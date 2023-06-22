@@ -36,7 +36,6 @@ curl -O https://downloads.mongodb.com/compass/mongosh-1.10.1-darwin-x64.zip
 unzip mongosh-1.10.1-darwin-x64.zip
 rm mongosh-1.10.1-darwin-x64.zip
 echo '\nPATH="/Users/'${me}'/mongosh-1.10.1-darwin-x64/bin:${PATH}"\nexport PATH\nalias mongo="mongosh"' >> .zprofile
-
 open mongodb-compass-1.38.0-darwin-x64.dmg
 say Done installing you bitch
 sleep 15

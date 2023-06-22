@@ -1,4 +1,4 @@
-# secondcents
+# Second Cents
 
 Hello this is the new GitHub respoitory for the app
 
