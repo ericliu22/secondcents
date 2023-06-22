@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'mongodb.dart';
 
-void main() {
+Future<void> main() async {
+  await MongoDatabase.connect();
   runApp(const MyApp());
 }
 
