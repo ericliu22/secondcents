@@ -1,8 +1,6 @@
 import 'dart:developer';
 
 import 'package:mongo_dart/mongo_dart.dart';
-import "package:realm/realm.dart" as realm;
-import "package:realm/realm.dart";
 
 // ignore: constant_identifier_names
 const MONGO_URL =
@@ -16,14 +14,4 @@ class MongoDatabase {
     var status = db.serverStatus();
     print(status);
   }
-}
-
-@RealmModel()
-class User {
-  @PrimaryKey()
-  late realm.ObjectId userId;
-
-  late String username;
-  late String displayName;
-  late String profilePic;
 }
