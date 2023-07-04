@@ -5,12 +5,14 @@ part 'user.g.dart';
 
 @RealmModel()
 class _User {
+  @MapTo("_id")
   @PrimaryKey()
   late realm.ObjectId userId;
 
   late String username;
   late String displayName;
   late String profilePic;
+  late int followerCount;
 }
 
 

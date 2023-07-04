@@ -1,8 +1,28 @@
 import 'package:flutter/material.dart';
-import 'mongodb.dart';
+import 'package:realm/realm.dart';
+import 'package:secondcents/schemas/user.dart' as user_schema;
+import 'globals.dart';
 
 Future<void> main() async {
-  await MongoDatabase.connect();
+  // ignore: non_constant_identifier_names
+  final SCHEMA_LIST = [
+    user_schema.User.schema,
+  ];
+  // ignore: constant_identifier_names
+  const String APP_ID = "twocents-pmukp";
+  final appConfig = AppConfiguration(APP_ID);
+
+  app.value = App(appConfig);
+
+  const String email = "jennierubyjane@gmail.com";
+  const String password = "blackpinkinyourarea";
+
+  emailRegister(email, password);
+  emailLogin(email, password);
+
+  final config = Configuration.flexibleSync(currentUser.value, SCHEMA_LIST,
+      path: 'flex.realm');
+  realm.value = Realm(config);
   runApp(const MyApp());
 }
 
@@ -114,4 +134,14 @@ class _MyHomePageState extends State<MyHomePage> {
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
+}
+
+Future<void> emailRegister(String email, String password) async {
+  EmailPasswordAuthProvider authProvider = EmailPasswordAuthProvider(app.value);
+  await authProvider.registerUser("lisa@example.com", "myStr0ngPassw0rd");
+}
+
+Future<void> emailLogin(String email, String password) async {
+  Credentials credentials = Credentials.emailPassword(email, password);
+  currentUser.value = await app.value.logIn(credentials);
 }
