@@ -1,19 +1,16 @@
-import "package:realm/realm.dart" as realm;
 import "package:realm/realm.dart";
 
 part 'user.g.dart';
 
 @RealmModel()
 class _User {
-  @MapTo("_id")
   @PrimaryKey()
-  late realm.ObjectId userId;
-
-  late String username;
+  @MapTo('_id')
+  ObjectId? id;
   late String displayName;
   late List<int> profilePic;
+  late String username;
 }
-
 
 /*
 ==========================

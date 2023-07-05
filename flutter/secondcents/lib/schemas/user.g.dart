@@ -8,14 +8,14 @@ part of 'user.dart';
 
 class User extends _User with RealmEntity, RealmObjectBase, RealmObject {
   User(
-    ObjectId userId,
-    String username,
-    String displayName, {
+    ObjectId? id,
+    String displayName,
+    String username, {
     Iterable<int> profilePic = const [],
   }) {
-    RealmObjectBase.set(this, '_id', userId);
-    RealmObjectBase.set(this, 'username', username);
+    RealmObjectBase.set(this, '_id', id);
     RealmObjectBase.set(this, 'displayName', displayName);
+    RealmObjectBase.set(this, 'username', username);
     RealmObjectBase.set<RealmList<int>>(
         this, 'profilePic', RealmList<int>(profilePic));
   }
@@ -23,15 +23,9 @@ class User extends _User with RealmEntity, RealmObjectBase, RealmObject {
   User._();
 
   @override
-  ObjectId get userId => RealmObjectBase.get<ObjectId>(this, '_id') as ObjectId;
+  ObjectId? get id => RealmObjectBase.get<ObjectId>(this, '_id') as ObjectId?;
   @override
-  set userId(ObjectId value) => RealmObjectBase.set(this, '_id', value);
-
-  @override
-  String get username =>
-      RealmObjectBase.get<String>(this, 'username') as String;
-  @override
-  set username(String value) => RealmObjectBase.set(this, 'username', value);
+  set id(ObjectId? value) => RealmObjectBase.set(this, '_id', value);
 
   @override
   String get displayName =>
@@ -48,6 +42,12 @@ class User extends _User with RealmEntity, RealmObjectBase, RealmObject {
       throw RealmUnsupportedSetError();
 
   @override
+  String get username =>
+      RealmObjectBase.get<String>(this, 'username') as String;
+  @override
+  set username(String value) => RealmObjectBase.set(this, 'username', value);
+
+  @override
   Stream<RealmObjectChanges<User>> get changes =>
       RealmObjectBase.getChanges<User>(this);
 
@@ -59,12 +59,12 @@ class User extends _User with RealmEntity, RealmObjectBase, RealmObject {
   static SchemaObject _initSchema() {
     RealmObjectBase.registerFactory(User._);
     return const SchemaObject(ObjectType.realmObject, User, 'User', [
-      SchemaProperty('userId', RealmPropertyType.objectid,
-          mapTo: '_id', primaryKey: true),
-      SchemaProperty('username', RealmPropertyType.string),
+      SchemaProperty('id', RealmPropertyType.objectid,
+          mapTo: '_id', optional: true, primaryKey: true),
       SchemaProperty('displayName', RealmPropertyType.string),
       SchemaProperty('profilePic', RealmPropertyType.int,
           collectionType: RealmCollectionType.list),
+      SchemaProperty('username', RealmPropertyType.string),
     ]);
   }
 }
