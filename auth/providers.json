@@ -15,7 +15,7 @@
         "config": {
             "autoConfirm": true,
             "resetPasswordSubject": "Reset password",
-            "resetPasswordUrl": "https://www.twocentsapp.com/passwordreset",
+            "resetPasswordUrl": "https://localhost:3000/resetPassword",
             "runConfirmationFunction": false
         },
         "disabled": false

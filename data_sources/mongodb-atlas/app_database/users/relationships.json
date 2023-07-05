@@ -1,8 +1,1 @@
-{
-    "_id": {
-        "ref": "#/relationship/mongodb-atlas/app_database/users",
-        "source_key": "_id",
-        "foreign_key": "userId",
-        "is_list": false
-    }
-}
+{}
