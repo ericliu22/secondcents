@@ -3,5 +3,5 @@
     "mongo_service_name": "mongodb-atlas",
     "database_name": "app_database",
     "collection_name": "users",
-    "user_id_field": "userId"
+    "user_id_field": "_id"
 }
