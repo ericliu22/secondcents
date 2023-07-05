@@ -12,18 +12,13 @@
                 "bsonType": "int"
             }
         },
-        "userId": {
-            "bsonType": "objectId"
-        },
         "username": {
             "bsonType": "string"
         }
     },
     "required": [
-        "userId",
         "username",
-        "displayName",
-        "profilePic"
+        "displayName"
     ],
     "title": "User"
 }
