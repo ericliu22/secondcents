@@ -1,0 +1,23 @@
+{
+    "properties": {
+        "displayName": {
+            "bsonType": "string"
+        },
+        "profilePic": {
+            "bsonType": "string"
+        },
+        "userId": {
+            "bsonType": "objectId"
+        },
+        "username": {
+            "bsonType": "string"
+        }
+    },
+    "required": [
+        "userId",
+        "username",
+        "displayName",
+        "profilePic"
+    ],
+    "title": "user"
+}
