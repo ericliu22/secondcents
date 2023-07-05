@@ -10,15 +10,14 @@ class User extends _User with RealmEntity, RealmObjectBase, RealmObject {
   User(
     ObjectId userId,
     String username,
-    String displayName,
-    String profilePic,
-    int followerCount,
-  ) {
+    String displayName, {
+    Iterable<int> profilePic = const [],
+  }) {
     RealmObjectBase.set(this, '_id', userId);
     RealmObjectBase.set(this, 'username', username);
     RealmObjectBase.set(this, 'displayName', displayName);
-    RealmObjectBase.set(this, 'profilePic', profilePic);
-    RealmObjectBase.set(this, 'followerCount', followerCount);
+    RealmObjectBase.set<RealmList<int>>(
+        this, 'profilePic', RealmList<int>(profilePic));
   }
 
   User._();
@@ -42,18 +41,11 @@ class User extends _User with RealmEntity, RealmObjectBase, RealmObject {
       RealmObjectBase.set(this, 'displayName', value);
 
   @override
-  String get profilePic =>
-      RealmObjectBase.get<String>(this, 'profilePic') as String;
+  RealmList<int> get profilePic =>
+      RealmObjectBase.get<int>(this, 'profilePic') as RealmList<int>;
   @override
-  set profilePic(String value) =>
-      RealmObjectBase.set(this, 'profilePic', value);
-
-  @override
-  int get followerCount =>
-      RealmObjectBase.get<int>(this, 'followerCount') as int;
-  @override
-  set followerCount(int value) =>
-      RealmObjectBase.set(this, 'followerCount', value);
+  set profilePic(covariant RealmList<int> value) =>
+      throw RealmUnsupportedSetError();
 
   @override
   Stream<RealmObjectChanges<User>> get changes =>
@@ -71,8 +63,8 @@ class User extends _User with RealmEntity, RealmObjectBase, RealmObject {
           mapTo: '_id', primaryKey: true),
       SchemaProperty('username', RealmPropertyType.string),
       SchemaProperty('displayName', RealmPropertyType.string),
-      SchemaProperty('profilePic', RealmPropertyType.string),
-      SchemaProperty('followerCount', RealmPropertyType.int),
+      SchemaProperty('profilePic', RealmPropertyType.int,
+          collectionType: RealmCollectionType.list),
     ]);
   }
 }

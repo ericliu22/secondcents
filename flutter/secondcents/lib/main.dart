@@ -145,3 +145,8 @@ Future<void> emailLogin(String email, String password) async {
   Credentials credentials = Credentials.emailPassword(email, password);
   currentUser.value = await app.value.logIn(credentials);
 }
+
+List<int> imageFileToBytes(var imageFile) {
+  List<int> imageBytes = imageFile.readAsBytesSync();
+  return imageBytes;
+}

@@ -11,8 +11,7 @@ class _User {
 
   late String username;
   late String displayName;
-  late String profilePic;
-  late int followerCount;
+  late List<int> profilePic;
 }
 
 
