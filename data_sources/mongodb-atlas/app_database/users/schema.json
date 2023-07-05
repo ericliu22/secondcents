@@ -1,5 +1,8 @@
 {
     "properties": {
+        "_id": {
+            "bsonType": "objectId"
+        },
         "displayName": {
             "bsonType": "string"
         },
@@ -15,9 +18,10 @@
     },
     "required": [
         "userId",
+        "_id",
         "username",
         "displayName",
         "profilePic"
     ],
-    "title": "user"
+    "title": "User"
 }
