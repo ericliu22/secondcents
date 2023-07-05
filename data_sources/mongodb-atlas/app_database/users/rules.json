@@ -7,7 +7,7 @@
             "apply_when": {},
             "document_filters": {
                 "write": {
-                    "owner_id": "%%user.id"
+                    "owner_id": "%%user._id"
                 },
                 "read": true
             },
