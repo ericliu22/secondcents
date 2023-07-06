@@ -6,5 +6,5 @@ import 'package:secondcents/schemas/user.dart' as user_information;
 
 late ValueNotifier<user_information.User> user_info;
 late ValueNotifier<User> currentUser;
-late ValueNotifier<Realm> realm;
+late ValueNotifier<Realm> user_realm;
 late ValueNotifier<App> app;

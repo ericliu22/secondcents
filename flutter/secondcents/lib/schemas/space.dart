@@ -14,4 +14,5 @@ class _Space {
   late int userCount;
   late List<String> userList;
   late List<String> bubbleList;
+  late String admin;
 }
