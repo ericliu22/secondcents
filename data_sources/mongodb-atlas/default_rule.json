@@ -3,7 +3,11 @@
     "roles": [
         {
             "name": "readAllWriteOwn",
-            "apply_when": {},
+            "apply_when": {
+                "%%user.data.email": {
+                    "%exists": true
+                }
+            },
             "document_filters": {
                 "write": {
                     "owner_id": "%%user.id"
@@ -14,6 +18,23 @@
             "write": true,
             "insert": true,
             "delete": true,
+            "search": true
+        },
+        {
+            "name": "readAll",
+            "apply_when": {
+                "%%user.data.email": {
+                    "%exists": false
+                }
+            },
+            "document_filters": {
+                "write": false,
+                "read": true
+            },
+            "read": true,
+            "write": false,
+            "insert": false,
+            "delete": false,
             "search": true
         }
     ]

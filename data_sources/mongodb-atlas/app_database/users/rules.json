@@ -4,7 +4,11 @@
     "roles": [
         {
             "name": "readAllWriteOwn",
-            "apply_when": {},
+            "apply_when": {
+                "%%user.data.email": {
+                    "%exists": true
+                }
+            },
             "document_filters": {
                 "write": {
                     "_id": "%%user._id"
@@ -15,6 +19,23 @@
             "write": true,
             "insert": true,
             "delete": true,
+            "search": true
+        },
+        {
+            "name": "anonymous",
+            "apply_when": {
+                "%%user.data.email": {
+                    "%exists": false
+                }
+            },
+            "document_filters": {
+                "write": false,
+                "read": true
+            },
+            "read": true,
+            "write": false,
+            "insert": false,
+            "delete": false,
             "search": true
         }
     ]
