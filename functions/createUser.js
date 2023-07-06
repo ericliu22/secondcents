@@ -6,7 +6,7 @@ exports = async function(authEvent) {
   const newUser = { ...user, eventLog: [ { "created": time } ] };
   
   await users.insertOne(newUser);
-  await users.updateOne({ id: newUser.id },
+  await users.updateOne({ _id: newUser.id },
    { $set:
       {
         "displayName": "",
