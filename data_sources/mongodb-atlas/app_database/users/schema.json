@@ -17,8 +17,8 @@
         }
     },
     "required": [
-        "username",
-        "displayName"
+        "displayName",
+        "username"
     ],
     "title": "User"
 }

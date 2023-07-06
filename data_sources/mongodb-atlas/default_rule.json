@@ -2,39 +2,16 @@
     "id": "64a52664b27786da19c5e418",
     "roles": [
         {
-            "name": "readAllWriteOwn",
-            "apply_when": {
-                "%%user.data.email": {
-                    "%exists": true
-                }
-            },
+            "name": "readAndWriteAll",
+            "apply_when": {},
             "document_filters": {
-                "write": {
-                    "owner_id": "%%user.id"
-                },
+                "write": true,
                 "read": true
             },
             "read": true,
             "write": true,
             "insert": true,
             "delete": true,
-            "search": true
-        },
-        {
-            "name": "readAll",
-            "apply_when": {
-                "%%user.data.email": {
-                    "%exists": false
-                }
-            },
-            "document_filters": {
-                "write": false,
-                "read": true
-            },
-            "read": true,
-            "write": false,
-            "insert": false,
-            "delete": false,
             "search": true
         }
     ]

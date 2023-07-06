@@ -1,9 +1,22 @@
 {
-    "collection": "users",
+    "collection": "newUsers",
     "database": "app_database",
     "roles": [
         {
             "name": "readAndWriteAll",
+            "apply_when": {},
+            "document_filters": {
+                "write": true,
+                "read": true
+            },
+            "read": true,
+            "write": true,
+            "insert": true,
+            "delete": true,
+            "search": true
+        },
+        {
+            "name": "ASDF",
             "apply_when": {},
             "document_filters": {
                 "write": true,
