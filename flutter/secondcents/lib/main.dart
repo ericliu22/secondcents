@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter/material.dart';
 import 'package:realm/realm.dart';
 import 'package:secondcents/schemas/user.dart' as user_schema;
@@ -11,18 +13,16 @@ Future<void> main() async {
   // ignore: constant_identifier_names
   const String APP_ID = "twocents-pmukp";
   final appConfig = AppConfiguration(APP_ID);
+  app = ValueNotifier<App>(App(appConfig));
 
-  app.value = App(appConfig);
-
-  const String email = "jennierubyjane@gmail.com";
+  const String email = "imnotgaasdfy@gmail.com";
   const String password = "blackpinkinyourarea";
 
-  emailRegister(email, password);
-  emailLogin(email, password);
+  await emailRegister(email, password);
+  await emailLogin(email, password);
 
-  final config = Configuration.flexibleSync(currentUser.value, SCHEMA_LIST,
-      path: 'flex.realm');
-  realm.value = Realm(config);
+  final config = Configuration.flexibleSync(currentUser.value, SCHEMA_LIST);
+  realm = ValueNotifier<Realm>(Realm(config));
   runApp(const MyApp());
 }
 
@@ -138,12 +138,12 @@ class _MyHomePageState extends State<MyHomePage> {
 
 Future<void> emailRegister(String email, String password) async {
   EmailPasswordAuthProvider authProvider = EmailPasswordAuthProvider(app.value);
-  await authProvider.registerUser("lisa@example.com", "myStr0ngPassw0rd");
+  await authProvider.registerUser(email, password);
 }
 
 Future<void> emailLogin(String email, String password) async {
   Credentials credentials = Credentials.emailPassword(email, password);
-  currentUser.value = await app.value.logIn(credentials);
+  currentUser = ValueNotifier<User>(await app.value.logIn(credentials));
 }
 
 List<int> imageFileToBytes(var imageFile) {
