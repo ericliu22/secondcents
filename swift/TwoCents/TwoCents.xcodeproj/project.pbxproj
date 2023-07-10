@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		A2459EDE2A57AB8700BF2441 /* TwoCentsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2459EDD2A57AB8700BF2441 /* TwoCentsApp.swift */; };
-		A2459EE02A57AB8700BF2441 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2459EDF2A57AB8700BF2441 /* ContentView.swift */; };
+		A2459EE02A57AB8700BF2441 /* StartupPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2459EDF2A57AB8700BF2441 /* StartupPage.swift */; };
 		A2459EE22A57AB8900BF2441 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A2459EE12A57AB8900BF2441 /* Assets.xcassets */; };
 		A2459EE52A57AB8900BF2441 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A2459EE42A57AB8900BF2441 /* Preview Assets.xcassets */; };
 		A2459EEF2A57AB8900BF2441 /* TwoCentsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2459EEE2A57AB8900BF2441 /* TwoCentsTests.swift */; };
@@ -39,7 +39,7 @@
 /* Begin PBXFileReference section */
 		A2459EDA2A57AB8700BF2441 /* TwoCents.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TwoCents.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A2459EDD2A57AB8700BF2441 /* TwoCentsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwoCentsApp.swift; sourceTree = "<group>"; };
-		A2459EDF2A57AB8700BF2441 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		A2459EDF2A57AB8700BF2441 /* StartupPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartupPage.swift; sourceTree = "<group>"; };
 		A2459EE12A57AB8900BF2441 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A2459EE42A57AB8900BF2441 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		A2459EEA2A57AB8900BF2441 /* TwoCentsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TwoCentsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -102,7 +102,7 @@
 			children = (
 				A2459F0C2A57B23A00BF2441 /* Schemas */,
 				A2459EDD2A57AB8700BF2441 /* TwoCentsApp.swift */,
-				A2459EDF2A57AB8700BF2441 /* ContentView.swift */,
+				A2459EDF2A57AB8700BF2441 /* StartupPage.swift */,
 				A2459EE12A57AB8900BF2441 /* Assets.xcassets */,
 				A2459EE32A57AB8900BF2441 /* Preview Content */,
 			);
@@ -279,7 +279,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A2459EE02A57AB8700BF2441 /* ContentView.swift in Sources */,
+				A2459EE02A57AB8700BF2441 /* StartupPage.swift in Sources */,
 				A2459EDE2A57AB8700BF2441 /* TwoCentsApp.swift in Sources */,
 				A2459F0E2A57B25A00BF2441 /* User.swift in Sources */,
 			);

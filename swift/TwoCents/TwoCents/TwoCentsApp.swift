@@ -12,10 +12,54 @@ typealias SwiftApp = SwiftUI.App
 typealias RealmApp = RealmSwift.App
 typealias SwiftList = SwiftUI.List
 typealias RealmList = RealmSwift.List
+typealias RealmUser = RealmSwift.User
+typealias UserSchema = User
 
-func imageToByteArray(imageData:NSData) -> Array<UInt8>
-{
+/*
+ Might move a lot of functions here into the startup page
+ Realistically don't need to sign in immediately
+ */
 
+
+func openSyncedRealm(user: RealmUser) async throws -> Realm {
+        // Pass object types to the Flexible Sync configuration
+        // as a temporary workaround for not being able to add a
+        // complete schema for a Flexible Sync app.
+        var flexSyncConfig = user.flexibleSyncConfiguration(initialSubscriptions: { subs in
+        subs.append(
+            QuerySubscription<UserSchema> {
+                $0.username == $0.username
+                })
+        })
+        flexSyncConfig.objectTypes = [User.self]
+        print("Got to let realm")
+    let realm = try await Realm(configuration: flexSyncConfig
+    )
+        print("finished let realm")
+        // You must add at least one subscription to read and write from a Flexible Sync realm
+        return realm
+}
+
+func login(userCredentials: Credentials) async {
+    do {
+        let user = try await Globals.app.login(credentials: userCredentials)
+        print("Successfully logged in user: \(user)")
+    } catch {
+        print("Error logging in: \(error.localizedDescription)")
+    }
+}
+
+func registerUser(email: String, password: String, app: RealmApp) async {
+    let authInstance: EmailPasswordAuth = EmailPasswordAuth(app: app)
+    do {
+        try await authInstance.registerUser(email: email, password: password)
+        print("Successfully registered user.")
+    } catch {
+        print("Failed to register: \(error.localizedDescription)")
+    }
+}
+
+func imageToByteArray(imageData:NSData) -> Array<UInt8> {
   // the number of elements:
   let count = imageData.length / MemoryLayout<Int8>.size
 
@@ -32,37 +76,106 @@ func imageToByteArray(imageData:NSData) -> Array<UInt8>
   }
 
   return byteArray
-
-
 }
-func arrayToList<T>(array:Array<T>) -> RealmList<Int>
-{
+
+/*
+ Arrays and lists are different
+ Realm and Swift's lists are different
+ UInt8 and Int are different
+ */
+func arrayToList<T>(array:Array<T>) -> RealmList<Int> {
     var intArray: Array<Int> = []
     for i in array {
-        var int8: Int8 = Int8(i as! UInt8)
-        var int: Int = Int(int8)
+        let int8: Int8 = Int8(i as! UInt8)
+        let int: Int = Int(int8)
         intArray.append(int)
     }
     let outputList = RealmList<Int>()
-    outputList.append(objectsIn: array)
+    outputList.append(objectsIn: intArray)
     return outputList
 }
 
-let imageName = "yourImage.png"
-let image = UIImage(named: "ASDf.png")
-let data = image!.jpegData(compressionQuality: 1.0)
-let byteArray = imageToByteArray(imageData: NSData(data: data!))
-let imageBytes = arrayToList(array: byteArray)
-let user = User(displayName: "Jennie Kim", profilePic: imageBytes, username: "jennierubyjane")
+func imageNameToBytes(imageName: String) -> RealmList<Int> {
+    let image = UIImage(named: imageName)
+    let data = image!.jpegData(compressionQuality: 1.0)
+    let byteArray: Array<UInt8> = imageToByteArray(imageData: data! as NSData)
+    let imageBytes = arrayToList(array: byteArray)
+    return imageBytes
+}
+
+
 
 @main
-struct TwoCentsApp: SwiftApp {
-    let realm = try! Realm()
+struct Main {
+    @MainActor
+    static func main() async {
+        //These are for test purposes don't actually use
+//        let imageBytes = imageNameToBytes(imageName: "jennie kim.jpg")
+            let dummyuser = UserSchema(
+                _id: try! ObjectId(string: Globals.app.currentUser!.id),
+                displayName: "Sugma",
+                profilePic: nil,
+                username: "Sugma"
+            )
+        
+        let email = "sugmaballs@gmail.com"
+        let password = "BLACKP1NK_in_your_area!"
+        await registerUser(email: email, password: password, app: Globals.app)
+        await login(userCredentials: Credentials.emailPassword(
+            email: email,
+            password: password))
+        do{
+            let realm: Realm = try await openSyncedRealm(user:Globals.app.currentUser!)
+            let subscriptions = realm.subscriptions
+            print(subscriptions.count)
+            subscriptions.update {
+                   subscriptions.append(
+                      QuerySubscription<UserSchema> {
+                          $0._id == dummyuser._id
+                      })
+            } onComplete: { error in
+                if let error=error {
+                    print("Failed to subscribe: \(error.localizedDescription)")
+                }
+            }
+            print("subscriptions.update ran")
+            print(realm.syncSession!)
+            
+            do {
+                try realm.write {
+                    realm.add(dummyuser)
+                }
+            } catch {
+                if error.localizedDescription.contains("existing primary key value") {
+                    print("User already exists")
+                } else {
+                    throw error
+                }
+            }
+            print("realm.write")
+        } catch {
+            print("Error opening realm: \(error.localizedDescription)")
+        }
+        MyApp.main()
+    }
+}
+
+struct MyApp: SwiftApp {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            StartupPage()
         }
     }
 }
 
 
+/*
+ You don't actually need a lot of things here
+ The realm app actually has a lot of important functions like
+ currentUser and configuration
+ */
+struct Globals {
+    static var appConfig: AppConfiguration = AppConfiguration(baseURL: "https://realm.mongodb.com")
+    static var app: RealmApp = RealmApp(id: "twocents-pmukp", configuration: appConfig)
+    
+}
