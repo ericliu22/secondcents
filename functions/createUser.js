@@ -9,9 +9,9 @@ exports = async function(authEvent) {
   await users.updateOne({ _id: newUser.id },
    { $set:
       {
-        "displayName": "",
-        "profilePic":[],
-        "username": "",
+        "custom_data.displayName": "",
+        "custom_data.profilePic":[],
+        "custom_data.username": "",
       }
    }
   )
