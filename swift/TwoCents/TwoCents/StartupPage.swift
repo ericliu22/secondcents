@@ -7,8 +7,14 @@
 import Realm
 import SwiftUI
 
+func registerUser() {
+    
+}
+
 struct StartupPage: View {
     @State private var username: String = ""
+    @State private var password: String = ""
+    @State private var confirmPassword: String = ""
     var body: some View {
         VStack {
             Image(systemName: "globe")
@@ -20,8 +26,16 @@ struct StartupPage: View {
                     TextField("Username", text: $username)
                 }
                 Section {
-                    Text(username)
+                    SecureField("Password",
+                            text: $password)
                 }
+                Section {
+                    SecureField("Confirm Password",
+                            text: $password)
+                }
+            }
+            Button(action: registerUser) {
+                Text("Register")
             }
         }
         .padding()

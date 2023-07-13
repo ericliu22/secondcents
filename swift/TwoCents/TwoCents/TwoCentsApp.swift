@@ -22,20 +22,20 @@ typealias UserSchema = User
 
 
 func openSyncedRealm(user: RealmUser) async throws -> Realm {
-        // Pass object types to the Flexible Sync configuration
-        // as a temporary workaround for not being able to add a
-        // complete schema for a Flexible Sync app.
-        var flexSyncConfig = user.flexibleSyncConfiguration(initialSubscriptions: { subs in
+        var flexSyncConfig = Globals.app.currentUser!.flexibleSyncConfiguration(initialSubscriptions: { subs in
         subs.append(
             QuerySubscription<UserSchema> {
-                $0.username == $0.username
+                try! $0._id == ObjectId(string: user.id)
                 })
-        })
+        }, rerunOnOpen: true)
+        
         flexSyncConfig.objectTypes = [User.self]
         print("Got to let realm")
-    let realm = try await Realm(configuration: flexSyncConfig
-    )
+        
+        let realm = try await Realm(configuration: flexSyncConfig, downloadBeforeOpen: .never)
+
         print("finished let realm")
+        
         // You must add at least one subscription to read and write from a Flexible Sync realm
         return realm
 }
@@ -113,12 +113,13 @@ struct Main {
 //        let imageBytes = imageNameToBytes(imageName: "jennie kim.jpg")
             let dummyuser = UserSchema(
                 _id: try! ObjectId(string: Globals.app.currentUser!.id),
-                displayName: "Sugma",
-                profilePic: nil,
-                username: "Sugma"
+                username: "ericliu",
+                displayName: "Eric Liu"
             )
-        
-        let email = "sugmaballs@gmail.com"
+        Globals.app.syncManager.errorHandler = { error,session in
+            print("ERROR LOCALIZED DESCRIPTION: \(error.localizedDescription)")
+        }
+        let email = "ericliu@gmail.com"
         let password = "BLACKP1NK_in_your_area!"
         await registerUser(email: email, password: password, app: Globals.app)
         await login(userCredentials: Credentials.emailPassword(
@@ -131,7 +132,7 @@ struct Main {
             subscriptions.update {
                    subscriptions.append(
                       QuerySubscription<UserSchema> {
-                          $0._id == dummyuser._id
+                          try! $0._id == ObjectId(string: Globals.app.currentUser!.id)
                       })
             } onComplete: { error in
                 if let error=error {
@@ -142,9 +143,12 @@ struct Main {
             print(realm.syncSession!)
             
             do {
-                try realm.write {
+                try! realm.write {
                     realm.add(dummyuser)
                 }
+                print("REALM CONNECTION STATE: \(String(describing: realm.syncSession?.connectionState))")
+                print("Got to write copy")
+                print("Wrote copy")
             } catch {
                 if error.localizedDescription.contains("existing primary key value") {
                     print("User already exists")
@@ -174,8 +178,10 @@ struct MyApp: SwiftApp {
  The realm app actually has a lot of important functions like
  currentUser and configuration
  */
-struct Globals {
+class Globals {
     static var appConfig: AppConfiguration = AppConfiguration(baseURL: "https://realm.mongodb.com")
+    
     static var app: RealmApp = RealmApp(id: "twocents-pmukp", configuration: appConfig)
     
 }
+

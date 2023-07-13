@@ -17,12 +17,10 @@ class User: Object {
 
     @Persisted var username: String = ""
     
-    convenience init(_id: ObjectId? = nil, displayName: String, profilePic: List<Int>?, username: String) {
+    convenience init(_id: ObjectId? = nil, username: String, displayName: String) {
         self.init()
-        let emptyList: List<Int> = List<Int>()
         self._id = _id
         self.displayName = displayName
-        self.profilePic = profilePic ?? emptyList
         self.username = username
     }
 }
