@@ -1,0 +1,18 @@
+{
+    "properties": {
+        "_id": {
+            "bsonType": "objectId"
+        },
+        "iq": {
+            "bsonType": "int"
+        },
+        "name": {
+            "bsonType": "string"
+        }
+    },
+    "required": [
+        "iq",
+        "name"
+    ],
+    "title": "dumbass"
+}
