@@ -3,22 +3,56 @@
         "_id": {
             "bsonType": "objectId"
         },
-        "displayName": {
-            "bsonType": "string"
-        },
-        "profilePic": {
-            "bsonType": "array",
-            "items": {
-                "bsonType": "int"
+        "custom_data": {
+            "bsonType": "object",
+            "properties": {
+                "displayName": {
+                    "bsonType": "string"
+                },
+                "username": {
+                    "bsonType": "string"
+                }
             }
         },
-        "username": {
+        "data": {
+            "bsonType": "object",
+            "properties": {
+                "email": {
+                    "bsonType": "string"
+                }
+            }
+        },
+        "eventLog": {
+            "bsonType": "array",
+            "items": {
+                "bsonType": "object",
+                "properties": {
+                    "created": {
+                        "bsonType": "date"
+                    }
+                }
+            }
+        },
+        "id": {
+            "bsonType": "string"
+        },
+        "identities": {
+            "bsonType": "array",
+            "items": {
+                "bsonType": "object",
+                "properties": {
+                    "id": {
+                        "bsonType": "string"
+                    },
+                    "provider_type": {
+                        "bsonType": "string"
+                    }
+                }
+            }
+        },
+        "type": {
             "bsonType": "string"
         }
     },
-    "required": [
-        "displayName",
-        "username"
-    ],
-    "title": "User"
+    "title": "user"
 }
