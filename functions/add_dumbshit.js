@@ -4,7 +4,7 @@ exports = async function(name){
   // https://www.mongodb.com/docs/atlas/app-services/functions/
 
   // Find the name of the MongoDB service you want to use (see "Linked Data Sources" tab)
-  var serviceName = "SecondCents-1";
+  var serviceName = "secondcents-crud";
   var dbName = "app_database";
   var collName = "dumbshit";
 

@@ -25,12 +25,8 @@ func openSyncedRealm(user: RealmUser) async throws -> Realm {
         let displayName = "tommy"
         var flexSyncConfig = Globals.app.currentUser!.flexibleSyncConfiguration(initialSubscriptions: { subs in
         subs.append(
-            QuerySubscription<UserSchema> {
-                try! $0._id == ObjectId(string: user.id)
-                })
-            subs.append(QuerySubscription<dumbass> {
-                try! $0.name == displayName
-            })
+            QuerySubscription<UserSchema>(name: "all_users"))
+            subs.append(QuerySubscription<dumbass>(name: "all_dumbasses"))
         }, rerunOnOpen: true)
         flexSyncConfig.objectTypes = [User.self, dumbass.self]
         print("Got to let realm")
@@ -150,7 +146,7 @@ struct Main {
             password: password))
         let user = Globals.app.currentUser!
         do{
-            print("add dumbshit ran")
+            print("add dumbshit")
             try await user.functions.add_dumbshit([AnyBSON(displayName)])
         } catch {
             print("error: \(error.localizedDescription)")
@@ -207,7 +203,7 @@ struct MyApp: SwiftApp {
  currentUser and configuration
  */
 class Globals {
-    static var appConfig: AppConfiguration = AppConfiguration(baseURL: "https://realm.mongodb.com")
+    static var appConfig: AppConfiguration = AppConfiguration()
     
     static var app: RealmApp = RealmApp(id: "twocents-pmukp", configuration: appConfig)
     
