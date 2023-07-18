@@ -22,21 +22,39 @@ typealias UserSchema = User
 
 
 func openSyncedRealm(user: RealmUser) async throws -> Realm {
+        let displayName = "tommy"
         var flexSyncConfig = Globals.app.currentUser!.flexibleSyncConfiguration(initialSubscriptions: { subs in
         subs.append(
             QuerySubscription<UserSchema> {
                 try! $0._id == ObjectId(string: user.id)
                 })
+            subs.append(QuerySubscription<dumbass> {
+                try! $0.name == displayName
+            })
         }, rerunOnOpen: true)
-        
-        flexSyncConfig.objectTypes = [User.self]
+        flexSyncConfig.objectTypes = [User.self, dumbass.self]
         print("Got to let realm")
         
-        let realm = try await Realm(configuration: flexSyncConfig, downloadBeforeOpen: .never)
+        let realm = try await Realm(configuration: flexSyncConfig, downloadBeforeOpen: .always)
 
         print("finished let realm")
-        
-        // You must add at least one subscription to read and write from a Flexible Sync realm
+        let subscriptions = realm.subscriptions
+        print(subscriptions.count)
+        subscriptions.update {
+               subscriptions.append(
+                  QuerySubscription<UserSchema> {
+                      try! $0._id == ObjectId(string: Globals.app.currentUser!.id)
+                  })
+            subscriptions.append(QuerySubscription<dumbass> {
+                try! $0.name == displayName
+            })
+        } onComplete: { error in
+            if let error=error {
+                print("Failed to subscribe: \(error.localizedDescription)")
+            }
+        }
+    
+    // You must add at least one subscription to read and write from a Flexible Sync realm
         return realm
 }
 
@@ -111,15 +129,20 @@ struct Main {
     static func main() async {
         //These are for test purposes don't actually use
 //        let imageBytes = imageNameToBytes(imageName: "jennie kim.jpg")
-            let dummyuser = UserSchema(
-                _id: try! ObjectId(string: Globals.app.currentUser!.id),
-                username: "ericliu",
-                displayName: "Eric Liu"
-            )
+        
+        let displayName: String = "tommy"
+        let username: String = "tommy"
+        
+//        let dummyuser = UserSchema(
+//            _id: try! ObjectId(string: Globals.app.currentUser!.id),
+//            username: "daniel",
+//            displayName: displayName
+//        )
+        
         Globals.app.syncManager.errorHandler = { error,session in
             print("ERROR LOCALIZED DESCRIPTION: \(error.localizedDescription)")
         }
-        let email = "ericliu@gmail.com"
+        let email = "tommy@gmail.com"
         let password = "BLACKP1NK_in_your_area!"
         await registerUser(email: email, password: password, app: Globals.app)
         await login(userCredentials: Credentials.emailPassword(
@@ -127,24 +150,21 @@ struct Main {
             password: password))
         do{
             let realm: Realm = try await openSyncedRealm(user:Globals.app.currentUser!)
-            let subscriptions = realm.subscriptions
-            print(subscriptions.count)
-            subscriptions.update {
-                   subscriptions.append(
-                      QuerySubscription<UserSchema> {
-                          try! $0._id == ObjectId(string: Globals.app.currentUser!.id)
-                      })
-            } onComplete: { error in
-                if let error=error {
-                    print("Failed to subscribe: \(error.localizedDescription)")
-                }
-            }
             print("subscriptions.update ran")
             print(realm.syncSession!)
             
             do {
                 try! realm.write {
-                    realm.add(dummyuser)
+                    realm.create(dumbass.self,
+                                 value: [
+                                    "_id": ObjectId.generate(),
+                                    "name": displayName,
+                                 ])
+                }
+                
+                let users = realm.objects(UserSchema.self)
+                for i in users {
+                    print(i.displayName)
                 }
                 print("REALM CONNECTION STATE: \(String(describing: realm.syncSession?.connectionState))")
                 print("Got to write copy")
@@ -157,6 +177,8 @@ struct Main {
                 }
             }
             print("realm.write")
+            let user = Globals.app.currentUser!
+            try await 
         } catch {
             print("Error opening realm: \(error.localizedDescription)")
         }

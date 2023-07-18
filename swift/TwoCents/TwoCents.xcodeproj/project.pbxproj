@@ -17,6 +17,7 @@
 		A2459F092A57B15800BF2441 /* Realm in Frameworks */ = {isa = PBXBuildFile; productRef = A2459F082A57B15800BF2441 /* Realm */; };
 		A2459F0B2A57B15800BF2441 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = A2459F0A2A57B15800BF2441 /* RealmSwift */; };
 		A2459F0E2A57B25A00BF2441 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2459F0D2A57B25A00BF2441 /* User.swift */; };
+		A29961072A6432C900B6AFCD /* dumbass.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29961062A6432C900B6AFCD /* dumbass.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,6 +49,7 @@
 		A2459EF82A57AB8900BF2441 /* TwoCentsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwoCentsUITests.swift; sourceTree = "<group>"; };
 		A2459EFA2A57AB8900BF2441 /* TwoCentsUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwoCentsUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		A2459F0D2A57B25A00BF2441 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		A29961062A6432C900B6AFCD /* dumbass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = dumbass.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -138,6 +140,7 @@
 			isa = PBXGroup;
 			children = (
 				A2459F0D2A57B25A00BF2441 /* User.swift */,
+				A29961062A6432C900B6AFCD /* dumbass.swift */,
 			);
 			path = Schemas;
 			sourceTree = "<group>";
@@ -282,6 +285,7 @@
 				A2459EE02A57AB8700BF2441 /* StartupPage.swift in Sources */,
 				A2459EDE2A57AB8700BF2441 /* TwoCentsApp.swift in Sources */,
 				A2459F0E2A57B25A00BF2441 /* User.swift in Sources */,
+				A29961072A6432C900B6AFCD /* dumbass.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

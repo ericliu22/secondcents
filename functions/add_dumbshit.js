@@ -24,9 +24,4 @@ exports = async function(name){
 
     return { error: err.message };
   }
-
-  // To call other named functions:
-  // var result = context.functions.execute("function_name", arg1, arg2);
-
-  return { result: findResult };
 };
