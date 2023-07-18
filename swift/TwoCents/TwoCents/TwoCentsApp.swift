@@ -148,6 +148,13 @@ struct Main {
         await login(userCredentials: Credentials.emailPassword(
             email: email,
             password: password))
+        let user = Globals.app.currentUser!
+        do{
+            print("add dumbshit ran")
+            try await user.functions.add_dumbshit([AnyBSON(displayName)])
+        } catch {
+            print("error: \(error.localizedDescription)")
+        }
         do{
             let realm: Realm = try await openSyncedRealm(user:Globals.app.currentUser!)
             print("subscriptions.update ran")
@@ -177,8 +184,7 @@ struct Main {
                 }
             }
             print("realm.write")
-            let user = Globals.app.currentUser!
-            try await 
+            
         } catch {
             print("Error opening realm: \(error.localizedDescription)")
         }
