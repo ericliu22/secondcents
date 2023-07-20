@@ -148,6 +148,8 @@ struct Main {
         do{
             print("add dumbshit")
             try await user.functions.add_dumbshit([AnyBSON(displayName)])
+            print("create user")
+            try await user.functions.createUser()
         } catch {
             print("error: \(error.localizedDescription)")
         }

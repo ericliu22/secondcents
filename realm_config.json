@@ -1,8 +1,0 @@
-{
-    "app_id": "twocents-pmukp",
-    "config_version": 20210101,
-    "name": "TwoCents",
-    "location": "US-VA",
-    "provider_region": "aws-us-east-1",
-    "deployment_model": "LOCAL"
-}
