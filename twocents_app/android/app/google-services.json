@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1077592208390",
+    "project_id": "secondcents",
+    "storage_bucket": "secondcents.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1077592208390:android:132f83f564842ce4c0bf87",
+        "android_client_info": {
+          "package_name": "com.example.twocents_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1077592208390-meld8mrc1skllaa98hb01asr8s9mm40g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDzCR5tea1oz20T4Aed9cEaWHYdl0DmldQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1077592208390-meld8mrc1skllaa98hb01asr8s9mm40g.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
