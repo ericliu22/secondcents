@@ -79,6 +79,7 @@ extension SettingsView {
                         try await viewModel.updateEmail()
                         
                     }  catch {
+                        
                         print(error)
                     }
                 }
@@ -109,7 +110,7 @@ extension SettingsView {
                 
             }
         } header: {
-            Text("Email Functions")
+            Text("Password & Security")
         }
     }
 }

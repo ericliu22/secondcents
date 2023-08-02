@@ -26,6 +26,7 @@ final class SignInEmailViewModel: ObservableObject{
     func signIn() async throws {
         guard !email.isEmpty, !password.isEmpty else {
             print("No email or password found.")
+            
             return
         }
         try await AuthenticationManager.shared.signInUser(email: email, password: password)
@@ -41,6 +42,7 @@ struct SignInEmailView: View {
     
     @StateObject private var viewModel = SignInEmailViewModel()
     var body: some View {
+        
         VStack {
             //Email Textfield
             TextField("Email", text: $viewModel.email)
@@ -86,7 +88,7 @@ struct SignInEmailView: View {
                     .foregroundColor(Color(UIColor.systemBackground))
                     .frame(height: 55)
                     .frame(maxWidth: .infinity)
-                    .background(Color.primary)
+                    .background(Color(UIColor.label))
                     .cornerRadius(10)
                    
             }

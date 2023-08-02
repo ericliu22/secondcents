@@ -10,25 +10,67 @@ import SwiftUI
 struct AuthenticationView: View {
     
     @Binding var showSignInView: Bool
+    
+    @State private var animateGradient: Bool = false
+    
+    
     var body: some View {
         VStack{
+            
+            
+            Spacer()
+                .frame(height:200)
+            
+            //TwoCents Text
+            
+            /*  First writes out the text, then overlays gradient over it (so that it scales with text instead of whole screen). Then, masks the text over it to cutout the words */
+          
+            
+            Text("TwoCents")
+//                .frame(maxWidth: .infinity, alignment: .leading)
+                .bold()
+                .font(.system(size: 64))
+                .overlay{
+                    
+                    LinearGradient(colors: [Color("TwoCentsGreen"),Color("TwoCentsCyan")], startPoint: .leading, endPoint: .trailing)
+                        .ignoresSafeArea()
+                        .hueRotation(.degrees(animateGradient ? 45 : 0))
+                        .onAppear{
+                            withAnimation(.easeInOut(duration: 3).repeatForever(autoreverses:true)){
+                                animateGradient.toggle()
+                            }
+                        }
+                    
+                        .mask(
+                            Text("TwoCents")
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .bold()
+                                .font(.system(size: 64))
+                        )
+                }
+            
+            Spacer()
+            
             NavigationLink {
                 SignInEmailView(showSignInView: $showSignInView)
             } label: {
                 Text("Sign In With Email")
                     .font(.headline)
-                    .foregroundColor(.white)
+                    .foregroundColor(Color(UIColor.systemBackground))
                     .frame(height: 55)
                     .frame(maxWidth: .infinity)
-                    .background(.blue)
+                    .background(Color(UIColor.label))
                     .cornerRadius(10)
             }
             
-            Spacer()
+            
 
         }
         .padding()
-        .navigationTitle("Sign In")
+//        .navigationTitle("Sign In")
+        
+        Spacer()
+            .frame(height:50)
     }
 }
 
