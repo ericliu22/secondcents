@@ -53,9 +53,9 @@ struct ContentView: View {
                 TextField("Email", text: $email)
                     .disableAutocorrection(true)
                     .textInputAutocapitalization(.never)
-                    .padding(14)
+                    .padding()
                     .background(Color(UIColor.secondarySystemBackground))
-                    .cornerRadius(5)
+                    .cornerRadius(10)
                     
                 //spacer
                 Spacer()
@@ -65,28 +65,30 @@ struct ContentView: View {
                 SecureField("Password",text:$password)
                     .disableAutocorrection(true)
                     .textInputAutocapitalization(.never)
-                    .padding(14)
+                    .padding()
                     .background(Color(UIColor.secondarySystemBackground))
-                    .cornerRadius(5)
-                    .frame(height: 50)
+                    .cornerRadius(10)
+                    .frame(height: 55)
                 
                 
                 Spacer()
-                    .frame(height:40)
+                    .frame(height:10)
                 
                 Button {
                     
                 } label: {
                     Text("Sign Up")
+                        
                         .bold()
                         .foregroundColor(Color(UIColor.systemBackground))
+                        .frame(height: 55)
                         .frame(maxWidth: .infinity)
                         
-                        .padding(14)
+                        
                     
                     
                         .background(Color.primary)
-                        .cornerRadius(5)
+                        .cornerRadius(10)
                        
                         
                     

@@ -13,19 +13,18 @@ struct TwoCentsApp: App {
     
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     
-    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+           RootView()
         }
     }
 }
-
-struct Previews_TwoCentsApp_Previews: PreviewProvider {
-    static var previews: some View {
-        /*@START_MENU_TOKEN@*/Text("Hello, World!")/*@END_MENU_TOKEN@*/
-    }
-}
+//
+//struct Previews_TwoCentsApp_Previews: PreviewProvider {
+//    static var previews: some View {
+//        /*@START_MENU_TOKEN@*/Text("Hello, World!")/*@END_MENU_TOKEN@*/
+//    }
+//}
 
 
 class AppDelegate: NSObject, UIApplicationDelegate {
