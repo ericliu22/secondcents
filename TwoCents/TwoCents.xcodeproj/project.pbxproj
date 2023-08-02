@@ -15,6 +15,9 @@
 		A257D79F2A6D707800A4E7BD /* TwoCentsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A257D79E2A6D707800A4E7BD /* TwoCentsUITests.swift */; };
 		A257D7A12A6D707800A4E7BD /* TwoCentsUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A257D7A02A6D707800A4E7BD /* TwoCentsUITestsLaunchTests.swift */; };
 		A2F003552A7260B300FE0688 /* CanvasPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F003542A7260B300FE0688 /* CanvasPage.swift */; };
+		ABA4C4662A7900A40015837D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = ABA4C4652A7900A40015837D /* GoogleService-Info.plist */; };
+		ABCA39CA2A79F97D009447C3 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = ABCA39C92A79F97D009447C3 /* FirebaseAnalytics */; };
+		ABCA39CC2A79F97D009447C3 /* FirebaseAnalyticsSwift in Frameworks */ = {isa = PBXBuildFile; productRef = ABCA39CB2A79F97D009447C3 /* FirebaseAnalyticsSwift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -46,6 +49,7 @@
 		A257D79E2A6D707800A4E7BD /* TwoCentsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwoCentsUITests.swift; sourceTree = "<group>"; };
 		A257D7A02A6D707800A4E7BD /* TwoCentsUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwoCentsUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		A2F003542A7260B300FE0688 /* CanvasPage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CanvasPage.swift; sourceTree = "<group>"; };
+		ABA4C4652A7900A40015837D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -53,6 +57,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ABCA39CC2A79F97D009447C3 /* FirebaseAnalyticsSwift in Frameworks */,
+				ABCA39CA2A79F97D009447C3 /* FirebaseAnalytics in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -99,6 +105,7 @@
 				A2F003542A7260B300FE0688 /* CanvasPage.swift */,
 				A257D7832A6D707600A4E7BD /* TwoCentsApp.swift */,
 				A257D7852A6D707600A4E7BD /* ContentView.swift */,
+				ABA4C4652A7900A40015837D /* GoogleService-Info.plist */,
 				A257D7872A6D707800A4E7BD /* Assets.xcassets */,
 				A257D7892A6D707800A4E7BD /* Preview Content */,
 			);
@@ -146,6 +153,10 @@
 			dependencies = (
 			);
 			name = TwoCents;
+			packageProductDependencies = (
+				ABCA39C92A79F97D009447C3 /* FirebaseAnalytics */,
+				ABCA39CB2A79F97D009447C3 /* FirebaseAnalyticsSwift */,
+			);
 			productName = TwoCents;
 			productReference = A257D7802A6D707600A4E7BD /* TwoCents.app */;
 			productType = "com.apple.product-type.application";
@@ -218,6 +229,9 @@
 				Base,
 			);
 			mainGroup = A257D7772A6D707600A4E7BD;
+			packageReferences = (
+				ABCA39C82A79F97D009447C3 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
 			productRefGroup = A257D7812A6D707600A4E7BD /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -236,6 +250,7 @@
 			files = (
 				A257D78B2A6D707800A4E7BD /* Preview Assets.xcassets in Resources */,
 				A257D7882A6D707800A4E7BD /* Assets.xcassets in Resources */,
+				ABA4C4662A7900A40015837D /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -421,6 +436,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"TwoCents/Preview Content\"";
+				DEVELOPMENT_TEAM = 857HQ99479;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -433,7 +449,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = TwoCents.TwoCents;
+				PRODUCT_BUNDLE_IDENTIFIER = com.twocentsapp.secondcents;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -449,6 +465,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"TwoCents/Preview Content\"";
+				DEVELOPMENT_TEAM = 857HQ99479;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -461,7 +478,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = TwoCents.TwoCents;
+				PRODUCT_BUNDLE_IDENTIFIER = com.twocentsapp.secondcents;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -581,6 +598,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		ABCA39C82A79F97D009447C3 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMinorVersion;
+				minimumVersion = 10.13.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		ABCA39C92A79F97D009447C3 /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = ABCA39C82A79F97D009447C3 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		ABCA39CB2A79F97D009447C3 /* FirebaseAnalyticsSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = ABCA39C82A79F97D009447C3 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalyticsSwift;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = A257D7782A6D707600A4E7BD /* Project object */;
 }

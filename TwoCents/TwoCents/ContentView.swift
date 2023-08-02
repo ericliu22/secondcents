@@ -11,25 +11,22 @@ struct ContentView: View {
     @State private var animateGradient: Bool = false
     @State private var email = ""
     @State private var password = ""
-
-
-    
-    
+        
     var body: some View{
         ZStack {
-//            Color.white
-            
-               
             VStack {
                 
                 //TwoCents Text
-                //First writes out the text, then overlays gradient over it (so that it scales with text instead of whole screen). Then, masks the text over it to cutout the words
+                
+                /*  First writes out the text, then overlays gradient over it (so that it scales with text instead of whole screen). Then, masks the text over it to cutout the words */
+              
                 
                 Text("TwoCents")
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .bold()
                     .font(.system(size: 48))
                     .overlay{
+                        
                         LinearGradient(colors: [Color("TwoCentsGreen"),Color("TwoCentsCyan")], startPoint: .leading, endPoint: .trailing)
                             .ignoresSafeArea()
                             .hueRotation(.degrees(animateGradient ? 45 : 0))
@@ -38,19 +35,21 @@ struct ContentView: View {
                                     animateGradient.toggle()
                                 }
                             }
+                        
                             .mask(
                                 Text("TwoCents")
                                     .frame(maxWidth: .infinity, alignment: .leading)
                                     .bold()
                                     .font(.system(size: 48))
                             )
-                        
-                        
                     }
-                    
+                
+                
+                //spacer
                 Spacer()
                     .frame(height:10)
-                    
+                
+                //Email Textfield
                 TextField("Email", text: $email)
                     .disableAutocorrection(true)
                     .textInputAutocapitalization(.never)
@@ -58,21 +57,18 @@ struct ContentView: View {
                     .background(Color(UIColor.secondarySystemBackground))
                     .cornerRadius(5)
                     
-                    
-                
-
+                //spacer
                 Spacer()
                     .frame(height:10)
                 
-                
-                
+                //Password Textfield
                 SecureField("Password",text:$password)
-          
                     .disableAutocorrection(true)
                     .textInputAutocapitalization(.never)
                     .padding(14)
                     .background(Color(UIColor.secondarySystemBackground))
                     .cornerRadius(5)
+                    .frame(height: 50)
                 
                 
                 Spacer()
