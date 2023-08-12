@@ -10,20 +10,24 @@ import Foundation
 
 @MainActor
 final class SignUpEmailViewModel: ObservableObject{
-    @Published var username = ""
+    @Published var name = ""
     @Published var email = ""
     @Published var password = ""
     @Published var confirmPassword = ""
     
+  
+    
     func signUp() async throws {
-        guard !email.isEmpty, !password.isEmpty else {
-            print("No email or password found.")
-            return
+        guard !email.isEmpty, !password.isEmpty, !name.isEmpty, !confirmPassword.isEmpty else {
+            print("Fields are empty")
+            throw URLError(.badServerResponse)
+//            return
         }
         
         guard password == confirmPassword else {
             print("password and confirm password are not equal")
-            return
+            throw URLError(.badServerResponse)
+//            return
         }
         
         
@@ -31,7 +35,13 @@ final class SignUpEmailViewModel: ObservableObject{
         let authDataResult = try await AuthenticationManager.shared.createUser(email: email, password: password)
 //        try await UserManager.shared.createNewUser(auth: authDataResult)
         
-        let user = DBUser(auth: authDataResult)
+        let user = DBUser(auth: authDataResult, name: name)
+        
+//
+//        let userWithName = DBUser(userId: user.userId, email: user.email, photoUrl: user.photoUrl, dateCreated: user.dateCreated, name: name)
+////        UserManager.shared.updateUser(user: updatedUser)
+        
+        
         
         try await UserManager.shared.createNewUser(user: user)
       

@@ -18,7 +18,7 @@ struct SignUpEmailView: View {
         VStack {
             
             //Email Textfield
-            TextField("Username", text: $viewModel.username)
+            TextField("Name", text: $viewModel.name)
                 .disableAutocorrection(true)
                 .textInputAutocapitalization(.never)
                 .padding()
@@ -57,6 +57,8 @@ struct SignUpEmailView: View {
                 Task {
                     do {
                         try await viewModel.signUp()
+                        
+                        
                         showSignInView = false
                         return
                     } catch {

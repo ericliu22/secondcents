@@ -15,6 +15,8 @@ final class ProfileViewModel: ObservableObject {
         let authDataResult = try AuthenticationManager.shared.getAuthenticatedUser()
         self.user = try await UserManager.shared.getUser(userId: authDataResult.uid)
     }
+    
+   
 }
 
 struct ProfileView: View {
@@ -24,10 +26,16 @@ struct ProfileView: View {
     var body: some View {
         List{
             if let user = viewModel.user {
+                if let name = user.name {
+                    Text("Name: \(name)")
+                }
+                
                 
                 if let email = user.email {
                     Text("Email: \(email)")
                 }
+                
+               
                 
                 Text("UserId: \(user.userId)")
                 

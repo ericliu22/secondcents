@@ -14,29 +14,32 @@ struct DBUser: Codable{
     let email: String?
     let photoUrl: String?
     let dateCreated: Date?
+    let name: String?
     
-    init(auth: AuthDataResultModel) {
+    
+    //create from auth data result
+    init(auth: AuthDataResultModel, name: String) {
         self.userId = auth.uid
         self.email = auth.email
         self.photoUrl = auth.photoUrl
         self.dateCreated = Date()
+        self.name = name
     }
+    
+    
     
     init(
          userId: String,
          email: String? = nil,
          photoUrl: String? = nil,
-         dateCreated: Date? = nil)
+         dateCreated: Date? = nil,
+         name: String? = nil)
     {
-        
-        
         self.userId = userId
         self.email = email
         self.photoUrl = photoUrl
         self.dateCreated = dateCreated
-        
-        
-       
+        self.name = name
     }
     
     
@@ -117,4 +120,18 @@ final class UserManager{
 //
 //        return DBUser(userId: userId, email: email, photoUrl: photoUrl, dateCreated: dateCreated)
 //    }
+    
+    
+    
+    
+    
+    
+    
+    
+//
+//    func updateUser (user: DBUser) async throws {
+//        try userDocument(userId: user.userId).setData(from: user, merge: true, encoder: encoder)
+//    }
 }
+
+
