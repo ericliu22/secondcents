@@ -24,10 +24,20 @@ struct ProfileView: View {
     var body: some View {
         List{
             if let user = viewModel.user {
+                
+                if let email = user.email {
+                    Text("Email: \(email)")
+                }
+                
                 Text("UserId: \(user.userId)")
                 
                 
+            
             }
+            
+           
+            
+            
            
         }
         .task{
@@ -36,8 +46,6 @@ struct ProfileView: View {
         .navigationTitle("Profile")
         .toolbar{
             ToolbarItem(placement: .navigationBarTrailing) {
-               
-                
                 NavigationLink{
                     SettingsView(showSignInView: $showSignInView)
                 } label: {

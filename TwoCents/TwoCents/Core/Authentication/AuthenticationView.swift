@@ -64,6 +64,23 @@ struct AuthenticationView: View {
             }
             
             
+            
+            NavigationLink{
+
+                SignUpEmailView(showSignInView: $showSignInView)
+//                    .navigationBarTitleDisplayMode(.large)
+//                    .navigationBarBackButtonHidden(true)
+
+            } label: {
+                Text("New? Ugh. Create a new account")
+                    .font(.footnote)
+                    .foregroundColor(Color(UIColor.secondaryLabel))
+                    .frame(height: 30)
+                    .frame(maxWidth: .infinity)
+
+            }
+            
+            
 
         }
         .padding()
