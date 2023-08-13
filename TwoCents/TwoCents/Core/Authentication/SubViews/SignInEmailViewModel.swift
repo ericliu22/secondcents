@@ -18,8 +18,9 @@ final class SignInEmailViewModel: ObservableObject{
     func signIn() async throws {
         guard !email.isEmpty, !password.isEmpty else {
             print("No email or password found.")
+            throw URLError(.badServerResponse)
             
-            return
+//            return
         }
         try await AuthenticationManager.shared.signInUser(email: email, password: password)
       

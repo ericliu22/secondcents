@@ -77,13 +77,19 @@ struct SignUpEmailView: View {
             } label: {
                 Text("Sign Up")
                     .font(.headline)
-                    .foregroundColor(Color(UIColor.systemBackground))
+//                    .foregroundColor(Color(UIColor.systemBackground))
                     .frame(height: 55)
                     .frame(maxWidth: .infinity)
-                    .background(Color(UIColor.label))
-                    .cornerRadius(10)
+//                    .background(Color(UIColor.label))
+//                    .cornerRadius(10)
                    
             }
+            .buttonStyle(.borderedProminent)
+            .tint(Color("TwoCentsGreen"))
+            .frame(height: 55)
+            .cornerRadius(10)
+            
+            
 
          
            
