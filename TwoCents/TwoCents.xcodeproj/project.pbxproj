@@ -17,6 +17,8 @@
 		A2F003552A7260B300FE0688 /* CanvasPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F003542A7260B300FE0688 /* CanvasPage.swift */; };
 		AB4C1E4F2A8785BF00588160 /* ColorSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB4C1E4E2A8785BF00588160 /* ColorSelectionView.swift */; };
 		AB7365BB2A85060F00799D31 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = AB7365BA2A85060F00799D31 /* GoogleService-Info.plist */; };
+		AB90021A2A8B85BD00F970B8 /* UploadExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB9002192A8B85BD00F970B8 /* UploadExample.swift */; };
+		AB90021D2A8B85DA00F970B8 /* UploadExampleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB90021C2A8B85DA00F970B8 /* UploadExampleViewModel.swift */; };
 		ABA45E7E2A7C8D8C0015F000 /* SignInEmailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABA45E7D2A7C8D8C0015F000 /* SignInEmailViewModel.swift */; };
 		ABA45E812A7C8DC50015F000 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABA45E802A7C8DC50015F000 /* ProfileView.swift */; };
 		ABA45E842A7C92B00015F000 /* UserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABA45E832A7C92B00015F000 /* UserManager.swift */; };
@@ -66,6 +68,8 @@
 		A2F003542A7260B300FE0688 /* CanvasPage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CanvasPage.swift; sourceTree = "<group>"; };
 		AB4C1E4E2A8785BF00588160 /* ColorSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorSelectionView.swift; sourceTree = "<group>"; };
 		AB7365BA2A85060F00799D31 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		AB9002192A8B85BD00F970B8 /* UploadExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadExample.swift; sourceTree = "<group>"; };
+		AB90021C2A8B85DA00F970B8 /* UploadExampleViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadExampleViewModel.swift; sourceTree = "<group>"; };
 		ABA45E7D2A7C8D8C0015F000 /* SignInEmailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInEmailViewModel.swift; sourceTree = "<group>"; };
 		ABA45E802A7C8DC50015F000 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 		ABA45E832A7C92B00015F000 /* UserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManager.swift; sourceTree = "<group>"; };
@@ -134,6 +138,7 @@
 			isa = PBXGroup;
 			children = (
 				A2F003542A7260B300FE0688 /* CanvasPage.swift */,
+				AB90021B2A8B85C600F970B8 /* Example */,
 				AB4C1E4E2A8785BF00588160 /* ColorSelectionView.swift */,
 				ABA45E822A7C92940015F000 /* Firestore */,
 				ABF56DFA2A7C8BC700F959DB /* Core */,
@@ -170,6 +175,15 @@
 				A257D7A02A6D707800A4E7BD /* TwoCentsUITestsLaunchTests.swift */,
 			);
 			path = TwoCentsUITests;
+			sourceTree = "<group>";
+		};
+		AB90021B2A8B85C600F970B8 /* Example */ = {
+			isa = PBXGroup;
+			children = (
+				AB9002192A8B85BD00F970B8 /* UploadExample.swift */,
+				AB90021C2A8B85DA00F970B8 /* UploadExampleViewModel.swift */,
+			);
+			path = Example;
 			sourceTree = "<group>";
 		};
 		ABA45E7C2A7C8D570015F000 /* SubViews */ = {
@@ -387,6 +401,7 @@
 				A257D7862A6D707600A4E7BD /* ContentView.swift in Sources */,
 				ABCA39DA2A7A0881009447C3 /* SettingsView.swift in Sources */,
 				A2F003552A7260B300FE0688 /* CanvasPage.swift in Sources */,
+				AB90021D2A8B85DA00F970B8 /* UploadExampleViewModel.swift in Sources */,
 				AB4C1E4F2A8785BF00588160 /* ColorSelectionView.swift in Sources */,
 				ABCA39D22A79FC16009447C3 /* AuthenticationView.swift in Sources */,
 				ABCA39D62A7A0159009447C3 /* AuthenticationManager.swift in Sources */,
@@ -399,6 +414,7 @@
 				ABC426B32A86438400873EE1 /* SignUpEmailViewModel.swift in Sources */,
 				ABC426B12A863D9F00873EE1 /* SignUpEmailView.swift in Sources */,
 				ABA45E7E2A7C8D8C0015F000 /* SignInEmailViewModel.swift in Sources */,
+				AB90021A2A8B85BD00F970B8 /* UploadExample.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

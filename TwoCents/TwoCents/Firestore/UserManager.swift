@@ -10,7 +10,7 @@ import FirebaseFirestore
 import FirebaseFirestoreSwift
 
 struct DBUser: Codable{
-    let userId: String
+    let userId: String	
     let email: String?
     let photoUrl: String?
     let dateCreated: Date?
@@ -127,11 +127,14 @@ final class UserManager{
     
     
     
-    
+//    
 //
 //    func updateUser (user: DBUser) async throws {
 //        try userDocument(userId: user.userId).setData(from: user, merge: true, encoder: encoder)
 //    }
+    
+    
+    
 }
 
 

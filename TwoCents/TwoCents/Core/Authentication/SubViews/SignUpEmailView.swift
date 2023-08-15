@@ -15,7 +15,12 @@ struct SignUpEmailView: View {
     @StateObject private var viewModel = SignUpEmailViewModel()
     
     var body: some View {
+        
+        
         VStack {
+            
+      
+            
             
             //Email Textfield
             TextField("Name", text: $viewModel.name)
@@ -90,19 +95,17 @@ struct SignUpEmailView: View {
             .cornerRadius(10)
             
             
-
-         
-           
-           
-            
         }
-        .padding() 
+        
+        
+        .padding()
+
+        
         .navigationTitle("Welcome, I guess?")
         .tint(Color("TwoCentsGreen"))
         
         .navigationBarTitleDisplayMode(.inline)
         //make back button black... (Gotta have the enviorment line on top)
-        
         .navigationBarBackButtonHidden(true)
         .navigationBarItems(leading:
                Image(systemName: "chevron.backward")
@@ -113,7 +116,13 @@ struct SignUpEmailView: View {
             )
         
         
+        
+        
     }
+        
+        
+    
+    
 }
 
 struct SignUpEmailView_Previews: PreviewProvider {
