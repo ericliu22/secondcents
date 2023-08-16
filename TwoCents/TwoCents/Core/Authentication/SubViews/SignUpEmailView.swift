@@ -14,12 +14,26 @@ struct SignUpEmailView: View {
     
     @StateObject private var viewModel = SignUpEmailViewModel()
     
+    
+    private func isValidPassword(_ password: String) -> Bool {
+        // minimum 6 characters long
+        // 1 uppercase character
+        // 1 special char
+        
+        let passwordRegex = NSPredicate(format: "SELF MATCHES %@", "^(?=.*[a-z])(?=.*[$@$#!%*?&])(?=.*[A-Z]).{6,}$")
+        
+        return passwordRegex.evaluate(with: password)
+    }
+    
+    
+    
+    
     var body: some View {
         
         
         VStack {
             
-      
+            
             
             
             //Email Textfield
@@ -32,12 +46,14 @@ struct SignUpEmailView: View {
             
             
             //Email Textfield
+            
             TextField("Email", text: $viewModel.email)
                 .disableAutocorrection(true)
                 .textInputAutocapitalization(.never)
                 .padding()
                 .background(Color(UIColor.secondarySystemBackground))
                 .cornerRadius(10)
+            
             
             //Password Textfield
             SecureField("Password", text: $viewModel.password)
@@ -70,24 +86,24 @@ struct SignUpEmailView: View {
                     }
                 }
                 //signIn
-//                Task {
-//                    do {
-//                        try await viewModel.signIn()
-//                        showSignInView = false
-//                        return
-//                    } catch {
-//                    }
-//                }
+                //                Task {
+                //                    do {
+                //                        try await viewModel.signIn()
+                //                        showSignInView = false
+                //                        return
+                //                    } catch {
+                //                    }
+                //                }
                 
             } label: {
                 Text("Sign Up")
                     .font(.headline)
-//                    .foregroundColor(Color(UIColor.systemBackground))
+                //                    .foregroundColor(Color(UIColor.systemBackground))
                     .frame(height: 55)
                     .frame(maxWidth: .infinity)
-//                    .background(Color(UIColor.label))
-//                    .cornerRadius(10)
-                   
+                //                    .background(Color(UIColor.label))
+                //                    .cornerRadius(10)
+                
             }
             .buttonStyle(.borderedProminent)
             .tint(Color("TwoCentsGreen"))
@@ -99,7 +115,7 @@ struct SignUpEmailView: View {
         
         
         .padding()
-
+        
         
         .navigationTitle("Welcome, I guess?")
         .tint(Color("TwoCentsGreen"))
@@ -108,19 +124,19 @@ struct SignUpEmailView: View {
         //make back button black... (Gotta have the enviorment line on top)
         .navigationBarBackButtonHidden(true)
         .navigationBarItems(leading:
-               Image(systemName: "chevron.backward")
+                                Image(systemName: "chevron.backward")
             .foregroundColor(Color(UIColor.label))
-               .onTapGesture {
-                  self.presentation.wrappedValue.dismiss()
-               }
-            )
+            .onTapGesture {
+                self.presentation.wrappedValue.dismiss()
+            }
+        )
         
         
         
         
     }
-        
-        
+    
+    
     
     
 }

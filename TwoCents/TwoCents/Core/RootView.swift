@@ -15,10 +15,10 @@ struct RootView: View {
     var body: some View {
         
         ZStack {
-            NavigationStack {
-                ProfileView(showSignInView: $showSignInView)
-              
-            }
+            
+//                
+                FrontPageView(showSignInView: $showSignInView)
+     
             
         }
         .onAppear{
