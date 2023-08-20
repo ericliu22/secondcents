@@ -35,7 +35,7 @@ final class CreateProfileEmailViewModel: ObservableObject{
             print (path)
             print (name)
             let url = try await StorageManager.shared.getURLForImage(path: path)
-            try await UserManager.shared.updateUserProfileImage(userId: user.userId, path: path, url: url.absoluteString)
+            try await UserManager.shared.updateUserProfileImage(userId: user.userId, url: url.absoluteString, path: path)
             
             
         }

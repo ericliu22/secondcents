@@ -30,14 +30,12 @@ struct CreateProfileView: View {
             }
             
             if let urlString = viewModel.user?.profileImageUrl, let url = URL(string: urlString) {
-                
                 AsyncImage(url: url) {image in
                     image
                         .resizable()
                         .scaledToFill()
                         .frame(width: 150, height: 150)
                         .cornerRadius(10)
-                    
                 } placeholder: {
                     ProgressView()
                         .frame(width: 150, height: 150)

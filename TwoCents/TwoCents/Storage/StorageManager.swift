@@ -76,7 +76,7 @@ final class StorageManager{
     
     func getURLForImage(path: String) async throws  -> URL{
         
-        try await Storage.storage().reference(withPath: path).downloadURL()
+        try await  Storage.storage().reference(withPath: path).downloadURL()
         
         
     }

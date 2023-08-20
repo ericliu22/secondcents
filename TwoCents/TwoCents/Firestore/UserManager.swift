@@ -114,10 +114,10 @@ final class UserManager{
         
     }
     
-    func updateUserProfileImage(userId: String, path: String, url: String) async throws {
+    func updateUserProfileImage(userId: String, url: String, path: String) async throws {
         let data: [String: Any] = [
-            "profileImageURL": url,
-            "profileImagePath": path
+            "profileImagePath": path,
+            "profileImageUrl": url
         ]
         
         try await userDocument(userId: userId).updateData(data)
