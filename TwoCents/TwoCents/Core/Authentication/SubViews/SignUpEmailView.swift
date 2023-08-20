@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+
 struct SignUpEmailView: View {
     @Environment(\.presentationMode) var presentation
     
@@ -14,18 +15,7 @@ struct SignUpEmailView: View {
     
     @StateObject private var viewModel = SignUpEmailViewModel()
     
-    
-    private func isValidPassword(_ password: String) -> Bool {
-        // minimum 6 characters long
-        // 1 uppercase character
-        // 1 special char
-        
-        let passwordRegex = NSPredicate(format: "SELF MATCHES %@", "^(?=.*[a-z])(?=.*[$@$#!%*?&])(?=.*[A-Z]).{6,}$")
-        
-        return passwordRegex.evaluate(with: password)
-    }
-    
-    
+   
     
     
     var body: some View {
@@ -33,6 +23,7 @@ struct SignUpEmailView: View {
         
         VStack {
             
+        
             
             
             

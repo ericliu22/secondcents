@@ -17,6 +17,11 @@
 		A2F003552A7260B300FE0688 /* CanvasPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F003542A7260B300FE0688 /* CanvasPage.swift */; };
 		AB4C1E4F2A8785BF00588160 /* ColorSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB4C1E4E2A8785BF00588160 /* ColorSelectionView.swift */; };
 		AB7365BB2A85060F00799D31 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = AB7365BA2A85060F00799D31 /* GoogleService-Info.plist */; };
+		AB842C0B2A91E27E00E4A7CE /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = AB842C0A2A91E27E00E4A7CE /* FirebaseStorage */; };
+		AB842C0E2A91E2B500E4A7CE /* StorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB842C0D2A91E2B500E4A7CE /* StorageManager.swift */; };
+		AB842C102A91E52000E4A7CE /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB842C0F2A91E52000E4A7CE /* ProfileViewModel.swift */; };
+		AB842C122A91F36300E4A7CE /* CreateProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB842C112A91F36300E4A7CE /* CreateProfileView.swift */; };
+		AB842C142A91F36D00E4A7CE /* CreateProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB842C132A91F36D00E4A7CE /* CreateProfileViewModel.swift */; };
 		AB90021A2A8B85BD00F970B8 /* UploadExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB9002192A8B85BD00F970B8 /* UploadExample.swift */; };
 		AB90021D2A8B85DA00F970B8 /* UploadExampleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB90021C2A8B85DA00F970B8 /* UploadExampleViewModel.swift */; };
 		ABA45E7E2A7C8D8C0015F000 /* SignInEmailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABA45E7D2A7C8D8C0015F000 /* SignInEmailViewModel.swift */; };
@@ -69,6 +74,10 @@
 		A2F003542A7260B300FE0688 /* CanvasPage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CanvasPage.swift; sourceTree = "<group>"; };
 		AB4C1E4E2A8785BF00588160 /* ColorSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorSelectionView.swift; sourceTree = "<group>"; };
 		AB7365BA2A85060F00799D31 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		AB842C0D2A91E2B500E4A7CE /* StorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageManager.swift; sourceTree = "<group>"; };
+		AB842C0F2A91E52000E4A7CE /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
+		AB842C112A91F36300E4A7CE /* CreateProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateProfileView.swift; sourceTree = "<group>"; };
+		AB842C132A91F36D00E4A7CE /* CreateProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateProfileViewModel.swift; sourceTree = "<group>"; };
 		AB9002192A8B85BD00F970B8 /* UploadExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadExample.swift; sourceTree = "<group>"; };
 		AB90021C2A8B85DA00F970B8 /* UploadExampleViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadExampleViewModel.swift; sourceTree = "<group>"; };
 		ABA45E7D2A7C8D8C0015F000 /* SignInEmailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInEmailViewModel.swift; sourceTree = "<group>"; };
@@ -95,6 +104,7 @@
 				ABF56DF72A7C8B7A00F959DB /* FirebaseFirestore in Frameworks */,
 				ABCA39CF2A79FBB5009447C3 /* FirebaseAuth in Frameworks */,
 				ABCA39CA2A79F97D009447C3 /* FirebaseAnalytics in Frameworks */,
+				AB842C0B2A91E27E00E4A7CE /* FirebaseStorage in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -142,6 +152,7 @@
 				A2F003542A7260B300FE0688 /* CanvasPage.swift */,
 				AB90021B2A8B85C600F970B8 /* Example */,
 				AB4C1E4E2A8785BF00588160 /* ColorSelectionView.swift */,
+				AB842C0C2A91E2A600E4A7CE /* Storage */,
 				ABA45E822A7C92940015F000 /* Firestore */,
 				ABF56DFA2A7C8BC700F959DB /* Core */,
 				ABCA39D02A79FBED009447C3 /* Authentication */,
@@ -179,6 +190,14 @@
 			path = TwoCentsUITests;
 			sourceTree = "<group>";
 		};
+		AB842C0C2A91E2A600E4A7CE /* Storage */ = {
+			isa = PBXGroup;
+			children = (
+				AB842C0D2A91E2B500E4A7CE /* StorageManager.swift */,
+			);
+			path = Storage;
+			sourceTree = "<group>";
+		};
 		AB90021B2A8B85C600F970B8 /* Example */ = {
 			isa = PBXGroup;
 			children = (
@@ -193,6 +212,8 @@
 			children = (
 				ABCA39D32A79FFAD009447C3 /* SignInEmailView.swift */,
 				ABC426B02A863D9F00873EE1 /* SignUpEmailView.swift */,
+				AB842C112A91F36300E4A7CE /* CreateProfileView.swift */,
+				AB842C132A91F36D00E4A7CE /* CreateProfileViewModel.swift */,
 				ABA45E7D2A7C8D8C0015F000 /* SignInEmailViewModel.swift */,
 				ABC426B22A86438400873EE1 /* SignUpEmailViewModel.swift */,
 			);
@@ -203,6 +224,7 @@
 			isa = PBXGroup;
 			children = (
 				ABA45E802A7C8DC50015F000 /* ProfileView.swift */,
+				AB842C0F2A91E52000E4A7CE /* ProfileViewModel.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -282,6 +304,7 @@
 				ABCA39CE2A79FBB5009447C3 /* FirebaseAuth */,
 				ABF56DF62A7C8B7A00F959DB /* FirebaseFirestore */,
 				ABF56DF82A7C8B7A00F959DB /* FirebaseFirestoreSwift */,
+				AB842C0A2A91E27E00E4A7CE /* FirebaseStorage */,
 			);
 			productName = TwoCents;
 			productReference = A257D7802A6D707600A4E7BD /* TwoCents.app */;
@@ -401,19 +424,23 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AB842C142A91F36D00E4A7CE /* CreateProfileViewModel.swift in Sources */,
 				A257D7862A6D707600A4E7BD /* ContentView.swift in Sources */,
 				ABCA39DA2A7A0881009447C3 /* SettingsView.swift in Sources */,
 				A2F003552A7260B300FE0688 /* CanvasPage.swift in Sources */,
+				AB842C122A91F36300E4A7CE /* CreateProfileView.swift in Sources */,
 				AB90021D2A8B85DA00F970B8 /* UploadExampleViewModel.swift in Sources */,
 				AB4C1E4F2A8785BF00588160 /* ColorSelectionView.swift in Sources */,
 				ABCA39D22A79FC16009447C3 /* AuthenticationView.swift in Sources */,
 				ABCA39D62A7A0159009447C3 /* AuthenticationManager.swift in Sources */,
 				ABCA39D82A7A0671009447C3 /* RootView.swift in Sources */,
 				ABA45E842A7C92B00015F000 /* UserManager.swift in Sources */,
+				AB842C0E2A91E2B500E4A7CE /* StorageManager.swift in Sources */,
 				A257D7842A6D707600A4E7BD /* TwoCentsApp.swift in Sources */,
 				ABCA39D42A79FFAD009447C3 /* SignInEmailView.swift in Sources */,
 				ABB84C342A8CBA03009C7550 /* FrontPageView.swift in Sources */,
 				ABF56DFF2A7C8C5200F959DB /* SettingsViewModel.swift in Sources */,
+				AB842C102A91E52000E4A7CE /* ProfileViewModel.swift in Sources */,
 				ABA45E812A7C8DC50015F000 /* ProfileView.swift in Sources */,
 				ABC426B32A86438400873EE1 /* SignUpEmailViewModel.swift in Sources */,
 				ABC426B12A863D9F00873EE1 /* SignUpEmailView.swift in Sources */,
@@ -752,6 +779,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		AB842C0A2A91E27E00E4A7CE /* FirebaseStorage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = ABCA39C82A79F97D009447C3 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseStorage;
+		};
 		ABCA39C92A79F97D009447C3 /* FirebaseAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = ABCA39C82A79F97D009447C3 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;

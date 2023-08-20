@@ -10,11 +10,13 @@ import FirebaseFirestore
 import FirebaseFirestoreSwift
 
 struct DBUser: Codable{
-    let userId: String	
+    let userId: String
     let email: String?
     let photoUrl: String?
     let dateCreated: Date?
     let name: String?
+    let profileImagePath: String?
+    let profileImageUrl: String?
     
     
     //create from auth data result
@@ -24,22 +26,29 @@ struct DBUser: Codable{
         self.photoUrl = auth.photoUrl
         self.dateCreated = Date()
         self.name = name
+        self.profileImagePath = nil
+        self.profileImageUrl = nil
     }
     
     
     
     init(
-         userId: String,
-         email: String? = nil,
-         photoUrl: String? = nil,
-         dateCreated: Date? = nil,
-         name: String? = nil)
+        userId: String,
+        email: String? = nil,
+        photoUrl: String? = nil,
+        dateCreated: Date? = nil,
+        name: String? = nil,
+        profileImagePath: String? = nil,
+        profileImageUrl: String? = nil
+    )
     {
         self.userId = userId
         self.email = email
         self.photoUrl = photoUrl
         self.dateCreated = dateCreated
         self.name = name
+        self.profileImagePath = profileImagePath
+        self.profileImageUrl = profileImageUrl
     }
     
     
@@ -77,49 +86,58 @@ final class UserManager{
         try userDocument(userId: user.userId).setData(from: user, merge: false, encoder: encoder)
     }
     
-//    func createNewUser(auth: AuthDataResultModel) async throws {
-//        print ("create new user func executed")
-//        var userData: [String: Any] = [
-//            "user_id" : auth.uid,
-//            "date_created" : Timestamp(),
-//
-//
-//        ]
-//
-//        if let email = auth.email {
-//            userData["email"] = email
-//        }
-//
-//        if let photoUrl = auth.photoUrl {
-//            userData["photo_url"] = photoUrl
-//        }
-//
-//        try await userDocument(userId: auth.uid).setData(userData, merge: false)
-//
-//
-//    }
+    //    func createNewUser(auth: AuthDataResultModel) async throws {
+    //        print ("create new user func executed")
+    //        var userData: [String: Any] = [
+    //            "user_id" : auth.uid,
+    //            "date_created" : Timestamp(),
+    //
+    //
+    //        ]
+    //
+    //        if let email = auth.email {
+    //            userData["email"] = email
+    //        }
+    //
+    //        if let photoUrl = auth.photoUrl {
+    //            userData["photo_url"] = photoUrl
+    //        }
+    //
+    //        try await userDocument(userId: auth.uid).setData(userData, merge: false)
+    //
+    //
+    //    }
     
     
     func getUser(userId: String) async throws -> DBUser {
         try await userDocument(userId: userId).getDocument(as: DBUser.self, decoder: decoder)
         
     }
+    
+    func updateUserProfileImage(userId: String, path: String, url: String) async throws {
+        let data: [String: Any] = [
+            "profileImageURL": url,
+            "profileImagePath": path
+        ]
         
-//
-//    func getUser(userId: String) async throws -> DBUser {
-//        let snapshot = try await userDocument(userId: userId).getDocument()
-//
-//        guard let data = snapshot.data(), let userId = data["user_id"] as? String else {
-//            throw URLError(.badServerResponse)
-//        }
-//
-//
-//        let email = data["email"] as? String
-//        let photoUrl = data["photo_url"] as? String
-//        let dateCreated = data["date_created"] as? Date
-//
-//        return DBUser(userId: userId, email: email, photoUrl: photoUrl, dateCreated: dateCreated)
-//    }
+        try await userDocument(userId: userId).updateData(data)
+    }
+    
+    //
+    //    func getUser(userId: String) async throws -> DBUser {
+    //        let snapshot = try await userDocument(userId: userId).getDocument()
+    //
+    //        guard let data = snapshot.data(), let userId = data["user_id"] as? String else {
+    //            throw URLError(.badServerResponse)
+    //        }
+    //
+    //
+    //        let email = data["email"] as? String
+    //        let photoUrl = data["photo_url"] as? String
+    //        let dateCreated = data["date_created"] as? Date
+    //
+    //        return DBUser(userId: userId, email: email, photoUrl: photoUrl, dateCreated: dateCreated)
+    //    }
     
     
     
@@ -127,11 +145,11 @@ final class UserManager{
     
     
     
-//    
-//
-//    func updateUser (user: DBUser) async throws {
-//        try userDocument(userId: user.userId).setData(from: user, merge: true, encoder: encoder)
-//    }
+    //
+    //
+    //    func updateUser (user: DBUser) async throws {
+    //        try userDocument(userId: user.userId).setData(from: user, merge: true, encoder: encoder)
+    //    }
     
     
     

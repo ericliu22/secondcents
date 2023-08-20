@@ -22,7 +22,7 @@ struct FrontPageView: View {
                     Image(systemName: "house")
                     Text("Color Picker")
                 }
-            ColorSelectionView()
+            CreateProfileView(showSignInView: $showSignInView )
                 .tabItem {
                     Image(systemName: "house")
                     Text("Page 3")
