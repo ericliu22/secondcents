@@ -15,7 +15,7 @@ struct SignUpEmailView: View {
     
     @StateObject private var viewModel = SignUpEmailViewModel()
     
-   
+    @Binding var showSheet: Bool
     
     
     var body: some View {
@@ -72,6 +72,9 @@ struct SignUpEmailView: View {
                         
                         
                         showSignInView = false
+                        
+                        
+                        showSheet = true
                         return
                     } catch {
                     }
@@ -96,6 +99,7 @@ struct SignUpEmailView: View {
                 //                    .cornerRadius(10)
                 
             }
+            
             .buttonStyle(.borderedProminent)
             .tint(Color("TwoCentsGreen"))
             .frame(height: 55)
@@ -135,7 +139,7 @@ struct SignUpEmailView: View {
 struct SignUpEmailView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack {
-            SignUpEmailView(showSignInView: .constant(false))
+            SignUpEmailView(showSignInView: .constant(false), showSheet: .constant(false))
         }
         
     }

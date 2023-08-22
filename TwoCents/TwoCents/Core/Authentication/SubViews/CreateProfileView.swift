@@ -10,13 +10,12 @@ import PhotosUI
 
 struct CreateProfileView: View {
     
-    @Binding var showSignInView: Bool
     @State private var url: URL? = nil
     
     
     @StateObject private var viewModel = CreateProfileEmailViewModel()
     
-    
+    @Binding var showSheet: Bool
     
     
     @State private var selectedItem: PhotosPickerItem? = nil
@@ -29,7 +28,9 @@ struct CreateProfileView: View {
                 Text("Select a photo")
             }
             
+            
             if let urlString = viewModel.user?.profileImageUrl, let url = URL(string: urlString) {
+                
                 AsyncImage(url: url) {image in
                     image
                         .resizable()
@@ -43,6 +44,12 @@ struct CreateProfileView: View {
             }
             
             
+            
+            Button {
+                showSheet.toggle()
+            } label: {
+                Text("DONE")
+            }
             
             
             
@@ -60,7 +67,8 @@ struct CreateProfileView: View {
             
             
         })
-        .navigationTitle("Create Profile")
+     
+//        .navigationTitle("Create Profile")
         
         
         
@@ -74,7 +82,7 @@ struct CreateProfileView: View {
 struct CreateProfileView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack{
-            CreateProfileView(showSignInView: .constant(false))
+            CreateProfileView(showSheet: .constant(true))
         }
     }
 }

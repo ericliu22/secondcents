@@ -12,6 +12,7 @@ struct SignInEmailView: View {
     @Environment(\.presentationMode) var presentation
     
     @Binding var showSignInView: Bool
+    @Binding var showSheet: Bool
     
     @StateObject private var viewModel = SignInEmailViewModel()
     var body: some View {
@@ -49,7 +50,9 @@ struct SignInEmailView: View {
                 Task {
                     do {
                         try await viewModel.signIn()
+                        
                         showSignInView = false
+                        showSheet = false
                         return
                     } catch {
                     }
@@ -102,7 +105,7 @@ struct SignInEmailView: View {
 struct SignInEmailView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack{
-            SignInEmailView(showSignInView: .constant(false))
+            SignInEmailView(showSignInView: .constant(false),showSheet: .constant(false))
         }
     }
 }

@@ -62,7 +62,7 @@ final class StorageManager{
     
     
     func getData(userId: String, path: String) async throws -> Data {
-//        try await userReference(userId: userId).child(path).data(maxSize: 3 * 1024 * 1024)
+        //        try await userReference(userId: userId).child(path).data(maxSize: 3 * 1024 * 1024)
         try await storage.child(path).data(maxSize: 3 * 1024 * 1024)
     }
     
@@ -71,7 +71,7 @@ final class StorageManager{
         guard let image = UIImage(data: data) else {
             throw URLError(.badServerResponse)
         }
-       return image
+        return image
     }
     
     func getURLForImage(path: String) async throws  -> URL{
@@ -81,5 +81,5 @@ final class StorageManager{
         
     }
     
-        
+    
 }

@@ -13,6 +13,8 @@ struct AuthenticationView: View {
     
     @State private var animateGradient: Bool = false
     
+    @Binding var showSheet: Bool
+    
     
     var body: some View {
         VStack{
@@ -52,7 +54,9 @@ struct AuthenticationView: View {
             Spacer()
             
             NavigationLink {
-                SignInEmailView(showSignInView: $showSignInView)
+                
+               
+                SignInEmailView(showSignInView: $showSignInView, showSheet: $showSheet)
             } label: {
                 Text("Sign In With Email")
                     .font(.headline)
@@ -66,8 +70,9 @@ struct AuthenticationView: View {
             
             
             NavigationLink{
+             
 
-                SignUpEmailView(showSignInView: $showSignInView)
+                SignUpEmailView(showSignInView: $showSignInView, showSheet: $showSheet)
 //                    .navigationBarTitleDisplayMode(.large)
 //                    .navigationBarBackButtonHidden(true)
 
@@ -94,7 +99,7 @@ struct AuthenticationView: View {
 struct AuthenticationView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack{
-            AuthenticationView(showSignInView: .constant(false))
+            AuthenticationView(showSignInView: .constant(false), showSheet: .constant(false))
         }
        
     }

@@ -12,6 +12,8 @@ struct RootView: View {
     
     @State private var showSignInView: Bool = false
     
+    @State private var showSheet: Bool = false
+    
     var body: some View {
         
         ZStack {
@@ -28,9 +30,16 @@ struct RootView: View {
         .fullScreenCover(isPresented: $showSignInView) {
             
             NavigationStack {
-                AuthenticationView(showSignInView: $showSignInView)
+                AuthenticationView(showSignInView: $showSignInView, showSheet: $showSheet)
             }
         }
+        .fullScreenCover(isPresented: $showSheet, content: {
+            CreateProfileView(showSheet: $showSheet)
+                
+        })
+
+        
+        
         
     }
 }

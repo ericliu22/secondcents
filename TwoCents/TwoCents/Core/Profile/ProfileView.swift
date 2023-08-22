@@ -23,18 +23,18 @@ struct ProfileView: View {
                     Text("Email: \(email)")
                 }
                 
-               
+                
                 
                 Text("UserId: \(user.userId)")
                 
                 
-            
+                
             }
             
-           
             
             
-           
+            
+            
         }
         .task{
             try? await viewModel.loadCurrentUser()
