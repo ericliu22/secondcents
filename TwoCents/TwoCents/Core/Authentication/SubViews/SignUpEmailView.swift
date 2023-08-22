@@ -15,7 +15,7 @@ struct SignUpEmailView: View {
     
     @StateObject private var viewModel = SignUpEmailViewModel()
     
-    @Binding var showSheet: Bool
+    @Binding var showCreateProfileView: Bool
     
     
     var body: some View {
@@ -74,7 +74,7 @@ struct SignUpEmailView: View {
                         showSignInView = false
                         
                         
-                        showSheet = true
+                        showCreateProfileView = true
                         return
                     } catch {
                     }
@@ -139,7 +139,7 @@ struct SignUpEmailView: View {
 struct SignUpEmailView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack {
-            SignUpEmailView(showSignInView: .constant(false), showSheet: .constant(false))
+            SignUpEmailView(showSignInView: .constant(false), showCreateProfileView: .constant(false))
         }
         
     }

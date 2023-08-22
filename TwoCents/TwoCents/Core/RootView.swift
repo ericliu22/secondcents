@@ -12,7 +12,7 @@ struct RootView: View {
     
     @State private var showSignInView: Bool = false
     
-    @State private var showSheet: Bool = false
+    @State private var showCreateProfileView: Bool = false
     
     var body: some View {
         
@@ -30,11 +30,11 @@ struct RootView: View {
         .fullScreenCover(isPresented: $showSignInView) {
             
             NavigationStack {
-                AuthenticationView(showSignInView: $showSignInView, showSheet: $showSheet)
+                AuthenticationView(showSignInView: $showSignInView, showCreateProfileView: $showCreateProfileView)
             }
         }
-        .fullScreenCover(isPresented: $showSheet, content: {
-            CreateProfileView(showSheet: $showSheet)
+        .fullScreenCover(isPresented: $showCreateProfileView, content: {
+            CreateProfileView(showCreateProfileView: $showCreateProfileView)
                 
         })
 
