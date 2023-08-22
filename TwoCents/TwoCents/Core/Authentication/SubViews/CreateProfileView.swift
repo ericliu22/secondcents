@@ -51,7 +51,7 @@ struct CreateProfileView: View {
                                     .resizable()
                                     .scaledToFill()
                                     .clipShape(Circle())
-                                    .frame(width: 192, height: 192)
+                                    .frame(width: 160, height: 160)
                                 
                             } placeholder: {
                                 //else show loading after user uploads but sending/downloading from database
@@ -59,16 +59,16 @@ struct CreateProfileView: View {
                                 ProgressView()
                                     .progressViewStyle(CircularProgressViewStyle(tint: Color(UIColor.systemBackground)))
                                     .scaleEffect(1.5, anchor: .center)
-                                    .frame(width: 192, height: 192)
+                                    .frame(width: 160, height: 160)
                                     .background(
                                         Circle()
                                             .fill(selectedColor)
-                                            .frame(width: 192, height: 192)
+                                            .frame(width: 160, height: 160)
                                     )
                             }
                             
                         )
-                        .frame(width: 192, height: 192)
+                        .frame(width: 160, height: 160)
                     
                 } else {
                     
@@ -77,7 +77,7 @@ struct CreateProfileView: View {
                     
                         .strokeBorder(selectedColor, lineWidth:15)
                         .background(Circle().fill(selectedColor))
-                        .frame(width: 192, height: 192)
+                        .frame(width: 160, height: 160)
                 }
                 
                 
@@ -109,14 +109,14 @@ struct CreateProfileView: View {
                     
                     
                 }
-                .offset(x:72, y:72)
+                .offset(x:56, y:56)
                 
                 
                 
                 
                 
             }
-            .padding(48)
+            .padding(32)
             .background(.thinMaterial)
             .cornerRadius(20)
             
@@ -168,7 +168,7 @@ struct CreateProfileView: View {
                 viewModel.saveProfileImage(item: newValue)
             }
         })
-//        .navigationTitle("Customize Profile")
+        .navigationTitle("Customize Profile")
     }
         
 }
