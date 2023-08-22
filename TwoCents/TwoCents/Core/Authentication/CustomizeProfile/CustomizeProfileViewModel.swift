@@ -12,7 +12,7 @@ import PhotosUI
 
 
 @MainActor
-final class CreateProfileEmailViewModel: ObservableObject{
+final class CustomizeProfileViewModel: ObservableObject{
     
     @Published private(set) var user:  DBUser? = nil
     func loadCurrentUser() async throws {

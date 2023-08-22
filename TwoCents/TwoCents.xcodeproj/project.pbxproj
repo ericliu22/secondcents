@@ -20,8 +20,8 @@
 		AB842C0B2A91E27E00E4A7CE /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = AB842C0A2A91E27E00E4A7CE /* FirebaseStorage */; };
 		AB842C0E2A91E2B500E4A7CE /* StorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB842C0D2A91E2B500E4A7CE /* StorageManager.swift */; };
 		AB842C102A91E52000E4A7CE /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB842C0F2A91E52000E4A7CE /* ProfileViewModel.swift */; };
-		AB842C122A91F36300E4A7CE /* CreateProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB842C112A91F36300E4A7CE /* CreateProfileView.swift */; };
-		AB842C142A91F36D00E4A7CE /* CreateProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB842C132A91F36D00E4A7CE /* CreateProfileViewModel.swift */; };
+		AB842C122A91F36300E4A7CE /* CustomizeProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB842C112A91F36300E4A7CE /* CustomizeProfileView.swift */; };
+		AB842C142A91F36D00E4A7CE /* CustomizeProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB842C132A91F36D00E4A7CE /* CustomizeProfileViewModel.swift */; };
 		AB90021A2A8B85BD00F970B8 /* UploadExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB9002192A8B85BD00F970B8 /* UploadExample.swift */; };
 		AB90021D2A8B85DA00F970B8 /* UploadExampleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB90021C2A8B85DA00F970B8 /* UploadExampleViewModel.swift */; };
 		AB9455232A9468130055B44A /* ColorPickerWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB9455222A9468130055B44A /* ColorPickerWidget.swift */; };
@@ -77,8 +77,8 @@
 		AB7365BA2A85060F00799D31 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		AB842C0D2A91E2B500E4A7CE /* StorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageManager.swift; sourceTree = "<group>"; };
 		AB842C0F2A91E52000E4A7CE /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
-		AB842C112A91F36300E4A7CE /* CreateProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateProfileView.swift; sourceTree = "<group>"; };
-		AB842C132A91F36D00E4A7CE /* CreateProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateProfileViewModel.swift; sourceTree = "<group>"; };
+		AB842C112A91F36300E4A7CE /* CustomizeProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomizeProfileView.swift; sourceTree = "<group>"; };
+		AB842C132A91F36D00E4A7CE /* CustomizeProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomizeProfileViewModel.swift; sourceTree = "<group>"; };
 		AB9002192A8B85BD00F970B8 /* UploadExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadExample.swift; sourceTree = "<group>"; };
 		AB90021C2A8B85DA00F970B8 /* UploadExampleViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadExampleViewModel.swift; sourceTree = "<group>"; };
 		AB9455222A9468130055B44A /* ColorPickerWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorPickerWidget.swift; sourceTree = "<group>"; };
@@ -209,18 +209,32 @@
 			path = Example;
 			sourceTree = "<group>";
 		};
-		ABA45E7C2A7C8D570015F000 /* SubViews */ = {
+		AB9455242A94A2D50055B44A /* SignUp */ = {
 			isa = PBXGroup;
 			children = (
-				ABCA39D32A79FFAD009447C3 /* SignInEmailView.swift */,
-				ABC426B02A863D9F00873EE1 /* SignUpEmailView.swift */,
-				AB842C112A91F36300E4A7CE /* CreateProfileView.swift */,
-				AB9455222A9468130055B44A /* ColorPickerWidget.swift */,
-				AB842C132A91F36D00E4A7CE /* CreateProfileViewModel.swift */,
-				ABA45E7D2A7C8D8C0015F000 /* SignInEmailViewModel.swift */,
 				ABC426B22A86438400873EE1 /* SignUpEmailViewModel.swift */,
+				ABC426B02A863D9F00873EE1 /* SignUpEmailView.swift */,
 			);
-			path = SubViews;
+			path = SignUp;
+			sourceTree = "<group>";
+		};
+		AB9455252A94A2E60055B44A /* SignIn */ = {
+			isa = PBXGroup;
+			children = (
+				ABA45E7D2A7C8D8C0015F000 /* SignInEmailViewModel.swift */,
+				ABCA39D32A79FFAD009447C3 /* SignInEmailView.swift */,
+			);
+			path = SignIn;
+			sourceTree = "<group>";
+		};
+		AB9455262A94A2F70055B44A /* CustomizeProfile */ = {
+			isa = PBXGroup;
+			children = (
+				AB9455222A9468130055B44A /* ColorPickerWidget.swift */,
+				AB842C132A91F36D00E4A7CE /* CustomizeProfileViewModel.swift */,
+				AB842C112A91F36300E4A7CE /* CustomizeProfileView.swift */,
+			);
+			path = CustomizeProfile;
 			sourceTree = "<group>";
 		};
 		ABA45E7F2A7C8DA70015F000 /* Profile */ = {
@@ -280,7 +294,9 @@
 			isa = PBXGroup;
 			children = (
 				ABCA39D12A79FC16009447C3 /* AuthenticationView.swift */,
-				ABA45E7C2A7C8D570015F000 /* SubViews */,
+				AB9455252A94A2E60055B44A /* SignIn */,
+				AB9455242A94A2D50055B44A /* SignUp */,
+				AB9455262A94A2F70055B44A /* CustomizeProfile */,
 			);
 			path = Authentication;
 			sourceTree = "<group>";
@@ -427,11 +443,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AB842C142A91F36D00E4A7CE /* CreateProfileViewModel.swift in Sources */,
+				AB842C142A91F36D00E4A7CE /* CustomizeProfileViewModel.swift in Sources */,
 				A257D7862A6D707600A4E7BD /* ContentView.swift in Sources */,
 				ABCA39DA2A7A0881009447C3 /* SettingsView.swift in Sources */,
 				A2F003552A7260B300FE0688 /* CanvasPage.swift in Sources */,
-				AB842C122A91F36300E4A7CE /* CreateProfileView.swift in Sources */,
+				AB842C122A91F36300E4A7CE /* CustomizeProfileView.swift in Sources */,
 				AB90021D2A8B85DA00F970B8 /* UploadExampleViewModel.swift in Sources */,
 				AB4C1E4F2A8785BF00588160 /* ColorSelectionView.swift in Sources */,
 				ABCA39D22A79FC16009447C3 /* AuthenticationView.swift in Sources */,

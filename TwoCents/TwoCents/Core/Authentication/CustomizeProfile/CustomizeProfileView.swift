@@ -8,12 +8,12 @@
 import SwiftUI
 import PhotosUI
 
-struct CreateProfileView: View {
+struct CustomizeProfileView: View {
     
     @State private var url: URL? = nil
     
     
-    @StateObject private var viewModel = CreateProfileEmailViewModel()
+    @StateObject private var viewModel = CustomizeProfileViewModel()
     
     @Binding var showCreateProfileView: Bool
     
@@ -174,10 +174,10 @@ struct CreateProfileView: View {
 }
 
 
-struct CreateProfileView_Previews: PreviewProvider {
+struct CustomizeProfileView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack{
-            CreateProfileView(showCreateProfileView: .constant(true))
+            CustomizeProfileView(showCreateProfileView: .constant(true))
         }
     }
 }
