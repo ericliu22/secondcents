@@ -8,6 +8,7 @@
 import Foundation
 import FirebaseFirestore
 import FirebaseFirestoreSwift
+import SwiftUI
 
 struct DBUser: Codable{
     let userId: String
@@ -17,6 +18,7 @@ struct DBUser: Codable{
     let name: String?
     let profileImagePath: String?
     let profileImageUrl: String?
+    let userColor: String?
     
     
     //create from auth data result
@@ -28,6 +30,8 @@ struct DBUser: Codable{
         self.name = name
         self.profileImagePath = nil
         self.profileImageUrl = nil
+        self.userColor = nil
+        
     }
     
     
@@ -39,7 +43,8 @@ struct DBUser: Codable{
         dateCreated: Date? = nil,
         name: String? = nil,
         profileImagePath: String? = nil,
-        profileImageUrl: String? = nil
+        profileImageUrl: String? = nil,
+        userColor: String? = nil
     )
     {
         self.userId = userId
@@ -49,6 +54,7 @@ struct DBUser: Codable{
         self.name = name
         self.profileImagePath = profileImagePath
         self.profileImageUrl = profileImageUrl
+        self.userColor = profileImageUrl
     }
     
     
@@ -121,6 +127,19 @@ final class UserManager{
         ]
         
         try await userDocument(userId: userId).updateData(data)
+    }
+    
+    
+    func updateUserColor(userId: String, selectedColor: Color) async throws {
+        let data: [String: Any] = [
+            "userColor": selectedColor.description,
+          
+        ]
+        print(selectedColor.description)
+        
+        try await userDocument(userId: userId).updateData(data)
+        print("Done")
+        
     }
     
     //

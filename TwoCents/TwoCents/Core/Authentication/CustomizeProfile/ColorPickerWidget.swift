@@ -13,8 +13,11 @@ import SwiftUI
 struct ColorPickerWidget: View {
     
     @Binding var selectedColor: Color
-
-    private let colors: [Color] = [.red, .orange, .yellow, .green, .mint, .teal,  .cyan, .blue, .indigo, .purple, .pink,.brown]
+    
+    @StateObject private var viewModel = ColorPickerWidgetViewModel()
+    
+    
+    private let colors: [Color] = [.red, .orange, .yellow, .green, .mint, .teal, .cyan, .blue, .indigo, .purple, .pink,.brown]
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack{
@@ -26,18 +29,31 @@ struct ColorPickerWidget: View {
                         .scaleEffect(color == selectedColor ? 1.1  : 1.0)
                         .onTapGesture{
                             selectedColor = color
+                            print("Clicked")
+                            
+                            viewModel.saveUserColor(selectedColor: selectedColor)
                         }
                 }
             }
+            
             .padding()
             .background(.thinMaterial)
-//            .background(selectedColor.opacity(0.3))
+            //            .background(selectedColor.opacity(0.3))
             
             .cornerRadius(20)
             .padding(.horizontal)
+            .task{
+                try? await viewModel.loadCurrentUser()
+                viewModel.saveUserColor(selectedColor: .red)
+                
+            }
         }
         
+        
+        
+        
     }
+    
 }
 
 struct ColorPickerWidget_Previews: PreviewProvider {
