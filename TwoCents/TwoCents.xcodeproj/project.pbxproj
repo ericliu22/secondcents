@@ -281,8 +281,8 @@
 				ABA45E7F2A7C8DA70015F000 /* Profile */,
 				ABF56DFB2A7C8C1200F959DB /* Settings */,
 				ABCA39D72A7A0671009447C3 /* RootView.swift */,
-				ABB84C332A8CBA03009C7550 /* FrontPageView.swift */,
 				ABF556852A950BCB00103880 /* RootViewModel.swift */,
+				ABB84C332A8CBA03009C7550 /* FrontPageView.swift */,
 			);
 			path = Core;
 			sourceTree = "<group>";

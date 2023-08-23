@@ -29,7 +29,7 @@ struct ColorPickerWidget: View {
                         .scaleEffect(color == selectedColor ? 1.1  : 1.0)
                         .onTapGesture{
                             selectedColor = color
-                            print("Clicked")
+                           
                             
                             viewModel.saveUserColor(selectedColor: selectedColor)
                         }

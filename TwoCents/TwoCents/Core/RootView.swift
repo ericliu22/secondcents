@@ -16,6 +16,12 @@ struct RootView: View {
     
     @StateObject private var viewModel = RootViewModel()
     
+    @State private var tintLoaded: Bool = false
+    @State private var userColor: String = ""
+    
+    
+    
+
        
     
     var body: some View {
@@ -28,11 +34,25 @@ struct RootView: View {
                 FrontPageView(showSignInView: $showSignInView)
                 .task{
                     try? await viewModel.loadCurrentUser()
+                    
+                    if let myColor = viewModel.user?.userColor{
+                        tintLoaded = true
+                        userColor = myColor
+                        print(userColor)
+                    }
                    
                    
                     
                 }
-                .tint(viewModel.getUserColor(userColor: viewModel.user?.userColor ?? ""))
+              
+              
+//                .tint(viewModel.getUserColor(userColor: viewModel.user?.userColor ?? ""))
+            
+                .tint(tintLoaded ? viewModel.getUserColor(userColor: userColor) : .gray)
+                .animation(.easeIn, value: tintLoaded)
+            
+            
+                
             
         }
         
@@ -57,6 +77,15 @@ struct RootView: View {
         .onChange(of: showCreateProfileView) { newValue in
             Task{
                 try? await viewModel.loadCurrentUser()
+                
+                if let myColor = viewModel.user?.userColor{
+                    tintLoaded = true
+                    
+                    userColor = myColor
+                    print(userColor)
+                }
+               
+                
             }
         }
         

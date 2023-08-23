@@ -140,7 +140,7 @@ final class UserManager{
         print(selectedColor.description)
         
         try await userDocument(userId: userId).updateData(data)
-        print("Done")
+//        print("Done")
         
     }
     

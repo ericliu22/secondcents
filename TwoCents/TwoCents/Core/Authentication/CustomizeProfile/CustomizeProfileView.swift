@@ -109,7 +109,9 @@ struct CustomizeProfileView: View {
                     
                     
                 }
+               
                 .offset(x:56, y:56)
+                
                 
                 
                 
