@@ -9,6 +9,8 @@ import SwiftUI
 
 struct FrontPageView: View {
     
+   
+    
     @Binding var showSignInView: Bool
     var body: some View {
         TabView{
@@ -44,12 +46,14 @@ struct FrontPageView: View {
                 
                 
             }
-         
-            
-            
             
         }
-        .tint(Color(UIColor.label))
+        
+
+        
+       
+        
+        
         
     }
 }

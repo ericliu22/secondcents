@@ -73,23 +73,24 @@ final class UserManager{
         
     }
     
-    private let encoder: Firestore.Encoder = {
-        let encoder = Firestore.Encoder()
-        
-        encoder.keyEncodingStrategy = .convertToSnakeCase
-        return encoder
-    } ()
-    
-    
-    private let decoder: Firestore.Decoder = {
-        let decoder = Firestore.Decoder()
-        
-        decoder.keyDecodingStrategy = .convertFromSnakeCase
-        return decoder
-    } ()
+//    private let encoder: Firestore.Encoder = {
+//        let encoder = Firestore.Encoder()
+//
+//        encoder.keyEncodingStrategy = .convertToSnakeCase
+//        return encoder
+//    } ()
+//
+//
+//    private let decoder: Firestore.Decoder = {
+//        let decoder = Firestore.Decoder()
+//
+//        decoder.keyDecodingStrategy = .convertFromSnakeCase
+//        return decoder
+//    } ()
     
     func createNewUser(user: DBUser) async throws {
-        try userDocument(userId: user.userId).setData(from: user, merge: false, encoder: encoder)
+//        try userDocument(userId: user.userId).setData(from: user, merge: false, encoder: encoder)
+        try userDocument(userId: user.userId).setData(from: user, merge: false)
     }
     
     //    func createNewUser(auth: AuthDataResultModel) async throws {
@@ -116,7 +117,8 @@ final class UserManager{
     
     
     func getUser(userId: String) async throws -> DBUser {
-        try await userDocument(userId: userId).getDocument(as: DBUser.self, decoder: decoder)
+//        try await userDocument(userId: userId).getDocument(as: DBUser.self, decoder: decoder)
+        try await userDocument(userId: userId).getDocument(as: DBUser.self)
         
     }
     

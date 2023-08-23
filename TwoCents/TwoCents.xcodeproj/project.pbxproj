@@ -40,6 +40,7 @@
 		ABCA39D82A7A0671009447C3 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCA39D72A7A0671009447C3 /* RootView.swift */; };
 		ABCA39DA2A7A0881009447C3 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCA39D92A7A0881009447C3 /* SettingsView.swift */; };
 		ABF556842A95046D00103880 /* ColorPickerWidgetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABF556832A95046D00103880 /* ColorPickerWidgetViewModel.swift */; };
+		ABF556862A950BCB00103880 /* RootViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABF556852A950BCB00103880 /* RootViewModel.swift */; };
 		ABF56DF72A7C8B7A00F959DB /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = ABF56DF62A7C8B7A00F959DB /* FirebaseFirestore */; };
 		ABF56DF92A7C8B7A00F959DB /* FirebaseFirestoreSwift in Frameworks */ = {isa = PBXBuildFile; productRef = ABF56DF82A7C8B7A00F959DB /* FirebaseFirestoreSwift */; };
 		ABF56DFF2A7C8C5200F959DB /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABF56DFE2A7C8C5200F959DB /* SettingsViewModel.swift */; };
@@ -95,6 +96,7 @@
 		ABCA39D72A7A0671009447C3 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		ABCA39D92A7A0881009447C3 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		ABF556832A95046D00103880 /* ColorPickerWidgetViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorPickerWidgetViewModel.swift; sourceTree = "<group>"; };
+		ABF556852A950BCB00103880 /* RootViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewModel.swift; sourceTree = "<group>"; };
 		ABF56DFE2A7C8C5200F959DB /* SettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -280,6 +282,7 @@
 				ABF56DFB2A7C8C1200F959DB /* Settings */,
 				ABCA39D72A7A0671009447C3 /* RootView.swift */,
 				ABB84C332A8CBA03009C7550 /* FrontPageView.swift */,
+				ABF556852A950BCB00103880 /* RootViewModel.swift */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -454,6 +457,7 @@
 				AB90021D2A8B85DA00F970B8 /* UploadExampleViewModel.swift in Sources */,
 				AB4C1E4F2A8785BF00588160 /* ColorSelectionView.swift in Sources */,
 				ABCA39D22A79FC16009447C3 /* AuthenticationView.swift in Sources */,
+				ABF556862A950BCB00103880 /* RootViewModel.swift in Sources */,
 				ABF556842A95046D00103880 /* ColorPickerWidgetViewModel.swift in Sources */,
 				ABCA39D62A7A0159009447C3 /* AuthenticationManager.swift in Sources */,
 				ABCA39D82A7A0671009447C3 /* RootView.swift in Sources */,
