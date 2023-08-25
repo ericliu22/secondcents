@@ -33,6 +33,8 @@ struct ColorPickerWidget: View {
                             
                             viewModel.saveUserColor(selectedColor: selectedColor)
                         }
+                        .animation(.easeInOut(duration: 0.25), value: selectedColor)
+                        
                 }
             }
             
@@ -40,7 +42,7 @@ struct ColorPickerWidget: View {
             .background(.thinMaterial)
             //            .background(selectedColor.opacity(0.3))
             
-            .cornerRadius(20)
+            .cornerRadius(10)
             .padding(.horizontal)
             .task{
                 try? await viewModel.loadCurrentUser()

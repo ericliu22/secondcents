@@ -22,6 +22,7 @@ final class RootViewModel: ObservableObject{
     
     
     
+    
     func getUserColor(userColor: String) -> Color{
         
         switch userColor {
