@@ -11,7 +11,11 @@ struct ProfileView: View {
     
     @StateObject private var viewModel = ProfileViewModel()
     @Binding var showSignInView: Bool
+    @Binding var loadedColor: Color
     var body: some View {
+        Rectangle()
+            .frame(width: 100,height: 100)
+            .foregroundColor(loadedColor)
         List{
             if let user = viewModel.user {
                 if let name = user.name {
@@ -57,7 +61,7 @@ struct ProfileView: View {
 struct ProfileView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack {
-            ProfileView(showSignInView: .constant(false))
+            ProfileView(showSignInView: .constant(false),loadedColor: .constant(.red))
         }
     }
 }

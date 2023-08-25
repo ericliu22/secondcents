@@ -12,6 +12,9 @@ struct FrontPageView: View {
    
     
     @Binding var showSignInView: Bool
+    @Binding var loadedColor: Color
+    
+    
     var body: some View {
         TabView{
             UploadExample()
@@ -38,7 +41,7 @@ struct FrontPageView: View {
             
             
             NavigationStack {
-                ProfileView(showSignInView: $showSignInView)
+                ProfileView(showSignInView: $showSignInView, loadedColor: $loadedColor)
             }
             .tabItem {
                 Image(systemName: "person")
@@ -61,6 +64,6 @@ struct FrontPageView: View {
 struct FrontPageView_Previews: PreviewProvider {
     
     static var previews: some View {
-        FrontPageView(showSignInView: .constant(false))
+        FrontPageView(showSignInView: .constant(false), loadedColor: .constant(.red))
     }
 }

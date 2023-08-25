@@ -18,6 +18,8 @@ struct RootView: View {
     
     @State private var tintLoaded: Bool = false
     @State private var userColor: String = ""
+    @State private var loadedColor: Color = .gray
+    
     
     
     
@@ -31,7 +33,7 @@ struct RootView: View {
             
             
 //                
-                FrontPageView(showSignInView: $showSignInView)
+            FrontPageView(showSignInView: $showSignInView, loadedColor: $loadedColor)
                 .task{
                     try? await viewModel.loadCurrentUser()
                     
@@ -39,6 +41,7 @@ struct RootView: View {
                         tintLoaded = true
                         userColor = myColor
                         print(userColor)
+                        loadedColor = viewModel.getUserColor(userColor: userColor)
                     }
                    
                    
@@ -48,7 +51,7 @@ struct RootView: View {
               
 //                .tint(viewModel.getUserColor(userColor: viewModel.user?.userColor ?? ""))
             
-                .tint(tintLoaded ? viewModel.getUserColor(userColor: userColor) : .gray)
+                .tint(tintLoaded ? loadedColor : .gray)
                 .animation(.easeIn, value: tintLoaded)
             
             
