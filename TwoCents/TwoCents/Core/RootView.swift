@@ -33,7 +33,7 @@ struct RootView: View {
             
             
 //                
-            FrontPageView(showSignInView: $showSignInView, loadedColor: $loadedColor)
+            FrontPageView(showSignInView: $showSignInView, loadedColor: $loadedColor, showCreateProfileView: $showCreateProfileView)
                 .task{
                     try? await viewModel.loadCurrentUser()
                     
@@ -86,6 +86,7 @@ struct RootView: View {
                     
                     userColor = myColor
                     print(userColor)
+                    loadedColor = viewModel.getUserColor(userColor: userColor)
                 }
                
                 

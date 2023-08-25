@@ -13,6 +13,7 @@ struct FrontPageView: View {
     
     @Binding var showSignInView: Bool
     @Binding var loadedColor: Color
+    @Binding var showCreateProfileView: Bool
     
     
     var body: some View {
@@ -41,7 +42,7 @@ struct FrontPageView: View {
             
             
             NavigationStack {
-                ProfileView(showSignInView: $showSignInView, loadedColor: $loadedColor)
+                ProfileView(showSignInView: $showSignInView, loadedColor: $loadedColor, showCreateProfileView: $showCreateProfileView)
             }
             .tabItem {
                 Image(systemName: "person")
@@ -64,6 +65,6 @@ struct FrontPageView: View {
 struct FrontPageView_Previews: PreviewProvider {
     
     static var previews: some View {
-        FrontPageView(showSignInView: .constant(false), loadedColor: .constant(.red))
+        FrontPageView(showSignInView: .constant(false), loadedColor: .constant(.red),showCreateProfileView: .constant(false))
     }
 }
