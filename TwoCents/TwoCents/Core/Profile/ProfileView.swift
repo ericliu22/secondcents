@@ -113,6 +113,7 @@ struct ProfileView: View {
                         if let username = user.username  {
                             Text("@\(username)")
                                 .font(.caption)
+                               
                             
                         }
                     }
