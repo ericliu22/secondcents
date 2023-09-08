@@ -23,10 +23,10 @@ struct FrontPageView: View {
                     Image(systemName: "house")
                     Text("Page 1")
                 }
-            ColorSelectionView()
+            SearchUserView()
                 .tabItem {
-                    Image(systemName: "house")
-                    Text("Color Picker")
+                    Image(systemName: "magnifyingglass")
+                    Text("Search")
                 }
             ColorSelectionView()
                 .tabItem {

@@ -10,27 +10,33 @@ import FirebaseFirestore
 import FirebaseFirestoreSwift
 import SwiftUI
 
-struct DBUser: Codable{
+struct DBUser: Identifiable, Codable{
+    var id: String { userId }
     let userId: String
     let email: String?
     let photoUrl: String?
     let dateCreated: Date?
     let name: String?
+    let username: String?
     let profileImagePath: String?
     let profileImageUrl: String?
     let userColor: String?
+    let friends: Array<String>?
+    
     
     
     //create from auth data result
-    init(auth: AuthDataResultModel, name: String) {
+    init(auth: AuthDataResultModel, name: String, username: String) {
         self.userId = auth.uid
         self.email = auth.email
         self.photoUrl = auth.photoUrl
         self.dateCreated = Date()
         self.name = name
+        self.username = username
         self.profileImagePath = nil
         self.profileImageUrl = nil
         self.userColor = nil
+        self.friends = []
         
     }
     
@@ -42,9 +48,11 @@ struct DBUser: Codable{
         photoUrl: String? = nil,
         dateCreated: Date? = nil,
         name: String? = nil,
+        username: String? = nil,
         profileImagePath: String? = nil,
         profileImageUrl: String? = nil,
-        userColor: String? = nil
+        userColor: String? = nil,
+        friends: Array<String>? = nil
     )
     {
         self.userId = userId
@@ -52,9 +60,11 @@ struct DBUser: Codable{
         self.photoUrl = photoUrl
         self.dateCreated = dateCreated
         self.name = name
+        self.username = username
         self.profileImagePath = profileImagePath
         self.profileImageUrl = profileImageUrl
-        self.userColor = profileImageUrl
+        self.userColor = nil
+        self.friends = []
     }
     
     
@@ -121,6 +131,33 @@ final class UserManager{
         try await userDocument(userId: userId).getDocument(as: DBUser.self)
         
     }
+    
+    
+    func getAllFriends() async throws -> [DBUser]{
+        
+        let snapshot = try await userCollection.getDocuments()
+        
+        var friends: [DBUser] = []
+        
+//        print(try snapshot.documents[1].data(as:DBUser.self).name!)
+        
+        for document in snapshot.documents{
+            print("hi1")
+            
+            let friend = try document.data(as: DBUser.self)
+            print("hi2")
+            
+            
+            
+            friends.append(friend)
+        }
+        
+        
+        return friends
+        
+    }
+    
+ 
     
     func updateUserProfileImage(userId: String, url: String, path: String) async throws {
         let data: [String: Any] = [

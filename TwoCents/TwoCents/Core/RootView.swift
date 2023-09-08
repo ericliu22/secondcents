@@ -92,6 +92,23 @@ struct RootView: View {
                 
             }
         }
+        .onChange(of: showSignInView) { newValue in
+            Task{
+                try? await viewModel.loadCurrentUser()
+                
+                if let myColor = viewModel.user?.userColor{
+                    tintLoaded = true
+                    
+                    userColor = myColor
+                    print(userColor)
+                    loadedColor = viewModel.getUserColor(userColor: userColor)
+                }
+               
+                
+            }
+        }
+        
+        
         
 
         

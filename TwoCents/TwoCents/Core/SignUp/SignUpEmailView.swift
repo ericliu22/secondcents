@@ -27,8 +27,17 @@ struct SignUpEmailView: View {
             
             
             
-            //Email Textfield
+            //Name Textfield
             TextField("Name", text: $viewModel.name)
+                .disableAutocorrection(true)
+                .textInputAutocapitalization(.never)
+                .padding()
+                .background(Color(UIColor.secondarySystemBackground))
+                .cornerRadius(10)
+            
+           
+            //Username Textfield
+            TextField("Username", text: $viewModel.username)
                 .disableAutocorrection(true)
                 .textInputAutocapitalization(.never)
                 .padding()
@@ -79,24 +88,14 @@ struct SignUpEmailView: View {
                     } catch {
                     }
                 }
-                //signIn
-                //                Task {
-                //                    do {
-                //                        try await viewModel.signIn()
-                //                        showSignInView = false
-                //                        return
-                //                    } catch {
-                //                    }
-                //                }
+               
                 
             } label: {
                 Text("Sign Up")
                     .font(.headline)
-                //                    .foregroundColor(Color(UIColor.systemBackground))
+              
                     .frame(height: 55)
                     .frame(maxWidth: .infinity)
-                //                    .background(Color(UIColor.label))
-                //                    .cornerRadius(10)
                 
             }
             

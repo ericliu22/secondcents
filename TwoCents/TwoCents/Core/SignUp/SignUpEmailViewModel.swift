@@ -13,6 +13,7 @@ final class SignUpEmailViewModel: ObservableObject{
     
     
     @Published var name = ""
+    @Published var username = ""
     @Published var email = ""
     @Published var password = ""
     @Published var confirmPassword = ""
@@ -24,7 +25,7 @@ final class SignUpEmailViewModel: ObservableObject{
   
     
     func signUp() async throws {
-        guard !email.isEmpty, !password.isEmpty, !name.isEmpty, !confirmPassword.isEmpty else {
+        guard !email.isEmpty, !password.isEmpty, !name.isEmpty, !username.isEmpty, !confirmPassword.isEmpty else {
             print("Fields are empty")
             throw URLError(.badServerResponse)
 //            return
@@ -41,7 +42,7 @@ final class SignUpEmailViewModel: ObservableObject{
         let authDataResult = try await AuthenticationManager.shared.createUser(email: email, password: password)
 //        try await UserManager.shared.createNewUser(auth: authDataResult)
         
-        let user = DBUser(auth: authDataResult, name: name)
+        let user = DBUser(auth: authDataResult, name: name, username: username)
         
 //
 //        let userWithName = DBUser(userId: user.userId, email: user.email, photoUrl: user.photoUrl, dateCreated: user.dateCreated, name: name)

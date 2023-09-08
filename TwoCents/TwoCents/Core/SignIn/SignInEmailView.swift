@@ -34,6 +34,7 @@ struct SignInEmailView: View {
                 .background(Color(UIColor.secondarySystemBackground))
                 .cornerRadius(10)
             
+                
             
             
             Button {
@@ -96,6 +97,7 @@ struct SignInEmailView: View {
                   self.presentation.wrappedValue.dismiss()
                }
             )
+        
       
                    
     }

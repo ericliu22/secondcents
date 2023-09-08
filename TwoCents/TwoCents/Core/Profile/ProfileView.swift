@@ -41,88 +41,108 @@ struct ProfileView: View {
         
         VStack {
             
-            VStack{
+            VStack {
                 
-                Group{
-                    //Circle or Profile Pic
+                
+                
+         
                     
-                    
-                    if let urlString = viewModel.user?.profileImageUrl,
-                       let url = URL(string: urlString) {
+                    Group{
+                        //Circle or Profile Pic
                         
                         
-                        
-                        //If there is URL for profile pic, show
-                        //circle with stroke
-                        AsyncImage(url: url) {image in
-                            image
-                                .resizable()
-                                .scaledToFill()
-                                .clipShape(Circle())
+                        if let urlString = viewModel.user?.profileImageUrl,
+                           let url = URL(string: urlString) {
+                            
+                            
+                            
+                            //If there is URL for profile pic, show
+                            //circle with stroke
+                            AsyncImage(url: url) {image in
+                                image
+                                    .resizable()
+                                    .scaledToFill()
+                                    .clipShape(Circle())
+                                    .frame(width: 128, height: 128)
+                                
+                                
+                                
+                            } placeholder: {
+                                //else show loading after user uploads but sending/downloading from database
+                                
+                                ProgressView()
+                                    .progressViewStyle(CircularProgressViewStyle(tint: Color(UIColor.systemBackground)))
+                                //                            .scaleEffect(1, anchor: .center)
+                                    .frame(width: 128, height: 128)
+                                    .background(
+                                        Circle()
+                                            .fill(loadedColor)
+                                            .frame(width: 128, height: 128)
+                                    )
+                            }
+                            
+                        } else {
+                            
+                            //if user has not uploaded profile pic, show circle
+                            Circle()
+                            
+                                .strokeBorder(loadedColor, lineWidth:0)
+                                .background(Circle().fill(loadedColor))
                                 .frame(width: 128, height: 128)
                             
+                        }
+                    }
+                    
+                    .onTapGesture{
+                        showCreateProfileView = true
+                        
+                    }
+                    
+                    
+                    Spacer()
+                        .frame(height: 15)
+                    
+                    if let user = viewModel.user {
+                        if let name = user.name {
+                            Text("\(name)")
+                                .font(.headline)
                             
-                            
-                        } placeholder: {
-                            //else show loading after user uploads but sending/downloading from database
-                            
-                            ProgressView()
-                                .progressViewStyle(CircularProgressViewStyle(tint: Color(UIColor.systemBackground)))
-                            //                            .scaleEffect(1, anchor: .center)
-                                .frame(width: 128, height: 128)
-                                .background(
-                                    Circle()
-                                        .fill(loadedColor)
-                                        .frame(width: 128, height: 128)
-                                )
                         }
                         
-                    } else {
                         
-                        //if user has not uploaded profile pic, show circle
-                        Circle()
-                        
-                            .strokeBorder(loadedColor, lineWidth:0)
-                            .background(Circle().fill(loadedColor))
-                            .frame(width: 128, height: 128)
-                        
-                    }
-                }
-                
-                .onTapGesture{
-                    showCreateProfileView = true
-                    
-                }
-                
-                
-                Spacer()
-                    .frame(height: 15)
-                
-                if let user = viewModel.user {
-                    if let name = user.name {
-                        Text("\(name)")
-                            .font(.headline)
-                        
+                        if let username = user.username  {
+                            Text("@\(username)")
+                                .font(.caption)
+                            
+                        }
                     }
                     
                     
                     
+                    
                 }
+
+                .padding(32)
+                .background(.thinMaterial)
+                .cornerRadius(20)
+              
                 
                 
                 
                 
-            }
-            
-            .padding(32)
-            
-            .background(.thinMaterial)
-            .cornerRadius(20)
-            
+              
+               
+         
             
             
             
             Spacer()
+            
+            
+            
+            
+            
+            
             
             
             
