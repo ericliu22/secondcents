@@ -14,7 +14,7 @@ struct DBUser: Identifiable, Codable{
     var id: String { userId }
     let userId: String
     let email: String?
-    let photoUrl: String?
+   
     let dateCreated: Date?
     let name: String?
     let username: String?
@@ -29,7 +29,7 @@ struct DBUser: Identifiable, Codable{
     init(auth: AuthDataResultModel, name: String, username: String) {
         self.userId = auth.uid
         self.email = auth.email
-        self.photoUrl = auth.photoUrl
+       
         self.dateCreated = Date()
         self.name = name
         self.username = username
@@ -45,7 +45,7 @@ struct DBUser: Identifiable, Codable{
     init(
         userId: String,
         email: String? = nil,
-        photoUrl: String? = nil,
+
         dateCreated: Date? = nil,
         name: String? = nil,
         username: String? = nil,
@@ -57,7 +57,7 @@ struct DBUser: Identifiable, Codable{
     {
         self.userId = userId
         self.email = email
-        self.photoUrl = photoUrl
+    
         self.dateCreated = dateCreated
         self.name = name
         self.username = username

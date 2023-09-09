@@ -9,8 +9,10 @@ import SwiftUI
 
 struct SearchUserView: View {
     
+    @Binding var showSignInView: Bool
+    @Binding var loadedColor: Color
+    @Binding var showCreateProfileView: Bool
     
-    @State private var tintLoaded: Bool = false
     
     @State private var searchTerm = ""
     
@@ -33,79 +35,91 @@ struct SearchUserView: View {
             List{
             
                 ForEach(filteredFriends) { friends    in
-                    let loadedColor: Color = viewModel.getUserColor(userColor: friends.userColor!)
+                    let targetUserColor: Color = viewModel.getUserColor(userColor: friends.userColor!)
                     
                     
                     
                     
-                    HStack(spacing: 20){
-                        
-                        
-                        
-                        Group{
-                            //Circle or Profile Pic
+                    
+                  
+                    
+                    NavigationLink {
+                     
+                        ProfileView(showSignInView: $showSignInView, loadedColor: $loadedColor,targetUserColor: targetUserColor, showCreateProfileView: $showCreateProfileView, targetUserId: friends.userId)
+                    } label: {
+                        HStack(spacing: 20){
                             
                             
-                            if let urlString = friends.profileImageUrl,
-                               let url = URL(string: urlString) {
+                            
+                            Group{
+                                //Circle or Profile Pic
                                 
                                 
-                                
-                                //If there is URL for profile pic, show
-                                //circle with stroke
-                                AsyncImage(url: url) {image in
-                                    image
-                                        .resizable()
-                                        .scaledToFill()
-                                        .clipShape(Circle())
+                                if let urlString = friends.profileImageUrl,
+                                   let url = URL(string: urlString) {
+                                    
+                                    
+                                    
+                                    //If there is URL for profile pic, show
+                                    //circle with stroke
+                                    AsyncImage(url: url) {image in
+                                        image
+                                            .resizable()
+                                            .scaledToFill()
+                                            .clipShape(Circle())
+                                            .frame(width: 48, height: 48)
+                                        
+                                        
+                                        
+                                    } placeholder: {
+                                        //else show loading after user uploads but sending/downloading from database
+                                        
+                                        ProgressView()
+                                            .progressViewStyle(CircularProgressViewStyle(tint: Color(UIColor.systemBackground)))
+                                        //                            .scaleEffect(1, anchor: .center)
+                                            .frame(width: 48, height: 48)
+                                            .background(
+                                                Circle()
+                                                    .fill(targetUserColor)
+                                                    .frame(width: 48, height: 48)
+                                            )
+                                    }
+                                    
+                                } else {
+                                    
+                                    //if user has not uploaded profile pic, show circle
+                                    Circle()
+                                    
+                                        .strokeBorder(targetUserColor, lineWidth:0)
+                                        .background(Circle().fill(targetUserColor))
                                         .frame(width: 48, height: 48)
                                     
-                                    
-                                    
-                                } placeholder: {
-                                    //else show loading after user uploads but sending/downloading from database
-                                    
-                                    ProgressView()
-                                        .progressViewStyle(CircularProgressViewStyle(tint: Color(UIColor.systemBackground)))
-                                    //                            .scaleEffect(1, anchor: .center)
-                                        .frame(width: 48, height: 48)
-                                        .background(
-                                            Circle()
-                                                .fill(loadedColor)
-                                                .frame(width: 48, height: 48)
-                                        )
                                 }
                                 
-                            } else {
                                 
-                                //if user has not uploaded profile pic, show circle
-                                Circle()
                                 
-                                    .strokeBorder(loadedColor, lineWidth:0)
-                                    .background(Circle().fill(loadedColor))
-                                    .frame(width: 48, height: 48)
                                 
                             }
                             
-                            
-                            
-                            
-                        }
-                        
-                        VStack(alignment: .leading){
-                            
-                            Text(friends.name!)
-                                .font(.headline)
-                            
-                            
-                            Text(
-                                "@\(friends.username!)")
-                                .font(.caption)
+                            VStack(alignment: .leading){
+                                
+                                Text(friends.name!)
+                                    .font(.headline)
+                                  
+                                
+                                Text(
+                                    "@\(friends.username!)")
+                                    .font(.caption)
+                                
+                            }
                             
                         }
-                        
                     }
+
+                    
+                  
                 }
+                
                 
                 
                 
@@ -128,6 +142,6 @@ struct SearchUserView: View {
 
 struct SearchUserView_Previews: PreviewProvider {
     static var previews: some View {
-        SearchUserView()
+        SearchUserView(showSignInView: .constant(false),loadedColor: .constant(.red),showCreateProfileView: .constant(false))
     }
 }

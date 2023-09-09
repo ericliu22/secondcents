@@ -12,32 +12,15 @@ struct ProfileView: View {
     @StateObject private var viewModel = ProfileViewModel()
     @Binding var showSignInView: Bool
     @Binding var loadedColor: Color
+    @State var targetUserColor: Color?
     @Binding var showCreateProfileView: Bool
+    
+    @State var targetUserId: String
+    
+    
+    
+    
     var body: some View {
-        //        Rectangle()
-        //            .frame(width: 100,height: 100)
-        //            .foregroundColor(loadedColor)
-        //        List{
-        //            if let user = viewModel.user {
-        //                if let name = user.name {
-        //                    Text("Name: \(name)")
-        //                }
-        //
-        //
-        //                if let email = user.email {
-        //                    Text("Email: \(email)")
-        //                }
-        //
-        //
-        //
-        //                Text("UserId: \(user.userId)")
-        //
-        //
-        //
-        //            }
-        //
-        //
-        
         
         VStack {
             
@@ -45,7 +28,7 @@ struct ProfileView: View {
                 
                 
                 
-         
+                ZStack{
                     
                     Group{
                         //Circle or Profile Pic
@@ -76,7 +59,7 @@ struct ProfileView: View {
                                     .frame(width: 128, height: 128)
                                     .background(
                                         Circle()
-                                            .fill(loadedColor)
+                                            .fill(targetUserColor ?? loadedColor)
                                             .frame(width: 128, height: 128)
                                     )
                             }
@@ -86,54 +69,86 @@ struct ProfileView: View {
                             //if user has not uploaded profile pic, show circle
                             Circle()
                             
-                                .strokeBorder(loadedColor, lineWidth:0)
-                                .background(Circle().fill(loadedColor))
+                                .strokeBorder(targetUserColor ?? loadedColor, lineWidth:0)
+                                .background(Circle().fill(targetUserColor ?? loadedColor))
                                 .frame(width: 128, height: 128)
                             
                         }
-                    }
-                    
-                    .onTapGesture{
-                        showCreateProfileView = true
                         
-                    }
-                    
-                    
-                    Spacer()
-                        .frame(height: 15)
-                    
-                    if let user = viewModel.user {
-                        if let name = user.name {
-                            Text("\(name)")
-                                .font(.headline)
+                        if (targetUserId.isEmpty) {
+                            ZStack{
+                                
+                                Circle()
+                                    .fill(Color(UIColor.systemBackground))
+                                    .frame(width: 48, height: 48)
+                                
+                                Circle()
+                                    .fill(.thinMaterial)
+                                    .frame(width: 48, height: 48)
+                                
+                                Circle()
+                                    .fill(targetUserColor ?? loadedColor)
+                                    .frame(width: 36, height: 36)
+                                
+                                Image(systemName: "plus")
+                                    .font(.headline)
+                                    .fontWeight(.bold)
+                                    .foregroundColor(Color(UIColor.systemBackground))
+                            }
+                            .offset(x:44, y:44)
+                            .onTapGesture{
+                                showCreateProfileView = true
+                                
+                                
+                            }
                             
                         }
                         
                         
-                        if let username = user.username  {
-                            Text("@\(username)")
-                                .font(.caption)
-                               
-                            
-                        }
+                        
+                        
                     }
-                    
                     
                     
                     
                 }
-
-                .padding(32)
-                .background(.thinMaterial)
-                .cornerRadius(20)
-              
+                
+                
+                Spacer()
+                    .frame(height: 15)
+                
+                if let user = viewModel.user {
+                    if let name = user.name {
+                        Text("\(name)")
+                            .font(.headline)
+                        
+                    }
+                    
+                    
+                    if let username = user.username  {
+                        Text("@\(username)")
+                            .font(.caption)
+                        
+                        
+                    }
+                }
                 
                 
                 
                 
-              
-               
-         
+            }
+            
+            .padding(32)
+            .background(.thinMaterial)
+            .cornerRadius(20)
+            
+            
+            
+            
+            
+            
+            
+            
             
             
             
@@ -149,17 +164,22 @@ struct ProfileView: View {
             
         }
         .task{
-            try? await viewModel.loadCurrentUser()
+            
+            targetUserId.isEmpty ?
+            try? await viewModel.loadCurrentUser() :
+            try? await viewModel.loadTargetUser(targetUserId: targetUserId)
             
         }
         .navigationTitle("Profile")
         .toolbar{
-            ToolbarItem(placement: .navigationBarTrailing) {
-                NavigationLink{
-                    SettingsView(showSignInView: $showSignInView)
-                } label: {
-                    Image (systemName: "gear")
-                        .font(.headline)
+            if (targetUserId.isEmpty) {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    NavigationLink{
+                        SettingsView(showSignInView: $showSignInView)
+                    } label: {
+                        Image (systemName: "gear")
+                            .font(.headline)
+                    }
                 }
             }
         }
@@ -170,7 +190,7 @@ struct ProfileView: View {
 struct ProfileView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack {
-            ProfileView(showSignInView: .constant(false),loadedColor: .constant(.red),showCreateProfileView: .constant(false))
+            ProfileView(showSignInView: .constant(false),loadedColor: .constant(.red),showCreateProfileView: .constant(false), targetUserId: "")
         }
     }
 }

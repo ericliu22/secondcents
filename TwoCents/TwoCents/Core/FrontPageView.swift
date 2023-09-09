@@ -23,7 +23,7 @@ struct FrontPageView: View {
                     Image(systemName: "house")
                     Text("Page 1")
                 }
-            SearchUserView()
+            SearchUserView(showSignInView: $showSignInView, loadedColor: $loadedColor, showCreateProfileView: $showCreateProfileView)
                 .tabItem {
                     Image(systemName: "magnifyingglass")
                     Text("Search")
@@ -42,7 +42,7 @@ struct FrontPageView: View {
             
             
             NavigationStack {
-                ProfileView(showSignInView: $showSignInView, loadedColor: $loadedColor, showCreateProfileView: $showCreateProfileView)
+                ProfileView(showSignInView: $showSignInView, loadedColor: $loadedColor, showCreateProfileView: $showCreateProfileView, targetUserId: "")
             }
             .tabItem {
                 Image(systemName: "person")
