@@ -12,7 +12,15 @@ struct SearchUserView: View {
     
     @State private var tintLoaded: Bool = false
     
+    @State private var searchTerm = ""
+    
     @StateObject private var viewModel = SearchUserViewModel()
+    
+    
+    var filteredFriends: [DBUser]{
+        guard !searchTerm.isEmpty else { return viewModel.friends }
+        return viewModel.friends.filter{$0.name!.localizedCaseInsensitiveContains(searchTerm) || $0.username!.localizedCaseInsensitiveContains(searchTerm)}
+    }
     var body: some View {
         //        VStack {
         //            ForEach(viewModel.images, id: \.id) { item in
@@ -21,10 +29,10 @@ struct SearchUserView: View {
         //            }
         //        }.onAppear { viewModel.fetchData() }
         
-        VStack{
+        NavigationStack{
             List{
             
-                ForEach(viewModel.friends) { friends    in
+                ForEach(filteredFriends) { friends    in
                     let loadedColor: Color = viewModel.getUserColor(userColor: friends.userColor!)
                     
                     
@@ -105,6 +113,8 @@ struct SearchUserView: View {
                 
                 
             }
+            .navigationTitle("Search")
+            .searchable(text: $searchTerm, prompt: "Search")
             
         }
         .task {
