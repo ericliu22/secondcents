@@ -44,7 +44,7 @@ class CanvasWidget {
         self.position = position
         self.borderColor = borderColor
         self.bodyView = bodyView
-        self.userId = "gay"
+        self.userId = "HfQw46R2aGfUK2CWNTPJ7LU8cGA3"
         self.size = size
     }
 }

@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		A2354EF82AA0D6CB0092BF1C /* CanvasPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2354EF42AA0D6CB0092BF1C /* CanvasPage.swift */; };
+		A2003C952AABA08300B1E551 /* Line.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2003C942AABA08300B1E551 /* Line.swift */; };
 		A2354EF92AA0D6CB0092BF1C /* ImageWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2354EF52AA0D6CB0092BF1C /* ImageWidget.swift */; };
 		A2354EFA2AA0D6CB0092BF1C /* VideoWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2354EF62AA0D6CB0092BF1C /* VideoWidget.swift */; };
 		A2354EFB2AA0D6CB0092BF1C /* CanvasWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2354EF72AA0D6CB0092BF1C /* CanvasWidget.swift */; };
@@ -18,6 +18,7 @@
 		A257D7952A6D707800A4E7BD /* TwoCentsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A257D7942A6D707800A4E7BD /* TwoCentsTests.swift */; };
 		A257D79F2A6D707800A4E7BD /* TwoCentsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A257D79E2A6D707800A4E7BD /* TwoCentsUITests.swift */; };
 		A257D7A12A6D707800A4E7BD /* TwoCentsUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A257D7A02A6D707800A4E7BD /* TwoCentsUITestsLaunchTests.swift */; };
+		A27145D52AA5262B00729CA7 /* CanvasPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A27145D42AA5262B00729CA7 /* CanvasPage.swift */; };
 		AB4C1E4F2A8785BF00588160 /* ColorSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB4C1E4E2A8785BF00588160 /* ColorSelectionView.swift */; };
 		AB7365BB2A85060F00799D31 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = AB7365BA2A85060F00799D31 /* GoogleService-Info.plist */; };
 		AB7438412AAA349C001B4988 /* SearchUserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB7438402AAA349C001B4988 /* SearchUserView.swift */; };
@@ -69,7 +70,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		A2354EF42AA0D6CB0092BF1C /* CanvasPage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CanvasPage.swift; path = ../../../../../Coding/Swift/scrollable_canvas/scrollable_canvas/CanvasPage.swift; sourceTree = "<group>"; };
+		A2003C942AABA08300B1E551 /* Line.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Line.swift; sourceTree = "<group>"; };
 		A2354EF52AA0D6CB0092BF1C /* ImageWidget.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageWidget.swift; sourceTree = "<group>"; };
 		A2354EF62AA0D6CB0092BF1C /* VideoWidget.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoWidget.swift; sourceTree = "<group>"; };
 		A2354EF72AA0D6CB0092BF1C /* CanvasWidget.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CanvasWidget.swift; sourceTree = "<group>"; };
@@ -83,6 +84,7 @@
 		A257D79A2A6D707800A4E7BD /* TwoCentsUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TwoCentsUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A257D79E2A6D707800A4E7BD /* TwoCentsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwoCentsUITests.swift; sourceTree = "<group>"; };
 		A257D7A02A6D707800A4E7BD /* TwoCentsUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwoCentsUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		A27145D42AA5262B00729CA7 /* CanvasPage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CanvasPage.swift; sourceTree = "<group>"; };
 		AB4C1E4E2A8785BF00588160 /* ColorSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorSelectionView.swift; sourceTree = "<group>"; };
 		AB7365BA2A85060F00799D31 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		AB7438402AAA349C001B4988 /* SearchUserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchUserView.swift; sourceTree = "<group>"; };
@@ -173,7 +175,8 @@
 		A257D7822A6D707600A4E7BD /* TwoCents */ = {
 			isa = PBXGroup;
 			children = (
-				A2354EF42AA0D6CB0092BF1C /* CanvasPage.swift */,
+				A27145D42AA5262B00729CA7 /* CanvasPage.swift */,
+				A2003C942AABA08300B1E551 /* Line.swift */,
 				A2354EF72AA0D6CB0092BF1C /* CanvasWidget.swift */,
 				A2354EF52AA0D6CB0092BF1C /* ImageWidget.swift */,
 				A2354EF62AA0D6CB0092BF1C /* VideoWidget.swift */,
@@ -488,7 +491,11 @@
 				AB842C122A91F36300E4A7CE /* CustomizeProfileView.swift in Sources */,
 				AB90021D2A8B85DA00F970B8 /* UploadExampleViewModel.swift in Sources */,
 				AB4C1E4F2A8785BF00588160 /* ColorSelectionView.swift in Sources */,
+<<<<<<< Updated upstream
 				AB7438412AAA349C001B4988 /* SearchUserView.swift in Sources */,
+=======
+				A2003C952AABA08300B1E551 /* Line.swift in Sources */,
+>>>>>>> Stashed changes
 				ABCA39D22A79FC16009447C3 /* AuthenticationView.swift in Sources */,
 				ABF556862A950BCB00103880 /* RootViewModel.swift in Sources */,
 				ABF556842A95046D00103880 /* ColorPickerWidgetViewModel.swift in Sources */,
@@ -504,10 +511,10 @@
 				AB842C102A91E52000E4A7CE /* ProfileViewModel.swift in Sources */,
 				AB7438432AAA34AD001B4988 /* SearchUserViewModel.swift in Sources */,
 				ABA45E812A7C8DC50015F000 /* ProfileView.swift in Sources */,
-				A2354EF82AA0D6CB0092BF1C /* CanvasPage.swift in Sources */,
 				ABC426B32A86438400873EE1 /* SignUpEmailViewModel.swift in Sources */,
 				ABC426B12A863D9F00873EE1 /* SignUpEmailView.swift in Sources */,
 				ABA45E7E2A7C8D8C0015F000 /* SignInEmailViewModel.swift in Sources */,
+				A27145D52AA5262B00729CA7 /* CanvasPage.swift in Sources */,
 				AB90021A2A8B85BD00F970B8 /* UploadExample.swift in Sources */,
 				AB9455232A9468130055B44A /* ColorPickerWidget.swift in Sources */,
 			);
