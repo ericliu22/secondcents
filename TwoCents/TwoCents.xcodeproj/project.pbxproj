@@ -491,11 +491,8 @@
 				AB842C122A91F36300E4A7CE /* CustomizeProfileView.swift in Sources */,
 				AB90021D2A8B85DA00F970B8 /* UploadExampleViewModel.swift in Sources */,
 				AB4C1E4F2A8785BF00588160 /* ColorSelectionView.swift in Sources */,
-<<<<<<< Updated upstream
 				AB7438412AAA349C001B4988 /* SearchUserView.swift in Sources */,
-=======
 				A2003C952AABA08300B1E551 /* Line.swift in Sources */,
->>>>>>> Stashed changes
 				ABCA39D22A79FC16009447C3 /* AuthenticationView.swift in Sources */,
 				ABF556862A950BCB00103880 /* RootViewModel.swift in Sources */,
 				ABF556842A95046D00103880 /* ColorPickerWidgetViewModel.swift in Sources */,
