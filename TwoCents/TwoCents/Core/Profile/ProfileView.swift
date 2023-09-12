@@ -131,45 +131,86 @@ struct ProfileView: View {
                 
                 ///
                 
+//                VStack{
+//
+//                    if let user = viewModel.user {
+//
+//
+//
+//
+//                        if let username = user.name  {
+//                            Text("\(username)")
+//                                .font(.headline)
+//                                .frame(maxWidth:.infinity, maxHeight: .infinity)
+//                                .background(.thinMaterial)
+//                                .cornerRadius(20)
+//                        }
+//                    }
+//
+//
+//                        HStack{
+//                            Image(systemName: "person.2.fill")
+//
+//                            Text("Friends")
+//
+//                        }
+//                        .font(.headline)
+//                        .fontWeight(.regular)
+//
+//                        .frame(maxWidth:.infinity, maxHeight: .infinity)
+//                        .background(.thinMaterial)
+//                        .cornerRadius(20)
+//
+//
+//
+//
+//                }
+//
+//
+                
+                
+                
                 VStack{
-                    
                     if let user = viewModel.user {
                         
-                        
-                        
-                        
-                        if let username = user.name  {
-                            Text("\(username)")
-                                .font(.headline)
-                                .frame(maxWidth:.infinity, maxHeight: .infinity)
-                                .background(.thinMaterial)
-                                .cornerRadius(20)
+                        if let name = user.name  {
+                            Text("\(name)")
+                                .font(.title)
+                                .fontWeight(.bold)
+                                .foregroundColor(targetUserColor ?? loadedColor)
                         }
-                    }
-                   
-               
-                        HStack{
-                            Image(systemName: "person.2.fill")
-                            
-                            Text("Friends")
-                            
-                        }
-                        .font(.headline)
-                        .fontWeight(.regular)
                         
-                        .frame(maxWidth:.infinity, maxHeight: .infinity)
-                        .background(.thinMaterial)
-                        .cornerRadius(20)
-                        
-                        
-                    
+
+                       if let username = user.username  {
+                           Text("@\(username)")
+                               .font(.headline)
+                               .fontWeight(.regular)
+                               
+                       }
+                   }
+
                     
                 }
+                .frame(maxWidth:.infinity, maxHeight: .infinity)
+                .background(.thinMaterial)
+                .cornerRadius(20)
                 
                 
                 
                 
-                
+                VStack{
+                    Text("15")
+                        .font(.title)
+                        .fontWeight(.bold)
+                    
+                    Text("Friends")
+                        .font(.headline)
+                        .fontWeight(.regular)
+                    
+                }
+                .frame(maxWidth:.infinity, maxHeight: .infinity)
+                .background(.thinMaterial)
+                .cornerRadius(20)
                 
                 
                 
@@ -178,7 +219,10 @@ struct ProfileView: View {
                 RoundedRectangle(cornerRadius: 20)
                     .aspectRatio(1, contentMode: .fit)
                 
+                
                 RoundedRectangle(cornerRadius: 20)
+                    .aspectRatio(1, contentMode: .fit)
+                
                 
                 
                 
@@ -202,7 +246,7 @@ struct ProfileView: View {
             try? await viewModel.loadTargetUser(targetUserId: targetUserId)
             
         }
-        .navigationTitle("@" + (viewModel.user?.username ?? ""))
+        .navigationTitle("Profile")
         .toolbar{
             if (targetUserId.isEmpty) {
                 ToolbarItem(placement: .navigationBarTrailing) {
