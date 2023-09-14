@@ -183,6 +183,53 @@ final class UserManager{
         
     }
     
+    
+    func addFriend(userId: String, friendUserId: String) async throws {
+        
+        
+        
+        //put friend uid in user database
+        let intoUserDatabase: [String: Any] = [
+            "friends": [friendUserId]
+          
+        ]
+        try await userDocument(userId: userId).updateData(intoUserDatabase)
+        
+        
+        //put user uid in friend database
+        let intoFriendDatabase: [String: Any] = [
+            "friends": [userId]
+          
+        ]
+        try await userDocument(userId: friendUserId).updateData(intoFriendDatabase)
+
+        
+    }
+//    
+//    func removeFriend(userId: String, friendUserId: String) async throws {
+//        
+//        
+//        
+//        //put friend uid in user database
+//        let intoUserDatabase: [String: Any] = [
+//            "friends": FieldValue.arrayRemove([friendUserId])
+//          
+//        ]
+//        try await userDocument(userId: userId).updateData(intoUserDatabase)
+//        
+//        
+//        //put user uid in friend database
+//        let intoFriendDatabase: [String: Any] = [
+//            "friends": FieldValue.arrayRemove([userId])
+//          
+//        ]
+//        try await userDocument(userId: friendUserId).updateData(intoFriendDatabase)
+//
+//        
+//    }
+//    
+    
+    
     //
     //    func getUser(userId: String) async throws -> DBUser {
     //        let snapshot = try await userDocument(userId: userId).getDocument()

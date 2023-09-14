@@ -18,11 +18,58 @@ final class ProfileViewModel: ObservableObject {
     }
     
     
- 
+    
     func loadTargetUser(targetUserId: String) async throws {
-     
+        
         self.user = try await UserManager.shared.getUser(userId: targetUserId)
     }
     
-   
+    
+    func addFriend(friendUserId: String)  {
+        guard !friendUserId.isEmpty else { return }
+        Task {
+            //loading like this becasuse this viewModel User changes depending on if its current user or a user thats searched
+            
+            
+            let authDataResultUserId = try AuthenticationManager.shared.getAuthenticatedUser().uid
+            
+            guard authDataResultUserId != friendUserId else { return }
+            
+            
+            try? await UserManager.shared.addFriend(userId: authDataResultUserId, friendUserId: friendUserId)
+        }
+    }
+//    
+//    func removeFriend(friendUserId: String)  {
+//        guard !friendUserId.isEmpty else { return }
+//        Task {
+//            //loading like this becasuse this viewModel User changes depending on if its current user or a user thats searched
+//            
+//            
+//            let authDataResultUserId = try AuthenticationManager.shared.getAuthenticatedUser().uid
+//            
+//            guard authDataResultUserId != friendUserId else { return }
+//            
+//            
+//            try? await UserManager.shared.removeFriend(userId: authDataResultUserId, friendUserId: friendUserId)
+//        }
+//    }
+//    
+    
+    
+    
+    func isFriend() -> Bool{
+        do {
+            let authDataResultUserId = try AuthenticationManager.shared.getAuthenticatedUser().uid
+            
+            return user?.friends?.contains(authDataResultUserId) ?? false
+        } catch {
+            print(error)
+        }
+        
+        return false
+        
+    }
+    
+    
 }

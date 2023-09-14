@@ -121,7 +121,6 @@ struct ProfileView: View {
                 }
                 .frame(maxWidth:.infinity, maxHeight: .infinity)
                 .aspectRatio(1, contentMode: .fit)
-                //                .padding(32)
                 .background(.thinMaterial)
                 .cornerRadius(20)
                 
@@ -129,44 +128,6 @@ struct ProfileView: View {
                 
                 
                 
-                ///
-                
-//                VStack{
-//
-//                    if let user = viewModel.user {
-//
-//
-//
-//
-//                        if let username = user.name  {
-//                            Text("\(username)")
-//                                .font(.headline)
-//                                .frame(maxWidth:.infinity, maxHeight: .infinity)
-//                                .background(.thinMaterial)
-//                                .cornerRadius(20)
-//                        }
-//                    }
-//
-//
-//                        HStack{
-//                            Image(systemName: "person.2.fill")
-//
-//                            Text("Friends")
-//
-//                        }
-//                        .font(.headline)
-//                        .fontWeight(.regular)
-//
-//                        .frame(maxWidth:.infinity, maxHeight: .infinity)
-//                        .background(.thinMaterial)
-//                        .cornerRadius(20)
-//
-//
-//
-//
-//                }
-//
-//
                 
                 
                 
@@ -180,37 +141,86 @@ struct ProfileView: View {
                                 .foregroundColor(targetUserColor ?? loadedColor)
                         }
                         
-
-                       if let username = user.username  {
-                           Text("@\(username)")
-                               .font(.headline)
-                               .fontWeight(.regular)
-                               
-                       }
-                   }
-
+                        
+                        if let username = user.username  {
+                            Text("@\(username)")
+                                .font(.headline)
+                                .fontWeight(.regular)
+                            
+                            
+                        }
+                    }
+                    
                     
                 }
                 .frame(maxWidth:.infinity, maxHeight: .infinity)
+                .aspectRatio(1, contentMode: .fit)
                 .background(.thinMaterial)
                 .cornerRadius(20)
-                
                 
                 
                 
                 VStack{
-                    Text("15")
-                        .font(.title)
-                        .fontWeight(.bold)
+                    Button {
+                        
+                        viewModel.addFriend(friendUserId: targetUserId)
+                    } label: {
+                        
+                        
+                        HStack{
+                            
+                            
+                            
+                            Text(viewModel.isFriend() ? "Friended" : "Add Friend")
+                                .font(.headline)
+                            
+                            Image(systemName: viewModel.isFriend() ? "checkmark.circle" : "plus.circle")
+                            
+                        }
+                        .frame(maxWidth:.infinity, maxHeight: .infinity)
+                        .background(.thinMaterial)
+                        .cornerRadius(20)
+                    }
                     
-                    Text("Friends")
-                        .font(.headline)
-                        .fontWeight(.regular)
+                    
+                    
+                    NavigationLink {
+                        SearchUserView(showSignInView: $showSignInView, loadedColor: $loadedColor, showCreateProfileView: $showCreateProfileView, friendsOnly: true, targetUserId: viewModel.user?.userId ?? "")
+                    } label: {
+                        
+                        VStack{
+                            if let user = viewModel.user {
+                                if let friends = user.friends{
+                                    Text(String(friends.count))
+                                        .font(.title)
+                                        .fontWeight(.bold)
+                                        .foregroundColor(targetUserColor ?? loadedColor)
+                                    
+                                    Text(friends.count == 1 ? "Friend" : "Friends")
+                                        .font(.headline)
+                                        .fontWeight(.regular)
+                                    
+                                }
+                                
+                            }
+                            
+                            
+                            
+                            
+                        }
+                        .foregroundColor(Color(UIColor.label))
+                        .frame(maxWidth:.infinity, maxHeight: .infinity)
+                        .background(.thinMaterial)
+                        .cornerRadius(20)
+                        
+                    }
+                    
+                    
+                    
+                    
                     
                 }
-                .frame(maxWidth:.infinity, maxHeight: .infinity)
-                .background(.thinMaterial)
-                .cornerRadius(20)
+                .aspectRatio(1, contentMode: .fit)
                 
                 
                 
