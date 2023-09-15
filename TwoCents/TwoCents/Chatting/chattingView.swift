@@ -27,7 +27,6 @@ struct chatStruct: View{
 
 struct messageBubble: View{
     var message: Message
-    if(message.sendBy = )
 
     var body: some View{
         Text(message.text)
