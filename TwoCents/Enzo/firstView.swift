@@ -10,7 +10,7 @@ import SwiftUI
 private let fixedColumns = [
     GridItem(.flexible()),
     GridItem(.flexible())
-]
+]//gay
 
 struct HotSeatGame: View {
     @State var scale = 0.5
