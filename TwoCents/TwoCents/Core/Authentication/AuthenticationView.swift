@@ -13,6 +13,8 @@ struct AuthenticationView: View {
     
     @State private var animateGradient: Bool = false
     
+    @Binding var showCreateProfileView: Bool
+    
     
     var body: some View {
         VStack{
@@ -52,7 +54,9 @@ struct AuthenticationView: View {
             Spacer()
             
             NavigationLink {
-                SignInEmailView(showSignInView: $showSignInView)
+                
+               
+                SignInEmailView(showSignInView: $showSignInView, showCreateProfileView: $showCreateProfileView)
             } label: {
                 Text("Sign In With Email")
                     .font(.headline)
@@ -61,6 +65,24 @@ struct AuthenticationView: View {
                     .frame(maxWidth: .infinity)
                     .background(Color(UIColor.label))
                     .cornerRadius(10)
+            }
+            
+            
+            
+            NavigationLink{
+             
+
+                SignUpEmailView(showSignInView: $showSignInView, showCreateProfileView: $showCreateProfileView)
+//                    .navigationBarTitleDisplayMode(.large)
+//                    .navigationBarBackButtonHidden(true)
+
+            } label: {
+                Text("New? Ugh. Create a new account")
+                    .font(.footnote)
+                    .foregroundColor(Color(UIColor.secondaryLabel))
+                    .frame(height: 30)
+                    .frame(maxWidth: .infinity)
+
             }
             
             
@@ -77,7 +99,7 @@ struct AuthenticationView: View {
 struct AuthenticationView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack{
-            AuthenticationView(showSignInView: .constant(false))
+            AuthenticationView(showSignInView: .constant(false), showCreateProfileView: .constant(false))
         }
        
     }

@@ -9,14 +9,14 @@
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
-			<integer>2</integer>
+			<integer>1</integer>
 		</dict>
 		<key>Promises (Playground) 2.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
-			<integer>3</integer>
+			<integer>2</integer>
 		</dict>
 		<key>Promises (Playground).xcscheme</key>
 		<dict>
@@ -24,29 +24,6 @@
 			<false/>
 			<key>orderHint</key>
 			<integer>0</integer>
-		</dict>
-		<key>TwoCents.xcscheme_^#shared#^_</key>
-		<dict>
-			<key>orderHint</key>
-			<integer>1</integer>
-		</dict>
-	</dict>
-	<key>SuppressBuildableAutocreation</key>
-	<dict>
-		<key>A257D77F2A6D707600A4E7BD</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>A257D78F2A6D707800A4E7BD</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>A257D7992A6D707800A4E7BD</key>
-		<dict>
-			<key>primary</key>
-			<true/>
 		</dict>
 	</dict>
 </dict>

@@ -9,6 +9,9 @@ import Foundation
 
 
 @MainActor
+
+
+        
 final class SettingsViewModel: ObservableObject{
     func signOut() throws {
         try AuthenticationManager.shared.signOut()
@@ -27,6 +30,7 @@ final class SettingsViewModel: ObservableObject{
     
     func updateEmail() async throws {
         //NEED TO CHANGE TO BE IN BRACKET ABOVE. BUT NEED TO IMPLEMENT UI
+        
         let email = "123"
         try await AuthenticationManager.shared.updateEmail(email: email)
     }
