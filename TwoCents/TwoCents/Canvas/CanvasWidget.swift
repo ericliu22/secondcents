@@ -22,22 +22,34 @@ The default inherited class for all widgets on the Canvas. Don't actually initia
     - size: Always make it an int list length 2 of [width, height]. There are no safety measures for this just remember it well
     - bodyView: The actual content of the widget
  */
-class CanvasWidget {
+class CanvasWidget: Hashable{
     
+    
+    static func == (lhs: CanvasWidget, rhs: CanvasWidget) -> Bool {
+        return lhs.uid == rhs.uid
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(uid)
+    }
+    
+    var uid: String
     var position: CGPoint
-    var size: [CGFloat] = []
+    var size: [CGFloat] = [250,250]
     var borderColor: Color
     var bodyView: AnyView
     var userId: String
+    var grab: Bool
     
     func widgetView() -> AnyView {
         AnyView(
             ZStack {
+                
+                self.bodyView
                 RoundedRectangle(cornerRadius: 25)
                     .stroke(borderColor, lineWidth: 10)
-                    .frame(width: size[0], height: size[1])
-                self.bodyView
-            }.position(x: position.x, y: position.y)
+                    .frame(width: 250, height: 250)
+            }
         )
     }
     init(position: CGPoint, size: [CGFloat], borderColor: Color, bodyView: AnyView) {
@@ -46,7 +58,9 @@ class CanvasWidget {
         self.bodyView = bodyView
         self.userId = "HfQw46R2aGfUK2CWNTPJ7LU8cGA3"
         self.size = size
+        self.grab = false
+        self.uid = UUID().uuidString
     }
+    
 }
-
 

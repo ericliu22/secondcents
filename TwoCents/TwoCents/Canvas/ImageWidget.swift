@@ -15,7 +15,7 @@ class ImageWidget: CanvasWidget {
             AnyView(
                 image
                     .resizable()
-                    .aspectRatio(contentMode: .fit)
+                    .aspectRatio(contentMode: .fill)
                     .frame(width: size[0], height: size[1])
                     .clipShape(
                         RoundedRectangle(cornerRadius: 25)

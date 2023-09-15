@@ -175,11 +175,7 @@
 		A257D7822A6D707600A4E7BD /* TwoCents */ = {
 			isa = PBXGroup;
 			children = (
-				A27145D42AA5262B00729CA7 /* CanvasPage.swift */,
-				A2003C942AABA08300B1E551 /* Line.swift */,
-				A2354EF72AA0D6CB0092BF1C /* CanvasWidget.swift */,
-				A2354EF52AA0D6CB0092BF1C /* ImageWidget.swift */,
-				A2354EF62AA0D6CB0092BF1C /* VideoWidget.swift */,
+				A2905EB62AAFD21700AC9AB1 /* Canvas */,
 				AB90021B2A8B85C600F970B8 /* Example */,
 				AB4C1E4E2A8785BF00588160 /* ColorSelectionView.swift */,
 				AB842C0C2A91E2A600E4A7CE /* Storage */,
@@ -218,6 +214,18 @@
 				A257D7A02A6D707800A4E7BD /* TwoCentsUITestsLaunchTests.swift */,
 			);
 			path = TwoCentsUITests;
+			sourceTree = "<group>";
+		};
+		A2905EB62AAFD21700AC9AB1 /* Canvas */ = {
+			isa = PBXGroup;
+			children = (
+				A27145D42AA5262B00729CA7 /* CanvasPage.swift */,
+				A2003C942AABA08300B1E551 /* Line.swift */,
+				A2354EF72AA0D6CB0092BF1C /* CanvasWidget.swift */,
+				A2354EF52AA0D6CB0092BF1C /* ImageWidget.swift */,
+				A2354EF62AA0D6CB0092BF1C /* VideoWidget.swift */,
+			);
+			path = Canvas;
 			sourceTree = "<group>";
 		};
 		AB74383F2AAA339A001B4988 /* SearchUser */ = {
