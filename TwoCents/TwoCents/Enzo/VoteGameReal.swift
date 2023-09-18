@@ -16,8 +16,9 @@ struct VoteGameReal: View {
     @State private var selectedImage: String = ""
     @State private var selectedColor: String = ""
     @State private var selectedNumVotes: Int = 0
-    
+
     @State private var readyNextPage = false
+
 
     var body: some View {
         NavigationView{
@@ -49,7 +50,7 @@ struct VoteGameReal: View {
                         }
                     }
                     .padding()
-                    
+
                     Button("Send") {
                         addVote()
                         self.readyNextPage = true
@@ -58,7 +59,7 @@ struct VoteGameReal: View {
                     .foregroundColor(.white)
                     .opacity(selectedPlayer == "" ? 0.5 : 1.0)
                     .disabled(selectedPlayer == "")
-                    
+
                     NavigationLink(destination: resultView(playerName: selectedPlayer, playerImage: selectedImage, playerColor: selectedColor, playerVotes: selectedNumVotes), isActive: $readyNextPage) {EmptyView()}
                 }
                 .padding(.top)
@@ -83,7 +84,7 @@ struct CapsuleView: View {
     var selectedNumVotes: Int
 
     var body: some View {
-        
+
         Capsule()
             .fill(selectedPlayer == emptyPlayer ? Color("enzoGreen") : .white)
             .onTapGesture {
@@ -103,7 +104,7 @@ struct resultView: View {
     var playerColor: String
     var playerVotes: Int
     var body: some View {
-        
+
         ZStack{
             Color(playerColor)
                 .edgesIgnoringSafeArea(.all)
@@ -122,7 +123,7 @@ struct resultView: View {
     }
 }
 
-    
+
 struct VoteGameReal_Previews: PreviewProvider {
     static var previews: some View {
         VoteGameReal()
