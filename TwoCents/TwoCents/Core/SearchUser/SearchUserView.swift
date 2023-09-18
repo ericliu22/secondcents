@@ -13,15 +13,19 @@ struct SearchUserView: View {
     @Binding var loadedColor: Color
     @Binding var showCreateProfileView: Bool
     
+    @State var friendsOnly: Bool
+    @State var targetUserId: String
     
     @State private var searchTerm = ""
+    
+    
     
     @StateObject private var viewModel = SearchUserViewModel()
     
     
     var filteredFriends: [DBUser]{
-        guard !searchTerm.isEmpty else { return viewModel.friends }
-        return viewModel.friends.filter{$0.name!.localizedCaseInsensitiveContains(searchTerm) || $0.username!.localizedCaseInsensitiveContains(searchTerm)}
+        guard !searchTerm.isEmpty else { return viewModel.allUsers}
+        return viewModel.allUsers.filter{$0.name!.localizedCaseInsensitiveContains(searchTerm) || $0.username!.localizedCaseInsensitiveContains(searchTerm)}
     }
     var body: some View {
         //        VStack {
@@ -33,7 +37,7 @@ struct SearchUserView: View {
         
         NavigationStack{
             List{
-            
+                
                 ForEach(filteredFriends) { friends    in
                     let targetUserColor: Color = viewModel.getUserColor(userColor: friends.userColor!)
                     
@@ -41,10 +45,10 @@ struct SearchUserView: View {
                     
                     
                     
-                  
+                    
                     
                     NavigationLink {
-                     
+                        
                         ProfileView(showSignInView: $showSignInView, loadedColor: $loadedColor,targetUserColor: targetUserColor, showCreateProfileView: $showCreateProfileView, targetUserId: friends.userId)
                     } label: {
                         HStack(spacing: 20){
@@ -105,36 +109,37 @@ struct SearchUserView: View {
                                 
                                 Text(friends.name!)
                                     .font(.headline)
-                                  
+                                
                                 
                                 Text(
                                     "@\(friends.username!)")
-                                    .font(.caption)
+                                .font(.caption)
                                 
                             }
                             
                         }
                     }
-
                     
-                  
+                    
+                    
                 }
                 
                 
                 
                 
-               
+                
                 
                 
             }
-            .navigationTitle("Search")
+            .navigationTitle(friendsOnly ? "Friends" :  "Search")
             .searchable(text: $searchTerm, prompt: "Search")
             
         }
         .task {
-            try? await viewModel.getAllFriends()
+            friendsOnly
+            ? try? await viewModel.getAllFriends(targetUserId: targetUserId)
+            : try? await viewModel.getAllUsers()
         }
-        
         
         
     }
@@ -142,6 +147,6 @@ struct SearchUserView: View {
 
 struct SearchUserView_Previews: PreviewProvider {
     static var previews: some View {
-        SearchUserView(showSignInView: .constant(false),loadedColor: .constant(.red),showCreateProfileView: .constant(false))
+        SearchUserView(showSignInView: .constant(false),loadedColor: .constant(.red),showCreateProfileView: .constant(false), friendsOnly: false, targetUserId: "")
     }
 }

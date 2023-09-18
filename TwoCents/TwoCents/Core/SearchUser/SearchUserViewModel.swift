@@ -28,15 +28,21 @@ final class SearchUserViewModel: ObservableObject {
     
     
     
-    @Published private(set) var friends: [DBUser] = []
+    @Published private(set) var allUsers: [DBUser] = []
     
     
     
-    func getAllFriends() async throws {
+    func getAllUsers() async throws {
         try? await loadCurrentUser()
-        self.friends = try await UserManager.shared.getAllUsers(userId: user!.userId, friendsOnly: false)
-        
-        
+      
+        self.allUsers = try await UserManager.shared.getAllUsers(userId: user!.userId, friendsOnly: false)
+       
+    }
+    
+    func getAllFriends(targetUserId: String) async throws {
+        print(targetUserId)
+        try? await loadCurrentUser()
+        self.allUsers = try await UserManager.shared.getAllUsers(userId: targetUserId, friendsOnly: true)
     }
     
     
