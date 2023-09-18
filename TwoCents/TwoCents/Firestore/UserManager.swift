@@ -190,7 +190,7 @@ final class UserManager{
         
         //put friend uid in user database
         let intoUserDatabase: [String: Any] = [
-            "friends": [friendUserId]
+            "friends": FieldValue.arrayUnion([friendUserId])
           
         ]
         try await userDocument(userId: userId).updateData(intoUserDatabase)
@@ -198,7 +198,7 @@ final class UserManager{
         
         //put user uid in friend database
         let intoFriendDatabase: [String: Any] = [
-            "friends": [userId]
+            "friends": FieldValue.arrayUnion([userId])
           
         ]
         try await userDocument(userId: friendUserId).updateData(intoFriendDatabase)
