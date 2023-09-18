@@ -28,7 +28,10 @@ struct CardView: View {
                         .padding(.top, -130)
                     Text(player.name)
                         .foregroundColor(.white)
-                        .font(.custom("LuckiestGuy-Regular", size: 32))
+                    
+                        .font(.title)
+                    
+//                        .font(.custom("LuckiestGuy-Regular", size: 32))
                         .bold()
                         .padding(.bottom, 230)
                     NavigationLink(value: playerData[playerIndex]) {

@@ -10,6 +10,9 @@
 		850958A52AB8F40B00018A32 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20EBD052AB8A36100EFDDE8 /* CardView.swift */; };
 		850958A62AB8F41100018A32 /* SabotageGame.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20EBD042AB8A36100EFDDE8 /* SabotageGame.swift */; };
 		850958A72AB8F41D00018A32 /* firstView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20EBD062AB8A36100EFDDE8 /* firstView.swift */; };
+		850958AA2AB8F82D00018A32 /* LuckiestGuy-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 850958A92AB8F82D00018A32 /* LuckiestGuy-Regular.ttf */; };
+		850958AB2AB8F82D00018A32 /* LuckiestGuy-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 850958A92AB8F82D00018A32 /* LuckiestGuy-Regular.ttf */; };
+		850958AC2AB8F82D00018A32 /* LuckiestGuy-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 850958A92AB8F82D00018A32 /* LuckiestGuy-Regular.ttf */; };
 		85C6759A2AB8EE5B00FACCB2 /* HotSeatManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20EBD082AB8A36100EFDDE8 /* HotSeatManager.swift */; };
 		85C6759B2AB8EE6100FACCB2 /* SuperlativeGame.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20EBD092AB8A36100EFDDE8 /* SuperlativeGame.swift */; };
 		A257D7842A6D707600A4E7BD /* TwoCentsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A257D7832A6D707600A4E7BD /* TwoCentsApp.swift */; };
@@ -78,6 +81,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		850958A82AB8F81200018A32 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		850958A92AB8F82D00018A32 /* LuckiestGuy-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "LuckiestGuy-Regular.ttf"; sourceTree = "<group>"; };
 		85DDD0CC2AB4E79A008A9C56 /* VoteGameReal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VoteGameReal.swift; sourceTree = "<group>"; };
 		A2003C942AABA08300B1E551 /* Line.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Line.swift; sourceTree = "<group>"; };
 		A20EBD042AB8A36100EFDDE8 /* SabotageGame.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SabotageGame.swift; sourceTree = "<group>"; };
@@ -183,6 +188,7 @@
 				A20EBD072AB8A36100EFDDE8 /* VoteGameReal.swift */,
 				A20EBD082AB8A36100EFDDE8 /* HotSeatManager.swift */,
 				A20EBD092AB8A36100EFDDE8 /* SuperlativeGame.swift */,
+				850958A92AB8F82D00018A32 /* LuckiestGuy-Regular.ttf */,
 			);
 			name = Enzo;
 			path = TwoCents/Enzo;
@@ -214,6 +220,7 @@
 		A257D7822A6D707600A4E7BD /* TwoCents */ = {
 			isa = PBXGroup;
 			children = (
+				850958A82AB8F81200018A32 /* Info.plist */,
 				A2F5631F2AB4E6700026D8C9 /* Chatting */,
 				A2F563122AB4E6240026D8C9 /* Canvas */,
 				AB90021B2A8B85C600F970B8 /* Example */,
@@ -517,6 +524,7 @@
 				A257D78B2A6D707800A4E7BD /* Preview Assets.xcassets in Resources */,
 				A257D7882A6D707800A4E7BD /* Assets.xcassets in Resources */,
 				AB7365BB2A85060F00799D31 /* GoogleService-Info.plist in Resources */,
+				850958AA2AB8F82D00018A32 /* LuckiestGuy-Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -524,6 +532,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				850958AB2AB8F82D00018A32 /* LuckiestGuy-Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -531,6 +540,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				850958AC2AB8F82D00018A32 /* LuckiestGuy-Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -743,6 +753,7 @@
 				DEVELOPMENT_TEAM = 857HQ99479;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = TwoCents/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -772,6 +783,7 @@
 				DEVELOPMENT_TEAM = 857HQ99479;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = TwoCents/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
