@@ -372,7 +372,7 @@ struct TextDisplayed: View {
 
     var body: some View {
         Text(textDisplayed)
-            .font(.custom("SFProDisplay-Regular", size: CGFloat(textSize)))
+            .font(.body)
             .foregroundColor(.white)
             .padding()
     }

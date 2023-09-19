@@ -23,7 +23,7 @@ struct SabotageGame: View {
                 VStack{
                     Text("Who will be the victim of your")
                         .foregroundColor(.white)
-                        .font(.custom("SFProDisplay-Regular", size: 24))
+                        .font(.title2)
                         .padding()
                     Text("Sabotage")
                         .foregroundColor(.white)
@@ -67,11 +67,11 @@ struct SabotageGamePageTwo: View {
                 Image(player.image)
                 Text(player.name)
                     .foregroundColor(.white)
-                    .font(.custom("LuckiestGuy-Regular", size: 32))
+                    .font(.custom("LuckiestGuy-Regular", size: 30))
                     .padding()
                 Spacer()
                 ScrollView{
-                    LazyVGrid(columns: fixedColumns, spacing: 30) {
+                    LazyVGrid(columns: fixedColumns, spacing: nil) {
                         NavigationLink {
                             SabotageGamePretend(player: player)
                         } label: {
@@ -95,8 +95,8 @@ struct SabotageGamePageTwo: View {
                         } label: {
                             SabotageWidget(player: player, icon: "delete.left.fill", sabotageText: "Remove points")
                         }
-                    }.padding(.top, 20)
-                }.padding(.top, 30)
+                    }.padding()
+                }
             }
         }
     }
@@ -114,10 +114,10 @@ struct SabotageGamePretend: View {
             VStack{
                 Text("What's on your mind")
                     .foregroundColor(.white)
-                    .font(.custom("LuckiestGuy-Regular", size: 32))
+                    .font(.custom("LuckiestGuy-Regular", size: 30))
                 Text("'\(player.name)'")
                     .foregroundColor(.white)
-                    .font(.custom("LuckiestGuy-Regular", size: 32))
+                    .font(.custom("LuckiestGuy-Regular", size: 30))
                 ZStack{
                     Image(player.image)
                         .resizable()
@@ -169,31 +169,24 @@ struct SabotageWidget: View {
         ZStack{
             VStack{
                 Image(systemName: icon)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 100, height: 100)
-                    .zIndex(10)
+                    .font(.title)
+                    .fontWeight(.bold)
                     .foregroundColor(Color(player.color))
-                    .shadow(radius: 1, x: 3, y: 3)
-                VStack{
-                    Text(sabotageText)
-                        .foregroundColor(Color(player.color))
-                        .font(.custom("SFProDisplay-Regular", size: 16))
-                        .italic()
-                        .opacity(0.5)
-                }
-                .offset(y: 20)
-            }
-            .zIndex(10)
-            RoundedRectangle(cornerRadius: 20)
-                .foregroundColor(.white)
-                .frame(width: 180, height: 180)
-                .shadow(radius: 5, x: 5, y: 5)
-                .overlay(RoundedRectangle(cornerRadius: 20).stroke(Color(player.color), lineWidth: 5))
-                .padding(.horizontal, 50)
                 
+                Text(sabotageText)
+                    .foregroundColor(Color(player.color))
+                    .font(.headline)
+                    .fontWeight(.regular)
+            }
         }
+        
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(.white)
+        .aspectRatio(1, contentMode: .fit)
+        .cornerRadius(20)
+        
     }
+    
 }
 
 
