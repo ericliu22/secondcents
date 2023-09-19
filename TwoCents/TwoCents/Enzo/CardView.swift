@@ -18,32 +18,34 @@ struct CardView: View {
     var body: some View {
             ZStack{
                 Rectangle()
-                    .frame(width: 320, height: 500)
                     .border(.white, width: 5.0)
                     .cornerRadius(4)
                     .foregroundColor(Color(player.color))
                     .shadow(radius: 2)
+                    .padding(.vertical, 100)
+                    .padding(.horizontal, 40)
                 VStack(){
                     Image(player.image)
-                        .padding(.top, -130)
                     Text(player.name)
                         .foregroundColor(.white)
-                    
                         .font(.title)
-                    
-//                        .font(.custom("LuckiestGuy-Regular", size: 32))
                         .bold()
-                        .padding(.bottom, 230)
+                    Spacer()
                     NavigationLink(value: playerData[playerIndex]) {
                         ZStack{
-                            Circle()
-                                .foregroundColor(.white)
-                                .frame(width: 50, height: 50)
+                            Rectangle()
+                                .foregroundColor(Color(player.color))
+                                .background(.regularMaterial)
+                                .frame(width: 200, height: 50)
+                                .cornerRadius(10)
+                                .opacity(0.5)
                                 .shadow(radius: 5)
-                            Image(systemName: "x.circle")
-                                .foregroundColor(.red)
+                            Text("Sabotage")
+                                .font(.custom("LuckiestGuy-Regular", size: 28))
+                                .foregroundColor(.white)
                         }
                     }
+                    Spacer()
                 }
             }
             .navigationDestination(for: PlayerData.self) { player in
