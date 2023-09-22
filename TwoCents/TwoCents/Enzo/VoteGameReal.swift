@@ -30,7 +30,7 @@ struct VoteGameReal: View {
                         .padding(.bottom, -5)
                     Text("Killing the Vibe")
                         .foregroundColor(.white)
-                        .font(.custom("LuckiestGuy-Regular", size: 40))
+                        .font(.custom("LuckiestGuy-Regular", size: 36))
                     ScrollView{
                         LazyVGrid(columns: fixedColumns, spacing: 20) {
                             ForEach(0..<playerData.count, id: \.self) {item in

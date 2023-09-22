@@ -26,17 +26,17 @@ struct SuperlativeGame: View {
                 VStack{
                     Text("SUPERLATIVES")
                         .foregroundColor(.white)
-                        .font(.custom("LuckiestGuy-Regular", size: 50))
+                        .font(.custom("LuckiestGuy-Regular", size: 48))
                     Spacer()
                     NavigationLink(value: playerData.first) {
                         Text("Start!")
                             .foregroundColor(.white)
-                            .font(.custom("LuckiestGuy-Regular", size: 64))
+                            .font(.custom("LuckiestGuy-Regular", size: 60))
                             .padding()
                             .shadow(radius: 3)
                     }
                     Spacer()
-                }.padding(.top, 50)
+                }
                 .navigationDestination(for: PlayerData.self) { player in
                     answeringView(path: $path, player: player)
                 }
@@ -68,7 +68,7 @@ struct answeringView: View {
                         animateOpacity = 1.0
                     }
                     .foregroundColor(.white)
-                    .font(.custom("LuckiestGuy-Regular", size: isAnimated ? 50 : 100))
+                    .font(.custom("LuckiestGuy-Regular", size: isAnimated ? 48 : 100))
                     .animation(Animation.spring(
                         response: 0.5,
                         dampingFraction: 0.2), value: isAnimated)
@@ -85,14 +85,14 @@ struct answeringView: View {
                 Spacer()
                 Text("How would you describe the _charming_")
                     .foregroundColor(.white)
-                    .font(.custom("SFProDisplay-Regular", size: isAnimated ? 22 : 50))
+                    .font(.custom("SFProDisplay-Regular", size: isAnimated ? 18 : 50))
                     .animation(Animation.spring(), value: isAnimated)
                     .opacity(animateOpacity)
                     .animation(.default.delay(2), value: animateOpacity)
                     .padding()
                 Text("\(player.name)?")
                     .foregroundColor(.white)
-                    .font(.custom("LuckiestGuy-Regular", size: isAnimated ? 32 : 100))
+                    .font(.custom("LuckiestGuy-Regular", size: isAnimated ? 28 : 100))
                     .animation(Animation.spring(), value: isAnimated)
                     .opacity(animateOpacity)
                     .animation(.default.delay(3), value: animateOpacity)
@@ -117,7 +117,7 @@ struct answeringView: View {
                         dataIndex = 0
                     }
                 } .foregroundColor(.white)
-                    .font(.custom("LuckiestGuy-Regular", size: 40))
+                    .font(.custom("LuckiestGuy-Regular", size: 36))
                     .shadow(radius: 3)
                     .padding(.top, 50)
                     .disabled(superlativeMessage == "")
@@ -149,15 +149,15 @@ struct responsesView: View {
             VStack{
                 Text("SUPERLATIVES")
                     .foregroundColor(.white)
-                    .font(.custom("LuckiestGuy-Regular", size: 50))
+                    .font(.custom("LuckiestGuy-Regular", size: 48))
                 Image(playerData[dataIndex].image)
                 Text("How would you describe the _charming_")
                     .foregroundColor(.white)
-                    .font(.custom("SFProDisplay-Regular", size: 22))
+                    .font(.custom("SFProDisplay-Regular", size: 18))
                     .padding()
                 Text("\(playerData[dataIndex].name)?")
                     .foregroundColor(.white)
-                    .font(.custom("LuckiestGuy-Regular", size: 32))
+                    .font(.custom("LuckiestGuy-Regular", size: 30))
                     .padding(.top, -15)
                 ZStack{
                     LazyVGrid(columns: fixedColumns, spacing: 20) {

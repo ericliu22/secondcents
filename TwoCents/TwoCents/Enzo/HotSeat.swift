@@ -69,7 +69,7 @@ struct secondView: View {
                 HotSeatText()
                 ImageDisplayed(imageDisplayed: profilePicture)
                 Text("What is your _burning question_ to")
-                    .font(.custom("SFProDisplay-Regular", size: 22))
+                    .font(.custom("SFProDisplay-Regular", size: 18))
                     .foregroundColor(.white)
                     .padding(.top, 75)
                 Text("\(profileName)?")
@@ -141,7 +141,7 @@ struct thirdView: View {
                     .animation(.default.delay(3), value: animateOpacity)
                 Spacer()
                 NavigationLink(destination: fourthView(dataArray: dataArray, hotSeatManager: HotSeatManager(), color: color, profilePicture: profilePicture, profileName: profileName), label: {Text("_Continue_")
-                        .font(.custom("SFProDisplay-Regular", size: 28))
+                        .font(.custom("SFProDisplay-Regular", size: 30))
                         .foregroundColor(.white)
                         .opacity(0.5)
                         .padding(.bottom, 30)
@@ -198,7 +198,7 @@ struct fourthView: View {
                 .animation(.default.delay(1), value: animateOpacity)
             
             Text("Dear")
-                .font(.custom("LuckiestGuy-Regular", size: 32))
+                .font(.custom("LuckiestGuy-Regular", size: 30))
                 .matchedGeometryEffect(id: "id1", in: textAnimation)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .foregroundColor(.white)
@@ -217,7 +217,7 @@ struct fourthView: View {
                 .animation(.default.delay(3), value: animateOpacity)
             
             Text(dataArray)
-                .font(.custom("LuckiestGuy-Regular", size: 40))
+                .font(.custom("LuckiestGuy-Regular", size: 36))
                 .matchedGeometryEffect(id: "id3", in: textAnimation)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .foregroundColor(.white)
@@ -247,7 +247,7 @@ struct fourthView: View {
     var continuedView: some View {
         VStack{
             Text("Dear")
-                .font(.custom("LuckiestGuy-Regular", size: 32))
+                .font(.custom("LuckiestGuy-Regular", size: 30))
                 .matchedGeometryEffect(id: "id1", in: textAnimation)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .foregroundColor(.white)
@@ -262,7 +262,7 @@ struct fourthView: View {
                 .padding(.leading, 30)
             
             Text(dataArray)
-                .font(.custom("LuckiestGuy-Regular", size: 40))
+                .font(.custom("LuckiestGuy-Regular", size: 36))
                 .matchedGeometryEffect(id: "id3", in: textAnimation)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .foregroundColor(.white)
@@ -272,7 +272,7 @@ struct fourthView: View {
             textFieldGroup
                 .padding(.top, 25)
             Text(savedResponse)
-                .font(.custom("LuckiestGuy-Regular", size: 40))
+                .font(.custom("LuckiestGuy-Regular", size: 36))
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .foregroundColor(.white)
                 .padding(.horizontal, 30)
@@ -360,7 +360,7 @@ struct fourthView: View {
 struct HotSeatText: View {
     var body: some View {
         Text("HOT SEAT")
-            .font(.custom("LuckiestGuy-Regular", size: 64))
+            .font(.custom("LuckiestGuy-Regular", size: 60))
             .foregroundColor(.white)
             .padding()
     }
