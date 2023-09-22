@@ -71,12 +71,12 @@ struct CardView: View {
 
    func swipeCard(width: CGFloat) {
         switch width {
-        case -500...(-200):
+        case -500...(-100):
             print("The index is: \(index)")
             print("The player is: \(player)")
             offset = CGSize(width: 0, height: 0)
             index = index - 1
-        case 200...(500):
+        case 100...(500):
             print("The index is: \(index)")
             offset = CGSize(width: 0, height: 0)
             index = index - 1

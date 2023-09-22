@@ -36,7 +36,7 @@ struct SabotageGame: View {
 //                                .onAppear{
 //                                    isSpread = true
 //                                }
-                                .rotationEffect(.degrees(isSpread ? CGFloat(player*5) : 0))
+                                .rotationEffect(.degrees(isSpread ? CGFloat((player*5)+5) : 0))
 //                                .animation(Animation.spring(
 //                                    response: 1.0,
 //                                    dampingFraction: 5).repeatForever().delay(1), value: isSpread)
