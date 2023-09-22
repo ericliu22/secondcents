@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		850958A52AB8F40B00018A32 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20EBD052AB8A36100EFDDE8 /* CardView.swift */; };
 		850958A62AB8F41100018A32 /* SabotageGame.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20EBD042AB8A36100EFDDE8 /* SabotageGame.swift */; };
-		850958A72AB8F41D00018A32 /* firstView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20EBD062AB8A36100EFDDE8 /* firstView.swift */; };
+		850958A72AB8F41D00018A32 /* HotSeat.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20EBD062AB8A36100EFDDE8 /* HotSeat.swift */; };
 		850958AA2AB8F82D00018A32 /* LuckiestGuy-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 850958A92AB8F82D00018A32 /* LuckiestGuy-Regular.ttf */; };
 		850958AB2AB8F82D00018A32 /* LuckiestGuy-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 850958A92AB8F82D00018A32 /* LuckiestGuy-Regular.ttf */; };
 		850958AC2AB8F82D00018A32 /* LuckiestGuy-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 850958A92AB8F82D00018A32 /* LuckiestGuy-Regular.ttf */; };
@@ -87,7 +87,7 @@
 		A2003C942AABA08300B1E551 /* Line.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Line.swift; sourceTree = "<group>"; };
 		A20EBD042AB8A36100EFDDE8 /* SabotageGame.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SabotageGame.swift; sourceTree = "<group>"; };
 		A20EBD052AB8A36100EFDDE8 /* CardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
-		A20EBD062AB8A36100EFDDE8 /* firstView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = firstView.swift; sourceTree = "<group>"; };
+		A20EBD062AB8A36100EFDDE8 /* HotSeat.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HotSeat.swift; sourceTree = "<group>"; };
 		A20EBD072AB8A36100EFDDE8 /* VoteGameReal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VoteGameReal.swift; sourceTree = "<group>"; };
 		A20EBD082AB8A36100EFDDE8 /* HotSeatManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HotSeatManager.swift; sourceTree = "<group>"; };
 		A20EBD092AB8A36100EFDDE8 /* SuperlativeGame.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuperlativeGame.swift; sourceTree = "<group>"; };
@@ -184,7 +184,7 @@
 			children = (
 				A20EBD042AB8A36100EFDDE8 /* SabotageGame.swift */,
 				A20EBD052AB8A36100EFDDE8 /* CardView.swift */,
-				A20EBD062AB8A36100EFDDE8 /* firstView.swift */,
+				A20EBD062AB8A36100EFDDE8 /* HotSeat.swift */,
 				A20EBD072AB8A36100EFDDE8 /* VoteGameReal.swift */,
 				A20EBD082AB8A36100EFDDE8 /* HotSeatManager.swift */,
 				A20EBD092AB8A36100EFDDE8 /* SuperlativeGame.swift */,
@@ -551,7 +551,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				850958A72AB8F41D00018A32 /* firstView.swift in Sources */,
+				850958A72AB8F41D00018A32 /* HotSeat.swift in Sources */,
 				850958A62AB8F41100018A32 /* SabotageGame.swift in Sources */,
 				850958A52AB8F40B00018A32 /* CardView.swift in Sources */,
 				85C6759B2AB8EE6100FACCB2 /* SuperlativeGame.swift in Sources */,
