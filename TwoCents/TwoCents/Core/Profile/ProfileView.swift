@@ -161,26 +161,6 @@ struct ProfileView: View {
                 
                 
                 VStack{
-                    Button {
-                        
-                        viewModel.addFriend(friendUserId: targetUserId)
-                    } label: {
-                        
-                        
-                        HStack{
-                            
-                            
-                            
-                            Text(viewModel.isFriend() ? "Friended" : "Add Friend")
-                                .font(.headline)
-                            
-                            Image(systemName: viewModel.isFriend() ? "checkmark.circle" : "plus.circle")
-                            
-                        }
-                        .frame(maxWidth:.infinity, maxHeight: .infinity)
-                        .background(.thinMaterial)
-                        .cornerRadius(20)
-                    }
                     
                     
                     
@@ -201,12 +181,7 @@ struct ProfileView: View {
                                         .fontWeight(.regular)
                                     
                                 }
-                                
                             }
-                            
-                            
-                            
-                            
                         }
                         .foregroundColor(Color(UIColor.label))
                         .frame(maxWidth:.infinity, maxHeight: .infinity)
@@ -216,7 +191,60 @@ struct ProfileView: View {
                     }
                     
                     
-                    
+                    if targetUserId.isEmpty {
+                        
+                        NavigationLink {
+                            SearchUserView(showSignInView: $showSignInView, loadedColor: $loadedColor, showCreateProfileView: $showCreateProfileView, friendsOnly: true, targetUserId: viewModel.user?.userId ?? "")
+                        } label: {
+                            
+                            VStack{
+                                if let user = viewModel.user {
+                                    if let friends = user.friends{
+                                        Text(String(friends.count))
+                                            .font(.title3)
+                                            .fontWeight(.bold)
+                                            .foregroundColor(targetUserColor ?? loadedColor)
+                                        
+                                        Text("Friend Requests")
+                                            .font(.headline)
+                                            .fontWeight(.regular)
+                                        
+                                    }
+                                }
+                            }
+                            .foregroundColor(Color(UIColor.label))
+                            .frame(maxWidth:.infinity, maxHeight: .infinity)
+                            .background(.thinMaterial)
+                            .cornerRadius(20)
+                            
+                        }
+                        
+                        
+                    } else {
+                        
+                        Button {
+                            
+                            viewModel.addFriend(friendUserId: targetUserId)
+                            
+                        } label: {
+                            
+                            
+                            HStack{
+                                
+                                Text(viewModel.isFriend() ? "Friended" : "Add Friend")
+                                    .font(.headline)
+                                
+                                Image(systemName: viewModel.isFriend() ? "checkmark.circle" : "plus.circle")
+                                
+                            }
+                            .frame(maxWidth:.infinity, maxHeight: .infinity)
+                            .background(.thinMaterial)
+                            .cornerRadius(20)
+                        }
+                        
+                        
+                        
+                    }
                     
                     
                 }

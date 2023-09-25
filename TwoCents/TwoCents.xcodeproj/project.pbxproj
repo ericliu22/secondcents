@@ -42,6 +42,8 @@
 		AB90021A2A8B85BD00F970B8 /* UploadExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB9002192A8B85BD00F970B8 /* UploadExample.swift */; };
 		AB90021D2A8B85DA00F970B8 /* UploadExampleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB90021C2A8B85DA00F970B8 /* UploadExampleViewModel.swift */; };
 		AB9455232A9468130055B44A /* ColorPickerWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB9455222A9468130055B44A /* ColorPickerWidget.swift */; };
+		AB9909AB2ABE3BF2004B3021 /* FriendRequestsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB9909AA2ABE3BF2004B3021 /* FriendRequestsView.swift */; };
+		AB9909AD2ABE3C1B004B3021 /* FriendRequestsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB9909AC2ABE3C1B004B3021 /* FriendRequestsViewModel.swift */; };
 		ABA45E7E2A7C8D8C0015F000 /* SignInEmailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABA45E7D2A7C8D8C0015F000 /* SignInEmailViewModel.swift */; };
 		ABA45E812A7C8DC50015F000 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABA45E802A7C8DC50015F000 /* ProfileView.swift */; };
 		ABA45E842A7C92B00015F000 /* UserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABA45E832A7C92B00015F000 /* UserManager.swift */; };
@@ -121,6 +123,8 @@
 		AB9002192A8B85BD00F970B8 /* UploadExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadExample.swift; sourceTree = "<group>"; };
 		AB90021C2A8B85DA00F970B8 /* UploadExampleViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadExampleViewModel.swift; sourceTree = "<group>"; };
 		AB9455222A9468130055B44A /* ColorPickerWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorPickerWidget.swift; sourceTree = "<group>"; };
+		AB9909AA2ABE3BF2004B3021 /* FriendRequestsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendRequestsView.swift; sourceTree = "<group>"; };
+		AB9909AC2ABE3C1B004B3021 /* FriendRequestsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendRequestsViewModel.swift; sourceTree = "<group>"; };
 		ABA45E7D2A7C8D8C0015F000 /* SignInEmailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInEmailViewModel.swift; sourceTree = "<group>"; };
 		ABA45E802A7C8DC50015F000 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 		ABA45E832A7C92B00015F000 /* UserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManager.swift; sourceTree = "<group>"; };
@@ -340,6 +344,16 @@
 			path = CustomizeProfile;
 			sourceTree = "<group>";
 		};
+		AB9909A52ABE3B78004B3021 /* FriendRequests */ = {
+			isa = PBXGroup;
+			children = (
+				AB9909AA2ABE3BF2004B3021 /* FriendRequestsView.swift */,
+				AB9909AC2ABE3C1B004B3021 /* FriendRequestsViewModel.swift */,
+			);
+			name = FriendRequests;
+			path = SearchUser/FriendRequests;
+			sourceTree = "<group>";
+		};
 		ABA45E7F2A7C8DA70015F000 /* Profile */ = {
 			isa = PBXGroup;
 			children = (
@@ -375,6 +389,7 @@
 		ABF56DFA2A7C8BC700F959DB /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				AB9909A52ABE3B78004B3021 /* FriendRequests */,
 				AB74383F2AAA339A001B4988 /* SearchUser */,
 				AB9455242A94A2D50055B44A /* SignUp */,
 				AB9455252A94A2E60055B44A /* SignIn */,
@@ -562,6 +577,7 @@
 				ABCA39DA2A7A0881009447C3 /* SettingsView.swift in Sources */,
 				AB6778E62AB8F67D00C11AA7 /* VideoWidget.swift in Sources */,
 				A257D7862A6D707600A4E7BD /* ContentView.swift in Sources */,
+				AB9909AD2ABE3C1B004B3021 /* FriendRequestsViewModel.swift in Sources */,
 				ABCA39DA2A7A0881009447C3 /* SettingsView.swift in Sources */,
 				AB842C122A91F36300E4A7CE /* CustomizeProfileView.swift in Sources */,
 				A2F5631E2AB4E6240026D8C9 /* CanvasPage.swift in Sources */,
@@ -591,6 +607,7 @@
 				ABC426B12A863D9F00873EE1 /* SignUpEmailView.swift in Sources */,
 				ABA45E7E2A7C8D8C0015F000 /* SignInEmailViewModel.swift in Sources */,
 				AB90021A2A8B85BD00F970B8 /* UploadExample.swift in Sources */,
+				AB9909AB2ABE3BF2004B3021 /* FriendRequestsView.swift in Sources */,
 				AB9455232A9468130055B44A /* ColorPickerWidget.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
