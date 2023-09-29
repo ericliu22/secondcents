@@ -38,8 +38,12 @@ struct AuthenticationView: View {
                         .ignoresSafeArea()
                         .hueRotation(.degrees(animateGradient ? 45 : 0))
                         .onAppear{
-                            withAnimation(.easeInOut(duration: 3).repeatForever(autoreverses:true)){
-                                animateGradient.toggle()
+                            
+                            //this line fixes problem of page animating around unintentionally?
+                            DispatchQueue.main.async {
+                                withAnimation(.easeInOut(duration: 3).repeatForever(autoreverses:true)){
+                                    animateGradient.toggle()
+                                }
                             }
                         }
                     
