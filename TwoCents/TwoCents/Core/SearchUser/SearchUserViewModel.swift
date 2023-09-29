@@ -35,16 +35,11 @@ final class SearchUserViewModel: ObservableObject {
     func getAllUsers() async throws {
         try? await loadCurrentUser()
       
-        self.allUsers = try await UserManager.shared.getAllUsers(userId: user!.userId, friendsOnly: false)
+        self.allUsers = try await UserManager.shared.getAllUsers(userId: user!.userId)
        
     }
     
-    func getAllFriends(targetUserId: String) async throws {
-        print(targetUserId)
-        try? await loadCurrentUser()
-        self.allUsers = try await UserManager.shared.getAllUsers(userId: targetUserId, friendsOnly: true)
-    }
-    
+   
     
     func getUserColor(userColor: String) -> Color{
 

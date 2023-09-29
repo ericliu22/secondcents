@@ -103,27 +103,6 @@ final class UserManager{
         try userDocument(userId: user.userId).setData(from: user, merge: false)
     }
     
-    //    func createNewUser(auth: AuthDataResultModel) async throws {
-    //        print ("create new user func executed")
-    //        var userData: [String: Any] = [
-    //            "user_id" : auth.uid,
-    //            "date_created" : Timestamp(),
-    //
-    //
-    //        ]
-    //
-    //        if let email = auth.email {
-    //            userData["email"] = email
-    //        }
-    //
-    //        if let photoUrl = auth.photoUrl {
-    //            userData["photo_url"] = photoUrl
-    //        }
-    //
-    //        try await userDocument(userId: auth.uid).setData(userData, merge: false)
-    //
-    //
-    //    }
     
     
     func getUser(userId: String) async throws -> DBUser {
@@ -133,14 +112,63 @@ final class UserManager{
     }
     
     
-    func getAllUsers(userId: String, friendsOnly: Bool) async throws -> [DBUser]{
+    func getAllUsers(userId: String) async throws -> [DBUser]{
         
         let snapshot: QuerySnapshot
-        if (friendsOnly) {
-            snapshot = try await userCollection.whereField("friends", arrayContains: userId).getDocuments()
-        } else {
-            snapshot = try await userCollection.whereField("userId", isNotEqualTo: userId).getDocuments()
+        
+        snapshot = try await userCollection.whereField("userId", isNotEqualTo: userId).getDocuments()
+    
+        
+        
+        var allUsers: [DBUser] = []
+        
+        
+        for document in snapshot.documents{
+            
+            
+            let singleUser = try document.data(as: DBUser.self)
+         
+            
+            allUsers.append(singleUser)
         }
+        
+        return allUsers
+        
+    }
+//    
+//    func getAllUsers(userId: String, friendsOnly: Bool) async throws -> [DBUser]{
+//        
+//        let snapshot: QuerySnapshot
+//        if (friendsOnly) {
+//            snapshot = try await userCollection.whereField("friends", arrayContains: userId).getDocuments()
+//        } else {
+//            snapshot = try await userCollection.whereField("userId", isNotEqualTo: userId).getDocuments()
+//        }
+//        
+//        
+//        var friends: [DBUser] = []
+//        
+//        
+//        for document in snapshot.documents{
+//            
+//            
+//            let friend = try document.data(as: DBUser.self)
+//         
+//            
+//            friends.append(friend)
+//        }
+//        
+//        return friends
+//        
+//    }
+//    
+//
+    func getAllFriends(userId: String) async throws -> [DBUser]{
+        
+        let snapshot: QuerySnapshot
+       
+        snapshot = try await userCollection.whereField("friends", arrayContains: userId).getDocuments()
+        
         
         
         var friends: [DBUser] = []
@@ -158,6 +186,7 @@ final class UserManager{
         return friends
         
     }
+    
     
  
     

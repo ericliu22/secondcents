@@ -27,6 +27,8 @@
 		A2F5631E2AB4E6240026D8C9 /* CanvasPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F563182AB4E6240026D8C9 /* CanvasPage.swift */; };
 		A2F563222AB4E6700026D8C9 /* retrievemessages.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F563202AB4E6700026D8C9 /* retrievemessages.swift */; };
 		A2F563232AB4E6700026D8C9 /* chattingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F563212AB4E6700026D8C9 /* chattingView.swift */; };
+		AB300FAE2AC7406500C6719D /* FriendsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB300FAD2AC7406500C6719D /* FriendsViewModel.swift */; };
+		AB300FB02AC7407000C6719D /* FriendsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB300FAF2AC7407000C6719D /* FriendsView.swift */; };
 		AB4C1E4F2A8785BF00588160 /* ColorSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB4C1E4E2A8785BF00588160 /* ColorSelectionView.swift */; };
 		AB6778E22AB8F67300C11AA7 /* ImageWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB6778E12AB8F67300C11AA7 /* ImageWidget.swift */; };
 		AB6778E42AB8F67800C11AA7 /* CanvasWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB6778E32AB8F67800C11AA7 /* CanvasWidget.swift */; };
@@ -109,6 +111,8 @@
 		A2F563182AB4E6240026D8C9 /* CanvasPage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CanvasPage.swift; sourceTree = "<group>"; };
 		A2F563202AB4E6700026D8C9 /* retrievemessages.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = retrievemessages.swift; sourceTree = "<group>"; };
 		A2F563212AB4E6700026D8C9 /* chattingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = chattingView.swift; sourceTree = "<group>"; };
+		AB300FAD2AC7406500C6719D /* FriendsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsViewModel.swift; sourceTree = "<group>"; };
+		AB300FAF2AC7407000C6719D /* FriendsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsView.swift; sourceTree = "<group>"; };
 		AB4C1E4E2A8785BF00588160 /* ColorSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorSelectionView.swift; sourceTree = "<group>"; };
 		AB6778E12AB8F67300C11AA7 /* ImageWidget.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageWidget.swift; sourceTree = "<group>"; };
 		AB6778E32AB8F67800C11AA7 /* CanvasWidget.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CanvasWidget.swift; sourceTree = "<group>"; };
@@ -289,6 +293,15 @@
 			path = TwoCents/Chatting;
 			sourceTree = SOURCE_ROOT;
 		};
+		AB300FAC2AC7403900C6719D /* Friends */ = {
+			isa = PBXGroup;
+			children = (
+				AB300FAD2AC7406500C6719D /* FriendsViewModel.swift */,
+				AB300FAF2AC7407000C6719D /* FriendsView.swift */,
+			);
+			path = Friends;
+			sourceTree = "<group>";
+		};
 		AB74383F2AAA339A001B4988 /* SearchUser */ = {
 			isa = PBXGroup;
 			children = (
@@ -390,6 +403,7 @@
 			isa = PBXGroup;
 			children = (
 				AB9909A52ABE3B78004B3021 /* FriendRequests */,
+				AB300FAC2AC7403900C6719D /* Friends */,
 				AB74383F2AAA339A001B4988 /* SearchUser */,
 				AB9455242A94A2D50055B44A /* SignUp */,
 				AB9455252A94A2E60055B44A /* SignIn */,
@@ -590,11 +604,13 @@
 				ABF556842A95046D00103880 /* ColorPickerWidgetViewModel.swift in Sources */,
 				ABCA39D62A7A0159009447C3 /* AuthenticationManager.swift in Sources */,
 				A2F563222AB4E6700026D8C9 /* retrievemessages.swift in Sources */,
+				AB300FAE2AC7406500C6719D /* FriendsViewModel.swift in Sources */,
 				ABCA39D82A7A0671009447C3 /* RootView.swift in Sources */,
 				ABA45E842A7C92B00015F000 /* UserManager.swift in Sources */,
 				AB842C0E2A91E2B500E4A7CE /* StorageManager.swift in Sources */,
 				AB6778E22AB8F67300C11AA7 /* ImageWidget.swift in Sources */,
 				A257D7842A6D707600A4E7BD /* TwoCentsApp.swift in Sources */,
+				AB300FB02AC7407000C6719D /* FriendsView.swift in Sources */,
 				ABCA39D42A79FFAD009447C3 /* SignInEmailView.swift in Sources */,
 				ABB84C342A8CBA03009C7550 /* FrontPageView.swift in Sources */,
 				AB6778E42AB8F67800C11AA7 /* CanvasWidget.swift in Sources */,

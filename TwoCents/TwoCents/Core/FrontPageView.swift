@@ -24,7 +24,7 @@ struct FrontPageView: View {
                     Text("Page 1")
                     
                 }
-            SearchUserView(showSignInView: $showSignInView, loadedColor: $loadedColor, showCreateProfileView: $showCreateProfileView, friendsOnly: false, targetUserId: "")
+            SearchUserView(showSignInView: $showSignInView, loadedColor: $loadedColor, showCreateProfileView: $showCreateProfileView, targetUserId: "")
                 .tabItem {
                     Image(systemName: "magnifyingglass")
                     Text("Search")

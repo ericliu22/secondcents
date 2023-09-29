@@ -91,7 +91,7 @@ final class ProfileViewModel: ObservableObject {
             let authDataResultUserId = try AuthenticationManager.shared.getAuthenticatedUser().uid
             
             isFriend =  user?.friends?.contains(authDataResultUserId)
-            print(user?.friends?.contains(authDataResultUserId))
+          
             
                 
              

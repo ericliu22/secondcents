@@ -13,7 +13,7 @@ struct SearchUserView: View {
     @Binding var loadedColor: Color
     @Binding var showCreateProfileView: Bool
     
-    @State var friendsOnly: Bool
+   
     @State var targetUserId: String
     
     @State private var searchTerm = ""
@@ -23,7 +23,7 @@ struct SearchUserView: View {
     @StateObject private var viewModel = SearchUserViewModel()
     
     
-    var filteredFriends: [DBUser]{
+    var filteredSearch: [DBUser]{
         guard !searchTerm.isEmpty else { return viewModel.allUsers}
         return viewModel.allUsers.filter{$0.name!.localizedCaseInsensitiveContains(searchTerm) || $0.username!.localizedCaseInsensitiveContains(searchTerm)}
     }
@@ -38,8 +38,8 @@ struct SearchUserView: View {
         NavigationStack{
             List{
                 
-                ForEach(filteredFriends) { friends    in
-                    let targetUserColor: Color = viewModel.getUserColor(userColor: friends.userColor!)
+                ForEach(filteredSearch) { userTile    in
+                    let targetUserColor: Color = viewModel.getUserColor(userColor: userTile.userColor!)
                     
                     
                     
@@ -49,7 +49,7 @@ struct SearchUserView: View {
                     
                     NavigationLink {
                         
-                        ProfileView(showSignInView: $showSignInView, loadedColor: $loadedColor,targetUserColor: targetUserColor, showCreateProfileView: $showCreateProfileView, targetUserId: friends.userId)
+                        ProfileView(showSignInView: $showSignInView, loadedColor: $loadedColor,targetUserColor: targetUserColor, showCreateProfileView: $showCreateProfileView, targetUserId: userTile.userId)
                     } label: {
                         HStack(spacing: 20){
                             
@@ -59,7 +59,7 @@ struct SearchUserView: View {
                                 //Circle or Profile Pic
                                 
                                 
-                                if let urlString = friends.profileImageUrl,
+                                if let urlString = userTile.profileImageUrl,
                                    let url = URL(string: urlString) {
                                     
                                     
@@ -107,12 +107,12 @@ struct SearchUserView: View {
                             
                             VStack(alignment: .leading){
                                 
-                                Text(friends.name!)
+                                Text(userTile.name!)
                                     .font(.headline)
                                 
                                 
                                 Text(
-                                    "@\(friends.username!)")
+                                    "@\(userTile.username!)")
                                 .font(.caption)
                                 
                             }
@@ -131,14 +131,12 @@ struct SearchUserView: View {
                 
                 
             }
-            .navigationTitle(friendsOnly ? "Friends" :  "Search")
+            .navigationTitle( "Search")
             .searchable(text: $searchTerm, prompt: "Search")
             
         }
         .task {
-            friendsOnly
-            ? try? await viewModel.getAllFriends(targetUserId: targetUserId)
-            : try? await viewModel.getAllUsers()
+         try? await viewModel.getAllUsers()
         }
         
         
@@ -147,6 +145,6 @@ struct SearchUserView: View {
 
 struct SearchUserView_Previews: PreviewProvider {
     static var previews: some View {
-        SearchUserView(showSignInView: .constant(false),loadedColor: .constant(.red),showCreateProfileView: .constant(false), friendsOnly: false, targetUserId: "")
+        SearchUserView(showSignInView: .constant(false),loadedColor: .constant(.red),showCreateProfileView: .constant(false),  targetUserId: "")
     }
 }

@@ -180,7 +180,7 @@ struct ProfileView: View {
                         
                         
                         NavigationLink {
-                            SearchUserView(showSignInView: $showSignInView, loadedColor: $loadedColor, showCreateProfileView: $showCreateProfileView, friendsOnly: true, targetUserId: viewModel.user?.userId ?? "")
+                            FriendsView(showSignInView: $showSignInView, loadedColor: $loadedColor, showCreateProfileView: $showCreateProfileView, targetUserId: viewModel.user?.userId ?? "")
                         } label: {
                             
                             VStack{
@@ -209,7 +209,7 @@ struct ProfileView: View {
                         if targetUserId.isEmpty {
                             
                             NavigationLink {
-                                SearchUserView(showSignInView: $showSignInView, loadedColor: $loadedColor, showCreateProfileView: $showCreateProfileView, friendsOnly: true, targetUserId: viewModel.user?.userId ?? "")
+                                FriendsView(showSignInView: $showSignInView, loadedColor: $loadedColor, showCreateProfileView: $showCreateProfileView, targetUserId: viewModel.user?.userId ?? "")
                             } label: {
                                 
                                 VStack{

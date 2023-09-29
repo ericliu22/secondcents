@@ -13,7 +13,7 @@ import SwiftUI
 
 
 @MainActor
-final class FriendRequestsViewModel: ObservableObject {
+final class FriendsViewModel: ObservableObject {
     
     @Published private(set) var user:  DBUser? = nil
     func loadCurrentUser() async throws {
@@ -23,16 +23,13 @@ final class FriendRequestsViewModel: ObservableObject {
     
     
     
-    @Published private(set) var allRequests: [DBUser] = []
+    @Published private(set) var allFriends: [DBUser] = []
     
     
-    func getAllRequests(targetUserId: String) async throws {
+    func getAllFriends(targetUserId: String) async throws {
         print(targetUserId)
         try? await loadCurrentUser()
-//        self.allRequests = try await UserManager.shared.getAllRequests(userId: targetUserId, friendsOnly: true)
-//        
-        
-//        self.allRequests = try await UserManager.shared.getAllUsers(userId: targetUserId, friendsOnly: true)
+        self.allFriends = try await UserManager.shared.getAllFriends(userId: targetUserId)
     }
     
     

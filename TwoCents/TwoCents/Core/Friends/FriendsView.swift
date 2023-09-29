@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct FriendRequestsView: View {
+struct FriendsView: View {
     
     @Binding var showSignInView: Bool
     @Binding var loadedColor: Color
@@ -20,12 +20,12 @@ struct FriendRequestsView: View {
     
     
     
-    @StateObject private var viewModel = FriendRequestsViewModel()
+    @StateObject private var viewModel = FriendsViewModel()
     
     
     var filteredSearch: [DBUser]{
-        guard !searchTerm.isEmpty else { return viewModel.allRequests}
-        return viewModel.allRequests.filter{$0.name!.localizedCaseInsensitiveContains(searchTerm) || $0.username!.localizedCaseInsensitiveContains(searchTerm)}
+        guard !searchTerm.isEmpty else { return viewModel.allFriends}
+        return viewModel.allFriends.filter{$0.name!.localizedCaseInsensitiveContains(searchTerm) || $0.username!.localizedCaseInsensitiveContains(searchTerm)}
     }
     var body: some View {
         //        VStack {
@@ -131,13 +131,13 @@ struct FriendRequestsView: View {
                 
                 
             }
-            .navigationTitle( "Friend Requests" )
+            .navigationTitle( "Friends" )
             .searchable(text: $searchTerm, placement: .navigationBarDrawer(displayMode: .always), prompt: "Search")
             
         }
         .task {
            
-          try? await viewModel.getAllRequests(targetUserId: targetUserId)
+          try? await viewModel.getAllFriends(targetUserId: targetUserId)
          
         }
         
@@ -145,8 +145,8 @@ struct FriendRequestsView: View {
     }
 }
 
-struct FriendRequestsView_Previews: PreviewProvider {
+struct FriendsView_Previews: PreviewProvider {
     static var previews: some View {
-        FriendRequestsView(showSignInView: .constant(false),loadedColor: .constant(.red),showCreateProfileView: .constant(false), targetUserId: "")
+        FriendsView(showSignInView: .constant(false),loadedColor: .constant(.red),showCreateProfileView: .constant(false), targetUserId: "")
     }
 }
