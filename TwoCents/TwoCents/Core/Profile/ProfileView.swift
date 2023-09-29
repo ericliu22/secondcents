@@ -112,8 +112,8 @@ struct ProfileView: View {
                     }
                     .frame(maxWidth:.infinity, maxHeight: .infinity)
                     //                .aspectRatio(1, contentMode: .fit)
-//                    .background(.thinMaterial)
-//                    .cornerRadius(20)
+                    //                    .background(.thinMaterial)
+                    //                    .cornerRadius(20)
                     
                     
                     
@@ -125,9 +125,9 @@ struct ProfileView: View {
                                     .font(.largeTitle)
                                     .fontWeight(.bold)
                                     .foregroundColor(targetUserColor ?? loadedColor)
-                                    
-                                 
-                                    //protects text overflow
+                                
+                                
+                                //protects text overflow
                                     .padding([.leading, .trailing],nil)
                                     .minimumScaleFactor(0.5)
                                     .lineLimit(1)
@@ -137,13 +137,13 @@ struct ProfileView: View {
                             if let username = user.username  {
                                 Text("@\(username)" )
                                     .font(.headline)
-                                    
+                                
                                     .fontWeight(.regular)
                                 
                                 //protects text overflow
                                     .padding([.leading, .trailing],nil)
-//                                .minimumScaleFactor(0.5)
-                                .lineLimit(1)
+                                //                                .minimumScaleFactor(0.5)
+                                    .lineLimit(1)
                                 
                                 
                                 
@@ -154,8 +154,8 @@ struct ProfileView: View {
                     }
                     .frame(maxWidth:.infinity, maxHeight: .infinity)
                     //                .aspectRatio(1, contentMode: .fit)
-//                    .background(.thinMaterial)
-//                    .cornerRadius(20)
+                    //                    .background(.thinMaterial)
+                    //                    .cornerRadius(20)
                 }
                 
                 .frame(maxWidth:.infinity, maxHeight: .infinity)
@@ -241,21 +241,30 @@ struct ProfileView: View {
                                 
                                 viewModel.addFriend(friendUserId: targetUserId)
                                 
+                                
                             } label: {
                                 
                                 
                                 HStack{
+                                    if  viewModel.isFriend != nil {
+                                        Text(viewModel.isFriend! ? "Friended" : "Add Friend")
+                                            .font(.headline)
+                                          
+                                        
+                                        Image(systemName: viewModel.isFriend! ? "checkmark.circle" : "plus.circle")
+                                           
+                                        
+                                    }
                                     
-                                    Text(viewModel.isFriend() ? "Friended" : "Add Friend")
-                                        .font(.headline)
-                                    
-                                    Image(systemName: viewModel.isFriend() ? "checkmark.circle" : "plus.circle")
                                     
                                 }
                                 .frame(maxWidth:.infinity, maxHeight: .infinity)
                                 .background(.thinMaterial)
                                 .cornerRadius(20)
+                                
                             }
+                           
+                            
                             
                             
                             
@@ -284,10 +293,10 @@ struct ProfileView: View {
                 
                 
                 
-        }
-        .padding()
+            }
+            .padding()
             
-        Spacer()
+            Spacer()
             
             
             
@@ -300,6 +309,9 @@ struct ProfileView: View {
             targetUserId.isEmpty ?
             try? await viewModel.loadCurrentUser() :
             try? await viewModel.loadTargetUser(targetUserId: targetUserId)
+            
+            viewModel.checkFriendshipStatus()
+            
             
         }
         .navigationTitle("Profile")

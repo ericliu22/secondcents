@@ -37,6 +37,8 @@ final class ProfileViewModel: ObservableObject {
             
             
             try? await UserManager.shared.addFriend(userId: authDataResultUserId, friendUserId: friendUserId)
+            
+            isFriend = true
         }
     }
 //    
@@ -56,18 +58,22 @@ final class ProfileViewModel: ObservableObject {
 //    }
 //    
     
+    @Published private(set) var isFriend:  Bool? 
     
-    
-    func isFriend() -> Bool{
+    func checkFriendshipStatus() {
         do {
             let authDataResultUserId = try AuthenticationManager.shared.getAuthenticatedUser().uid
             
-            return user?.friends?.contains(authDataResultUserId) ?? false
+            isFriend =  user?.friends?.contains(authDataResultUserId)
+            print(user?.friends?.contains(authDataResultUserId))
+            
+                
+             
         } catch {
             print(error)
         }
         
-        return false
+//        return false
         
     }
     
