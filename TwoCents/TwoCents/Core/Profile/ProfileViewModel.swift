@@ -27,6 +27,9 @@ final class ProfileViewModel: ObservableObject {
     
     func addFriend(friendUserId: String)  {
         guard !friendUserId.isEmpty else { return }
+        isFriend = true
+        
+        
         Task {
             //loading like this becasuse this viewModel User changes depending on if its current user or a user thats searched
             
@@ -38,7 +41,7 @@ final class ProfileViewModel: ObservableObject {
             
             try? await UserManager.shared.addFriend(userId: authDataResultUserId, friendUserId: friendUserId)
             
-            isFriend = true
+            
         }
     }
 //    

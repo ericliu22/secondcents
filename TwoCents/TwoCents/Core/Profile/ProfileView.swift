@@ -243,27 +243,32 @@ struct ProfileView: View {
                                 
                                 
                             } label: {
+                                if  viewModel.isFriend != nil {
                                 
-                                
-                                HStack{
-                                    if  viewModel.isFriend != nil {
-                                        Text(viewModel.isFriend! ? "Friended" : "Add Friend")
-                                            .font(.headline)
-                                          
+                                    HStack{
+                                      
+                                            
+                                        Image(systemName: viewModel.isFriend! ? "person.crop.circle.badge.checkmark"
+                                              : "person.badge.plus")
+                                        .tint(targetUserColor ?? loadedColor)
+                                       
                                         
-                                        Image(systemName: viewModel.isFriend! ? "checkmark.circle" : "plus.circle")
-                                           
+                                        Text(viewModel.isFriend! ? "Friended" : "Add Friend")
+                                            .tint(Color(UIColor.label))
+                                      
                                         
                                     }
-                                    
+                                    .font(.headline)
+                                    .fontWeight(.regular)
+                                    .animation(.easeInOut, value: viewModel.isFriend!)
+                                    .frame(maxWidth:.infinity, maxHeight: .infinity)
+                                    .background(.thinMaterial)
+                                    .cornerRadius(20)
                                     
                                 }
-                                .frame(maxWidth:.infinity, maxHeight: .infinity)
-                                .background(.thinMaterial)
-                                .cornerRadius(20)
                                 
                             }
-                           
+                            
                             
                             
                             
