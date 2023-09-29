@@ -236,14 +236,14 @@ struct ProfileView: View {
                             
                             
                         } else {
-                            
+                            if  viewModel.isFriend != nil {
                             Button {
-                                
-                                viewModel.addFriend(friendUserId: targetUserId)
+                                viewModel.isFriend! ?viewModel.removeFriend(friendUserId: targetUserId)
+                                    :viewModel.addFriend(friendUserId: targetUserId)
                                 
                                 
                             } label: {
-                                if  viewModel.isFriend != nil {
+                                
                                 
                                     HStack{
                                       

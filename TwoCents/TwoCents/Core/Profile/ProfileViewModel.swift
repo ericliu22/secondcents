@@ -44,7 +44,30 @@ final class ProfileViewModel: ObservableObject {
             
         }
     }
-//    
+    
+    func removeFriend(friendUserId: String)  {
+        guard !friendUserId.isEmpty else { return }
+        isFriend = false
+        
+        
+        Task {
+            //loading like this becasuse this viewModel User changes depending on if its current user or a user thats searched
+            
+            
+            let authDataResultUserId = try AuthenticationManager.shared.getAuthenticatedUser().uid
+            
+            guard authDataResultUserId != friendUserId else { return }
+            
+            
+            try? await UserManager.shared.removeFriend(userId: authDataResultUserId, friendUserId: friendUserId)
+            
+            
+        }
+    }
+    
+    
+    
+//
 //    func removeFriend(friendUserId: String)  {
 //        guard !friendUserId.isEmpty else { return }
 //        Task {
