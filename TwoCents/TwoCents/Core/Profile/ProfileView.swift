@@ -18,6 +18,8 @@ struct ProfileView: View {
     @State var targetUserId: String
     
     
+    
+    
     private let columns = [
         GridItem(.flexible()),
         GridItem(.flexible())
@@ -34,8 +36,8 @@ struct ProfileView: View {
                             
                             Group{
                                 //Circle or Profile Pic
-                                
-                                
+//                                
+//                                
                                 if let urlString = viewModel.user?.profileImageUrl,
                                    let url = URL(string: urlString) {
                                     
@@ -76,6 +78,10 @@ struct ProfileView: View {
                                         .frame(width: 128, height: 128)
                                     
                                 }
+//                                
+                                
+//                                
+//                               
                                 
                                 if (targetUserId.isEmpty) {
                                     ZStack{
