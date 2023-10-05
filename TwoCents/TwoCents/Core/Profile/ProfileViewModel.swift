@@ -65,6 +65,25 @@ final class ProfileViewModel: ObservableObject {
         }
     }
     
+    func sendFriendRequest(friendUserId: String)  {
+        guard !friendUserId.isEmpty else { return }
+        
+        
+        
+        Task {
+            //loading like this becasuse this viewModel User changes depending on if its current user or a user thats searched
+            
+            let authDataResultUserId = try AuthenticationManager.shared.getAuthenticatedUser().uid
+            
+            guard authDataResultUserId != friendUserId else { return }
+            
+            
+            try? await UserManager.shared.sendFriendRequest(userId: authDataResultUserId, friendUserId: friendUserId)
+            
+            
+        }
+    }
+    
     
     
 //

@@ -22,6 +22,8 @@ struct DBUser: Identifiable, Codable{
     let profileImageUrl: String?
     let userColor: String?
     let friends: Array<String>?
+    let incomingFriendRequests: Array<String>?
+    let outgoingFriendRequests: Array<String>?
     
     
     
@@ -37,6 +39,8 @@ struct DBUser: Identifiable, Codable{
         self.profileImageUrl = nil
         self.userColor = nil
         self.friends = []
+        self.incomingFriendRequests = []
+        self.outgoingFriendRequests = []
         
     }
     
@@ -52,7 +56,9 @@ struct DBUser: Identifiable, Codable{
         profileImagePath: String? = nil,
         profileImageUrl: String? = nil,
         userColor: String? = nil,
-        friends: Array<String>? = nil
+        friends: Array<String>? = nil,
+        incomingFriendRequests: Array<String>? = nil,
+        outgoingFriendRequests: Array<String>? = nil
     )
     {
         self.userId = userId
@@ -65,6 +71,8 @@ struct DBUser: Identifiable, Codable{
         self.profileImageUrl = profileImageUrl
         self.userColor = nil
         self.friends = []
+        self.incomingFriendRequests = []
+        self.outgoingFriendRequests = []
     }
     
     
@@ -135,34 +143,7 @@ final class UserManager{
         return allUsers
         
     }
-//    
-//    func getAllUsers(userId: String, friendsOnly: Bool) async throws -> [DBUser]{
-//        
-//        let snapshot: QuerySnapshot
-//        if (friendsOnly) {
-//            snapshot = try await userCollection.whereField("friends", arrayContains: userId).getDocuments()
-//        } else {
-//            snapshot = try await userCollection.whereField("userId", isNotEqualTo: userId).getDocuments()
-//        }
-//        
-//        
-//        var friends: [DBUser] = []
-//        
-//        
-//        for document in snapshot.documents{
-//            
-//            
-//            let friend = try document.data(as: DBUser.self)
-//         
-//            
-//            friends.append(friend)
-//        }
-//        
-//        return friends
-//        
-//    }
-//    
-//
+
     func getAllFriends(userId: String) async throws -> [DBUser]{
         
         let snapshot: QuerySnapshot
@@ -188,7 +169,32 @@ final class UserManager{
     }
     
     
- 
+    
+    func getAllRequests(userId: String) async throws -> [DBUser]{
+        
+        let snapshot: QuerySnapshot
+      
+        snapshot = try await userCollection.whereField("outgoingFriendRequests", arrayContains: userId).getDocuments()
+  
+        
+        
+        var requests: [DBUser] = []
+        
+        
+        for document in snapshot.documents{
+            
+            
+            let request = try document.data(as: DBUser.self)
+         
+            
+            requests.append(request)
+        }
+        
+        return requests
+        
+    }
+    
+
     
     func updateUserProfileImage(userId: String, url: String, path: String) async throws {
         let data: [String: Any] = [
@@ -258,59 +264,25 @@ final class UserManager{
     }
     
     
-//
-//    func removeFriend(userId: String, friendUserId: String) async throws {
-//        
-//        
-//        
-//        //put friend uid in user database
-//        let intoUserDatabase: [String: Any] = [
-//            "friends": FieldValue.arrayRemove([friendUserId])
-//          
-//        ]
-//        try await userDocument(userId: userId).updateData(intoUserDatabase)
-//        
-//        
-//        //put user uid in friend database
-//        let intoFriendDatabase: [String: Any] = [
-//            "friends": FieldValue.arrayRemove([userId])
-//          
-//        ]
-//        try await userDocument(userId: friendUserId).updateData(intoFriendDatabase)
-//
-//        
-//    }
-//    
-    
-    
-    //
-    //    func getUser(userId: String) async throws -> DBUser {
-    //        let snapshot = try await userDocument(userId: userId).getDocument()
-    //
-    //        guard let data = snapshot.data(), let userId = data["user_id"] as? String else {
-    //            throw URLError(.badServerResponse)
-    //        }
-    //
-    //
-    //        let email = data["email"] as? String
-    //        let photoUrl = data["photo_url"] as? String
-    //        let dateCreated = data["date_created"] as? Date
-    //
-    //        return DBUser(userId: userId, email: email, photoUrl: photoUrl, dateCreated: dateCreated)
-    //    }
-    
-    
-    
-    
-    
-    
-    
-    //
-    //
-    //    func updateUser (user: DBUser) async throws {
-    //        try userDocument(userId: user.userId).setData(from: user, merge: true, encoder: encoder)
-    //    }
-    
+    func sendFriendRequest(userId: String, friendUserId: String) async throws {
+        
+        
+        
+        //put friend uid in user database
+        let intoUserDatabase: [String: Any] = [
+            "outgoingFriendRequests": FieldValue.arrayUnion([friendUserId])
+        ]
+        try await userDocument(userId: userId).updateData(intoUserDatabase)
+        
+        
+        //put user uid in friend database
+        let intoFriendDatabase: [String: Any] = [
+            "incomingFriendRequests": FieldValue.arrayUnion([userId])
+        ]
+        try await userDocument(userId: friendUserId).updateData(intoFriendDatabase)
+
+        
+    }
     
     
 }

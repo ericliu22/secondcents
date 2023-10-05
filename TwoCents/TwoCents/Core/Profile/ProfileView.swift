@@ -209,7 +209,7 @@ struct ProfileView: View {
                         if targetUserId.isEmpty {
                             
                             NavigationLink {
-                                FriendsView(showSignInView: $showSignInView, loadedColor: $loadedColor, showCreateProfileView: $showCreateProfileView, targetUserId: viewModel.user?.userId ?? "")
+                                FriendRequestsView(showSignInView: $showSignInView, loadedColor: $loadedColor, showCreateProfileView: $showCreateProfileView, targetUserId: viewModel.user?.userId ?? "")
                             } label: {
                                 
                                 VStack{
@@ -238,8 +238,11 @@ struct ProfileView: View {
                         } else {
                             if  viewModel.isFriend != nil {
                             Button {
+//                                viewModel.isFriend! ?viewModel.removeFriend(friendUserId: targetUserId)
+//                                    :viewModel.addFriend(friendUserId: targetUserId)
+                                
                                 viewModel.isFriend! ?viewModel.removeFriend(friendUserId: targetUserId)
-                                    :viewModel.addFriend(friendUserId: targetUserId)
+                                    :viewModel.sendFriendRequest(friendUserId: targetUserId)
                                 
                                 
                             } label: {

@@ -29,8 +29,8 @@ final class FriendRequestsViewModel: ObservableObject {
     func getAllRequests(targetUserId: String) async throws {
         print(targetUserId)
         try? await loadCurrentUser()
-//        self.allRequests = try await UserManager.shared.getAllRequests(userId: targetUserId, friendsOnly: true)
-//        
+        self.allRequests = try await UserManager.shared.getAllRequests(userId: targetUserId)
+        
         
 //        self.allRequests = try await UserManager.shared.getAllUsers(userId: targetUserId, friendsOnly: true)
     }
