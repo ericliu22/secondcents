@@ -85,7 +85,6 @@ struct ProfileView: View {
                                 
                                 if (targetUserId.isEmpty) {
                                     ZStack{
-                                        
                                         Circle()
                                             .fill(Color(UIColor.systemBackground))
                                             .frame(width: 48, height: 48)
@@ -142,6 +141,7 @@ struct ProfileView: View {
                             
                             if let username = user.username  {
                                 Text("@\(username)" )
+                                    .foregroundColor(Color(UIColor.secondaryLabel))
                                     .font(.headline)
                                 
                                     .fontWeight(.regular)
@@ -220,8 +220,8 @@ struct ProfileView: View {
                                 
                                 VStack{
                                     if let user = viewModel.user {
-                                        if let friends = user.friends{
-                                            Text(String(friends.count))
+                                        if let incomingFriendRequests = user.incomingFriendRequests{
+                                            Text(String(incomingFriendRequests.count))
                                                 .font(.title3)
                                                 .fontWeight(.bold)
                                                 .foregroundColor(targetUserColor ?? loadedColor)
@@ -242,14 +242,19 @@ struct ProfileView: View {
                             
                             
                         } else {
-                            if  viewModel.isFriend != nil {
+                            if  viewModel.isFriend != nil, viewModel.requestSent != nil {
                             Button {
-//                                viewModel.isFriend! ?viewModel.removeFriend(friendUserId: targetUserId)
-//                                    :viewModel.addFriend(friendUserId: targetUserId)
-                                
-                                viewModel.isFriend! ?viewModel.removeFriend(friendUserId: targetUserId)
-                                    :viewModel.sendFriendRequest(friendUserId: targetUserId)
-                                
+
+                                if viewModel.isFriend!{
+                                    viewModel.removeFriend(friendUserId: targetUserId)
+                                } else {
+                                    viewModel.requestSent!
+                                    ? viewModel.unsendFriendRequest(friendUserId: targetUserId)
+                                    : viewModel.sendFriendRequest(friendUserId: targetUserId)
+                                    
+                                }
+                             
+                              
                                 
                             } label: {
                                 
@@ -257,19 +262,37 @@ struct ProfileView: View {
                                     HStack{
                                       
                                             
-                                        Image(systemName: viewModel.isFriend! ? "person.crop.circle.badge.checkmark"
-                                              : "person.badge.plus")
-                                        .tint(targetUserColor ?? loadedColor)
                                        
                                         
-                                        Text(viewModel.isFriend! ? "Friended" : "Add Friend")
-                                            .tint(Color(UIColor.label))
+                                        if viewModel.isFriend!{
+                                            
+                                            Label("Friended", systemImage: "person.crop.circle.badge.checkmark")
+                                               
+                                        } else {
+                                            viewModel.requestSent!
+                                            ? Label("Request Sent", systemImage: "paperplane")
+                                              
+                                            :Label("Add Friend", systemImage: "person.badge.plus")
+                                              
+                                            
+                                            
+                                        }
+                                        
+                                        
+                                       
+                                        
+                                           
                                       
                                         
                                     }
                                     .font(.headline)
                                     .fontWeight(.regular)
-                                    .animation(.easeInOut, value: viewModel.isFriend!)
+                                    .tint(targetUserColor ?? loadedColor)
+//                                    .animation(.easeInOut, value: viewModel.isFriend!)
+                                    .animation(nil, value: viewModel.isFriend!)
+                                    .animation(nil, value: viewModel.requestSent!)
+                                
+                               
                                     .frame(maxWidth:.infinity, maxHeight: .infinity)
                                     .background(.thinMaterial)
                                     .cornerRadius(20)
@@ -325,6 +348,7 @@ struct ProfileView: View {
             try? await viewModel.loadTargetUser(targetUserId: targetUserId)
             
             viewModel.checkFriendshipStatus()
+            viewModel.checkRequestStatus()
             
             
         }

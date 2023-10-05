@@ -25,39 +25,19 @@ final class ProfileViewModel: ObservableObject {
     }
     
     
-    func addFriend(friendUserId: String)  {
-        guard !friendUserId.isEmpty else { return }
-        isFriend = true
-        
-        
-        Task {
-            //loading like this becasuse this viewModel User changes depending on if its current user or a user thats searched
-            
-            
-            let authDataResultUserId = try AuthenticationManager.shared.getAuthenticatedUser().uid
-            
-            guard authDataResultUserId != friendUserId else { return }
-            
-            
-            try? await UserManager.shared.addFriend(userId: authDataResultUserId, friendUserId: friendUserId)
-            
-            
-        }
-    }
     
     func removeFriend(friendUserId: String)  {
         guard !friendUserId.isEmpty else { return }
         isFriend = false
+        requestSent = false
         
         
         Task {
             //loading like this becasuse this viewModel User changes depending on if its current user or a user thats searched
             
-            
             let authDataResultUserId = try AuthenticationManager.shared.getAuthenticatedUser().uid
             
             guard authDataResultUserId != friendUserId else { return }
-            
             
             try? await UserManager.shared.removeFriend(userId: authDataResultUserId, friendUserId: friendUserId)
             
@@ -65,11 +45,13 @@ final class ProfileViewModel: ObservableObject {
         }
     }
     
+    
+    
     func sendFriendRequest(friendUserId: String)  {
+        
         guard !friendUserId.isEmpty else { return }
-        
-        
-        
+        isFriend = false
+        requestSent = true
         Task {
             //loading like this becasuse this viewModel User changes depending on if its current user or a user thats searched
             
@@ -79,29 +61,30 @@ final class ProfileViewModel: ObservableObject {
             
             
             try? await UserManager.shared.sendFriendRequest(userId: authDataResultUserId, friendUserId: friendUserId)
+        }
+    }
+    
+    
+    func unsendFriendRequest(friendUserId: String)  {
+        
+        guard !friendUserId.isEmpty else { return }
+        isFriend = false
+        requestSent = false
+        Task {
+            //loading like this becasuse this viewModel User changes depending on if its current user or a user thats searched
+            
+            let authDataResultUserId = try AuthenticationManager.shared.getAuthenticatedUser().uid
+            
+            guard authDataResultUserId != friendUserId else { return }
             
             
+            try? await UserManager.shared.unsendFriendRequest(userId: authDataResultUserId, friendUserId: friendUserId)
         }
     }
     
     
     
-//
-//    func removeFriend(friendUserId: String)  {
-//        guard !friendUserId.isEmpty else { return }
-//        Task {
-//            //loading like this becasuse this viewModel User changes depending on if its current user or a user thats searched
-//            
-//            
-//            let authDataResultUserId = try AuthenticationManager.shared.getAuthenticatedUser().uid
-//            
-//            guard authDataResultUserId != friendUserId else { return }
-//            
-//            
-//            try? await UserManager.shared.removeFriend(userId: authDataResultUserId, friendUserId: friendUserId)
-//        }
-//    }
-//    
+    
     
     @Published private(set) var isFriend:  Bool? 
     
@@ -118,7 +101,24 @@ final class ProfileViewModel: ObservableObject {
             print(error)
         }
         
-//        return false
+    }
+    
+    
+    
+    @Published private(set) var requestSent:  Bool?
+    
+    func checkRequestStatus() {
+        do {
+            let authDataResultUserId = try AuthenticationManager.shared.getAuthenticatedUser().uid
+            
+            requestSent =  user?.incomingFriendRequests?.contains(authDataResultUserId)
+          
+   
+                
+             
+        } catch {
+            print(error)
+        }
         
     }
     

@@ -27,12 +27,48 @@ final class FriendRequestsViewModel: ObservableObject {
     
     
     func getAllRequests(targetUserId: String) async throws {
-        print(targetUserId)
+       
         try? await loadCurrentUser()
         self.allRequests = try await UserManager.shared.getAllRequests(userId: targetUserId)
         
         
 //        self.allRequests = try await UserManager.shared.getAllUsers(userId: targetUserId, friendsOnly: true)
+    }
+    
+    func acceptFriendRequest(friendUserId: String)  {
+        guard !friendUserId.isEmpty else { return }
+        
+        Task {
+            //loading like this becasuse this viewModel User changes depending on if its current user or a user thats searched
+            
+            
+            let authDataResultUserId = try AuthenticationManager.shared.getAuthenticatedUser().uid
+            
+            guard authDataResultUserId != friendUserId else { return }
+            
+            
+            try? await UserManager.shared.acceptFriendRequest(userId: authDataResultUserId, friendUserId: friendUserId)
+            
+            
+        }
+    }
+    
+    func declineFriendRequest(friendUserId: String)  {
+        guard !friendUserId.isEmpty else { return }
+        
+        Task {
+            //loading like this becasuse this viewModel User changes depending on if its current user or a user thats searched
+            
+            
+            let authDataResultUserId = try AuthenticationManager.shared.getAuthenticatedUser().uid
+            
+            guard authDataResultUserId != friendUserId else { return }
+            
+            
+            try? await UserManager.shared.acceptFriendRequest(userId: authDataResultUserId, friendUserId: friendUserId)
+            
+            
+        }
     }
     
     

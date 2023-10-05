@@ -60,7 +60,6 @@ struct FriendRequestsView: View {
                                 if let urlString = userTile.profileImageUrl,
                                    let url = URL(string: urlString) {
                     
-                                    
                                     //If there is URL for profile pic, show
                                     //circle with stroke
                                     AsyncImage(url: url) {image in
@@ -68,21 +67,18 @@ struct FriendRequestsView: View {
                                             .resizable()
                                             .scaledToFill()
                                             .clipShape(Circle())
-                                            .frame(width: 48, height: 48)
-                                        
-                                        
+                                            .frame(width: 64, height: 64)
                                         
                                     } placeholder: {
                                         //else show loading after user uploads but sending/downloading from database
-                                        
                                         ProgressView()
                                             .progressViewStyle(CircularProgressViewStyle(tint: Color(UIColor.systemBackground)))
                                         //                            .scaleEffect(1, anchor: .center)
-                                            .frame(width: 48, height: 48)
+                                            .frame(width: 64, height: 64)
                                             .background(
                                                 Circle()
                                                     .fill(targetUserColor)
-                                                    .frame(width: 48, height: 48)
+                                                    .frame(width: 64, height: 64)
                                             )
                                     }
                                     
@@ -93,7 +89,7 @@ struct FriendRequestsView: View {
                                     
                                         .strokeBorder(targetUserColor, lineWidth:0)
                                         .background(Circle().fill(targetUserColor))
-                                        .frame(width: 48, height: 48)
+                                        .frame(width: 64, height: 64)
                                     
                                 }
                                 
@@ -103,7 +99,8 @@ struct FriendRequestsView: View {
                             }
                             
                             VStack(alignment: .leading){
-                                
+                            
+                                    
                                 Text(userTile.name!)
                                     .font(.headline)
                                 
@@ -111,7 +108,48 @@ struct FriendRequestsView: View {
                                 Text(
                                     "@\(userTile.username!)")
                                 .font(.caption)
+                                .foregroundColor(Color(UIColor.secondaryLabel))
                                 
+                                HStack{
+                                    Button {
+                                        viewModel.acceptFriendRequest(friendUserId: userTile.userId)
+                                          
+                                        Task{
+                                            //reload requests list
+                                            try? await viewModel.getAllRequests(targetUserId: targetUserId)
+                                        }
+                                          
+                                        
+                                    } label: {
+                                        Text("Accept")
+                                            .font(.caption)
+                                        
+                                        
+                                            .frame(maxWidth: .infinity)
+                                        
+                                    }
+                                    .tint(.green)
+                                    .buttonStyle(.bordered)
+                                    .cornerRadius(10)
+                                    
+                                    
+                                    Button {
+                                        
+                                        viewModel.declineFriendRequest(friendUserId: userTile.userId)
+                                        
+                                    } label: {
+                                        Text("Decline")
+                                            .font(.caption)
+                                        
+                                        
+                                            .frame(maxWidth: .infinity)
+                                        
+                                    }
+                                    .tint(.gray)
+                                    .buttonStyle(.bordered)
+                                    .cornerRadius(10)
+                                }
+
                             }
                             
                             
@@ -146,8 +184,12 @@ struct FriendRequestsView: View {
         }
         
         .task {
-           
-          try? await viewModel.getAllRequests(targetUserId: targetUserId)
+            
+            try? await viewModel.getAllRequests(targetUserId: targetUserId)
+             
+             
+            
+        
          
         }
         
