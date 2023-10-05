@@ -85,13 +85,16 @@ struct ProfileView: View {
                                 
                                 if (targetUserId.isEmpty) {
                                     ZStack{
+//                                        Circle()
+//                                            .fill(Color(UIColor.systemBackground))
+////                                            .fill(targetUserColor ?? loadedColor)
+//                                           
+//                                            .frame(width: 48, height: 48)
+//                                        
                                         Circle()
-                                            .fill(Color(UIColor.systemBackground))
+                                            .fill(.ultraThickMaterial)
                                             .frame(width: 48, height: 48)
                                         
-                                        Circle()
-                                            .fill(.thinMaterial)
-                                            .frame(width: 48, height: 48)
                                         
                                         Circle()
                                             .fill(targetUserColor ?? loadedColor)
@@ -142,6 +145,7 @@ struct ProfileView: View {
                             if let username = user.username  {
                                 Text("@\(username)" )
                                     .foregroundColor(Color(UIColor.secondaryLabel))
+                         
                                     .font(.headline)
                                 
                                     .fontWeight(.regular)
@@ -166,7 +170,9 @@ struct ProfileView: View {
                 
                 .frame(maxWidth:.infinity, maxHeight: .infinity)
                 .aspectRatio(2, contentMode: .fit)
-                .background(.thinMaterial)
+                .background(.thickMaterial)
+                .background(targetUserColor ?? loadedColor)
+               
                 .cornerRadius(20)
                 //            .padding([.bottom], 0)
                 //            .padding([.top, .leading, .trailing], nil)
@@ -316,10 +322,12 @@ struct ProfileView: View {
                     
                     
                     RoundedRectangle(cornerRadius: 20)
+                        .fill(.thinMaterial)
                         .aspectRatio(1, contentMode: .fit)
                     
                     
                     RoundedRectangle(cornerRadius: 20)
+                        .fill(.thinMaterial)
                         .aspectRatio(1, contentMode: .fit)
                     
                     

@@ -22,6 +22,11 @@ struct FriendRequestsView: View {
     
     @StateObject private var viewModel = FriendRequestsViewModel()
     
+    private let noFriendsMessage: [String] = [
+        "it's getting dry 😬",
+        "no friends 🫵😂"
+    ]
+    
     
     var filteredSearch: [DBUser]{
         guard !searchTerm.isEmpty else { return viewModel.allRequests}
@@ -34,165 +39,167 @@ struct FriendRequestsView: View {
         //                Text("Quote: \(item.quote)")
         //            }
         //        }.onAppear { viewModel.fetchData() }
-        
-        NavigationStack{
-            List{
-                
-                ForEach(filteredSearch) { userTile    in
-                    let targetUserColor: Color = viewModel.getUserColor(userColor: userTile.userColor!)
+        if filteredSearch.isEmpty {
+          
+            Text(noFriendsMessage[Int.random(in: 0..<(noFriendsMessage.count))])
+                .font(.headline)
+                .fontWeight(.regular)
+            
+            
+            
+        } else {
+            NavigationStack{
+                List{
                     
-                    
-                    
-                    
-                    
-                    
-                    
-                    NavigationLink  {
+                    ForEach(filteredSearch) { userTile    in
+                        let targetUserColor: Color = viewModel.getUserColor(userColor: userTile.userColor!)
                         
-                        ProfileView(showSignInView: $showSignInView, loadedColor: $loadedColor,targetUserColor: targetUserColor, showCreateProfileView: $showCreateProfileView, targetUserId: userTile.userId)
-                    } label: {
-                        HStack(spacing: 20){
+                        
+                        
+                        
+                        
+                        
+                        
+                        NavigationLink  {
                             
-                            
-                            Group{
-                                //Circle or Profile Pic
+                            ProfileView(showSignInView: $showSignInView, loadedColor: $loadedColor,targetUserColor: targetUserColor, showCreateProfileView: $showCreateProfileView, targetUserId: userTile.userId)
+                        } label: {
+                            HStack(spacing: 20){
                                 
-                                if let urlString = userTile.profileImageUrl,
-                                   let url = URL(string: urlString) {
-                    
-                                    //If there is URL for profile pic, show
-                                    //circle with stroke
-                                    AsyncImage(url: url) {image in
-                                        image
-                                            .resizable()
-                                            .scaledToFill()
-                                            .clipShape(Circle())
-                                            .frame(width: 64, height: 64)
+                                
+                                Group{
+                                    //Circle or Profile Pic
+                                    
+                                    if let urlString = userTile.profileImageUrl,
+                                       let url = URL(string: urlString) {
                                         
-                                    } placeholder: {
-                                        //else show loading after user uploads but sending/downloading from database
-                                        ProgressView()
-                                            .progressViewStyle(CircularProgressViewStyle(tint: Color(UIColor.systemBackground)))
-                                        //                            .scaleEffect(1, anchor: .center)
-                                            .frame(width: 64, height: 64)
-                                            .background(
-                                                Circle()
-                                                    .fill(targetUserColor)
-                                                    .frame(width: 64, height: 64)
-                                            )
-                                    }
-                                    
-                                } else {
-                                    
-                                    //if user has not uploaded profile pic, show circle
-                                    Circle()
-                                    
-                                        .strokeBorder(targetUserColor, lineWidth:0)
-                                        .background(Circle().fill(targetUserColor))
-                                        .frame(width: 64, height: 64)
-                                    
-                                }
-                                
-                                
-                                
-                                
-                            }
-                            
-                            VStack(alignment: .leading){
-                            
-                                    
-                                Text(userTile.name!)
-                                    .font(.headline)
-                                
-                                
-                                Text(
-                                    "@\(userTile.username!)")
-                                .font(.caption)
-                                .foregroundColor(Color(UIColor.secondaryLabel))
-                                
-                                HStack{
-                                    Button {
-                                        viewModel.acceptFriendRequest(friendUserId: userTile.userId)
-                                          
-                                        Task{
-                                            //reload requests list
-                                            try? await viewModel.getAllRequests(targetUserId: targetUserId)
+                                        //If there is URL for profile pic, show
+                                        //circle with stroke
+                                        AsyncImage(url: url) {image in
+                                            image
+                                                .resizable()
+                                                .scaledToFill()
+                                                .clipShape(Circle())
+                                                .frame(width: 64, height: 64)
+                                            
+                                        } placeholder: {
+                                            //else show loading after user uploads but sending/downloading from database
+                                            ProgressView()
+                                                .progressViewStyle(CircularProgressViewStyle(tint: Color(UIColor.systemBackground)))
+                                            //                            .scaleEffect(1, anchor: .center)
+                                                .frame(width: 64, height: 64)
+                                                .background(
+                                                    Circle()
+                                                        .fill(targetUserColor)
+                                                        .frame(width: 64, height: 64)
+                                                )
                                         }
-                                          
                                         
-                                    } label: {
-                                        Text("Accept")
-                                            .font(.caption)
+                                    } else {
                                         
+                                        //if user has not uploaded profile pic, show circle
+                                        Circle()
                                         
-                                            .frame(maxWidth: .infinity)
-                                        
-                                    }
-                                    .tint(.green)
-                                    .buttonStyle(.bordered)
-                                    .cornerRadius(10)
-                                    
-                                    
-                                    Button {
-                                        
-                                        viewModel.declineFriendRequest(friendUserId: userTile.userId)
-                                        
-                                    } label: {
-                                        Text("Decline")
-                                            .font(.caption)
-                                        
-                                        
-                                            .frame(maxWidth: .infinity)
+                                            .strokeBorder(targetUserColor, lineWidth:0)
+                                            .background(Circle().fill(targetUserColor))
+                                            .frame(width: 64, height: 64)
                                         
                                     }
-                                    .tint(.gray)
-                                    .buttonStyle(.bordered)
-                                    .cornerRadius(10)
+                                    
+                                    
+                                    
+                                    
                                 }
-
+                                
+                                VStack(alignment: .leading){
+                                    
+                                    
+                                    Text(userTile.name!)
+                                        .font(.headline)
+                                    
+                                    
+                                    Text(
+                                        "@\(userTile.username!)")
+                                    .font(.caption)
+                                    .foregroundColor(Color(UIColor.secondaryLabel))
+                                    
+                                    HStack{
+                                        Button {
+                                            viewModel.acceptFriendRequest(friendUserId: userTile.userId)
+                                            
+                                            Task{
+                                                //reload requests list
+                                                try? await viewModel.getAllRequests(targetUserId: targetUserId)
+                                            }
+                                            
+                                            
+                                        } label: {
+                                            Text("Accept")
+                                                .font(.caption)
+                                            
+                                            
+                                                .frame(maxWidth: .infinity)
+                                            
+                                        }
+                                        .tint(.green)
+                                        .buttonStyle(.bordered)
+                                        .cornerRadius(10)
+                                        
+                                        
+                                        Button {
+                                            
+                                            viewModel.declineFriendRequest(friendUserId: userTile.userId)
+                                            
+                                        } label: {
+                                            Text("Decline")
+                                                .font(.caption)
+                                            
+                                            
+                                                .frame(maxWidth: .infinity)
+                                            
+                                        }
+                                        .tint(.gray)
+                                        .buttonStyle(.bordered)
+                                        .cornerRadius(10)
+                                    }
+                                    
+                                }
+                                
+                                
+                                
+                                
                             }
-                            
                             
                             
                             
                         }
                         
-                      
-                       
+                        
+                        
+                        
+                        
+                        
                     }
                     
                     
-                  
-             
+                    
+                    
+                    
+                    
+                    
                     
                     
                 }
                 
-                
-                
-                
-                
-                
-                
-                
+                .navigationTitle( "Friend Requests" )
+                .searchable(text: $searchTerm, placement: .navigationBarDrawer(displayMode: .always), prompt: "Search")
                 
             }
-            
-            .navigationTitle( "Friend Requests" )
-            .searchable(text: $searchTerm, placement: .navigationBarDrawer(displayMode: .always), prompt: "Search")
-            
+            .task {
+                
+                try? await viewModel.getAllRequests(targetUserId: targetUserId)
+            }
         }
-        
-        .task {
-            
-            try? await viewModel.getAllRequests(targetUserId: targetUserId)
-             
-             
-            
-        
-         
-        }
-        
         
     }
 }
