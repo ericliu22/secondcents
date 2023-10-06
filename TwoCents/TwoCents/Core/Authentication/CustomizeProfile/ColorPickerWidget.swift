@@ -46,7 +46,7 @@ struct ColorPickerWidget: View {
             .padding(.horizontal)
             .task{
                 try? await viewModel.loadCurrentUser()
-                viewModel.saveUserColor(selectedColor: .red)
+                viewModel.saveUserColor(selectedColor: selectedColor)
                 
             }
         }

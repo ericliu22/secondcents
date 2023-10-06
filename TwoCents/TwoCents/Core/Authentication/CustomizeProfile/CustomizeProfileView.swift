@@ -20,7 +20,7 @@ struct CustomizeProfileView: View {
     
     @State private var selectedPhoto: PhotosPickerItem? = nil
     
-    @State private var selectedColor: Color = .red
+    @Binding var selectedColor: Color
     
     
     
@@ -180,7 +180,7 @@ struct CustomizeProfileView: View {
 struct CustomizeProfileView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack{
-            CustomizeProfileView(showCreateProfileView: .constant(true))
+            CustomizeProfileView(showCreateProfileView: .constant(true), selectedColor: .constant(.red))
         }
     }
 }

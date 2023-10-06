@@ -39,24 +39,19 @@ struct FriendRequestsView: View {
         //                Text("Quote: \(item.quote)")
         //            }
         //        }.onAppear { viewModel.fetchData() }
-        if filteredSearch.isEmpty {
-          
-            Text(noFriendsMessage[Int.random(in: 0..<(noFriendsMessage.count))])
-                .font(.headline)
-                .fontWeight(.regular)
-            
-            
-            
-        } else {
+        
+        
+//        Text(noFriendsMessage[Int.random(in: 0..<(noFriendsMessage.count))])
+//            .font(.headline)
+//            .fontWeight(.regular)
             NavigationStack{
+                
                 List{
+                    
+                   
                     
                     ForEach(filteredSearch) { userTile    in
                         let targetUserColor: Color = viewModel.getUserColor(userColor: userTile.userColor!)
-                        
-                        
-                        
-                        
                         
                         
                         
@@ -191,7 +186,7 @@ struct FriendRequestsView: View {
                     
                 }
                 
-                .navigationTitle( "Friend Requests" )
+                .navigationTitle("Friend Requests✨")
                 .searchable(text: $searchTerm, placement: .navigationBarDrawer(displayMode: .always), prompt: "Search")
                 
             }
@@ -199,7 +194,7 @@ struct FriendRequestsView: View {
                 
                 try? await viewModel.getAllRequests(targetUserId: targetUserId)
             }
-        }
+        
         
     }
 }

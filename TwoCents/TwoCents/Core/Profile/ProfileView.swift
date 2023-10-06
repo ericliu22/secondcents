@@ -36,8 +36,8 @@ struct ProfileView: View {
                             
                             Group{
                                 //Circle or Profile Pic
-//                                
-//                                
+                                //
+                                //
                                 if let urlString = viewModel.user?.profileImageUrl,
                                    let url = URL(string: urlString) {
                                     
@@ -58,7 +58,12 @@ struct ProfileView: View {
                                         //else show loading after user uploads but sending/downloading from database
                                         
                                         ProgressView()
-                                            .progressViewStyle(CircularProgressViewStyle(tint: Color(UIColor.systemBackground)))
+                                            .progressViewStyle(
+                                                CircularProgressViewStyle(tint:
+                                                                            Color(UIColor.systemBackground)
+                                                                          
+                                                                         )
+                                            )
                                         //                            .scaleEffect(1, anchor: .center)
                                             .frame(width: 128, height: 128)
                                             .background(
@@ -73,25 +78,25 @@ struct ProfileView: View {
                                     //if user has not uploaded profile pic, show circle
                                     Circle()
                                     
-                                        
+                                    
                                         .background(Circle().fill(targetUserColor ?? loadedColor))
                                         .frame(width: 128, height: 128)
-                                       
+                                    
                                     
                                 }
-//                                
+                                //
                                 
-//                                
-//                               
+                                //
+                                //
                                 
                                 if (targetUserId.isEmpty) {
                                     ZStack{
                                         Circle()
-
+                                        
                                             .fill(targetUserColor ?? loadedColor)
-                                           
+                                        
                                             .frame(width: 48, height: 48)
-
+                                        
                                         Circle()
                                             .fill(.thickMaterial)
                                             .scaleEffect(1.015)
@@ -148,7 +153,7 @@ struct ProfileView: View {
                             if let username = user.username  {
                                 Text("@\(username)" )
                                     .foregroundColor(Color(UIColor.secondaryLabel))
-                                  
+                                
                                     .font(.headline)
                                 
                                     .fontWeight(.regular)
@@ -175,7 +180,7 @@ struct ProfileView: View {
                 .aspectRatio(2, contentMode: .fit)
                 .background(.thickMaterial)
                 .background(targetUserColor ?? loadedColor)
-               
+                
                 .cornerRadius(20)
                 //            .padding([.bottom], 0)
                 //            .padding([.top, .leading, .trailing], nil)
@@ -230,15 +235,36 @@ struct ProfileView: View {
                                 VStack{
                                     if let user = viewModel.user {
                                         if let incomingFriendRequests = user.incomingFriendRequests{
-                                            Text(String(incomingFriendRequests.count))
-                                                .font(.title3)
-                                                .fontWeight(.bold)
-                                                .foregroundColor(targetUserColor ?? loadedColor)
                                             
-                                            Text("Friend Requests")
+//
+//                                            Image(systemName: "person.crop.rectangle.stack")
+//                                                .font(.title2)
+//                                                .fontWeight(.bold)
+//                                                .foregroundColor(loadedColor)
+//
+//                                            Text(String(incomingFriendRequests.count) + " Requests")
+//                                                .font(.headline)
+//                                                .fontWeight(.regular)
+//                                                .foregroundColor(Color(UIColor.secondaryLabel))
+                                            if incomingFriendRequests.count == 0 {
+                                                Label("No Requests",
+                                                      systemImage: "person.crop.rectangle.stack")
+                                                
                                                 .font(.headline)
                                                 .fontWeight(.regular)
-                                            
+                                                .foregroundColor(Color(UIColor.secondaryLabel))
+                                            } else {
+                                                
+                                                Label(incomingFriendRequests.count == 1
+                                                      ? String(incomingFriendRequests.count)  +   " Request"
+                                                      : String(incomingFriendRequests.count)  +    " Requests",
+                                                      systemImage: "person.crop.rectangle.stack")
+                                                
+                                                .font(.headline)
+                                                .fontWeight(.regular)
+                                                .foregroundColor(loadedColor)
+                                                
+                                            }
                                         }
                                     }
                                 }
@@ -252,56 +278,56 @@ struct ProfileView: View {
                             
                         } else {
                             if  viewModel.isFriend != nil, viewModel.requestSent != nil {
-                            Button {
-
-                                if viewModel.isFriend!{
-                                    viewModel.removeFriend(friendUserId: targetUserId)
-                                } else {
-                                    viewModel.requestSent!
-                                    ? viewModel.unsendFriendRequest(friendUserId: targetUserId)
-                                    : viewModel.sendFriendRequest(friendUserId: targetUserId)
+                                Button {
                                     
-                                }
-                             
-                              
-                                
-                            } label: {
-                                
-                                
+                                    if viewModel.isFriend!{
+                                        viewModel.removeFriend(friendUserId: targetUserId)
+                                    } else {
+                                        viewModel.requestSent!
+                                        ? viewModel.unsendFriendRequest(friendUserId: targetUserId)
+                                        : viewModel.sendFriendRequest(friendUserId: targetUserId)
+                                        
+                                    }
+                                    
+                                    
+                                    
+                                } label: {
+                                    
+                                    
                                     HStack{
-                                      
-                                            
-                                       
+                                        
+                                        
+                                        
                                         
                                         if viewModel.isFriend!{
                                             
                                             Label("Friended", systemImage: "person.crop.circle.badge.checkmark")
-                                               
+                                            
                                         } else {
                                             viewModel.requestSent!
                                             ? Label("Request Sent", systemImage: "paperplane")
-                                              
-                                            :Label("Add Friend", systemImage: "person.badge.plus")
-                                              
+                                            
+                                            : Label("Add Friend", systemImage: "person.badge.plus")
+                                            
                                             
                                             
                                         }
                                         
                                         
-                                       
                                         
-                                           
-                                      
+                                        
+                                        
+                                        
                                         
                                     }
                                     .font(.headline)
                                     .fontWeight(.regular)
                                     .tint(targetUserColor ?? loadedColor)
-//                                    .animation(.easeInOut, value: viewModel.isFriend!)
+                                    //                                    .animation(.easeInOut, value: viewModel.isFriend!)
                                     .animation(nil, value: viewModel.isFriend!)
                                     .animation(nil, value: viewModel.requestSent!)
-                                
-                               
+                                    
+                                    
                                     .frame(maxWidth:.infinity, maxHeight: .infinity)
                                     .background(.thinMaterial)
                                     .cornerRadius(20)

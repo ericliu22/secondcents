@@ -72,7 +72,7 @@ struct RootView: View {
         }
         .fullScreenCover(isPresented: $showCreateProfileView,  content: {
             NavigationStack{
-                CustomizeProfileView(showCreateProfileView: $showCreateProfileView)
+                CustomizeProfileView(showCreateProfileView: $showCreateProfileView, selectedColor: $loadedColor)
             }
             
                 
