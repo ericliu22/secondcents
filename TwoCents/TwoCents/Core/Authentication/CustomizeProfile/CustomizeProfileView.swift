@@ -43,7 +43,7 @@ struct CustomizeProfileView: View {
                     //If there is URL for profile pic, show
                     //circle with stroke
                     Circle()
-                        .strokeBorder(selectedColor, lineWidth:15)
+//                        .strokeBorder(selectedColor, lineWidth:15)
                         .background(
                             //profile pic in middle
                             AsyncImage(url: url) {image in
@@ -51,7 +51,7 @@ struct CustomizeProfileView: View {
                                     .resizable()
                                     .scaledToFill()
                                     .clipShape(Circle())
-                                    .frame(width: 160, height: 160)
+                                    .frame(width: 176, height: 176)
                                 
                             } placeholder: {
                                 //else show loading after user uploads but sending/downloading from database
@@ -59,25 +59,25 @@ struct CustomizeProfileView: View {
                                 ProgressView()
                                     .progressViewStyle(CircularProgressViewStyle(tint: Color(UIColor.systemBackground)))
                                     .scaleEffect(1.5, anchor: .center)
-                                    .frame(width: 160, height: 160)
+                                    .frame(width: 176, height: 176)
                                     .background(
                                         Circle()
                                             .fill(selectedColor)
-                                            .frame(width: 160, height: 160)
+                                            .frame(width: 176, height: 176)
                                     )
                             }
                             
                         )
-                        .frame(width: 160, height: 160)
+                        .frame(width: 176, height: 176)
                     
                 } else {
                     
                     //if user has not uploaded profile pic, show circle
                     Circle()
                     
-                        .strokeBorder(selectedColor, lineWidth:15)
-                        .background(Circle().fill(selectedColor))
-                        .frame(width: 160, height: 160)
+//                        .strokeBorder(selectedColor, lineWidth:15)
+                        .fill(selectedColor)
+                        .frame(width: 176, height: 176)
                 }
                 
                 
@@ -110,7 +110,7 @@ struct CustomizeProfileView: View {
                     
                 }
                
-                .offset(x:56, y:56)
+                .offset(x:60, y:60)
                 
                 
                 
@@ -120,6 +120,7 @@ struct CustomizeProfileView: View {
             }
             .padding(32)
             .background(.thinMaterial)
+//            .background(in: <#T##S#>)
             .cornerRadius(20)
             
             

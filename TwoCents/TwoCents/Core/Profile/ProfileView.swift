@@ -73,9 +73,10 @@ struct ProfileView: View {
                                     //if user has not uploaded profile pic, show circle
                                     Circle()
                                     
-                                        .strokeBorder(targetUserColor ?? loadedColor, lineWidth:0)
+                                        
                                         .background(Circle().fill(targetUserColor ?? loadedColor))
                                         .frame(width: 128, height: 128)
+                                       
                                     
                                 }
 //                                
@@ -85,26 +86,28 @@ struct ProfileView: View {
                                 
                                 if (targetUserId.isEmpty) {
                                     ZStack{
-//                                        Circle()
-//                                            .fill(Color(UIColor.systemBackground))
-////                                            .fill(targetUserColor ?? loadedColor)
-//                                           
-//                                            .frame(width: 48, height: 48)
-//                                        
                                         Circle()
-                                            .fill(.ultraThickMaterial)
+
+                                            .fill(targetUserColor ?? loadedColor)
+                                           
                                             .frame(width: 48, height: 48)
-                                        
+
+                                        Circle()
+                                            .fill(.thickMaterial)
+                                            .scaleEffect(1.015)
+                                            .frame(width: 48, height: 48)
                                         
                                         Circle()
                                             .fill(targetUserColor ?? loadedColor)
                                             .frame(width: 36, height: 36)
+                                        
                                         
                                         Image(systemName: "plus")
                                             .font(.headline)
                                             .fontWeight(.bold)
                                             .foregroundColor(Color(UIColor.systemBackground))
                                     }
+                                    
                                     .offset(x:44, y:44)
                                     .onTapGesture{
                                         showCreateProfileView = true
@@ -145,7 +148,7 @@ struct ProfileView: View {
                             if let username = user.username  {
                                 Text("@\(username)" )
                                     .foregroundColor(Color(UIColor.secondaryLabel))
-                         
+                                  
                                     .font(.headline)
                                 
                                     .fontWeight(.regular)
