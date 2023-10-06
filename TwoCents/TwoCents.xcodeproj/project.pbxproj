@@ -13,6 +13,10 @@
 		850958AA2AB8F82D00018A32 /* LuckiestGuy-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 850958A92AB8F82D00018A32 /* LuckiestGuy-Regular.ttf */; };
 		850958AB2AB8F82D00018A32 /* LuckiestGuy-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 850958A92AB8F82D00018A32 /* LuckiestGuy-Regular.ttf */; };
 		850958AC2AB8F82D00018A32 /* LuckiestGuy-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 850958A92AB8F82D00018A32 /* LuckiestGuy-Regular.ttf */; };
+		85741EA82AD03A0C0085423E /* CarouselPractice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85741EA72AD03A0C0085423E /* CarouselPractice.swift */; };
+		85741EAA2AD03B2C0085423E /* SnapCarouselPractice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85741EA92AD03B2C0085423E /* SnapCarouselPractice.swift */; };
+		85741EAD2AD03BB20085423E /* CarouselContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85741EAC2AD03BB20085423E /* CarouselContent.swift */; };
+		85741EAF2AD03D370085423E /* PostModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85741EAE2AD03D370085423E /* PostModel.swift */; };
 		85C6759A2AB8EE5B00FACCB2 /* HotSeatManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20EBD082AB8A36100EFDDE8 /* HotSeatManager.swift */; };
 		85C6759B2AB8EE6100FACCB2 /* SuperlativeGame.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20EBD092AB8A36100EFDDE8 /* SuperlativeGame.swift */; };
 		A257D7842A6D707600A4E7BD /* TwoCentsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A257D7832A6D707600A4E7BD /* TwoCentsApp.swift */; };
@@ -87,6 +91,10 @@
 /* Begin PBXFileReference section */
 		850958A82AB8F81200018A32 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		850958A92AB8F82D00018A32 /* LuckiestGuy-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "LuckiestGuy-Regular.ttf"; sourceTree = "<group>"; };
+		85741EA72AD03A0C0085423E /* CarouselPractice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarouselPractice.swift; sourceTree = "<group>"; };
+		85741EA92AD03B2C0085423E /* SnapCarouselPractice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapCarouselPractice.swift; sourceTree = "<group>"; };
+		85741EAC2AD03BB20085423E /* CarouselContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarouselContent.swift; sourceTree = "<group>"; };
+		85741EAE2AD03D370085423E /* PostModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostModel.swift; sourceTree = "<group>"; };
 		85DDD0CC2AB4E79A008A9C56 /* VoteGameReal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VoteGameReal.swift; sourceTree = "<group>"; };
 		A2003C942AABA08300B1E551 /* Line.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Line.swift; sourceTree = "<group>"; };
 		A20EBD042AB8A36100EFDDE8 /* SabotageGame.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SabotageGame.swift; sourceTree = "<group>"; };
@@ -176,6 +184,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		85741EAB2AD03B9A0085423E /* CarouselPracticeFiles */ = {
+			isa = PBXGroup;
+			children = (
+				85741EA72AD03A0C0085423E /* CarouselPractice.swift */,
+				85741EAE2AD03D370085423E /* PostModel.swift */,
+				85741EAC2AD03BB20085423E /* CarouselContent.swift */,
+				85741EA92AD03B2C0085423E /* SnapCarouselPractice.swift */,
+			);
+			path = CarouselPracticeFiles;
+			sourceTree = "<group>";
+		};
 		85D8C3432AB4E805008803D4 /* Recovered References */ = {
 			isa = PBXGroup;
 			children = (
@@ -193,6 +212,7 @@
 				A20EBD042AB8A36100EFDDE8 /* SabotageGame.swift */,
 				A20EBD052AB8A36100EFDDE8 /* CardView.swift */,
 				A20EBD062AB8A36100EFDDE8 /* HotSeat.swift */,
+				85741EAB2AD03B9A0085423E /* CarouselPracticeFiles */,
 				A20EBD072AB8A36100EFDDE8 /* VoteGameReal.swift */,
 				A20EBD082AB8A36100EFDDE8 /* HotSeatManager.swift */,
 				A20EBD092AB8A36100EFDDE8 /* SuperlativeGame.swift */,
@@ -589,11 +609,13 @@
 				AB842C142A91F36D00E4A7CE /* CustomizeProfileViewModel.swift in Sources */,
 				A257D7862A6D707600A4E7BD /* ContentView.swift in Sources */,
 				ABCA39DA2A7A0881009447C3 /* SettingsView.swift in Sources */,
+				85741EAD2AD03BB20085423E /* CarouselContent.swift in Sources */,
 				AB6778E62AB8F67D00C11AA7 /* VideoWidget.swift in Sources */,
 				A257D7862A6D707600A4E7BD /* ContentView.swift in Sources */,
 				AB9909AD2ABE3C1B004B3021 /* FriendRequestsViewModel.swift in Sources */,
 				ABCA39DA2A7A0881009447C3 /* SettingsView.swift in Sources */,
 				AB842C122A91F36300E4A7CE /* CustomizeProfileView.swift in Sources */,
+				85741EA82AD03A0C0085423E /* CarouselPractice.swift in Sources */,
 				A2F5631E2AB4E6240026D8C9 /* CanvasPage.swift in Sources */,
 				AB90021D2A8B85DA00F970B8 /* UploadExampleViewModel.swift in Sources */,
 				A2F563232AB4E6700026D8C9 /* chattingView.swift in Sources */,
@@ -602,6 +624,7 @@
 				ABCA39D22A79FC16009447C3 /* AuthenticationView.swift in Sources */,
 				ABF556862A950BCB00103880 /* RootViewModel.swift in Sources */,
 				ABF556842A95046D00103880 /* ColorPickerWidgetViewModel.swift in Sources */,
+				85741EAF2AD03D370085423E /* PostModel.swift in Sources */,
 				ABCA39D62A7A0159009447C3 /* AuthenticationManager.swift in Sources */,
 				A2F563222AB4E6700026D8C9 /* retrievemessages.swift in Sources */,
 				AB300FAE2AC7406500C6719D /* FriendsViewModel.swift in Sources */,
@@ -624,6 +647,7 @@
 				ABA45E7E2A7C8D8C0015F000 /* SignInEmailViewModel.swift in Sources */,
 				AB90021A2A8B85BD00F970B8 /* UploadExample.swift in Sources */,
 				AB9909AB2ABE3BF2004B3021 /* FriendRequestsView.swift in Sources */,
+				85741EAA2AD03B2C0085423E /* SnapCarouselPractice.swift in Sources */,
 				AB9455232A9468130055B44A /* ColorPickerWidget.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
