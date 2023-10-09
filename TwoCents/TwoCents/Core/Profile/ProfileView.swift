@@ -236,16 +236,6 @@ struct ProfileView: View {
                                     if let user = viewModel.user {
                                         if let incomingFriendRequests = user.incomingFriendRequests{
                                             
-//
-//                                            Image(systemName: "person.crop.rectangle.stack")
-//                                                .font(.title2)
-//                                                .fontWeight(.bold)
-//                                                .foregroundColor(loadedColor)
-//
-//                                            Text(String(incomingFriendRequests.count) + " Requests")
-//                                                .font(.headline)
-//                                                .fontWeight(.regular)
-//                                                .foregroundColor(Color(UIColor.secondaryLabel))
                                             if incomingFriendRequests.count == 0 {
                                                 Label("No Requests",
                                                       systemImage: "person.crop.rectangle.stack")
@@ -277,16 +267,20 @@ struct ProfileView: View {
                             
                             
                         } else {
-                            if  viewModel.isFriend != nil, viewModel.requestSent != nil {
+                            if  viewModel.isFriend != nil, viewModel.requestSent != nil, viewModel.requestedMe != nil {
                                 Button {
                                     
                                     if viewModel.isFriend!{
                                         viewModel.removeFriend(friendUserId: targetUserId)
                                     } else {
-                                        viewModel.requestSent!
-                                        ? viewModel.unsendFriendRequest(friendUserId: targetUserId)
-                                        : viewModel.sendFriendRequest(friendUserId: targetUserId)
-                                        
+                                        if viewModel.requestedMe! {
+                                            viewModel.acceptFriendRequest(friendUserId: targetUserId)
+                                            
+                                        } else {
+                                            viewModel.requestSent!
+                                            ? viewModel.unsendFriendRequest(friendUserId: targetUserId)
+                                            : viewModel.sendFriendRequest(friendUserId: targetUserId)
+                                        }
                                     }
                                     
                                     
@@ -297,29 +291,39 @@ struct ProfileView: View {
                                     HStack{
                                         
                                         
-                                        
+                              
                                         
                                         if viewModel.isFriend!{
                                             
                                             Label("Friended", systemImage: "person.crop.circle.badge.checkmark")
                                             
                                         } else {
-                                            viewModel.requestSent!
-                                            ? Label("Request Sent", systemImage: "paperplane")
-                                            
-                                            : Label("Add Friend", systemImage: "person.badge.plus")
-                                            
-                                            
-                                            
+//                                                    let authDataResultUserId = try AuthenticationManager.shared.getAuthenticatedUser().uid
+                                            if viewModel.requestedMe! {
+                                                
+                                                
+                                                Label("Accept Request", systemImage: "person.badge.plus")
+                                                
+                                                
+                                            } else {
+                                                
+                                                
+                                                viewModel.requestSent!
+                                                ? Label("Request Sent", systemImage: "paperplane")
+                                                
+                                                : Label("Add Friend", systemImage: "person.badge.plus")
+                                                
+                                            }
                                         }
-                                        
-                                        
-                                        
+                                
+                                
+                                
                                         
                                         
                                         
                                         
                                     }
+                                    
                                     .font(.headline)
                                     .fontWeight(.regular)
                                     .tint(targetUserColor ?? loadedColor)
@@ -330,6 +334,8 @@ struct ProfileView: View {
                                     
                                     .frame(maxWidth:.infinity, maxHeight: .infinity)
                                     .background(.thinMaterial)
+                                  
+                                    
                                     .cornerRadius(20)
                                     
                                 }
@@ -386,10 +392,11 @@ struct ProfileView: View {
             
             viewModel.checkFriendshipStatus()
             viewModel.checkRequestStatus()
+            viewModel.checkRequestedMe()
             
             
         }
-        .navigationTitle("Profile")
+        .navigationTitle("Profile 🤠")
         .toolbar{
             if (targetUserId.isEmpty) {
                 ToolbarItem(placement: .navigationBarTrailing) {

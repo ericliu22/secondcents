@@ -40,10 +40,15 @@ struct FriendRequestsView: View {
         //            }
         //        }.onAppear { viewModel.fetchData() }
         
+//        if viewModel.allRequests.count == 0 {
+//            
+//            Text(noFriendsMessage[Int.random(in: 0..<(noFriendsMessage.count))])
+//                .font(.headline)
+//                .fontWeight(.regular)
+//            
+//            
+//        } else {
         
-//        Text(noFriendsMessage[Int.random(in: 0..<(noFriendsMessage.count))])
-//            .font(.headline)
-//            .fontWeight(.regular)
             NavigationStack{
                 
                 List{
@@ -186,7 +191,7 @@ struct FriendRequestsView: View {
                     
                 }
                 
-                .navigationTitle("Friend Requests✨")
+                .navigationTitle("Friend Requests ✨")
                 .searchable(text: $searchTerm, placement: .navigationBarDrawer(displayMode: .always), prompt: "Search")
                 
             }
@@ -194,7 +199,7 @@ struct FriendRequestsView: View {
                 
                 try? await viewModel.getAllRequests(targetUserId: targetUserId)
             }
-        
+//        }
         
     }
 }

@@ -131,7 +131,7 @@ struct SearchUserView: View {
                 
                 
             }
-            .navigationTitle( "Search")
+            .navigationTitle( "Search 👀")
             .searchable(text: $searchTerm, prompt: "Search")
             
         }

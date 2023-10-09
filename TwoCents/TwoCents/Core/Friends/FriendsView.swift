@@ -131,7 +131,7 @@ struct FriendsView: View {
                 
                 
             }
-            .navigationTitle( "Friends" )
+            .navigationTitle( "Friends 💛" )
             .searchable(text: $searchTerm, placement: .navigationBarDrawer(displayMode: .always), prompt: "Search")
             
         }

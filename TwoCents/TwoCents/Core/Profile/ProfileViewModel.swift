@@ -85,6 +85,25 @@ final class ProfileViewModel: ObservableObject {
     
     
     
+    func acceptFriendRequest(friendUserId: String)  {
+        
+        guard !friendUserId.isEmpty else { return }
+        isFriend = true
+        requestSent = false
+        Task {
+            //loading like this becasuse this viewModel User changes depending on if its current user or a user thats searched
+            
+            let authDataResultUserId = try AuthenticationManager.shared.getAuthenticatedUser().uid
+            
+            guard authDataResultUserId != friendUserId else { return }
+            
+            
+            try? await UserManager.shared.acceptFriendRequest(userId: authDataResultUserId, friendUserId: friendUserId)
+        }
+    }
+    
+    
+    
     
     @Published private(set) var isFriend:  Bool? 
     
@@ -122,5 +141,23 @@ final class ProfileViewModel: ObservableObject {
         
     }
     
+    @Published private(set) var requestedMe:  Bool?
+    
+    
+   
+    func checkRequestedMe() {
+        do {
+            let authDataResultUserId = try AuthenticationManager.shared.getAuthenticatedUser().uid
+            
+            requestedMe =  user?.outgoingFriendRequests?.contains(authDataResultUserId)
+          
+   
+                
+             
+        } catch {
+            print(error)
+        }
+        
+    }
     
 }

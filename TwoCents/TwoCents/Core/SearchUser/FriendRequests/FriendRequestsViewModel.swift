@@ -24,13 +24,14 @@ final class FriendRequestsViewModel: ObservableObject {
     
     
     @Published private(set) var allRequests: [DBUser] = []
-    
+//    @State private(set) var requestLoaded: Bool = false
     
     func getAllRequests(targetUserId: String) async throws {
        
         try? await loadCurrentUser()
         self.allRequests = try await UserManager.shared.getAllRequests(userId: targetUserId)
         
+//        requestLoaded = true
         
 //        self.allRequests = try await UserManager.shared.getAllUsers(userId: targetUserId, friendsOnly: true)
     }
