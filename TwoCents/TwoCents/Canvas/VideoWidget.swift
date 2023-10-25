@@ -48,6 +48,10 @@ class VideoWidget: CanvasWidget {
             }
         )
         
-        super.init(position: position, size: size, borderColor: borderColor, bodyView: bodyView)
+        super.init(position: position, borderColor: borderColor, bodyView: bodyView)
+    }
+    
+    required init(from decoder: Decoder) throws {
+        try super.init(from: Decoder.self as! Decoder);
     }
 }
