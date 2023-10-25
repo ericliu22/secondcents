@@ -9,9 +9,6 @@ import SwiftUI
 import FirebaseCore
 import FirebaseFirestore
 
-
-
-
 //HARDCODED SECTION
 
 let db = Firestore.firestore()
@@ -24,30 +21,23 @@ size: [250, 250],
 borderColor: Color(.black),
 image: Image("jennie kim"))
 
-var videoView = VideoWidget(
-position: CGPoint(x: 600, y:1000),
-size: [250,250],
-borderColor: Color(.red),
-videoName: "lisa manoban",
-extensionName: "mp4")
-
 var imageView2 = ImageWidget(
 position: CGPoint(x: 200, y: 1000),
 size: [250, 250],
 borderColor: Color(.black),
-image: Image("jennie kim"))
+image: Image("jonathan-pic"))
 
 var imageView3 = ImageWidget(
 position: CGPoint(x: 200, y: 1000),
 size: [250, 250],
 borderColor: Color(.black),
-image: Image("jennie kim"))
+image: Image("josh-pic"))
 
 var imageView4 = ImageWidget(
 position: CGPoint(x: 200, y: 1000),
 size: [250, 250],
 borderColor: Color(.black),
-image: Image("jennie kim"))
+image: Image("enzo-pic"))
 //HARDCODED SECTION
 
 
@@ -92,12 +82,12 @@ struct CanvasPage: View {
     @State private var handFill: String = ""
     @State private var grabMode: Bool = false
     @State private var canvasWidgets: [CanvasWidget]
-    
+    @GestureState private var magnifyBy: CGFloat = 1.0
     
     
     init() {
         
-        self.canvasWidgets = [imageView, videoView, imageView2, imageView3, imageView4]
+        self.canvasWidgets = [imageView, imageView2, imageView3, imageView4]
         
     }
     
@@ -116,7 +106,7 @@ struct CanvasPage: View {
     
     
     
-    func Task() async {
+    func onChange() async {
         
         do {
             try await self.userUID = getUID()!
@@ -158,41 +148,18 @@ struct CanvasPage: View {
     
     
     func GridView() -> AnyView {
-    
+        
         let columns = Array(repeating: GridItem(.fixed(250), spacing: 15, alignment: .leading), count: 3)
         
-        return AnyView(LazyVGrid(columns: columns, alignment: .leading, spacing: 15, content: {
+        return AnyView(LazyVGrid(columns: columns, alignment: .leading, spacing: 250, content: {
             
-                ForEach(self.canvasWidgets, id:\.self) { widget in
-                        widget.widgetView()
-                }
-            
-            })
-        )
-        
+            ReorderableForEach(items: canvasWidgets) { widget in
+                widget.widgetView()
+            } moveAction: { from, to in
+                canvasWidgets.move(fromOffsets: from, toOffset: to)
+            }}
+        ))
     }
-
-    
-    
-    
-    func canvasView() -> AnyView {
-        
-       AnyView(
-            ZStack {
-                GridView()
-                Canvas { context, size in
-                    for line in lines {
-                        var path = Path()
-                        path.addLines(line.points)
-                        context.stroke(path, with: .color(line.color), lineWidth: line.lineWidth)
-                    }
-                }
-            }.frame(minWidth: 1600, minHeight: 1600)
-        )
-        
-    }
-    
-    
 
     func Toolbar() -> AnyView {
         
@@ -217,8 +184,10 @@ struct CanvasPage: View {
                         
                         if handFill.isEmpty {
                             self.handFill = ".fill"
+                            self.grabMode = true
                         } else {
                             self.handFill = ""
+                            self.grabMode = false
                         }
                         
                     }))
@@ -226,13 +195,40 @@ struct CanvasPage: View {
         )
         
     }
+
     
     
+    func canvasView() -> AnyView {
+        
+       AnyView(
+            ZStack {
+                GridView()
+                Canvas { context, size in
+                    for line in lines {
+                        var path = Path()
+                        path.addLines(line.points)
+                        context.stroke(path, with: .color(line.color), lineWidth: line.lineWidth)
+                    }
+                }
+            }.frame(minWidth: 1000, minHeight: 1000)
+        )
+        
+    }
+    
+    
+    var magnification: some Gesture {
+            MagnifyGesture()
+                .updating($magnifyBy) { value, gestureState, transaction in
+                    gestureState = value.magnification
+                    print(magnifyBy)
+                }
+        }
+
     
     var body: some View {
         
         VStack {
-            ScrollView([.horizontal,.vertical],showsIndicators: false) {
+            ScrollView([.horizontal,.vertical],showsIndicators: true) {
                     if drawingMode {
                         canvasView()
                             .gesture(DragGesture(minimumDistance: 0, coordinateSpace: .local).onChanged({ value in
@@ -251,14 +247,19 @@ struct CanvasPage: View {
                                     }
                                 })
                             )
+                    } else if grabMode {
+                        canvasView()
                     } else {
                         canvasView()
                     }
-            }.task {
-                await Task()
-            }
-                Toolbar()
+            }.scrollDisabled(grabMode)//ScrollView
+                .gesture(magnification)
+                .scaleEffect(CGSize(width: magnifyBy, height: magnifyBy))
+            Toolbar()
+        }.task {
+                await onChange()
         }
+
         
     }
     
