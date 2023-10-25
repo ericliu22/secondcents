@@ -34,10 +34,10 @@ struct FrontPageView: View {
                     Image(systemName: "house")
                     Text("Canvas Page")
                 }
-            ColorSelectionView()
+            SpacesView(showSignInView: $showSignInView, loadedColor: $loadedColor, showCreateProfileView: $showCreateProfileView, targetUserId: "")
                 .tabItem {
-                    Image(systemName: "house")
-                    Text("Page 4")
+                    Image(systemName: "rectangle.3.group.fill")
+                    Text("Spaces")
                 }
             
             

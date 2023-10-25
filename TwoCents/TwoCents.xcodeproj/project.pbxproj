@@ -31,6 +31,10 @@
 		A2F5631E2AB4E6240026D8C9 /* CanvasPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F563182AB4E6240026D8C9 /* CanvasPage.swift */; };
 		A2F563222AB4E6700026D8C9 /* retrievemessages.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F563202AB4E6700026D8C9 /* retrievemessages.swift */; };
 		A2F563232AB4E6700026D8C9 /* chattingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F563212AB4E6700026D8C9 /* chattingView.swift */; };
+		AB0D07662AE6FB95003AC8A4 /* SpacesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB0D07652AE6FB95003AC8A4 /* SpacesView.swift */; };
+		AB2E56C62AE9B9210096A58C /* CreateSpacesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2E56C52AE9B9210096A58C /* CreateSpacesView.swift */; };
+		AB2E56C82AE9B9590096A58C /* CreateSpacesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2E56C72AE9B9590096A58C /* CreateSpacesViewModel.swift */; };
+		AB2E56CA2AE9BB410096A58C /* SpaceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2E56C92AE9BB410096A58C /* SpaceManager.swift */; };
 		AB300FAE2AC7406500C6719D /* FriendsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB300FAD2AC7406500C6719D /* FriendsViewModel.swift */; };
 		AB300FB02AC7407000C6719D /* FriendsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB300FAF2AC7407000C6719D /* FriendsView.swift */; };
 		AB4C1E4F2A8785BF00588160 /* ColorSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB4C1E4E2A8785BF00588160 /* ColorSelectionView.swift */; };
@@ -45,6 +49,7 @@
 		AB842C102A91E52000E4A7CE /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB842C0F2A91E52000E4A7CE /* ProfileViewModel.swift */; };
 		AB842C122A91F36300E4A7CE /* CustomizeProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB842C112A91F36300E4A7CE /* CustomizeProfileView.swift */; };
 		AB842C142A91F36D00E4A7CE /* CustomizeProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB842C132A91F36D00E4A7CE /* CustomizeProfileViewModel.swift */; };
+		AB8C6E202AE6FBD50005B7F9 /* SpacesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB8C6E1F2AE6FBD50005B7F9 /* SpacesViewModel.swift */; };
 		AB90021A2A8B85BD00F970B8 /* UploadExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB9002192A8B85BD00F970B8 /* UploadExample.swift */; };
 		AB90021D2A8B85DA00F970B8 /* UploadExampleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB90021C2A8B85DA00F970B8 /* UploadExampleViewModel.swift */; };
 		AB9455232A9468130055B44A /* ColorPickerWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB9455222A9468130055B44A /* ColorPickerWidget.swift */; };
@@ -119,6 +124,10 @@
 		A2F563182AB4E6240026D8C9 /* CanvasPage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CanvasPage.swift; sourceTree = "<group>"; };
 		A2F563202AB4E6700026D8C9 /* retrievemessages.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = retrievemessages.swift; sourceTree = "<group>"; };
 		A2F563212AB4E6700026D8C9 /* chattingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = chattingView.swift; sourceTree = "<group>"; };
+		AB0D07652AE6FB95003AC8A4 /* SpacesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpacesView.swift; sourceTree = "<group>"; };
+		AB2E56C52AE9B9210096A58C /* CreateSpacesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateSpacesView.swift; sourceTree = "<group>"; };
+		AB2E56C72AE9B9590096A58C /* CreateSpacesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateSpacesViewModel.swift; sourceTree = "<group>"; };
+		AB2E56C92AE9BB410096A58C /* SpaceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpaceManager.swift; sourceTree = "<group>"; };
 		AB300FAD2AC7406500C6719D /* FriendsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsViewModel.swift; sourceTree = "<group>"; };
 		AB300FAF2AC7407000C6719D /* FriendsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsView.swift; sourceTree = "<group>"; };
 		AB4C1E4E2A8785BF00588160 /* ColorSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorSelectionView.swift; sourceTree = "<group>"; };
@@ -132,6 +141,7 @@
 		AB842C0F2A91E52000E4A7CE /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
 		AB842C112A91F36300E4A7CE /* CustomizeProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomizeProfileView.swift; sourceTree = "<group>"; };
 		AB842C132A91F36D00E4A7CE /* CustomizeProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomizeProfileViewModel.swift; sourceTree = "<group>"; };
+		AB8C6E1F2AE6FBD50005B7F9 /* SpacesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpacesViewModel.swift; sourceTree = "<group>"; };
 		AB9002192A8B85BD00F970B8 /* UploadExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadExample.swift; sourceTree = "<group>"; };
 		AB90021C2A8B85DA00F970B8 /* UploadExampleViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadExampleViewModel.swift; sourceTree = "<group>"; };
 		AB9455222A9468130055B44A /* ColorPickerWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorPickerWidget.swift; sourceTree = "<group>"; };
@@ -313,6 +323,25 @@
 			path = TwoCents/Chatting;
 			sourceTree = SOURCE_ROOT;
 		};
+		AB0D07642AE6FB7C003AC8A4 /* Spaces */ = {
+			isa = PBXGroup;
+			children = (
+				AB0D07652AE6FB95003AC8A4 /* SpacesView.swift */,
+				AB2E56C42AE9B9120096A58C /* CreateSpaces */,
+				AB8C6E1F2AE6FBD50005B7F9 /* SpacesViewModel.swift */,
+			);
+			path = Spaces;
+			sourceTree = "<group>";
+		};
+		AB2E56C42AE9B9120096A58C /* CreateSpaces */ = {
+			isa = PBXGroup;
+			children = (
+				AB2E56C52AE9B9210096A58C /* CreateSpacesView.swift */,
+				AB2E56C72AE9B9590096A58C /* CreateSpacesViewModel.swift */,
+			);
+			path = CreateSpaces;
+			sourceTree = "<group>";
+		};
 		AB300FAC2AC7403900C6719D /* Friends */ = {
 			isa = PBXGroup;
 			children = (
@@ -400,6 +429,7 @@
 			isa = PBXGroup;
 			children = (
 				ABA45E832A7C92B00015F000 /* UserManager.swift */,
+				AB2E56C92AE9BB410096A58C /* SpaceManager.swift */,
 			);
 			path = Firestore;
 			sourceTree = "<group>";
@@ -423,6 +453,7 @@
 			isa = PBXGroup;
 			children = (
 				AB9909A52ABE3B78004B3021 /* FriendRequests */,
+				AB0D07642AE6FB7C003AC8A4 /* Spaces */,
 				AB300FAC2AC7403900C6719D /* Friends */,
 				AB74383F2AAA339A001B4988 /* SearchUser */,
 				AB9455242A94A2D50055B44A /* SignUp */,
@@ -607,6 +638,8 @@
 				85C6759A2AB8EE5B00FACCB2 /* HotSeatManager.swift in Sources */,
 				A26809CA2AB8A77E003B30DE /* VoteGameReal.swift in Sources */,
 				AB842C142A91F36D00E4A7CE /* CustomizeProfileViewModel.swift in Sources */,
+				AB2E56C62AE9B9210096A58C /* CreateSpacesView.swift in Sources */,
+				AB2E56C82AE9B9590096A58C /* CreateSpacesViewModel.swift in Sources */,
 				A257D7862A6D707600A4E7BD /* ContentView.swift in Sources */,
 				ABCA39DA2A7A0881009447C3 /* SettingsView.swift in Sources */,
 				85741EAD2AD03BB20085423E /* CarouselContent.swift in Sources */,
@@ -621,6 +654,7 @@
 				A2F563232AB4E6700026D8C9 /* chattingView.swift in Sources */,
 				AB4C1E4F2A8785BF00588160 /* ColorSelectionView.swift in Sources */,
 				AB7438412AAA349C001B4988 /* SearchUserView.swift in Sources */,
+				AB8C6E202AE6FBD50005B7F9 /* SpacesViewModel.swift in Sources */,
 				ABCA39D22A79FC16009447C3 /* AuthenticationView.swift in Sources */,
 				ABF556862A950BCB00103880 /* RootViewModel.swift in Sources */,
 				ABF556842A95046D00103880 /* ColorPickerWidgetViewModel.swift in Sources */,
@@ -641,10 +675,12 @@
 				ABF56DFF2A7C8C5200F959DB /* SettingsViewModel.swift in Sources */,
 				AB842C102A91E52000E4A7CE /* ProfileViewModel.swift in Sources */,
 				AB7438432AAA34AD001B4988 /* SearchUserViewModel.swift in Sources */,
+				AB2E56CA2AE9BB410096A58C /* SpaceManager.swift in Sources */,
 				ABA45E812A7C8DC50015F000 /* ProfileView.swift in Sources */,
 				ABC426B32A86438400873EE1 /* SignUpEmailViewModel.swift in Sources */,
 				ABC426B12A863D9F00873EE1 /* SignUpEmailView.swift in Sources */,
 				ABA45E7E2A7C8D8C0015F000 /* SignInEmailViewModel.swift in Sources */,
+				AB0D07662AE6FB95003AC8A4 /* SpacesView.swift in Sources */,
 				AB90021A2A8B85BD00F970B8 /* UploadExample.swift in Sources */,
 				AB9909AB2ABE3BF2004B3021 /* FriendRequestsView.swift in Sources */,
 				85741EAA2AD03B2C0085423E /* SnapCarouselPractice.swift in Sources */,

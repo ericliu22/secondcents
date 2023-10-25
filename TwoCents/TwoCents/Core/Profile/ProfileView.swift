@@ -152,7 +152,8 @@ struct ProfileView: View {
                             
                             if let username = user.username  {
                                 Text("@\(username)" )
-                                    .foregroundColor(Color(UIColor.secondaryLabel))
+//                                    .foregroundColor(Color(UIColor.secondaryLabel))
+                                    .foregroundStyle(.secondary)
                                 
                                     .font(.headline)
                                 
@@ -242,7 +243,8 @@ struct ProfileView: View {
                                                 
                                                 .font(.headline)
                                                 .fontWeight(.regular)
-                                                .foregroundColor(Color(UIColor.secondaryLabel))
+//                                                .foregroundColor(Color(UIColor.secondaryLabel))
+                                                .foregroundStyle(.secondary)
                                             } else {
                                                 
                                                 Label(incomingFriendRequests.count == 1
