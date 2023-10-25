@@ -37,6 +37,10 @@
 		AB2E56C62AE9B9210096A58C /* CreateSpacesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2E56C52AE9B9210096A58C /* CreateSpacesView.swift */; };
 		AB2E56C82AE9B9590096A58C /* CreateSpacesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2E56C72AE9B9590096A58C /* CreateSpacesViewModel.swift */; };
 		AB2E56CA2AE9BB410096A58C /* SpaceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2E56C92AE9BB410096A58C /* SpaceManager.swift */; };
+		AB2E56CD2AE9C59D0096A58C /* VoteGameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2E56CC2AE9C59D0096A58C /* VoteGameView.swift */; };
+		AB2E56CF2AE9C5E60096A58C /* ResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2E56CE2AE9C5E60096A58C /* ResultView.swift */; };
+		AB2E56D12AE9C62C0096A58C /* CapsuleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2E56D02AE9C62C0096A58C /* CapsuleView.swift */; };
+		AB2E56D32AE9C6F00096A58C /* VoteGameViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2E56D22AE9C6F00096A58C /* VoteGameViewModel.swift */; };
 		AB300FAE2AC7406500C6719D /* FriendsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB300FAD2AC7406500C6719D /* FriendsViewModel.swift */; };
 		AB300FB02AC7407000C6719D /* FriendsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB300FAF2AC7407000C6719D /* FriendsView.swift */; };
 		AB4C1E4F2A8785BF00588160 /* ColorSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB4C1E4E2A8785BF00588160 /* ColorSelectionView.swift */; };
@@ -132,6 +136,10 @@
 		AB2E56C52AE9B9210096A58C /* CreateSpacesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateSpacesView.swift; sourceTree = "<group>"; };
 		AB2E56C72AE9B9590096A58C /* CreateSpacesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateSpacesViewModel.swift; sourceTree = "<group>"; };
 		AB2E56C92AE9BB410096A58C /* SpaceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpaceManager.swift; sourceTree = "<group>"; };
+		AB2E56CC2AE9C59D0096A58C /* VoteGameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoteGameView.swift; sourceTree = "<group>"; };
+		AB2E56CE2AE9C5E60096A58C /* ResultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultView.swift; sourceTree = "<group>"; };
+		AB2E56D02AE9C62C0096A58C /* CapsuleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapsuleView.swift; sourceTree = "<group>"; };
+		AB2E56D22AE9C6F00096A58C /* VoteGameViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoteGameViewModel.swift; sourceTree = "<group>"; };
 		AB300FAD2AC7406500C6719D /* FriendsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsViewModel.swift; sourceTree = "<group>"; };
 		AB300FAF2AC7407000C6719D /* FriendsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsView.swift; sourceTree = "<group>"; };
 		AB4C1E4E2A8785BF00588160 /* ColorSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorSelectionView.swift; sourceTree = "<group>"; };
@@ -237,6 +245,7 @@
 				A20EBD062AB8A36100EFDDE8 /* HotSeat.swift */,
 				85741EAB2AD03B9A0085423E /* CarouselPracticeFiles */,
 				A20EBD072AB8A36100EFDDE8 /* VoteGameReal.swift */,
+				AB2E56CB2AE9C5880096A58C /* VoteGame */,
 				8573EC872AE6EF3400CFB579 /* Animations Group */,
 				A20EBD082AB8A36100EFDDE8 /* HotSeatManager.swift */,
 				A20EBD092AB8A36100EFDDE8 /* SuperlativeGame.swift */,
@@ -354,6 +363,17 @@
 				AB2E56C72AE9B9590096A58C /* CreateSpacesViewModel.swift */,
 			);
 			path = CreateSpaces;
+			sourceTree = "<group>";
+		};
+		AB2E56CB2AE9C5880096A58C /* VoteGame */ = {
+			isa = PBXGroup;
+			children = (
+				AB2E56CC2AE9C59D0096A58C /* VoteGameView.swift */,
+				AB2E56CE2AE9C5E60096A58C /* ResultView.swift */,
+				AB2E56D22AE9C6F00096A58C /* VoteGameViewModel.swift */,
+				AB2E56D02AE9C62C0096A58C /* CapsuleView.swift */,
+			);
+			path = VoteGame;
 			sourceTree = "<group>";
 		};
 		AB300FAC2AC7403900C6719D /* Friends */ = {
@@ -655,6 +675,7 @@
 				AB2E56C62AE9B9210096A58C /* CreateSpacesView.swift in Sources */,
 				AB2E56C82AE9B9590096A58C /* CreateSpacesViewModel.swift in Sources */,
 				A257D7862A6D707600A4E7BD /* ContentView.swift in Sources */,
+				AB2E56D12AE9C62C0096A58C /* CapsuleView.swift in Sources */,
 				ABCA39DA2A7A0881009447C3 /* SettingsView.swift in Sources */,
 				AB6778E62AB8F67D00C11AA7 /* VideoWidget.swift in Sources */,
 				A257D7862A6D707600A4E7BD /* ContentView.swift in Sources */,
@@ -662,6 +683,8 @@
 				ABCA39DA2A7A0881009447C3 /* SettingsView.swift in Sources */,
 				AB842C122A91F36300E4A7CE /* CustomizeProfileView.swift in Sources */,
 				85741EA82AD03A0C0085423E /* CarouselPractice.swift in Sources */,
+				AB2E56D32AE9C6F00096A58C /* VoteGameViewModel.swift in Sources */,
+				AB2E56CD2AE9C59D0096A58C /* VoteGameView.swift in Sources */,
 				A2F5631E2AB4E6240026D8C9 /* CanvasPage.swift in Sources */,
 				AB90021D2A8B85DA00F970B8 /* UploadExampleViewModel.swift in Sources */,
 				A2F563232AB4E6700026D8C9 /* chattingView.swift in Sources */,
@@ -685,6 +708,7 @@
 				AB300FB02AC7407000C6719D /* FriendsView.swift in Sources */,
 				ABCA39D42A79FFAD009447C3 /* SignInEmailView.swift in Sources */,
 				8573EC892AE6EF4A00CFB579 /* HeartParticle.swift in Sources */,
+				AB2E56CF2AE9C5E60096A58C /* ResultView.swift in Sources */,
 				ABB84C342A8CBA03009C7550 /* FrontPageView.swift in Sources */,
 				AB6778E42AB8F67800C11AA7 /* CanvasWidget.swift in Sources */,
 				A2F5631C2AB4E6240026D8C9 /* Line.swift in Sources */,
