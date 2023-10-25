@@ -13,57 +13,75 @@ struct ParticleView: View {
     @State private var showPulses: Bool = false
     @State private var pulsedHearts: [HeartParticle] = []
     var body: some View {
-        VStack{
-            ZStack{
-                if showPulses {
-                    TimelineView(.animation(minimumInterval: 0.7, paused: false)) {
-                        timeline in
-                        Canvas { context, size in
-                            for heart in pulsedHearts {
-                                if let resolvedView = context.resolveSymbol(id: heart.id) {
-                                    let centerX = size.width / 2
-                                    let centerY = size.height / 2
-                                    
-                                    context.draw(resolvedView, at: CGPoint(x: centerX, y: centerY))
+        ZStack{
+            Color("SabotageBg")
+                .edgesIgnoringSafeArea(.all)
+            Image("eric-pic")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 1000, height: 1000)
+                .blur(radius: 80)
+            VStack{
+                ZStack{
+                    if showPulses {
+                        TimelineView(.animation(minimumInterval: 1.4, paused: false)) {
+                            timeline in
+                            Canvas { context, size in
+                                for heart in pulsedHearts {
+                                    if let resolvedView = context.resolveSymbol(id: heart.id) {
+                                        let centerX = size.width / 2
+                                        let centerY = size.height / 2
+                                        
+                                        context.draw(resolvedView, at: CGPoint(x: centerX, y: centerY))
+                                    }
+                                }
+                            } symbols: {
+                                ForEach(pulsedHearts) {
+                                    PulseHeartView()
+                                        .id($0.id)
                                 }
                             }
-                        } symbols: {
-                            ForEach(pulsedHearts) {
-                                PulseHeartView()
-                                    .id($0.id)
-                            }
-                        }
-                        .onChange(of: timeline.date) { oldValue, newValue in
-                            if beatAnimation {
-                                addPulsedHeart()
+                            .onChange(of: timeline.date) { oldValue, newValue in
+                                if beatAnimation {
+                                    addPulsedHeart()
+                                }
                             }
                         }
                     }
+                    ZStack{
+                        Image(systemName: "suit.heart.fill")
+                            .font(.system(size: 150))
+                            .foregroundStyle(Color("ericPurple").gradient)
+                            .symbolEffect(.bounce, options: beatAnimation ? .repeating.speed(0.5) : .default, value: beatAnimation)
+//                            .onAppear{
+//                                beatAnimation = true
+//                            }
+                        Text("Pretend")
+                            .font(.custom("LuckiestGuy-Regular", size: 28))
+                            .foregroundStyle(Color("ericPurple"))
+                            .offset(y: 200)
+                    }
                 }
-                Image(systemName: "suit.heart.fill")
-                    .font(.system(size: 100))
-                    .foregroundStyle(.blue)
-                    .symbolEffect(.bounce, options: !beatAnimation ? .default : .repeating.speed(1), value: beatAnimation)
+                .frame(maxWidth: 350, maxHeight: 500)
+                .overlay(RoundedRectangle(cornerRadius: 30).stroke(Color("ericPurple"), lineWidth: 5))
+                .background(.thickMaterial, in: .rect(cornerRadius: 30))
                 
-            }
-            .frame(maxWidth: 350, maxHeight: 350)
-            .background(.bar, in: .rect(cornerRadius: 30))
-            
-            Toggle("Beat Animation", isOn: $beatAnimation)
-                .padding(15)
-                .frame(maxWidth: 350)
-                .background(.bar, in: .rect(cornerRadius: 15))
-                .padding(.top, 20)
-                .onChange(of: beatAnimation) { oldValue, newValue in
-                    if pulsedHearts.isEmpty {
-                        showPulses = true
-                    }
+                Toggle("Beat Animation", isOn: $beatAnimation)
+                    .padding(15)
+                    .frame(maxWidth: 350)
+                    .background(.bar, in: .rect(cornerRadius: 15))
+                    .padding(.top, 20)
                     
-                    if newValue && pulsedHearts.isEmpty {
-                        addPulsedHeart()
+                    .onChange(of: beatAnimation) { oldValue, newValue in
+                        if pulsedHearts.isEmpty {
+                            showPulses = true
+                        }
+                        
+                        if newValue && pulsedHearts.isEmpty {
+                            addPulsedHeart()
+                        }
                     }
-                }
-//                .disabled(!beatAnimation && pulsedHearts.isEmpty)
+            }   //vstack
         }
     }
     
@@ -88,8 +106,8 @@ struct PulseHeartView: View {
     @State private var startAnimation: Bool = false
     var body: some  View {
         Image(systemName: "suit.heart.fill")
-            .font(.system(size: 100))
-            .foregroundStyle(.blue)
+            .font(.system(size: 120))
+            .foregroundStyle(Color("ericPurple").gradient)
             .scaleEffect(startAnimation ? 4 : 1)
             .opacity(startAnimation ? 0 : 0.7)
             .onAppear(perform: {

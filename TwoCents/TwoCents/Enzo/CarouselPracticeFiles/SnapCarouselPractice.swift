@@ -44,42 +44,42 @@ struct SnapCarouselPractice<Content: View, T: Identifiable>: View {
 //
 //                }
                 
-                ZStack{
-                    RoundedRectangle(cornerRadius: 10)
-                        .frame(width: proxy.size.width - trailingSpace)
-                    NavigationLink {
-                        TestTest()
-                    } label: {
-                        Circle()
-                    }
-                }
-                ZStack{
-                    RoundedRectangle(cornerRadius: 10)
-                        .frame(width: proxy.size.width - trailingSpace)
-                    NavigationLink {
-                        TestTest()
-                    } label: {
-                        Circle()
-                    }
-                }
-                ZStack{
-                    RoundedRectangle(cornerRadius: 10)
-                        .frame(width: proxy.size.width - trailingSpace)
-                    NavigationLink {
-                        TestTest()
-                    } label: {
-                        Circle()
-                    }
-                }
-                ZStack{
-                    RoundedRectangle(cornerRadius: 10)
-                        .frame(width: proxy.size.width - trailingSpace)
-                    NavigationLink {
-                        TestTest()
-                    } label: {
-                        Circle()
-                    }
-                }
+//                ZStack{
+//                    RoundedRectangle(cornerRadius: 10)
+//                        .frame(width: proxy.size.width - trailingSpace)
+//                    NavigationLink {
+//                        TestTest()
+//                    } label: {
+//                        Circle()
+//                    }
+//                }
+//                ZStack{
+//                    RoundedRectangle(cornerRadius: 10)
+//                        .frame(width: proxy.size.width - trailingSpace)
+//                    NavigationLink {
+//                        TestTest()
+//                    } label: {
+//                        Circle()
+//                    }
+//                }
+//                ZStack{
+//                    RoundedRectangle(cornerRadius: 10)
+//                        .frame(width: proxy.size.width - trailingSpace)
+//                    NavigationLink {
+//                        TestTest()
+//                    } label: {
+//                        Circle()
+//                    }
+//                }
+//                ZStack{
+//                    RoundedRectangle(cornerRadius: 10)
+//                        .frame(width: proxy.size.width - trailingSpace)
+//                    NavigationLink {
+//                        TestTest()
+//                    } label: {
+//                        Circle()
+//                    }
+//                }
                 
 
                 
@@ -102,7 +102,10 @@ struct SnapCarouselPractice<Content: View, T: Identifiable>: View {
                         let progress = -offsetX / width
                         let roundIndex = progress.rounded()
                         currentIndex = max(min(currentIndex + Int(roundIndex), list.count - 1), 0)
-                        print("The list is: \(list)")
+//                        print("The list is: \(list)")
+                        print("Round Index: \(roundIndex)")
+                        print("current index : \(currentIndex)")
+
                         
                         //updating Index
                         currentIndex = index
