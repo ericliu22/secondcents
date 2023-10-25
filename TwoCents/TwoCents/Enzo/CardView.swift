@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+@available(iOS 17.0, *)
 struct CardView: View {
     
     var player: PlayerData
@@ -49,7 +50,7 @@ struct CardView: View {
                 }
             }
             .navigationDestination(for: PlayerData.self) { player in
-                SabotageGamePageTwo(player: player)
+                SabotageRealPageTwo(player: player)
             }
             .zIndex(index)
             .offset(x: offset.width, y: offset.height)
@@ -86,6 +87,7 @@ struct CardView: View {
     }
 }
 
+@available(iOS 17.0, *)
 struct CardView_Previews: PreviewProvider {
     static var previews: some View {
         CardView(player: playerData[1], playerIndex: 1, isSpread: .constant(false))

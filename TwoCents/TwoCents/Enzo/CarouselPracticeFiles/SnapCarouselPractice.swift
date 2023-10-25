@@ -38,10 +38,52 @@ struct SnapCarouselPractice<Content: View, T: Identifiable>: View {
             let adjustmentWidth = (trailingSpace / 2) - spacing
             
             HStack(spacing: spacing){
-                ForEach(list){item in
-                    content(item)
-                        .frame(width: proxy.size.width - trailingSpace)
-                }
+//                ForEach(list){item in
+//                    content(item)
+//                        .frame(width: proxy.size.width - trailingSpace)
+//
+//                }
+                
+//                ZStack{
+//                    RoundedRectangle(cornerRadius: 10)
+//                        .frame(width: proxy.size.width - trailingSpace)
+//                    NavigationLink {
+//                        TestTest()
+//                    } label: {
+//                        Circle()
+//                    }
+//                }
+//                ZStack{
+//                    RoundedRectangle(cornerRadius: 10)
+//                        .frame(width: proxy.size.width - trailingSpace)
+//                    NavigationLink {
+//                        TestTest()
+//                    } label: {
+//                        Circle()
+//                    }
+//                }
+//                ZStack{
+//                    RoundedRectangle(cornerRadius: 10)
+//                        .frame(width: proxy.size.width - trailingSpace)
+//                    NavigationLink {
+//                        TestTest()
+//                    } label: {
+//                        Circle()
+//                    }
+//                }
+//                ZStack{
+//                    RoundedRectangle(cornerRadius: 10)
+//                        .frame(width: proxy.size.width - trailingSpace)
+//                    NavigationLink {
+//                        TestTest()
+//                    } label: {
+//                        Circle()
+//                    }
+//                }
+                
+
+                
+                
             }
             .padding(.horizontal,spacing)
             .offset(x: (CGFloat(currentIndex) * -width) + (currentIndex != 0 ? adjustmentWidth: 0) + offset)
@@ -60,6 +102,10 @@ struct SnapCarouselPractice<Content: View, T: Identifiable>: View {
                         let progress = -offsetX / width
                         let roundIndex = progress.rounded()
                         currentIndex = max(min(currentIndex + Int(roundIndex), list.count - 1), 0)
+//                        print("The list is: \(list)")
+                        print("Round Index: \(roundIndex)")
+                        print("current index : \(currentIndex)")
+
                         
                         //updating Index
                         currentIndex = index
@@ -87,6 +133,6 @@ struct SnapCarouselPractice<Content: View, T: Identifiable>: View {
 
 struct SnapCarouselPractice_Previews: PreviewProvider {
     static var previews: some View {
-        CarouselContent()
+        CarouselPractice()
     }
 }
