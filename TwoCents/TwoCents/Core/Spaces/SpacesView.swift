@@ -124,7 +124,7 @@ struct SpacesView: View {
                
                 ToolbarItem(placement: .navigationBarTrailing) {
                     NavigationLink{
-                        CreateSpacesView()
+                        CreateSpacesView(spaceId: UUID().uuidString)
                     } label: {
                         Image (systemName: "square.and.pencil")
                             .font(.headline)

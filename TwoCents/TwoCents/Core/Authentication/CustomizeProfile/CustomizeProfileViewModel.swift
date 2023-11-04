@@ -32,7 +32,7 @@ final class CustomizeProfileViewModel: ObservableObject{
             
             guard let data = try await item.loadTransferable(type: Data.self) else { return }
          
-            let (path, name) = try await StorageManager.shared.saveImage(data: data, userId: user.userId)
+            let (path, name) = try await StorageManager.shared.saveProfilePic(data: data, userId: user.userId)
             print ("Saved Image")
             print (path)
             print (name)
