@@ -22,7 +22,7 @@ struct CreateSpacesView: View {
     @State private var selectedPhoto: PhotosPickerItem? = nil
     
     
-    @State private var searchTerm = ""
+   
     
     
     
@@ -273,6 +273,7 @@ struct CreateSpacesView: View {
                     .frame(maxWidth: .infinity)
                 
             }
+            .disabled(viewModel.name.isEmpty || viewModel.selectedMembers.isEmpty)
             
             .buttonStyle(.bordered)
             .tint(.accentColor)
@@ -282,7 +283,11 @@ struct CreateSpacesView: View {
         .padding()
         .task{
             try? await viewModel.loadCurrentSpace(spaceId: spaceId)
-            try? await viewModel.getAllFriends()
+            //to prevent list from refreshing when one exits tab and comes back
+            if viewModel.selectedMembers.isEmpty {
+                try? await viewModel.getAllFriends()
+      
+            }
             
             randomIndex = Int.random(in: 0..<(noMembersMessage.count))
             
