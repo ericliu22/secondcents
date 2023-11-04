@@ -21,7 +21,7 @@ class MessageManager: ObservableObject{
     }
     
     func fetchMessages() {
-        db.collection("Chatrooms").document(testchatRoom).collection("Chats").addSnapshotListener { querySnapshot, error in guard let documents = querySnapshot?.documents else {
+        db.collection("Chatrooms").document(testchatRoom).collection("Chats").order(by: "ts", descending: false).addSnapshotListener { querySnapshot, error in guard let documents = querySnapshot?.documents else {
             print("message not retrieved")
             return
         }
@@ -33,7 +33,16 @@ class MessageManager: ObservableObject{
                     return nil
                 }
             }
-            self.messages.sort {$0.ts < $1.ts}
+            //self.messages.sort {$0.ts < $1.ts}
+        }
+    }
+    
+    func sendMessages(text: String) {
+        do {
+            let newMessage = Message(id: "\(UUID())", sendBy: testchatUser, text: text, ts: Date())
+            try db.collection("Chatrooms").document(testchatRoom).collection("Chats").document().setData(from: newMessage)
+            } catch {
+            print("Error adding message to Firestore: \(error)")
         }
     }
 }
