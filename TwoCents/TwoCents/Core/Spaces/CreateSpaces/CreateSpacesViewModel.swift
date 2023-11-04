@@ -41,10 +41,11 @@ final class CreateSpacesViewModel: ObservableObject{
 //
 //          }
 //          
+
+
+        print(selectedMembersUserId)
           
- 
-          
-        let space = DBSpace(spaceId: spaceId, name: name.isEmpty ? "Untitled Space" : name)
+        let space = DBSpace(spaceId: spaceId, name: name.isEmpty ? "Untitled Space" : name, members: selectedMembersUserId)
           
 
           
@@ -89,6 +90,53 @@ final class CreateSpacesViewModel: ObservableObject{
         let authDataResult = try AuthenticationManager.shared.getAuthenticatedUser()
         self.allFriends = try await UserManager.shared.getAllFriends(userId: authDataResult.uid)
     }
+    
+    
+    
+    
+    @Published private(set) var selectedMembers: [DBUser] = []
+    @Published private(set) var selectedMembersUserId: [String] = []
+    
+    
+    func addMember(friend: DBUser) {
+        
+        //remove user from all friends array
+        allFriends.removeAll { user in
+            return user.userId == friend.userId
+        }
+        
+        
+        //add user to selected member array
+        selectedMembers.append(friend)
+        
+        //add user to selected member UserID array
+        selectedMembersUserId.append(friend.userId)
+        
+        
+    }
+    
+    func removeMember(friend: DBUser) {
+        
+        //remove user from members array
+        selectedMembers.removeAll { user in
+            return user.userId == friend.userId
+        }
+        
+        //remove user from members UID array
+        selectedMembersUserId.removeAll { user in
+            return user == friend.userId
+        }
+        
+        
+        
+        //add user to selected member array
+        allFriends.append(friend)
+        
+        
+    }
+    
+    
+    
     
     func getUserColor(userColor: String) -> Color{
 

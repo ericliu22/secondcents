@@ -39,7 +39,7 @@ struct DBSpace: Identifiable, Codable{
         self.emoji = emoji
         self.profileImagePath = profileImagePath
         self.profileImageUrl = profileImageUrl
-        self.members = []
+        self.members = members
        
     }
     
