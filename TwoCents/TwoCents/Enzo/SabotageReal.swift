@@ -13,8 +13,7 @@ private let fixedColumns = [
     GridItem(.flexible())
 ]
 
-@available(iOS 17.0, *)
-struct SabotageReal: View {
+struct SabotageView: View {
     
     @State var isSpread = false
     var body: some View {
@@ -57,8 +56,7 @@ struct SabotageReal: View {
     }
 }
 
-@available(iOS 17.0, *)
-struct SabotageRealPageTwo: View {
+struct SabotageSelectionView: View {
     @State var currentIndex: Int = 0
     @State var posts: [PostModel] = []
     var player: PlayerData
@@ -70,7 +68,7 @@ struct SabotageRealPageTwo: View {
                 HStack(spacing: 0){
                 }
                 
-                SabotageBruh(index: $currentIndex, player: player)
+                SabotageCarouselView(index: $currentIndex, player: player)
                 .padding(.vertical, 40)
                 
                 HStack(spacing: 10) {
@@ -92,7 +90,7 @@ struct SabotageRealPageTwo: View {
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(width: 1000, height: 1000)
-                    .blur(radius: 40)
+                    .blur(radius: 80)
             }
             )
         .frame(maxWidth: .infinity, alignment: .top)
@@ -105,8 +103,7 @@ struct SabotageRealPageTwo: View {
     }
 }
 
-@available(iOS 17.0, *)
-struct SabotageBruh: View {
+struct SabotageCarouselView: View {
     
     
     // Properties...
@@ -141,13 +138,13 @@ struct SabotageBruh: View {
             HStack(spacing: spacing){
 
                 
-                SabotageCarouselWidget(player: player)
+                SabotageCarouselWidget(icon: "theatermasks.fill", sabotageText: "Pretend", player: player)
                     .frame(width: proxy.size.width - 100)
-                SabotageCarouselWidget(player: player)
+                SabotageCarouselWidget(icon: "shuffle", sabotageText: "Change Profile", player: player)
                     .frame(width: proxy.size.width - 100)
-                SabotageCarouselWidget(player: player)
+                SabotageCarouselWidget(icon: "trash.fill", sabotageText: "Delete Widgets", player: player)
                     .frame(width: proxy.size.width - 100)
-                SabotageCarouselWidget(player: player)
+                SabotageCarouselWidget(icon: "delete.left.fill", sabotageText: "Remove points", player: player)
                     .frame(width: proxy.size.width - 100)
                 
                 
@@ -194,90 +191,113 @@ struct SabotageBruh: View {
 
 }
 
-@available(iOS 17.0, *)
 struct SabotageCarouselWidget: View {
     @State private var beatAnimation: Bool = false
     @State private var showPulses: Bool = false
     @State private var pulsedHearts: [HeartParticle] = []
+    
+    var icon: String
+    var sabotageText: String
+    
     var player: PlayerData
     var body: some View {
         VStack{
             ZStack{
-                if showPulses {
-                    TimelineView(.animation(minimumInterval: 1.4, paused: false)) {
-                        timeline in
-                        Canvas { context, size in
-                            for heart in pulsedHearts {
-                                if let resolvedView = context.resolveSymbol(id: heart.id) {
-                                    let centerX = size.width / 2
-                                    let centerY = size.height / 2
-                                    
-                                    context.draw(resolvedView, at: CGPoint(x: centerX, y: centerY))
-                                }
-                            }
-                        } symbols: {
-                            ForEach(pulsedHearts) {
-                                PulseHeartView()
-                                    .id($0.id)
-                            }
-                        }
-                        .onChange(of: timeline.date) { oldValue, newValue in
-                            if beatAnimation {
-                                addPulsedHeart()
-                            }
-                        }
-                    }
-                }
+//                if showPulses {
+//                    TimelineView(.animation(minimumInterval: 1.5, paused: false)) {
+//                        timeline in
+//                        Canvas { context, size in
+//                            for heart in pulsedHearts {
+//                                if let resolvedView = context.resolveSymbol(id: heart.id) {
+//                                    let centerX = size.width / 2
+//                                    let centerY = size.height / 2
+//                                    
+//                                    context.draw(resolvedView, at: CGPoint(x: centerX, y: centerY))
+//                                }
+//                            }
+//                        } symbols: {
+//                            ForEach(pulsedHearts) {
+//                                SabotagePulseHeartView(iconPulse: icon, player: player)
+//                                    .id($0.id)
+//                            }
+//                        }
+//                        .onChange(of: timeline.date) { oldValue, newValue in
+//                            if beatAnimation {
+//                                addPulsedHeart()
+//                            }
+//                        }
+//                    }
+//                }
                 ZStack{
-                    Image(systemName: "suit.heart.fill")
-                        .font(.system(size: 150))
-                        .foregroundStyle(Color(player.color).gradient)
-                        .symbolEffect(.bounce, options: beatAnimation ? .repeating.speed(0.5) : .default, value: beatAnimation)
+                    Image(systemName: icon)
+                        .font(.system(size: 120))
+                        .foregroundStyle(player.nativeColor.gradient)
+                        .symbolEffect(.bounce, options: beatAnimation ? .repeating.speed(0.00000000000001) : .default, value: beatAnimation)
 //                            .onAppear{
 //                                beatAnimation = true
 //                            }
-                    Text("Pretend")
-                        .font(.custom("LuckiestGuy-Regular", size: 28))
-                        .foregroundStyle(Color(player.color))
+                    Text(sabotageText)
+                        .font(.custom("LuckiestGuy-Regular", size: 32))
+                        .foregroundStyle(player.nativeColor)
                         .offset(y: 200)
                 }
                 
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .overlay(RoundedRectangle(cornerRadius: 30).stroke(Color(player.color), lineWidth: 5))
-            .background(.thickMaterial, in: .rect(cornerRadius: 30))
+//            .overlay(RoundedRectangle(cornerRadius: 30).stroke(Color(player.color), lineWidth: 5))
+            .background(.ultraThinMaterial, in: .rect(cornerRadius: 30))
             
             Toggle("Beat Animation", isOn: $beatAnimation)
                 .padding(15)
                 .frame(maxWidth: 350)
                 .background(.bar, in: .rect(cornerRadius: 15))
                 .padding(.top, 20)
-                
-                .onChange(of: beatAnimation) { oldValue, newValue in
-                    if pulsedHearts.isEmpty {
-                        showPulses = true
-                    }
-                    
-                    if newValue && pulsedHearts.isEmpty {
-                        addPulsedHeart()
-                    }
+//                
+//                .onChange(of: beatAnimation) { oldValue, newValue in
+//                    if pulsedHearts.isEmpty {
+//                        showPulses = true
+//                    }
+//                    
+//                    if newValue && pulsedHearts.isEmpty {
+//                        addPulsedHeart()
+//                    }
                 }
         }
     }
-    func addPulsedHeart() {
-        let pulsedHeart = HeartParticle()
-        pulsedHearts.append(pulsedHeart)
-        
-        //Removing after the pulse animation is finished
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-            pulsedHearts.removeAll(where: { $0.id == pulsedHeart.id })
-            
-            if pulsedHearts.isEmpty {
-                showPulses = false
-            }
-        }
-    }
-}
+//    func addPulsedHeart() {
+//        let pulsedHeart = HeartParticle()
+//        pulsedHearts.append(pulsedHeart)
+//        
+//        //Removing after the pulse animation is finished
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+//            pulsedHearts.removeAll(where: { $0.id == pulsedHeart.id })
+//            
+//            if pulsedHearts.isEmpty {
+//                showPulses = false
+//            }
+//        }
+//    }
+//}
+
+// Pulsed Heart Animation View
+
+//struct SabotagePulseHeartView: View {
+//    @State private var startAnimation: Bool = false
+//    var iconPulse: String
+//    var player: PlayerData
+//    var body: some  View {
+//        Image(systemName: iconPulse)
+//            .font(.system(size: 120))
+//            .foregroundStyle(Color(player.color).gradient)
+//            .scaleEffect(startAnimation ? 4 : 1)
+//            .opacity(startAnimation ? 0 : 0.3)
+//            .onAppear(perform: {
+//                withAnimation(.linear(duration: 3)){
+//                    startAnimation = true
+//                }
+//            })
+//    }
+//}
 
 struct SabotageGamePretendReal: View {
     
@@ -368,8 +388,8 @@ struct SabotageWidgetReal: View {
 
 
 @available(iOS 17.0, *)
-struct SabotageReal_Previews: PreviewProvider {
+struct SabotageView_Previews: PreviewProvider {
     static var previews: some View {
-        SabotageReal()
+        SabotageView()
     }
 }

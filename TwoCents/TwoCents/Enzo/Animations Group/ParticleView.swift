@@ -52,24 +52,29 @@ struct ParticleView: View {
                         Image(systemName: "suit.heart.fill")
                             .font(.system(size: 150))
                             .foregroundStyle(Color("ericPurple").gradient)
-                            .symbolEffect(.bounce, options: beatAnimation ? .repeating.speed(0.5) : .default, value: beatAnimation)
+                            .symbolEffect(.bounce, options: beatAnimation ? .repeating.speed(0.1) : .default, value: beatAnimation)
 //                            .onAppear{
 //                                beatAnimation = true
 //                            }
                         Text("Pretend")
-                            .font(.custom("LuckiestGuy-Regular", size: 28))
+                            .font(.custom("LuckiestGuy-Regular", size: 64))
+                   
+                        
                             .foregroundStyle(Color("ericPurple"))
                             .offset(y: 200)
                     }
                 }
                 .frame(maxWidth: 350, maxHeight: 500)
-                .overlay(RoundedRectangle(cornerRadius: 30).stroke(Color("ericPurple"), lineWidth: 5))
-                .background(.thickMaterial, in: .rect(cornerRadius: 30))
+//                .overlay(RoundedRectangle(cornerRadius: 20)
+////                    .stroke(Color("ericPurple"), lineWidth: 5)
+//                    .fill(.purple.opacity(0.1))
+//                )
+                .background(.ultraThinMaterial, in: .rect(cornerRadius: 20))
                 
                 Toggle("Beat Animation", isOn: $beatAnimation)
                     .padding(15)
                     .frame(maxWidth: 350)
-                    .background(.bar, in: .rect(cornerRadius: 15))
+                    .background(.bar, in: .rect(cornerRadius: 20))
                     .padding(.top, 20)
                     
                     .onChange(of: beatAnimation) { oldValue, newValue in
@@ -109,7 +114,7 @@ struct PulseHeartView: View {
             .font(.system(size: 120))
             .foregroundStyle(Color("ericPurple").gradient)
             .scaleEffect(startAnimation ? 4 : 1)
-            .opacity(startAnimation ? 0 : 0.7)
+            .opacity(startAnimation ? 0 : 0.3)
             .onAppear(perform: {
                 withAnimation(.linear(duration: 3)){
                     startAnimation = true
