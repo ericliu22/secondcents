@@ -23,13 +23,13 @@ final class SpacesViewModel: ObservableObject {
     
     
     
-    @Published private(set) var allFriends: [DBUser] = []
+    @Published private(set) var allSpaces: [DBSpace] = []
     
     
-    func getAllFriends(targetUserId: String) async throws {
-        print(targetUserId)
+    func getAllSpaces(userId: String) async throws {
+//        print(targetUserId)
         try? await loadCurrentUser()
-        self.allFriends = try await UserManager.shared.getAllFriends(userId: targetUserId)
+        self.allSpaces = try await UserManager.shared.getAllSpaces(userId: userId)
     }
     
     

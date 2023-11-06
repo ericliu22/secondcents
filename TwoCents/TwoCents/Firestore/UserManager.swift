@@ -85,9 +85,15 @@ final class UserManager{
     
     //so you dont have to type this many times... creates cleaner code
     private let userCollection = Firestore.firestore().collection("users")
+    private let spaceCollection = Firestore.firestore().collection("spaces")
     
     private func userDocument(userId: String) -> DocumentReference {
         userCollection.document(userId)
+        
+    }
+    
+    private func spaceDocument(spaceId: String) -> DocumentReference {
+        spaceCollection.document(spaceId)
         
     }
     
@@ -165,6 +171,38 @@ final class UserManager{
         }
         
         return friends
+        
+    }
+    
+    
+    func getUser(spaceId: String) async throws -> DBSpace {
+//        try await userDocument(userId: userId).getDocument(as: DBUser.self, decoder: decoder)
+        try await spaceDocument(spaceId: spaceId).getDocument(as: DBSpace.self)
+        
+    }
+    
+    func getAllSpaces(userId: String) async throws -> [DBSpace]{
+        print(userId)
+      
+        let snapshot: QuerySnapshot
+       
+        snapshot = try await spaceCollection.whereField("members", arrayContains: userId).getDocuments()
+        
+        
+        
+        var spaces: [DBSpace] = []
+        
+       
+        for document in snapshot.documents{
+            
+            
+            let space = try document.data(as: DBSpace.self)
+        
+            
+            spaces.append(space)
+        }
+        
+        return spaces
         
     }
     

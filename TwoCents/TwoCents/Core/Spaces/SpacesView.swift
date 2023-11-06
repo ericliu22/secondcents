@@ -14,7 +14,6 @@ struct SpacesView: View {
     @Binding var showCreateProfileView: Bool
     
 
-    @State var targetUserId: String
     
     @State private var searchTerm = ""
     
@@ -23,9 +22,9 @@ struct SpacesView: View {
     @StateObject private var viewModel = SpacesViewModel()
     
     
-    var filteredSearch: [DBUser]{
-        guard !searchTerm.isEmpty else { return viewModel.allFriends}
-        return viewModel.allFriends.filter{$0.name!.localizedCaseInsensitiveContains(searchTerm) || $0.username!.localizedCaseInsensitiveContains(searchTerm)}
+    var filteredSearch: [DBSpace]{
+        guard !searchTerm.isEmpty else { return viewModel.allSpaces}
+        return viewModel.allSpaces.filter{$0.name!.localizedCaseInsensitiveContains(searchTerm)}
     }
     var body: some View {
 
@@ -33,12 +32,13 @@ struct SpacesView: View {
         NavigationStack{
             List{
                 
-                ForEach(filteredSearch) { userTile    in
-                    let targetUserColor: Color = viewModel.getUserColor(userColor: userTile.userColor!)
+                ForEach(filteredSearch) { spaceTile    in
+
                     
                     NavigationLink {
+                       
                         
-                        ProfileView(showSignInView: $showSignInView, loadedColor: $loadedColor,targetUserColor: targetUserColor, showCreateProfileView: $showCreateProfileView, targetUserId: userTile.userId)
+                        
                     } label: {
                         HStack(spacing: 20){
                             
@@ -48,7 +48,7 @@ struct SpacesView: View {
                                 //Circle or Profile Pic
                                 
                                 
-                                if let urlString = userTile.profileImageUrl,
+                                if let urlString = spaceTile.profileImageUrl,
                                    let url = URL(string: urlString) {
                                     
                                     
@@ -73,7 +73,7 @@ struct SpacesView: View {
                                             .frame(width: 48, height: 48)
                                             .background(
                                                 Circle()
-                                                    .fill(targetUserColor)
+                                                    .fill(Color.accentColor)
                                                     .frame(width: 48, height: 48)
                                             )
                                     }
@@ -83,8 +83,8 @@ struct SpacesView: View {
                                     //if user has not uploaded profile pic, show circle
                                     Circle()
                                     
-                                        .strokeBorder(targetUserColor, lineWidth:0)
-                                        .background(Circle().fill(targetUserColor))
+//                                        .strokeBorder(targetUserColor, lineWidth:0)
+                                        .background(Color.accentColor)
                                         .frame(width: 48, height: 48)
                                     
                                 }
@@ -96,13 +96,13 @@ struct SpacesView: View {
                             
                             VStack(alignment: .leading){
                                 
-                                Text(userTile.name!)
+                                Text(spaceTile.name!)
                                     .font(.headline)
                                 
-                                
-                                Text(
-                                    "@\(userTile.username!)")
-                                .font(.caption)
+//                                
+//                                Text(
+//                                    "@\(userTile.username!)")
+//                                .font(.caption)
                                 
                             }
                             
@@ -137,9 +137,10 @@ struct SpacesView: View {
             
         }
         .task {
-           
-          try? await viewModel.getAllFriends(targetUserId: targetUserId)
-         
+            try? await viewModel.loadCurrentUser()
+            if let user = viewModel.user {
+                try? await viewModel.getAllSpaces(userId: user.userId)
+            }
         }
         
         
@@ -148,6 +149,6 @@ struct SpacesView: View {
 
 struct SpacesView_Previews: PreviewProvider {
     static var previews: some View {
-        SpacesView(showSignInView: .constant(false),loadedColor: .constant(.red),showCreateProfileView: .constant(false), targetUserId: "")
+        SpacesView(showSignInView: .constant(false),loadedColor: .constant(.red),showCreateProfileView: .constant(false))
     }
 }

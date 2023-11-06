@@ -27,6 +27,12 @@ final class CreateSpacesViewModel: ObservableObject{
     }
     
     
+    @Published private(set) var user:  DBUser? = nil
+    func loadCurrentUser() async throws {
+        let authDataResult = try AuthenticationManager.shared.getAuthenticatedUser()
+        self.user = try await UserManager.shared.getUser(userId: authDataResult.uid)
+    }
+    
     
       
     func createSpace(spaceId: String) async throws {
@@ -44,7 +50,10 @@ final class CreateSpacesViewModel: ObservableObject{
 
 
         print(selectedMembersUserId)
-          
+        if let user = user {
+            
+            selectedMembersUserId.append(user.userId)
+        }
         let space = DBSpace(spaceId: spaceId, name: name.isEmpty ? "Untitled Space" : name, members: selectedMembersUserId)
           
 
