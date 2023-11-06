@@ -52,7 +52,7 @@ final class SpaceManager{
     private init() { }
     
     //so you dont have to type this many times... creates cleaner code
-    private let spaceCollection = Firestore.firestore().collection("space")
+    private let spaceCollection = Firestore.firestore().collection("spaces")
     
     private func spaceDocument(spaceId: String) -> DocumentReference {
         spaceCollection.document(spaceId)

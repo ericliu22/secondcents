@@ -29,7 +29,7 @@ final class StorageManager{
     }
     
     private func spaceReference(spaceId: String) -> StorageReference{
-        storage.child("space").child(spaceId)
+        storage.child("spaces").child(spaceId)
     }
     
     

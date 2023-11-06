@@ -59,6 +59,7 @@ struct CreateSpacesView: View {
                 Text("Members 👯‍♀️")
                     .font(.title3)
                     .fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/)
+                    
                 
                 
                 
@@ -254,24 +255,19 @@ struct CreateSpacesView: View {
             .background(Color(UIColor.secondarySystemBackground))
             .cornerRadius(10)
             
+
             
-            
-            Button {
-                Task {
-                    do {
-                        try await viewModel.createSpace(spaceId: spaceId)
-                        
-                        return
-                    } catch {
-                    }
-                }
+            NavigationLink {
+                
+                SpaceProfilePicView(spaceId: spaceId)
             } label: {
                 Text("Create")
                     .font(.headline)
-                
                     .frame(height: 55)
                     .frame(maxWidth: .infinity)
-                
+                    
+            
+            
             }
             .disabled(viewModel.name.isEmpty || viewModel.selectedMembers.isEmpty)
             
@@ -279,6 +275,57 @@ struct CreateSpacesView: View {
             .tint(.accentColor)
             .frame(height: 55)
             .cornerRadius(10)
+            
+            .simultaneousGesture(TapGesture().onEnded{
+                Task{
+                    do {
+                        try await viewModel.createSpace(spaceId: spaceId)
+                        
+                        return
+                    } catch {
+                    }
+                }
+              
+            })
+            
+   
+           
+//
+//            NavigationLink {
+//              
+//                SpaceProfilePicView(spaceId: spaceId)
+//            } label: {
+//                Button {
+////                    Task {
+////                        do {
+////                            try await viewModel.createSpace(spaceId: spaceId)
+////                            
+////                            return
+////                        } catch {
+////                        }
+////                    }
+//                } label: {
+//                    Text("Create")
+//                        .font(.headline)
+//                        .frame(height: 55)
+//                        .frame(maxWidth: .infinity)
+//                        
+//                }
+//                .disabled(viewModel.name.isEmpty || viewModel.selectedMembers.isEmpty)
+//                .buttonStyle(.bordered)
+//                .tint(.accentColor)
+//                .frame(height: 55)
+//                .cornerRadius(10)
+//
+//                
+//            }
+
+            
+
+            
+           
+            
+            
         }
         .padding()
         .task{
