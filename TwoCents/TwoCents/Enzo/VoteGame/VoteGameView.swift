@@ -67,7 +67,39 @@ struct VoteGameView: View {
                             
                         }
                         
+                        
                     }
+                    
+                    
+                    if let mySpace = viewModel.space {
+                        
+                        if let mySpaceName = mySpace.name{
+                            
+                            Text("\(mySpaceName)")
+                                .font(.largeTitle)
+                            
+                        }
+                        
+                        
+                        
+                        if let mySpaceMembers = mySpace.members{
+                            
+                            ForEach(0..<mySpaceMembers.count, id: \.self) {member in
+                                
+                                Text(mySpaceMembers[member])
+                                    .font(.largeTitle)
+                                
+                                
+                            }
+                        }
+                            
+                            
+                        }
+                        
+                    
+                    
+                    
+                    
                     
                     
                
@@ -92,6 +124,7 @@ struct VoteGameView: View {
         .task{
             
             try? await viewModel.loadCurrentUser()
+            try? await viewModel.loadCurrentSpace(spaceId: "90746DB9-141C-4155-82D6-7E780BE5CD05" )
             
             
         }

@@ -23,4 +23,12 @@ final class VoteGameViewModel: ObservableObject{
     }
     
     
+    @Published private(set) var space:  DBSpace? = nil
+    
+    func loadCurrentSpace(spaceId: String) async throws {
+        self.space = try await SpaceManager.shared.getSpace(spaceId: spaceId)
+        
+    }
+    
+    
 }
