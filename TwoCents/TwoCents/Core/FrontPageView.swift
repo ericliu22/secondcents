@@ -18,10 +18,11 @@ struct FrontPageView: View {
     
     var body: some View {
         TabView{
-            UploadExample()
+//            UploadExample()
+            VoteGameView()
                 .tabItem {
                     Image(systemName: "house")
-                    Text("Page 1")
+                    Text("Vote Game")
                     
                 }
             SearchUserView(showSignInView: $showSignInView, loadedColor: $loadedColor, showCreateProfileView: $showCreateProfileView, targetUserId: "")
