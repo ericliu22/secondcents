@@ -174,12 +174,41 @@ final class UserManager{
         
     }
     
-    
-    func getUser(spaceId: String) async throws -> DBSpace {
-//        try await userDocument(userId: userId).getDocument(as: DBUser.self, decoder: decoder)
-        try await spaceDocument(spaceId: spaceId).getDocument(as: DBSpace.self)
+    func getMembersInfo(members: Array<String>) async throws -> [DBUser]{
+        
+//        let snapshot: QuerySnapshot
+//       
+//        snapshot = try await userCollection.whereField("friends", arrayContains: userId).getDocuments()
+//        
+        
+        
+        var membersInfo: [DBUser] = []
+        
+        
+        for member in members{
+            if let memberInfo = try? await getUser(userId: member) {
+                
+                membersInfo.append(memberInfo)
+            }
+            
+            
+            
+//            let friend = try document.data(as: DBUser.self)
+         
+            
+           
+        }
+        
+        return membersInfo
         
     }
+    
+    
+//    func getUser(spaceId: String) async throws -> DBSpace {
+////        try await userDocument(userId: userId).getDocument(as: DBUser.self, decoder: decoder)
+//        try await spaceDocument(spaceId: spaceId).getDocument(as: DBSpace.self)
+//        
+//    }
     
     func getAllSpaces(userId: String) async throws -> [DBSpace]{
         print(userId)
