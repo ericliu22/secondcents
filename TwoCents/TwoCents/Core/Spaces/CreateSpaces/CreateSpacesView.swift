@@ -12,171 +12,351 @@ import PhotosUI
 struct CreateSpacesView: View {
     
     @State private var url: URL? = nil
-    
+    @State var spaceId: String
     
     @StateObject private var viewModel = CreateSpacesViewModel()
+    @State private var randomIndex: Int = 0
     
-   
     
     
     @State private var selectedPhoto: PhotosPickerItem? = nil
     
-
+    
+   
+    
+    
+    
+    private let noMembersMessage: [String] = [
+        "crickets...",
+        "looking a little lonely here...",
+        "whole lotta silence !!"
+    ]
+    
+    
     
     var body: some View {
         
         VStack {
-            ZStack{
+          
+            //Name Textfield
+            TextField("Enter a name", text: $viewModel.name)
+                .font(.largeTitle)
+                .fontWeight(.bold)
                 
-                
-                //Circle or Profile Pic
-                
-                
-                if let urlString = viewModel.user?.profileImageUrl, let url = URL(string: urlString) {
-                    
-                    
-                    //If there is URL for profile pic, show
-                    //circle with stroke
-                    Circle()
-//                        .strokeBorder(selectedColor, lineWidth:15)
-                        .background(
-                            //profile pic in middle
-                            AsyncImage(url: url) {image in
-                                image
-                                    .resizable()
-                                    .scaledToFill()
-                                    .clipShape(Circle())
-                                    .frame(width: 176, height: 176)
-                                
-                            } placeholder: {
-                                //else show loading after user uploads but sending/downloading from database
-                                
-                                ProgressView()
-                                    .progressViewStyle(CircularProgressViewStyle(tint: Color(UIColor.systemBackground)))
-                                    .scaleEffect(1.5, anchor: .center)
-                                    .frame(width: 176, height: 176)
-                                    .background(
-                                        Circle()
-                                            .fill(Color.accentColor)
-                                            .frame(width: 176, height: 176)
-                                    )
-                            }
-                            
-                        )
-                        .frame(width: 176, height: 176)
-                    
-                } else {
-                    
-                    //if user has not uploaded profile pic, show circle
-                    Circle()
-                    
-//                        .strokeBorder(selectedColor, lineWidth:15)
-                        .fill(Color.accentColor)
-                        .frame(width: 176, height: 176)
-                }
-                
-                
-                
-                PhotosPicker(selection: $selectedPhoto, matching: .images, photoLibrary: .shared()){
-                   
-                    
-                    ZStack{
-                        
-                        Circle()
-                            .fill(Color(UIColor.systemBackground))
-                            .frame(width: 64, height: 64)
-                        
-                        Circle()
-                            .fill(.thinMaterial)
-                            .frame(width: 64, height: 64)
-                        
-                        Circle()
-                            .fill(Color.accentColor)
-                            .frame(width: 48, height: 48)
-                        
-                        Image(systemName: "plus")
-                            .font(.title2)
-                            .fontWeight(.bold)
-                            .foregroundColor(Color(UIColor.systemBackground))
-                        
-                        
-                    }
-                    
-                    
-                }
-               
-                .offset(x:60, y:60)
-                
-                
-                
-                
-                
-                
-            }
-            .padding(32)
-            .background(.thinMaterial)
-
-            .cornerRadius(20)
+                .foregroundStyle(Color.accentColor)
+//                .padding(.bottom)
             
-            
+//            
+////
+//            Spacer()
+//                .frame(height: 100)
+                
+   
     
-            
-            
-            Button {
-                //signUp
-                Task {
-                    do {
-                        try await viewModel.createSpace()
-                        return
-                    } catch {
+            //Selected Members
+            VStack(alignment:.leading){
+                
+                Text("Members 👯‍♀️")
+                    .font(.title3)
+                    .fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/)
+                    
+                
+                
+                
+                ScrollView(.horizontal, showsIndicators: false) {
+                    
+                    HStack{
+                        
+                        
+                        
+                        //No members selected message
+                        if viewModel.selectedMembers.count == 0 {                            Text(noMembersMessage[randomIndex])
+                                .italic()
+                                .font(.headline)
+                                .foregroundStyle(.tertiary)
+                                .fontWeight(.regular)
+                                .padding(.vertical,2.5)
+                        }
+                        
+                        
+                        
+                        
+                        ForEach(viewModel.selectedMembers) { userTile    in
+                            let targetUserColor: Color = viewModel.getUserColor(userColor: userTile.userColor!)
+                            Group{
+                                HStack{
+                                    Group{
+                                        //Circle or Profile Pic
+                                        if let urlString = userTile.profileImageUrl,
+                                           let url = URL(string: urlString) {
+                                            
+                                            
+                                            
+                                            //If there is URL for profile pic, show
+                                            //circle with stroke
+                                            AsyncImage(url: url) {image in
+                                                image
+                                                    .resizable()
+                                                    .scaledToFill()
+                                                    .clipShape(Circle())
+                                                    .frame(width: 16, height: 16)
+                                                
+                                                
+                                                
+                                            } placeholder: {
+                                                //else show loading after user uploads but sending/downloading from database
+                                                
+                                                ProgressView()
+                                                    .progressViewStyle(CircularProgressViewStyle(tint: Color(UIColor.systemBackground)))
+                                                    .scaleEffect(0.5, anchor: .center)
+                                                    .frame(width: 16, height: 16)
+                                                    .background(
+                                                        Circle()
+                                                            .fill(targetUserColor)
+                                                            .frame(width: 16, height: 16)
+                                                    )
+                                            }
+                                            
+                                        } else {
+                                            
+                                            //if user has not uploaded profile pic, show circle
+                                            Circle()
+                                            
+                                                .strokeBorder(targetUserColor, lineWidth:0)
+                                                .background(Circle().fill(targetUserColor))
+                                                .frame(width: 16, height: 16)
+                                            
+                                        }
+                                        
+                                        
+                                        
+                                        
+                                    }
+                                    Text(userTile.name!)
+                                        .font(.headline)
+                                }
+                            }
+                            .onTapGesture {
+                                viewModel.removeMember(friend: userTile)
+                            }
+                            .padding(.horizontal,5)
+                            .padding(.vertical,2.5)
+                            .background(.thickMaterial, in: Capsule())
+                            .background(targetUserColor, in: Capsule())
+                            
+                        }
                     }
                 }
-               
+            }
+            .padding()
+            .background(Color(UIColor.secondarySystemBackground))
+            .cornerRadius(10)
+            
+            
+            
+            //Friends
+            
+            VStack(alignment:.leading){
+                
+                Text("Friends 💛")
+                    .font(.title3)
+                    .fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/)
                 
                 
-               
                 
+                ScrollView(.horizontal, showsIndicators: false) {
+                    
+                    HStack{
+                        
+                        //No friends  message
+                        if viewModel.allFriends.count == 0 {                            Text("It's a party!")
+                                .italic()
+                                .font(.headline)
+                                .foregroundStyle(.tertiary)
+                                .fontWeight(.regular)
+                                .padding(.vertical,2.5)
+                        }
+                        
+                        
+                        ForEach(viewModel.allFriends) { userTile    in
+                            let targetUserColor: Color = viewModel.getUserColor(userColor: userTile.userColor!)
+                            Group{
+                                HStack{
+                                    Group{
+                                        //Circle or Profile Pic
+                                        
+                                        
+                                        if let urlString = userTile.profileImageUrl,
+                                           let url = URL(string: urlString) {
+                                            
+                                            
+                                            
+                                            //If there is URL for profile pic, show
+                                            //circle with stroke
+                                            AsyncImage(url: url) {image in
+                                                image
+                                                    .resizable()
+                                                    .scaledToFill()
+                                                    .clipShape(Circle())
+                                                    .frame(width: 16, height: 16)
+                                                
+                                                
+                                                
+                                            } placeholder: {
+                                                //else show loading after user uploads but sending/downloading from database
+                                                
+                                                ProgressView()
+                                                    .progressViewStyle(CircularProgressViewStyle(tint: Color(UIColor.systemBackground)))
+                                                    .scaleEffect(0.5, anchor: .center)
+                                                    .frame(width: 16, height: 16)
+                                                    .background(
+                                                        Circle()
+                                                            .fill(targetUserColor)
+                                                            .frame(width: 16, height: 16)
+                                                    )
+                                            }
+                                            
+                                        } else {
+                                            
+                                            //if user has not uploaded profile pic, show circle
+                                            Circle()
+                                            
+                                                .strokeBorder(targetUserColor, lineWidth:0)
+                                                .background(Circle().fill(targetUserColor))
+                                                .frame(width: 16, height: 16)
+                                            
+                                        }
+                                        
+                                        
+                                        
+                                        
+                                    }
+                                    
+                                    Text(userTile.name!)
+                                        .font(.headline)
+                                    
+                                   
+                                    
+                                }
+                            }
+                            .onTapGesture {
+                                viewModel.addMember(friend: userTile)
+                            }
+                            .padding(.horizontal,5)
+                            .padding(.vertical,2.5)
+                            .background(.thickMaterial, in: Capsule())
+                            .background(targetUserColor, in: Capsule())
+                            
+                        }
+                    }
+                }
+            }
+            .padding()
+            .background(Color(UIColor.secondarySystemBackground))
+            .cornerRadius(10)
+            
+
+            
+            NavigationLink {
+                
+                SpaceProfilePicView(spaceId: spaceId)
             } label: {
-                Text("Done")
+                Text("Create")
                     .font(.headline)
-              
                     .frame(height: 55)
                     .frame(maxWidth: .infinity)
-                
+                    
+            
+            
             }
+            .disabled(viewModel.name.isEmpty || viewModel.selectedMembers.isEmpty)
             
             .buttonStyle(.bordered)
             .tint(.accentColor)
             .frame(height: 55)
             .cornerRadius(10)
-            .padding(.horizontal)
             
+            .simultaneousGesture(TapGesture().onEnded{
+                Task{
+                    do {
+                        try await viewModel.createSpace(spaceId: spaceId)
+                        
+                        return
+                    } catch {
+                    }
+                }
+              
+            })
             
+   
+           
+//
+//            NavigationLink {
+//              
+//                SpaceProfilePicView(spaceId: spaceId)
+//            } label: {
+//                Button {
+////                    Task {
+////                        do {
+////                            try await viewModel.createSpace(spaceId: spaceId)
+////                            
+////                            return
+////                        } catch {
+////                        }
+////                    }
+//                } label: {
+//                    Text("Create")
+//                        .font(.headline)
+//                        .frame(height: 55)
+//                        .frame(maxWidth: .infinity)
+//                        
+//                }
+//                .disabled(viewModel.name.isEmpty || viewModel.selectedMembers.isEmpty)
+//                .buttonStyle(.bordered)
+//                .tint(.accentColor)
+//                .frame(height: 55)
+//                .cornerRadius(10)
+//
+//                
+//            }
+
             
+
             
+           
             
             
         }
+        .padding()
         .task{
+            try? await viewModel.loadCurrentSpace(spaceId: spaceId)
             try? await viewModel.loadCurrentUser()
+            //to prevent list from refreshing when one exits tab and comes back
+            if viewModel.selectedMembers.isEmpty {
+                try? await viewModel.getAllFriends()
+      
+            }
+            
+            randomIndex = Int.random(in: 0..<(noMembersMessage.count))
             
         }
         
-        .onChange(of: selectedPhoto, perform: { newValue in
-            if let newValue {
-                viewModel.saveProfileImage(item: newValue)
-            }
-        })
+        //        .onChange(of: selectedPhoto, perform: { newValue in
+        //            if let newValue {
+        //
+        //                viewModel.saveProfileImage(item: newValue, spaceId: spaceId)
+        //            }
+        //        })
         .navigationTitle("Create Space 💭")
     }
-        
+    
 }
 
 
 struct CreateSpacesView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack{
-            CreateSpacesView()
+            CreateSpacesView(spaceId: UUID().uuidString)
         }
     }
 }

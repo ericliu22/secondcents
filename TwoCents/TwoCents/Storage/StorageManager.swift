@@ -28,9 +28,13 @@ final class StorageManager{
         storage.child("users").child(userId)
     }
     
+    private func spaceReference(spaceId: String) -> StorageReference{
+        storage.child("spaces").child(spaceId)
+    }
     
     
-    func saveImage(data: Data, userId: String)async throws -> (path: String, name: String){
+    
+    func saveProfilePic(data: Data, userId: String)async throws -> (path: String, name: String){
         
         
         let meta = StorageMetadata()
@@ -52,12 +56,12 @@ final class StorageManager{
     }
     
     
-    func saveImage(image: UIImage, userId: String)async throws -> (path: String, name: String){
+    func saveProfilePic(image: UIImage, userId: String)async throws -> (path: String, name: String){
         
         guard let data = image.jpegData(compressionQuality: 1) else {
             throw URLError(.badURL)
         }
-        return try await saveImage(data: data, userId: userId)
+        return try await saveProfilePic(data: data, userId: userId)
     }
     
     
@@ -81,5 +85,36 @@ final class StorageManager{
         
     }
     
+    //for spaces
+    
+    func saveSpaceProfilePic(data: Data, spaceId: String)async throws -> (path: String, name: String){
+        
+        
+        let meta = StorageMetadata()
+        
+        meta.contentType = "image/jpeg"
+        
+        let path = "\(UUID().uuidString).jpeg"
+        let returnedMetaData = try await spaceReference(spaceId: spaceId).child(path).putDataAsync(data, metadata: meta)
+        
+        
+        guard let returnedPath = returnedMetaData.path, let returnedName = returnedMetaData.name else {
+            throw URLError(.badServerResponse)
+        }
+        
+        
+        return (returnedPath, returnedName)
+        
+        
+    }
+    
+    
+    func saveSpaceProfilePic(image: UIImage, spaceId: String)async throws -> (path: String, name: String){
+        
+        guard let data = image.jpegData(compressionQuality: 1) else {
+            throw URLError(.badURL)
+        }
+        return try await saveSpaceProfilePic(data: data, spaceId: spaceId)
+    }
     
 }

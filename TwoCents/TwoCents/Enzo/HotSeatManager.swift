@@ -14,13 +14,14 @@ struct PlayerData: Identifiable, Hashable{
     let image: String
     let color: String
     let numVotes: Int
+    let nativeColor: Color
 }
 
 let playerData: [PlayerData] = [
-    PlayerData(name: "enzobenzoferrari", image: "enzo-pic", color: "enzoGreen", numVotes: 2),
-    PlayerData(name: "GOAT", image: "josh-pic", color: "joshOrange", numVotes: 3),
-    PlayerData(name: "mlgxd420", image: "jonathan-pic", color: "jonathanBlue", numVotes: 0),
-    PlayerData(name: "daddy", image: "eric-pic", color: "ericPurple", numVotes: 100),
+    PlayerData(name: "enzobenzoferrari", image: "enzo-pic", color: "enzoGreen", numVotes: 2, nativeColor: .green),
+    PlayerData(name: "GOAT", image: "josh-pic", color: "joshOrange", numVotes: 3, nativeColor: .orange),
+    PlayerData(name: "mlgxd420", image: "jonathan-pic", color: "jonathanBlue", numVotes: 0, nativeColor: .teal),
+    PlayerData(name: "daddy", image: "eric-pic", color: "ericPurple", numVotes: 100, nativeColor: .purple),
 ]
 
 class HotSeatManager: ObservableObject{

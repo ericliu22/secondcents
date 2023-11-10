@@ -18,10 +18,11 @@ struct FrontPageView: View {
     
     var body: some View {
         TabView{
-            UploadExample()
+//            UploadExample()
+            VoteGameView()
                 .tabItem {
                     Image(systemName: "house")
-                    Text("Page 1")
+                    Text("Vote Game")
                     
                 }
             SearchUserView(showSignInView: $showSignInView, loadedColor: $loadedColor, showCreateProfileView: $showCreateProfileView, targetUserId: "")
@@ -34,7 +35,7 @@ struct FrontPageView: View {
                     Image(systemName: "house")
                     Text("Canvas Page")
                 }
-            SpacesView(showSignInView: $showSignInView, loadedColor: $loadedColor, showCreateProfileView: $showCreateProfileView, targetUserId: "")
+            SpacesView(showSignInView: $showSignInView, loadedColor: $loadedColor, showCreateProfileView: $showCreateProfileView)
                 .tabItem {
                     Image(systemName: "rectangle.3.group.fill")
                     Text("Spaces")

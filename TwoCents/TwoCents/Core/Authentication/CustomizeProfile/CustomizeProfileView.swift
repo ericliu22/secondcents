@@ -39,36 +39,65 @@ struct CustomizeProfileView: View {
                 
                 if let urlString = viewModel.user?.profileImageUrl, let url = URL(string: urlString) {
                     
+//                    
+//                    //If there is URL for profile pic, show
+//                    //circle with stroke
+//                    Circle()
+////                        .strokeBorder(selectedColor, lineWidth:15)
+//                        .background(
+//                            //profile pic in middle
+//                            AsyncImage(url: url) {image in
+//                                image
+//                                    .resizable()
+//                                    .scaledToFill()
+//                                    .clipShape(Circle())
+//                                    .frame(width: 176, height: 176)
+//                                
+//                            } placeholder: {
+//                                //else show loading after user uploads but sending/downloading from database
+//                                
+//                                ProgressView()
+//                                    .progressViewStyle(CircularProgressViewStyle(tint: Color(UIColor.systemBackground)))
+//                                    .scaleEffect(1.5, anchor: .center)
+//                                    .frame(width: 176, height: 176)
+//                                    .background(
+//                                        Circle()
+//                                            .fill(selectedColor)
+//                                            .frame(width: 176, height: 176)
+//                                    )
+//                            }
+//                            
+//                        )
+//                        .frame(width: 176, height: 176)
                     
-                    //If there is URL for profile pic, show
-                    //circle with stroke
-                    Circle()
-//                        .strokeBorder(selectedColor, lineWidth:15)
-                        .background(
-                            //profile pic in middle
-                            AsyncImage(url: url) {image in
-                                image
-                                    .resizable()
-                                    .scaledToFill()
-                                    .clipShape(Circle())
-                                    .frame(width: 176, height: 176)
-                                
-                            } placeholder: {
-                                //else show loading after user uploads but sending/downloading from database
-                                
-                                ProgressView()
-                                    .progressViewStyle(CircularProgressViewStyle(tint: Color(UIColor.systemBackground)))
-                                    .scaleEffect(1.5, anchor: .center)
-                                    .frame(width: 176, height: 176)
-                                    .background(
-                                        Circle()
-                                            .fill(selectedColor)
-                                            .frame(width: 176, height: 176)
-                                    )
-                            }
+                    
+                    //profile pic in middle
+                    AsyncImage(url: url) {image in
+                        image
+                            .resizable()
+                            .scaledToFill()
                             
-                        )
-                        .frame(width: 176, height: 176)
+                        
+                    } placeholder: {
+                        //else show loading after user uploads but sending/downloading from database
+                        
+                        ProgressView()
+                            .progressViewStyle(CircularProgressViewStyle(tint: Color(UIColor.systemBackground)))
+                            .scaleEffect(1.5, anchor: .center)
+                            .background(
+                                Circle()
+                                    .fill(selectedColor)
+                                .frame(width: 176, height: 176)
+                            )
+                            
+                    }
+                    
+                
+                .frame(width: 176, height: 176)
+            
+            .frame(width: 176, height: 176)
+            .clipShape(Circle())
+            
                     
                 } else {
                     

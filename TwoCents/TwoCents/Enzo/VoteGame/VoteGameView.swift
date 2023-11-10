@@ -16,12 +16,12 @@ struct VoteGameView: View {
     @State private var selectedImage: String = ""
     @State private var selectedColor: String = ""
     @State private var selectedNumVotes: Int = 0
-
+    
     @State private var readyNextPage = false
-
+    
     
     @StateObject private var viewModel = VoteGameViewModel()
-
+    
     var body: some View {
         NavigationView{
             ZStack{
@@ -57,21 +57,58 @@ struct VoteGameView: View {
                     }
                     .padding()
                     
+                    
+                    
+                    
+                    //Displays the current user's name
                     if let myUser = viewModel.user {
-                        
                         if let myName = myUser.name{
-                            
-                            Text("\(myName)")
+                            Text("My name: \(myName)")
                                 .font(.largeTitle)
-                            
-                            
                         }
+                    }
+                    
+                    
+                    //Displays the space's name
+                    if let mySpace = viewModel.space {
+                        if let mySpaceName = mySpace.name{
+                            Text("This space: \(mySpaceName)")
+                                .font(.largeTitle)
+                        }
+                        
+                        
+                        //display's the UID's of each member within this space. Usually not needed, as i have put this within the loadMembersInfo function
+                        if let mySpaceMembers = mySpace.members{
+                            ForEach(0..<mySpaceMembers.count, id: \.self) {member in
+                                Text("member \(member): \(mySpaceMembers[member])")
+                                    .font(.headline)
+                            }
+                        }
+                        
+                        
+                        //displays each user's info pulled from the database. Must do the try await loadMembersInfo in the task area at the bottom first.
+                        if let myMemberInfo = viewModel.membersInfo{
+                            ForEach(0..<myMemberInfo.count, id: \.self) {member in
+                                Text(myMemberInfo[member].name ?? "")
+                                    .font(.largeTitle)
+                            }
+                        }
+                        
+                        
+                        
+                        
+                        
                         
                     }
                     
                     
-               
-
+                    
+                    
+                    
+                    
+                    
+                    
+                    
                     Button("Send") {
                         addVote()
                         self.readyNextPage = true
@@ -80,7 +117,7 @@ struct VoteGameView: View {
                     .foregroundColor(.white)
                     .opacity(selectedPlayer == "" ? 0.5 : 1.0)
                     .disabled(selectedPlayer == "")
-
+                    
                     
                     
                     NavigationLink(destination: ResultView(playerName: selectedPlayer, playerImage: selectedImage, playerColor: selectedColor, playerVotes: selectedNumVotes), isActive: $readyNextPage) {EmptyView()}
@@ -91,8 +128,17 @@ struct VoteGameView: View {
         }
         .task{
             
+            //loads the current user (the one using the app)
             try? await viewModel.loadCurrentUser()
             
+            //loads teh current space (usually, spaceId is passed in. However, jonny has not completed the page that passes it in, so its hard coded rn)
+            try? await viewModel.loadCurrentSpace(spaceId: "90746DB9-141C-4155-82D6-7E780BE5CD05" )
+            
+            //if space is loaded, and it has the field members in it...
+            //for each UID in the members array, load their DBUser Info...
+            if let mySpace = viewModel.space, let myMembers = mySpace.members {
+                    try? await viewModel.loadMembersInfo(members: myMembers)
+            }
             
         }
         

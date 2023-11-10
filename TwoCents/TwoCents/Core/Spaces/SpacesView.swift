@@ -13,8 +13,7 @@ struct SpacesView: View {
     @Binding var loadedColor: Color
     @Binding var showCreateProfileView: Bool
     
-
-    @State var targetUserId: String
+    
     
     @State private var searchTerm = ""
     
@@ -23,123 +22,188 @@ struct SpacesView: View {
     @StateObject private var viewModel = SpacesViewModel()
     
     
-    var filteredSearch: [DBUser]{
-        guard !searchTerm.isEmpty else { return viewModel.allFriends}
-        return viewModel.allFriends.filter{$0.name!.localizedCaseInsensitiveContains(searchTerm) || $0.username!.localizedCaseInsensitiveContains(searchTerm)}
+    var filteredSearch: [DBSpace]{
+        guard !searchTerm.isEmpty else { return viewModel.allSpaces}
+        return viewModel.allSpaces.filter{$0.name!.localizedCaseInsensitiveContains(searchTerm)}
     }
+    
+    
+    private let columns = [
+        GridItem(.flexible()),
+        GridItem(.flexible())
+    ]
+    
+    
     var body: some View {
-
+        
         
         NavigationStack{
-            List{
-                
-                ForEach(filteredSearch) { userTile    in
-                    let targetUserColor: Color = viewModel.getUserColor(userColor: userTile.userColor!)
+            ScrollView(.vertical) {
+                LazyVGrid(columns: columns, spacing: nil){
                     
-                    NavigationLink {
+                    ForEach(filteredSearch) { spaceTile    in
                         
-                        ProfileView(showSignInView: $showSignInView, loadedColor: $loadedColor,targetUserColor: targetUserColor, showCreateProfileView: $showCreateProfileView, targetUserId: userTile.userId)
-                    } label: {
-                        HStack(spacing: 20){
+                        NavigationLink {
                             
-                            
-                            
-                            Group{
-                                //Circle or Profile Pic
-                                
-                                
-                                if let urlString = userTile.profileImageUrl,
-                                   let url = URL(string: urlString) {
+                        } label: {
+                            ZStack{
+                                Group{
+                                    //Circle or Profile Pic
                                     
                                     
-                                    
-                                    //If there is URL for profile pic, show
-                                    //circle with stroke
-                                    AsyncImage(url: url) {image in
-                                        image
-                                            .resizable()
-                                            .scaledToFill()
-                                            .clipShape(Circle())
-                                            .frame(width: 48, height: 48)
+                                    if let urlString = spaceTile.profileImageUrl,
+                                       let url = URL(string: urlString) {
+                                        
+                                        //If there is URL for profile pic, show
+                                        //circle with stroke
                                         
                                         
-                                        
-                                    } placeholder: {
-                                        //else show loading after user uploads but sending/downloading from database
-                                        
-                                        ProgressView()
-                                            .progressViewStyle(CircularProgressViewStyle(tint: Color(UIColor.systemBackground)))
-                                        //                            .scaleEffect(1, anchor: .center)
-                                            .frame(width: 48, height: 48)
+                                        Color.clear
+                                            .aspectRatio(1, contentMode: .fit)
                                             .background(
-                                                Circle()
-                                                    .fill(targetUserColor)
-                                                    .frame(width: 48, height: 48)
+                                                
+                                                
+                                                AsyncImage(url: url) {image in
+                                                    image
+                                                        .resizable()
+                                                        .scaledToFill()
+                                                        .layoutPriority(-1)
+                                                    
+                                                } placeholder: {
+                                                    Rectangle()
+                                                        .fill(Color.accentColor)
+                                                }
+                                                
                                             )
+                                            .clipped()
+                                        
+                                        
+                                        
+                                        
+                                    } else {
+                                        //if space does not have profile pic, show circle
+                                        Rectangle()
+                                            .fill(Color.accentColor)
+//                                            .clipShape(Circle())
+                                           
                                     }
                                     
-                                } else {
-                                    
-                                    //if user has not uploaded profile pic, show circle
-                                    Circle()
-                                    
-                                        .strokeBorder(targetUserColor, lineWidth:0)
-                                        .background(Circle().fill(targetUserColor))
-                                        .frame(width: 48, height: 48)
                                     
                                 }
+//                                .frame(maxWidth:.infinity)
+//                                .aspectRatio(1, contentMode: .fit)
+                     
+                              
+                               
                                 
                                 
+                                
+                                VStack(alignment:.leading){
+                                    
+                                    Group{
+                                        //Circle or Profile Pic
+                                        
+                                        
+                                        if let urlString = spaceTile.profileImageUrl,
+                                           let url = URL(string: urlString) {
+                                            
+                                            //If there is URL for profile pic, show
+                                            //circle with stroke
+                                            AsyncImage(url: url) {image in
+                                                image
+                                                    .resizable()
+                                                    .scaledToFill()
+                                                
+                                            } placeholder: {
+                                                //else show loading after user uploads but sending/downloading from database
+                                                ProgressView()
+                                                    .progressViewStyle(CircularProgressViewStyle(tint: Color(UIColor.systemBackground)))
+                                                    .frame(width: 64, height: 64)
+                                                    .background(
+                                                        Circle()
+                                                            .fill(Color.accentColor)
+                                                    )
+                                            }
+                                            .clipShape(Circle())
+                                            .frame(width: 64, height: 64)
+                                            
+                                        } else {
+                                            //if space does not have profile pic, show circle
+                                            Circle()
+                                                .fill(Color.accentColor)
+                                                .clipShape(Circle())
+                                                .frame(width: 64, height: 64)
+                                        }
+                                        
+                                        
+                                    }
+                                    
+                                    
+                                    Spacer()
+                         
+                                    
+                                    Text(spaceTile.name!)
+                                        .font(.title)
+                                        .fontWeight(.bold)
+                                    
+                                        .minimumScaleFactor(0.5)
+                                        .lineLimit(1)
+                                    
+                                       
+                                    
+                                    
+                                
+                                }
+                                .padding()
+                                .frame(maxWidth:.infinity, maxHeight: .infinity, alignment: .topLeading)
+                                .aspectRatio(1, contentMode: .fit)
+                                .background(.thickMaterial)
+                               
+                               
                                 
                                 
                             }
                             
-                            VStack(alignment: .leading){
-                                
-                                Text(userTile.name!)
-                                    .font(.headline)
-                                
-                                
-                                Text(
-                                    "@\(userTile.username!)")
-                                .font(.caption)
-                                
-                            }
+                            
+//
+                            .cornerRadius(20)
+                            
+                            
+                            
                             
                         }
+                        
+                        
+                        
                     }
                     
-                    
-                    
                 }
-                
-                
-                
-                
-                
+                .padding(.horizontal)
                 
                 
             }
             .toolbar{
-               
+                
                 ToolbarItem(placement: .navigationBarTrailing) {
                     NavigationLink{
-                        CreateSpacesView()
+                        CreateSpacesView(spaceId: UUID().uuidString)
                     } label: {
                         Image (systemName: "square.and.pencil")
                             .font(.headline)
                     }
                 }
-             
+                
             }
             .navigationTitle( "Spaces 💬" )
             .searchable(text: $searchTerm, placement: .navigationBarDrawer(displayMode: .always), prompt: "Search")
             
+            
         }
         .task {
-           
-          try? await viewModel.getAllFriends(targetUserId: targetUserId)
-         
+            try? await viewModel.loadCurrentUser()
+            if let user = viewModel.user {
+                try? await viewModel.getAllSpaces(userId: user.userId)
+            }
         }
         
         
@@ -148,6 +212,6 @@ struct SpacesView: View {
 
 struct SpacesView_Previews: PreviewProvider {
     static var previews: some View {
-        SpacesView(showSignInView: .constant(false),loadedColor: .constant(.red),showCreateProfileView: .constant(false), targetUserId: "")
+        SpacesView(showSignInView: .constant(false),loadedColor: .constant(.red),showCreateProfileView: .constant(false))
     }
 }

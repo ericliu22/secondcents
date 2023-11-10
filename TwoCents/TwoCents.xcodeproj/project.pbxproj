@@ -38,6 +38,8 @@
 		A2F563222AB4E6700026D8C9 /* retrievemessages.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F563202AB4E6700026D8C9 /* retrievemessages.swift */; };
 		A2F563232AB4E6700026D8C9 /* chattingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F563212AB4E6700026D8C9 /* chattingView.swift */; };
 		AB0D07662AE6FB95003AC8A4 /* SpacesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB0D07652AE6FB95003AC8A4 /* SpacesView.swift */; };
+		AB15AC0B2AF6F00C0055D5D0 /* SpaceProfilePicView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB15AC0A2AF6F00C0055D5D0 /* SpaceProfilePicView.swift */; };
+		AB15AC0D2AF6F01B0055D5D0 /* SpaceProfilePicViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB15AC0C2AF6F01B0055D5D0 /* SpaceProfilePicViewModel.swift */; };
 		AB2E56C62AE9B9210096A58C /* CreateSpacesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2E56C52AE9B9210096A58C /* CreateSpacesView.swift */; };
 		AB2E56C82AE9B9590096A58C /* CreateSpacesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2E56C72AE9B9590096A58C /* CreateSpacesViewModel.swift */; };
 		AB2E56CA2AE9BB410096A58C /* SpaceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2E56C92AE9BB410096A58C /* SpaceManager.swift */; };
@@ -141,6 +143,8 @@
 		A2F563202AB4E6700026D8C9 /* retrievemessages.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = retrievemessages.swift; sourceTree = "<group>"; };
 		A2F563212AB4E6700026D8C9 /* chattingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = chattingView.swift; sourceTree = "<group>"; };
 		AB0D07652AE6FB95003AC8A4 /* SpacesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpacesView.swift; sourceTree = "<group>"; };
+		AB15AC0A2AF6F00C0055D5D0 /* SpaceProfilePicView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpaceProfilePicView.swift; sourceTree = "<group>"; };
+		AB15AC0C2AF6F01B0055D5D0 /* SpaceProfilePicViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpaceProfilePicViewModel.swift; sourceTree = "<group>"; };
 		AB2E56C52AE9B9210096A58C /* CreateSpacesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateSpacesView.swift; sourceTree = "<group>"; };
 		AB2E56C72AE9B9590096A58C /* CreateSpacesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateSpacesViewModel.swift; sourceTree = "<group>"; };
 		AB2E56C92AE9BB410096A58C /* SpaceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpaceManager.swift; sourceTree = "<group>"; };
@@ -362,8 +366,8 @@
 			isa = PBXGroup;
 			children = (
 				AB0D07652AE6FB95003AC8A4 /* SpacesView.swift */,
-				AB2E56C42AE9B9120096A58C /* CreateSpaces */,
 				AB8C6E1F2AE6FBD50005B7F9 /* SpacesViewModel.swift */,
+				AB2E56C42AE9B9120096A58C /* CreateSpaces */,
 			);
 			path = Spaces;
 			sourceTree = "<group>";
@@ -373,6 +377,8 @@
 			children = (
 				AB2E56C52AE9B9210096A58C /* CreateSpacesView.swift */,
 				AB2E56C72AE9B9590096A58C /* CreateSpacesViewModel.swift */,
+				AB15AC0A2AF6F00C0055D5D0 /* SpaceProfilePicView.swift */,
+				AB15AC0C2AF6F01B0055D5D0 /* SpaceProfilePicViewModel.swift */,
 			);
 			path = CreateSpaces;
 			sourceTree = "<group>";
@@ -718,6 +724,8 @@
 				8573EC8B2AE6EF9C00CFB579 /* ParticleView.swift in Sources */,
 				ABA45E842A7C92B00015F000 /* UserManager.swift in Sources */,
 				AB842C0E2A91E2B500E4A7CE /* StorageManager.swift in Sources */,
+				AB15AC0B2AF6F00C0055D5D0 /* SpaceProfilePicView.swift in Sources */,
+				AB15AC0D2AF6F01B0055D5D0 /* SpaceProfilePicViewModel.swift in Sources */,
 				AB6778E22AB8F67300C11AA7 /* ImageWidget.swift in Sources */,
 				A257D7842A6D707600A4E7BD /* TwoCentsApp.swift in Sources */,
 				AB300FB02AC7407000C6719D /* FriendsView.swift in Sources */,

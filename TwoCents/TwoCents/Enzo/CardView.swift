@@ -21,7 +21,7 @@ struct CardView: View {
                 Rectangle()
                     .border(.white, width: 5.0)
                     .cornerRadius(4)
-                    .foregroundColor(Color(player.color))
+                    .foregroundColor(player.nativeColor)
                     .shadow(radius: 2)
                     .padding(.vertical, 100)
                     .padding(.horizontal, 40)
@@ -50,7 +50,7 @@ struct CardView: View {
                 }
             }
             .navigationDestination(for: PlayerData.self) { player in
-                SabotageRealPageTwo(player: player)
+                SabotageSelectionView(player: player)
             }
             .zIndex(index)
             .offset(x: offset.width, y: offset.height)
