@@ -15,29 +15,10 @@ let db = Firestore.firestore()
 
 let chatroom = db.collection("Chatrooms").document("ChatRoom1").collection("Widgets").document("Drawings")
 
-var imageView = ImageWidget(
-position: CGPoint(x: 200, y: 1000),
-size: [250, 250],
-borderColor: Color(.black),
-image: Image("jennie kim"))
-
-var imageView2 = ImageWidget(
-position: CGPoint(x: 200, y: 1000),
-size: [250, 250],
-borderColor: Color(.black),
-image: Image("jonathan-pic"))
-
-var imageView3 = ImageWidget(
-position: CGPoint(x: 200, y: 1000),
-size: [250, 250],
-borderColor: Color(.black),
-image: Image("josh-pic"))
-
-var imageView4 = ImageWidget(
-position: CGPoint(x: 200, y: 1000),
-size: [250, 250],
-borderColor: Color(.black),
-image: Image("enzo-pic"))
+var imageView0 = CanvasWidget(borderColor: .black, userId: "jennierubyjane", media: .image, mediaURL: URL(string: "https://m.media-amazon.com/images/M/MV5BN2Q0OWJmNWYtYzBiNy00ODAyLWI2NGQtZGFhM2VjOWM5NDNkXkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_.jpg")!)
+var imageView1 = CanvasWidget(borderColor: .black, userId: "jennierubyjane", media: .image, mediaURL: URL(string: "https://www.billboard.com/wp-content/uploads/2023/01/lisa-blackpink-dec-2022-billboard-1548.jpg?w=942&h=623&crop=1")!)
+var imageView2 = CanvasWidget(borderColor: .black, userId: "jennierubyjane", media: .image, mediaURL: URL(string: "https://i.mydramalist.com/66L5p_5c.jpg")!)
+var imageView3 = CanvasWidget(borderColor: .black, userId: "jennierubyjane", media: .image, mediaURL: URL(string: "https://static.wikia.nocookie.net/the_kpop_house/images/6/60/Jisoo.jpg/revision/latest?cb=20200330154248")!)
 //HARDCODED SECTION
 
 
@@ -81,13 +62,13 @@ struct CanvasPage: View {
     @State private var penColor: Color = .black
     @State private var handFill: String = ""
     @State private var grabMode: Bool = false
-    @State private var canvasWidgets: [CanvasWidget]
+    @State private var frameSize: CGFloat = 1000
+    @State private var canvasWidgets: [CanvasWidget] = []
+    @State private var draggingItem: CanvasWidget?
     @GestureState private var magnifyBy: CGFloat = 1.0
     
     
     init() {
-        
-        self.canvasWidgets = [imageView, imageView2, imageView3, imageView4]
         
     }
     
@@ -107,7 +88,7 @@ struct CanvasPage: View {
     
     
     func onChange() async {
-        
+        self.canvasWidgets = [imageView0, imageView1, imageView2, imageView3]
         do {
             try await self.userUID = getUID()!
             var dbDrawings: Dictionary<String, Any>
@@ -149,15 +130,37 @@ struct CanvasPage: View {
     
     func GridView() -> AnyView {
         
-        let columns = Array(repeating: GridItem(.fixed(250), spacing: 15, alignment: .leading), count: 3)
-        
-        return AnyView(LazyVGrid(columns: columns, alignment: .leading, spacing: 250, content: {
+        let columns = Array(repeating: GridItem(.fixed(250 * magnifyBy), spacing: 15, alignment: .leading), count: 3)
+
+        return AnyView(LazyVGrid(columns: columns, alignment: .leading, spacing: 15, content: {
             
-            ReorderableForEach(items: canvasWidgets) { widget in
-                widget.widgetView()
-            } moveAction: { from, to in
-                canvasWidgets.move(fromOffsets: from, toOffset: to)
-            }}
+            ForEach(canvasWidgets, id: \.id) { widget in
+               
+                ZStack {
+                    getMediaView(widget: widget)
+                    RoundedRectangle(cornerRadius: 25)
+                        .stroke(widget.borderColor, lineWidth: 10 * magnifyBy)
+                        .frame(width: widget.width, height: widget.height)
+                }.draggable(widget) {
+                    getMediaView(widget: widget)
+                }
+                .dropDestination(for: CanvasWidget.self) { items, location in
+                    draggingItem = nil
+                    return false
+                } isTargeted: { status  in
+                    print(status)
+                    if let draggingItem, status, draggingItem != widget {
+                        if let sourceIndex = canvasWidgets.firstIndex(of: draggingItem), let destinationIndex = canvasWidgets.firstIndex(of: widget) {
+                                     withAnimation(.bouncy) {
+                                         let sourceItem = canvasWidgets.remove(at: sourceIndex)
+                                        canvasWidgets.insert(sourceItem, at: destinationIndex)
+   
+                                    }
+                                }
+                            }
+                        }//isTargeted
+                }//ForEach
+            }
         ))
     }
 
@@ -200,17 +203,24 @@ struct CanvasPage: View {
     
     func canvasView() -> AnyView {
         
-       AnyView(
+        if grabMode {
+           return AnyView(
+                ZStack {
+                    GridView()
+                }.frame(minWidth: frameSize, minHeight: frameSize)
+            )
+        }
+       return AnyView(
             ZStack {
                 GridView()
                 Canvas { context, size in
                     for line in lines {
                         var path = Path()
                         path.addLines(line.points)
-                        context.stroke(path, with: .color(line.color), lineWidth: line.lineWidth)
+                        context.stroke(path, with: .color(line.color), lineWidth: line.lineWidth * magnifyBy)
                     }
                 }
-            }.frame(minWidth: 1000, minHeight: 1000)
+            }.frame(minWidth: frameSize, minHeight: frameSize)
         )
         
     }
@@ -220,6 +230,15 @@ struct CanvasPage: View {
             MagnifyGesture()
                 .updating($magnifyBy) { value, gestureState, transaction in
                     gestureState = value.magnification
+                    for index in 0...canvasWidgets.count-1 {
+                        let widget = canvasWidgets[index]
+                        var newWidget = CanvasWidget(id: widget.id, width: widget.width * magnifyBy, height: widget.height * magnifyBy, borderColor: widget.borderColor, userId: widget.userId, media: widget.media, mediaURL: widget.mediaURL)
+
+                        canvasWidgets.remove(at: index)
+                        canvasWidgets.insert(newWidget, at: index)
+                        print(newWidget.width)
+                    }
+                    frameSize = frameSize * magnifyBy
                     print(magnifyBy)
                 }
         }
@@ -254,7 +273,6 @@ struct CanvasPage: View {
                     }
             }.scrollDisabled(grabMode)//ScrollView
                 .gesture(magnification)
-                .scaleEffect(CGSize(width: magnifyBy, height: magnifyBy))
             Toolbar()
         }.task {
                 await onChange()

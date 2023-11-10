@@ -9,49 +9,44 @@ import Foundation
 import SwiftUI
 import AVKit
 
-class VideoWidget: CanvasWidget {
+struct VideoWidget: View{
     
+    var url: URL;
+    var videoplayer: AVPlayer;
+    var width: CGFloat;
+    var height: CGFloat;
+    @State private var isPlaying = false;
     
-    struct VideoView: View {
-        @State var isPlaying: Bool = false
-        @State var privatePlayer: AVPlayer
-        var width: CGFloat
-        var height: CGFloat
-        
-        init(url: URL, width: CGFloat, height: CGFloat) {
-            self.isPlaying = false
-            self.privatePlayer = AVPlayer(url: url)
-            self.width = width
-            self.height = height
-        }
-        
-        var body: some View {
-            VideoPlayer(player: privatePlayer)
-                .frame(width: width,height: height, alignment: .center)
+    var body: some View {
+        VideoPlayer(player: videoplayer)
+            .frame(width: width,height: height, alignment: .center)
+            .clipShape(RoundedRectangle(cornerRadius: 25))
+            .gesture(TapGesture().onEnded({
+                isPlaying ? videoplayer.pause() : videoplayer.play()
+                isPlaying.toggle()
+            })).draggable(url)
+    }
+    
+    init(url: URL, width: CGFloat, height: CGFloat) {
+        self.url = url
+        self.videoplayer = AVPlayer(url: self.url)
+        self.width = width
+        self.height = height
+    }
+    
+}
+
+func videoWidget(widget: CanvasWidget) -> AnyView {
+        assert(widget.media == .video)
+        var isPlaying = false
+        let videoplayer = AVPlayer(url: widget.mediaURL)
+        return AnyView(
+            VideoPlayer(player: videoplayer)
+                .frame(width: widget.width ,height: widget.height, alignment: .center)
                 .clipShape(RoundedRectangle(cornerRadius: 25))
                 .gesture(TapGesture().onEnded({
-                    isPlaying ? privatePlayer.pause() : privatePlayer.play()
+                    isPlaying ? videoplayer.pause() : videoplayer.play()
                     isPlaying.toggle()
-                }))
-        }
-        
-    }
-    
-    init(position: CGPoint, size: [CGFloat], borderColor: Color, videoName: String, extensionName: String) {
-        let filePath = Bundle.main.path(forResource: videoName, ofType: extensionName)
-        
-        let videoURL = URL(filePath: "lisa manoban.mp4")
-        let bodyView = AnyView(
-            ZStack {
-                VideoView(url: videoURL, width: size[0], height: size[1])
-                Image(systemName: "play")
-            }
+                })).draggable(widget)
         )
-        
-        super.init(position: position, borderColor: borderColor, bodyView: bodyView)
-    }
-    
-    required init(from decoder: Decoder) throws {
-        try super.init(from: Decoder.self as! Decoder);
-    }
 }
