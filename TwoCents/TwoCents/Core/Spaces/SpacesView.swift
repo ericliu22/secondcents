@@ -76,6 +76,12 @@ struct SpacesView: View {
                                                 
                                             )
                                             .clipped()
+//                                            .overlay(.regularMaterial)
+                                        
+                                        
+                                        
+                                        
+                                        
                                         
                                         
                                         
@@ -84,8 +90,7 @@ struct SpacesView: View {
                                         //if space does not have profile pic, show circle
                                         Rectangle()
                                             .fill(Color.accentColor)
-//                                            .clipShape(Circle())
-                                           
+//                                            .overlay(.thickMaterial)
                                     }
                                     
                                     
@@ -146,10 +151,25 @@ struct SpacesView: View {
                                         .font(.title)
                                         .fontWeight(.bold)
                                     
-                                        .minimumScaleFactor(0.5)
+                                        .minimumScaleFactor(0.7)
                                         .lineLimit(1)
                                     
+                                    
+                                    if let mySpaceMembers = spaceTile.members{
                                        
+                                            
+                                        Text( "\(mySpaceMembers.count) members")
+                                                .foregroundStyle(.secondary)
+                                                .font(.headline)
+                                            
+//                                                .fontWeight(.regular)
+                                            
+                                            
+                                        
+                                    }
+                                    
+                                    
+                                    
                                     
                                     
                                 
@@ -157,7 +177,7 @@ struct SpacesView: View {
                                 .padding()
                                 .frame(maxWidth:.infinity, maxHeight: .infinity, alignment: .topLeading)
                                 .aspectRatio(1, contentMode: .fit)
-                                .background(.thickMaterial)
+                                .background(.regularMaterial)
                                
                                
                                 

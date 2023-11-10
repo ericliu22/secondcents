@@ -132,7 +132,7 @@ struct VoteGameView: View {
             try? await viewModel.loadCurrentUser()
             
             //loads teh current space (usually, spaceId is passed in. However, jonny has not completed the page that passes it in, so its hard coded rn)
-            try? await viewModel.loadCurrentSpace(spaceId: "90746DB9-141C-4155-82D6-7E780BE5CD05" )
+            try? await viewModel.loadCurrentSpace(spaceId: "BC636778-A19D-4BD3-9973-7C6768F5D861" )
             
             //if space is loaded, and it has the field members in it...
             //for each UID in the members array, load their DBUser Info...
