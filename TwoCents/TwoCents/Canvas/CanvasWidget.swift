@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import UniformTypeIdentifiers
 
 /**
 The default inherited class for all widgets on the Canvas. Don't actually initialize this class
@@ -22,81 +23,100 @@ The default inherited class for all widgets on the Canvas. Don't actually initia
     - size: Always make it an int list length 2 of [width, height]. There are no safety measures for this just remember it well
     - bodyView: The actual content of the widget
  */
-class CanvasWidget: Hashable, Codable, Identifiable, Transferable, Equatable {
+struct CanvasWidget: Hashable, Codable, Identifiable, Transferable, Equatable {
+    
     static var transferRepresentation: some TransferRepresentation {
-            CodableRepresentation(contentType: .content)
+            CodableRepresentation(contentType: .canvasWidget)
     }
     
     
-    var uid: String
-    var position: CGPoint
-    var size: [CGFloat] = [250,250]
+    var id: UUID = UUID()
+    @State var width: CGFloat = 250
+    @State var height: CGFloat = 250
     var borderColor: Color
-    var bodyView: AnyView
     var userId: String
-    var media: String
+    var media: Media
+    var mediaURL: URL
     
-    func widgetView() -> AnyView {
-        AnyView(
-            ZStack {
-                
-                self.bodyView
-                RoundedRectangle(cornerRadius: 25)
-                    .stroke(borderColor, lineWidth: 10)
-                    .frame(width: size[0], height: size[1])
-            }
-        )
+    
+    
+    static func == (lhs: CanvasWidget, rhs: CanvasWidget) -> Bool {
+        return lhs.id == rhs.id
     }
     
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+}
+
+enum Media {
+    case video, image
+}
+
+extension Media: Codable {
+    init (media: String) {
+        switch media {
+            case "video":
+                self = .video
+            case "image":
+                self = .image
+            default:
+                self = .image
+        }
+    }
+    
+}
+
+extension CanvasWidget {
+
     enum CodingKeys: String, CodingKey {
         
-        case uid
-        case positionX
-        case positionY
+        case id
         case borderColor
         case userId
         case media
+        case mediaURL
+        case width
+        case height
         
     }
     
-    required init(from decoder: Decoder) throws {
+    init(from decoder: Decoder) throws {
         
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.uid = try container.decode(String.self, forKey: .uid)
-        let x: Float = try container.decode(Float.self, forKey: .positionX)
-        let y: Float = try container.decode(Float.self, forKey: .positionY)
-        self.position = CGPoint(x: CGFloat(x), y: CGFloat(y))
+        self.id = try container.decode(UUID.self, forKey: .id)
         self.borderColor = Color.fromString(name: try container.decode(String.self, forKey: .borderColor))
-        self.media = try container.decode(String.self, forKey: .media)
         self.userId = try container.decode(String.self, forKey: .userId)
-        self.bodyView = AnyView(ZStack{})
+        self.media = try container.decode(Media.self, forKey: .media)
+        self.mediaURL = try container.decode(URL.self, forKey: .mediaURL)
+        self.width = try container.decode(CGFloat.self, forKey: .width)
+        self.height = try container.decode(CGFloat.self, forKey: .height)
     }
     
     func encode(to encoder: Encoder) throws {
             var container = encoder.container(keyedBy: CodingKeys.self)
-            try container.encode(uid, forKey: .uid)
-            try container.encode(position.x, forKey: .positionX)
-            try container.encode(position.y, forKey: .positionY)
+            try container.encode(id, forKey: .id)
             try container.encode(userId, forKey: .userId)
-            try container.encode(media, forKey: .media)
             try container.encode(borderColor.description, forKey: .borderColor)
+            try container.encode(media, forKey: .media)
+            try container.encode(mediaURL, forKey: .mediaURL)
+            try container.encode(width, forKey: .width)
+            try container.encode(height, forKey: .height)
     }
     
-    init(position: CGPoint, borderColor: Color, bodyView: AnyView) {
-        self.position = position
-        self.borderColor = borderColor
-        self.bodyView = bodyView
-        self.userId = "HfQw46R2aGfUK2CWNTPJ7LU8cGA3"
-        self.uid = UUID().uuidString
-        self.media = ""
-    }
-    
-    static func == (lhs: CanvasWidget, rhs: CanvasWidget) -> Bool {
-        return lhs.uid == rhs.uid
-    }
-    
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(uid)
-    }
+    func setHeight(height: CGFloat) { self.height = height }
+    func setWidth(width: CGFloat) { self.width = width}
 }
 
+extension UTType {
+    static let canvasWidget = UTType(exportedAs: "com.twocentsapp.secondcents")
+}
+
+func getMediaView(widget: CanvasWidget) -> AnyView {
+    switch (widget.media) {
+    case .video:
+        return videoWidget(widget: widget)
+    case .image:
+        return imageWidget(widget: widget)
+    }
+}
