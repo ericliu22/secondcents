@@ -11,7 +11,7 @@ import FirebaseFirestore
 import FirebaseFirestoreSwift
 
 class MessageManager: ObservableObject{
-    let testchatUser = "Eric"
+    let testchatUser = "Enzo"
     let testchatRoom = "ChatRoom1"
     @Published private(set) var messages: [Message] = []
     let db = Firestore.firestore()
@@ -38,9 +38,21 @@ class MessageManager: ObservableObject{
     }
     
     func sendMessages(text: String) {
+        let docRef = db.collection("Chatrooms").document(testchatRoom)
+
+        docRef.getDocument(source: .cache) { (document, error) in
+            if let document = document {
+                let property = document.get("lastSend")
+                print(property) //<-- how to access globally?
+            } else {
+                print("Document does not exist in cache")
+            }
+        }
         do {
             let newMessage = Message(id: "\(UUID())", sendBy: testchatUser, text: text, ts: Date())
             try db.collection("Chatrooms").document(testchatRoom).collection("Chats").document().setData(from: newMessage)
+            db.collection("Chatrooms").document(testchatRoom).setData(["lastSend": newMessage.sendBy], merge: true)
+            db.collection("Chatrooms").document(testchatRoom).setData(["lastTs": newMessage.ts], merge: true)
             } catch {
             print("Error adding message to Firestore: \(error)")
         }

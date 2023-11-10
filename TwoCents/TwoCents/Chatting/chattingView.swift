@@ -14,14 +14,18 @@ struct Message: Identifiable, Codable {
     var sendBy: String
     var text: String
     var ts: Date
+    //var parent: String
 }
+
 
 struct chatStruct: View{
     @StateObject var messageManager = MessageManager()
     var body: some View{
         ForEach(messageManager.messages, id:\.id) {
             message in
-            messageBubbleLead(message: message)
+            if(message.sendBy == "Eric"){
+                messageBubbleLead(message: message)
+            }
         }
     }
 }
