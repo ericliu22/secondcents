@@ -145,6 +145,7 @@ struct SpacesView: View {
                                     Text(spaceTile.name!)
                                         .font(.title)
                                         .fontWeight(.bold)
+                                    
                                         .minimumScaleFactor(0.5)
                                         .lineLimit(1)
                                     
@@ -156,7 +157,7 @@ struct SpacesView: View {
                                 .padding()
                                 .frame(maxWidth:.infinity, maxHeight: .infinity, alignment: .topLeading)
                                 .aspectRatio(1, contentMode: .fit)
-                                .background(.regularMaterial)
+                                .background(.thickMaterial)
                                
                                
                                 
