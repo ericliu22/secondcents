@@ -91,6 +91,18 @@ struct VoteGameView: View {
                             ForEach(0..<myMemberInfo.count, id: \.self) {member in
                                 Text(myMemberInfo[member].name ?? "")
                                     .font(.largeTitle)
+                                
+                                
+//                    
+                                
+                                let memberColor: Color = viewModel.getUserColor(userColor:myMemberInfo[member].userColor ?? "")
+                                
+                                
+                                Rectangle()
+                                    .fill(memberColor)
+                                
+//                                
+                                
                             }
                         }
                         

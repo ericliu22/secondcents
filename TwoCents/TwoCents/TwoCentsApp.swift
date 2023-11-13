@@ -3,7 +3,6 @@
 //  TwoCents
 //
 //  Created by Eric Liu on 2023/7/23.
-//
 
 import SwiftUI
 import Firebase
