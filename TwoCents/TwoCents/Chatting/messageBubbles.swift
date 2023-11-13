@@ -13,8 +13,13 @@ import SwiftUI
 struct messageBubbleLead: View{
     var message: Message
     var body: some View{
-        Text(message.sendBy)
-        Text(message.text).background(Color(.red))
+        VStack{
+            Text(message.sendBy)
+            Text(message.text)
+                .background(Color(.green))
+                .cornerRadius(30)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 }
 
@@ -23,6 +28,8 @@ struct messageBubbleSameLead: View{
     var message: Message
     var body: some View{
         Text(message.text).background(Color(.yellow))
+            .cornerRadius(30)
+            .frame(maxWidth: .infinity, alignment: .leading)
     }
 }
 
@@ -30,14 +37,23 @@ struct messageBubbleSameLead: View{
 struct messageBubbleTrail: View{
     var message: Message
     var body: some View{
-        Text(message.text).background(Color(.green))
+        VStack{
+            Text(message.sendBy)
+            Text(message.text)
+                .background(Color(.red))
+                .cornerRadius(30)
+        }
+            .frame(maxWidth: .infinity, alignment: .trailing)
     }
 }
 
 struct messageBubbleSameTrail: View{
     var message: Message
     var body: some View{
-        Text(message.text).background(Color(.blue))
+        Text(message.text)
+            .background(Color(.orange))
+            .cornerRadius(30)
+            .frame(maxWidth: .infinity, alignment: .trailing)
     }
 }
 
