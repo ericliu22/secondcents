@@ -18,6 +18,38 @@
             endingLineNumber = "21"
             landmarkName = "chatStruct"
             landmarkType = "14">
+            <Locations>
+               <Location
+                  uuid = "49970B4C-F10D-4B2C-9DAE-968C8C055DB5 - 224e7fc6d6bf0ce"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "TwoCents.chatStruct.init() -&gt; TwoCents.chatStruct"
+                  moduleName = "TwoCents"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jshen/Documents/GitHub/secondcents/TwoCents/TwoCents/Chatting/chattingView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "21"
+                  endingLineNumber = "21"
+                  offsetFromSymbolStart = "120">
+               </Location>
+               <Location
+                  uuid = "49970B4C-F10D-4B2C-9DAE-968C8C055DB5 - 3d8d60f42323628"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "TwoCents.chatStruct.init(messageManager: @autoclosure () -&gt; TwoCents.MessageManager) -&gt; TwoCents.chatStruct"
+                  moduleName = "TwoCents"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jshen/Documents/GitHub/secondcents/TwoCents/TwoCents/Chatting/chattingView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "0"
+                  endingLineNumber = "0"
+                  offsetFromSymbolStart = "8">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>
