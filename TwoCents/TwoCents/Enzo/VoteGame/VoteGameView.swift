@@ -103,6 +103,50 @@ struct VoteGameView: View {
                                 
 //                                
                                 
+                                Group{
+                                    //Circle or Profile Pic
+                                    
+                                    let frameSize: CGFloat? = 64
+                                    
+                                    if let urlString = myMemberInfo[member].profileImageUrl,
+                                       let url = URL(string: urlString) {
+                                        
+                                        //If there is URL for profile pic, show
+                                        //circle with stroke
+                                        AsyncImage(url: url) {image in
+                                            image
+                                                .resizable()
+                                                .scaledToFill()
+                                            
+                                        } placeholder: {
+                                            //else show loading after user uploads but sending/downloading from database
+                                            ProgressView()
+                                                .progressViewStyle(CircularProgressViewStyle(tint: Color(UIColor.systemBackground)))
+                                                .frame(width: frameSize, height: frameSize)
+                                                .background(
+                                                    Circle()
+                                                        .fill(Color.accentColor)
+                                                )
+                                        }
+                                        .clipShape(Circle())
+                                        .frame(width: frameSize, height: frameSize)
+                                        
+                                    } else {
+                                        //if space does not have profile pic, show circle
+                                        Circle()
+                                            .fill(Color.accentColor)
+                                            .clipShape(Circle())
+                                            .frame(width: frameSize, height: frameSize)
+                                    }
+                                    
+                                    
+                                }
+                                
+                                
+                                
+                                
+                                
+                                
                             }
                         }
                         
