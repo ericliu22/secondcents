@@ -63,7 +63,7 @@ class MessageManager: ObservableObject{
         docRef.getDocument(source: .cache) { [self] (document, error) in
             if let document = document {
                 let property = document.get("lastSend")
-                print(property) //<-- how to access globally?
+               
                 do {
                     let newMessage = Message(id: "\(UUID())", sendBy: self.testchatUser, text: text, ts: Date(), parent: property as! String)
                     try self.db.collection("Chatrooms").document(self.testchatRoom).collection("Chats").document().setData(from: newMessage)

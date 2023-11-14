@@ -25,23 +25,23 @@ struct chatStruct: View{
             message in
             
             /*
-            //other user, texted once
-            if(message.sendBy != "Josh" && message.sendBy != message.parent){
-                messageBubbleLead(message: message)
-            }
-            //other user, texted twice
-            else if(message.sendBy != "Josh" && message.sendBy == message.parent){
-                messageBubbleSameLead(message: message)
-            }
-            //I texted twice
-            else if(message.sendBy == "Josh" && message.sendBy == message.parent){
-                messageBubbleSameTrail(message: message)
-            }
-            //I texted once
-            else if(message.sendBy == "Josh" && message.sendBy != message.parent){
-                messageBubbleTrail(message: message)
-            }
-            */
+             //other user, texted once
+             if(message.sendBy != "Josh" && message.sendBy != message.parent){
+             messageBubbleLead(message: message)
+             }
+             //other user, texted twice
+             else if(message.sendBy != "Josh" && message.sendBy == message.parent){
+             messageBubbleSameLead(message: message)
+             }
+             //I texted twice
+             else if(message.sendBy == "Josh" && message.sendBy == message.parent){
+             messageBubbleSameTrail(message: message)
+             }
+             //I texted once
+             else if(message.sendBy == "Josh" && message.sendBy != message.parent){
+             messageBubbleTrail(message: message)
+             }
+             */
             
             //Jonathan combined above stucts into one
             universalMessageBubble(message: message, sentByMe: message.sendBy == "Josh", isFirstMsg: message.sendBy != message.parent)
@@ -49,7 +49,7 @@ struct chatStruct: View{
             
         }
         .frame(maxWidth: .infinity)
-        .padding(.horizontal)
+        
     }
 }
 
@@ -74,14 +74,11 @@ struct newChatView: View {
     @State var Tapped = false
     //check for data to use this boolean
     var body: some View{
-        VStack{
+        
+        VStack(spacing: 0){
             ScrollView{
-                LazyVStack{
-                    chatStruct()
-                    //unwrap data into view
-                }
-                .padding(5)
                 
+                chatStruct()
                 
             }
             .frame(width: Tapped ? .infinity: 200, height: Tapped ? .infinity: 200)
@@ -96,12 +93,19 @@ struct newChatView: View {
                 }
             }
             
+            
+            
+            
             if Tapped{
                 MessageField().environmentObject(messagesManager)
+                
             }
         }
+        .padding(.horizontal)
+        .scrollIndicators(.hidden)
+        
+        
         
     }
 }
-
 

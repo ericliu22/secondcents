@@ -78,14 +78,22 @@ struct universalMessageBubble: View{
             
             if isFirstMsg {
                 Text(message.sendBy)
+                    .foregroundStyle(.purple)
+                    .font(.headline)
             }
             
             
             Text(message.text)
-               
+                .font(.headline)
+                .fontWeight(.regular)
+            
+                .padding(.horizontal,5)
+                .padding(.vertical,2.5)
+            
+            
                 .background(.regularMaterial)
-                .background(.red)
-                .cornerRadius(30)
+                .background(.purple)
+                .cornerRadius(20)
         }
         .frame(maxWidth: .infinity, alignment: sentByMe ?  .trailing : .leading)
     }
