@@ -80,21 +80,39 @@ struct universalMessageBubble: View{
                 Text(message.sendBy)
                     .foregroundStyle(.purple)
                     .font(.headline)
+                    
             }
             
             
             Text(message.text)
-                .font(.headline)
-                .fontWeight(.regular)
-            
-                .padding(.horizontal,5)
-                .padding(.vertical,2.5)
-            
-            
-                .background(.regularMaterial)
+                .font(.subheadline)
+                .padding(12)
+//                .font(.headline)
+//                .fontWeight(.regular)
+                .foregroundStyle(Color(UIColor.systemBackground))
+//
+//                .padding(.vertical, 8)
+//                .padding(.horizontal, 12)
+//            
+//            
+////                .background(.ultraThinMaterial)
                 .background(.purple)
-                .cornerRadius(20)
+                .clipShape(chatBubbleShape (sentByMe: sentByMe))
+//                .cornerRadius(20)
         }
         .frame(maxWidth: .infinity, alignment: sentByMe ?  .trailing : .leading)
     }
+}
+
+
+struct chatBubbleShape: Shape {
+    
+    let sentByMe: Bool
+    
+    func path(in rect: CGRect) -> Path {
+        let path = UIBezierPath(roundedRect: rect, byRoundingCorners: [.topLeft,.topRight,sentByMe ? .bottomLeft : .bottomRight], cornerRadii: CGSize(width:16, height: 16))
+        
+        return Path(path.cgPath)
+    }
+    
 }

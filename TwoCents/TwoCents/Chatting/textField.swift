@@ -13,43 +13,60 @@ struct MessageField: View{
     @EnvironmentObject var messagesManager: MessageManager
     @State private var message = ""
     var body: some View{
-        HStack {
-//            customTextField(placeholder: Text("message..."), text: $message)
-       
-            TextField("Message", text: $message, axis: .vertical)
-                .lineLimit(0...5)
-                .padding(.leading, nil)
+//        ZStack (alignment: .bottomTrailing){
+            
+        
+        ZStack (alignment: .bottomTrailing){
+                //            customTextField(placeholder: Text("message..."), text: $message)
                 
-         
-           
-          
-            Button{
-                messagesManager.sendMessages(text: message)
-                message = ""
-            } label: {
-                Image(systemName: "paperplane.fill")
-                    .font(.headline)
-                    .foregroundColor(.white)
-                //                    .padding(10)
+                TextField("Message", text: $message, axis: .vertical)
+                    .lineLimit(0...5)
+//                    .padding(.leading, nil)
+//                    .padding(.vertical, 10)
+                    .padding(12)
+                    .padding(.trailing, 48)
+                    .clipShape(Capsule())
+                    .font(.subheadline)
+                
+                
+                
+//                Spacer()
+//                    .frame(width: 60, height: 30)
+ 
+                
+                Button{
+                    messagesManager.sendMessages(text: message)
+                    message = ""
+                } label: {
+                    Image(systemName: "paperplane.fill")
+                        .font(.headline)
+                        .foregroundColor(.white)
+                    //                    .padding(10)
+                    
+                }
+                .tint(.purple)
+                .buttonStyle(.borderedProminent)
+                .disabled(message.isEmpty)
+                .clipShape(Circle())
+                .padding(.horizontal)
+                .offset(x: 12, y: -4)
+                
+               
+                
+                
+
                 
             }
-            .tint(.purple)
-            .buttonStyle(.borderedProminent)
-            .disabled(message.isEmpty)
-            .clipShape(Circle())
-            
-     
+            .background(.thickMaterial)
+            .background(.purple)
+            .cornerRadius(20)
             
             
-        }
-//        .padding(.horizontal)
-//        .padding(.vertical, 10)
-        .padding(.vertical, 5)
-        .background(.regularMaterial)
-        .background(.purple)
-        .cornerRadius(20)
-        
-//        .padding(.bottom, nil)
+            
+            
+       
+          
+//        }
     }
 }
 
