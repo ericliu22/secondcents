@@ -245,7 +245,7 @@ struct SabotageCarouselWidget: View {
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
 //            .overlay(RoundedRectangle(cornerRadius: 30).stroke(Color(player.color), lineWidth: 5))
-            .background(.ultraThinMaterial, in: .rect(cornerRadius: 30))
+            .background(.thinMaterial, in: .rect(cornerRadius: 30))
             
             Toggle("Beat Animation", isOn: $beatAnimation)
                 .padding(15)

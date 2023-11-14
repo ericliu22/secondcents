@@ -56,7 +56,7 @@ struct ParticleView: View {
 //                            .onAppear{
 //                                beatAnimation = true
 //                            }
-                        Text("Pretend")
+                        Text("")
                             .font(.custom("LuckiestGuy-Regular", size: 64))
                    
                         

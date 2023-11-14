@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		850958A52AB8F40B00018A32 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20EBD052AB8A36100EFDDE8 /* CardView.swift */; };
-		850958A62AB8F41100018A32 /* SabotageGame.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20EBD042AB8A36100EFDDE8 /* SabotageGame.swift */; };
 		850958A72AB8F41D00018A32 /* HotSeat.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20EBD062AB8A36100EFDDE8 /* HotSeat.swift */; };
 		850958AA2AB8F82D00018A32 /* LuckiestGuy-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 850958A92AB8F82D00018A32 /* LuckiestGuy-Regular.ttf */; };
 		850958AB2AB8F82D00018A32 /* LuckiestGuy-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 850958A92AB8F82D00018A32 /* LuckiestGuy-Regular.ttf */; };
@@ -116,7 +115,6 @@
 		85DDD0CC2AB4E79A008A9C56 /* VoteGameReal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VoteGameReal.swift; sourceTree = "<group>"; };
 		85F5629B2AE8682C0039908B /* SabotageReal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SabotageReal.swift; sourceTree = "<group>"; };
 		A2003C942AABA08300B1E551 /* Line.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Line.swift; sourceTree = "<group>"; };
-		A20EBD042AB8A36100EFDDE8 /* SabotageGame.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SabotageGame.swift; sourceTree = "<group>"; };
 		A20EBD052AB8A36100EFDDE8 /* CardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 		A20EBD062AB8A36100EFDDE8 /* HotSeat.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HotSeat.swift; sourceTree = "<group>"; };
 		A20EBD072AB8A36100EFDDE8 /* VoteGameReal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VoteGameReal.swift; sourceTree = "<group>"; };
@@ -247,7 +245,6 @@
 		A20EBD032AB8A36100EFDDE8 /* Enzo */ = {
 			isa = PBXGroup;
 			children = (
-				A20EBD042AB8A36100EFDDE8 /* SabotageGame.swift */,
 				85F5629B2AE8682C0039908B /* SabotageReal.swift */,
 				A20EBD052AB8A36100EFDDE8 /* CardView.swift */,
 				A20EBD062AB8A36100EFDDE8 /* HotSeat.swift */,
@@ -381,9 +378,9 @@
 			isa = PBXGroup;
 			children = (
 				AB2E56CC2AE9C59D0096A58C /* VoteGameView.swift */,
+				AB2E56D02AE9C62C0096A58C /* CapsuleView.swift */,
 				AB2E56CE2AE9C5E60096A58C /* ResultView.swift */,
 				AB2E56D22AE9C6F00096A58C /* VoteGameViewModel.swift */,
-				AB2E56D02AE9C62C0096A58C /* CapsuleView.swift */,
 			);
 			path = VoteGame;
 			sourceTree = "<group>";
@@ -678,7 +675,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				850958A72AB8F41D00018A32 /* HotSeat.swift in Sources */,
-				850958A62AB8F41100018A32 /* SabotageGame.swift in Sources */,
 				850958A52AB8F40B00018A32 /* CardView.swift in Sources */,
 				85C6759B2AB8EE6100FACCB2 /* SuperlativeGame.swift in Sources */,
 				85C6759A2AB8EE5B00FACCB2 /* HotSeatManager.swift in Sources */,

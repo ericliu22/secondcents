@@ -11,8 +11,11 @@ import SwiftUI
 struct ResultView: View {
     var playerName: String
     var playerImage: String
-    var playerColor: String
+    var playerColor: Color
     var playerVotes: Int
+    
+    var player: PlayerData
+    
     var body: some View {
 
         ZStack{
@@ -36,5 +39,5 @@ struct ResultView: View {
 
 
 #Preview {
-    ResultView(playerName: "enzo", playerImage: "enzo-pic", playerColor: "enzoGreen", playerVotes: 2)
+    ResultView(playerName: "enzo", playerImage: "enzo-pic", playerColor: .green, playerVotes: 2, player: playerData[1])
 }
