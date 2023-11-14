@@ -23,6 +23,8 @@ struct chatStruct: View{
     var body: some View{
         ForEach(messageManager.messages, id:\.id) {
             message in
+            
+            /*
             //other user, texted once
             if(message.sendBy != "Josh" && message.sendBy != message.parent){
                 messageBubbleLead(message: message)
@@ -39,8 +41,15 @@ struct chatStruct: View{
             else if(message.sendBy == "Josh" && message.sendBy != message.parent){
                 messageBubbleTrail(message: message)
             }
+            */
+            
+            //Jonathan combined above stucts into one
+            universalMessageBubble(message: message, sentByMe: message.sendBy == "Josh", isFirstMsg: message.sendBy != message.parent)
+            
+            
         }
         .frame(maxWidth: .infinity)
+        .padding(.horizontal)
     }
 }
 
@@ -74,12 +83,19 @@ struct newChatView: View {
                 .padding(5)
                 
                 
-            }.frame(width: Tapped ? 300: 200, height: Tapped ? 700: 200).overlay(RoundedRectangle(cornerRadius:20).stroke(Tapped ? .white : .black, lineWidth: 2))
-                .onTapGesture {
-                    withAnimation(.spring()){
-                        Tapped.toggle()
-                    }
+            }
+            .frame(width: Tapped ? .infinity: 200, height: Tapped ? .infinity: 200)
+            .overlay(
+                RoundedRectangle(cornerRadius:20)
+                    .stroke(Tapped ? .clear : .black, lineWidth: 5)
+                    .ignoresSafeArea()
+            )
+            .onTapGesture {
+                withAnimation(.spring()){
+                    Tapped.toggle()
                 }
+            }
+            
             if Tapped{
                 MessageField().environmentObject(messagesManager)
             }
@@ -87,5 +103,5 @@ struct newChatView: View {
         
     }
 }
-   
+
 
