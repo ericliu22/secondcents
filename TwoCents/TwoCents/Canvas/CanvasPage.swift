@@ -8,17 +8,28 @@
 import SwiftUI
 import FirebaseCore
 import FirebaseFirestore
+import PencilKit
+
+
+//CONSTANTS
+let db = Firestore.firestore()
+
+let TILE_SIZE: CGFloat = 100
+let MAX_ZOOM: CGFloat = 3.0
+let MIN_ZOOM: CGFloat = 1.0
+let CORNER_RADIUS: CGFloat = 15
+let LINE_WIDTH: CGFloat = 5
 
 //HARDCODED SECTION
 
-let db = Firestore.firestore()
-
 let chatroom = db.collection("Chatrooms").document("ChatRoom1").collection("Widgets").document("Drawings")
 
-var imageView0 = CanvasWidget(borderColor: .black, userId: "jennierubyjane", media: .image, mediaURL: URL(string: "https://m.media-amazon.com/images/M/MV5BN2Q0OWJmNWYtYzBiNy00ODAyLWI2NGQtZGFhM2VjOWM5NDNkXkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_.jpg")!)
-var imageView1 = CanvasWidget(borderColor: .black, userId: "jennierubyjane", media: .image, mediaURL: URL(string: "https://www.billboard.com/wp-content/uploads/2023/01/lisa-blackpink-dec-2022-billboard-1548.jpg?w=942&h=623&crop=1")!)
-var imageView2 = CanvasWidget(borderColor: .black, userId: "jennierubyjane", media: .image, mediaURL: URL(string: "https://i.mydramalist.com/66L5p_5c.jpg")!)
-var imageView3 = CanvasWidget(borderColor: .black, userId: "jennierubyjane", media: .image, mediaURL: URL(string: "https://static.wikia.nocookie.net/the_kpop_house/images/6/60/Jisoo.jpg/revision/latest?cb=20200330154248")!)
+var imageView0 = CanvasWidget(width: TILE_SIZE, height: TILE_SIZE, borderColor: .black, userId: "jennierubyjane", media: .image, mediaURL: URL(string: "https://m.media-amazon.com/images/M/MV5BN2Q0OWJmNWYtYzBiNy00ODAyLWI2NGQtZGFhM2VjOWM5NDNkXkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_.jpg")!)
+var imageView1 = CanvasWidget(width: TILE_SIZE, height: TILE_SIZE,borderColor: .black, userId: "jennierubyjane", media: .image, mediaURL: URL(string: "https://www.billboard.com/wp-content/uploads/2023/01/lisa-blackpink-dec-2022-billboard-1548.jpg?w=942&h=623&crop=1")!)
+var imageView2 = CanvasWidget(width: TILE_SIZE, height: TILE_SIZE,borderColor: .black, userId: "jennierubyjane", media: .image, mediaURL: URL(string: "https://i.mydramalist.com/66L5p_5c.jpg")!)
+var imageView3 = CanvasWidget(width: TILE_SIZE, height: TILE_SIZE,borderColor: .black, userId: "jennierubyjane", media: .image, mediaURL: URL(string: "https://static.wikia.nocookie.net/the_kpop_house/images/6/60/Jisoo.jpg/revision/latest?cb=20200330154248")!)
+
+var videoView3 = CanvasWidget(width: TILE_SIZE, height: TILE_SIZE, borderColor: .red, userId: "jisookim", media: .video, mediaURL: URL(string: "https://video.link/w/vl6552d3ab6cdff#")!)
 //HARDCODED SECTION
 
 
@@ -65,7 +76,7 @@ struct CanvasPage: View {
     @State private var frameSize: CGFloat = 1000
     @State private var canvasWidgets: [CanvasWidget] = []
     @State private var draggingItem: CanvasWidget?
-    @GestureState private var magnifyBy: CGFloat = 1.0
+    @State private var magnifyBy: CGFloat = 1.0
     
     
     init() {
@@ -88,7 +99,7 @@ struct CanvasPage: View {
     
     
     func onChange() async {
-        self.canvasWidgets = [imageView0, imageView1, imageView2, imageView3]
+        self.canvasWidgets = [imageView0, imageView1, imageView2, imageView3, videoView3]
         do {
             try await self.userUID = getUID()!
             var dbDrawings: Dictionary<String, Any>
@@ -130,36 +141,36 @@ struct CanvasPage: View {
     
     func GridView() -> AnyView {
         
-        let columns = Array(repeating: GridItem(.fixed(250 * magnifyBy), spacing: 15, alignment: .leading), count: 3)
+        let columns = Array(repeating: GridItem(.fixed(TILE_SIZE), spacing: 15, alignment: .leading), count: 3)
 
         return AnyView(LazyVGrid(columns: columns, alignment: .leading, spacing: 15, content: {
             
-            ForEach(canvasWidgets, id: \.id) { widget in
+            ForEach(canvasWidgets, id:\.id) { widget in
                
                 ZStack {
                     getMediaView(widget: widget)
-                    RoundedRectangle(cornerRadius: 25)
-                        .stroke(widget.borderColor, lineWidth: 10 * magnifyBy)
+                    RoundedRectangle(cornerRadius: CORNER_RADIUS)
+                        .stroke(widget.borderColor, lineWidth: LINE_WIDTH)
                         .frame(width: widget.width, height: widget.height)
                 }.draggable(widget) {
-                    getMediaView(widget: widget)
-                }
-                .dropDestination(for: CanvasWidget.self) { items, location in
+                    getMediaView(widget: widget).onAppear{
+                        draggingItem = widget
+                    }
+                }.dropDestination(for: CanvasWidget.self) { items, location in
                     draggingItem = nil
                     return false
-                } isTargeted: { status  in
-                    print(status)
+                } isTargeted: { status in
                     if let draggingItem, status, draggingItem != widget {
-                        if let sourceIndex = canvasWidgets.firstIndex(of: draggingItem), let destinationIndex = canvasWidgets.firstIndex(of: widget) {
-                                     withAnimation(.bouncy) {
-                                         let sourceItem = canvasWidgets.remove(at: sourceIndex)
-                                        canvasWidgets.insert(sourceItem, at: destinationIndex)
-   
-                                    }
+                        if let sourceIndex = canvasWidgets.firstIndex(of: draggingItem),
+                            let destinationIndex = canvasWidgets.firstIndex(of: widget) {
+                                withAnimation(.bouncy) {
+                                    let sourceItem = canvasWidgets.remove(at: sourceIndex)
+                                    canvasWidgets.insert(sourceItem, at: destinationIndex)
                                 }
                             }
-                        }//isTargeted
-                }//ForEach
+                    }
+                }
+            }
             }
         ))
     }
@@ -217,7 +228,7 @@ struct CanvasPage: View {
                     for line in lines {
                         var path = Path()
                         path.addLines(line.points)
-                        context.stroke(path, with: .color(line.color), lineWidth: line.lineWidth * magnifyBy)
+                        context.stroke(path, with: .color(line.color), lineWidth: line.lineWidth)
                     }
                 }
             }.frame(minWidth: frameSize, minHeight: frameSize)
@@ -227,21 +238,10 @@ struct CanvasPage: View {
     
     
     var magnification: some Gesture {
-            MagnifyGesture()
-                .updating($magnifyBy) { value, gestureState, transaction in
-                    gestureState = value.magnification
-                    for index in 0...canvasWidgets.count-1 {
-                        let widget = canvasWidgets[index]
-                        var newWidget = CanvasWidget(id: widget.id, width: widget.width * magnifyBy, height: widget.height * magnifyBy, borderColor: widget.borderColor, userId: widget.userId, media: widget.media, mediaURL: widget.mediaURL)
-
-                        canvasWidgets.remove(at: index)
-                        canvasWidgets.insert(newWidget, at: index)
-                        print(newWidget.width)
-                    }
-                    frameSize = frameSize * magnifyBy
-                    print(magnifyBy)
-                }
+        MagnificationGesture().onChanged { value in
+            if value < MAX_ZOOM && value > MIN_ZOOM { magnifyBy = value }
         }
+    }
 
     
     var body: some View {
@@ -272,6 +272,7 @@ struct CanvasPage: View {
                         canvasView()
                     }
             }.scrollDisabled(grabMode)//ScrollView
+                .scaleEffect(magnifyBy)
                 .gesture(magnification)
             Toolbar()
         }.task {

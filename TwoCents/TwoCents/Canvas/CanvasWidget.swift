@@ -10,18 +10,21 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 /**
-The default inherited class for all widgets on the Canvas. Don't actually initialize this class
- it's not actually a view so you have to use the ```widgetView()```
+The default class for all widgets on the Canvas.
+ It's not actually a view so you have to use the ```getMediaView(widget: CanvasWidget)```
  function to get the view
  
- > Warning: Don't fuck up the size. It's always [width, height].
+ > Warning: Decoder and Encoder has untested behavior might not work.
  There are no safety measures for this.
  
  -  Parameters:
-    - position: A CGPoint
+    - id: UUID of the widget which will also be the UUID on firestore (i.e. interchangable). Don't change this when doing copy-remove behavior in arrays
+    - width: Length of the widget
+    - height: Height of the widget
     - borderColor: Color of the user
-    - size: Always make it an int list length 2 of [width, height]. There are no safety measures for this just remember it well
-    - bodyView: The actual content of the widget
+    - uid: The user owner of the widget's id
+    - media: An enumerator that describes what function to call to get the view (e.g. .video or .image)
+    - mediaURL: URL type that is a link to the media attached to widget
  */
 struct CanvasWidget: Hashable, Codable, Identifiable, Transferable, Equatable {
     
@@ -31,8 +34,8 @@ struct CanvasWidget: Hashable, Codable, Identifiable, Transferable, Equatable {
     
     
     var id: UUID = UUID()
-    @State var width: CGFloat = 250
-    @State var height: CGFloat = 250
+    var width: CGFloat
+    var height: CGFloat
     var borderColor: Color
     var userId: String
     var media: Media
@@ -104,8 +107,6 @@ extension CanvasWidget {
             try container.encode(height, forKey: .height)
     }
     
-    func setHeight(height: CGFloat) { self.height = height }
-    func setWidth(width: CGFloat) { self.width = width}
 }
 
 extension UTType {

@@ -17,7 +17,7 @@ func imageWidget(widget: CanvasWidget) -> AnyView {
                 .aspectRatio(contentMode: .fill)
                 .frame(width: widget.width, height: widget.height)
                 .clipShape(
-                    RoundedRectangle(cornerRadius: 25)
+                    RoundedRectangle(cornerRadius: CORNER_RADIUS)
                 )
         } placeholder: {
             
