@@ -39,20 +39,55 @@ struct VoteGameView: View {
                     
                     ScrollView{
                         LazyVGrid(columns: fixedColumns, spacing: 20) {
-                            ForEach(0..<playerData.count, id: \.self) {item in
+                            if let myMemberInfo = viewModel.membersInfo{ForEach(0..<myMemberInfo.count, id: \.self){member in
                                 ZStack{
-                                    CapsuleView(emptyPlayer: $selectedPlayer, emptyImage: $selectedImage, emptyColor: $selectedColor, emptyNumVotes: $selectedNumVotes, selectedPlayer: playerData[item].name, selectedImage: playerData[item].image, selectedColor: playerData[item].color, selectedNumVotes: playerData[item].numVotes)
+                                    CapsuleView(emptyPlayer: $selectedPlayer, emptyImage: $selectedImage, emptyColor: $selectedColor, emptyNumVotes: $selectedNumVotes, selectedPlayer: playerData[member].name, selectedImage: playerData[member].image, selectedColor: playerData[member].color, selectedNumVotes: playerData[member].numVotes)
                                     HStack{
-                                        Image(playerData[item].image)
-                                            .resizable()
-                                            .aspectRatio(contentMode: .fit)
-                                            .frame(width: 60, height: 60)
-                                            .padding(.leading, 5)
-                                        Text(playerData[item].name)
+                                        //images
+                                        Group{
+                                            //Circle or Profile Pic
+                                            let frameSize: CGFloat? = 64
+                                            
+                                            if let urlString = myMemberInfo[member].profileImageUrl,
+                                               let url = URL(string: urlString) {
+                                                
+                                                //If there is URL for profile pic, show
+                                                //circle with stroke
+                                                AsyncImage(url: url) {image in
+                                                    image
+                                                        .resizable()
+                                                        .scaledToFill()
+                                                    
+                                                } placeholder: {
+                                                    //else show loading after user uploads but sending/downloading from database
+                                                    ProgressView()
+                                                        .progressViewStyle(CircularProgressViewStyle(tint: Color(UIColor.systemBackground)))
+                                                        .frame(width: frameSize, height: frameSize)
+                                                        .background(
+                                                            Circle()
+                                                                .fill(Color.accentColor)
+                                                        )
+                                                }
+                                                .clipShape(Circle())
+                                                .frame(width: frameSize, height: frameSize)
+                                                
+                                            } else {
+                                                //if space does not have profile pic, show circle
+                                                Circle()
+                                                    .fill(Color.accentColor)
+                                                    .clipShape(Circle())
+                                                    .frame(width: frameSize, height: frameSize)
+                                            }
+                                            
+                                            
+                                        }
+                                        Text(myMemberInfo[member].name ?? "")
+                                            .font(.largeTitle)
                                     }
                                     .frame(maxWidth: .infinity, alignment: .leading)
                                 }
-                            }
+                            }}
+                            
                         }
                     }
                     .padding()
@@ -64,33 +99,29 @@ struct VoteGameView: View {
                     if let myUser = viewModel.user {
                         if let myName = myUser.name{
                             Text("My name: \(myName)")
-                                .font(.largeTitle)
                         }
                     }
                     
                     
                     //Displays the space's name
                     if let mySpace = viewModel.space {
-                        if let mySpaceName = mySpace.name{
-                            Text("This space: \(mySpaceName)")
-                                .font(.largeTitle)
-                        }
+//                        if let mySpaceName = mySpace.name{
+//                            Text("This space: \(mySpaceName)")
+//                        }
                         
                         
                         //display's the UID's of each member within this space. Usually not needed, as i have put this within the loadMembersInfo function
-                        if let mySpaceMembers = mySpace.members{
-                            ForEach(0..<mySpaceMembers.count, id: \.self) {member in
-                                Text("member \(member): \(mySpaceMembers[member])")
-                                    .font(.headline)
-                            }
-                        }
+//                        if let mySpaceMembers = mySpace.members{
+//                            ForEach(0..<mySpaceMembers.count, id: \.self) {member in
+//                                Text("member \(member): \(mySpaceMembers[member])")
+//                            }
+//                        }
                         
                         
                         //displays each user's info pulled from the database. Must do the try await loadMembersInfo in the task area at the bottom first.
                         if let myMemberInfo = viewModel.membersInfo{
                             ForEach(0..<myMemberInfo.count, id: \.self) {member in
-                                Text(myMemberInfo[member].name ?? "")
-                                    .font(.largeTitle)
+//                                Text(myMemberInfo[member].name ?? "")
                                 
                                 
 //                    
@@ -98,49 +129,48 @@ struct VoteGameView: View {
                                 let memberColor: Color = viewModel.getUserColor(userColor:myMemberInfo[member].userColor ?? "")
                                 
                                 
-                                Rectangle()
-                                    .fill(memberColor)
+//                                Rectangle()
+//                                    .fill(memberColor)
                                 
 //                                
                                 
-                                Group{
-                                    //Circle or Profile Pic
-                                    
-                                    let frameSize: CGFloat? = 64
-                                    
-                                    if let urlString = myMemberInfo[member].profileImageUrl,
-                                       let url = URL(string: urlString) {
-                                        
-                                        //If there is URL for profile pic, show
-                                        //circle with stroke
-                                        AsyncImage(url: url) {image in
-                                            image
-                                                .resizable()
-                                                .scaledToFill()
-                                            
-                                        } placeholder: {
-                                            //else show loading after user uploads but sending/downloading from database
-                                            ProgressView()
-                                                .progressViewStyle(CircularProgressViewStyle(tint: Color(UIColor.systemBackground)))
-                                                .frame(width: frameSize, height: frameSize)
-                                                .background(
-                                                    Circle()
-                                                        .fill(Color.accentColor)
-                                                )
-                                        }
-                                        .clipShape(Circle())
-                                        .frame(width: frameSize, height: frameSize)
-                                        
-                                    } else {
-                                        //if space does not have profile pic, show circle
-                                        Circle()
-                                            .fill(Color.accentColor)
-                                            .clipShape(Circle())
-                                            .frame(width: frameSize, height: frameSize)
-                                    }
-                                    
-                                    
-                                }
+//                                Group{
+//                                    //Circle or Profile Pic
+//                                    let frameSize: CGFloat? = 64
+//                                    
+//                                    if let urlString = myMemberInfo[member].profileImageUrl,
+//                                       let url = URL(string: urlString) {
+//                                        
+//                                        //If there is URL for profile pic, show
+//                                        //circle with stroke
+//                                        AsyncImage(url: url) {image in
+//                                            image
+//                                                .resizable()
+//                                                .scaledToFill()
+//                                            
+//                                        } placeholder: {
+//                                            //else show loading after user uploads but sending/downloading from database
+//                                            ProgressView()
+//                                                .progressViewStyle(CircularProgressViewStyle(tint: Color(UIColor.systemBackground)))
+//                                                .frame(width: frameSize, height: frameSize)
+//                                                .background(
+//                                                    Circle()
+//                                                        .fill(Color.accentColor)
+//                                                )
+//                                        }
+//                                        .clipShape(Circle())
+//                                        .frame(width: frameSize, height: frameSize)
+//                                        
+//                                    } else {
+//                                        //if space does not have profile pic, show circle
+//                                        Circle()
+//                                            .fill(Color.accentColor)
+//                                            .clipShape(Circle())
+//                                            .frame(width: frameSize, height: frameSize)
+//                                    }
+//                                    
+//                                    
+//                                }
                                 
                                 
                                 
