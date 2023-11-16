@@ -16,6 +16,7 @@ struct VoteGameView: View {
     @State private var selectedImage: String = ""
     @State private var selectedColor: Color = .green
     @State private var selectedNumVotes: Int = 0
+    @State private var selectedURLString: String = ""
     
     @State private var readyNextPage = false
     
@@ -42,9 +43,11 @@ struct VoteGameView: View {
                             
                             if let myMemberInfo = viewModel.membersInfo{ForEach(0..<myMemberInfo.count, id: \.self){member in
                                 let memberColor: Color = viewModel.getUserColor(userColor:myMemberInfo[member].userColor ?? "")
+                                let urlString: String = myMemberInfo[member].profileImageUrl ?? ""
+                                
                                 
                                 ZStack{
-                                    CapsuleView(emptyPlayer: $selectedPlayer, emptyImage: $selectedImage, emptyColor: $selectedColor, emptyNumVotes: $selectedNumVotes, selectedPlayer: myMemberInfo[member].name ?? "", selectedImage: myMemberInfo[member].profileImageUrl ?? "", selectedColor: memberColor, selectedNumVotes: playerData[member].numVotes, member: playerData[member])
+                                    CapsuleView(emptyPlayer: $selectedPlayer, emptyImage: $selectedImage, emptyColor: $selectedColor, emptyNumVotes: $selectedNumVotes, emptyURLString: $selectedURLString, selectedPlayer: myMemberInfo[member].name ?? "", selectedImage: "enzo-pic", selectedColor: memberColor, selectedNumVotes: playerData[member].numVotes, selectedURLString: urlString)
                                     HStack{
                                         //images
                                         Group{
@@ -95,19 +98,22 @@ struct VoteGameView: View {
 
                     
                     ForEach(0..<1) { player in
-                        NavigationLink(value: playerData[0]) {
+                        NavigationLink(value: player) {
                             Text("Send")
                                 .font(.custom("LuckiestGuy-Regular", size: 48))
                                 .foregroundColor(.white)
                                 .opacity(selectedPlayer == "" ? 0.5 : 1.0)
                         }
                         .disabled(selectedPlayer == "")
+                        .onTapGesture {
+                            addVote()
+                        }
                     }
                 }
                 .padding(.top)
             }
-            .navigationDestination(for: PlayerData.self) { player in
-                ResultView(playerName: selectedPlayer, playerImage: selectedImage, playerColor: selectedColor, playerVotes: selectedNumVotes, player: player)
+            .navigationDestination(for: Int.self) { player in
+                ResultView(playerName: selectedPlayer, playerImage: selectedImage, playerColor: selectedColor, playerVotes: selectedNumVotes, urlString: selectedURLString)
             }
             .background(Color("VoteBg"))
 

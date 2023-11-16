@@ -14,14 +14,15 @@ struct CapsuleView: View {
     @Binding var emptyImage: String
     @Binding var emptyColor: Color
     @Binding var emptyNumVotes: Int
+    @Binding var emptyURLString: String
 
     var selectedPlayer: String
     var selectedImage: String
     var selectedColor: Color
     var selectedNumVotes: Int
+    var selectedURLString: String
     
-    var member: PlayerData
-
+    
     var body: some View {
 
         Capsule()
@@ -32,6 +33,8 @@ struct CapsuleView: View {
                     emptyImage = selectedImage
                     emptyColor = selectedColor
                     emptyNumVotes = selectedNumVotes
+//                    emptyURL = selectedURL
+                    emptyURLString = selectedURLString
                 }
             }
     }

@@ -14,7 +14,9 @@ struct ResultView: View {
     var playerColor: Color
     var playerVotes: Int
     
-    var player: PlayerData
+    var urlString: String
+    var frameSize: CGFloat? = 200
+    
     
     var body: some View {
 
@@ -22,7 +24,24 @@ struct ResultView: View {
             Color(playerColor)
                 .edgesIgnoringSafeArea(.all)
             VStack{
-                Image(playerImage)
+                let url = URL(string: urlString)
+                AsyncImage(url: url) {image in
+                    image
+                        .resizable()
+                        .scaledToFill()
+                }  placeholder: {
+                    //else show loading after user uploads but sending/downloading from database
+                    ProgressView()
+                        .progressViewStyle(CircularProgressViewStyle(tint: Color(UIColor.systemBackground)))
+                        .frame(width: frameSize, height: frameSize)
+                        .background(
+                            Circle()
+                                .fill(Color.accentColor)
+                        )
+                }
+                .clipShape(Circle())
+                .frame(width: frameSize, height: frameSize)
+                
                 Text(playerName)
                     .foregroundColor(.white)
                     .font(.custom("LuckiestGuy-Regular", size: 36))
@@ -39,5 +58,5 @@ struct ResultView: View {
 
 
 #Preview {
-    ResultView(playerName: "enzo", playerImage: "enzo-pic", playerColor: .green, playerVotes: 2, player: playerData[1])
+    ResultView(playerName: "enzo", playerImage: "enzo-pic", playerColor: .green, playerVotes: 2, urlString: "enzo-pic")
 }
