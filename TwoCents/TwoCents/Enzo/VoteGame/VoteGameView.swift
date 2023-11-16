@@ -97,10 +97,11 @@ struct VoteGameView: View {
                     ForEach(0..<1) { player in
                         NavigationLink(value: playerData[0]) {
                             Text("Send")
-                            .font(.custom("LuckiestGuy-Regular", size: 48))
-                            .foregroundColor(.white)
-                            .opacity(selectedPlayer == "" ? 0.5 : 1.0)
+                                .font(.custom("LuckiestGuy-Regular", size: 48))
+                                .foregroundColor(.white)
+                                .opacity(selectedPlayer == "" ? 0.5 : 1.0)
                         }
+                        .disabled(selectedPlayer == "")
                     }
                 }
                 .padding(.top)
