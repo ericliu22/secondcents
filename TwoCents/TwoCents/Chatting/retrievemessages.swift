@@ -60,7 +60,7 @@ class MessageManager: ObservableObject{
     func sendMessages(text: String) {
         let docRef = db.collection("Chatrooms").document(testchatRoom)
 
-        docRef.getDocument(source: .cache) { [self] (document, error) in
+        docRef.getDocument{ [self] (document, error) in
             if let document = document {
                 let property = document.get("lastSend")
                

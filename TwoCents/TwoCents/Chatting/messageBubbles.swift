@@ -76,7 +76,7 @@ struct universalMessageBubble: View{
         VStack(alignment: sentByMe ? .trailing : .leading){
             
             
-            if isFirstMsg {
+            if isFirstMsg && !sentByMe {
                 Text(message.sendBy)
                     .foregroundStyle(.purple)
                     .font(.headline)
