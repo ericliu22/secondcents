@@ -76,12 +76,18 @@ struct newChatView: View {
     var body: some View{
         
         VStack(spacing: 0){
+            ScrollViewReader{ proxy in
             ScrollView{
                 
-                chatStruct()
+                chatStruct().onAppear(perform: {
+                            proxy.scrollTo(messagesManager.lastMessageId, anchor: .bottom)
+                        })
                 
             }
             .frame(width: Tapped ? .infinity: 200, height: Tapped ? .infinity: 200)
+            .onChange(of: messagesManager.lastMessageId) {
+                    id in proxy.scrollTo(id, anchor: .bottom)
+                }
             .overlay(
                 RoundedRectangle(cornerRadius:20)
                     .stroke(Tapped ? .clear : .black, lineWidth: 5)
@@ -91,6 +97,8 @@ struct newChatView: View {
                 withAnimation(.spring()){
                     Tapped.toggle()
                 }
+                proxy.scrollTo(messagesManager.lastMessageId, anchor: .bottom)
+            }
             }
             
             
