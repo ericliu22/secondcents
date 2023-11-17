@@ -26,7 +26,8 @@ struct MessageField: View{
                     .padding(12)
                     .padding(.trailing, 48)
                     .clipShape(Capsule())
-                    .font(.subheadline)
+                    .font(.headline)
+                    .fontWeight(.regular)
                 
                 
                 

@@ -85,20 +85,18 @@ struct universalMessageBubble: View{
             
             
             Text(message.text)
-                .font(.subheadline)
+                .font(.headline)
+                .fontWeight(.regular)
                 .padding(12)
-//                .font(.headline)
-//                .fontWeight(.regular)
-                .foregroundStyle(Color(UIColor.systemBackground))
-//
-//                .padding(.vertical, 8)
-//                .padding(.horizontal, 12)
-//            
-//            
-////                .background(.ultraThinMaterial)
+                .foregroundStyle(.white)
                 .background(.purple)
+                
                 .clipShape(chatBubbleShape (sentByMe: sentByMe))
-//                .cornerRadius(20)
+                .frame(maxWidth: 300, alignment: sentByMe ?  .trailing : .leading)
+            
+            
+            
+
         }
         .frame(maxWidth: .infinity, alignment: sentByMe ?  .trailing : .leading)
     }

@@ -25,6 +25,14 @@ struct FrontPageView: View {
                     Text("Vote Game")
                     
                 }
+            chattingView()
+                .tabItem {
+                    Image(systemName: "house")
+                    Text("Chatting View")
+                    
+                }
+            
+            
             SearchUserView(showSignInView: $showSignInView, loadedColor: $loadedColor, showCreateProfileView: $showCreateProfileView, targetUserId: "")
                 .tabItem {
                     Image(systemName: "magnifyingglass")

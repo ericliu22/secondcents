@@ -85,7 +85,7 @@ struct newChatView: View {
             .overlay(
                 RoundedRectangle(cornerRadius:20)
                     .stroke(Tapped ? .clear : .black, lineWidth: 5)
-                    .ignoresSafeArea()
+//                    .ignoresSafeArea()
             )
             .onTapGesture {
                 withAnimation(.spring()){
