@@ -21,7 +21,12 @@ class MessageManager: ObservableObject{
     }
     
     func fetchMessages() {
-        db.collection("Chatrooms").document(testchatRoom).collection("Chats").order(by: "ts", descending: false).addSnapshotListener { querySnapshot, error in guard let documents = querySnapshot?.documents else {
+        db.collection("Chatrooms")
+            .document(testchatRoom)
+            .collection("Chats")
+            .order(by: "ts", descending: false)
+            .addSnapshotListener { querySnapshot, error in
+                guard let documents = querySnapshot?.documents else {
             print("message not retrieved")
             return
         }

@@ -27,7 +27,7 @@ struct chatStruct: View{
             /*
              //other user, texted once
              if(message.sendBy != "Josh" && message.sendBy != message.parent){
-             messageBubbleLead(message: message)
+             messageBubbleLead(message: message) 
              }
              //other user, texted twice
              else if(message.sendBy != "Josh" && message.sendBy == message.parent){
