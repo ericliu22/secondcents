@@ -49,6 +49,7 @@ struct chatStruct: View{
             
         }
         .frame(maxWidth: .infinity)
+        .padding(.bottom, 60)
         
     }
 }
@@ -75,7 +76,7 @@ struct newChatView: View {
     //check for data to use this boolean
     var body: some View{
         
-        VStack(spacing: 0){
+        ZStack(alignment:.bottom){
             ScrollView{
                 
                 chatStruct()
@@ -92,6 +93,7 @@ struct newChatView: View {
                     Tapped.toggle()
                 }
             }
+            .padding(.horizontal)
             
             
             
@@ -101,7 +103,7 @@ struct newChatView: View {
                 
             }
         }
-        .padding(.horizontal)
+        
         .scrollIndicators(.hidden)
         
         
