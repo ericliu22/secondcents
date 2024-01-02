@@ -17,8 +17,10 @@ struct Line {
     func pointsArray() -> [NSNumber] {
         var output: [NSNumber] = []
         for i in self.points {
-            output.append(NSNumber(value: i.x))
-            output.append(NSNumber(value: i.y))
+            let refactoredX: Float = Float(i.x)
+            let refactoredY: Float = Float(i.y)
+            output.append(NSNumber(value: refactoredX))
+            output.append(NSNumber(value: refactoredY))
         }
         return output
     }

@@ -34,8 +34,8 @@ struct CanvasWidget: Hashable, Codable, Identifiable, Transferable, Equatable {
     
     
     var id: UUID = UUID()
-    var width: CGFloat
-    var height: CGFloat
+    var width: CGFloat = TILE_SIZE
+    var height: CGFloat = TILE_SIZE
     var borderColor: Color
     var userId: String
     var media: Media
@@ -53,7 +53,7 @@ struct CanvasWidget: Hashable, Codable, Identifiable, Transferable, Equatable {
 }
 
 enum Media {
-    case video, image
+    case video, image, chat
 }
 
 extension Media: Codable {
@@ -119,5 +119,8 @@ func getMediaView(widget: CanvasWidget) -> AnyView {
         return videoWidget(widget: widget)
     case .image:
         return imageWidget(widget: widget)
+    case .chat:
+        return chatWidget(widget: widget)
     }
+
 }

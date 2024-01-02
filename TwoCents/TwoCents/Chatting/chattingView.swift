@@ -82,12 +82,7 @@ struct newChatView: View {
                 chatStruct()
                 
             }
-            .frame(width: Tapped ? .infinity: 200, height: Tapped ? .infinity: 200)
-            .overlay(
-                RoundedRectangle(cornerRadius:20)
-                    .stroke(Tapped ? .clear : .black, lineWidth: 5)
-//                    .ignoresSafeArea()
-            )
+            .frame(width: Tapped ? .infinity: TILE_SIZE, height: Tapped ? .infinity: TILE_SIZE)
             .onTapGesture {
                 withAnimation(.spring()){
                     Tapped.toggle()
