@@ -54,23 +54,17 @@ struct chatStruct: View{
     }
 }
 
-struct chattingView: View {
-    var body: some View {
-        VStack{
-            newChatView()
-        }
-    }
-}
+
 
 struct chattingView_Previews: PreviewProvider {
     static var previews: some View {
-        chattingView()
+        ChatView()
     }
 }
 
 //originally part of separate file
 
-struct newChatView: View {
+struct ChatView: View {
     @StateObject  var messagesManager = MessageManager()
     @State var Tapped = false
     //check for data to use this boolean
@@ -105,4 +99,6 @@ struct newChatView: View {
         
     }
 }
+
+
 

@@ -25,7 +25,7 @@ struct FrontPageView: View {
                     Text("Vote Game")
                     
                 }
-            chattingView()
+            ChatView()
                 .tabItem {
                     Image(systemName: "house")
                     Text("Chatting View")

@@ -23,9 +23,10 @@ struct MessageField: View{
                     .lineLimit(0...5)
 //                    .padding(.leading, nil)
 //                    .padding(.vertical, 10)
-                    .padding(12)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 8)
                     .padding(.trailing, 48)
-                    .clipShape(Capsule())
+//                    .clipShape(Capsule())
                     .font(.headline)
                     .fontWeight(.regular)
                 
@@ -43,7 +44,7 @@ struct MessageField: View{
                         .frame(width: 30, height: 30)
                         .font(.headline )
                         .foregroundColor(message.isEmpty ? .clear : .white)
-                        .background(message.isEmpty ? .clear : .red)
+                        .background(message.isEmpty ? .clear : .green)
                         .clipShape(Circle())
                     //                    .padding(10)
                     
@@ -55,7 +56,7 @@ struct MessageField: View{
                 .disabled(message.isEmpty)
 //                .clipShape(Circle())
 //                .padding(.horizontal)
-                .offset(x: 6, y: -5)
+                .offset(x: -10, y: 2)
                 
                
                 
