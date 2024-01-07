@@ -97,7 +97,7 @@ struct SabotageSelectionView: View {
         .onAppear {
             for index in 1...4 {
                 posts.append(PostModel(postImage: "post\(index)"))
-                print("The posts are: \(posts)")
+//                print("The posts are: \(posts)")
             }
         }
     }
@@ -120,6 +120,7 @@ struct SabotageCarouselView: View {
     
     @GestureState var offset: CGFloat = 0
     @State var currentIndex: Int = 0
+    @State var counter: Int = 0
     
     @State private var beatAnimation: Bool = false
     @State private var showPulses: Bool = false
@@ -138,13 +139,13 @@ struct SabotageCarouselView: View {
             HStack(spacing: spacing){
 
                 
-                SabotageCarouselWidget(icon: "theatermasks.fill", sabotageText: "Pretend", player: player)
+                SabotageCarouselWidget(currentIndex: $currentIndex, icon: "theatermasks.fill", sabotageText: "Pretend", specificIndex: 0, counter: $counter, player: player)
                     .frame(width: proxy.size.width - 100)
-                SabotageCarouselWidget(icon: "shuffle", sabotageText: "Change Profile", player: player)
+                SabotageCarouselWidget(currentIndex: $currentIndex, icon: "shuffle", sabotageText: "Change Profile", specificIndex: 1, counter: $counter, player: player)
                     .frame(width: proxy.size.width - 100)
-                SabotageCarouselWidget(icon: "trash.fill", sabotageText: "Delete Widgets", player: player)
+                SabotageCarouselWidget(currentIndex: $currentIndex, icon: "trash.fill", sabotageText: "Delete Widgets", specificIndex: 2, counter: $counter, player: player)
                     .frame(width: proxy.size.width - 100)
-                SabotageCarouselWidget(icon: "delete.left.fill", sabotageText: "Remove points", player: player)
+                SabotageCarouselWidget(currentIndex: $currentIndex, icon: "delete.left.fill", sabotageText: "Remove points", specificIndex: 3, counter: $counter, player: player)
                     .frame(width: proxy.size.width - 100)
                 
                 
@@ -169,6 +170,8 @@ struct SabotageCarouselView: View {
                         
                         //updating Index
                         currentIndex = index
+                        counter = counter + 1
+                        print(currentIndex)
                     })
                     .onChanged({ value in
                         let offsetX = value.translation.width
@@ -196,8 +199,14 @@ struct SabotageCarouselWidget: View {
     @State private var showPulses: Bool = false
     @State private var pulsedHearts: [HeartParticle] = []
     
+    @Binding var currentIndex: Int
+    
     var icon: String
     var sabotageText: String
+    
+    var specificIndex: Int
+    
+    @Binding var counter: Int
     
     var player: PlayerData
     var body: some View {
@@ -232,10 +241,10 @@ struct SabotageCarouselWidget: View {
                     Image(systemName: icon)
                         .font(.system(size: 120))
                         .foregroundStyle(player.nativeColor.gradient)
-                        .symbolEffect(.bounce, options: beatAnimation ? .repeating.speed(0.00000000000001) : .default, value: beatAnimation)
-//                            .onAppear{
-//                                beatAnimation = true
-//                            }
+                        .symbolEffect(.bounce, options: specificIndex == currentIndex ? .repeating.speed(0.01) : .default, value: currentIndex)
+                            .onAppear{
+                                counter = 5
+                            }
                     Text(sabotageText)
                         .font(.custom("LuckiestGuy-Regular", size: 32))
                         .foregroundStyle(player.nativeColor)
@@ -245,13 +254,13 @@ struct SabotageCarouselWidget: View {
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
 //            .overlay(RoundedRectangle(cornerRadius: 30).stroke(Color(player.color), lineWidth: 5))
-            .background(.thinMaterial, in: .rect(cornerRadius: 30))
+            .background(specificIndex == currentIndex ? .green : .red, in: .rect(cornerRadius: 30))
             
-            Toggle("Beat Animation", isOn: $beatAnimation)
-                .padding(15)
-                .frame(maxWidth: 350)
-                .background(.bar, in: .rect(cornerRadius: 15))
-                .padding(.top, 20)
+//            Toggle("Beat Animation", isOn: $beatAnimation)
+//                .padding(15)
+//                .frame(maxWidth: 350)
+//                .background(.bar, in: .rect(cornerRadius: 15))
+//                .padding(.top, 20)
 //                
 //                .onChange(of: beatAnimation) { oldValue, newValue in
 //                    if pulsedHearts.isEmpty {

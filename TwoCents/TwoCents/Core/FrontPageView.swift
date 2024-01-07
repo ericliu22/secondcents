@@ -25,7 +25,7 @@ struct FrontPageView: View {
                     Text("Vote Game")
                     
                 }
-            chattingView()
+            ChatView()
                 .tabItem {
                     Image(systemName: "house")
                     Text("Chatting View")
@@ -38,7 +38,7 @@ struct FrontPageView: View {
                     Image(systemName: "magnifyingglass")
                     Text("Search")
                 }
-            CanvasPage()
+            CanvasPage(chatroom: db.collection("Chatrooms").document("ChatRoom1"))
                 .tabItem {
                     Image(systemName: "house")
                     Text("Canvas Page")

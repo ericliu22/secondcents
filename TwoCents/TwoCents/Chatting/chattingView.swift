@@ -27,7 +27,7 @@ struct chatStruct: View{
             /*
              //other user, texted once
              if(message.sendBy != "Josh" && message.sendBy != message.parent){
-             messageBubbleLead(message: message)
+             messageBubbleLead(message: message) 
              }
              //other user, texted twice
              else if(message.sendBy != "Josh" && message.sendBy == message.parent){
@@ -49,27 +49,22 @@ struct chatStruct: View{
             
         }
         .frame(maxWidth: .infinity)
+        .padding(.bottom, 60)
         
     }
 }
 
-struct chattingView: View {
-    var body: some View {
-        VStack{
-            newChatView()
-        }
-    }
-}
+
 
 struct chattingView_Previews: PreviewProvider {
     static var previews: some View {
-        chattingView()
+        ChatView()
     }
 }
 
 //originally part of separate file
 
-struct newChatView: View {
+struct ChatView: View {
     @StateObject  var messagesManager = MessageManager()
     @State var Tapped = false
     //check for data to use this boolean
@@ -100,6 +95,7 @@ struct newChatView: View {
                 proxy.scrollTo(messagesManager.lastMessageId, anchor: .bottom)
             }
             }
+            .padding(.horizontal)
             
             
             
@@ -109,11 +105,13 @@ struct newChatView: View {
                 
             }
         }
-        .padding(.horizontal)
+        
         .scrollIndicators(.hidden)
         
         
         
     }
 }
+
+
 

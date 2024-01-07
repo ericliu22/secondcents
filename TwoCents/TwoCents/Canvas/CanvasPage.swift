@@ -19,10 +19,10 @@ let MAX_ZOOM: CGFloat = 3.0
 let MIN_ZOOM: CGFloat = 1.0
 let CORNER_RADIUS: CGFloat = 15
 let LINE_WIDTH: CGFloat = 5
+let FRAME_SIZE: CGFloat = 1000
 
 //HARDCODED SECTION
 
-let chatroom = db.collection("Chatrooms").document("ChatRoom1").collection("Widgets").document("Drawings")
 
 var imageView0 = CanvasWidget(width: TILE_SIZE, height: TILE_SIZE, borderColor: .black, userId: "jennierubyjane", media: .image, mediaURL: URL(string: "https://m.media-amazon.com/images/M/MV5BN2Q0OWJmNWYtYzBiNy00ODAyLWI2NGQtZGFhM2VjOWM5NDNkXkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_.jpg")!)
 var imageView1 = CanvasWidget(width: TILE_SIZE, height: TILE_SIZE,borderColor: .black, userId: "jennierubyjane", media: .image, mediaURL: URL(string: "https://www.billboard.com/wp-content/uploads/2023/01/lisa-blackpink-dec-2022-billboard-1548.jpg?w=942&h=623&crop=1")!)
@@ -30,31 +30,11 @@ var imageView2 = CanvasWidget(width: TILE_SIZE, height: TILE_SIZE,borderColor: .
 var imageView3 = CanvasWidget(width: TILE_SIZE, height: TILE_SIZE,borderColor: .black, userId: "jennierubyjane", media: .image, mediaURL: URL(string: "https://static.wikia.nocookie.net/the_kpop_house/images/6/60/Jisoo.jpg/revision/latest?cb=20200330154248")!)
 
 var videoView3 = CanvasWidget(width: TILE_SIZE, height: TILE_SIZE, borderColor: .red, userId: "jisookim", media: .video, mediaURL: URL(string: "https://video.link/w/vl6552d3ab6cdff#")!)
+
+var chatview = CanvasWidget(borderColor: .blue, userId: "shenjjj", media: .chat, mediaURL: URL(string: "https://www.youtube.com/watch?v=dQw4w9WgXcQ")!)
 //HARDCODED SECTION
 
 
-func pushDrawing(userId: String, userColor: Color, lines: [Line]) {
-    
-    if userId.isEmpty {
-        print("UID not loaded yet")
-        return
-    }
-    
-    var FirebaseLineArray: [Dictionary<String, Any>] = []
-    for line in lines {
-        FirebaseLineArray.append(line.toFirebase())
-    }
-    
-    do {
-        chatroom.updateData([userId: FieldValue.arrayUnion(FirebaseLineArray)])
-    } catch {
-        chatroom.setData([
-            "color \(userId)": userColor.description
-        ])
-        chatroom.setData([userId: FirebaseLineArray])
-    }
-    
-}
 
 
 func getUID() async throws -> String? {
@@ -69,42 +49,79 @@ struct CanvasPage: View {
     @State private var userUID: String = ""
     @State private var currentLine = Line()
     @State private var lines: [Line] = []
-    @State private var drawingMode: Bool = false
-    @State private var penColor: Color = .black
-    @State private var handFill: String = ""
-    @State private var grabMode: Bool = false
-    @State private var frameSize: CGFloat = 1000
+    @State private var penColor: Color = .red
+    @State private var currentMode: canvasState = .normal
+    @State private var drawingMode: drawingState = .pencil
     @State private var canvasWidgets: [CanvasWidget] = []
     @State private var draggingItem: CanvasWidget?
+    @State private var scrollPosition: CGPoint = CGPointZero
     @State private var magnifyBy: CGFloat = 1.0
+    @State private var activeGestures: GestureMask = .none
+    @State private var newWidget: Bool = false
+    private var chatroomDocument: DocumentReference
+    private var drawingDocument: DocumentReference
     
-    
-    init() {
+    enum canvasState {
+        
+        case drawing, grab, normal
+        
+    }
+    enum drawingState {
+        
+        case pencil, eraser
         
     }
     
+    init(chatroom: DocumentReference) {
+        self.chatroomDocument = chatroom
+        self.drawingDocument = chatroom.collection("Widgets").document("Drawings")
+        let pullDrawing = chatroom.addSnapshotListener {
+            documentSnapshot, error in guard let document = documentSnapshot else {
+                print("Error fetching document: \(error!)")
+                return
+            }
+            guard let data = document.data() else {
+                print("Empty document")
+                return
+            }
+        }
+
+    }
+    
+    func pushDrawing(userId: String, userColor: Color, lines: [Line]) {
+        
+        if userId.isEmpty {
+            print("UID not loaded yet")
+            return
+        }
+        
+        var FirebaseLineArray: [Dictionary<String, Any>] = []
+        for line in lines {
+            FirebaseLineArray.append(line.toFirebase())
+        }
+        
+        do {
+            drawingDocument.updateData([userId: FieldValue.arrayUnion(FirebaseLineArray)])
+        } catch {
+            drawingDocument.setData([
+                "color \(userId)": userColor.description
+            ])
+            drawingDocument.setData([userId: FirebaseLineArray])
+        }
+        
+    }
 
     
-    let pullDrawing = chatroom.addSnapshotListener {
-        documentSnapshot, error in guard let document = documentSnapshot else {
-            print("Error fetching document: \(error!)")
-            return
-        }
-        guard let data = document.data() else {
-            print("Empty document")
-            return
-        }
-    }
     
     
     
     func onChange() async {
-        self.canvasWidgets = [imageView0, imageView1, imageView2, imageView3, videoView3]
+        self.canvasWidgets = [imageView0, imageView1, imageView2, imageView3, videoView3, chatview]
         do {
             try await self.userUID = getUID()!
             var dbDrawings: Dictionary<String, Any>
             do {
-                dbDrawings = try await chatroom.getDocument().data()!
+                dbDrawings = try await drawingDocument.getDocument().data()!
             } catch {
                 return
             }
@@ -179,33 +196,61 @@ struct CanvasPage: View {
         
         AnyView(
             HStack{
-                Image(systemName: "pencil")
-                    .font(.largeTitle)
-                    .foregroundColor(penColor)
-                    .gesture(TapGesture(count: 1).onEnded({
-                        if (drawingMode) {
-                            self.penColor = Color.black
-                            self.drawingMode = false
-                        } else {
-                            self.penColor = Color.red
-                            self.drawingMode = true
-                        }
-                    }))
-                Image(systemName: "hand.raised\(handFill)")
-                    .font(.largeTitle)
-                    .foregroundColor(Color.black)
-                    .gesture(TapGesture(count: 1).onEnded({
-                        
-                        if handFill.isEmpty {
-                            self.handFill = ".fill"
-                            self.grabMode = true
-                        } else {
-                            self.handFill = ""
-                            self.grabMode = false
-                        }
-                        
-                    }))
+                if (currentMode == .drawing) {
+                    
+                    Image(systemName: "arrowshape.backward.circle")
+                        .font(.largeTitle)
+                        .foregroundColor(.black)
+                        .gesture(TapGesture(count: 1).onEnded({
+                            withAnimation(.easeIn) {
+                                    self.currentMode = .normal
+                                    self.activeGestures = .none
+                                }
+                        }))
+                    Image(systemName: "pencil.circle\(drawingMode == .pencil ? ".fill" : "")")
+                        .font(.largeTitle)
+                        .foregroundColor(drawingMode == .pencil ? penColor : .black)
+                        .gesture(TapGesture(count: 1).onEnded({
+                                self.drawingMode = .pencil
+                        }))
+                    Image(systemName: "eraser\(drawingMode == .eraser ? ".fill" : "")")
+                        .font(.largeTitle)
+                        .foregroundColor(drawingMode == .eraser ? penColor : .black)
+                        .gesture(TapGesture(count: 1).onEnded({
+                            self.drawingMode = .eraser
+                        }))
+                }
+                else {
+                    Image(systemName: "pencil.circle")
+                        .font(.largeTitle)
+                        .foregroundColor(.black)
+                        .gesture(TapGesture(count: 1).onEnded({
+                                withAnimation(.bouncy) {
+                                    self.currentMode = .drawing
+                                    self.activeGestures = .all
+                                }
+                        }))
+                    Image(systemName: "hand.raised\(currentMode == .grab ? ".fill" : "")")
+                        .font(.largeTitle)
+                        .foregroundColor(Color.black)
+                        .gesture(TapGesture(count: 1).onEnded({
+                            if currentMode == .grab {
+                                currentMode = .normal
+                            } else {
+                                self.currentMode = .grab
+                                self.activeGestures = .subviews
+                            }
+                        }))
+                    Image(systemName: "plus.circle")
+                        .font(.largeTitle)
+                        .foregroundColor(.black)
+                        .gesture(TapGesture(count:1).onEnded(({
+                            
+                            newWidget = true
+                        })))
+                }
             }
+            
         )
         
     }
@@ -214,16 +259,10 @@ struct CanvasPage: View {
     
     func canvasView() -> AnyView {
         
-        if grabMode {
-           return AnyView(
-                ZStack {
-                    GridView()
-                }.frame(minWidth: frameSize, minHeight: frameSize)
-            )
-        }
        return AnyView(
             ZStack {
                 GridView()
+                    .zIndex(currentMode == .grab ? 1 : 0)
                 Canvas { context, size in
                     for line in lines {
                         var path = Path()
@@ -231,7 +270,9 @@ struct CanvasPage: View {
                         context.stroke(path, with: .color(line.color), lineWidth: line.lineWidth)
                     }
                 }
-            }.frame(minWidth: frameSize, minHeight: frameSize)
+                .gesture(dragMode)
+                .gesture(draw, including: activeGestures)
+            }.frame(minWidth: FRAME_SIZE * magnifyBy, minHeight: FRAME_SIZE * magnifyBy)
         )
         
     }
@@ -239,47 +280,71 @@ struct CanvasPage: View {
     
     var magnification: some Gesture {
         MagnificationGesture().onChanged { value in
-            if value < MAX_ZOOM && value > MIN_ZOOM { magnifyBy = value }
+            print(value)
+            if value > MAX_ZOOM {
+                magnifyBy = MAX_ZOOM
+            } else if value < MIN_ZOOM {
+                magnifyBy = MIN_ZOOM
+            } else {
+                magnifyBy = value
+            }
         }
     }
-
+    
+    var draw: some Gesture {
+        
+        DragGesture(minimumDistance: 0, coordinateSpace: .local).onChanged ({ value in
+                let newPoint = value.location
+                currentLine.points.append(newPoint)
+                self.lines.append(currentLine)
+            }).onEnded({value in
+                self.lines.append(currentLine)
+                self.currentLine = Line()
+                pushDrawing(userId: userUID, userColor: penColor, lines: self.lines)
+            })
+        
+    }
+    
+    var dragMode: some Gesture {
+        
+        LongPressGesture(minimumDuration: 1.0, maximumDistance: 1)
+        .onEnded { value in
+            print("grabmode")
+            currentMode = .grab
+        }
+        
+    }
+    
     
     var body: some View {
         
         VStack {
-            ScrollView([.horizontal,.vertical],showsIndicators: true) {
-                    if drawingMode {
+            GeometryReader { geometry in
+                ScrollViewReader { proxy in
+                    ScrollView([.horizontal,.vertical], showsIndicators: false) {
                         canvasView()
-                            .gesture(DragGesture(minimumDistance: 0, coordinateSpace: .local).onChanged({ value in
-                                if (drawingMode) {
-                                    let newPoint = value.location
-                                    currentLine.points.append(newPoint)
-                                    self.lines.append(currentLine)
-                                    
-                                }
-                            })
-                                .onEnded({value in
-                                    if (drawingMode) {
-                                        self.lines.append(currentLine)
-                                        self.currentLine = Line()
-                                        pushDrawing(userId: userUID, userColor: penColor, lines: self.lines)
-                                    }
-                                })
-                            )
-                    } else if grabMode {
-                        canvasView()
-                    } else {
-                        canvasView()
-                    }
-            }.scrollDisabled(grabMode)//ScrollView
-                .scaleEffect(magnifyBy)
-                .gesture(magnification)
+                    }.scrollDisabled(currentMode == .grab)
+                        .scaleEffect(magnifyBy)
+                        .gesture(magnification)
+                }.task {
+                    await onChange()
+                }
+            }
             Toolbar()
-        }.task {
-                await onChange()
         }
-
-        
+            .overlay(alignment: .center) {
+                if newWidget {
+                    NewWidget()
+                        .overlay(alignment: .topLeading) {
+                            Image(systemName: "x.circle")
+                                .font(.largeTitle)
+                                .foregroundColor(.black)
+                                .gesture(TapGesture(count:1).onEnded(({
+                                    newWidget = false
+                                })))
+                        }
+                }
+            }
     }
     
     
@@ -290,7 +355,6 @@ struct CanvasPage: View {
 
 struct CanvasPage_Previews: PreviewProvider {
     static var previews: some View {
-        CanvasPage()
+        CanvasPage(chatroom: db.collection("Chatrooms").document("Chatroom1"))
     }
 }
-

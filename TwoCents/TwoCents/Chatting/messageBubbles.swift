@@ -78,8 +78,9 @@ struct universalMessageBubble: View{
             
             if isFirstMsg && !sentByMe {
                 Text(message.sendBy)
-                    .foregroundStyle(.purple)
-                    .font(.headline)
+                    .foregroundStyle(.green)
+                    .font(.caption)
+                    .padding(.leading, 10)
                     
             }
             
@@ -87,9 +88,12 @@ struct universalMessageBubble: View{
             Text(message.text)
                 .font(.headline)
                 .fontWeight(.regular)
-                .padding(12)
+                .padding(10)
+      
                 .foregroundStyle(.white)
-                .background(.purple)
+                . background(.ultraThinMaterial)
+                .background(.green)
+            
                 
                 .clipShape(chatBubbleShape (sentByMe: sentByMe))
                 .frame(maxWidth: 300, alignment: sentByMe ?  .trailing : .leading)

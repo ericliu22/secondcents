@@ -23,9 +23,10 @@ struct MessageField: View{
                     .lineLimit(0...5)
 //                    .padding(.leading, nil)
 //                    .padding(.vertical, 10)
-                    .padding(12)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 8)
                     .padding(.trailing, 48)
-                    .clipShape(Capsule())
+//                    .clipShape(Capsule())
                     .font(.headline)
                     .fontWeight(.regular)
                 
@@ -40,17 +41,22 @@ struct MessageField: View{
                     message = ""
                 } label: {
                     Image(systemName: "paperplane.fill")
-                        .font(.headline)
-                        .foregroundColor(.white)
+                        .frame(width: 30, height: 30)
+                        .font(.headline )
+                        .foregroundColor(message.isEmpty ? .clear : .white)
+                        .background(message.isEmpty ? .clear : .green)
+                        .clipShape(Circle())
                     //                    .padding(10)
                     
                 }
-                .tint(.purple)
-                .buttonStyle(.borderedProminent)
+                .clipped()
+                .buttonStyle(PlainButtonStyle())
+//                .tint(.green)
+//                .buttonStyle(.borderedProminent)
                 .disabled(message.isEmpty)
-                .clipShape(Circle())
-                .padding(.horizontal)
-                .offset(x: 12, y: -4)
+//                .clipShape(Circle())
+//                .padding(.horizontal)
+                .offset(x: -10, y: 2)
                 
                
                 
@@ -59,14 +65,17 @@ struct MessageField: View{
                 
             }
             .background(.thickMaterial)
-            .background(.purple)
+            .background(.green)
             .cornerRadius(20)
-            
+            .padding(.horizontal)
+            .padding(.top, 5)
+            .background(.thickMaterial)
+       
             
             
             
        
-          
+     
 //        }
     }
 }
