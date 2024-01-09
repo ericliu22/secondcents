@@ -70,17 +70,30 @@ struct ChatView: View {
     //check for data to use this boolean
     var body: some View{
         
-        ZStack(alignment:.bottom){
+        VStack(spacing: 0){
+            ScrollViewReader{ proxy in
             ScrollView{
                 
-                chatStruct()
+                chatStruct().onAppear(perform: {
+                            proxy.scrollTo(messagesManager.lastMessageId, anchor: .bottom)
+                        })
                 
             }
-            .frame(width: Tapped ? .infinity: TILE_SIZE, height: Tapped ? .infinity: TILE_SIZE)
+            .frame(width: Tapped ? .infinity: 200, height: Tapped ? .infinity: 200)
+            .onChange(of: messagesManager.lastMessageId) {
+                    id in proxy.scrollTo(id, anchor: .bottom)
+                }
+            .overlay(
+                RoundedRectangle(cornerRadius:20)
+                    .stroke(Tapped ? .clear : .black, lineWidth: 5)
+//                    .ignoresSafeArea()
+            )
             .onTapGesture {
                 withAnimation(.spring()){
                     Tapped.toggle()
                 }
+                proxy.scrollTo(messagesManager.lastMessageId, anchor: .bottom)
+            }
             }
             .padding(.horizontal)
             
