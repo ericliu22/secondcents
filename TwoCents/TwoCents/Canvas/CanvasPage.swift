@@ -338,19 +338,22 @@ struct CanvasPage: View {
             }
             Toolbar()
         }
-            .overlay(alignment: .center) {
-                if newWidget {
-                    NewWidget()
-                        .overlay(alignment: .topLeading) {
-                            Image(systemName: "x.circle")
-                                .font(.largeTitle)
-                                .foregroundColor(.black)
-                                .gesture(TapGesture(count:1).onEnded(({
-                                    newWidget = false
-                                })))
-                        }
-                }
-            }
+//            .overlay(alignment: .center) {
+//                if newWidget {
+//                    NewWidget()
+//                        .overlay(alignment: .topLeading) {
+//                            Image(systemName: "x.circle")
+//                                .font(.largeTitle)
+//                                .foregroundColor(.black)
+//                                .gesture(TapGesture(count:1).onEnded(({
+//                                    newWidget = false
+//                                })))
+//                        }
+//                }
+//            }
+        .sheet(isPresented: $newWidget, content: {
+            NewWidget()
+        })
             .toolbar(.hidden, for: .tabBar)
 //            .toolbarBackground(.hidden, for: .navigationBar)
     }
