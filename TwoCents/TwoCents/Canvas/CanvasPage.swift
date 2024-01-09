@@ -120,34 +120,40 @@ struct CanvasPage: View {
         do {
             try await self.userUID = getUID()!
             var dbDrawings: Dictionary<String, Any>
-            do {
-                dbDrawings = try await drawingDocument.getDocument().data()!
-            } catch {
-                return
-            }
-            dbDrawings.forEach({ key, value in
-                let drawingArray: [Dictionary<String, Any>] = value as! [Dictionary<String, Any>]
-                drawingArray.forEach({ map in
-                    var line = Line()
-                    let usercolor: Color = Color.fromString(name: map["color"] as! String)
-                    let penWidth: Double = Double(exactly: map["lineWidth"] as! NSNumber)!
-                    
-                    line.color = usercolor
-                    line.lineWidth = penWidth
-                    
-                    let floatsArray: NSArray = map["points"] as! NSArray
-                    var pointsArray: [CGPoint] = []
-                    
-                    for i in stride(from: 0, to: floatsArray.count, by: 2) {
-                        let y: CGFloat = CGFloat(truncating: floatsArray[i] as! NSNumber)
-                        let x: CGFloat = CGFloat(truncating: floatsArray[i+1] as! NSNumber)
-                        pointsArray.append(CGPoint(x: x, y: y))
-                    }
-                    
-                    line.points = pointsArray
-                    self.lines.append(line)
+//            do {
+//                dbDrawings = try await drawingDocument.getDocument().data()!
+//            } catch {
+//                return
+//            }
+            
+            
+            //Jonny changed from above do catch to "if let." so that app does not crash if drawing widget document/collections does not exist
+            if let  dbDrawings = try await drawingDocument.getDocument().data() {
+                dbDrawings.forEach({ key, value in
+                    let drawingArray: [Dictionary<String, Any>] = value as! [Dictionary<String, Any>]
+                    drawingArray.forEach({ map in
+                        var line = Line()
+                        let usercolor: Color = Color.fromString(name: map["color"] as! String)
+                        let penWidth: Double = Double(exactly: map["lineWidth"] as! NSNumber)!
+                        
+                        line.color = usercolor
+                        line.lineWidth = penWidth
+                        
+                        let floatsArray: NSArray = map["points"] as! NSArray
+                        var pointsArray: [CGPoint] = []
+                        
+                        for i in stride(from: 0, to: floatsArray.count, by: 2) {
+                            let y: CGFloat = CGFloat(truncating: floatsArray[i] as! NSNumber)
+                            let x: CGFloat = CGFloat(truncating: floatsArray[i+1] as! NSNumber)
+                            pointsArray.append(CGPoint(x: x, y: y))
+                        }
+                        
+                        line.points = pointsArray
+                        self.lines.append(line)
+                    })
                 })
-            })
+                
+            }
         } catch {
             print("something fucked up")
         }
@@ -345,6 +351,8 @@ struct CanvasPage: View {
                         }
                 }
             }
+            .toolbar(.hidden, for: .tabBar)
+//            .toolbarBackground(.hidden, for: .navigationBar)
     }
     
     

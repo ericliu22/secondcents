@@ -44,6 +44,7 @@ struct SpacesView: View {
                     ForEach(filteredSearch) { spaceTile    in
                         
                         NavigationLink {
+                            CanvasPage(chatroom: db.collection("spaces").document(spaceTile.spaceId))
                             
                         } label: {
                             ZStack{
