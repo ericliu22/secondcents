@@ -13,7 +13,7 @@ struct SpacesView: View {
     @Binding var loadedColor: Color
     @Binding var showCreateProfileView: Bool
     
-    
+
     
     @State private var searchTerm = ""
     
@@ -145,6 +145,7 @@ struct SpacesView: View {
                                     }
                                     
                                     
+                                    
                                     Spacer()
                          
                                     
@@ -179,7 +180,7 @@ struct SpacesView: View {
                                 .frame(maxWidth:.infinity, maxHeight: .infinity, alignment: .topLeading)
                                 .aspectRatio(1, contentMode: .fit)
                                 .background(.regularMaterial)
-                               
+                                
                                
                                 
                                 
@@ -208,10 +209,12 @@ struct SpacesView: View {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     NavigationLink{
                         CreateSpacesView(spaceId: UUID().uuidString)
+                        
                     } label: {
                         Image (systemName: "square.and.pencil")
                             .font(.headline)
                     }
+                    
                 }
                 
             }

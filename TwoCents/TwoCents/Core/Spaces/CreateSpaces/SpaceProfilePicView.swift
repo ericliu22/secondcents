@@ -22,6 +22,7 @@ struct SpaceProfilePicView: View {
     @State private var selectedPhoto: PhotosPickerItem? = nil
     
 
+
     
     var body: some View {
         
@@ -114,20 +115,17 @@ struct SpaceProfilePicView: View {
             .cornerRadius(20)
             
             
-    
-            
             Button {
                 
-      
+//                CanvasPage(chatroom: db.collection("spaces").document(spaceId))
                 
             } label: {
                 Text("Done")
                     .font(.headline)
-              
                     .frame(height: 55)
                     .frame(maxWidth: .infinity)
-                
             }
+            
             
             .buttonStyle(.bordered)
 //            .tint(selectedColor)
@@ -137,6 +135,32 @@ struct SpaceProfilePicView: View {
             
             
             
+            
+//            
+//            
+//            
+//            
+//            Button {
+//                
+//      
+//                
+//            } label: {
+//                Text("Done")
+//                    .font(.headline)
+//              
+//                    .frame(height: 55)
+//                    .frame(maxWidth: .infinity)
+//                
+//            }
+//            
+//            .buttonStyle(.bordered)
+////            .tint(selectedColor)
+//            .frame(height: 55)
+//            .cornerRadius(10)
+//            .padding(.horizontal)
+//            
+//            
+//            
             
             
             

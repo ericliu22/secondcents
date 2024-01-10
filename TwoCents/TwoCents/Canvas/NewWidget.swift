@@ -78,56 +78,112 @@ struct NewWidget: View {
             
             
             
-            ScrollView(.vertical, showsIndicators: false) {
-                Spacer()
-                    .frame(height: 30)
-                LazyVGrid(columns: columns, spacing: nil) {
-                    ForEach(0..<widgets.count, id: \.self) {index in
-                        
-                        VStack{
-                            Color.red
-                            //                            .frame(width: 150, height: 150)
+//            ScrollView(.vertical, showsIndicators: false) {
+//                Spacer()
+//                    .frame(height: 30)
+//                LazyVGrid(columns: columns, spacing: nil) {
+//                    ForEach(0..<widgets.count, id: \.self) {index in
+//                        
+//                        VStack{
+//                            Color.red
+//                            //                            .frame(width: 150, height: 150)
+//                            
+//                                .aspectRatio(1, contentMode: .fit)
+//                            
+//                                .shadow(radius: 20, y: 10)
+//                                .cornerRadius(20)
+//                            
+//                            
+//                            //                            .containerRelativeFrame(.vertical, count: 4, spacing: 20)
+//                            
+//                            
+//                            Text("Name")
+//                                .foregroundStyle(.primary)
+//                                .font(.headline)
+//                                .fontWeight(.regular)
+//                            
+//                            
+//                            Text("Description")
+//                                .foregroundStyle(.secondary)
+//                                .font(.headline)
+//                                .fontWeight(.regular)
+//                            
+//                        }
+//                        .scrollTransition(.animated, axis: .vertical) { content, phase in
+//                            content
+////                                .opacity(phase.isIdentity ? 1.0 : 0.8)
+//                                .scaleEffect(phase.isIdentity ? 1.0 : 0.9)
+//                                .blur(radius: phase.isIdentity ? 0 : 3)
+//                            
+//                        }
+//                      
+//                    }
+//                }
+//                .scrollTargetLayout()
+//                
+//            }
+//           
+////            .contentMargins(16, for: .scrollContent)
+//            .scrollTargetBehavior(.viewAligned)
+//            .safeAreaPadding()
+//            
+            
+            NavigationView{
+                ScrollView(.horizontal, showsIndicators: false) {
+                    
+                    HStack {
+                        ForEach(0..<widgets.count, id: \.self) {index in
                             
-                                .aspectRatio(1, contentMode: .fit)
-                            
-                                .shadow(radius: 20, y: 10)
-                                .cornerRadius(20)
-                            
-                            
-                            //                            .containerRelativeFrame(.vertical, count: 4, spacing: 20)
-                            
-                            
-                            Text("Name")
-                                .foregroundStyle(.primary)
-                                .font(.headline)
-                                .fontWeight(.regular)
-                            
-                            
-                            Text("Description")
-                                .foregroundStyle(.secondary)
-                                .font(.headline)
-                                .fontWeight(.regular)
+                            VStack{
+                                Color.red
+                                //                            .frame(width: 150, height: 150)
+                                
+                                    .aspectRatio(1, contentMode: .fit)
+                                
+                                    .shadow(radius: 20, y: 10)
+                                    .cornerRadius(30)
+                                
+                                
+                                    .containerRelativeFrame(.horizontal, count: 1, spacing: 0)
+                                
+                                
+                                Text("Name")
+                                    .foregroundStyle(.primary)
+                                    .font(.title3)
+                                    .fontWeight(.regular)
+                                
+                                
+                                Text("Description")
+                                    .foregroundStyle(.secondary)
+                                    .font(.headline)
+                                    .fontWeight(.regular)
+                                
+                            }
+                            .scrollTransition(.animated, axis: .horizontal) { content, phase in
+                                content
+                                    .opacity(phase.isIdentity ? 1.0 : 0.8)
+                                    .scaleEffect(phase.isIdentity ? 1.0 : 0.8)
+                                    .blur(radius: phase.isIdentity ? 0 : 3)
+                                
+                            }
                             
                         }
-                        .scrollTransition(.animated, axis: .vertical) { content, phase in
-                            content
-//                                .opacity(phase.isIdentity ? 1.0 : 0.8)
-                                .scaleEffect(phase.isIdentity ? 1.0 : 0.9)
-                                .blur(radius: phase.isIdentity ? 0 : 3)
-                            
-                        }
-                      
                     }
+                    .scrollTargetLayout()
+                    
                 }
-                .scrollTargetLayout()
+                
+                .contentMargins(50, for: .scrollContent)
+                .scrollTargetBehavior(.viewAligned)
+                .safeAreaPadding()
+               
+                .navigationTitle("Add a Widget 🙈")
+                
+                
                 
             }
-           
-//            .contentMargins(16, for: .scrollContent)
-            .scrollTargetBehavior(.viewAligned)
-            .safeAreaPadding()
+      
             
-  
             
             
             ZStack (alignment: .topLeading) {

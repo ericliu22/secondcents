@@ -22,8 +22,7 @@ struct CreateSpacesView: View {
     @State private var selectedPhoto: PhotosPickerItem? = nil
     
     
-   
-    
+ 
     
     
     private let noMembersMessage: [String] = [
@@ -241,6 +240,7 @@ struct CreateSpacesView: View {
                             }
                             .onTapGesture {
                                 viewModel.addMember(friend: userTile)
+                                print("added")
                             }
                             .padding(.horizontal,5)
                             .padding(.vertical,2.5)
@@ -260,6 +260,7 @@ struct CreateSpacesView: View {
             NavigationLink {
                 
                 SpaceProfilePicView(spaceId: spaceId)
+                
             } label: {
                 Text("Create")
                     .font(.headline)
@@ -275,6 +276,7 @@ struct CreateSpacesView: View {
             .tint(.accentColor)
             .frame(height: 55)
             .cornerRadius(10)
+            
             
             .simultaneousGesture(TapGesture().onEnded{
                 Task{

@@ -48,11 +48,14 @@ final class CreateSpacesViewModel: ObservableObject{
 //          }
 //          
 
-
+        print("asd")
         print(selectedMembersUserId)
+        print("asd")
         if let user = user {
+            if !selectedMembersUserId.contains(user.userId){
+                selectedMembersUserId.append(user.userId)
+            }
             
-            selectedMembersUserId.append(user.userId)
         }
         let space = DBSpace(spaceId: spaceId, name: name.isEmpty ? "Untitled Space" : name, members: selectedMembersUserId)
           
