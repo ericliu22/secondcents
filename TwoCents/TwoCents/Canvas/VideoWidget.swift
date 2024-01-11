@@ -19,19 +19,31 @@ struct VideoWidget: View{
     
     var body: some View {
         VideoPlayer(player: videoplayer)
-            .frame(width: width,height: height, alignment: .center)
+            .ignoresSafeArea()
+                 
+            .frame(width: width, height: height, alignment: .center)
+        
+            
             .clipShape(RoundedRectangle(cornerRadius: CORNER_RADIUS))
+          
+        
             .gesture(TapGesture().onEnded({
                 isPlaying ? videoplayer.pause() : videoplayer.play()
                 isPlaying.toggle()
+                
             })).draggable(url)
+        
+        
     }
+    
     
     init(url: URL, width: CGFloat, height: CGFloat) {
         self.url = url
         self.videoplayer = AVPlayer(url: self.url)
         self.width = width
         self.height = height
+        
+        
     }
     
 }

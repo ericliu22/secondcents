@@ -8,12 +8,19 @@
 import Foundation
 import SwiftUI
 
+var imageViewTest = CanvasWidget(width: 250, height:  250, borderColor: .black, userId: "jennierubyjane", media: .image, mediaURL: URL(string: "https://m.media-amazon.com/images/M/MV5BN2Q0OWJmNWYtYzBiNy00ODAyLWI2NGQtZGFhM2VjOWM5NDNkXkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_.jpg")!, widgetName: "Photo Widget", widgetDescription: "Add a photo to spice the convo")
+
+
+var videoViewTest = CanvasWidget(width: 250, height: 250, borderColor: .red, userId: "jisookim", media: .video, mediaURL: URL(string: "https://www.pexels.com/video/10167684/download/")!, widgetName: "Video Widget", widgetDescription: "Nice vid")
+
+
+
 struct NewWidget: View {
     
     @State private var currentIndex: Int = 0
     @GestureState private var dragOffset: CGFloat = 0
-    
-    private let widgets: [String] = ["widget1", "widget2", "widget3", "widget4", "widget5", "widget6", "widget7", "widget8", "widget9", "widget10"]
+   
+   
     
     
     @Environment(\.dismiss) var dismissScreen
@@ -24,109 +31,23 @@ struct NewWidget: View {
         GridItem(.flexible(), spacing: 20)
     ]
     
+    
+    
+//
+//    private let widgetsExample: [String] = ["widget1", "widget2", "widget3", "widget4", "widget5", "widget6", "widget7", "widget8", "widget9", "widget10"]
+//    
+    
+    
+    
+    private let widgets: [CanvasWidget] = [imageViewTest, videoViewTest, imageViewTest, imageViewTest, imageViewTest]
+    
+    
+    
+    
     var body: some View {
         
         ZStack {
-//            NavigationView {
-//                VStack{
-//                    ZStack{
-//                        ForEach(0..<widgets.count, id: \.self) {index in
-//                            Color.red
-//                                .frame(width: 200, height: 200)
-//                                .shadow(radius: 10, y: 10)
-//                                .cornerRadius(25)
-//                                .opacity(currentIndex == index ? 1.0: 0.5)
-//                                .scaleEffect(currentIndex == index ? 1.2 : 0.8)
-//                                .offset(x: CGFloat(index-currentIndex)*220 + dragOffset, y: 0)
-//
-//                        }
-//                    }
-//                    
-//                
-//                    
-//                    .gesture(
-//
-//                        DragGesture()
-//                         
-//                            .onEnded({value in
-//                                let threshold: CGFloat = 50
-//                                if value.translation.width > threshold {
-//                                    withAnimation{
-//                                        currentIndex = max (0, currentIndex - 1)
-//                                    }
-//                                    
-//                                } else if value.translation.width < -threshold {
-//                                    withAnimation{
-//                                        currentIndex = min(widgets.count - 1, currentIndex + 1)
-//                                    }
-//                                    
-//                                }
-//                              
-//                                
-//                                
-//                                
-//                            })
-//                    )
-//                    
-//                }
-//                .navigationTitle("Add a Widget 🙈")
-//             
-//                
-//            }
-//           
-//            
-            
-            
-            
-//            ScrollView(.vertical, showsIndicators: false) {
-//                Spacer()
-//                    .frame(height: 30)
-//                LazyVGrid(columns: columns, spacing: nil) {
-//                    ForEach(0..<widgets.count, id: \.self) {index in
-//                        
-//                        VStack{
-//                            Color.red
-//                            //                            .frame(width: 150, height: 150)
-//                            
-//                                .aspectRatio(1, contentMode: .fit)
-//                            
-//                                .shadow(radius: 20, y: 10)
-//                                .cornerRadius(20)
-//                            
-//                            
-//                            //                            .containerRelativeFrame(.vertical, count: 4, spacing: 20)
-//                            
-//                            
-//                            Text("Name")
-//                                .foregroundStyle(.primary)
-//                                .font(.headline)
-//                                .fontWeight(.regular)
-//                            
-//                            
-//                            Text("Description")
-//                                .foregroundStyle(.secondary)
-//                                .font(.headline)
-//                                .fontWeight(.regular)
-//                            
-//                        }
-//                        .scrollTransition(.animated, axis: .vertical) { content, phase in
-//                            content
-////                                .opacity(phase.isIdentity ? 1.0 : 0.8)
-//                                .scaleEffect(phase.isIdentity ? 1.0 : 0.9)
-//                                .blur(radius: phase.isIdentity ? 0 : 3)
-//                            
-//                        }
-//                      
-//                    }
-//                }
-//                .scrollTargetLayout()
-//                
-//            }
-//           
-////            .contentMargins(16, for: .scrollContent)
-//            .scrollTargetBehavior(.viewAligned)
-//            .safeAreaPadding()
-//            
+
             
             NavigationView{
                 ScrollView(.horizontal, showsIndicators: false) {
@@ -135,28 +56,36 @@ struct NewWidget: View {
                         ForEach(0..<widgets.count, id: \.self) {index in
                             
                             VStack{
-                                Color.red
-                                //                            .frame(width: 150, height: 150)
                                 
+                                
+                                //widget
+                                getMediaView(widget: widgets[index])
                                     .aspectRatio(1, contentMode: .fit)
-                                
                                     .shadow(radius: 20, y: 10)
                                     .cornerRadius(30)
-                                
-                                
                                     .containerRelativeFrame(.horizontal, count: 1, spacing: 0)
                                 
                                 
-                                Text("Name")
-                                    .foregroundStyle(.primary)
-                                    .font(.title3)
-                                    .fontWeight(.regular)
+                                //spacer
+                                Spacer()
+                                    .frame(height:10)
                                 
+                                //name
+                                if let name = widgets[index].widgetName {
+                                    Text(name)
+                                        .foregroundStyle(.primary)
+                                        .font(.headline)
+                                        .fontWeight(.regular)
+                                }
                                 
-                                Text("Description")
-                                    .foregroundStyle(.secondary)
-                                    .font(.headline)
-                                    .fontWeight(.regular)
+                                //description
+                                if let description = widgets[index].widgetDescription {
+                                    Text(description)
+                                        .foregroundStyle(.secondary)
+                                        .font(.headline)
+                                        .fontWeight(.regular)
+                                    
+                                }
                                 
                             }
                             .scrollTransition(.animated, axis: .horizontal) { content, phase in

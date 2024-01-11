@@ -22,6 +22,9 @@ struct SpacesView: View {
     @StateObject private var viewModel = SpacesViewModel()
     
     
+    @State private var showDetail = false
+    
+    
     var filteredSearch: [DBSpace]{
         guard !searchTerm.isEmpty else { return viewModel.allSpaces}
         return viewModel.allSpaces.filter{$0.name!.localizedCaseInsensitiveContains(searchTerm)}
@@ -207,6 +210,8 @@ struct SpacesView: View {
             .toolbar{
                 
                 ToolbarItem(placement: .navigationBarTrailing) {
+                    
+                    
                     NavigationLink{
                         CreateSpacesView(spaceId: UUID().uuidString)
                         

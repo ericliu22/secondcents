@@ -40,6 +40,9 @@ struct CanvasWidget: Hashable, Codable, Identifiable, Transferable, Equatable {
     var userId: String
     var media: Media
     var mediaURL: URL
+    var widgetName: String?
+    var widgetDescription: String?
+    
     
     
     
@@ -81,6 +84,8 @@ extension CanvasWidget {
         case mediaURL
         case width
         case height
+        case widgetName
+        case widgetDescription
         
     }
     
@@ -94,6 +99,8 @@ extension CanvasWidget {
         self.mediaURL = try container.decode(URL.self, forKey: .mediaURL)
         self.width = try container.decode(CGFloat.self, forKey: .width)
         self.height = try container.decode(CGFloat.self, forKey: .height)
+        self.widgetName = try container.decode(String.self, forKey: .widgetName)
+        self.widgetDescription = try container.decode(String.self, forKey: .widgetDescription)
     }
     
     func encode(to encoder: Encoder) throws {
@@ -105,6 +112,9 @@ extension CanvasWidget {
             try container.encode(mediaURL, forKey: .mediaURL)
             try container.encode(width, forKey: .width)
             try container.encode(height, forKey: .height)
+            try container.encode(userId, forKey: .widgetName)
+            try container.encode(userId, forKey: .widgetDescription)
+        
     }
     
 }

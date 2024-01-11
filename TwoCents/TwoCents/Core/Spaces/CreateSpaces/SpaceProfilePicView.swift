@@ -116,7 +116,8 @@ struct SpaceProfilePicView: View {
             
             
             Button {
-                
+               
+//                    
 //                CanvasPage(chatroom: db.collection("spaces").document(spaceId))
                 
             } label: {
