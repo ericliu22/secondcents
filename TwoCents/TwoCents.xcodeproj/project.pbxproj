@@ -11,12 +11,12 @@
 		850958AA2AB8F82D00018A32 /* LuckiestGuy-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 850958A92AB8F82D00018A32 /* LuckiestGuy-Regular.ttf */; };
 		850958AB2AB8F82D00018A32 /* LuckiestGuy-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 850958A92AB8F82D00018A32 /* LuckiestGuy-Regular.ttf */; };
 		850958AC2AB8F82D00018A32 /* LuckiestGuy-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 850958A92AB8F82D00018A32 /* LuckiestGuy-Regular.ttf */; };
-		856E80AA2B50E9970078A2CE /* SabotageGameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 856E80A62B50E9960078A2CE /* SabotageGameView.swift */; };
-		856E80AB2B50E9970078A2CE /* SabotageCarouselView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 856E80A72B50E9960078A2CE /* SabotageCarouselView.swift */; };
-		856E80AC2B50E9970078A2CE /* SabotageSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 856E80A82B50E9960078A2CE /* SabotageSelectionView.swift */; };
-		856E80AD2B50E9970078A2CE /* SabotageGameViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 856E80A92B50E9970078A2CE /* SabotageGameViewModel.swift */; };
-		856E80AF2B50E9AB0078A2CE /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 856E80AE2B50E9AB0078A2CE /* CardView.swift */; };
 		856E80B12B50E9D00078A2CE /* PencilKitPractice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 856E80B02B50E9CF0078A2CE /* PencilKitPractice.swift */; };
+		856E80B92B50EB260078A2CE /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 856E80B42B50EB260078A2CE /* CardView.swift */; };
+		856E80BA2B50EB260078A2CE /* SabotageSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 856E80B52B50EB260078A2CE /* SabotageSelectionView.swift */; };
+		856E80BB2B50EB260078A2CE /* SabotageGameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 856E80B62B50EB260078A2CE /* SabotageGameView.swift */; };
+		856E80BC2B50EB260078A2CE /* SabotageCarouselView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 856E80B72B50EB260078A2CE /* SabotageCarouselView.swift */; };
+		856E80BD2B50EB260078A2CE /* SabotageGameViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 856E80B82B50EB260078A2CE /* SabotageGameViewModel.swift */; };
 		8573EC892AE6EF4A00CFB579 /* HeartParticle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8573EC882AE6EF4A00CFB579 /* HeartParticle.swift */; };
 		8573EC8B2AE6EF9C00CFB579 /* ParticleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8573EC8A2AE6EF9C00CFB579 /* ParticleView.swift */; };
 		85741EA82AD03A0C0085423E /* CarouselPractice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85741EA72AD03A0C0085423E /* CarouselPractice.swift */; };
@@ -112,12 +112,12 @@
 /* Begin PBXFileReference section */
 		850958A82AB8F81200018A32 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		850958A92AB8F82D00018A32 /* LuckiestGuy-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "LuckiestGuy-Regular.ttf"; sourceTree = "<group>"; };
-		856E80A62B50E9960078A2CE /* SabotageGameView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SabotageGameView.swift; path = SabotageGame/SabotageGameView.swift; sourceTree = "<group>"; };
-		856E80A72B50E9960078A2CE /* SabotageCarouselView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SabotageCarouselView.swift; path = SabotageGame/SabotageCarouselView.swift; sourceTree = "<group>"; };
-		856E80A82B50E9960078A2CE /* SabotageSelectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SabotageSelectionView.swift; path = SabotageGame/SabotageSelectionView.swift; sourceTree = "<group>"; };
-		856E80A92B50E9970078A2CE /* SabotageGameViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SabotageGameViewModel.swift; path = SabotageGame/SabotageGameViewModel.swift; sourceTree = "<group>"; };
-		856E80AE2B50E9AB0078A2CE /* CardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CardView.swift; path = SabotageGame/CardView.swift; sourceTree = "<group>"; };
 		856E80B02B50E9CF0078A2CE /* PencilKitPractice.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PencilKitPractice.swift; sourceTree = "<group>"; };
+		856E80B42B50EB260078A2CE /* CardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
+		856E80B52B50EB260078A2CE /* SabotageSelectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SabotageSelectionView.swift; sourceTree = "<group>"; };
+		856E80B62B50EB260078A2CE /* SabotageGameView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SabotageGameView.swift; sourceTree = "<group>"; };
+		856E80B72B50EB260078A2CE /* SabotageCarouselView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SabotageCarouselView.swift; sourceTree = "<group>"; };
+		856E80B82B50EB260078A2CE /* SabotageGameViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SabotageGameViewModel.swift; sourceTree = "<group>"; };
 		8573EC882AE6EF4A00CFB579 /* HeartParticle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeartParticle.swift; sourceTree = "<group>"; };
 		8573EC8A2AE6EF9C00CFB579 /* ParticleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParticleView.swift; sourceTree = "<group>"; };
 		85741EA72AD03A0C0085423E /* CarouselPractice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarouselPractice.swift; sourceTree = "<group>"; };
@@ -226,6 +226,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		856E80B32B50EB260078A2CE /* SabotageGame */ = {
+			isa = PBXGroup;
+			children = (
+				856E80B42B50EB260078A2CE /* CardView.swift */,
+				856E80B52B50EB260078A2CE /* SabotageSelectionView.swift */,
+				856E80B62B50EB260078A2CE /* SabotageGameView.swift */,
+				856E80B72B50EB260078A2CE /* SabotageCarouselView.swift */,
+				856E80B82B50EB260078A2CE /* SabotageGameViewModel.swift */,
+			);
+			path = SabotageGame;
+			sourceTree = "<group>";
+		};
 		8573EC872AE6EF3400CFB579 /* Animations Group */ = {
 			isa = PBXGroup;
 			children = (
@@ -260,11 +272,7 @@
 			isa = PBXGroup;
 			children = (
 				856E80B02B50E9CF0078A2CE /* PencilKitPractice.swift */,
-				856E80A72B50E9960078A2CE /* SabotageCarouselView.swift */,
-				856E80AE2B50E9AB0078A2CE /* CardView.swift */,
-				856E80A62B50E9960078A2CE /* SabotageGameView.swift */,
-				856E80A92B50E9970078A2CE /* SabotageGameViewModel.swift */,
-				856E80A82B50E9960078A2CE /* SabotageSelectionView.swift */,
+				856E80B32B50EB260078A2CE /* SabotageGame */,
 				A20EBD062AB8A36100EFDDE8 /* HotSeat.swift */,
 				85741EAB2AD03B9A0085423E /* CarouselPracticeFiles */,
 				A20EBD072AB8A36100EFDDE8 /* VoteGameReal.swift */,
@@ -695,7 +703,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				856E80AD2B50E9970078A2CE /* SabotageGameViewModel.swift in Sources */,
+				856E80BD2B50EB260078A2CE /* SabotageGameViewModel.swift in Sources */,
 				850958A72AB8F41D00018A32 /* HotSeat.swift in Sources */,
 				85C6759B2AB8EE6100FACCB2 /* SuperlativeGame.swift in Sources */,
 				85C6759A2AB8EE5B00FACCB2 /* HotSeatManager.swift in Sources */,
@@ -707,19 +715,19 @@
 				A257D7862A6D707600A4E7BD /* ContentView.swift in Sources */,
 				AB2E56D12AE9C62C0096A58C /* CapsuleView.swift in Sources */,
 				ABCA39DA2A7A0881009447C3 /* SettingsView.swift in Sources */,
-				856E80AB2B50E9970078A2CE /* SabotageCarouselView.swift in Sources */,
 				AB6778E62AB8F67D00C11AA7 /* VideoWidget.swift in Sources */,
+				856E80BC2B50EB260078A2CE /* SabotageCarouselView.swift in Sources */,
 				A257D7862A6D707600A4E7BD /* ContentView.swift in Sources */,
 				AB9909AD2ABE3C1B004B3021 /* FriendRequestsViewModel.swift in Sources */,
 				ABCA39DA2A7A0881009447C3 /* SettingsView.swift in Sources */,
 				A246A42E2B43A1B700F0F6E6 /* NewWidget.swift in Sources */,
 				AB842C122A91F36300E4A7CE /* CustomizeProfileView.swift in Sources */,
+				856E80BB2B50EB260078A2CE /* SabotageGameView.swift in Sources */,
 				85741EA82AD03A0C0085423E /* CarouselPractice.swift in Sources */,
 				AB2E56D32AE9C6F00096A58C /* VoteGameViewModel.swift in Sources */,
 				AB2E56CD2AE9C59D0096A58C /* VoteGameView.swift in Sources */,
 				A2F5631E2AB4E6240026D8C9 /* CanvasPage.swift in Sources */,
 				AB90021D2A8B85DA00F970B8 /* UploadExampleViewModel.swift in Sources */,
-				856E80AA2B50E9970078A2CE /* SabotageGameView.swift in Sources */,
 				85A6766D2AE9C6BB003ECAAA /* textField.swift in Sources */,
 				A2F563232AB4E6700026D8C9 /* chattingView.swift in Sources */,
 				AB4C1E4F2A8785BF00588160 /* ColorSelectionView.swift in Sources */,
@@ -740,7 +748,8 @@
 				AB15AC0B2AF6F00C0055D5D0 /* SpaceProfilePicView.swift in Sources */,
 				AB9EB95D2B1E805300F58EA5 /* ChatManager.swift in Sources */,
 				AB15AC0D2AF6F01B0055D5D0 /* SpaceProfilePicViewModel.swift in Sources */,
-				856E80AF2B50E9AB0078A2CE /* CardView.swift in Sources */,
+				856E80BA2B50EB260078A2CE /* SabotageSelectionView.swift in Sources */,
+				856E80B92B50EB260078A2CE /* CardView.swift in Sources */,
 				AB6778E22AB8F67300C11AA7 /* ImageWidget.swift in Sources */,
 				A257D7842A6D707600A4E7BD /* TwoCentsApp.swift in Sources */,
 				AB300FB02AC7407000C6719D /* FriendsView.swift in Sources */,
@@ -753,7 +762,6 @@
 				ABF56DFF2A7C8C5200F959DB /* SettingsViewModel.swift in Sources */,
 				AB842C102A91E52000E4A7CE /* ProfileViewModel.swift in Sources */,
 				AB7438432AAA34AD001B4988 /* SearchUserViewModel.swift in Sources */,
-				856E80AC2B50E9970078A2CE /* SabotageSelectionView.swift in Sources */,
 				AB2E56CA2AE9BB410096A58C /* SpaceManager.swift in Sources */,
 				ABA45E812A7C8DC50015F000 /* ProfileView.swift in Sources */,
 				ABC426B32A86438400873EE1 /* SignUpEmailViewModel.swift in Sources */,
