@@ -10,7 +10,7 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 /**
-The default class for all widgets on the Canvas.
+ The default class for all widgets on the Canvas.
  It's not actually a view so you have to use the ```getMediaView(widget: CanvasWidget)```
  function to get the view
  
@@ -18,18 +18,18 @@ The default class for all widgets on the Canvas.
  There are no safety measures for this.
  
  -  Parameters:
-    - id: UUID of the widget which will also be the UUID on firestore (i.e. interchangable). Don't change this when doing copy-remove behavior in arrays
-    - width: Length of the widget
-    - height: Height of the widget
-    - borderColor: Color of the user
-    - uid: The user owner of the widget's id
-    - media: An enumerator that describes what function to call to get the view (e.g. .video or .image)
-    - mediaURL: URL type that is a link to the media attached to widget
+ - id: UUID of the widget which will also be the UUID on firestore (i.e. interchangable). Don't change this when doing copy-remove behavior in arrays
+ - width: Length of the widget
+ - height: Height of the widget
+ - borderColor: Color of the user
+ - uid: The user owner of the widget's id
+ - media: An enumerator that describes what function to call to get the view (e.g. .video or .image)
+ - mediaURL: URL type that is a link to the media attached to widget
  */
 struct CanvasWidget: Hashable, Codable, Identifiable, Transferable, Equatable {
     
     static var transferRepresentation: some TransferRepresentation {
-            CodableRepresentation(contentType: .canvasWidget)
+        CodableRepresentation(contentType: .canvasWidget)
     }
     
     
@@ -53,6 +53,9 @@ struct CanvasWidget: Hashable, Codable, Identifiable, Transferable, Equatable {
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
+    
+    
+    
 }
 
 enum Media {
@@ -62,19 +65,19 @@ enum Media {
 extension Media: Codable {
     init (media: String) {
         switch media {
-            case "video":
-                self = .video
-            case "image":
-                self = .image
-            default:
-                self = .image
+        case "video":
+            self = .video
+        case "image":
+            self = .image
+        default:
+            self = .image
         }
     }
     
 }
 
 extension CanvasWidget {
-
+    
     enum CodingKeys: String, CodingKey {
         
         case id
@@ -104,18 +107,25 @@ extension CanvasWidget {
     }
     
     func encode(to encoder: Encoder) throws {
-            var container = encoder.container(keyedBy: CodingKeys.self)
-            try container.encode(id, forKey: .id)
-            try container.encode(userId, forKey: .userId)
-            try container.encode(borderColor.description, forKey: .borderColor)
-            try container.encode(media, forKey: .media)
-            try container.encode(mediaURL, forKey: .mediaURL)
-            try container.encode(width, forKey: .width)
-            try container.encode(height, forKey: .height)
-            try container.encode(userId, forKey: .widgetName)
-            try container.encode(userId, forKey: .widgetDescription)
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(userId, forKey: .userId)
+        try container.encode(borderColor.description, forKey: .borderColor)
+        try container.encode(media, forKey: .media)
+        try container.encode(mediaURL, forKey: .mediaURL)
+        try container.encode(width, forKey: .width)
+        try container.encode(height, forKey: .height)
+        try container.encode(userId, forKey: .widgetName)
+        try container.encode(userId, forKey: .widgetDescription)
         
     }
+    
+    
+    
+    
+    
+    
+    
     
 }
 
@@ -132,5 +142,7 @@ func getMediaView(widget: CanvasWidget) -> AnyView {
     case .chat:
         return chatWidget(widget: widget)
     }
-
+    
+    
+    
 }

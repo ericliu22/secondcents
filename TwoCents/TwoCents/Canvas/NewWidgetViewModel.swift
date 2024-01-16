@@ -30,6 +30,14 @@ final class NewWidgetViewModel: ObservableObject{
  
     
     @Published var widgetId = UUID().uuidString
+    
+    
+    private var path = ""
+    private var url = ""
+    
+    
+    @Published var widgets: [CanvasWidget] = [imageViewTest, videoViewTest]
+    
     func saveTempImage(item: PhotosPickerItem) {
       
     
@@ -42,22 +50,58 @@ final class NewWidgetViewModel: ObservableObject{
             if let image = UIImage(data: data), let imageData = resizeImage(image: image, targetSize: CGSize(width: 250, height: 250))?.jpegData(compressionQuality: 1)  {
                 
                 
-                
+             
                 
                 let (path, name) = try await StorageManager.shared.saveTempWidgetPic(data: imageData, spaceId: space.spaceId, widgetId: widgetId)
                 print ("Saved Image")
                 print (widgetId)
-                print (path)
+//                print (path)
                 print (name)
                 let url = try await StorageManager.shared.getURLForImage(path: path)
-                print(url)
-                try await SpaceManager.shared.setImageWidgetPic(spaceId: space.spaceId, widgetId: widgetId, url: url.absoluteString, path: path)
-                try? await loadCurrentSpace(spaceId: space.spaceId)
+//                print(url)
+                
+                self.path = path
+                self.url = url.absoluteString
+    
+                    widgets[0] = CanvasWidget(width: 250, height:  250, borderColor: .black, userId: "jennierubyjane", media: .image, mediaURL: URL(string: self.url)!, widgetName: "Photo Widget", widgetDescription: "Add a photo to spice the convo")
+                
+              
+        
+                
+                
+                        
+                  
+                
+               
             }
             
         }
         
     }
+    
+    
+    func saveImageWidget() {
+      
+    
+        guard let space, !path.isEmpty, !url.isEmpty else { return }
+        
+        
+        Task {
+            
+               
+            try await SpaceManager.shared.setImageWidgetPic(spaceId: space.spaceId, widgetId: widgetId, url: self.url, path: self.path)
+                try? await loadCurrentSpace(spaceId: space.spaceId)
+           
+            
+        }
+        
+    }
+    
+    
+    
+    
+    
+    
     
     
     

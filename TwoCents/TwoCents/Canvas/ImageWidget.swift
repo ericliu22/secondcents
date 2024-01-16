@@ -14,6 +14,7 @@ func imageWidget(widget: CanvasWidget) -> AnyView {
 
     
     return AnyView(
+        
         AsyncImage(url: widget.mediaURL) {image in
             image
                 .resizable()
@@ -32,11 +33,21 @@ func imageWidget(widget: CanvasWidget) -> AnyView {
                 .frame(width: widget.width, height: widget.height)
                 .background(.thickMaterial)
         }//AsyncImage
-        
-        
+          
+       
     )//AnyView
     
+//    
+//    func updateMediaURL(url: String){
+//       assert(widget.mediaURL == URL(string: url)!)
+//       
+//   }
+//    
+    
+    
 }
+
+
 
 /*
 func uploadTOFireBaseVideo(url: URL,
