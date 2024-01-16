@@ -24,41 +24,40 @@ struct Home: View {
     @State var isDraw = true
     // default is pen...
     
+    @State private var toolPickerIsActive = false
+    @State private var canvasIsVisible = false
+    
+    
+    
     var body: some View{
         NavigationView{
             // Drawing View
             
-            DrawingView(canvas: $canvas, isDraw: $isDraw)
+            
+                ZStack{
+                    
+//                    Button(action: {
+//                        toolPickerIsActive.toggle()
+//                    }, label: {
+//                        Text("button beneath canvas")
+//                    })
+                    
+        
+                    
+                    DrawingView(canvas: $canvas, isDraw: $isDraw, toolPickerIsActive: $toolPickerIsActive)
+                        .allowsHitTesting(toolPickerIsActive)
+
+            }
                 .navigationTitle("Drawing")
                 .navigationBarTitleDisplayMode(.inline)
-                .navigationBarItems(leading: Button(action: {
-                    
-                    SaveImage()
-                    
-                }, label: {
-                    
-                    Image(systemName: "square.and.arrow.down.fill")
-                        .font(.title)
-                }), trailing: HStack(spacing: 15){
-//                    
-//                    Button(action: {
-//                        
-//                        // erase tool
-//                        
-//                        isDraw.toggle()
-//                    }) {
-//                        
-//                        Image(systemName: "pencil.slash")
-//                    }
-                    
-                })
+                .navigationBarItems(leading:
+                                        Button(action: {
+                                            toolPickerIsActive.toggle()
+                                        }, label: {
+                                            Text("toggle toolpicker")
+                                        }))
         }
-    }
-    
-    func SaveImage(){
-        let image = canvas.drawing.image(from: canvas.drawing.bounds, scale: 1)
         
-        UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
     }
     
 }
@@ -67,35 +66,39 @@ struct DrawingView : UIViewRepresentable {
     
     @Binding var canvas: PKCanvasView
     @Binding var isDraw: Bool
-    
-//    let ink = PKInkingTool(.pencil, color: .black)
-//    
-//    let eraser = PKEraserTool(.bitmap)
+    @Binding var toolPickerIsActive: Bool
     
     let toolPicker = PKToolPicker()
     
-    let drawing = PKDrawing()
-    
+
     func makeUIView(context: Context) -> PKCanvasView {
-        
+        canvas.contentSize = CGSize(width: 1200, height: 1500)
         canvas.drawingPolicy = .anyInput
-        
-        toolPicker.setVisible(true, forFirstResponder: canvas)
-        toolPicker.addObserver(canvas)
+        canvas.minimumZoomScale = 0.1
+        canvas.maximumZoomScale = 4.0
+//        canvas.backgroundColor = UIColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 1.0)
+        canvas.backgroundColor = .clear
+        canvas.contentInset = UIEdgeInsets(top: 280, left: 400, bottom: 280, right: 400)
+        canvas.contentMode = .center
+        canvas.scrollsToTop = false
         canvas.becomeFirstResponder()
+        showToolPicker()
         
-        canvas.drawing = drawing
-        
-//        canvas.tool = isDraw ? ink : eraser
         
         return canvas
     }
+    
+    func showToolPicker() {
+          toolPicker.setVisible(true, forFirstResponder: canvas)
+          toolPicker.addObserver(canvas)
+          canvas.becomeFirstResponder()
+        }
+    
     func updateUIView(_ uiView: PKCanvasView, context: Context) {
         
-        //updating tool whenever main view updates
-        
-//        uiView.tool = isDraw ? ink : eraser
-        
+        toolPicker.setVisible(toolPickerIsActive, forFirstResponder: canvas)
+
+        print("i changed")
         
     }
 }

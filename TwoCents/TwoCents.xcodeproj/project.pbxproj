@@ -232,8 +232,8 @@
 			isa = PBXGroup;
 			children = (
 				856E80B42B50EB260078A2CE /* CardView.swift */,
-				856E80B52B50EB260078A2CE /* SabotageSelectionView.swift */,
 				856E80B62B50EB260078A2CE /* SabotageGameView.swift */,
+				856E80B52B50EB260078A2CE /* SabotageSelectionView.swift */,
 				856E80B72B50EB260078A2CE /* SabotageCarouselView.swift */,
 				856E80B82B50EB260078A2CE /* SabotageGameViewModel.swift */,
 			);
