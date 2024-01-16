@@ -42,6 +42,8 @@ func getUID() async throws -> String? {
     return authDataResult.uid
 }
 
+
+
 struct CanvasPage: View {
     
     
@@ -57,7 +59,14 @@ struct CanvasPage: View {
     @State private var scrollPosition: CGPoint = CGPointZero
     @State private var magnifyBy: CGFloat = 1.0
     @State private var activeGestures: GestureMask = .none
-    @State private var newWidget: Bool = false
+    @State private var showNewWidgetView: Bool = false
+    @State private var showCustomizeWidgetView: Bool = false
+    
+    
+    
+    private var spaceId: String
+   
+    
     private var chatroomDocument: DocumentReference
     private var drawingDocument: DocumentReference
     
@@ -72,10 +81,12 @@ struct CanvasPage: View {
         
     }
     
-    init(chatroom: DocumentReference) {
-        self.chatroomDocument = chatroom
-        self.drawingDocument = chatroom.collection("Widgets").document("Drawings")
-        let pullDrawing = chatroom.addSnapshotListener {
+    init(spaceId: String) {
+        self.spaceId = spaceId
+        
+        self.chatroomDocument = db.collection("spaces").document(spaceId)
+        self.drawingDocument = db.collection("spaces").document(spaceId).collection("Widgets").document("Drawings")
+        let pullDrawing = db.collection("spaces").document(spaceId).addSnapshotListener {
             documentSnapshot, error in guard let document = documentSnapshot else {
                 print("Error fetching document: \(error!)")
                 return
@@ -252,7 +263,7 @@ struct CanvasPage: View {
                         .foregroundColor(.black)
                         .gesture(TapGesture(count:1).onEnded(({
                             
-                            newWidget = true
+                            showNewWidgetView = true
                         })))
                 }
             }
@@ -351,8 +362,11 @@ struct CanvasPage: View {
 //                        }
 //                }
 //            }
-        .sheet(isPresented: $newWidget, content: {
-            NewWidget()
+        .sheet(isPresented: $showNewWidgetView, content: {
+            NewWidgetView(showNewWidgetView: $showNewWidgetView, showCustomizeWidgetView: $showCustomizeWidgetView, spaceId: spaceId)
+                .sheet(isPresented: $showCustomizeWidgetView, content: {
+                    CustomizeWidgetView(showNewWidgetView: $showNewWidgetView, showCustomizeWidgetView: $showCustomizeWidgetView)
+                })
         })
             .toolbar(.hidden, for: .tabBar)
 //            .toolbarBackground(.hidden, for: .navigationBar)
@@ -366,6 +380,6 @@ struct CanvasPage: View {
 
 struct CanvasPage_Previews: PreviewProvider {
     static var previews: some View {
-        CanvasPage(chatroom: db.collection("Chatrooms").document("Chatroom1"))
+        CanvasPage(spaceId:"F531C015-E840-4B1B-BB3E-B9E7A3DFB80F")
     }
 }

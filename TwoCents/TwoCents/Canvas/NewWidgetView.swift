@@ -7,6 +7,10 @@
 
 import Foundation
 import SwiftUI
+import PhotosUI
+
+
+
 
 var imageViewTest = CanvasWidget(width: 250, height:  250, borderColor: .black, userId: "jennierubyjane", media: .image, mediaURL: URL(string: "https://m.media-amazon.com/images/M/MV5BN2Q0OWJmNWYtYzBiNy00ODAyLWI2NGQtZGFhM2VjOWM5NDNkXkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_.jpg")!, widgetName: "Photo Widget", widgetDescription: "Add a photo to spice the convo")
 
@@ -15,12 +19,13 @@ var videoViewTest = CanvasWidget(width: 250, height: 250, borderColor: .red, use
 
 
 
-struct NewWidget: View {
+struct NewWidgetView: View {
+    
+
+    @StateObject private var viewModel = NewWidgetViewModel()
     
     @State private var currentIndex: Int = 0
-    @GestureState private var dragOffset: CGFloat = 0
-   
-   
+    
     
     
     @Environment(\.dismiss) var dismissScreen
@@ -31,24 +36,19 @@ struct NewWidget: View {
         GridItem(.flexible(), spacing: 20)
     ]
     
-    
-    
-//
-//    private let widgetsExample: [String] = ["widget1", "widget2", "widget3", "widget4", "widget5", "widget6", "widget7", "widget8", "widget9", "widget10"]
-//    
-    
-    
-    
     private let widgets: [CanvasWidget] = [imageViewTest, videoViewTest, imageViewTest, imageViewTest, imageViewTest]
     
+    @Binding var showNewWidgetView: Bool
+    @Binding var showCustomizeWidgetView: Bool
     
+    @State private var selectedPhoto: PhotosPickerItem? = nil
+    
+    @State var spaceId: String
     
     
     var body: some View {
         
         ZStack {
-
-            
             NavigationView{
                 ScrollView(.horizontal, showsIndicators: false) {
                     
@@ -57,13 +57,31 @@ struct NewWidget: View {
                             
                             VStack{
                                 
-                                
-                                //widget
-                                getMediaView(widget: widgets[index])
-                                    .aspectRatio(1, contentMode: .fit)
-                                    .shadow(radius: 20, y: 10)
-                                    .cornerRadius(30)
-                                    .containerRelativeFrame(.horizontal, count: 1, spacing: 0)
+                                switch widgets[index].media {
+                                case .image:
+                                    //widget
+                                    
+                                    
+                                    PhotosPicker(selection: $selectedPhoto, matching: .images, photoLibrary: .shared()){
+                                        
+                                        
+                                        getMediaView(widget: widgets[index])
+                                            .aspectRatio(1, contentMode: .fit)
+                                            .shadow(radius: 20, y: 10)
+                                            .cornerRadius(30)
+                                            .containerRelativeFrame(.horizontal, count: 1, spacing: 0)
+                                        
+                                        
+                                    }
+                                    
+                                    
+                                default:
+                                    getMediaView(widget: widgets[index])
+                                        .aspectRatio(1, contentMode: .fit)
+                                        .shadow(radius: 20, y: 10)
+                                        .cornerRadius(30)
+                                        .containerRelativeFrame(.horizontal, count: 1, spacing: 0)
+                                }
                                 
                                 
                                 //spacer
@@ -76,6 +94,7 @@ struct NewWidget: View {
                                         .foregroundStyle(.primary)
                                         .font(.headline)
                                         .fontWeight(.regular)
+                                    
                                 }
                                 
                                 //description
@@ -87,12 +106,14 @@ struct NewWidget: View {
                                     
                                 }
                                 
+                                
                             }
                             .scrollTransition(.animated, axis: .horizontal) { content, phase in
                                 content
                                     .opacity(phase.isIdentity ? 1.0 : 0.8)
                                     .scaleEffect(phase.isIdentity ? 1.0 : 0.8)
                                     .blur(radius: phase.isIdentity ? 0 : 3)
+                                
                                 
                             }
                             
@@ -105,14 +126,10 @@ struct NewWidget: View {
                 .contentMargins(50, for: .scrollContent)
                 .scrollTargetBehavior(.viewAligned)
                 .safeAreaPadding()
-               
+                
                 .navigationTitle("Add a Widget 🙈")
                 
-                
-                
             }
-      
-            
             
             
             ZStack (alignment: .topLeading) {
@@ -130,42 +147,33 @@ struct NewWidget: View {
                         .padding()
                     
                 })
-                
-                
             }
+        }
+        .task{
             
+            try? await viewModel.loadCurrentSpace(spaceId: spaceId)
             
+            print(viewModel.space?.name)
+            
+        
             
         }
+        
+        .onChange(of: selectedPhoto, perform: { newValue in
+            if let newValue {
+                                viewModel.saveTempImage(item: newValue)
+            }
+        })
+        
+        
+        
     }
 }
 
-//
-//struct Tile: View {
-//
-//    @State private var color: Color = .black
-//    @State private var type: Media = .image
-//
-//    init(userColor: Color) {
-//
-//        self.color = userColor
-//    }
-//
-//    var body: some View {
-//        ZStack {
-//            Text("Media")
-//            RoundedRectangle(cornerRadius: CORNER_RADIUS)
-//                .stroke(color, lineWidth: LINE_WIDTH)
-//                .frame(width: TILE_SIZE, height: TILE_SIZE)
-//        }
-//    }
-//}
 
-
-
-struct NewWidget_Previews: PreviewProvider {
+struct NewWidgetView_Previews: PreviewProvider {
     
     static var previews: some View {
-       NewWidget()
+        NewWidgetView(showNewWidgetView: .constant(true), showCustomizeWidgetView: .constant(false), spaceId:"F531C015-E840-4B1B-BB3E-B9E7A3DFB80F")
     }
 }

@@ -38,7 +38,7 @@ struct FrontPageView: View {
                     Image(systemName: "magnifyingglass")
                     Text("Search")
                 }
-            CanvasPage(chatroom: db.collection("Chatrooms").document("ChatRoom1"))
+            CanvasPage(spaceId:"F531C015-E840-4B1B-BB3E-B9E7A3DFB80F")
                 .tabItem {
                     Image(systemName: "house")
                     Text("Canvas Page")

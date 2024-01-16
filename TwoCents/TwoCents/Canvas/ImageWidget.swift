@@ -11,9 +11,7 @@ import SwiftUI
 func imageWidget(widget: CanvasWidget) -> AnyView {
     assert(widget.media == .image)
     
-//    widgetName = "Photo"
-//    widgetDescription = "Insert a photo"
-//    
+
     
     return AnyView(
         AsyncImage(url: widget.mediaURL) {image in
@@ -34,6 +32,8 @@ func imageWidget(widget: CanvasWidget) -> AnyView {
                 .frame(width: widget.width, height: widget.height)
                 .background(.thickMaterial)
         }//AsyncImage
+        
+        
     )//AnyView
     
 }

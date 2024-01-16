@@ -87,6 +87,17 @@ final class SpaceManager{
     
     
     
+    func setImageWidgetPic(spaceId: String, widgetId: String, url: String, path: String) async throws {
+        let data: [String: Any] = [
+            "ImagePath": path,
+            "ImageUrl": url
+        ]
+        
+        try await spaceDocument(spaceId: spaceId).collection("imageWidgets").document(widgetId).setData(data)
+    }
+    
+    
+    
 }
 
 

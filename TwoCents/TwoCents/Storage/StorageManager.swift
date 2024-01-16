@@ -32,6 +32,10 @@ final class StorageManager{
         storage.child("spaces").child(spaceId)
     }
     
+    private func imageWidgetReference(spaceId: String) -> StorageReference{
+        storage.child("spaces").child(spaceId).child("imageWidgets")
+    }
+    
     
     
     func saveProfilePic(data: Data, userId: String)async throws -> (path: String, name: String){
@@ -115,6 +119,40 @@ final class StorageManager{
             throw URLError(.badURL)
         }
         return try await saveSpaceProfilePic(data: data, spaceId: spaceId)
+    }
+    
+    
+    //for widgets
+    
+    func saveTempWidgetPic(data: Data, spaceId: String, widgetId: String)async throws -> ( path: String, name: String){
+        
+        
+        let meta = StorageMetadata()
+        
+        meta.contentType = "image/jpeg"
+        
+//        let widgetId = UUID().uuidString
+        let path = "\(widgetId).jpeg"
+        let returnedMetaData = try await imageWidgetReference(spaceId: spaceId).child(path).putDataAsync(data, metadata: meta)
+        
+        
+        guard let returnedPath = returnedMetaData.path, let returnedName = returnedMetaData.name else {
+            throw URLError(.badServerResponse)
+        }
+        
+        
+        return (returnedPath, returnedName)
+        
+        
+    }
+    
+    
+    func saveTempWidgetPic(image: UIImage, spaceId: String, widgetId: String)async throws -> (path: String, name: String){
+        
+        guard let data = image.jpegData(compressionQuality: 1) else {
+            throw URLError(.badURL)
+        }
+        return try await saveTempWidgetPic(data: data, spaceId: spaceId, widgetId: widgetId)
     }
     
 }
