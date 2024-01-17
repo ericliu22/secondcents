@@ -29,7 +29,7 @@ final class NewWidgetViewModel: ObservableObject{
     
  
     
-    @Published var widgetId = UUID().uuidString
+//    @Published var widgetId = UUID().uuidString
     
     
     private var path = ""
@@ -38,7 +38,7 @@ final class NewWidgetViewModel: ObservableObject{
     
     @Published var widgets: [CanvasWidget] = [imageViewTest, videoViewTest]
     
-    func saveTempImage(item: PhotosPickerItem) {
+    func saveTempImage(item: PhotosPickerItem, widgetId: String) {
       
     
         guard let space else { return }
@@ -80,17 +80,16 @@ final class NewWidgetViewModel: ObservableObject{
     }
     
     
-    func saveImageWidget() {
+    func saveImageWidget(widgetId: String) {
       
     
         guard let space, !path.isEmpty, !url.isEmpty else { return }
-        
-        
+
         Task {
             
                
             try await SpaceManager.shared.setImageWidgetPic(spaceId: space.spaceId, widgetId: widgetId, url: self.url, path: self.path)
-                try? await loadCurrentSpace(spaceId: space.spaceId)
+            try? await loadCurrentSpace(spaceId: space.spaceId)
            
             
         }

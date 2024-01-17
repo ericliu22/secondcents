@@ -363,10 +363,12 @@ struct CanvasPage: View {
 //                }
 //            }
         .sheet(isPresented: $showNewWidgetView, content: {
-            NewWidgetView(showNewWidgetView: $showNewWidgetView, showCustomizeWidgetView: $showCustomizeWidgetView, spaceId: spaceId)
-                .sheet(isPresented: $showCustomizeWidgetView, content: {
-                    CustomizeWidgetView(showNewWidgetView: $showNewWidgetView, showCustomizeWidgetView: $showCustomizeWidgetView)
-                })
+            
+            NewWidgetView(widgetId: UUID().uuidString, showNewWidgetView: $showNewWidgetView, showCustomizeWidgetView: $showCustomizeWidgetView, spaceId: spaceId)
+            
+//                .sheet(isPresented: $showCustomizeWidgetView, content: {
+//                    CustomizeWidgetView(showNewWidgetView: $showNewWidgetView, showCustomizeWidgetView: $showCustomizeWidgetView)
+//                })
         })
             .toolbar(.hidden, for: .tabBar)
 //            .toolbarBackground(.hidden, for: .navigationBar)

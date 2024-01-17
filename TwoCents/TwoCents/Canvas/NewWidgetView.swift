@@ -23,25 +23,26 @@ var videoViewTest = CanvasWidget(width: 250, height: 250, borderColor: .red, use
 
 
 struct NewWidgetView: View {
-
-   
-
-
+    @State var widgetId: String
+    
+    
+    
     @StateObject private var viewModel = NewWidgetViewModel()
     
-  
     
-   
+    
+    
     
     @Environment(\.dismiss) var dismissScreen
     
-
+    
     
     
     @Binding var showNewWidgetView: Bool
     @Binding var showCustomizeWidgetView: Bool
     
     @State private var selectedPhoto: PhotosPickerItem? = nil
+    
     
     @State var spaceId: String
     
@@ -56,115 +57,146 @@ struct NewWidgetView: View {
                         HStack {
                             ForEach(0..<viewModel.widgets.count, id: \.self) {index in
                                 
+                                
+                                
                                 VStack{
-                                    //name
-                                    if let name = viewModel.widgets[index].widgetName {
-                                        Text(name)
-                                            .foregroundStyle(.primary)
-                                            .font(.title)
-                                            .fontWeight(.bold)
-                                            .frame(maxWidth: .infinity)
-                                            .visualEffect { content, geometryProxy in
-                                                content
-                                                    .offset(x: scrollOffset(geometryProxy))
-                                            }
-                                        
-                                    }
-                                    
-                                    
-                                    //description
-                                    if let description = viewModel.widgets[index].widgetDescription {
-                                        Text(description)
-                                            .foregroundStyle(.secondary)
-                                            .font(.headline)
-                                            .fontWeight(.regular)
-                                            .frame(maxWidth: .infinity)
-                                            .visualEffect { content, geometryProxy in
-                                                content
-                                                    .offset(x: scrollOffset(geometryProxy))
-                                            }
-                                            .padding(.bottom, 100)
+                                    VStack{
+                                        //name
+                                        if let name = viewModel.widgets[index].widgetName {
+                                            Text(name)
+                                                .foregroundStyle(.primary)
+                                                .font(.title)
+                                                .fontWeight(.bold)
+                                                .frame(maxWidth: .infinity)
+                                                .visualEffect { content, geometryProxy in
+                                                    content
+                                                        .offset(x: scrollOffset(geometryProxy))
+                                                }
+                                            
+                                        }
                                         
                                         
-                                    
-                                    
+                                        //description
+                                        if let description = viewModel.widgets[index].widgetDescription {
+                                            Text(description)
+                                                .foregroundStyle(.secondary)
+                                                .font(.headline)
+                                                .fontWeight(.regular)
+                                                .frame(maxWidth: .infinity)
+                                                .visualEffect { content, geometryProxy in
+                                                    content
+                                                        .offset(x: scrollOffset(geometryProxy))
+                                                }
+                                                .padding(.bottom, 60)
+                                            
+                                        }
                                         
                                         
                                         switch viewModel.widgets[index].media {
-                                    case .image:
-                                        //widget
-                                        
-                                        
-                                        PhotosPicker(selection: $selectedPhoto, matching: .images, photoLibrary: .shared()){
+                                        case .image:
+                                            //widget
                                             
                                             
+                                            PhotosPicker(selection: $selectedPhoto, matching: .images, photoLibrary: .shared()){
+                                                
+                                                
+                                                getMediaView(widget: viewModel.widgets[index])
+                                                    .aspectRatio(1, contentMode: .fit)
+                                                    .shadow(radius: 20, y: 10)
+                                                    .cornerRadius(30)
+                                                    .containerRelativeFrame(.horizontal, count: 1, spacing: 0)
+                                                
+                                            }
+                                            
+                                            
+                                            
+                                        default:
                                             getMediaView(widget: viewModel.widgets[index])
                                                 .aspectRatio(1, contentMode: .fit)
                                                 .shadow(radius: 20, y: 10)
                                                 .cornerRadius(30)
                                                 .containerRelativeFrame(.horizontal, count: 1, spacing: 0)
-                                                
                                         }
                                         
+                                    }
+                                    .scrollTransition(.animated, axis: .horizontal) { content, phase in
+                                        content
+                                            .opacity(phase.isIdentity ? 1.0 : 0.8)
+                                            .scaleEffect(phase.isIdentity ? 1.0 : 0.8)
+                                            .blur(radius: phase.isIdentity ? 0 : 3)
+                                        
+                                        
+                                        
+                                    }
+                                    
+                                    
+                                    Spacer()
+                                        .frame(height:30)
+                                    
+                                    
+                                    switch index {
+                                        
+                                    case 0:
+                                        Button {
+                                            
+                                            
+                                            viewModel.saveImageWidget(widgetId: widgetId)
+                                            
+                                            
+                                            
+                                            
+                                            dismissScreen()
+                                        } label: {
+                                            Text("Add Widget")
+                                                .padding(.vertical, 10)
+                                                .frame(maxWidth: .infinity)
+                                        }
+                                        .buttonStyle(.bordered)
+                                        .buttonBorderShape(.capsule)
+                                        .padding(.horizontal)
+                                        .disabled(selectedPhoto == nil)
                                         
                                         
                                     default:
-                                            getMediaView(widget: viewModel.widgets[index])
-                                            .aspectRatio(1, contentMode: .fit)
-                                            .shadow(radius: 20, y: 10)
-                                            .cornerRadius(30)
-                                            .containerRelativeFrame(.horizontal, count: 1, spacing: 0)
+                                        Button {
+                                            
+                                            dismissScreen()
+                                        } label: {
+                                            Text("Add Widget")
+                                                .padding(.vertical, 10)
+                                                .frame(maxWidth: .infinity)
+                                        }
+                                        .buttonStyle(.bordered)
+                                        .buttonBorderShape(.capsule)
+                                        .padding(.horizontal)
+                                        .disabled(true)
+                                        
+                                        
                                     }
                                     
                                     
-                                        Spacer()
+                                }
                                 
-                                   
-                                        
-                                        
-                                    }
-                                    
-                                    
-                                }
-                                .scrollTransition(.animated, axis: .horizontal) { content, phase in
-                                    content
-                                        .opacity(phase.isIdentity ? 1.0 : 0.8)
-                                        .scaleEffect(phase.isIdentity ? 1.0 : 0.8)
-                                        .blur(radius: phase.isIdentity ? 0 : 3)
-                                    
-                                    
-                                }
                                 
                                 
                             }
                         }
                         .scrollTargetLayout()
-                       
+                        
                         
                         
                     }
                     .frame(maxHeight: .infinity, alignment: .top)
-//                    .background(.red)
+                    //                    .background(.red)
                     
                     .contentMargins(50, for: .scrollContent)
                     .scrollTargetBehavior(.viewAligned)
                     .safeAreaPadding()
-                   
                     
                     
-                    Button {
-                        
-                        viewModel.saveImageWidget()
-                        dismissScreen()
-                    } label: {
-                        Text("Add Widget")
-                            .padding(.vertical, 10)
-                            .frame(maxWidth: .infinity)
-                    }
-                    .buttonStyle(.bordered)
-                    .buttonBorderShape(.capsule)
-                    .padding(.horizontal)
-
+                    
+                    
+                    
                     
                     
                 }
@@ -197,16 +229,16 @@ struct NewWidgetView: View {
             
             print(viewModel.space?.name ?? "Space not available")
             
-        
+            
             
         }
         
         .onChange(of: selectedPhoto, perform: { newValue in
             if let newValue {
-                viewModel.saveTempImage(item: newValue)
+                viewModel.saveTempImage(item: newValue, widgetId: widgetId)
                 
-                 
-//                widgets[0] = CanvasWidget(width: 250, height:  250, borderColor: .black, userId: "jennierubyjane", media: .image, mediaURL: URL(string: viewModel.url)!, widgetName: "Photo Widget", widgetDescription: "Add a photo to spice the convo")
+                
+                //                widgets[0] = CanvasWidget(width: 250, height:  250, borderColor: .black, userId: "jennierubyjane", media: .image, mediaURL: URL(string: viewModel.url)!, widgetName: "Photo Widget", widgetDescription: "Add a photo to spice the convo")
             }
         })
         
@@ -219,14 +251,14 @@ struct NewWidgetView: View {
 func scrollOffset(_ proxy: GeometryProxy) -> CGFloat {
     let minX = proxy.bounds(of: .scrollView)?.minX ?? 0
     
-    //0.6 speed of main content
-    return -minX * 0.5
+    
+    return -minX * 0.6
 }
 
 
 struct NewWidgetView_Previews: PreviewProvider {
     
     static var previews: some View {
-        NewWidgetView(showNewWidgetView: .constant(true), showCustomizeWidgetView: .constant(false), spaceId:"F531C015-E840-4B1B-BB3E-B9E7A3DFB80F")
+        NewWidgetView(widgetId: UUID().uuidString, showNewWidgetView: .constant(true), showCustomizeWidgetView: .constant(false), spaceId:"F531C015-E840-4B1B-BB3E-B9E7A3DFB80F")
     }
 }
