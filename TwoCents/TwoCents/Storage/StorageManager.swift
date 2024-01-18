@@ -155,4 +155,21 @@ final class StorageManager{
         return try await saveTempWidgetPic(data: data, spaceId: spaceId, widgetId: widgetId)
     }
     
+    
+    func deleteTempWidgetPic(spaceId: String, widgetId: String) async throws {
+        
+        print("deleted")
+  
+
+        let path = "\(widgetId).jpeg"
+        
+        print(path)
+        try await imageWidgetReference(spaceId: spaceId).child(path).delete { error in
+            print(error)
+            print("NOT WORKING")
+        }
+        
+        
+    }
+    
 }

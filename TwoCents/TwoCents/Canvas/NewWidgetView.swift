@@ -27,6 +27,7 @@ struct NewWidgetView: View {
     
     
     
+    
     @StateObject private var viewModel = NewWidgetViewModel()
     
     
@@ -42,9 +43,11 @@ struct NewWidgetView: View {
     @Binding var showCustomizeWidgetView: Bool
     
     @State private var selectedPhoto: PhotosPickerItem? = nil
-    
+    //    @State private var imagePreview: UIImage?
     
     @State var spaceId: String
+    
+    @Binding var photoLinkedToProfile: Bool
     
     
     var body: some View {
@@ -61,6 +64,8 @@ struct NewWidgetView: View {
                                 
                                 VStack{
                                     VStack{
+                                        
+                                        
                                         //name
                                         if let name = viewModel.widgets[index].widgetName {
                                             Text(name)
@@ -96,17 +101,50 @@ struct NewWidgetView: View {
                                         case .image:
                                             //widget
                                             
-                                            
-                                            PhotosPicker(selection: $selectedPhoto, matching: .images, photoLibrary: .shared()){
+                                            ZStack{
                                                 
+                                                PhotosPicker(selection: $selectedPhoto, matching: .images, photoLibrary: .shared()){
+                                                    
+                                                    
+                                                    getMediaView(widget: viewModel.widgets[index])
+                                                        .aspectRatio(1, contentMode: .fit)
+                                                        .shadow(radius: 20, y: 10)
+                                                        .cornerRadius(30)
+                                                        .containerRelativeFrame(.horizontal, count: 1, spacing: 0)
+                                                    
+                                                    
+                                                }
+                                             
                                                 
-                                                getMediaView(widget: viewModel.widgets[index])
-                                                    .aspectRatio(1, contentMode: .fit)
-                                                    .shadow(radius: 20, y: 10)
-                                                    .cornerRadius(30)
-                                                    .containerRelativeFrame(.horizontal, count: 1, spacing: 0)
+                                                if viewModel.loading {
+                                                    
+                                                    //                                                        if let imagePreview {
+                                                    //                                                            Image(uiImage: imagePreview)
+                                                    //                                                                .resizable()
+                                                    //                                                                .aspectRatio(contentMode: .fill)
+                                                    //                                                                .frame(width: viewModel.widgets[index].width, height: viewModel.widgets[index].height)
+                                                    //                                                                .cornerRadius(30)
+                                                    //                                                        }
+                                                    //
+                                                    
+                                                    
+                                                    ProgressView()
+                                                        .progressViewStyle(
+                                                            CircularProgressViewStyle(tint:
+                                                                    .primary)
+                                                        )
+                                                    
+                                                        .frame(width: viewModel.widgets[index].width, height: viewModel.widgets[index].height)
+//                                                        .background(.thinMaterial)
+                                                        .cornerRadius(30)
+                                                        
+                                                        
+                                                    
+                                                    
+                                                }
                                                 
                                             }
+                                         
                                             
                                             
                                             
@@ -142,7 +180,10 @@ struct NewWidgetView: View {
                                             
                                             viewModel.saveImageWidget(widgetId: widgetId)
                                             
-                                            
+                                            if !viewModel.loading {
+                                                photoLinkedToProfile = true
+                                            }
+                                           
                                             
                                             
                                             dismissScreen()
@@ -154,7 +195,7 @@ struct NewWidgetView: View {
                                         .buttonStyle(.bordered)
                                         .buttonBorderShape(.capsule)
                                         .padding(.horizontal)
-                                        .disabled(selectedPhoto == nil)
+                                        .disabled(viewModel.loading || (selectedPhoto == nil))
                                         
                                         
                                     default:
@@ -235,12 +276,25 @@ struct NewWidgetView: View {
         
         .onChange(of: selectedPhoto, perform: { newValue in
             if let newValue {
+                viewModel.loading = true
+                
                 viewModel.saveTempImage(item: newValue, widgetId: widgetId)
                 
                 
-                //                widgets[0] = CanvasWidget(width: 250, height:  250, borderColor: .black, userId: "jennierubyjane", media: .image, mediaURL: URL(string: viewModel.url)!, widgetName: "Photo Widget", widgetDescription: "Add a photo to spice the convo")
+                //                Task{
+                //                    if let selectedPhoto,
+                //                       let data = try? await selectedPhoto.loadTransferable(type: Data.self) {
+                //                        if let image = UIImage(data: data) {
+                //                            imagePreview = image
+                //                        }
+                //
+                //                    }
+                //                }
+                
+                
             }
         })
+        
         
         
         
@@ -259,6 +313,6 @@ func scrollOffset(_ proxy: GeometryProxy) -> CGFloat {
 struct NewWidgetView_Previews: PreviewProvider {
     
     static var previews: some View {
-        NewWidgetView(widgetId: UUID().uuidString, showNewWidgetView: .constant(true), showCustomizeWidgetView: .constant(false), spaceId:"F531C015-E840-4B1B-BB3E-B9E7A3DFB80F")
+        NewWidgetView(widgetId: UUID().uuidString, showNewWidgetView: .constant(true), showCustomizeWidgetView: .constant(false), spaceId:"F531C015-E840-4B1B-BB3E-B9E7A3DFB80F", photoLinkedToProfile: .constant(false))
     }
 }

@@ -28,7 +28,7 @@ final class NewWidgetViewModel: ObservableObject{
     
     
  
-    
+    @Published var loading: Bool = false
 //    @Published var widgetId = UUID().uuidString
     
     
@@ -37,6 +37,11 @@ final class NewWidgetViewModel: ObservableObject{
     
     
     @Published var widgets: [CanvasWidget] = [imageViewTest, videoViewTest]
+    
+    
+    
+    
+    
     
     func saveTempImage(item: PhotosPickerItem, widgetId: String) {
       
@@ -54,26 +59,27 @@ final class NewWidgetViewModel: ObservableObject{
                 
                 let (path, name) = try await StorageManager.shared.saveTempWidgetPic(data: imageData, spaceId: space.spaceId, widgetId: widgetId)
                 print ("Saved Image")
-                print (widgetId)
-//                print (path)
-                print (name)
+//                print (widgetId)
+                print (path)
+//                print (name)
                 let url = try await StorageManager.shared.getURLForImage(path: path)
 //                print(url)
                 
                 self.path = path
                 self.url = url.absoluteString
     
-                    widgets[0] = CanvasWidget(width: 250, height:  250, borderColor: .black, userId: "jennierubyjane", media: .image, mediaURL: URL(string: self.url)!, widgetName: "Photo Widget", widgetDescription: "Add a photo to spice the convo")
+                widgets[0] = CanvasWidget(width: 250, height:  250, borderColor: .black, userId: "jennierubyjane", media: .image, mediaURL: URL(string: self.url)!, widgetName: "Photo Widget", widgetDescription: "Add a photo to spice the convo")
                 
-              
-        
                 
+                loading = false
+             
                 
                         
                   
                 
                
             }
+            
             
         }
         

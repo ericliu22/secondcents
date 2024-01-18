@@ -61,6 +61,8 @@ struct CanvasPage: View {
     @State private var activeGestures: GestureMask = .none
     @State private var showNewWidgetView: Bool = false
     @State private var showCustomizeWidgetView: Bool = false
+    @State private var photoLinkedToProfile: Bool = false
+    @State private var widgetId: String = UUID().uuidString
     
     
     
@@ -362,13 +364,26 @@ struct CanvasPage: View {
 //                        }
 //                }
 //            }
-        .sheet(isPresented: $showNewWidgetView, content: {
+        .sheet(isPresented: $showNewWidgetView, onDismiss: {
             
-            NewWidgetView(widgetId: UUID().uuidString, showNewWidgetView: $showNewWidgetView, showCustomizeWidgetView: $showCustomizeWidgetView, spaceId: spaceId)
+            if photoLinkedToProfile {
+                photoLinkedToProfile = false
+                widgetId = UUID().uuidString
+                
+            } else {
+                Task{
+                    try await StorageManager.shared.deleteTempWidgetPic(spaceId:spaceId, widgetId: widgetId)
+                }
+            }
             
-//                .sheet(isPresented: $showCustomizeWidgetView, content: {
-//                    CustomizeWidgetView(showNewWidgetView: $showNewWidgetView, showCustomizeWidgetView: $showCustomizeWidgetView)
-//                })
+           
+        }, content: {
+            
+            NewWidgetView(widgetId: widgetId, showNewWidgetView: $showNewWidgetView, showCustomizeWidgetView: $showCustomizeWidgetView, spaceId: spaceId, photoLinkedToProfile: $photoLinkedToProfile)
+            
+            //                .sheet(isPresented: $showCustomizeWidgetView, content: {
+            //                    CustomizeWidgetView(showNewWidgetView: $showNewWidgetView, showCustomizeWidgetView: $showCustomizeWidgetView)
+            //                })
         })
             .toolbar(.hidden, for: .tabBar)
 //            .toolbarBackground(.hidden, for: .navigationBar)
