@@ -60,14 +60,13 @@ struct CanvasPage: View {
     @State private var magnifyBy: CGFloat = 1.0
     @State private var activeGestures: GestureMask = .none
     @State private var showNewWidgetView: Bool = false
-    @State private var showCustomizeWidgetView: Bool = false
     @State private var photoLinkedToProfile: Bool = false
     @State private var widgetId: String = UUID().uuidString
     
     
     
     private var spaceId: String
-   
+    
     
     private var chatroomDocument: DocumentReference
     private var drawingDocument: DocumentReference
@@ -98,7 +97,7 @@ struct CanvasPage: View {
                 return
             }
         }
-
+        
     }
     
     func pushDrawing(userId: String, userColor: Color, lines: [Line]) {
@@ -123,7 +122,7 @@ struct CanvasPage: View {
         }
         
     }
-
+    
     
     
     
@@ -133,11 +132,11 @@ struct CanvasPage: View {
         do {
             try await self.userUID = getUID()!
             var dbDrawings: Dictionary<String, Any>
-//            do {
-//                dbDrawings = try await drawingDocument.getDocument().data()!
-//            } catch {
-//                return
-//            }
+            //            do {
+            //                dbDrawings = try await drawingDocument.getDocument().data()!
+            //            } catch {
+            //                return
+            //            }
             
             
             //Jonny changed from above do catch to "if let." so that app does not crash if drawing widget document/collections does not exist
@@ -178,11 +177,11 @@ struct CanvasPage: View {
     func GridView() -> AnyView {
         
         let columns = Array(repeating: GridItem(.fixed(TILE_SIZE), spacing: 15, alignment: .leading), count: 3)
-
+        
         return AnyView(LazyVGrid(columns: columns, alignment: .leading, spacing: 15, content: {
             
             ForEach(canvasWidgets, id:\.id) { widget in
-               
+                
                 ZStack {
                     getMediaView(widget: widget)
                     RoundedRectangle(cornerRadius: CORNER_RADIUS)
@@ -198,19 +197,19 @@ struct CanvasPage: View {
                 } isTargeted: { status in
                     if let draggingItem, status, draggingItem != widget {
                         if let sourceIndex = canvasWidgets.firstIndex(of: draggingItem),
-                            let destinationIndex = canvasWidgets.firstIndex(of: widget) {
-                                withAnimation(.bouncy) {
-                                    let sourceItem = canvasWidgets.remove(at: sourceIndex)
-                                    canvasWidgets.insert(sourceItem, at: destinationIndex)
-                                }
+                           let destinationIndex = canvasWidgets.firstIndex(of: widget) {
+                            withAnimation(.bouncy) {
+                                let sourceItem = canvasWidgets.remove(at: sourceIndex)
+                                canvasWidgets.insert(sourceItem, at: destinationIndex)
                             }
+                        }
                     }
                 }
             }
-            }
-        ))
+        }
+                                ))
     }
-
+    
     func Toolbar() -> AnyView {
         
         AnyView(
@@ -222,15 +221,15 @@ struct CanvasPage: View {
                         .foregroundColor(.black)
                         .gesture(TapGesture(count: 1).onEnded({
                             withAnimation(.easeIn) {
-                                    self.currentMode = .normal
-                                    self.activeGestures = .none
-                                }
+                                self.currentMode = .normal
+                                self.activeGestures = .none
+                            }
                         }))
                     Image(systemName: "pencil.circle\(drawingMode == .pencil ? ".fill" : "")")
                         .font(.largeTitle)
                         .foregroundColor(drawingMode == .pencil ? penColor : .black)
                         .gesture(TapGesture(count: 1).onEnded({
-                                self.drawingMode = .pencil
+                            self.drawingMode = .pencil
                         }))
                     Image(systemName: "eraser\(drawingMode == .eraser ? ".fill" : "")")
                         .font(.largeTitle)
@@ -244,10 +243,10 @@ struct CanvasPage: View {
                         .font(.largeTitle)
                         .foregroundColor(.black)
                         .gesture(TapGesture(count: 1).onEnded({
-                                withAnimation(.bouncy) {
-                                    self.currentMode = .drawing
-                                    self.activeGestures = .all
-                                }
+                            withAnimation(.bouncy) {
+                                self.currentMode = .drawing
+                                self.activeGestures = .all
+                            }
                         }))
                     Image(systemName: "hand.raised\(currentMode == .grab ? ".fill" : "")")
                         .font(.largeTitle)
@@ -273,12 +272,12 @@ struct CanvasPage: View {
         )
         
     }
-
+    
     
     
     func canvasView() -> AnyView {
         
-       return AnyView(
+        return AnyView(
             ZStack {
                 GridView()
                     .zIndex(currentMode == .grab ? 1 : 0)
@@ -313,24 +312,24 @@ struct CanvasPage: View {
     var draw: some Gesture {
         
         DragGesture(minimumDistance: 0, coordinateSpace: .local).onChanged ({ value in
-                let newPoint = value.location
-                currentLine.points.append(newPoint)
-                self.lines.append(currentLine)
-            }).onEnded({value in
-                self.lines.append(currentLine)
-                self.currentLine = Line()
-                pushDrawing(userId: userUID, userColor: penColor, lines: self.lines)
-            })
+            let newPoint = value.location
+            currentLine.points.append(newPoint)
+            self.lines.append(currentLine)
+        }).onEnded({value in
+            self.lines.append(currentLine)
+            self.currentLine = Line()
+            pushDrawing(userId: userUID, userColor: penColor, lines: self.lines)
+        })
         
     }
     
     var dragMode: some Gesture {
         
         LongPressGesture(minimumDuration: 1.0, maximumDistance: 1)
-        .onEnded { value in
-            print("grabmode")
-            currentMode = .grab
-        }
+            .onEnded { value in
+                print("grabmode")
+                currentMode = .grab
+            }
         
     }
     
@@ -351,19 +350,7 @@ struct CanvasPage: View {
             }
             Toolbar()
         }
-//            .overlay(alignment: .center) {
-//                if newWidget {
-//                    NewWidget()
-//                        .overlay(alignment: .topLeading) {
-//                            Image(systemName: "x.circle")
-//                                .font(.largeTitle)
-//                                .foregroundColor(.black)
-//                                .gesture(TapGesture(count:1).onEnded(({
-//                                    newWidget = false
-//                                })))
-//                        }
-//                }
-//            }
+        
         .sheet(isPresented: $showNewWidgetView, onDismiss: {
             
             if photoLinkedToProfile {
@@ -376,17 +363,14 @@ struct CanvasPage: View {
                 }
             }
             
-           
+            
         }, content: {
             
-            NewWidgetView(widgetId: widgetId, showNewWidgetView: $showNewWidgetView, showCustomizeWidgetView: $showCustomizeWidgetView, spaceId: spaceId, photoLinkedToProfile: $photoLinkedToProfile)
+            NewWidgetView(widgetId: widgetId, showNewWidgetView: $showNewWidgetView,  spaceId: spaceId, photoLinkedToProfile: $photoLinkedToProfile)
             
-            //                .sheet(isPresented: $showCustomizeWidgetView, content: {
-            //                    CustomizeWidgetView(showNewWidgetView: $showNewWidgetView, showCustomizeWidgetView: $showCustomizeWidgetView)
-            //                })
         })
-            .toolbar(.hidden, for: .tabBar)
-//            .toolbarBackground(.hidden, for: .navigationBar)
+        .toolbar(.hidden, for: .tabBar)
+      
     }
     
     

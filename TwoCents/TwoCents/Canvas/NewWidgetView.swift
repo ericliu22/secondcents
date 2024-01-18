@@ -40,7 +40,7 @@ struct NewWidgetView: View {
     
     
     @Binding var showNewWidgetView: Bool
-    @Binding var showCustomizeWidgetView: Bool
+    
     
     @State private var selectedPhoto: PhotosPickerItem? = nil
     //    @State private var imagePreview: UIImage?
@@ -56,16 +56,11 @@ struct NewWidgetView: View {
             NavigationView{
                 VStack{
                     ScrollView(.horizontal, showsIndicators: false) {
-                        
                         HStack {
                             ForEach(0..<viewModel.widgets.count, id: \.self) {index in
-                                
-                                
-                                
                                 VStack{
+                                    
                                     VStack{
-                                        
-                                        
                                         //name
                                         if let name = viewModel.widgets[index].widgetName {
                                             Text(name)
@@ -77,9 +72,7 @@ struct NewWidgetView: View {
                                                     content
                                                         .offset(x: scrollOffset(geometryProxy))
                                                 }
-                                            
                                         }
-                                        
                                         
                                         //description
                                         if let description = viewModel.widgets[index].widgetDescription {
@@ -93,18 +86,16 @@ struct NewWidgetView: View {
                                                         .offset(x: scrollOffset(geometryProxy))
                                                 }
                                                 .padding(.bottom, 60)
-                                            
                                         }
                                         
-                                        
+                                        //Widget Body
                                         switch viewModel.widgets[index].media {
                                         case .image:
-                                            //widget
-                                            
+                                            //image widget
                                             ZStack{
                                                 
+                                                //main widget/photopicker
                                                 PhotosPicker(selection: $selectedPhoto, matching: .images, photoLibrary: .shared()){
-                                                    
                                                     
                                                     getMediaView(widget: viewModel.widgets[index])
                                                         .aspectRatio(1, contentMode: .fit)
@@ -112,43 +103,25 @@ struct NewWidgetView: View {
                                                         .cornerRadius(30)
                                                         .containerRelativeFrame(.horizontal, count: 1, spacing: 0)
                                                     
-                                                    
                                                 }
-                                             
                                                 
+                                                //loading circle
                                                 if viewModel.loading {
-                                                    
-                                                    //                                                        if let imagePreview {
-                                                    //                                                            Image(uiImage: imagePreview)
-                                                    //                                                                .resizable()
-                                                    //                                                                .aspectRatio(contentMode: .fill)
-                                                    //                                                                .frame(width: viewModel.widgets[index].width, height: viewModel.widgets[index].height)
-                                                    //                                                                .cornerRadius(30)
-                                                    //                                                        }
-                                                    //
-                                                    
-                                                    
                                                     ProgressView()
                                                         .progressViewStyle(
                                                             CircularProgressViewStyle(tint:
                                                                     .primary)
                                                         )
-                                                    
                                                         .frame(width: viewModel.widgets[index].width, height: viewModel.widgets[index].height)
-//                                                        .background(.thinMaterial)
                                                         .cornerRadius(30)
-                                                        
-                                                        
-                                                    
                                                     
                                                 }
                                                 
                                             }
-                                         
-                                            
-                                            
                                             
                                         default:
+                                            
+                                            //default widgets
                                             getMediaView(widget: viewModel.widgets[index])
                                                 .aspectRatio(1, contentMode: .fit)
                                                 .shadow(radius: 20, y: 10)
@@ -172,19 +145,15 @@ struct NewWidgetView: View {
                                         .frame(height:30)
                                     
                                     
+                                    //button
                                     switch index {
-                                        
                                     case 0:
                                         Button {
-                                            
-                                            
                                             viewModel.saveImageWidget(widgetId: widgetId)
                                             
                                             if !viewModel.loading {
                                                 photoLinkedToProfile = true
                                             }
-                                           
-                                            
                                             
                                             dismissScreen()
                                         } label: {
@@ -196,7 +165,6 @@ struct NewWidgetView: View {
                                         .buttonBorderShape(.capsule)
                                         .padding(.horizontal)
                                         .disabled(viewModel.loading || (selectedPhoto == nil))
-                                        
                                         
                                     default:
                                         Button {
@@ -212,46 +180,27 @@ struct NewWidgetView: View {
                                         .padding(.horizontal)
                                         .disabled(true)
                                         
-                                        
                                     }
-                                    
-                                    
                                 }
-                                
-                                
-                                
                             }
                         }
                         .scrollTargetLayout()
                         
-                        
-                        
                     }
                     .frame(maxHeight: .infinity, alignment: .top)
-                    //                    .background(.red)
-                    
                     .contentMargins(50, for: .scrollContent)
                     .scrollTargetBehavior(.viewAligned)
                     .safeAreaPadding()
                     
-                    
-                    
-                    
-                    
-                    
-                    
                 }
-                
                 .navigationTitle("Add a Widget 🙈")
-                
             }
             
-            
+            //cross to dismiss screen
             ZStack (alignment: .topLeading) {
                 
                 Color.clear
                     .edgesIgnoringSafeArea(.all)
-                
                 
                 Button(action: {
                     dismissScreen()
@@ -260,48 +209,27 @@ struct NewWidgetView: View {
                         .foregroundColor(Color(UIColor.label))
                         .font(.title2)
                         .padding()
-                    
                 })
             }
         }
         .task{
-            
             try? await viewModel.loadCurrentSpace(spaceId: spaceId)
-            
             print(viewModel.space?.name ?? "Space not available")
-            
-            
-            
         }
         
         .onChange(of: selectedPhoto, perform: { newValue in
             if let newValue {
+                
                 viewModel.loading = true
-                
                 viewModel.saveTempImage(item: newValue, widgetId: widgetId)
-                
-                
-                //                Task{
-                //                    if let selectedPhoto,
-                //                       let data = try? await selectedPhoto.loadTransferable(type: Data.self) {
-                //                        if let image = UIImage(data: data) {
-                //                            imagePreview = image
-                //                        }
-                //
-                //                    }
-                //                }
-                
                 
             }
         })
-        
-        
-        
-        
     }
 }
 
 
+//to make scroll transition effect cool
 func scrollOffset(_ proxy: GeometryProxy) -> CGFloat {
     let minX = proxy.bounds(of: .scrollView)?.minX ?? 0
     
@@ -313,6 +241,6 @@ func scrollOffset(_ proxy: GeometryProxy) -> CGFloat {
 struct NewWidgetView_Previews: PreviewProvider {
     
     static var previews: some View {
-        NewWidgetView(widgetId: UUID().uuidString, showNewWidgetView: .constant(true), showCustomizeWidgetView: .constant(false), spaceId:"F531C015-E840-4B1B-BB3E-B9E7A3DFB80F", photoLinkedToProfile: .constant(false))
+        NewWidgetView(widgetId: UUID().uuidString, showNewWidgetView: .constant(true),  spaceId:"F531C015-E840-4B1B-BB3E-B9E7A3DFB80F", photoLinkedToProfile: .constant(false))
     }
 }
