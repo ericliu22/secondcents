@@ -10,24 +10,48 @@ import SwiftUI
 @available(iOS 17.0, *)
 struct CardView: View {
     
-    var player: PlayerData
+    var player: DBUser
     var playerIndex: Int
     @State private var offset = CGSize.zero
     @State private var index: Double = 0
     @Binding var isSpread: Bool
-
+    
+    var playerColor: Color
+    var playerImage: String
+    
+    var urlString: String
+    var frameSize: CGFloat? = 200
+    
     var body: some View {
             ZStack{
                 Rectangle()
                     .border(.white, width: 5.0)
                     .cornerRadius(4)
-                    .foregroundColor(player.nativeColor)
+                    .foregroundColor(playerColor)
                     .shadow(radius: 2)
                     .padding(.vertical, 100)
                     .padding(.horizontal, 40)
                 VStack(){
-                    Image(player.image)
-                    Text(player.name)
+                    
+                    let url = URL(string: urlString)
+                    AsyncImage(url: url) {image in
+                        image
+                            .resizable()
+                            .scaledToFill()
+                    }  placeholder: {
+                        //else show loading after user uploads but sending/downloading from database
+                        ProgressView()
+                            .progressViewStyle(CircularProgressViewStyle(tint: Color(UIColor.systemBackground)))
+                            .frame(width: frameSize, height: frameSize)
+                            .background(
+                                Circle()
+                                    .fill(Color.accentColor)
+                            )
+                    }
+                    .clipShape(Circle())
+                    .frame(width: frameSize, height: frameSize)
+
+                    Text(player.name!)
                         .foregroundColor(.white)
                         .font(.title)
                         .bold()
@@ -35,7 +59,7 @@ struct CardView: View {
                     NavigationLink(value: playerData[playerIndex]) {
                         ZStack{
                             Rectangle()
-                                .foregroundColor(Color(player.color))
+                                .foregroundColor(playerColor)
                                 .background(.regularMaterial)
                                 .frame(width: 200, height: 50)
                                 .cornerRadius(10)
@@ -49,8 +73,8 @@ struct CardView: View {
                     Spacer()
                 }
             }
-            .navigationDestination(for: PlayerData.self) { player in
-                SabotageSelectionView(player: player)
+            .navigationDestination(for: Int.self) { player in
+                SabotageSelectionView(playerIndex: player)
             }
             .zIndex(index)
             .offset(x: offset.width, y: offset.height)
@@ -87,9 +111,9 @@ struct CardView: View {
     }
 }
 
-@available(iOS 17.0, *)
-struct CardView_Previews: PreviewProvider {
-    static var previews: some View {
-        CardView(player: playerData[1], playerIndex: 1, isSpread: .constant(false))
-    }
-}
+//@available(iOS 17.0, *)
+//struct CardView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        CardView(player: playerData[1], playerIndex: 1, isSpread: .constant(false))
+//    }
+//}

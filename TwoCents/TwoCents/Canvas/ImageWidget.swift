@@ -9,6 +9,8 @@ import Foundation
 import SwiftUI
 
 func imageWidget(widget: CanvasWidget) -> AnyView {
+    @State var isPresented: Bool = false
+    print(isPresented)
     assert(widget.media == .image)
     
 
@@ -23,6 +25,11 @@ func imageWidget(widget: CanvasWidget) -> AnyView {
                 .clipShape(
                     RoundedRectangle(cornerRadius: CORNER_RADIUS)
                 )
+                .onTapGesture {
+                    print(isPresented)
+                    isPresented.toggle();
+                    print(isPresented)
+                }
         } placeholder: {
             ProgressView()
                 .progressViewStyle(
@@ -46,6 +53,24 @@ func imageWidget(widget: CanvasWidget) -> AnyView {
     
     
 }
+//testing struct with imageWidget2
+//struct testNormal: View{
+//    assert(widget.media == .image)
+//    var body: some View{
+//        AsyncImage(url: widget.mediaURL) {image in
+//            image
+//                .resizable()
+//                .aspectRatio(contentMode: .fill)
+//                .frame(width: widget.width, height: widget.height)
+//                .clipShape(
+//                    RoundedRectangle(cornerRadius: CORNER_RADIUS)
+//                )
+//
+//        } placeholder: {
+//            
+//        }//AsyncImage
+//    }
+//}
 
 
 
