@@ -46,9 +46,12 @@ struct Home: View {
                     Circle()
                         .onTapGesture {
                             tapped.toggle()
-                            print("ToolPickerIsActive: \(toolPickerIsActive)")
+                            print("hi")
+
+//                            print("ToolPickerIsActive: \(toolPickerIsActive)")
                         }
-                        .foregroundColor(tapped ? .red : .gray)
+                        .frame(height: tapped ? 100 : 50)
+//                        .foregroundColor(tapped ? .red : .gray)
         
                     
                     DrawingView(canvas: $canvas, isDraw: $isDraw, toolPickerIsActive: $toolPickerIsActive)
@@ -100,9 +103,10 @@ struct DrawingView : UIViewRepresentable {
         return canvas
     }
     
+ 
     
     func updateUIView(_ uiView: PKCanvasView, context: Context) {
-        
+        if !toolPickerIsActive { return }
 //        toolPicker.setVisible(toolPickerIsActive, forFirstResponder: canvas)
         
 //        if toolPickerIsActive == false{
@@ -119,7 +123,8 @@ struct DrawingView : UIViewRepresentable {
         canvas.becomeFirstResponder()
 
         toolPicker.setVisible(toolPickerIsActive, forFirstResponder: canvas)
-
+        
+       
 
 
         
@@ -128,5 +133,7 @@ struct DrawingView : UIViewRepresentable {
         
             
     }
+    
 
 }
+
