@@ -27,6 +27,7 @@ struct Home: View {
     @State private var toolPickerIsActive = false
     @State private var canvasIsVisible = false
     
+    @State var tapped = false
     
     
     var body: some View{
@@ -42,6 +43,12 @@ struct Home: View {
 //                        Text("button beneath canvas")
 //                    })
                     
+                    Circle()
+                        .onTapGesture {
+                            tapped.toggle()
+                            print("ToolPickerIsActive: \(toolPickerIsActive)")
+                        }
+                        .foregroundColor(tapped ? .red : .gray)
         
                     
                     DrawingView(canvas: $canvas, isDraw: $isDraw, toolPickerIsActive: $toolPickerIsActive)
@@ -53,8 +60,11 @@ struct Home: View {
                 .navigationBarItems(leading:
                                         Button(action: {
                                             toolPickerIsActive.toggle()
+                    print("ToolPickerIsActive: \(toolPickerIsActive)")
+                    
+                    
                                         }, label: {
-                                            Text("toggle toolpicker")
+                                            Text(toolPickerIsActive ? "TOOLPICKER: ON" : "TOOLPICKER: OFF")
                                         }))
         }
         
@@ -71,6 +81,8 @@ struct DrawingView : UIViewRepresentable {
     let toolPicker = PKToolPicker()
     
 
+    
+    
     func makeUIView(context: Context) -> PKCanvasView {
         canvas.contentSize = CGSize(width: 1200, height: 1500)
         canvas.drawingPolicy = .anyInput
@@ -81,24 +93,40 @@ struct DrawingView : UIViewRepresentable {
         canvas.contentInset = UIEdgeInsets(top: 280, left: 400, bottom: 280, right: 400)
         canvas.contentMode = .center
         canvas.scrollsToTop = false
-        canvas.becomeFirstResponder()
-        showToolPicker()
-        
+
+//        canvas.becomeFirstResponder()
+
         
         return canvas
     }
     
-    func showToolPicker() {
-          toolPicker.setVisible(true, forFirstResponder: canvas)
-          toolPicker.addObserver(canvas)
-          canvas.becomeFirstResponder()
-        }
     
     func updateUIView(_ uiView: PKCanvasView, context: Context) {
         
+//        toolPicker.setVisible(toolPickerIsActive, forFirstResponder: canvas)
+        
+//        if toolPickerIsActive == false{
+//            self.canvas.drawingGestureRecognizer.isEnabled = false
+//        } else {
+//            self.canvas.drawingGestureRecognizer.isEnabled = true
+//        }
+        
+        
+        canvas.isUserInteractionEnabled = toolPickerIsActive
+
+
+        toolPicker.addObserver(canvas)
+        canvas.becomeFirstResponder()
+
         toolPicker.setVisible(toolPickerIsActive, forFirstResponder: canvas)
 
-        print("i changed")
+
+
         
+
+        
+        
+            
     }
+
 }
