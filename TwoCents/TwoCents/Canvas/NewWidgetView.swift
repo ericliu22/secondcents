@@ -225,6 +225,7 @@ struct NewWidgetView: View {
                 
             }
         })
+//        .presentationBackground(.thickMaterial)
     }
 }
 

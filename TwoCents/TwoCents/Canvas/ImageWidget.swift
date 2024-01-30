@@ -10,7 +10,7 @@ import SwiftUI
 
 func imageWidget(widget: CanvasWidget) -> AnyView {
     @State var isPresented: Bool = false
-    print(isPresented)
+//    print(isPresented)
     assert(widget.media == .image)
     
 
@@ -26,9 +26,9 @@ func imageWidget(widget: CanvasWidget) -> AnyView {
                     RoundedRectangle(cornerRadius: CORNER_RADIUS)
                 )
                 .onTapGesture {
-                    print(isPresented)
+//                    print(isPresented)
                     isPresented.toggle();
-                    print(isPresented)
+//                    print(isPresented)
                 }
         } placeholder: {
             ProgressView()
