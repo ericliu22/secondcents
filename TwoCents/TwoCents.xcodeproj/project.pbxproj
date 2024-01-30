@@ -25,6 +25,7 @@
 		85741EAF2AD03D370085423E /* PostModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85741EAE2AD03D370085423E /* PostModel.swift */; };
 		85A6766B2AE9C19B003ECAAA /* messageBubbles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A6766A2AE9C19B003ECAAA /* messageBubbles.swift */; };
 		85A6766D2AE9C6BB003ECAAA /* textField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A6766C2AE9C6BB003ECAAA /* textField.swift */; };
+		85BB02F02B5D077E00B9A9EA /* ToolPickerPractice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85BB02EF2B5D077E00B9A9EA /* ToolPickerPractice.swift */; };
 		85C6759A2AB8EE5B00FACCB2 /* HotSeatManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20EBD082AB8A36100EFDDE8 /* HotSeatManager.swift */; };
 		85C6759B2AB8EE6100FACCB2 /* SuperlativeGame.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20EBD092AB8A36100EFDDE8 /* SuperlativeGame.swift */; };
 		A246A42E2B43A1B700F0F6E6 /* NewWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A246A42D2B43A1B700F0F6E6 /* NewWidgetView.swift */; };
@@ -131,6 +132,7 @@
 		85741EAE2AD03D370085423E /* PostModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostModel.swift; sourceTree = "<group>"; };
 		85A6766A2AE9C19B003ECAAA /* messageBubbles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = messageBubbles.swift; sourceTree = "<group>"; };
 		85A6766C2AE9C6BB003ECAAA /* textField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = textField.swift; sourceTree = "<group>"; };
+		85BB02EF2B5D077E00B9A9EA /* ToolPickerPractice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolPickerPractice.swift; sourceTree = "<group>"; };
 		85DDD0CC2AB4E79A008A9C56 /* VoteGameReal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VoteGameReal.swift; sourceTree = "<group>"; };
 		A2003C942AABA08300B1E551 /* Line.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Line.swift; sourceTree = "<group>"; };
 		A20EBD062AB8A36100EFDDE8 /* HotSeat.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HotSeat.swift; sourceTree = "<group>"; };
@@ -282,6 +284,7 @@
 			isa = PBXGroup;
 			children = (
 				856E80B02B50E9CF0078A2CE /* PencilKitPractice.swift */,
+				85BB02EF2B5D077E00B9A9EA /* ToolPickerPractice.swift */,
 				856E80B32B50EB260078A2CE /* SabotageGame */,
 				A20EBD062AB8A36100EFDDE8 /* HotSeat.swift */,
 				85741EAB2AD03B9A0085423E /* CarouselPracticeFiles */,
@@ -722,6 +725,7 @@
 				856E80BD2B50EB260078A2CE /* SabotageGameViewModel.swift in Sources */,
 				850958A72AB8F41D00018A32 /* HotSeat.swift in Sources */,
 				85C6759B2AB8EE6100FACCB2 /* SuperlativeGame.swift in Sources */,
+				85BB02F02B5D077E00B9A9EA /* ToolPickerPractice.swift in Sources */,
 				85C6759A2AB8EE5B00FACCB2 /* HotSeatManager.swift in Sources */,
 				A26809CA2AB8A77E003B30DE /* VoteGameReal.swift in Sources */,
 				A2AFFDDC2B154C7000B14C1E /* ChatWidget.swift in Sources */,
