@@ -126,6 +126,7 @@ struct CanvasPage: View {
 
                 .draggable(widget) {
                     getMediaView(widget: widget).onAppear{
+                        self.currentMode = .grab
                         draggingItem = widget
                     }
                 }.dropDestination(for: CanvasWidget.self) { items, location in
@@ -190,17 +191,20 @@ struct CanvasPage: View {
         )
         
     }
-
+    
     func canvasView() -> AnyView {
         
        return AnyView(
-        ZStack {
-            GridView()
-                .zIndex(currentMode == .grab ? 1 : 0)
+        ScrollView([.horizontal,.vertical], content: {
+            ZStack {
+                GridView()
+                    .zIndex(currentMode == .grab ? 1 : 0)
                 if (currentMode != .grab) {
-                    DrawingCanvas(canvas: $canvas, toolPickerActive: $toolPickerActive)
+                    DrawingCanvas(canvas: $canvas, toolPickerActive: $toolPickerActive).allowsHitTesting(toolPickerActive)
                 }
             }
+            //            .gesture(scroll, including: activeGestures)
+        }).scrollDisabled(currentMode != .normal)
         )
     }
     

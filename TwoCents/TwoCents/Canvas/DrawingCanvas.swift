@@ -26,8 +26,6 @@ struct DrawingCanvas: UIViewRepresentable {
         canvas.contentMode = .center
         canvas.scrollsToTop = false
         canvas.becomeFirstResponder()
-        showToolPicker()
-        
         
         return canvas
     }
@@ -42,15 +40,14 @@ struct DrawingCanvas: UIViewRepresentable {
     
     func updateUIView(_ uiView: PKCanvasView, context: Context) {
         
-        toolPicker.setVisible(toolPickerActive, forFirstResponder: canvas)
-        if toolPickerActive == false {
-            self.canvas.drawingGestureRecognizer.isEnabled = false
-        } else {
-            self.canvas.drawingGestureRecognizer.isEnabled = true
-        }
-
-        print("TOOLPICKERACTIVE \(toolPickerActive)")
-        print("i changed")
+        if !toolPickerActive { return }
         
+        canvas.drawingGestureRecognizer.isEnabled = toolPickerActive
+
+
+        toolPicker.addObserver(canvas)
+        canvas.becomeFirstResponder()
+
+        toolPicker.setVisible(toolPickerActive, forFirstResponder: canvas)
     }
 }
