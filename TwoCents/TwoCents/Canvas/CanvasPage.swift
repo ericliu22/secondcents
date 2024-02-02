@@ -73,7 +73,7 @@ struct CanvasPage: View {
     
     enum canvasState {
         
-        case drawing, grab, normal
+        case drawing, normal
         
     }
     
@@ -119,18 +119,13 @@ struct CanvasPage: View {
                         .stroke(widget.borderColor, lineWidth: LINE_WIDTH)
                         .frame(width: widget.width, height: widget.height)
                 }
-                .phaseAnimator([false, true], trigger: currentMode == .grab) { content, phase in
-                    content.rotationEffect(.degrees(phase ? -5 : 0))
-                } animation: { phase in
-                    phase ? .linear(duration: 0.1).repeatForever(autoreverses: true) : .default
-                }
                 
                 .draggable(widget) {
                     getMediaView(widget: widget).onAppear{
-                        self.currentMode = .grab
                         draggingItem = widget
                     }
-                }.dropDestination(for: CanvasWidget.self) { items, location in
+                }
+                .dropDestination(for: CanvasWidget.self) { items, location in
                     draggingItem = nil
                     return false
                 } isTargeted: { status in
@@ -144,7 +139,7 @@ struct CanvasPage: View {
                         }
                     }
                 }
-                .rotationEffect(.degrees(widgetShake))
+                
             }
         }
                                  
@@ -169,18 +164,6 @@ struct CanvasPage: View {
                             self.activeGestures = .subviews
                         }
                     }))
-                Image(systemName: "hand.raised\(currentMode == .grab ? ".fill" : "")")
-                    .font(.largeTitle)
-                    .foregroundColor(Color.black)
-                    .gesture(TapGesture(count: 1).onEnded({
-                        if currentMode == .grab {
-                            currentMode = .normal
-                            widgetShake = 0
-                        } else {
-                            self.currentMode = .grab
-                            self.activeGestures = .subviews
-                        }
-                    }))
                 Image(systemName: "plus.circle")
                     .font(.largeTitle)
                     .foregroundColor(.black)
@@ -200,24 +183,10 @@ struct CanvasPage: View {
             ScrollView([.horizontal,.vertical], content: {
                 ZStack {
                     GridView()
-                        .zIndex(currentMode == .grab ? 1 : 0)
-                    
-                    
-                    
 //                    Spacer()
 //                        .frame(width: 1000, height: 1000)
-                    
-                    
-                    
-                    if (currentMode != .grab) {
-                        DrawingCanvas(canvas: $canvas, toolPickerActive: $toolPickerActive).allowsHitTesting(toolPickerActive)
-                    }
-                    
-                    
+                    DrawingCanvas(canvas: $canvas, toolPickerActive: $toolPickerActive).allowsHitTesting(toolPickerActive)
 //                    Color.blue
-                    
-                    
-                    
                 }
                 .frame(width: FRAME_SIZE, height: FRAME_SIZE)
                 }).scrollDisabled(currentMode != .normal)
