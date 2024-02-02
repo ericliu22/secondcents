@@ -142,6 +142,7 @@ struct CanvasPage: View {
                 
             }
         }
+                                 
                                 ))
     }
     
@@ -179,7 +180,7 @@ struct CanvasPage: View {
     func canvasView() -> AnyView {
         
         return AnyView(
-            ScrollView([.horizontal,.vertical], showsIndicators: false, content: {
+            ScrollView([.horizontal,.vertical], content: {
                 ZStack {
                     GridView()
 //                    Spacer()
@@ -225,30 +226,14 @@ struct CanvasPage: View {
                     
                 }
             }
-        
-            .overlay(alignment: .top, content: {
-                Toolbar()
-                    .padding(0)
-                
-            })
-            .sheet(isPresented: $showNewWidgetView, onDismiss: {
-                
-                if photoLinkedToProfile {
-                    photoLinkedToProfile = false
-                    widgetId = UUID().uuidString
-                    
-                } else {
-                    Task{
-                        try await StorageManager.shared.deleteTempWidgetPic(spaceId:spaceId, widgetId: widgetId)
-                    }
-                }
-                
-            }, content: {
-                
-                NewWidgetView(widgetId: widgetId, showNewWidgetView: $showNewWidgetView,  spaceId: spaceId, photoLinkedToProfile: $photoLinkedToProfile)
-                
-            })
-            .toolbar(.hidden, for: .tabBar)
+            
+            
+        }, content: {
+            
+            NewWidgetView(widgetId: widgetId, showNewWidgetView: $showNewWidgetView,  spaceId: spaceId, photoLinkedToProfile: $photoLinkedToProfile)
+            
+        })
+        .toolbar(.hidden, for: .tabBar)
         
     }
     
