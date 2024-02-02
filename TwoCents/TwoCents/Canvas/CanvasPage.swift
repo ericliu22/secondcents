@@ -97,7 +97,7 @@ struct CanvasPage: View {
     func pushDrawing(userId: String, userColor: Color, lines: [Line]) {
         
     }
-
+    
     func onChange() async {
         self.canvasWidgets = [imageView0, imageView1, imageView2, imageView3, videoView3, chatview]
     }
@@ -123,7 +123,7 @@ struct CanvasPage: View {
                 } animation: { phase in
                     phase ? .linear(duration: 0.1).repeatForever(autoreverses: true) : .default
                 }
-
+                
                 .draggable(widget) {
                     getMediaView(widget: widget).onAppear{
                         self.currentMode = .grab
@@ -146,6 +146,7 @@ struct CanvasPage: View {
                 .rotationEffect(.degrees(widgetShake))
             }
         }
+                                 
                                 ))
     }
     
@@ -153,39 +154,39 @@ struct CanvasPage: View {
         
         AnyView(
             HStack{
-                    Image(systemName: "pencil.circle")
-                        .font(.largeTitle)
-                        .foregroundColor(currentMode == .drawing ? .red : .black)
-                        .gesture(TapGesture(count: 1).onEnded({
-                            self.toolPickerActive.toggle()
-                            print("Canvas Page TOOLPICKERACTIVE \(toolPickerActive)")
-                            if currentMode != .drawing {
-                                self.currentMode = .drawing
-                                self.activeGestures = .all
-                            } else {
-                                self.currentMode = .normal
-                                self.activeGestures = .subviews
-                            }
-                        }))
-                    Image(systemName: "hand.raised\(currentMode == .grab ? ".fill" : "")")
-                        .font(.largeTitle)
-                        .foregroundColor(Color.black)
-                        .gesture(TapGesture(count: 1).onEnded({
-                            if currentMode == .grab {
-                                currentMode = .normal
-                                widgetShake = 0
-                            } else {
-                                self.currentMode = .grab
-                                self.activeGestures = .subviews
-                            }
-                        }))
-                    Image(systemName: "plus.circle")
-                        .font(.largeTitle)
-                        .foregroundColor(.black)
-                        .gesture(TapGesture(count:1).onEnded(({
-                            
-                            showNewWidgetView = true
-                        })))
+                Image(systemName: "pencil.circle")
+                    .font(.largeTitle)
+                    .foregroundColor(currentMode == .drawing ? .red : .black)
+                    .gesture(TapGesture(count: 1).onEnded({
+                        self.toolPickerActive.toggle()
+                        print("Canvas Page TOOLPICKERACTIVE \(toolPickerActive)")
+                        if currentMode != .drawing {
+                            self.currentMode = .drawing
+                            self.activeGestures = .all
+                        } else {
+                            self.currentMode = .normal
+                            self.activeGestures = .subviews
+                        }
+                    }))
+                Image(systemName: "hand.raised\(currentMode == .grab ? ".fill" : "")")
+                    .font(.largeTitle)
+                    .foregroundColor(Color.black)
+                    .gesture(TapGesture(count: 1).onEnded({
+                        if currentMode == .grab {
+                            currentMode = .normal
+                            widgetShake = 0
+                        } else {
+                            self.currentMode = .grab
+                            self.activeGestures = .subviews
+                        }
+                    }))
+                Image(systemName: "plus.circle")
+                    .font(.largeTitle)
+                    .foregroundColor(.black)
+                    .gesture(TapGesture(count:1).onEnded(({
+                        
+                        showNewWidgetView = true
+                    })))
             }
             
         )
@@ -194,13 +195,28 @@ struct CanvasPage: View {
     
     func canvasView() -> AnyView {
         
-       return AnyView(
-        ScrollView([.horizontal,.vertical], content: {
-            ZStack {
-                GridView()
-                    .zIndex(currentMode == .grab ? 1 : 0)
-                if (currentMode != .grab) {
-                    DrawingCanvas(canvas: $canvas, toolPickerActive: $toolPickerActive).allowsHitTesting(toolPickerActive)
+        return AnyView(
+            ScrollView([.horizontal,.vertical], content: {
+                ZStack {
+                    GridView()
+                        .zIndex(currentMode == .grab ? 1 : 0)
+                    
+                    
+                    
+//                    Spacer()
+//                        .frame(width: 1000, height: 1000)
+                    
+                    
+                    
+                    if (currentMode != .grab) {
+                        DrawingCanvas(canvas: $canvas, toolPickerActive: $toolPickerActive).allowsHitTesting(toolPickerActive)
+                    }
+                    
+                    
+//                    Color.blue
+                    
+                    
+                    
                 }
             }
             .frame(width: FRAME_SIZE, height: FRAME_SIZE)

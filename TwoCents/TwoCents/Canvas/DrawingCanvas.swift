@@ -15,6 +15,7 @@ struct DrawingCanvas: UIViewRepresentable {
     
     let toolPicker = PKToolPicker()
     
+ 
 
     func makeUIView(context: Context) -> PKCanvasView {
         canvas.contentSize = CGSize(width: FRAME_SIZE, height: FRAME_SIZE)
@@ -23,10 +24,11 @@ struct DrawingCanvas: UIViewRepresentable {
         canvas.maximumZoomScale = MAX_ZOOM
         canvas.backgroundColor = .clear
         canvas.contentInset = UIEdgeInsets(top: 280, left: 400, bottom: 280, right: 400)
+//        canvas.backgroundColor = .red
         canvas.contentMode = .center
         canvas.scrollsToTop = false
         canvas.becomeFirstResponder()
-        
+
         return canvas
     }
     
@@ -50,11 +52,7 @@ struct DrawingCanvas: UIViewRepresentable {
 
 
         toolPicker.addObserver(canvas)
-        
-        DispatchQueue.main.async {
-            canvas.becomeFirstResponder()
-               }
-       
+        canvas.becomeFirstResponder()
 
         toolPicker.setVisible(toolPickerActive, forFirstResponder: canvas)
     }
