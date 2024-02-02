@@ -59,6 +59,7 @@ struct CanvasPage: View {
     @State private var showNewWidgetView: Bool = false
     @State private var photoLinkedToProfile: Bool = false
     @State private var widgetId: String = UUID().uuidString
+    @State private var magnification: CGSize = CGSize(width: 1.0, height: 1.0);
     
     
     
@@ -94,7 +95,7 @@ struct CanvasPage: View {
         
     }
     
-    func pushDrawing(userId: String, userColor: Color, lines: [Line]) {
+    func pushDrawing() {
         
     }
     
@@ -219,18 +220,25 @@ struct CanvasPage: View {
                     
                 }
                 .frame(width: FRAME_SIZE, height: FRAME_SIZE)
-            //            .gesture(scroll, including: activeGestures)
                 }).scrollDisabled(currentMode != .normal)
+                .scaleEffect(magnification)
+                .gesture(magnify)
         )
+    }
+    
+    var magnify: some Gesture {
+        MagnifyGesture().onChanged() { value in
+            if (value.magnification < MAX_ZOOM && value.magnification > MIN_ZOOM) {
+                self.magnification = CGSize(width: value.magnification, height: value.magnification)
+            }
+        }
     }
     
     var body: some View {
         
-        VStack{
-            canvasView()
-                .task {
-                    await onChange()
-                }
+        canvasView()
+        .task {
+            await onChange()
         }
         .overlay(alignment: .top, content: {
             Toolbar().padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
