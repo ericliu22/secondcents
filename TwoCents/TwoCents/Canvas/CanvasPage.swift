@@ -218,10 +218,9 @@ struct CanvasPage: View {
                     
                     
                 }
-            }
-            .frame(width: FRAME_SIZE, height: FRAME_SIZE)
+                .frame(width: FRAME_SIZE, height: FRAME_SIZE)
             //            .gesture(scroll, including: activeGestures)
-        }).scrollDisabled(currentMode != .normal)
+                }).scrollDisabled(currentMode != .normal)
         )
     }
     
