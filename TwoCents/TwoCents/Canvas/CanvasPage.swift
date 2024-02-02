@@ -251,8 +251,10 @@ struct CanvasPage: View {
                 widgetId = UUID().uuidString
                 
             } else {
+                
                 Task{
                     try await StorageManager.shared.deleteTempWidgetPic(spaceId:spaceId, widgetId: widgetId)
+                    
                 }
             }
             
