@@ -203,6 +203,7 @@ struct CanvasPage: View {
                     DrawingCanvas(canvas: $canvas, toolPickerActive: $toolPickerActive).allowsHitTesting(toolPickerActive)
                 }
             }
+            .frame(width: FRAME_SIZE, height: FRAME_SIZE)
             //            .gesture(scroll, including: activeGestures)
         }).scrollDisabled(currentMode != .normal)
         )
@@ -211,13 +212,15 @@ struct CanvasPage: View {
     var body: some View {
         
         VStack{
-            Toolbar()
-                .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, alignment: .trailing)
             canvasView()
                 .task {
                     await onChange()
                 }
         }
+        .overlay(alignment: .top, content: {
+            Toolbar().padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+
+        })
         .sheet(isPresented: $showNewWidgetView, onDismiss: {
             
             if photoLinkedToProfile {
