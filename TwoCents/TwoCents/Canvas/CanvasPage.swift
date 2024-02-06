@@ -146,36 +146,36 @@ struct CanvasPage: View {
                                 ))
     }
     
-//    func Toolbar() -> AnyView {
-//        
-//        AnyView(
-//            HStack{
-//                Image(systemName: "pencil.circle")
-//                    .font(.largeTitle)
-//                    .foregroundColor(currentMode == .drawing ? .red : .black)
-//                    .gesture(TapGesture(count: 1).onEnded({
-//                        self.toolPickerActive.toggle()
-//                        print("Canvas Page TOOLPICKERACTIVE \(toolPickerActive)")
-//                        if currentMode != .drawing {
-//                            self.currentMode = .drawing
-//                            self.activeGestures = .all
-//                        } else {
-//                            self.currentMode = .normal
-//                            self.activeGestures = .subviews
-//                        }
-//                    }))
-//                Image(systemName: "plus.circle")
-//                    .font(.largeTitle)
-//                    .foregroundColor(.black)
-//                    .gesture(TapGesture(count:1).onEnded(({
-//                        
-//                        showNewWidgetView = true
-//                    })))
-//            }
-//            
-//        )
-//        
-//    }
+    //    func Toolbar() -> AnyView {
+    //
+    //        AnyView(
+    //            HStack{
+    //                Image(systemName: "pencil.circle")
+    //                    .font(.largeTitle)
+    //                    .foregroundColor(currentMode == .drawing ? .red : .black)
+    //                    .gesture(TapGesture(count: 1).onEnded({
+    //                        self.toolPickerActive.toggle()
+    //                        print("Canvas Page TOOLPICKERACTIVE \(toolPickerActive)")
+    //                        if currentMode != .drawing {
+    //                            self.currentMode = .drawing
+    //                            self.activeGestures = .all
+    //                        } else {
+    //                            self.currentMode = .normal
+    //                            self.activeGestures = .subviews
+    //                        }
+    //                    }))
+    //                Image(systemName: "plus.circle")
+    //                    .font(.largeTitle)
+    //                    .foregroundColor(.black)
+    //                    .gesture(TapGesture(count:1).onEnded(({
+    //
+    //                        showNewWidgetView = true
+    //                    })))
+    //            }
+    //
+    //        )
+    //
+    //    }
     
     func canvasView() -> AnyView {
         
@@ -183,15 +183,26 @@ struct CanvasPage: View {
             ScrollView([.horizontal,.vertical], content: {
                 ZStack {
                     GridView()
-                    //                    Spacer()
-                    //                        .frame(width: 1000, height: 1000)
-                    DrawingCanvas(canvas: $canvas, toolPickerActive: $toolPickerActive).allowsHitTesting(toolPickerActive)
-                    //                    Color.blue
+                        .frame(width: FRAME_SIZE, height: FRAME_SIZE)
+                    
+                    DrawingCanvas(canvas: $canvas, toolPickerActive: $toolPickerActive)
+                        .allowsHitTesting(toolPickerActive)
+                        .frame(width: FRAME_SIZE, height: FRAME_SIZE)
+                    
+                    
                 }
-                .frame(width: FRAME_SIZE, height: FRAME_SIZE)
-            }).scrollDisabled(currentMode != .normal)
-                .scaleEffect(magnification)
-                .gesture(magnify)
+             
+//                .border(.blue)
+                
+                
+            })
+            
+            .scrollDisabled(currentMode != .normal)
+            .scaleEffect(magnification)
+            .gesture(magnify)
+//            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            
+//            .border(.red)
         )
     }
     
@@ -206,13 +217,14 @@ struct CanvasPage: View {
     var body: some View {
         
         canvasView()
+            .ignoresSafeArea()
             .task {
                 await onChange()
             }
-//            .overlay(alignment: .top, content: {
-//                Toolbar().padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-//                
-//            })
+        //            .overlay(alignment: .top, content: {
+        //                Toolbar().padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+        //
+        //            })
             .sheet(isPresented: $showNewWidgetView, onDismiss: {
                 
                 if photoLinkedToProfile {
@@ -233,8 +245,12 @@ struct CanvasPage: View {
                 NewWidgetView(widgetId: widgetId, showNewWidgetView: $showNewWidgetView,  spaceId: spaceId, photoLinkedToProfile: $photoLinkedToProfile)
                 
             })
+
             .toolbar(.hidden, for: .tabBar)
+        
+        
             .toolbar {
+                
                 ToolbarItem(placement: .topBarTrailing) {
                     
                     
@@ -251,7 +267,7 @@ struct CanvasPage: View {
                         
                     }, label: {
                         Image(systemName: "pencil.tip.crop.circle")
-                           
+                        
                     })
                     
                 }
@@ -267,7 +283,7 @@ struct CanvasPage: View {
                     
                     
                     
-                   
+                    
                     
                     
                 }
@@ -275,6 +291,8 @@ struct CanvasPage: View {
                 
                 
             }
+
+        
         
     }
     

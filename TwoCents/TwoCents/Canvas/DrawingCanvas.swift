@@ -41,12 +41,14 @@ struct DrawingCanvas: UIViewRepresentable {
         }
     
     func updateUIView(_ uiView: PKCanvasView, context: Context) {
-        
-        if !toolPickerActive { 
-          
+
+        if !toolPickerActive {
+     
             return
            
         }
+        
+        
         
         canvas.drawingGestureRecognizer.isEnabled = toolPickerActive
 
