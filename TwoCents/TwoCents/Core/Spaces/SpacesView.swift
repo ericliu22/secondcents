@@ -224,6 +224,7 @@ struct SpacesView: View {
                 
             }
             .navigationTitle( "Spaces 💬" )
+         
             .searchable(text: $searchTerm, placement: .navigationBarDrawer(displayMode: .always), prompt: "Search")
             
             

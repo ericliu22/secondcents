@@ -14,24 +14,24 @@ import PencilKit
 //CONSTANTS
 let db = Firestore.firestore()
 
-let TILE_SIZE: CGFloat = 100
+let TILE_SIZE: CGFloat = 150
 let MAX_ZOOM: CGFloat = 3.0
 let MIN_ZOOM: CGFloat = 1.0
 let CORNER_RADIUS: CGFloat = 15
-let LINE_WIDTH: CGFloat = 5
+let LINE_WIDTH: CGFloat = 2
 let FRAME_SIZE: CGFloat = 1000
 
 //HARDCODED SECTION
 
 
-var imageView0 = CanvasWidget(width: TILE_SIZE, height: TILE_SIZE, borderColor: .black, userId: "jennierubyjane", media: .image, mediaURL: URL(string: "https://m.media-amazon.com/images/M/MV5BN2Q0OWJmNWYtYzBiNy00ODAyLWI2NGQtZGFhM2VjOWM5NDNkXkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_.jpg")!)
-var imageView1 = CanvasWidget(width: TILE_SIZE, height: TILE_SIZE,borderColor: .black, userId: "jennierubyjane", media: .image, mediaURL: URL(string: "https://www.billboard.com/wp-content/uploads/2023/01/lisa-blackpink-dec-2022-billboard-1548.jpg?w=942&h=623&crop=1")!)
-var imageView2 = CanvasWidget(width: TILE_SIZE, height: TILE_SIZE,borderColor: .black, userId: "jennierubyjane", media: .image, mediaURL: URL(string: "https://i.mydramalist.com/66L5p_5c.jpg")!)
-var imageView3 = CanvasWidget(width: TILE_SIZE, height: TILE_SIZE,borderColor: .black, userId: "jennierubyjane", media: .image, mediaURL: URL(string: "https://static.wikia.nocookie.net/the_kpop_house/images/6/60/Jisoo.jpg/revision/latest?cb=20200330154248")!)
+var imageView0 = CanvasWidget(width: TILE_SIZE, height: TILE_SIZE, borderColor: .red, userId: "jennierubyjane", media: .image, mediaURL: URL(string: "https://m.media-amazon.com/images/M/MV5BN2Q0OWJmNWYtYzBiNy00ODAyLWI2NGQtZGFhM2VjOWM5NDNkXkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_.jpg")!)
+var imageView1 = CanvasWidget(width: TILE_SIZE, height: TILE_SIZE,borderColor: .green, userId: "jennierubyjane", media: .image, mediaURL: URL(string: "https://www.billboard.com/wp-content/uploads/2023/01/lisa-blackpink-dec-2022-billboard-1548.jpg?w=942&h=623&crop=1")!)
+var imageView2 = CanvasWidget(width: TILE_SIZE, height: TILE_SIZE,borderColor: .blue, userId: "jennierubyjane", media: .image, mediaURL: URL(string: "https://i.mydramalist.com/66L5p_5c.jpg")!)
+var imageView3 = CanvasWidget(width: TILE_SIZE, height: TILE_SIZE,borderColor: .brown, userId: "jennierubyjane", media: .image, mediaURL: URL(string: "https://static.wikia.nocookie.net/the_kpop_house/images/6/60/Jisoo.jpg/revision/latest?cb=20200330154248")!)
 
-var videoView3 = CanvasWidget(width: TILE_SIZE, height: TILE_SIZE, borderColor: .red, userId: "jisookim", media: .video, mediaURL: URL(string: "https://video.link/w/vl6552d3ab6cdff#")!)
+var videoView3 = CanvasWidget(width: TILE_SIZE, height: TILE_SIZE, borderColor: .orange, userId: "jisookim", media: .video, mediaURL: URL(string: "https://video.link/w/vl6552d3ab6cdff#")!)
 
-var chatview = CanvasWidget(borderColor: .blue, userId: "shenjjj", media: .chat, mediaURL: URL(string: "https://www.youtube.com/watch?v=dQw4w9WgXcQ")!)
+var chatview = CanvasWidget(borderColor: .yellow, userId: "shenjjj", media: .chat, mediaURL: URL(string: "https://www.youtube.com/watch?v=dQw4w9WgXcQ")!)
 //HARDCODED SECTION
 
 
@@ -100,30 +100,47 @@ struct CanvasPage: View {
     }
     
     func onChange() async {
-        self.canvasWidgets = [imageView0, imageView1, imageView2, imageView3, videoView3, chatview]
+        self.canvasWidgets = [imageView0, imageView1, imageView2, imageView3, videoView3]
     }
     
     
     
     func GridView() -> AnyView {
         
-        let columns = Array(repeating: GridItem(.fixed(TILE_SIZE), spacing: 15, alignment: .leading), count: 3)
+        let columns = Array(repeating: GridItem(.fixed(TILE_SIZE), spacing: 50, alignment: .leading), count: 3)
         
-        return AnyView(LazyVGrid(columns: columns, alignment: .leading, spacing: 15, content: {
+        return AnyView(LazyVGrid(columns: columns, alignment: .leading, spacing: 50, content: {
             
             ForEach(canvasWidgets, id:\.id) { widget in
+            
+                getMediaView(widget: widget)
+                    .cornerRadius(CORNER_RADIUS)
+                    .overlay(
+                        Text(widget.userId)
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
+                            .offset(y:90)
+                    )
                 
-                ZStack {
-                    getMediaView(widget: widget)
-                    RoundedRectangle(cornerRadius: CORNER_RADIUS)
-                        .stroke(widget.borderColor, lineWidth: LINE_WIDTH)
-                        .frame(width: widget.width, height: widget.height)
-                }
-                
+                    
+                  
+                    
+//                    RoundedRectangle(cornerRadius: CORNER_RADIUS)
+//                        .stroke(widget.borderColor, lineWidth: LINE_WIDTH)
+//                        .frame(width: widget.width, height: widget.height)
+            
+                 
                 .draggable(widget) {
-                    getMediaView(widget: widget).onAppear{
-                        draggingItem = widget
-                    }
+                    
+//                    RoundedRectangle(cornerRadius: 15.0)
+//                        .fill(.ultraThinMaterial)
+//                        .frame(width: widget.width, height: widget.height)
+                    getMediaView(widget: widget)
+                      
+                        .onAppear{
+                            draggingItem = widget
+                        }
+//                    
                 }
                 .dropDestination(for: CanvasWidget.self) { items, location in
                     draggingItem = nil
@@ -143,39 +160,10 @@ struct CanvasPage: View {
             }
         }
                                  
+                                 
                                 ))
     }
-    
-    //    func Toolbar() -> AnyView {
-    //
-    //        AnyView(
-    //            HStack{
-    //                Image(systemName: "pencil.circle")
-    //                    .font(.largeTitle)
-    //                    .foregroundColor(currentMode == .drawing ? .red : .black)
-    //                    .gesture(TapGesture(count: 1).onEnded({
-    //                        self.toolPickerActive.toggle()
-    //                        print("Canvas Page TOOLPICKERACTIVE \(toolPickerActive)")
-    //                        if currentMode != .drawing {
-    //                            self.currentMode = .drawing
-    //                            self.activeGestures = .all
-    //                        } else {
-    //                            self.currentMode = .normal
-    //                            self.activeGestures = .subviews
-    //                        }
-    //                    }))
-    //                Image(systemName: "plus.circle")
-    //                    .font(.largeTitle)
-    //                    .foregroundColor(.black)
-    //                    .gesture(TapGesture(count:1).onEnded(({
-    //
-    //                        showNewWidgetView = true
-    //                    })))
-    //            }
-    //
-    //        )
-    //
-    //    }
+ 
     
     func canvasView() -> AnyView {
         
@@ -191,8 +179,8 @@ struct CanvasPage: View {
                     
                     
                 }
-             
-//                .border(.blue)
+                
+                //                .border(.blue)
                 
                 
             })
@@ -200,9 +188,9 @@ struct CanvasPage: View {
             .scrollDisabled(currentMode != .normal)
             .scaleEffect(magnification)
             .gesture(magnify)
-//            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            //            .frame(maxWidth: .infinity, maxHeight: .infinity)
             
-//            .border(.red)
+            //            .border(.red)
         )
     }
     
@@ -245,44 +233,72 @@ struct CanvasPage: View {
                 NewWidgetView(widgetId: widgetId, showNewWidgetView: $showNewWidgetView,  spaceId: spaceId, photoLinkedToProfile: $photoLinkedToProfile)
                 
             })
-
+        
             .toolbar(.hidden, for: .tabBar)
-        
-        
+            
             .toolbar {
                 
-                ToolbarItem(placement: .topBarTrailing) {
+                if toolPickerActive {
+                   
                     
-                    
-                    Button(action: {
-                        self.toolPickerActive.toggle()
-                        print("Canvas Page TOOLPICKERACTIVE \(toolPickerActive)")
-                        if currentMode != .drawing {
-                            self.currentMode = .drawing
-                            self.activeGestures = .all
-                        } else {
-                            self.currentMode = .normal
-                            self.activeGestures = .subviews
-                        }
+                    ToolbarItem(placement: .topBarTrailing) {
                         
-                    }, label: {
-                        Image(systemName: "pencil.tip.crop.circle")
                         
-                    })
+                        
+                        Button(action: {
+                            self.toolPickerActive.toggle()
+                            print("Canvas Page TOOLPICKERACTIVE \(toolPickerActive)")
+                            if currentMode != .drawing {
+                                self.currentMode = .drawing
+                                self.activeGestures = .all
+                            } else {
+                                self.currentMode = .normal
+                                self.activeGestures = .subviews
+                            }
+                            
+                        }, label: {
+                            Text("Cancel")
+                            
+                        })
+                        
+                    }
                     
-                }
-                
-                ToolbarItem(placement: .topBarTrailing) {
+                } else {
                     
+                   
+                    ToolbarItem(placement: .topBarTrailing) {
+                        
+                        
+                        
+                        Button(action: {
+                            self.toolPickerActive.toggle()
+                            print("Canvas Page TOOLPICKERACTIVE \(toolPickerActive)")
+                            if currentMode != .drawing {
+                                self.currentMode = .drawing
+                                self.activeGestures = .all
+                            } else {
+                                self.currentMode = .normal
+                                self.activeGestures = .subviews
+                            }
+                            
+                        }, label: {
+                            Image(systemName: "pencil.tip.crop.circle")
+                            
+                        })
+                        
+                    }
                     
-                    Button(action: {
-                        showNewWidgetView = true
-                    }, label: {
-                        Image(systemName: "plus.circle")
-                    })
-                    
-                    
-                    
+                    ToolbarItem(placement: .topBarTrailing) {
+                        
+                        
+                        Button(action: {
+                            showNewWidgetView = true
+                        }, label: {
+                            Image(systemName: "plus.circle")
+                        })
+                        
+                        
+                    }
                     
                     
                     
@@ -291,7 +307,7 @@ struct CanvasPage: View {
                 
                 
             }
-
+        
         
         
     }
