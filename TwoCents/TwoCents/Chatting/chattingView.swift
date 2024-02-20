@@ -79,7 +79,7 @@ struct ChatView: View {
                         })
                 
             }
-            .frame(width: Tapped ? .infinity: 200, height: Tapped ? .infinity: 200)
+            .frame(width: Tapped ? .infinity: TILE_SIZE, height: Tapped ? .infinity: TILE_SIZE)
             .onChange(of: messagesManager.lastMessageId) {
                     id in proxy.scrollTo(id, anchor: .bottom)
                 }

@@ -12,10 +12,7 @@ struct DrawingCanvas: UIViewRepresentable {
     
     @Binding var canvas: PKCanvasView
     @Binding var toolPickerActive: Bool
-    
-    let toolPicker = PKToolPicker()
-    
- 
+    @Binding var toolPicker: PKToolPicker
 
     func makeUIView(context: Context) -> PKCanvasView {
         canvas.contentSize = CGSize(width: FRAME_SIZE, height: FRAME_SIZE)
@@ -27,35 +24,22 @@ struct DrawingCanvas: UIViewRepresentable {
 //        canvas.backgroundColor = .red
         canvas.contentMode = .center
         canvas.scrollsToTop = false
+        toolPicker.addObserver(canvas)
         canvas.becomeFirstResponder()
+        
 
         return canvas
     }
     
     func showToolPicker() {
 //          toolPicker.setVisible(true, forFirstResponder: canvas)
-        
-        
-          toolPicker.addObserver(canvas)
           canvas.becomeFirstResponder()
         }
     
     func updateUIView(_ uiView: PKCanvasView, context: Context) {
-
-        if !toolPickerActive {
-     
-            return
-           
-        }
-        
-        
         
         canvas.drawingGestureRecognizer.isEnabled = toolPickerActive
-
-
-        toolPicker.addObserver(canvas)
-        canvas.becomeFirstResponder()
-
-        toolPicker.setVisible(toolPickerActive, forFirstResponder: canvas)
+        
     }
+    
 }

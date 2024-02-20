@@ -60,6 +60,7 @@ struct CanvasPage: View {
     @State private var photoLinkedToProfile: Bool = false
     @State private var widgetId: String = UUID().uuidString
     @State private var magnification: CGSize = CGSize(width: 1.0, height: 1.0);
+    @State private var toolkit: PKToolPicker = PKToolPicker.init()
     
     
     
@@ -146,37 +147,6 @@ struct CanvasPage: View {
                                 ))
     }
     
-    //    func Toolbar() -> AnyView {
-    //
-    //        AnyView(
-    //            HStack{
-    //                Image(systemName: "pencil.circle")
-    //                    .font(.largeTitle)
-    //                    .foregroundColor(currentMode == .drawing ? .red : .black)
-    //                    .gesture(TapGesture(count: 1).onEnded({
-    //                        self.toolPickerActive.toggle()
-    //                        print("Canvas Page TOOLPICKERACTIVE \(toolPickerActive)")
-    //                        if currentMode != .drawing {
-    //                            self.currentMode = .drawing
-    //                            self.activeGestures = .all
-    //                        } else {
-    //                            self.currentMode = .normal
-    //                            self.activeGestures = .subviews
-    //                        }
-    //                    }))
-    //                Image(systemName: "plus.circle")
-    //                    .font(.largeTitle)
-    //                    .foregroundColor(.black)
-    //                    .gesture(TapGesture(count:1).onEnded(({
-    //
-    //                        showNewWidgetView = true
-    //                    })))
-    //            }
-    //
-    //        )
-    //
-    //    }
-    
     func canvasView() -> AnyView {
         
         return AnyView(
@@ -185,14 +155,13 @@ struct CanvasPage: View {
                     GridView()
                         .frame(width: FRAME_SIZE, height: FRAME_SIZE)
                     
-                    DrawingCanvas(canvas: $canvas, toolPickerActive: $toolPickerActive)
+                    DrawingCanvas(canvas: $canvas, toolPickerActive: $toolPickerActive, toolPicker: $toolkit)
                         .allowsHitTesting(toolPickerActive)
                         .frame(width: FRAME_SIZE, height: FRAME_SIZE)
                     
                     
                 }
              
-//                .border(.blue)
                 
                 
             })
@@ -200,14 +169,12 @@ struct CanvasPage: View {
             .scrollDisabled(currentMode != .normal)
             .scaleEffect(magnification)
             .gesture(magnify)
-//            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            
-//            .border(.red)
         )
     }
     
     var magnify: some Gesture {
         MagnifyGesture().onChanged() { value in
+            print(value.magnification)
             if (value.magnification < MAX_ZOOM && value.magnification > MIN_ZOOM) {
                 self.magnification = CGSize(width: value.magnification, height: value.magnification)
             }
@@ -256,7 +223,12 @@ struct CanvasPage: View {
                     
                     Button(action: {
                         self.toolPickerActive.toggle()
-                        print("Canvas Page TOOLPICKERACTIVE \(toolPickerActive)")
+                        if toolPickerActive {
+                            self.toolkit = PKToolPicker()
+                            self.toolkit.addObserver(canvas)
+                            canvas.becomeFirstResponder()
+                        }
+                        self.toolkit.setVisible(toolPickerActive, forFirstResponder: canvas)
                         if currentMode != .drawing {
                             self.currentMode = .drawing
                             self.activeGestures = .all
@@ -287,9 +259,6 @@ struct CanvasPage: View {
                     
                     
                 }
-                
-                
-                
             }
 
         
