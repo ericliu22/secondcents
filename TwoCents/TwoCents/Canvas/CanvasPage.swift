@@ -199,11 +199,9 @@ struct CanvasPage: View {
     }
     
     var magnify: some Gesture {
-        MagnifyGesture().onChanged() { value in
-            print(value.magnification)
-            if (value.magnification < MAX_ZOOM && value.magnification > MIN_ZOOM) {
-                self.magnification = CGSize(width: value.magnification, height: value.magnification)
-            }
+        MagnificationGesture().onChanged { value in
+            let newMagnification = min(max(self.magnification.width * value, MIN_ZOOM), MAX_ZOOM)
+            self.magnification = CGSize(width: newMagnification, height: newMagnification)
         }
     }
     
