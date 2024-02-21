@@ -42,6 +42,7 @@
 		A2F5631E2AB4E6240026D8C9 /* CanvasPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F563182AB4E6240026D8C9 /* CanvasPage.swift */; };
 		A2F563222AB4E6700026D8C9 /* retrievemessages.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F563202AB4E6700026D8C9 /* retrievemessages.swift */; };
 		A2F563232AB4E6700026D8C9 /* chattingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F563212AB4E6700026D8C9 /* chattingView.swift */; };
+		AB01CB5F2B855E83004BEB5B /* TextWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB01CB5E2B855E83004BEB5B /* TextWidget.swift */; };
 		AB0D07662AE6FB95003AC8A4 /* SpacesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB0D07652AE6FB95003AC8A4 /* SpacesView.swift */; };
 		AB15AC0B2AF6F00C0055D5D0 /* SpaceProfilePicView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB15AC0A2AF6F00C0055D5D0 /* SpaceProfilePicView.swift */; };
 		AB15AC0D2AF6F01B0055D5D0 /* SpaceProfilePicViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB15AC0C2AF6F01B0055D5D0 /* SpaceProfilePicViewModel.swift */; };
@@ -156,6 +157,7 @@
 		A2F563182AB4E6240026D8C9 /* CanvasPage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CanvasPage.swift; sourceTree = "<group>"; };
 		A2F563202AB4E6700026D8C9 /* retrievemessages.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = retrievemessages.swift; sourceTree = "<group>"; };
 		A2F563212AB4E6700026D8C9 /* chattingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = chattingView.swift; sourceTree = "<group>"; };
+		AB01CB5E2B855E83004BEB5B /* TextWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextWidget.swift; sourceTree = "<group>"; };
 		AB0D07652AE6FB95003AC8A4 /* SpacesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpacesView.swift; sourceTree = "<group>"; };
 		AB15AC0A2AF6F00C0055D5D0 /* SpaceProfilePicView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpaceProfilePicView.swift; sourceTree = "<group>"; };
 		AB15AC0C2AF6F01B0055D5D0 /* SpaceProfilePicViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpaceProfilePicViewModel.swift; sourceTree = "<group>"; };
@@ -375,6 +377,7 @@
 				A2AFFDDB2B154C7000B14C1E /* ChatWidget.swift */,
 				AB6778E32AB8F67800C11AA7 /* CanvasWidget.swift */,
 				A2E5F52A2B5A12D30019C6ED /* DrawingCanvas.swift */,
+				AB01CB5E2B855E83004BEB5B /* TextWidget.swift */,
 				A2F563182AB4E6240026D8C9 /* CanvasPage.swift */,
 				AB90EDB82B54EB78002AD855 /* CustomizeWidgetView.swift */,
 				AB90EDBA2B54FDAD002AD855 /* CustomizeWidgetViewModel.swift */,
@@ -767,6 +770,7 @@
 				AB15AC0B2AF6F00C0055D5D0 /* SpaceProfilePicView.swift in Sources */,
 				AB9EB95D2B1E805300F58EA5 /* ChatManager.swift in Sources */,
 				AB15AC0D2AF6F01B0055D5D0 /* SpaceProfilePicViewModel.swift in Sources */,
+				AB01CB5F2B855E83004BEB5B /* TextWidget.swift in Sources */,
 				856E80BA2B50EB260078A2CE /* SabotageSelectionView.swift in Sources */,
 				856E80B92B50EB260078A2CE /* CardView.swift in Sources */,
 				AB6778E22AB8F67300C11AA7 /* ImageWidget.swift in Sources */,

@@ -39,9 +39,11 @@ struct CanvasWidget: Hashable, Codable, Identifiable, Transferable, Equatable {
     var borderColor: Color
     var userId: String
     var media: Media
-    var mediaURL: URL
+    var mediaURL: URL?
     var widgetName: String?
     var widgetDescription: String?
+    var textString: String?
+    
     
     
     
@@ -59,7 +61,7 @@ struct CanvasWidget: Hashable, Codable, Identifiable, Transferable, Equatable {
 }
 
 enum Media {
-    case video, image, chat
+    case video, image, chat, text
 }
 
 extension Media: Codable {
@@ -67,6 +69,8 @@ extension Media: Codable {
         switch media {
         case "video":
             self = .video
+        case "text":
+            self = .text
         case "image":
             self = .image
         default:
@@ -89,6 +93,7 @@ extension CanvasWidget {
         case height
         case widgetName
         case widgetDescription
+        case textString
         
     }
     
@@ -104,6 +109,8 @@ extension CanvasWidget {
         self.height = try container.decode(CGFloat.self, forKey: .height)
         self.widgetName = try container.decode(String.self, forKey: .widgetName)
         self.widgetDescription = try container.decode(String.self, forKey: .widgetDescription)
+        
+        self.textString = try container.decode(String.self, forKey: .textString)
     }
     
     func encode(to encoder: Encoder) throws {
@@ -117,6 +124,7 @@ extension CanvasWidget {
         try container.encode(height, forKey: .height)
         try container.encode(userId, forKey: .widgetName)
         try container.encode(userId, forKey: .widgetDescription)
+        try container.encode(userId, forKey: .textString)
         
     }
     
@@ -135,6 +143,8 @@ extension UTType {
 
 func getMediaView(widget: CanvasWidget) -> AnyView {
     switch (widget.media) {
+    case .text:
+        return textWidget(widget: widget)
     case .video:
         return videoWidget(widget: widget)
     case .image:

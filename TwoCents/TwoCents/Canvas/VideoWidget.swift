@@ -51,7 +51,7 @@ struct VideoWidget: View{
 func videoWidget(widget: CanvasWidget) -> AnyView {
         assert(widget.media == .video)
         var isPlaying = true
-        let videoplayer = AVPlayer(url: widget.mediaURL)
+        let videoplayer = AVPlayer(url: widget.mediaURL!)
         return AnyView(
             VideoPlayer(player: videoplayer)
                 .frame(width: widget.width ,height: widget.height, alignment: .center)

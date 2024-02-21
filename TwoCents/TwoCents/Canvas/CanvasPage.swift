@@ -26,12 +26,19 @@ let FRAME_SIZE: CGFloat = 1000
 
 var imageView0 = CanvasWidget(width: TILE_SIZE, height: TILE_SIZE, borderColor: .red, userId: "jennierubyjane", media: .image, mediaURL: URL(string: "https://m.media-amazon.com/images/M/MV5BN2Q0OWJmNWYtYzBiNy00ODAyLWI2NGQtZGFhM2VjOWM5NDNkXkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_.jpg")!)
 var imageView1 = CanvasWidget(width: TILE_SIZE, height: TILE_SIZE,borderColor: .green, userId: "jennierubyjane", media: .image, mediaURL: URL(string: "https://www.billboard.com/wp-content/uploads/2023/01/lisa-blackpink-dec-2022-billboard-1548.jpg?w=942&h=623&crop=1")!)
+
 var imageView2 = CanvasWidget(width: TILE_SIZE, height: TILE_SIZE,borderColor: .blue, userId: "jennierubyjane", media: .image, mediaURL: URL(string: "https://i.mydramalist.com/66L5p_5c.jpg")!)
 var imageView3 = CanvasWidget(width: TILE_SIZE, height: TILE_SIZE,borderColor: .brown, userId: "jennierubyjane", media: .image, mediaURL: URL(string: "https://static.wikia.nocookie.net/the_kpop_house/images/6/60/Jisoo.jpg/revision/latest?cb=20200330154248")!)
 
 var videoView3 = CanvasWidget(width: TILE_SIZE, height: TILE_SIZE, borderColor: .orange, userId: "jisookim", media: .video, mediaURL: URL(string: "https://video.link/w/vl6552d3ab6cdff#")!)
 
 var chatview = CanvasWidget(borderColor: .yellow, userId: "shenjjj", media: .chat, mediaURL: URL(string: "https://www.youtube.com/watch?v=dQw4w9WgXcQ")!)
+
+var textView = CanvasWidget(width: TILE_SIZE, height: TILE_SIZE,borderColor: .green, userId: "jennierubyjane", media: .text, textString: "Gyatt")
+
+var textView2 = CanvasWidget(width: TILE_SIZE, height: TILE_SIZE,borderColor: .green, userId: "jennierubyjane", media: .text, textString: "Unpopular opinion: NewJeans lowkeeeeeyyyy????? 👀👀")
+
+
 //HARDCODED SECTION
 
 
@@ -100,7 +107,7 @@ struct CanvasPage: View {
     }
     
     func onChange() async {
-        self.canvasWidgets = [imageView0, imageView1, imageView2, imageView3, videoView3]
+        self.canvasWidgets = [textView, textView2, imageView0, imageView1, imageView2, imageView3, videoView3]
     }
     
     
@@ -121,6 +128,7 @@ struct CanvasPage: View {
                             .foregroundStyle(.secondary)
                             .offset(y:90)
                     )
+                
                 
                     
                   
