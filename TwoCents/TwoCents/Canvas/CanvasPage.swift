@@ -16,7 +16,7 @@ let db = Firestore.firestore()
 
 let TILE_SIZE: CGFloat = 150
 let MAX_ZOOM: CGFloat = 3.0
-let MIN_ZOOM: CGFloat = 1.0
+let MIN_ZOOM: CGFloat = 1
 let CORNER_RADIUS: CGFloat = 15
 let LINE_WIDTH: CGFloat = 2
 let FRAME_SIZE: CGFloat = 1000
@@ -122,6 +122,7 @@ struct CanvasPage: View {
             ForEach(canvasWidgets, id:\.id) { widget in
                 
                 getMediaView(widget: widget)
+                    .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
                     .cornerRadius(CORNER_RADIUS)
                     .overlay(
                         Text(widget.userId)
@@ -141,16 +142,15 @@ struct CanvasPage: View {
                 
                     .draggable(widget) {
                         
-                        //                    RoundedRectangle(cornerRadius: 15.0)
-                        //                        .fill(.ultraThinMaterial)
-                        //                        .frame(width: widget.width, height: widget.height)
                         getMediaView(widget: widget)
+                            .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
                         
                             .onAppear{
                                 draggingItem = widget
                             }
                         //
                     }
+                
                     .dropDestination(for: CanvasWidget.self) { items, location in
                         draggingItem = nil
                         return false
@@ -167,7 +167,10 @@ struct CanvasPage: View {
                     }
                 
             }
+            
+            
         }
+                                 
                                  
                                  
                                 ))
@@ -179,7 +182,9 @@ struct CanvasPage: View {
             ScrollView([.horizontal,.vertical], content: {
                 ZStack {
                     GridView()
-                        .frame(width: FRAME_SIZE, height: FRAME_SIZE)
+                        .frame(width: FRAME_SIZE, height: FRAME_SIZE, alignment: .center)
+                       
+                        .border(Color.secondary, width: 1)
                     
                     DrawingCanvas(canvas: $canvas, toolPickerActive: $toolPickerActive, toolPicker: $toolkit)
                         .allowsHitTesting(toolPickerActive)
@@ -187,20 +192,25 @@ struct CanvasPage: View {
                     
                     
                 }
-                
+                .scaleEffect(magnification)
                 
                 
             })
-            
+       
             .scrollDisabled(currentMode != .normal)
-            .scaleEffect(magnification)
+            
             .gesture(magnify)
         )
     }
     
     var magnify: some Gesture {
         MagnificationGesture().onChanged { value in
-            let newMagnification = min(max(self.magnification.width * value, MIN_ZOOM), MAX_ZOOM)
+            // Adjust sensitivity by multiplying the value
+            let sensitivityMultiplier: CGFloat = 0.5 // Adjust this value as needed
+            let adjustedValue = value * sensitivityMultiplier
+            
+            // Calculate new magnification
+            let newMagnification = min(max(self.magnification.width * adjustedValue, MIN_ZOOM), MAX_ZOOM)
             self.magnification = CGSize(width: newMagnification, height: newMagnification)
         }
     }
@@ -298,13 +308,13 @@ struct CanvasPage: View {
             }
         
             .navigationBarTitleDisplayMode(.inline)
-//        
+        //
             .toolbarBackground(.ultraThinMaterial, for: .navigationBar)
-                           .toolbarBackground(.visible, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
         
-       
-
-//        .toolbarBackground(.hidden, for: .navigationBar)
+        
+        
+        //        .toolbarBackground(.hidden, for: .navigationBar)
     }
     
 }
