@@ -207,6 +207,12 @@ struct CanvasPage: View {
         }
     }
     
+    @Environment(\.undoManager) private var undoManager
+
+    
+    
+
+    
     var body: some View {
         
         canvasView()
@@ -243,47 +249,43 @@ struct CanvasPage: View {
             
             .toolbar {
                 
-                if toolPickerActive {
-                   
-                    
-                    ToolbarItem(placement: .topBarTrailing) {
-                    
+        
+                ToolbarItem(placement: .topBarTrailing) {
                     Button(action: {
-                        self.toolPickerActive.toggle()
-                        if toolPickerActive {
-                            self.toolkit = PKToolPicker()
-                            self.toolkit.addObserver(canvas)
-                            canvas.becomeFirstResponder()
-                        }
-                        self.toolkit.setVisible(toolPickerActive, forFirstResponder: canvas)
-                        if currentMode != .drawing {
-                            self.currentMode = .drawing
-                            self.activeGestures = .all
-                        } else {
-                            self.currentMode = .normal
-                            self.activeGestures = .subviews
-                        }
-                        
-                        
-                        
+                        undoManager?.undo()
+                    }, label: {
+                        Image(systemName: "arrow.uturn.backward.circle")
+                          
+                     
                             
-                        }, label: {
-                            Text("Cancel")
                             
-                        })
-                        
-                    }
+                    })
+                  
                     
-                } else {
-                    
-                   
+                }
+                
+                
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button(action: {
+                        undoManager?.redo()
+                    }, label: {
+                        Image(systemName: "arrow.uturn.forward.circle")
+                    })
+                 
+                }
+                
+                
+                
                     ToolbarItem(placement: .topBarTrailing) {
-                        
-                        
                         
                         Button(action: {
                             self.toolPickerActive.toggle()
-                            print("Canvas Page TOOLPICKERACTIVE \(toolPickerActive)")
+                            if toolPickerActive {
+                                self.toolkit = PKToolPicker()
+                                self.toolkit.addObserver(canvas)
+                                canvas.becomeFirstResponder()
+                            }
+                            self.toolkit.setVisible(toolPickerActive, forFirstResponder: canvas)
                             if currentMode != .drawing {
                                 self.currentMode = .drawing
                                 self.activeGestures = .all
@@ -292,8 +294,12 @@ struct CanvasPage: View {
                                 self.activeGestures = .subviews
                             }
                             
+                            
+                            
                         }, label: {
-                            Image(systemName: "pencil.tip.crop.circle")
+                            toolPickerActive
+                            ? Image(systemName: "pencil.tip.crop.circle.fill")
+                            : Image(systemName: "pencil.tip.crop.circle")
                             
                         })
                         
@@ -312,8 +318,12 @@ struct CanvasPage: View {
                     }
                     
                     
+      
+                  
+            
                     
-                }
+                    
+           
             }
         
         
