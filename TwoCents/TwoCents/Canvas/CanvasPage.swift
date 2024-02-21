@@ -120,7 +120,7 @@ struct CanvasPage: View {
         return AnyView(LazyVGrid(columns: columns, alignment: .leading, spacing: 50, content: {
             
             ForEach(canvasWidgets, id:\.id) { widget in
-            
+                
                 getMediaView(widget: widget)
                     .cornerRadius(CORNER_RADIUS)
                     .overlay(
@@ -131,40 +131,40 @@ struct CanvasPage: View {
                     )
                 
                 
-                    
-                  
-                    
-//                    RoundedRectangle(cornerRadius: CORNER_RADIUS)
-//                        .stroke(widget.borderColor, lineWidth: LINE_WIDTH)
-//                        .frame(width: widget.width, height: widget.height)
-            
-                 
-                .draggable(widget) {
-                    
-//                    RoundedRectangle(cornerRadius: 15.0)
-//                        .fill(.ultraThinMaterial)
-//                        .frame(width: widget.width, height: widget.height)
-                    getMediaView(widget: widget)
-                      
-                        .onAppear{
-                            draggingItem = widget
-                        }
-//                    
-                }
-                .dropDestination(for: CanvasWidget.self) { items, location in
-                    draggingItem = nil
-                    return false
-                } isTargeted: { status in
-                    if let draggingItem, status, draggingItem != widget {
-                        if let sourceIndex = canvasWidgets.firstIndex(of: draggingItem),
-                           let destinationIndex = canvasWidgets.firstIndex(of: widget) {
-                            withAnimation(.bouncy) {
-                                let sourceItem = canvasWidgets.remove(at: sourceIndex)
-                                canvasWidgets.insert(sourceItem, at: destinationIndex)
+                
+                
+                
+                //                    RoundedRectangle(cornerRadius: CORNER_RADIUS)
+                //                        .stroke(widget.borderColor, lineWidth: LINE_WIDTH)
+                //                        .frame(width: widget.width, height: widget.height)
+                
+                
+                    .draggable(widget) {
+                        
+                        //                    RoundedRectangle(cornerRadius: 15.0)
+                        //                        .fill(.ultraThinMaterial)
+                        //                        .frame(width: widget.width, height: widget.height)
+                        getMediaView(widget: widget)
+                        
+                            .onAppear{
+                                draggingItem = widget
+                            }
+                        //
+                    }
+                    .dropDestination(for: CanvasWidget.self) { items, location in
+                        draggingItem = nil
+                        return false
+                    } isTargeted: { status in
+                        if let draggingItem, status, draggingItem != widget {
+                            if let sourceIndex = canvasWidgets.firstIndex(of: draggingItem),
+                               let destinationIndex = canvasWidgets.firstIndex(of: widget) {
+                                withAnimation(.bouncy) {
+                                    let sourceItem = canvasWidgets.remove(at: sourceIndex)
+                                    canvasWidgets.insert(sourceItem, at: destinationIndex)
+                                }
                             }
                         }
                     }
-                }
                 
             }
         }
@@ -187,7 +187,7 @@ struct CanvasPage: View {
                     
                     
                 }
-             
+                
                 
                 
             })
@@ -208,10 +208,10 @@ struct CanvasPage: View {
     }
     
     @Environment(\.undoManager) private var undoManager
-
     
     
-
+    
+    
     
     var body: some View {
         
@@ -246,88 +246,67 @@ struct CanvasPage: View {
             })
         
             .toolbar(.hidden, for: .tabBar)
-            
+        
             .toolbar {
                 
-        
+                //undo
                 ToolbarItem(placement: .topBarTrailing) {
                     Button(action: {
                         undoManager?.undo()
                     }, label: {
                         Image(systemName: "arrow.uturn.backward.circle")
-                          
-                     
-                            
-                            
                     })
-                  
-                    
                 }
-                
-                
+                //redo
                 ToolbarItem(placement: .topBarTrailing) {
                     Button(action: {
                         undoManager?.redo()
                     }, label: {
                         Image(systemName: "arrow.uturn.forward.circle")
                     })
-                 
+                }
+                //pencilkit
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button(action: {
+                        self.toolPickerActive.toggle()
+                        if toolPickerActive {
+                            self.toolkit = PKToolPicker()
+                            self.toolkit.addObserver(canvas)
+                            canvas.becomeFirstResponder()
+                        }
+                        self.toolkit.setVisible(toolPickerActive, forFirstResponder: canvas)
+                        if currentMode != .drawing {
+                            self.currentMode = .drawing
+                            self.activeGestures = .all
+                        } else {
+                            self.currentMode = .normal
+                            self.activeGestures = .subviews
+                        }
+                    }, label: {
+                        toolPickerActive
+                        ? Image(systemName: "pencil.tip.crop.circle.fill")
+                        : Image(systemName: "pencil.tip.crop.circle")
+                    })
+                }
+                //add widget
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button(action: {
+                        showNewWidgetView = true
+                    }, label: {
+                        Image(systemName: "plus.circle")
+                    })
                 }
                 
-                
-                
-                    ToolbarItem(placement: .topBarTrailing) {
-                        
-                        Button(action: {
-                            self.toolPickerActive.toggle()
-                            if toolPickerActive {
-                                self.toolkit = PKToolPicker()
-                                self.toolkit.addObserver(canvas)
-                                canvas.becomeFirstResponder()
-                            }
-                            self.toolkit.setVisible(toolPickerActive, forFirstResponder: canvas)
-                            if currentMode != .drawing {
-                                self.currentMode = .drawing
-                                self.activeGestures = .all
-                            } else {
-                                self.currentMode = .normal
-                                self.activeGestures = .subviews
-                            }
-                            
-                            
-                            
-                        }, label: {
-                            toolPickerActive
-                            ? Image(systemName: "pencil.tip.crop.circle.fill")
-                            : Image(systemName: "pencil.tip.crop.circle")
-                            
-                        })
-                        
-                    }
-                    
-                    ToolbarItem(placement: .topBarTrailing) {
-                        
-                        
-                        Button(action: {
-                            showNewWidgetView = true
-                        }, label: {
-                            Image(systemName: "plus.circle")
-                        })
-                        
-                        
-                    }
-                    
-                    
-      
-                  
-            
-                    
-                    
-           
             }
         
+            .navigationBarTitleDisplayMode(.inline)
+//        
+            .toolbarBackground(.ultraThinMaterial, for: .navigationBar)
+                           .toolbarBackground(.visible, for: .navigationBar)
         
-        
+       
+
+//        .toolbarBackground(.hidden, for: .navigationBar)
     }
     
 }
