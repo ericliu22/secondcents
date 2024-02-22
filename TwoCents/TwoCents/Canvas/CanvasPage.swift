@@ -16,7 +16,7 @@ let db = Firestore.firestore()
 
 let TILE_SIZE: CGFloat = 150
 let MAX_ZOOM: CGFloat = 3.0
-let MIN_ZOOM: CGFloat = 1
+let MIN_ZOOM: CGFloat = 0.6
 let CORNER_RADIUS: CGFloat = 15
 let LINE_WIDTH: CGFloat = 2
 let FRAME_SIZE: CGFloat = 1000
@@ -24,7 +24,7 @@ let FRAME_SIZE: CGFloat = 1000
 //HARDCODED SECTION
 
 
-var imageView0 = CanvasWidget(width: TILE_SIZE, height: TILE_SIZE, borderColor: .red, userId: "jennierubyjane", media: .image, mediaURL: URL(string: "https://m.media-amazon.com/images/M/MV5BN2Q0OWJmNWYtYzBiNy00ODAyLWI2NGQtZGFhM2VjOWM5NDNkXkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_.jpg")!)
+var imageView0 = CanvasWidget(width: TILE_SIZE*2 + 50, height: TILE_SIZE, borderColor: .red, userId: "jennierubyjane", media: .image, mediaURL: URL(string: "https://m.media-amazon.com/images/M/MV5BN2Q0OWJmNWYtYzBiNy00ODAyLWI2NGQtZGFhM2VjOWM5NDNkXkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_.jpg")!)
 var imageView1 = CanvasWidget(width: TILE_SIZE, height: TILE_SIZE,borderColor: .green, userId: "jennierubyjane", media: .image, mediaURL: URL(string: "https://www.billboard.com/wp-content/uploads/2023/01/lisa-blackpink-dec-2022-billboard-1548.jpg?w=942&h=623&crop=1")!)
 
 var imageView2 = CanvasWidget(width: TILE_SIZE, height: TILE_SIZE,borderColor: .blue, userId: "jennierubyjane", media: .image, mediaURL: URL(string: "https://i.mydramalist.com/66L5p_5c.jpg")!)
@@ -37,6 +37,8 @@ var chatview = CanvasWidget(borderColor: .yellow, userId: "shenjjj", media: .cha
 var textView = CanvasWidget(width: TILE_SIZE, height: TILE_SIZE,borderColor: .green, userId: "jennierubyjane", media: .text, textString: "Gyatt")
 
 var textView2 = CanvasWidget(width: TILE_SIZE, height: TILE_SIZE,borderColor: .green, userId: "jennierubyjane", media: .text, textString: "Unpopular opinion: NewJeans lowkeeeeeyyyy????? 👀👀")
+
+
 
 
 //HARDCODED SECTION
@@ -108,36 +110,36 @@ struct CanvasPage: View {
     }
     
     func onChange() async {
-        self.canvasWidgets = [textView, textView2, imageView0, imageView1, imageView2, imageView3, videoView3]
+        self.canvasWidgets = [ textView2, imageView0, imageView1, imageView2, imageView3, videoView3, textView]
     }
     
     
     
     func GridView() -> AnyView {
         
-        let columns = Array(repeating: GridItem(.fixed(TILE_SIZE), spacing: 50, alignment: .leading), count: 3)
+        let columns = Array(repeating: GridItem(.fixed(TILE_SIZE), spacing: 50, alignment: .leading), count: 4)
         
         return AnyView(LazyVGrid(columns: columns, alignment: .leading, spacing: 50, content: {
             
             ForEach(canvasWidgets, id:\.id) { widget in
                 
+               
+               
                 getMediaView(widget: widget)
+                
                     .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
                     .cornerRadius(CORNER_RADIUS)
-                    .overlay(
-                        Text(widget.userId)
+                    .overlay(Text(widget.userId)
                             .font(.caption2)
                             .foregroundStyle(.secondary)
-                            .offset(y:90)
-                    )
+                            .offset(y:90))
+                    
+                
+         
                 
                 
+               
                 
-                
-                
-                //                    RoundedRectangle(cornerRadius: CORNER_RADIUS)
-                //                        .stroke(widget.borderColor, lineWidth: LINE_WIDTH)
-                //                        .frame(width: widget.width, height: widget.height)
                 
                 
                     .draggable(widget) {
@@ -159,12 +161,24 @@ struct CanvasPage: View {
                             if let sourceIndex = canvasWidgets.firstIndex(of: draggingItem),
                                let destinationIndex = canvasWidgets.firstIndex(of: widget) {
                                 withAnimation(.bouncy) {
+                                    
                                     let sourceItem = canvasWidgets.remove(at: sourceIndex)
                                     canvasWidgets.insert(sourceItem, at: destinationIndex)
+                                   
+                                 
                                 }
                             }
                         }
                     }
+                
+                if widget.width > TILE_SIZE {
+                    Color.clear
+
+                        .gridCellUnsizedAxes([.horizontal, .vertical])
+                    
+                }
+                
+                
                 
             }
             
@@ -196,9 +210,9 @@ struct CanvasPage: View {
                 
                 
             })
-       
-            .scrollDisabled(currentMode != .normal)
             
+            .scrollDisabled(currentMode != .normal)
+  
             .gesture(magnify)
         )
     }

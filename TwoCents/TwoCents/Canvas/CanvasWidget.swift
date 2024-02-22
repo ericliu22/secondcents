@@ -71,6 +71,7 @@ extension Media: Codable {
             self = .video
         case "text":
             self = .text
+
         case "image":
             self = .image
         default:
@@ -145,6 +146,7 @@ func getMediaView(widget: CanvasWidget) -> AnyView {
     switch (widget.media) {
     case .text:
         return textWidget(widget: widget)
+  
     case .video:
         return videoWidget(widget: widget)
     case .image:
