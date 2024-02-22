@@ -73,7 +73,7 @@ struct CanvasPage: View {
     
     @State private var selectedWidget: CanvasWidget?
  
-    
+    @StateObject private var viewModel = CanvasPageViewModel()
     
     
     private var spaceId: String
@@ -81,6 +81,11 @@ struct CanvasPage: View {
     
     @State private var newWidget: Bool = false
     @State private var widgetShake: Double = 0
+    
+    
+    @State private var widgetDoubleTapped: Bool = false
+    
+    
     private var chatroomDocument: DocumentReference
     private var drawingDocument: DocumentReference
 
@@ -126,64 +131,81 @@ struct CanvasPage: View {
         return AnyView(LazyVGrid(columns: columns, alignment: .leading, spacing: 50, content: {
             
             ForEach(canvasWidgets, id:\.id) { widget in
-                
-             
-              
+                //main widget
                 getMediaView(widget: widget)
                     .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
-
-                    
-                   
-                   
                     .cornerRadius(CORNER_RADIUS)
+                
+                //clickable area/outline when clicked
                     .overlay(
-                   
-
-                        
                         RoundedRectangle(cornerRadius: CORNER_RADIUS)
                             .strokeBorder(selectedWidget == widget ? Color.secondary : .clear, lineWidth: 2)
-                        
                             .contentShape(RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
                             .cornerRadius(CORNER_RADIUS)
-                            .onTapGesture {
-                                
-                                if selectedWidget != widget {
-                                //select
+                            .onTapGesture(count: 2, perform: {
+                               print("hi")
+                           
+                                if selectedWidget != widget || !widgetDoubleTapped {
+                                    //select
                                     selectedWidget = widget
-                                    //activate widgettoolbar
-                                  
+                                    widgetDoubleTapped = true
+                                    
                                 } else {
                                     //deselect
                                     selectedWidget = nil
-                                  
+                                    widgetDoubleTapped = false
+                                }
+                            })
+                          
+                            .onTapGesture {
+                                if selectedWidget != widget {
+                                    //select
+                                    selectedWidget = widget
+                                    widgetDoubleTapped = false
+                                    
+                                    
+                                } else {
+                                    //deselect
+                                    selectedWidget = nil
+                                    widgetDoubleTapped = false
                                 }
                             }
-
-
-                        
-                    
+                           
                     )
+                
+                //username below widget
                     .overlay(content: {
                         Text(widget.userId)
                             .font(.caption2)
                             .foregroundStyle(.secondary)
                             .offset(y:90)
                     })
-                    
-                    
-                
+                    .blur(radius: widgetDoubleTapped && selectedWidget != widget ? 20 : 0)
+                    .scaleEffect(widgetDoubleTapped && selectedWidget == widget ? 1.05 : 1)
+                    //emoji react
+                    .overlay( alignment: .top, content: {
+                        if widgetDoubleTapped && selectedWidget == widget {
+                            
+                            
+                            EmojiReactionsView()
+//                                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                
+                                .offset(y:-60)
+                        }
+                        
+                    })
+              
+               
+                  
                 //dragable
                     .draggable(widget) {
-                        
                         getMediaView(widget: widget)
                             .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
-                        
                             .onAppear{
                                 draggingItem = widget
                             }
                     }
-                
-                    //where its dropped
+                //where its dropped
                     .dropDestination(for: CanvasWidget.self) { items, location in
                         draggingItem = nil
                         return false
@@ -192,40 +214,26 @@ struct CanvasPage: View {
                             if let sourceIndex = canvasWidgets.firstIndex(of: draggingItem),
                                let destinationIndex = canvasWidgets.firstIndex(of: widget) {
                                 withAnimation(.bouncy) {
-                                    
+                                    //move widget
                                     let sourceItem = canvasWidgets.remove(at: sourceIndex)
                                     canvasWidgets.insert(sourceItem, at: destinationIndex)
-                                   //deselect
+                                    //deselect
                                     selectedWidget = nil
-                                   
+                                    
                                 }
                             }
                         }
                     }
                 
-                
-                
-                    
-                
+                //add blank space after widget if its a long widget
                 if widget.width > TILE_SIZE {
                     Color.clear
-
                         .gridCellUnsizedAxes([.horizontal, .vertical])
-                    
                 }
-                
-                
-                
             }
-            
-         
-            
-            
         }
-                                 
-                                 
-                                 
-                                ))
+                                )
+        )
     }
     
     func canvasView() -> AnyView {
@@ -235,44 +243,35 @@ struct CanvasPage: View {
                 ZStack {
                     GridView()
                         .frame(width: FRAME_SIZE, height: FRAME_SIZE, alignment: .center)
-                       
                         .border(Color.secondary, width: 1)
                       
                     DrawingCanvas(canvas: $canvas, toolPickerActive: $toolPickerActive, toolPicker: $toolkit)
                         .allowsHitTesting(toolPickerActive)
                         .frame(width: FRAME_SIZE, height: FRAME_SIZE)
                     
-                    
                 }
                 .scaleEffect(magnification)
                 
-                
             })
-            
             .onTapGesture {
              //deselect
                     selectedWidget = nil
-             
-               
+                widgetDoubleTapped = false
             }
-        
             .scrollDisabled(currentMode != .normal)
-  
             .gesture(magnify)
-            
+            //hovering action menu when widget is clicked
             .overlay(selectedWidget != nil
                      ? HStack{
                          Text("omg hi")
                          
                          Button(action: {
                              if let selectedWidget, let index = canvasWidgets.firstIndex(of: selectedWidget){
-                                 
                                  canvasWidgets.remove(at: index)
-                                
                              }
                              selectedWidget = nil
+                             widgetDoubleTapped = false
                            
-                             
                          }, label: {
                              Image(systemName: "trash")
                                  .foregroundColor(.red)
@@ -282,14 +281,10 @@ struct CanvasPage: View {
                         .padding(.vertical, 8)
                         .background(Color(UIColor.systemBackground), in: .capsule)
                         .contentShape(.capsule)
-                     
                         .shadow(color: Color.black.opacity(0.2), radius: 20, x: 0, y: 2)
                         .frame(maxHeight: .infinity, alignment: .bottom)
                         .padding(.bottom, 50)
-                     
                      :  nil
-      
-           
         )
             .animation(.easeInOut)
            
@@ -310,44 +305,28 @@ struct CanvasPage: View {
     
     @Environment(\.undoManager) private var undoManager
     
-    
-    
-    
-    
     var body: some View {
-        
         canvasView()
             .ignoresSafeArea()
             .task {
                 await onChange()
             }
-        //            .overlay(alignment: .top, content: {
-        //                Toolbar().padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-        //
-        //            })
+        //add new widget view
             .sheet(isPresented: $showNewWidgetView, onDismiss: {
-                
                 if photoLinkedToProfile {
                     photoLinkedToProfile = false
                     widgetId = UUID().uuidString
-                    
                 } else {
-                    
                     Task{
                         try await StorageManager.shared.deleteTempWidgetPic(spaceId:spaceId, widgetId: widgetId)
-                        
                     }
                 }
-                
-                
             }, content: {
-                
                 NewWidgetView(widgetId: widgetId, showNewWidgetView: $showNewWidgetView,  spaceId: spaceId, photoLinkedToProfile: $photoLinkedToProfile)
                 
             })
-        
+        //toolbar
             .toolbar(.hidden, for: .tabBar)
-        
             .toolbar {
                 if toolPickerActive{
                     //undo
@@ -366,7 +345,6 @@ struct CanvasPage: View {
                             Image(systemName: "arrow.uturn.forward.circle")
                         })
                     }
-                    
                 }
                 //pencilkit
                 ToolbarItem(placement: .topBarTrailing) {
@@ -401,16 +379,15 @@ struct CanvasPage: View {
                 }
                 
             }
-        
             .navigationBarTitleDisplayMode(.inline)
-        //
             .toolbarBackground(.ultraThinMaterial, for: .navigationBar)
             .toolbarBackground(.visible, for: .navigationBar)
-        
-        
-        
-        //        .toolbarBackground(.hidden, for: .navigationBar)
+            .task{
+                try? await viewModel.loadCurrentSpace(spaceId: spaceId)
+            }
+            .navigationTitle(toolPickerActive ? "" : viewModel.space?.name ?? "" )
     }
+       
     
 }
 

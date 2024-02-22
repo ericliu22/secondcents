@@ -59,6 +59,9 @@
 		AB6778E22AB8F67300C11AA7 /* ImageWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB6778E12AB8F67300C11AA7 /* ImageWidget.swift */; };
 		AB6778E42AB8F67800C11AA7 /* CanvasWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB6778E32AB8F67800C11AA7 /* CanvasWidget.swift */; };
 		AB6778E62AB8F67D00C11AA7 /* VideoWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB6778E52AB8F67D00C11AA7 /* VideoWidget.swift */; };
+		AB6EA60A2B879B7C00CC90FF /* CanvasPageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB6EA6092B879B7C00CC90FF /* CanvasPageViewModel.swift */; };
+		AB6EA60C2B87A1FE00CC90FF /* EmojiReactionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB6EA60B2B87A1FE00CC90FF /* EmojiReactionsView.swift */; };
+		AB6EA6102B87A27D00CC90FF /* SplashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB6EA60F2B87A27D00CC90FF /* SplashView.swift */; };
 		AB7365BB2A85060F00799D31 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = AB7365BA2A85060F00799D31 /* GoogleService-Info.plist */; };
 		AB7438412AAA349C001B4988 /* SearchUserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB7438402AAA349C001B4988 /* SearchUserView.swift */; };
 		AB7438432AAA34AD001B4988 /* SearchUserViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB7438422AAA34AD001B4988 /* SearchUserViewModel.swift */; };
@@ -174,6 +177,9 @@
 		AB6778E12AB8F67300C11AA7 /* ImageWidget.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageWidget.swift; sourceTree = "<group>"; };
 		AB6778E32AB8F67800C11AA7 /* CanvasWidget.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CanvasWidget.swift; sourceTree = "<group>"; };
 		AB6778E52AB8F67D00C11AA7 /* VideoWidget.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoWidget.swift; sourceTree = "<group>"; };
+		AB6EA6092B879B7C00CC90FF /* CanvasPageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasPageViewModel.swift; sourceTree = "<group>"; };
+		AB6EA60B2B87A1FE00CC90FF /* EmojiReactionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiReactionsView.swift; sourceTree = "<group>"; };
+		AB6EA60F2B87A27D00CC90FF /* SplashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashView.swift; sourceTree = "<group>"; };
 		AB7365BA2A85060F00799D31 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		AB7438402AAA349C001B4988 /* SearchUserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchUserView.swift; sourceTree = "<group>"; };
 		AB7438422AAA34AD001B4988 /* SearchUserViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchUserViewModel.swift; sourceTree = "<group>"; };
@@ -379,6 +385,9 @@
 				A2E5F52A2B5A12D30019C6ED /* DrawingCanvas.swift */,
 				AB01CB5E2B855E83004BEB5B /* TextWidget.swift */,
 				A2F563182AB4E6240026D8C9 /* CanvasPage.swift */,
+				AB6EA60B2B87A1FE00CC90FF /* EmojiReactionsView.swift */,
+				AB6EA60F2B87A27D00CC90FF /* SplashView.swift */,
+				AB6EA6092B879B7C00CC90FF /* CanvasPageViewModel.swift */,
 				AB90EDB82B54EB78002AD855 /* CustomizeWidgetView.swift */,
 				AB90EDBA2B54FDAD002AD855 /* CustomizeWidgetViewModel.swift */,
 				A246A42D2B43A1B700F0F6E6 /* NewWidgetView.swift */,
@@ -734,6 +743,7 @@
 				AB2E56C82AE9B9590096A58C /* CreateSpacesViewModel.swift in Sources */,
 				A257D7862A6D707600A4E7BD /* ContentView.swift in Sources */,
 				AB2E56D12AE9C62C0096A58C /* CapsuleView.swift in Sources */,
+				AB6EA60C2B87A1FE00CC90FF /* EmojiReactionsView.swift in Sources */,
 				ABCA39DA2A7A0881009447C3 /* SettingsView.swift in Sources */,
 				AB90EDBB2B54FDAD002AD855 /* CustomizeWidgetViewModel.swift in Sources */,
 				AB6778E62AB8F67D00C11AA7 /* VideoWidget.swift in Sources */,
@@ -768,6 +778,7 @@
 				ABA45E842A7C92B00015F000 /* UserManager.swift in Sources */,
 				AB842C0E2A91E2B500E4A7CE /* StorageManager.swift in Sources */,
 				AB15AC0B2AF6F00C0055D5D0 /* SpaceProfilePicView.swift in Sources */,
+				AB6EA6102B87A27D00CC90FF /* SplashView.swift in Sources */,
 				AB9EB95D2B1E805300F58EA5 /* ChatManager.swift in Sources */,
 				AB15AC0D2AF6F01B0055D5D0 /* SpaceProfilePicViewModel.swift in Sources */,
 				AB01CB5F2B855E83004BEB5B /* TextWidget.swift in Sources */,
@@ -779,6 +790,7 @@
 				ABCA39D42A79FFAD009447C3 /* SignInEmailView.swift in Sources */,
 				8573EC892AE6EF4A00CFB579 /* HeartParticle.swift in Sources */,
 				A2E5F52B2B5A12D30019C6ED /* DrawingCanvas.swift in Sources */,
+				AB6EA60A2B879B7C00CC90FF /* CanvasPageViewModel.swift in Sources */,
 				AB2E56CF2AE9C5E60096A58C /* ResultView.swift in Sources */,
 				ABB84C342A8CBA03009C7550 /* FrontPageView.swift in Sources */,
 				AB6778E42AB8F67800C11AA7 /* CanvasWidget.swift in Sources */,
