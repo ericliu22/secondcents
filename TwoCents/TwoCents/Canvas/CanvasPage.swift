@@ -71,6 +71,9 @@ struct CanvasPage: View {
     @State private var magnification: CGSize = CGSize(width: 1.0, height: 1.0);
     @State private var toolkit: PKToolPicker = PKToolPicker.init()
     
+    @State private var selectedWidget: CanvasWidget?
+ 
+    
     
     
     private var spaceId: String
@@ -80,7 +83,7 @@ struct CanvasPage: View {
     @State private var widgetShake: Double = 0
     private var chatroomDocument: DocumentReference
     private var drawingDocument: DocumentReference
-    
+
     enum canvasState {
         
         case drawing, normal
@@ -115,6 +118,7 @@ struct CanvasPage: View {
     
     
     
+    
     func GridView() -> AnyView {
         
         let columns = Array(repeating: GridItem(.fixed(TILE_SIZE), spacing: 50, alignment: .leading), count: 4)
@@ -123,25 +127,52 @@ struct CanvasPage: View {
             
             ForEach(canvasWidgets, id:\.id) { widget in
                 
-               
-               
+             
+              
                 getMediaView(widget: widget)
-                
                     .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
+
+                    
+                   
+                   
                     .cornerRadius(CORNER_RADIUS)
-                    .overlay(Text(widget.userId)
+                    .overlay(
+                   
+
+                        
+                        RoundedRectangle(cornerRadius: CORNER_RADIUS)
+                            .strokeBorder(selectedWidget == widget ? Color.secondary : .clear, lineWidth: 2)
+                        
+                            .contentShape(RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
+                            .cornerRadius(CORNER_RADIUS)
+                            .onTapGesture {
+                                
+                                if selectedWidget != widget {
+                                //select
+                                    selectedWidget = widget
+                                    //activate widgettoolbar
+                                  
+                                } else {
+                                    //deselect
+                                    selectedWidget = nil
+                                  
+                                }
+                            }
+
+
+                        
+                    
+                    )
+                    .overlay(content: {
+                        Text(widget.userId)
                             .font(.caption2)
                             .foregroundStyle(.secondary)
-                            .offset(y:90))
+                            .offset(y:90)
+                    })
+                    
                     
                 
-         
-                
-                
-               
-                
-                
-                
+                //dragable
                     .draggable(widget) {
                         
                         getMediaView(widget: widget)
@@ -150,9 +181,9 @@ struct CanvasPage: View {
                             .onAppear{
                                 draggingItem = widget
                             }
-                        //
                     }
                 
+                    //where its dropped
                     .dropDestination(for: CanvasWidget.self) { items, location in
                         draggingItem = nil
                         return false
@@ -164,12 +195,17 @@ struct CanvasPage: View {
                                     
                                     let sourceItem = canvasWidgets.remove(at: sourceIndex)
                                     canvasWidgets.insert(sourceItem, at: destinationIndex)
+                                   //deselect
+                                    selectedWidget = nil
                                    
-                                 
                                 }
                             }
                         }
                     }
+                
+                
+                
+                    
                 
                 if widget.width > TILE_SIZE {
                     Color.clear
@@ -181,6 +217,8 @@ struct CanvasPage: View {
                 
                 
             }
+            
+         
             
             
         }
@@ -199,7 +237,7 @@ struct CanvasPage: View {
                         .frame(width: FRAME_SIZE, height: FRAME_SIZE, alignment: .center)
                        
                         .border(Color.secondary, width: 1)
-                    
+                      
                     DrawingCanvas(canvas: $canvas, toolPickerActive: $toolPickerActive, toolPicker: $toolkit)
                         .allowsHitTesting(toolPickerActive)
                         .frame(width: FRAME_SIZE, height: FRAME_SIZE)
@@ -211,9 +249,50 @@ struct CanvasPage: View {
                 
             })
             
+            .onTapGesture {
+             //deselect
+                    selectedWidget = nil
+             
+               
+            }
+        
             .scrollDisabled(currentMode != .normal)
   
             .gesture(magnify)
+            
+            .overlay(selectedWidget != nil
+                     ? HStack{
+                         Text("omg hi")
+                         
+                         Button(action: {
+                             if let selectedWidget, let index = canvasWidgets.firstIndex(of: selectedWidget){
+                                 
+                                 canvasWidgets.remove(at: index)
+                                
+                             }
+                             selectedWidget = nil
+                           
+                             
+                         }, label: {
+                             Image(systemName: "trash")
+                                 .foregroundColor(.red)
+                         })
+                     }
+                        .padding(.horizontal, 15)
+                        .padding(.vertical, 8)
+                        .background(Color(UIColor.systemBackground), in: .capsule)
+                        .contentShape(.capsule)
+                     
+                        .shadow(color: Color.black.opacity(0.2), radius: 20, x: 0, y: 2)
+                        .frame(maxHeight: .infinity, alignment: .bottom)
+                        .padding(.bottom, 50)
+                     
+                     :  nil
+      
+           
+        )
+            .animation(.easeInOut)
+           
         )
     }
     
@@ -270,22 +349,24 @@ struct CanvasPage: View {
             .toolbar(.hidden, for: .tabBar)
         
             .toolbar {
-                
-                //undo
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button(action: {
-                        undoManager?.undo()
-                    }, label: {
-                        Image(systemName: "arrow.uturn.backward.circle")
-                    })
-                }
-                //redo
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button(action: {
-                        undoManager?.redo()
-                    }, label: {
-                        Image(systemName: "arrow.uturn.forward.circle")
-                    })
+                if toolPickerActive{
+                    //undo
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button(action: {
+                            undoManager?.undo()
+                        }, label: {
+                            Image(systemName: "arrow.uturn.backward.circle")
+                        })
+                    }
+                    //redo
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button(action: {
+                            undoManager?.redo()
+                        }, label: {
+                            Image(systemName: "arrow.uturn.forward.circle")
+                        })
+                    }
+                    
                 }
                 //pencilkit
                 ToolbarItem(placement: .topBarTrailing) {
