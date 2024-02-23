@@ -8,7 +8,8 @@ struct EmojiReactionsView: View {
     @State private var thumbsUpCount = 0
     @State private var thumbsDownCount = 0
     @State private var cryCount = 0
-    @State private var sadCount = 0
+    @State private var questionCount = 0
+    @State private var fingerCount = 0
     @State private var isLoved = false
     @State private var isLiked = false
     
@@ -97,7 +98,7 @@ struct EmojiReactionsView: View {
                     Text("👍")
                         .phaseAnimator([false, true], trigger: thumbsUpCount) { icon, scaleRotate in
                             icon
-                                .rotationEffect(.degrees(scaleRotate ? -45 : 0), anchor: .bottomLeading)
+                                .rotationEffect(.degrees(scaleRotate ? -5 : 0), anchor: .bottomLeading)
                                 .scaleEffect(scaleRotate ? 1.5 : 1)
                         } animation: { scaleRotate in
                                 .bouncy(duration: 0.4, extraBounce: 0.4)
@@ -137,31 +138,55 @@ struct EmojiReactionsView: View {
             }
             .phaseAnimator([false, true], trigger: cryCount) { icon, crying in
                 icon
-                    .offset(y: crying ? -30 : 0)
+                    .offset(y: crying ? -20 : 0)
                     .scaleEffect(crying ? 1.5 : 1)
             } animation: { crying in
                     .bouncy(duration: 0.2, extraBounce: 0.4)
             }
             
             Button {
-                sadCount += 1
+                fingerCount += 1
             } label: {
-                Text("😔")
+                Text("🫵")
             }
-            .phaseAnimator([false, true], trigger: sadCount) { icon, sad in
+            .phaseAnimator([false, true], trigger: fingerCount) { icon, point in
                 icon
-                    .offset(y: sad ? -30 : 0)
-                    .rotationEffect(.degrees(sad ? 45 : 0))
-                    .scaleEffect(sad ? 1.5 : 1)
-            } animation: { sad in
+//                    .offset(y: point ? -20 : 0)
+                    .scaleEffect(point ? 2 : 1)
+            } animation: { point in
                     .bouncy(duration: 0.2, extraBounce: 0.4)
             }
+            
+            
+            Button {
+                questionCount += 1
+            } label: {
+                Text("⁉️")
+            }
+            .phaseAnimator([false, true], trigger: questionCount) { icon, question in
+                icon
+//                    .offset(y: question ? -20 : 0)
+                
+                                    .rotationEffect(.degrees(question ? 15 : 0))
+                    .scaleEffect(question ? 2 : 1)
+            } animation: { question in
+                    .bouncy(duration: 0.2, extraBounce: 0.4)
+            }
+            
+            
+          
+            
+            
+            
         }
-        .frame(width: TILE_SIZE)
+        .frame(width: TILE_SIZE + 30)
         .padding(.horizontal, 15)
         .padding(.vertical, 8)
-        .background(.ultraThinMaterial)
-        .clipShape(Capsule())
+        .background(Rectangle()
+            .fill(.ultraThinMaterial)
+            .clipShape(Capsule())
+        )
+        
         
 //        .cornerRadius(16)
     }
