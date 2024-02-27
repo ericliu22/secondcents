@@ -326,6 +326,17 @@ struct CanvasPage: View {
                 NewWidgetView(widgetId: widgetId, showNewWidgetView: $showNewWidgetView,  spaceId: spaceId, photoLinkedToProfile: $photoLinkedToProfile)
                 
             })
+            .onChange(of: canvas.drawing, { oldValue, newValue in
+                if canvas.drawing.strokes.isEmpty == false {
+                    DispatchQueue.main.asyncAfter(deadline: .now()+5) {
+                    
+                        canvas.drawing.strokes.remove(at: 0)
+                           
+                        print(canvas.drawing.strokes)
+                        print("5 seconds is up")
+                    }
+                }
+            })
         //toolbar
             .toolbar(.hidden, for: .tabBar)
             .toolbar {

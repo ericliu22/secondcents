@@ -21,6 +21,7 @@ struct PencilKitPractice: View {
 struct Home: View {
     
     @State var canvas = PKCanvasView()
+   
     @State var isDraw = true
     // default is pen...
     
@@ -46,7 +47,7 @@ struct Home: View {
                     Circle()
                         .onTapGesture {
                             tapped.toggle()
-                            print("hi")
+//                            print("hi")
 
 //                            print("ToolPickerIsActive: \(toolPickerIsActive)")
                         }
@@ -56,6 +57,14 @@ struct Home: View {
                     
                     DrawingView(canvas: $canvas, isDraw: $isDraw, toolPickerIsActive: $toolPickerIsActive)
                         .allowsHitTesting(toolPickerIsActive)
+                        .onTapGesture {
+                            if toolPickerIsActive == false{
+                            self.canvas.drawingGestureRecognizer.isEnabled = false
+                                    } 
+                            else {
+                            self.canvas.drawingGestureRecognizer.isEnabled = true
+                                    }
+                        }
 
             }
                 .navigationTitle("Drawing")
@@ -63,7 +72,7 @@ struct Home: View {
                 .navigationBarItems(leading:
                                         Button(action: {
                                             toolPickerIsActive.toggle()
-                    print("ToolPickerIsActive: \(toolPickerIsActive)")
+//                    print("ToolPickerIsActive: \(toolPickerIsActive)")
                     
                     
                                         }, label: {
@@ -81,7 +90,10 @@ struct DrawingView : UIViewRepresentable {
     @Binding var isDraw: Bool
     @Binding var toolPickerIsActive: Bool
     
+    @State private var hasTimeElapsed = false
+    
     let toolPicker = PKToolPicker()
+    
     
 
     
@@ -96,6 +108,10 @@ struct DrawingView : UIViewRepresentable {
         canvas.contentInset = UIEdgeInsets(top: 280, left: 400, bottom: 280, right: 400)
         canvas.contentMode = .center
         canvas.scrollsToTop = false
+        
+        
+                
+        
 
 //        canvas.becomeFirstResponder()
 
@@ -106,14 +122,12 @@ struct DrawingView : UIViewRepresentable {
  
     
     func updateUIView(_ uiView: PKCanvasView, context: Context) {
-        if !toolPickerIsActive { return }
+        
+        if !toolPickerIsActive { 
+            
+            return }
 //        toolPicker.setVisible(toolPickerIsActive, forFirstResponder: canvas)
         
-//        if toolPickerIsActive == false{
-//            self.canvas.drawingGestureRecognizer.isEnabled = false
-//        } else {
-//            self.canvas.drawingGestureRecognizer.isEnabled = true
-//        }
         
         
         canvas.isUserInteractionEnabled = toolPickerIsActive
@@ -124,16 +138,18 @@ struct DrawingView : UIViewRepresentable {
 
         toolPicker.setVisible(toolPickerIsActive, forFirstResponder: canvas)
         
-       
-
+        if canvas.drawing.strokes.isEmpty == false {
+            DispatchQueue.main.asyncAfter(deadline: .now()+5) {
+                
+                canvas.drawing.strokes.removeAll()
+                print(canvas.drawing.strokes)
+                print("5 seconds is up")
+            }
+        }
 
         
-
         
-        
-            
     }
-    
-
+ 
 }
 
