@@ -70,6 +70,7 @@ struct CanvasPage: View {
     @State private var widgetId: String = UUID().uuidString
     @State private var magnification: CGSize = CGSize(width: 1.0, height: 1.0);
     @State private var toolkit: PKToolPicker = PKToolPicker.init()
+    @State private var pendingWrites: Bool = false
     
     @State private var selectedWidget: CanvasWidget?
  
@@ -100,7 +101,25 @@ struct CanvasPage: View {
         
         self.chatroomDocument = db.collection("spaces").document(spaceId)
         self.drawingDocument = db.collection("spaces").document(spaceId).collection("Widgets").document("Drawings")
-        let pullDrawing = db.collection("spaces").document(spaceId).addSnapshotListener {
+        
+        
+    }
+    
+    func pushDrawing() async {
+        
+        do {
+          try await db.collection("spaces").document(spaceId).updateData([
+            "drawing": canvas.drawing.dataRepresentation(),
+          ])
+          print("Document successfully written!")
+        } catch {
+          print("Error writing document: \(error)")
+        }
+        
+    }
+    
+    func pullDrawing() async {
+        db.collection("spaces").document(spaceId).addSnapshotListener {
             documentSnapshot, error in guard let document = documentSnapshot else {
                 print("Error fetching document: \(error!)")
                 return
@@ -109,16 +128,21 @@ struct CanvasPage: View {
                 print("Empty document")
                 return
             }
+            let source = document.metadata.hasPendingWrites
+            //There are no type checks on this if this fails our app crashes
+            let databaseDrawing = try! PKDrawingReference(data: data["drawing"] as! Data)
+            Task {
+                let newDrawing = await databaseDrawing.appending(self.canvas.drawing)
+                self.canvas.drawing = newDrawing
+            }
+            
         }
-        
-    }
-    
-    func pushDrawing() {
-        
     }
     
     func onChange() async {
         self.canvasWidgets = [ textView2, imageView0, imageView1, imageView2, imageView3, videoView3, textView]
+        
+        await pullDrawing()
     }
     
     
@@ -379,6 +403,15 @@ struct CanvasPage: View {
                         toolPickerActive
                         ? Image(systemName: "pencil.tip.crop.circle.fill")
                         : Image(systemName: "pencil.tip.crop.circle")
+                    })
+                }
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button(action: {
+                        Task {
+                            await pushDrawing()
+                        }
+                    }, label: {
+                        Image(systemName: "cloud")
                     })
                 }
                 //add widget
