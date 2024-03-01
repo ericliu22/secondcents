@@ -71,6 +71,7 @@ struct CanvasPage: View {
     @State private var magnification: CGSize = CGSize(width: 1.0, height: 1.0);
     @State private var toolkit: PKToolPicker = PKToolPicker.init()
     @State private var pendingWrites: Bool = false
+    @State private var timer: Timer?
     
     @State private var selectedWidget: CanvasWidget?
  
@@ -129,13 +130,10 @@ struct CanvasPage: View {
                 return
             }
             let source = document.metadata.hasPendingWrites
-            //There are no type checks on this if this fails our app crashes
+            //There are no type checks on this if this fails our app (supposedly it's ok because we always upload correctly)
             let databaseDrawing = try! PKDrawingReference(data: data["drawing"] as! Data)
-            Task {
-                let newDrawing = await databaseDrawing.appending(self.canvas.drawing)
+                let newDrawing = databaseDrawing.appending(self.canvas.drawing)
                 self.canvas.drawing = newDrawing
-            }
-            
         }
     }
     
@@ -316,6 +314,16 @@ struct CanvasPage: View {
         )
     }
     
+    private func removeExpiredStrokes() {
+        let strokes = canvas.drawing.strokes.filter { stroke in
+                if (Date().timeIntervalSince(stroke.path.creationDate) > 30) {
+                    print(Date().timeIntervalSince(stroke.path.creationDate))
+                }
+                return !stroke.isExpired()
+            }
+            canvas.drawing = PKDrawing(strokes: strokes)
+    }
+    
     var magnify: some Gesture {
         MagnificationGesture().onChanged { value in
             // Adjust sensitivity by multiplying the value
@@ -350,17 +358,9 @@ struct CanvasPage: View {
                 NewWidgetView(widgetId: widgetId, showNewWidgetView: $showNewWidgetView,  spaceId: spaceId, photoLinkedToProfile: $photoLinkedToProfile)
                 
             })
-            .onChange(of: canvas.drawing, { oldValue, newValue in
-                if canvas.drawing.strokes.isEmpty == false {
-                    DispatchQueue.main.asyncAfter(deadline: .now()+5) {
-                    
-                        canvas.drawing.strokes.remove(at: 0)
-                           
-                        print(canvas.drawing.strokes)
-                        print("5 seconds is up")
-                    }
-                }
-            })
+            .onReceive(Timer.publish(every: 5, on: .main, in: .common).autoconnect()) { _ in
+                removeExpiredStrokes()
+            }
         //toolbar
             .toolbar(.hidden, for: .tabBar)
             .toolbar {
