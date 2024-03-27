@@ -56,7 +56,6 @@ func getUID() async throws -> String? {
 struct CanvasPage: View {
     
     
-    
     @State private var userUID: String = ""
     @State var canvas: PKCanvasView = PKCanvasView()
     @State var toolPickerActive: Bool = false
@@ -103,7 +102,6 @@ struct CanvasPage: View {
         self.chatroomDocument = db.collection("spaces").document(spaceId)
         self.drawingDocument = db.collection("spaces").document(spaceId).collection("Widgets").document("Drawings")
         
-        
     }
     
     func pushDrawing() async {
@@ -119,28 +117,54 @@ struct CanvasPage: View {
         
     }
     
-    func pullDrawing() async {
-        db.collection("spaces").document(spaceId).addSnapshotListener {
-            documentSnapshot, error in guard let document = documentSnapshot else {
+    func pullDocuments() async {
+        db.collection("spaces").document(spaceId).addSnapshotListener { documentSnapshot, error in
+            
+            guard let document = documentSnapshot else {
                 print("Error fetching document: \(error!)")
                 return
             }
+            
+            guard document.exists else {
+                print("Document doesn't exist")
+                return
+            }
+            
             guard let data = document.data() else {
                 print("Empty document")
                 return
             }
-            let source = document.metadata.hasPendingWrites
-            //There are no type checks on this if this fails our app (supposedly it's ok because we always upload correctly)
-            let databaseDrawing = try! PKDrawingReference(data: data["drawing"] as! Data)
+            
+
+            //@TODO: Add checks for what writes type it is
+            //Get database drawing
+            if let drawingAccess = data["drawing"] as? Data {
+                let databaseDrawing = try! PKDrawingReference(data: drawingAccess)
                 let newDrawing = databaseDrawing.appending(self.canvas.drawing)
                 self.canvas.drawing = newDrawing
+            } else {
+                print("No database drawing")
+            }
+
+            //Get widget drawing
+
+        }
+        
+        db.collection("spaces").document(spaceId).collection("widgets").addSnapshotListener { querySnapshot, error in
+            guard let query = querySnapshot else {
+                print("Error fetching document: \(error!)")
+                return
+            }
+            
+            for document in query.documents {
+                let newWidget = try! document.data(as: CanvasWidget.self)
+                self.canvasWidgets.append(newWidget)
+            }
         }
     }
     
     func onChange() async {
-        self.canvasWidgets = [ textView2, imageView0, imageView1, imageView2, imageView3, videoView3, textView]
-        
-        await pullDrawing()
+        await pullDocuments()
     }
     
     

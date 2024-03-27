@@ -85,7 +85,6 @@ final class NewWidgetViewModel: ObservableObject{
         
     }
     
-    
     func saveImageWidget(widgetId: String) {
       
     
@@ -104,7 +103,14 @@ final class NewWidgetViewModel: ObservableObject{
     
     
     
-    
+    func saveWidget(index: Int) {
+        //Need to copy to variable before uploading (something about actor-isolate whatever)
+        let uploadWidget: CanvasWidget = widgets[index]
+        Task {
+            //space call should never fail so we manly !
+            await SpaceManager.shared.uploadWidget(spaceId: space!.spaceId, widget: uploadWidget)
+        }
+    }
     
     
     

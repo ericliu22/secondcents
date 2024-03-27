@@ -87,46 +87,46 @@ struct NewWidgetView: View {
                                                 }
                                                 .padding(.bottom, 60)
                                         }
-                                        
                                         //Widget Body
                                         switch viewModel.widgets[index].media {
-                                        case .image:
-                                            //image widget
-                                            ZStack{
-                                                
-                                                //main widget/photopicker
-                                                PhotosPicker(selection: $selectedPhoto, matching: .images, photoLibrary: .shared()){
+                                            case .image:
+                                                //image widget
+                                                ZStack{
                                                     
-                                                    getMediaView(widget: viewModel.widgets[index])
-                                                        .aspectRatio(1, contentMode: .fit)
-                                                        .shadow(radius: 20, y: 10)
-                                                        .cornerRadius(30)
-                                                        .containerRelativeFrame(.horizontal, count: 1, spacing: 0)
+                                                    //main widget/photopicker
+                                                    PhotosPicker(selection: $selectedPhoto, matching: .images, photoLibrary: .shared()){
+                                                        
+                                                        getMediaView(widget: viewModel.widgets[index])
+                                                            .aspectRatio(1, contentMode: .fit)
+                                                            .shadow(radius: 20, y: 10)
+                                                            .cornerRadius(30)
+                                                            .containerRelativeFrame(.horizontal, count: 1, spacing: 0)
+                                                        
+                                                    }
                                                     
+                                                    //loading circle
+                                                    if viewModel.loading {
+                                                        ProgressView()
+                                                            .progressViewStyle(
+                                                                CircularProgressViewStyle(tint:
+                                                                        .primary)
+                                                            )
+                                                            .frame(width: viewModel.widgets[index].width, height: viewModel.widgets[index].height)
+                                                            .cornerRadius(30)
+                                                        
+                                                    }
                                                 }
-                                                
-                                                //loading circle
-                                                if viewModel.loading {
-                                                    ProgressView()
-                                                        .progressViewStyle(
-                                                            CircularProgressViewStyle(tint:
-                                                                    .primary)
-                                                        )
-                                                        .frame(width: viewModel.widgets[index].width, height: viewModel.widgets[index].height)
-                                                        .cornerRadius(30)
-                                                    
-                                                }
-                                                
-                                            }
                                             
                                         default:
-                                            
-                                            //default widgets
-                                            getMediaView(widget: viewModel.widgets[index])
-                                                .aspectRatio(1, contentMode: .fit)
-                                                .shadow(radius: 20, y: 10)
-                                                .cornerRadius(30)
-                                                .containerRelativeFrame(.horizontal, count: 1, spacing: 0)
+                                            ZStack{
+                                                
+                                                //default widgets
+                                                getMediaView(widget: viewModel.widgets[index])
+                                                    .aspectRatio(1, contentMode: .fit)
+                                                    .shadow(radius: 20, y: 10)
+                                                    .cornerRadius(30)
+                                                    .containerRelativeFrame(.horizontal, count: 1, spacing: 0)
+                                            }
                                         }
                                         
                                     }
@@ -149,7 +149,9 @@ struct NewWidgetView: View {
                                     switch index {
                                     case 0:
                                         Button {
-                                            viewModel.saveImageWidget(widgetId: widgetId)
+                                            //No need for NewWidgetViewModel just directly upload
+                                            //@TODO: look into just making it index instead of hardcoding each index
+                                            viewModel.saveWidget(index: 0)
                                             
                                             if !viewModel.loading {
                                                 photoLinkedToProfile = true
