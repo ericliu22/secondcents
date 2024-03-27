@@ -71,7 +71,6 @@ extension Media: Codable {
             self = .video
         case "text":
             self = .text
-
         case "image":
             self = .image
         default:

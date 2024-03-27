@@ -47,9 +47,7 @@ struct Home: View {
                     Circle()
                         .onTapGesture {
                             tapped.toggle()
-//                            print("hi")
 
-//                            print("ToolPickerIsActive: \(toolPickerIsActive)")
                         }
                         .frame(height: tapped ? 100 : 50)
 //                        .foregroundColor(tapped ? .red : .gray)

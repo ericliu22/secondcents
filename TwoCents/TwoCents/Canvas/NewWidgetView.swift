@@ -43,6 +43,7 @@ struct NewWidgetView: View {
     
     
     @State private var selectedPhoto: PhotosPickerItem? = nil
+    @State private var selectedVideo: PhotosPickerItem? = nil
     //    @State private var imagePreview: UIImage?
     
     @State var spaceId: String
@@ -87,46 +88,69 @@ struct NewWidgetView: View {
                                                 }
                                                 .padding(.bottom, 60)
                                         }
-                                        
                                         //Widget Body
                                         switch viewModel.widgets[index].media {
-                                        case .image:
-                                            //image widget
-                                            ZStack{
-                                                
-                                                //main widget/photopicker
-                                                PhotosPicker(selection: $selectedPhoto, matching: .images, photoLibrary: .shared()){
+                                            case .image:
+                                                //image widget
+                                                ZStack{
                                                     
+                                                    //main widget/photopicker
+                                                    PhotosPicker(selection: $selectedPhoto, matching: .images, photoLibrary: .shared()){
+                                                        
+                                                        getMediaView(widget: viewModel.widgets[index])
+                                                            .aspectRatio(1, contentMode: .fit)
+                                                            .shadow(radius: 20, y: 10)
+                                                            .cornerRadius(30)
+                                                            .containerRelativeFrame(.horizontal, count: 1, spacing: 0)
+                                                        
+                                                    }
+                                                    //loading circle
+                                                    if viewModel.loading {
+                                                        ProgressView()
+                                                            .progressViewStyle(
+                                                                CircularProgressViewStyle(tint:
+                                                                        .primary)
+                                                            )
+                                                            .frame(width: viewModel.widgets[index].width, height: viewModel.widgets[index].height)
+                                                            .cornerRadius(30)
+                                                        
+                                                    }
+                                                }
+                                            case .video:
+                                                ZStack{
+                                                    
+                                                    //main widget/photopicker
+                                                    PhotosPicker(selection: $selectedPhoto, matching: .videos, photoLibrary: .shared()){
+                                                        
+                                                        getMediaView(widget: viewModel.widgets[index])
+                                                            .aspectRatio(1, contentMode: .fit)
+                                                            .shadow(radius: 20, y: 10)
+                                                            .cornerRadius(30)
+                                                            .containerRelativeFrame(.horizontal, count: 1, spacing: 0)
+                                                        
+                                                    }
+                                                    //loading circle
+                                                    if viewModel.loading {
+                                                        ProgressView()
+                                                            .progressViewStyle(
+                                                                CircularProgressViewStyle(tint:
+                                                                        .primary)
+                                                            )
+                                                            .frame(width: viewModel.widgets[index].width, height: viewModel.widgets[index].height)
+                                                            .cornerRadius(30)
+                                                        
+                                                    }
+                                                }
+                                            default:
+                                                ZStack{
+                                                    
+                                                    //default widgets
                                                     getMediaView(widget: viewModel.widgets[index])
                                                         .aspectRatio(1, contentMode: .fit)
                                                         .shadow(radius: 20, y: 10)
                                                         .cornerRadius(30)
                                                         .containerRelativeFrame(.horizontal, count: 1, spacing: 0)
-                                                    
                                                 }
-                                                
-                                                //loading circle
-                                                if viewModel.loading {
-                                                    ProgressView()
-                                                        .progressViewStyle(
-                                                            CircularProgressViewStyle(tint:
-                                                                    .primary)
-                                                        )
-                                                        .frame(width: viewModel.widgets[index].width, height: viewModel.widgets[index].height)
-                                                        .cornerRadius(30)
-                                                    
-                                                }
-                                                
-                                            }
-                                            
-                                        default:
-                                            
-                                            //default widgets
-                                            getMediaView(widget: viewModel.widgets[index])
-                                                .aspectRatio(1, contentMode: .fit)
-                                                .shadow(radius: 20, y: 10)
-                                                .cornerRadius(30)
-                                                .containerRelativeFrame(.horizontal, count: 1, spacing: 0)
                                         }
                                         
                                     }
@@ -149,7 +173,9 @@ struct NewWidgetView: View {
                                     switch index {
                                     case 0:
                                         Button {
-                                            viewModel.saveImageWidget(widgetId: widgetId)
+                                            //No need for NewWidgetViewModel just directly upload
+                                            //@TODO: look into just making it index instead of hardcoding each index
+                                            viewModel.saveWidget(index: index)
                                             
                                             if !viewModel.loading {
                                                 photoLinkedToProfile = true
@@ -165,7 +191,24 @@ struct NewWidgetView: View {
                                         .buttonBorderShape(.capsule)
                                         .padding(.horizontal)
                                         .disabled(viewModel.loading || (selectedPhoto == nil))
-                                        
+                                    case 1:
+                                        Button {
+                                            viewModel.saveWidget(index: index)
+                                            
+                                            if !viewModel.loading {
+                                                photoLinkedToProfile = true
+                                            }
+                                            
+                                            dismissScreen()
+                                        } label: {
+                                            Text("Add Widget")
+                                                .padding(.vertical, 10)
+                                                .frame(maxWidth: .infinity)
+                                        }
+                                        .buttonStyle(.bordered)
+                                        .buttonBorderShape(.capsule)
+                                        .padding(.horizontal)
+                                        .disabled(viewModel.loading || (selectedVideo == nil))
                                     default:
                                         Button {
                                             
