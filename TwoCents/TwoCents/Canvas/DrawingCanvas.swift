@@ -30,6 +30,7 @@ struct DrawingCanvas: UIViewRepresentable {
         return canvas
     }
     
+    
     func showToolPicker() {
         //          toolPicker.setVisible(true, forFirstResponder: canvas)
         canvas.becomeFirstResponder()
