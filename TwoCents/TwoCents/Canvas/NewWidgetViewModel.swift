@@ -105,11 +105,11 @@ final class NewWidgetViewModel: ObservableObject{
     
     func saveWidget(index: Int) {
         //Need to copy to variable before uploading (something about actor-isolate whatever)
-        let uploadWidget: CanvasWidget = widgets[index]
-        Task {
-            //space call should never fail so we manly !
-            await SpaceManager.shared.uploadWidget(spaceId: space!.spaceId, widget: uploadWidget)
-        }
+        var uploadWidget: CanvasWidget = widgets[index]
+        uploadWidget.width = TILE_SIZE
+        uploadWidget.height = TILE_SIZE
+        //space call should never fail so we manly exclamation mark
+        SpaceManager.shared.uploadWidget(spaceId: space!.spaceId, widget: uploadWidget)
     }
     
     

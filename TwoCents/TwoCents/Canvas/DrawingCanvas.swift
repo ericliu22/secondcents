@@ -13,8 +13,10 @@ struct DrawingCanvas: UIViewRepresentable {
     @Binding var canvas: PKCanvasView
     @Binding var toolPickerActive: Bool
     @Binding var toolPicker: PKToolPicker
+    var spaceId: String
     
     func makeUIView(context: Context) -> PKCanvasView {
+        canvas.drawingGestureRecognizer.addTarget(context.coordinator, action: #selector(context.coordinator.drawing(_:)))
         canvas.contentSize = CGSize(width: FRAME_SIZE, height: FRAME_SIZE)
         canvas.drawingPolicy = .anyInput
         canvas.minimumZoomScale = MIN_ZOOM
@@ -40,7 +42,43 @@ struct DrawingCanvas: UIViewRepresentable {
         canvas.drawingGestureRecognizer.isEnabled = toolPickerActive
         
     }
-
+    
+    func pushDrawing() async {
+        
+        
+        
+    }
+    
+    func makeCoordinator() -> Coordinator {
+            Coordinator(spaceId: spaceId, canvas: canvas)
+        }
+        
+        class Coordinator: NSObject {
+            
+            var canvas: PKCanvasView
+            var spaceId: String
+            
+            init(spaceId: String, canvas: PKCanvasView) {
+                self.spaceId = spaceId
+                self.canvas = canvas
+            }
+            
+            @objc func drawing(_ gestureRecognizer: UIGestureRecognizer) {
+                if gestureRecognizer.state == .ended {
+                    print("Drawing ended")
+                    Task {
+                        do {
+                            try await db.collection("spaces").document(spaceId).updateData([
+                                "drawing": canvas.drawing.dataRepresentation(),
+                            ])
+                            print("Document successfully written!")
+                        } catch {
+                            print("Error writing document: \(error)")
+                        }
+                    }
+                }
+            }
+        }
 }
 
 extension PKStroke {

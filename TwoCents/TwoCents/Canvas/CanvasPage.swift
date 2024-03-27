@@ -21,30 +21,6 @@ let CORNER_RADIUS: CGFloat = 15
 let LINE_WIDTH: CGFloat = 2
 let FRAME_SIZE: CGFloat = 1000
 
-//HARDCODED SECTION
-
-
-var imageView0 = CanvasWidget(width: TILE_SIZE*2 + 50, height: TILE_SIZE, borderColor: .red, userId: "jennierubyjane", media: .image, mediaURL: URL(string: "https://m.media-amazon.com/images/M/MV5BN2Q0OWJmNWYtYzBiNy00ODAyLWI2NGQtZGFhM2VjOWM5NDNkXkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_.jpg")!)
-var imageView1 = CanvasWidget(width: TILE_SIZE, height: TILE_SIZE,borderColor: .green, userId: "jennierubyjane", media: .image, mediaURL: URL(string: "https://www.billboard.com/wp-content/uploads/2023/01/lisa-blackpink-dec-2022-billboard-1548.jpg?w=942&h=623&crop=1")!)
-
-var imageView2 = CanvasWidget(width: TILE_SIZE, height: TILE_SIZE,borderColor: .blue, userId: "jennierubyjane", media: .image, mediaURL: URL(string: "https://i.mydramalist.com/66L5p_5c.jpg")!)
-var imageView3 = CanvasWidget(width: TILE_SIZE, height: TILE_SIZE,borderColor: .brown, userId: "jennierubyjane", media: .image, mediaURL: URL(string: "https://static.wikia.nocookie.net/the_kpop_house/images/6/60/Jisoo.jpg/revision/latest?cb=20200330154248")!)
-
-var videoView3 = CanvasWidget(width: TILE_SIZE, height: TILE_SIZE, borderColor: .orange, userId: "jisookim", media: .video, mediaURL: URL(string: "https://video.link/w/vl6552d3ab6cdff#")!)
-
-var chatview = CanvasWidget(borderColor: .yellow, userId: "shenjjj", media: .chat, mediaURL: URL(string: "https://www.youtube.com/watch?v=dQw4w9WgXcQ")!)
-
-var textView = CanvasWidget(width: TILE_SIZE, height: TILE_SIZE,borderColor: .green, userId: "jennierubyjane", media: .text, textString: "Gyatt")
-
-var textView2 = CanvasWidget(width: TILE_SIZE, height: TILE_SIZE,borderColor: .green, userId: "jennierubyjane", media: .text, textString: "Unpopular opinion: NewJeans lowkeeeeeyyyy????? 👀👀")
-
-
-
-
-//HARDCODED SECTION
-
-
-
 
 func getUID() async throws -> String? {
     let authDataResult = try AuthenticationManager.shared.getAuthenticatedUser()
@@ -104,18 +80,7 @@ struct CanvasPage: View {
         
     }
     
-    func pushDrawing() async {
-        
-        do {
-          try await db.collection("spaces").document(spaceId).updateData([
-            "drawing": canvas.drawing.dataRepresentation(),
-          ])
-          print("Document successfully written!")
-        } catch {
-          print("Error writing document: \(error)")
-        }
-        
-    }
+    
     
     func pullDocuments() async {
         db.collection("spaces").document(spaceId).addSnapshotListener { documentSnapshot, error in
@@ -137,7 +102,6 @@ struct CanvasPage: View {
             
 
             //@TODO: Add checks for what writes type it is
-            //Get database drawing
             if let drawingAccess = data["drawing"] as? Data {
                 let databaseDrawing = try! PKDrawingReference(data: drawingAccess)
                 let newDrawing = databaseDrawing.appending(self.canvas.drawing)
@@ -146,13 +110,11 @@ struct CanvasPage: View {
                 print("No database drawing")
             }
 
-            //Get widget drawing
-
         }
         
         db.collection("spaces").document(spaceId).collection("widgets").addSnapshotListener { querySnapshot, error in
             guard let query = querySnapshot else {
-                print("Error fetching document: \(error!)")
+                print("Error fetching query: \(error!)")
                 return
             }
             
@@ -292,7 +254,7 @@ struct CanvasPage: View {
                         .frame(width: FRAME_SIZE, height: FRAME_SIZE, alignment: .center)
                         .border(Color.secondary, width: 1)
                       
-                    DrawingCanvas(canvas: $canvas, toolPickerActive: $toolPickerActive, toolPicker: $toolkit)
+                    DrawingCanvas(canvas: $canvas, toolPickerActive: $toolPickerActive, toolPicker: $toolkit, spaceId: spaceId)
                         .allowsHitTesting(toolPickerActive)
                         .frame(width: FRAME_SIZE, height: FRAME_SIZE)
                     
@@ -340,12 +302,9 @@ struct CanvasPage: View {
     
     private func removeExpiredStrokes() {
         let strokes = canvas.drawing.strokes.filter { stroke in
-                if (Date().timeIntervalSince(stroke.path.creationDate) > 30) {
-                    print(Date().timeIntervalSince(stroke.path.creationDate))
-                }
                 return !stroke.isExpired()
-            }
-            canvas.drawing = PKDrawing(strokes: strokes)
+        }
+        canvas.drawing = PKDrawing(strokes: strokes)
     }
     
     var magnify: some Gesture {
@@ -427,15 +386,6 @@ struct CanvasPage: View {
                         toolPickerActive
                         ? Image(systemName: "pencil.tip.crop.circle.fill")
                         : Image(systemName: "pencil.tip.crop.circle")
-                    })
-                }
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button(action: {
-                        Task {
-                            await pushDrawing()
-                        }
-                    }, label: {
-                        Image(systemName: "cloud")
                     })
                 }
                 //add widget

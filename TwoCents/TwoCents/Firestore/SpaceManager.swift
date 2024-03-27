@@ -86,15 +86,17 @@ final class SpaceManager{
     }
     
     //Takes the CanvasWidget class as a parameter, encodes it, then uploads to database
-    func uploadWidget(spaceId: String, widget: CanvasWidget) async {
+    func uploadWidget(spaceId: String, widget: CanvasWidget) {
         let encoder = JSONEncoder()
         guard let data = try? encoder.encode(widget) else {
             print("Failed to encode")
             return
         }
-        print("DATA: \(data)")
         do {
-            try await spaceDocument(spaceId: spaceId).collection("widgets").document(widget.id.uuidString).setData(from: widget)
+            try spaceDocument(spaceId: spaceId)
+                .collection("widgets")
+                .document(widget.id.uuidString)
+                .setData(from: widget)
         } catch {
             print("Some shit fucked up")
         }
