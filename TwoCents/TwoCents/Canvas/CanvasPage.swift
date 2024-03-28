@@ -31,6 +31,8 @@ func getUID() async throws -> String? {
 
 struct CanvasPage: View {
     
+    //var for widget onTap
+    //@State var isShowingPopup = false
     
     @State private var userUID: String = ""
     @State var canvas: PKCanvasView = PKCanvasView()
@@ -56,6 +58,8 @@ struct CanvasPage: View {
     private var spaceId: String
     
     
+    @State private var magnifyBy: CGFloat = 1.0
+    @State private var activeGestures: GestureMask = .subviews
     @State private var newWidget: Bool = false
     @State private var widgetShake: Double = 0
     
@@ -133,10 +137,10 @@ struct CanvasPage: View {
     
     
     func GridView() -> AnyView {
-        
-        let columns = Array(repeating: GridItem(.fixed(TILE_SIZE), spacing: 50, alignment: .leading), count: 4)
-        
-        return AnyView(LazyVGrid(columns: columns, alignment: .leading, spacing: 50, content: {
+        @State var isShowingPopup = false
+        let columns = Array(repeating: GridItem(.fixed(TILE_SIZE), spacing: 15, alignment: .leading), count: 3)
+
+        return AnyView(LazyVGrid(columns: columns, alignment: .leading, spacing: 15, content: {
             
             ForEach(canvasWidgets, id:\.id) { widget in
                 //main widget
@@ -204,14 +208,39 @@ struct CanvasPage: View {
                     })
               
                
-                  
-                //dragable
-                    .draggable(widget) {
-                        getMediaView(widget: widget)
-                            .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
-                            .onAppear{
-                                draggingItem = widget
-                            }
+                ZStack {
+                    getMediaView(widget: widget)
+                    //josh code testing
+//                        .onTapGesture {
+//                            let _ = print("reached code 1")
+//                            isShowingPopup.toggle()
+//                            print("reached code 2")
+//                        }
+//                        .fullScreenCover(isPresented: $isShowingPopup, content: {widgetPopup()})
+                    //end of josh code testing
+                    RoundedRectangle(cornerRadius: CORNER_RADIUS)
+                        .stroke(widget.borderColor, lineWidth: LINE_WIDTH)
+                        .frame(width: widget.width, height: widget.height)
+                    //start of josh code
+//                        .onTapGesture {
+//                            let _ = print("reached code 1")
+//                            isShowingPopup.toggle()
+//                            print("reached code 2")
+//                        }
+//                        .fullScreenCover(isPresented: $isShowingPopup, content: {widgetPopup()})
+                    //end of josh code
+                }
+                //josh code zstack attempt
+                .onTapGesture {
+                    let _ = print("reached code 1")
+                    isShowingPopup.toggle()
+                    print("reached code 2")
+                }
+                .fullScreenCover(isPresented: $isShowingPopup, content: {widgetPopup()})
+                //end of attempt
+                .draggable(widget) {
+                    getMediaView(widget: widget).onAppear{
+                        draggingItem = widget
                     }
                 //where its dropped
                     .dropDestination(for: CanvasWidget.self) { items, location in
@@ -242,6 +271,69 @@ struct CanvasPage: View {
             }
         }
                                 )
+            }
+        ))
+    }
+
+    func Toolbar() -> AnyView {
+        
+        AnyView(
+            HStack{
+                if (currentMode == .drawing) {
+                    
+                    Image(systemName: "arrowshape.backward.circle")
+                        .font(.largeTitle)
+                        .foregroundColor(.black)
+                        .gesture(TapGesture(count: 1).onEnded({
+                            withAnimation(.easeIn) {
+                                    self.currentMode = .normal
+                                    self.activeGestures = .subviews
+                                }
+                        }))
+                    Image(systemName: "pencil.circle\(drawingMode == .pencil ? ".fill" : "")")
+                        .font(.largeTitle)
+                        .foregroundColor(drawingMode == .pencil ? penColor : .black)
+                        .gesture(TapGesture(count: 1).onEnded({
+                                self.drawingMode = .pencil
+                        }))
+                    Image(systemName: "eraser\(drawingMode == .eraser ? ".fill" : "")")
+                        .font(.largeTitle)
+                        .foregroundColor(drawingMode == .eraser ? penColor : .black)
+                        .gesture(TapGesture(count: 1).onEnded({
+                            self.drawingMode = .eraser
+                        }))
+                }
+                else {
+                    Image(systemName: "pencil.circle")
+                        .font(.largeTitle)
+                        .foregroundColor(.black)
+                        .gesture(TapGesture(count: 1).onEnded({
+                                withAnimation(.bouncy) {
+                                    self.currentMode = .drawing
+                                    self.activeGestures = .all
+                                }
+                        }))
+                    Image(systemName: "hand.raised\(currentMode == .grab ? ".fill" : "")")
+                        .font(.largeTitle)
+                        .foregroundColor(Color.black)
+                        .gesture(TapGesture(count: 1).onEnded({
+                            if currentMode == .grab {
+                                currentMode = .normal
+                            } else {
+                                self.currentMode = .grab
+                                self.activeGestures = .subviews
+                            }
+                        }))
+                    Image(systemName: "plus.circle")
+                        .font(.largeTitle)
+                        .foregroundColor(.black)
+                        .gesture(TapGesture(count:1).onEnded(({
+                            
+                            newWidget = true
+                        })))
+                }
+            }
+            
         )
     }
     

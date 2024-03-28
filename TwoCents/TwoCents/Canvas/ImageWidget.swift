@@ -53,6 +53,13 @@ func imageWidget(widget: CanvasWidget) -> AnyView {
     
     
 }
+
+//struct imageStruct: View{
+//    var body: some View{
+//        getMediaView(widget: imageWidget)
+//    }
+//}
+
 //testing struct with imageWidget2
 //struct testNormal: View{
 //    assert(widget.media == .image)

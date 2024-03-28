@@ -13,7 +13,7 @@ struct PollChartView: View{
     let options: [Option]
     var body: some View{
         VStack{
-            Text("Idk how to change chart colors lmao").foregroundColor(.black)
+//            Text("Idk how to change chart colors lmao").foregroundColor(.black)
             Chart{
                 ForEach(options) {
                     option in SectorMark(
@@ -26,13 +26,13 @@ struct PollChartView: View{
                 }
             }
             .padding()
-            PollButtons(options:[
-                .init(count: 5, name: "blue"),
-                .init(count: 1, name: "red"),
-                .init(count: 2, name: "purple"),
-                .init(count: 5, name: "yellow"),
-                .init(count: 3, name: "green")
-                        ])
+//            PollButtons(options:[
+//                .init(count: 5, name: "blue"),
+//                .init(count: 1, name: "red"),
+//                .init(count: 2, name: "purple"),
+//                .init(count: 5, name: "yellow"),
+//                .init(count: 3, name: "green")
+//                        ])
         }
     }
 }
@@ -65,14 +65,14 @@ struct PollButtons: View {
     }
 }
 
-#Preview{
-    PollChartView(
-        options:[
-            .init(count: 5, name: "blue"),
-            .init(count: 1, name: "red"),
-            .init(count: 2, name: "purple"),
-            .init(count: 5, name: "yellow"),
-            .init(count: 3, name: "green")
-                    ]
-    )
-}
+//#Preview{
+//    PollChartView(
+////        options:[
+////            .init(count: 5, name: "blue"),
+////            .init(count: 1, name: "red"),
+////            .init(count: 2, name: "purple"),
+////            .init(count: 5, name: "yellow"),
+////            .init(count: 3, name: "green")
+////                    ]
+//    )
+//}
