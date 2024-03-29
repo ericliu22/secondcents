@@ -31,6 +31,7 @@ struct DrawingCanvas: UIViewRepresentable {
         return canvas
     }
     
+    
     func showToolPicker() {
         canvas.becomeFirstResponder()
     }

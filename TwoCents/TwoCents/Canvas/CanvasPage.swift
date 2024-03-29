@@ -202,14 +202,20 @@ struct CanvasPage: View {
                         }
                     }
                 
-                    //add blank space after widget if its a long widget
-                    if widget.width > TILE_SIZE {
-                        Color.clear
-                            .gridCellUnsizedAxes([.horizontal, .vertical])
-                    }
-                }
-            }))
+                
+            
+//                    
+//                //add blank space after widget if its a long widget
+//                if widget.width > TILE_SIZE {
+//                    Color.clear
+//                        .gridCellUnsizedAxes([.horizontal, .vertical])
+//                }
+            }
+        }
+                                )
+        )
     }
+    @State var zoomValue: CGFloat = 0
     
     func canvasView() -> AnyView {
         
@@ -225,16 +231,33 @@ struct CanvasPage: View {
                         .frame(width: FRAME_SIZE, height: FRAME_SIZE)
                     
                 }
-                .scaleEffect(magnification)
                 
+//                .scaleEffect(magnification)
+                
+                .scaleEffect(zoomValue + 1)
             })
+            
+            .gesture(
+                MagnificationGesture()
+                    .onChanged{value in
+                        print(value)
+                        
+                      
+                        zoomValue = value - 1
+                    }
+//                        .onEnded({ value in
+//                            withAnimation(.spring()) {
+//                                currentAmount = 0
+//                            }
+//                        })
+            )
             .onTapGesture {
              //deselect
                     selectedWidget = nil
                 widgetDoubleTapped = false
             }
             .scrollDisabled(currentMode != .normal)
-            .gesture(magnify)
+//            .gesture(magnify)
             //hovering action menu when widget is clicked
             .overlay(selectedWidget != nil
                      ? HStack{
@@ -279,18 +302,19 @@ struct CanvasPage: View {
             canvas.upload(spaceId: spaceId)
         }
     }
-    
-    var magnify: some Gesture {
-        MagnificationGesture().onChanged { value in
-            // Adjust sensitivity by multiplying the value
-            let sensitivityMultiplier: CGFloat = 0.5 // Adjust this value as needed
-            let adjustedValue = value * sensitivityMultiplier
-            
-            // Calculate new magnification
-            let newMagnification = min(max(self.magnification.width * adjustedValue, MIN_ZOOM), MAX_ZOOM)
-            self.magnification = CGSize(width: newMagnification, height: newMagnification)
-        }
-    }
+//    
+//    var magnify: some Gesture {
+//        MagnificationGesture().onChanged { value in
+//            // Adjust sensitivity by multiplying the value
+//            let sensitivityMultiplier: CGFloat = 0.5 // Adjust this value as needed
+//            let adjustedValue = value * sensitivityMultiplier
+//            
+//            // Calculate new magnification
+//            let newMagnification = min(max(self.magnification.width * adjustedValue, MIN_ZOOM), MAX_ZOOM)
+//            self.magnification = CGSize(width: newMagnification, height: newMagnification)
+//         
+//        }
+//    }
     
     @Environment(\.undoManager) private var undoManager
     
