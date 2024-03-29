@@ -52,13 +52,17 @@ func videoWidget(widget: CanvasWidget) -> AnyView {
         assert(widget.media == .video)
         var isPlaying = true
         let videoplayer = AVPlayer(url: widget.mediaURL!)
+        videoplayer.play()
         return AnyView(
             VideoPlayer(player: videoplayer)
                 .frame(width: widget.width ,height: widget.height, alignment: .center)
                 .clipShape(RoundedRectangle(cornerRadius: CORNER_RADIUS))
+                .draggable(widget)
+            /*
                 .gesture(TapGesture().onEnded({
                     isPlaying ? videoplayer.pause() : videoplayer.play()
                     isPlaying.toggle()
-                })).draggable(widget)
+                }))
+             */
         )
 }

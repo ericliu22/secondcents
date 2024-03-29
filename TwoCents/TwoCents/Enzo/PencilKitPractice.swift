@@ -70,8 +70,6 @@ struct Home: View {
                 .navigationBarItems(leading:
                                         Button(action: {
                                             toolPickerIsActive.toggle()
-//                    print("ToolPickerIsActive: \(toolPickerIsActive)")
-                    
                     
                                         }, label: {
                                             Text(toolPickerIsActive ? "TOOLPICKER: ON" : "TOOLPICKER: OFF")
@@ -141,7 +139,6 @@ struct DrawingView : UIViewRepresentable {
                 
                 canvas.drawing.strokes.removeAll()
                 print(canvas.drawing.strokes)
-                print("5 seconds is up")
             }
         }
 

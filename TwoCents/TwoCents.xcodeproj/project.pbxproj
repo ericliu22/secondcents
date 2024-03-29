@@ -7,11 +7,18 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8507204B2B54692F0057B8BC /* widgetPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8507204A2B54692F0057B8BC /* widgetPopup.swift */; };
+		850720512B5A13BF0057B8BC /* Poll.swift in Sources */ = {isa = PBXBuildFile; fileRef = 850720502B5A13BF0057B8BC /* Poll.swift */; };
+		850720532B5A13C20057B8BC /* PollChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 850720522B5A13C20057B8BC /* PollChart.swift */; };
+		850720552B5A13C40057B8BC /* PollFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 850720542B5A13C40057B8BC /* PollFunctions.swift */; };
+		850720572B5A13C60057B8BC /* PollSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 850720562B5A13C60057B8BC /* PollSheet.swift */; };
+		850720592B5A13C80057B8BC /* PollWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 850720582B5A13C80057B8BC /* PollWidget.swift */; };
+		8507205B2B5A140D0057B8BC /* Option.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8507205A2B5A140D0057B8BC /* Option.swift */; };
 		850958A72AB8F41D00018A32 /* HotSeat.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20EBD062AB8A36100EFDDE8 /* HotSeat.swift */; };
 		850958AA2AB8F82D00018A32 /* LuckiestGuy-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 850958A92AB8F82D00018A32 /* LuckiestGuy-Regular.ttf */; };
 		850958AB2AB8F82D00018A32 /* LuckiestGuy-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 850958A92AB8F82D00018A32 /* LuckiestGuy-Regular.ttf */; };
 		850958AC2AB8F82D00018A32 /* LuckiestGuy-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 850958A92AB8F82D00018A32 /* LuckiestGuy-Regular.ttf */; };
-		851F5E102B50EF84008E0746 /* Polls in Resources */ = {isa = PBXBuildFile; fileRef = 851F5E0F2B50EF84008E0746 /* Polls */; };
+		8534B8B92B8001660089AD5C /* NewPoll.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8534B8B82B8001660089AD5C /* NewPoll.swift */; };
 		856E80B12B50E9D00078A2CE /* PencilKitPractice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 856E80B02B50E9CF0078A2CE /* PencilKitPractice.swift */; };
 		856E80B92B50EB260078A2CE /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 856E80B42B50EB260078A2CE /* CardView.swift */; };
 		856E80BA2B50EB260078A2CE /* SabotageSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 856E80B52B50EB260078A2CE /* SabotageSelectionView.swift */; };
@@ -119,9 +126,16 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		8507204A2B54692F0057B8BC /* widgetPopup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = widgetPopup.swift; sourceTree = "<group>"; };
+		850720502B5A13BF0057B8BC /* Poll.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Poll.swift; sourceTree = "<group>"; };
+		850720522B5A13C20057B8BC /* PollChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollChart.swift; sourceTree = "<group>"; };
+		850720542B5A13C40057B8BC /* PollFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollFunctions.swift; sourceTree = "<group>"; };
+		850720562B5A13C60057B8BC /* PollSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollSheet.swift; sourceTree = "<group>"; };
+		850720582B5A13C80057B8BC /* PollWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollWidget.swift; sourceTree = "<group>"; };
+		8507205A2B5A140D0057B8BC /* Option.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Option.swift; sourceTree = "<group>"; };
 		850958A82AB8F81200018A32 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		850958A92AB8F82D00018A32 /* LuckiestGuy-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "LuckiestGuy-Regular.ttf"; sourceTree = "<group>"; };
-		851F5E0F2B50EF84008E0746 /* Polls */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Polls; sourceTree = "<group>"; };
+		8534B8B82B8001660089AD5C /* NewPoll.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewPoll.swift; sourceTree = "<group>"; };
 		856E80B02B50E9CF0078A2CE /* PencilKitPractice.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PencilKitPractice.swift; sourceTree = "<group>"; };
 		856E80B42B50EB260078A2CE /* CardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 		856E80B52B50EB260078A2CE /* SabotageSelectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SabotageSelectionView.swift; sourceTree = "<group>"; };
@@ -244,6 +258,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		8507204D2B5A13A60057B8BC /* Polls */ = {
+			isa = PBXGroup;
+			children = (
+				850720502B5A13BF0057B8BC /* Poll.swift */,
+				850720522B5A13C20057B8BC /* PollChart.swift */,
+				850720542B5A13C40057B8BC /* PollFunctions.swift */,
+				850720562B5A13C60057B8BC /* PollSheet.swift */,
+				850720582B5A13C80057B8BC /* PollWidget.swift */,
+				8534B8B82B8001660089AD5C /* NewPoll.swift */,
+				8507205A2B5A140D0057B8BC /* Option.swift */,
+			);
+			path = Polls;
+			sourceTree = "<group>";
+		};
 		856E80B32B50EB260078A2CE /* SabotageGame */ = {
 			isa = PBXGroup;
 			children = (
@@ -377,7 +405,8 @@
 		A2F563122AB4E6240026D8C9 /* Canvas */ = {
 			isa = PBXGroup;
 			children = (
-				851F5E0F2B50EF84008E0746 /* Polls */,
+				8507204D2B5A13A60057B8BC /* Polls */,
+				A2F563162AB4E6240026D8C9 /* Line.swift */,
 				AB6778E12AB8F67300C11AA7 /* ImageWidget.swift */,
 				AB6778E52AB8F67D00C11AA7 /* VideoWidget.swift */,
 				A2AFFDDB2B154C7000B14C1E /* ChatWidget.swift */,
@@ -392,6 +421,8 @@
 				AB90EDBA2B54FDAD002AD855 /* CustomizeWidgetViewModel.swift */,
 				A246A42D2B43A1B700F0F6E6 /* NewWidgetView.swift */,
 				AB90EDBC2B55BB59002AD855 /* NewWidgetViewModel.swift */,
+				8507204A2B54692F0057B8BC /* widgetPopup.swift */,
+				A246A42D2B43A1B700F0F6E6 /* NewWidget.swift */,
 			);
 			path = Canvas;
 			sourceTree = "<group>";
@@ -703,7 +734,6 @@
 				A257D78B2A6D707800A4E7BD /* Preview Assets.xcassets in Resources */,
 				A257D7882A6D707800A4E7BD /* Assets.xcassets in Resources */,
 				AB7365BB2A85060F00799D31 /* GoogleService-Info.plist in Resources */,
-				851F5E102B50EF84008E0746 /* Polls in Resources */,
 				850958AA2AB8F82D00018A32 /* LuckiestGuy-Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -748,6 +778,7 @@
 				AB90EDBB2B54FDAD002AD855 /* CustomizeWidgetViewModel.swift in Sources */,
 				AB6778E62AB8F67D00C11AA7 /* VideoWidget.swift in Sources */,
 				856E80BC2B50EB260078A2CE /* SabotageCarouselView.swift in Sources */,
+				850720592B5A13C80057B8BC /* PollWidget.swift in Sources */,
 				A257D7862A6D707600A4E7BD /* ContentView.swift in Sources */,
 				AB9909AD2ABE3C1B004B3021 /* FriendRequestsViewModel.swift in Sources */,
 				ABCA39DA2A7A0881009447C3 /* SettingsView.swift in Sources */,
@@ -758,17 +789,21 @@
 				AB2E56D32AE9C6F00096A58C /* VoteGameViewModel.swift in Sources */,
 				AB2E56CD2AE9C59D0096A58C /* VoteGameView.swift in Sources */,
 				A2F5631E2AB4E6240026D8C9 /* CanvasPage.swift in Sources */,
+				8534B8B92B8001660089AD5C /* NewPoll.swift in Sources */,
 				AB90021D2A8B85DA00F970B8 /* UploadExampleViewModel.swift in Sources */,
 				85A6766D2AE9C6BB003ECAAA /* textField.swift in Sources */,
 				A2F563232AB4E6700026D8C9 /* chattingView.swift in Sources */,
 				AB4C1E4F2A8785BF00588160 /* ColorSelectionView.swift in Sources */,
+				850720532B5A13C20057B8BC /* PollChart.swift in Sources */,
 				AB7438412AAA349C001B4988 /* SearchUserView.swift in Sources */,
 				AB8C6E202AE6FBD50005B7F9 /* SpacesViewModel.swift in Sources */,
 				ABCA39D22A79FC16009447C3 /* AuthenticationView.swift in Sources */,
 				ABF556862A950BCB00103880 /* RootViewModel.swift in Sources */,
 				856E80B12B50E9D00078A2CE /* PencilKitPractice.swift in Sources */,
+				8507204B2B54692F0057B8BC /* widgetPopup.swift in Sources */,
 				ABF556842A95046D00103880 /* ColorPickerWidgetViewModel.swift in Sources */,
 				85741EAF2AD03D370085423E /* PostModel.swift in Sources */,
+				850720572B5A13C60057B8BC /* PollSheet.swift in Sources */,
 				ABCA39D62A7A0159009447C3 /* AuthenticationManager.swift in Sources */,
 				A2F563222AB4E6700026D8C9 /* retrievemessages.swift in Sources */,
 				AB300FAE2AC7406500C6719D /* FriendsViewModel.swift in Sources */,
@@ -793,6 +828,8 @@
 				AB6EA60A2B879B7C00CC90FF /* CanvasPageViewModel.swift in Sources */,
 				AB2E56CF2AE9C5E60096A58C /* ResultView.swift in Sources */,
 				ABB84C342A8CBA03009C7550 /* FrontPageView.swift in Sources */,
+				8507205B2B5A140D0057B8BC /* Option.swift in Sources */,
+				850720552B5A13C40057B8BC /* PollFunctions.swift in Sources */,
 				AB6778E42AB8F67800C11AA7 /* CanvasWidget.swift in Sources */,
 				ABF56DFF2A7C8C5200F959DB /* SettingsViewModel.swift in Sources */,
 				AB842C102A91E52000E4A7CE /* ProfileViewModel.swift in Sources */,
@@ -808,6 +845,7 @@
 				AB9909AB2ABE3BF2004B3021 /* FriendRequestsView.swift in Sources */,
 				85741EAA2AD03B2C0085423E /* SnapCarouselPractice.swift in Sources */,
 				AB9455232A9468130055B44A /* ColorPickerWidget.swift in Sources */,
+				850720512B5A13BF0057B8BC /* Poll.swift in Sources */,
 				85A6766B2AE9C19B003ECAAA /* messageBubbles.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

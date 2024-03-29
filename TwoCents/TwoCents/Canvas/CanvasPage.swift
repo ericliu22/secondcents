@@ -18,7 +18,6 @@ let TILE_SIZE: CGFloat = 150
 let MAX_ZOOM: CGFloat = 3.0
 let MIN_ZOOM: CGFloat = 0.6
 let CORNER_RADIUS: CGFloat = 15
-let LINE_WIDTH: CGFloat = 2
 let FRAME_SIZE: CGFloat = 1000
 
 
@@ -31,6 +30,8 @@ func getUID() async throws -> String? {
 
 struct CanvasPage: View {
     
+    //var for widget onTap
+    //@State var isShowingPopup = false
     
     @State private var userUID: String = ""
     @State var canvas: PKCanvasView = PKCanvasView()
@@ -39,7 +40,7 @@ struct CanvasPage: View {
     @State private var canvasWidgets: [CanvasWidget] = []
     @State private var draggingItem: CanvasWidget?
     @State private var scrollPosition: CGPoint = CGPointZero
-    @State private var activeGestures: GestureMask = .none
+    @State private var activeGestures: GestureMask = .subviews
     @State private var showNewWidgetView: Bool = false
     @State private var photoLinkedToProfile: Bool = false
     @State private var widgetId: String = UUID().uuidString
@@ -54,10 +55,6 @@ struct CanvasPage: View {
     
     
     private var spaceId: String
-    
-    
-    @State private var newWidget: Bool = false
-    @State private var widgetShake: Double = 0
     
     
     @State private var widgetDoubleTapped: Bool = false
@@ -133,17 +130,17 @@ struct CanvasPage: View {
     
     
     func GridView() -> AnyView {
-        
-        let columns = Array(repeating: GridItem(.fixed(TILE_SIZE), spacing: 50, alignment: .leading), count: 4)
-        
-        return AnyView(LazyVGrid(columns: columns, alignment: .leading, spacing: 50, content: {
+        @State var isShowingPopup = false
+        let columns = Array(repeating: GridItem(.fixed(TILE_SIZE), spacing: 15, alignment: .leading), count: 3)
+
+        return AnyView(LazyVGrid(columns: columns, alignment: .leading, spacing: 15, content: {
             
             ForEach(canvasWidgets, id:\.id) { widget in
                 //main widget
                 getMediaView(widget: widget)
                     .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
                     .cornerRadius(CORNER_RADIUS)
-                
+                    
                 //clickable area/outline when clicked
                     .overlay(
                         RoundedRectangle(cornerRadius: CORNER_RADIUS)
@@ -151,8 +148,7 @@ struct CanvasPage: View {
                             .contentShape(RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
                             .cornerRadius(CORNER_RADIUS)
                             .onTapGesture(count: 2, perform: {
-                               print("hi")
-                           
+                                
                                 if selectedWidget != widget || !widgetDoubleTapped {
                                     //select
                                     selectedWidget = widget
@@ -164,21 +160,6 @@ struct CanvasPage: View {
                                     widgetDoubleTapped = false
                                 }
                             })
-                          
-                            .onTapGesture {
-                                if selectedWidget != widget {
-                                    //select
-                                    selectedWidget = widget
-                                    widgetDoubleTapped = false
-                                    
-                                    
-                                } else {
-                                    //deselect
-                                    selectedWidget = nil
-                                    widgetDoubleTapped = false
-                                }
-                            }
-                           
                     )
                 
                 //username below widget
@@ -190,22 +171,18 @@ struct CanvasPage: View {
                     })
                     .blur(radius: widgetDoubleTapped && selectedWidget != widget ? 20 : 0)
                     .scaleEffect(widgetDoubleTapped && selectedWidget == widget ? 1.05 : 1)
-                    //emoji react
+                //emoji react
                     .overlay( alignment: .top, content: {
                         if widgetDoubleTapped && selectedWidget == widget {
                             
                             
                             EmojiReactionsView()
-//                                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                                
+                            //                                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            
                                 .offset(y:-60)
                         }
                         
                     })
-              
-               
-                  
-                //dragable
                     .draggable(widget) {
                         getMediaView(widget: widget)
                             .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
@@ -228,7 +205,6 @@ struct CanvasPage: View {
                                     //deselect
                                     selectedWidget = nil
                                     widgetDoubleTapped = false
-                                    
                                 }
                             }
                         }
@@ -315,8 +291,8 @@ struct CanvasPage: View {
                         .frame(maxHeight: .infinity, alignment: .bottom)
                         .padding(.bottom, 50)
                      :  nil
-        )
-            .animation(.easeInOut)
+                    )
+                    .animation(.easeInOut)
            
         )
     }
@@ -326,6 +302,7 @@ struct CanvasPage: View {
                 return !stroke.isExpired()
         }
         canvas.drawing = PKDrawing(strokes: strokes)
+        //@TODO: Check if strokes were actually removed, if so then upload new PKDrawing to database
     }
 //    
 //    var magnify: some Gesture {
