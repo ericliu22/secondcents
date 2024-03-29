@@ -109,6 +109,7 @@ struct NewWidgetView: View {
                                                     }
                                                     
                                                     
+                                                    
                                                     //loading circle
                                                     if viewModel.loading {
                                                         ProgressView()
