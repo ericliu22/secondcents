@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 func imageWidget(widget: CanvasWidget) -> AnyView {
-    @State var isPresented: Bool = false
+
 //    print(isPresented)
     assert(widget.media == .image)
     
@@ -25,11 +25,11 @@ func imageWidget(widget: CanvasWidget) -> AnyView {
                 .clipShape(
                     RoundedRectangle(cornerRadius: CORNER_RADIUS)
                 )
-                .onTapGesture {
-//                    print(isPresented)
-                    isPresented.toggle();
-//                    print(isPresented)
-                }
+//                .onTapGesture {
+////                    print(isPresented)
+//                    isPresented.toggle();
+////                    print(isPresented)
+//                }
         } placeholder: {
             ProgressView()
                 .progressViewStyle(

@@ -96,6 +96,9 @@ struct NewWidgetView: View {
                                                     
                                                     //main widget/photopicker
                                                     PhotosPicker(selection: $selectedPhoto, matching: .images, photoLibrary: .shared()){
+//                                                        
+//                                                        Color.red
+//                                                            .frame(width: 10, height:10)
                                                         
                                                         getMediaView(widget: viewModel.widgets[index])
                                                             .aspectRatio(1, contentMode: .fit)
@@ -104,6 +107,8 @@ struct NewWidgetView: View {
                                                             .containerRelativeFrame(.horizontal, count: 1, spacing: 0)
                                                         
                                                     }
+                                                    
+                                                    
                                                     //loading circle
                                                     if viewModel.loading {
                                                         ProgressView()
