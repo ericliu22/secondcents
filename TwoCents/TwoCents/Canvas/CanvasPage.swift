@@ -128,9 +128,9 @@ struct CanvasPage: View {
     
     func GridView() -> AnyView {
         @State var isShowingPopup = false
-        let columns = Array(repeating: GridItem(.fixed(TILE_SIZE), spacing: 15, alignment: .leading), count: 3)
+        let columns = Array(repeating: GridItem(.fixed(TILE_SIZE), spacing: 30, alignment: .leading), count: 3)
 
-        return AnyView(LazyVGrid(columns: columns, alignment: .leading, spacing: 15, content: {
+        return AnyView(LazyVGrid(columns: columns, alignment: .leading, spacing: 30, content: {
             
             ForEach(canvasWidgets, id:\.id) { widget in
                 //main widget
@@ -144,6 +144,7 @@ struct CanvasPage: View {
                             .strokeBorder(selectedWidget == widget ? Color.secondary : .clear, lineWidth: 2)
                             .contentShape(RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
                             .cornerRadius(CORNER_RADIUS)
+                        
                             .onTapGesture(count: 2, perform: {
                                 
                                 if selectedWidget != widget || !widgetDoubleTapped {
@@ -161,7 +162,8 @@ struct CanvasPage: View {
                 
                 //username below widget
                     .overlay(content: {
-                        Text(widget.userId)
+                        
+                        Text(widgetDoubleTapped ? widget.userId : ""  )
                             .font(.caption2)
                             .foregroundStyle(.secondary)
                             .offset(y:90)
