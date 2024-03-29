@@ -40,7 +40,7 @@ struct RootView: View {
                     if let myColor = viewModel.user?.userColor{
                         tintLoaded = true
                         userColor = myColor
-                        print(userColor)
+                        print("USERCOLOR: \(userColor)")
                         loadedColor = viewModel.getUserColor(userColor: userColor)
                     }
                    
@@ -85,7 +85,7 @@ struct RootView: View {
                     tintLoaded = true
                     
                     userColor = myColor
-                    print(userColor)
+                    print("USERCOLOR: \(userColor)")
                     loadedColor = viewModel.getUserColor(userColor: userColor)
                 }
                
@@ -100,7 +100,7 @@ struct RootView: View {
                     tintLoaded = true
                     
                     userColor = myColor
-                    print(userColor)
+                    print("USERCOLOR: \(userColor)")
                     loadedColor = viewModel.getUserColor(userColor: userColor)
                 }
                

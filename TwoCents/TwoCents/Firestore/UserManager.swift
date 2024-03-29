@@ -211,7 +211,7 @@ final class UserManager{
 //    }
     
     func getAllSpaces(userId: String) async throws -> [DBSpace]{
-        print(userId)
+        print("USERID: \(userId)")
       
         let snapshot: QuerySnapshot
        
@@ -278,7 +278,7 @@ final class UserManager{
             "userColor": selectedColor.description,
           
         ]
-        print(selectedColor.description)
+        print("COLOR: \(selectedColor.description)")
         
         try await userDocument(userId: userId).updateData(data)
 //        print("Done")

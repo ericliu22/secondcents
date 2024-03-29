@@ -18,7 +18,6 @@ let TILE_SIZE: CGFloat = 150
 let MAX_ZOOM: CGFloat = 3.0
 let MIN_ZOOM: CGFloat = 0.6
 let CORNER_RADIUS: CGFloat = 15
-let LINE_WIDTH: CGFloat = 2
 let FRAME_SIZE: CGFloat = 1000
 
 
@@ -41,7 +40,7 @@ struct CanvasPage: View {
     @State private var canvasWidgets: [CanvasWidget] = []
     @State private var draggingItem: CanvasWidget?
     @State private var scrollPosition: CGPoint = CGPointZero
-    @State private var activeGestures: GestureMask = .none
+    @State private var activeGestures: GestureMask = .subviews
     @State private var showNewWidgetView: Bool = false
     @State private var photoLinkedToProfile: Bool = false
     @State private var widgetId: String = UUID().uuidString
@@ -56,12 +55,6 @@ struct CanvasPage: View {
     
     
     private var spaceId: String
-    
-    
-    @State private var magnifyBy: CGFloat = 1.0
-    @State private var activeGestures: GestureMask = .subviews
-    @State private var newWidget: Bool = false
-    @State private var widgetShake: Double = 0
     
     
     @State private var widgetDoubleTapped: Bool = false
@@ -147,7 +140,7 @@ struct CanvasPage: View {
                 getMediaView(widget: widget)
                     .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
                     .cornerRadius(CORNER_RADIUS)
-                
+                    
                 //clickable area/outline when clicked
                     .overlay(
                         RoundedRectangle(cornerRadius: CORNER_RADIUS)
@@ -155,8 +148,7 @@ struct CanvasPage: View {
                             .contentShape(RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
                             .cornerRadius(CORNER_RADIUS)
                             .onTapGesture(count: 2, perform: {
-                               print("hi")
-                           
+                                
                                 if selectedWidget != widget || !widgetDoubleTapped {
                                     //select
                                     selectedWidget = widget
@@ -168,21 +160,6 @@ struct CanvasPage: View {
                                     widgetDoubleTapped = false
                                 }
                             })
-                          
-                            .onTapGesture {
-                                if selectedWidget != widget {
-                                    //select
-                                    selectedWidget = widget
-                                    widgetDoubleTapped = false
-                                    
-                                    
-                                } else {
-                                    //deselect
-                                    selectedWidget = nil
-                                    widgetDoubleTapped = false
-                                }
-                            }
-                           
                     )
                 
                 //username below widget
@@ -194,53 +171,24 @@ struct CanvasPage: View {
                     })
                     .blur(radius: widgetDoubleTapped && selectedWidget != widget ? 20 : 0)
                     .scaleEffect(widgetDoubleTapped && selectedWidget == widget ? 1.05 : 1)
-                    //emoji react
+                //emoji react
                     .overlay( alignment: .top, content: {
                         if widgetDoubleTapped && selectedWidget == widget {
                             
                             
                             EmojiReactionsView()
-//                                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                                
+                            //                                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            
                                 .offset(y:-60)
                         }
                         
                     })
-              
-               
-                ZStack {
-                    getMediaView(widget: widget)
-                    //josh code testing
-//                        .onTapGesture {
-//                            let _ = print("reached code 1")
-//                            isShowingPopup.toggle()
-//                            print("reached code 2")
-//                        }
-//                        .fullScreenCover(isPresented: $isShowingPopup, content: {widgetPopup()})
-                    //end of josh code testing
-                    RoundedRectangle(cornerRadius: CORNER_RADIUS)
-                        .stroke(widget.borderColor, lineWidth: LINE_WIDTH)
-                        .frame(width: widget.width, height: widget.height)
-                    //start of josh code
-//                        .onTapGesture {
-//                            let _ = print("reached code 1")
-//                            isShowingPopup.toggle()
-//                            print("reached code 2")
-//                        }
-//                        .fullScreenCover(isPresented: $isShowingPopup, content: {widgetPopup()})
-                    //end of josh code
-                }
-                //josh code zstack attempt
-                .onTapGesture {
-                    let _ = print("reached code 1")
-                    isShowingPopup.toggle()
-                    print("reached code 2")
-                }
-                .fullScreenCover(isPresented: $isShowingPopup, content: {widgetPopup()})
-                //end of attempt
-                .draggable(widget) {
-                    getMediaView(widget: widget).onAppear{
-                        draggingItem = widget
+                    .draggable(widget) {
+                        getMediaView(widget: widget)
+                            .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
+                            .onAppear{
+                                draggingItem = widget
+                            }
                     }
                 //where its dropped
                     .dropDestination(for: CanvasWidget.self) { items, location in
@@ -257,84 +205,18 @@ struct CanvasPage: View {
                                     //deselect
                                     selectedWidget = nil
                                     widgetDoubleTapped = false
-                                    
                                 }
                             }
                         }
                     }
                 
-                //add blank space after widget if its a long widget
-                if widget.width > TILE_SIZE {
-                    Color.clear
-                        .gridCellUnsizedAxes([.horizontal, .vertical])
+                    //add blank space after widget if its a long widget
+                    if widget.width > TILE_SIZE {
+                        Color.clear
+                            .gridCellUnsizedAxes([.horizontal, .vertical])
+                    }
                 }
-            }
-        }
-                                )
-            }
-        ))
-    }
-
-    func Toolbar() -> AnyView {
-        
-        AnyView(
-            HStack{
-                if (currentMode == .drawing) {
-                    
-                    Image(systemName: "arrowshape.backward.circle")
-                        .font(.largeTitle)
-                        .foregroundColor(.black)
-                        .gesture(TapGesture(count: 1).onEnded({
-                            withAnimation(.easeIn) {
-                                    self.currentMode = .normal
-                                    self.activeGestures = .subviews
-                                }
-                        }))
-                    Image(systemName: "pencil.circle\(drawingMode == .pencil ? ".fill" : "")")
-                        .font(.largeTitle)
-                        .foregroundColor(drawingMode == .pencil ? penColor : .black)
-                        .gesture(TapGesture(count: 1).onEnded({
-                                self.drawingMode = .pencil
-                        }))
-                    Image(systemName: "eraser\(drawingMode == .eraser ? ".fill" : "")")
-                        .font(.largeTitle)
-                        .foregroundColor(drawingMode == .eraser ? penColor : .black)
-                        .gesture(TapGesture(count: 1).onEnded({
-                            self.drawingMode = .eraser
-                        }))
-                }
-                else {
-                    Image(systemName: "pencil.circle")
-                        .font(.largeTitle)
-                        .foregroundColor(.black)
-                        .gesture(TapGesture(count: 1).onEnded({
-                                withAnimation(.bouncy) {
-                                    self.currentMode = .drawing
-                                    self.activeGestures = .all
-                                }
-                        }))
-                    Image(systemName: "hand.raised\(currentMode == .grab ? ".fill" : "")")
-                        .font(.largeTitle)
-                        .foregroundColor(Color.black)
-                        .gesture(TapGesture(count: 1).onEnded({
-                            if currentMode == .grab {
-                                currentMode = .normal
-                            } else {
-                                self.currentMode = .grab
-                                self.activeGestures = .subviews
-                            }
-                        }))
-                    Image(systemName: "plus.circle")
-                        .font(.largeTitle)
-                        .foregroundColor(.black)
-                        .gesture(TapGesture(count:1).onEnded(({
-                            
-                            newWidget = true
-                        })))
-                }
-            }
-            
-        )
+            }))
     }
     
     func canvasView() -> AnyView {
@@ -386,8 +268,8 @@ struct CanvasPage: View {
                         .frame(maxHeight: .infinity, alignment: .bottom)
                         .padding(.bottom, 50)
                      :  nil
-        )
-            .animation(.easeInOut)
+                    )
+                    .animation(.easeInOut)
            
         )
     }
@@ -397,6 +279,7 @@ struct CanvasPage: View {
                 return !stroke.isExpired()
         }
         canvas.drawing = PKDrawing(strokes: strokes)
+        //@TODO: Check if strokes were actually removed, if so then upload new PKDrawing to database
     }
     
     var magnify: some Gesture {

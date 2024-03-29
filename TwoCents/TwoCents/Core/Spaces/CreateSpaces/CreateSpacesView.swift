@@ -240,7 +240,6 @@ struct CreateSpacesView: View {
                             }
                             .onTapGesture {
                                 viewModel.addMember(friend: userTile)
-                                print("added")
                             }
                             .padding(.horizontal,5)
                             .padding(.vertical,2.5)

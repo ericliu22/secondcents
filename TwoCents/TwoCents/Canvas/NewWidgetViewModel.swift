@@ -85,23 +85,6 @@ final class NewWidgetViewModel: ObservableObject{
         
     }
     
-    func saveImageWidget(widgetId: String) {
-      
-    
-        guard let space, !path.isEmpty, !url.isEmpty else { return }
-
-        Task {
-            
-               
-            try await SpaceManager.shared.setImageWidgetPic(spaceId: space.spaceId, widgetId: widgetId, url: self.url, path: self.path)
-            try? await loadCurrentSpace(spaceId: space.spaceId)
-           
-            
-        }
-        
-    }
-    
-    
     
     func saveWidget(index: Int) {
         //Need to copy to variable before uploading (something about actor-isolate whatever)

@@ -23,7 +23,6 @@ struct DrawingCanvas: UIViewRepresentable {
         canvas.maximumZoomScale = MAX_ZOOM
         canvas.backgroundColor = .clear
         canvas.contentInset = UIEdgeInsets(top: 280, left: 400, bottom: 280, right: 400)
-        //        canvas.backgroundColor = .red
         canvas.contentMode = .center
         canvas.scrollsToTop = false
         toolPicker.addObserver(canvas)
@@ -33,19 +32,12 @@ struct DrawingCanvas: UIViewRepresentable {
     }
     
     func showToolPicker() {
-        //          toolPicker.setVisible(true, forFirstResponder: canvas)
         canvas.becomeFirstResponder()
     }
     
     func updateUIView(_ uiView: PKCanvasView, context: Context) {
         
         canvas.drawingGestureRecognizer.isEnabled = toolPickerActive
-        
-    }
-    
-    func pushDrawing() async {
-        
-        
         
     }
     
@@ -65,13 +57,11 @@ struct DrawingCanvas: UIViewRepresentable {
             
             @objc func drawing(_ gestureRecognizer: UIGestureRecognizer) {
                 if gestureRecognizer.state == .ended {
-                    print("Drawing ended")
                     Task {
                         do {
                             try await db.collection("spaces").document(spaceId).updateData([
                                 "drawing": canvas.drawing.dataRepresentation(),
                             ])
-                            print("Document successfully written!")
                         } catch {
                             print("Error writing document: \(error)")
                         }
