@@ -57,15 +57,7 @@ struct DrawingCanvas: UIViewRepresentable {
             
             @objc func drawing(_ gestureRecognizer: UIGestureRecognizer) {
                 if gestureRecognizer.state == .ended {
-                    Task {
-                        do {
-                            try await db.collection("spaces").document(spaceId).updateData([
-                                "drawing": canvas.drawing.dataRepresentation(),
-                            ])
-                        } catch {
-                            print("Error writing document: \(error)")
-                        }
-                    }
+                    canvas.upload(spaceId: spaceId)
                 }
             }
         }
@@ -76,5 +68,19 @@ extension PKStroke {
     public func isExpired() -> Bool {
         let currentTime = Date()
         return currentTime.timeIntervalSince(self.path.creationDate) > 30
+    }
+}
+
+extension PKCanvasView {
+    public func upload(spaceId: String) {
+        Task {
+            do {
+                try await db.collection("spaces").document(spaceId).updateData([
+                    "drawing": self.drawing.dataRepresentation(),
+                ])
+            } catch {
+                print("Error uploading canvas: \(error)")
+            }
+        }
     }
 }

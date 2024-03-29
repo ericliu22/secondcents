@@ -25,6 +25,7 @@ import UniformTypeIdentifiers
  - uid: The user owner of the widget's id
  - media: An enumerator that describes what function to call to get the view (e.g. .video or .image)
  - mediaURL: URL type that is a link to the media attached to widget
+ - widgetName: Name of the widget
  */
 struct CanvasWidget: Hashable, Codable, Identifiable, Transferable, Equatable {
     
@@ -61,7 +62,7 @@ struct CanvasWidget: Hashable, Codable, Identifiable, Transferable, Equatable {
 }
 
 enum Media {
-    case video, image, chat, text
+    case video, image, chat, text, poll
 }
 
 extension Media: Codable {
@@ -73,6 +74,8 @@ extension Media: Codable {
             self = .text
         case "image":
             self = .image
+        case "poll":
+            self = .poll
         default:
             self = .image
         }
@@ -141,17 +144,22 @@ extension UTType {
     static let canvasWidget = UTType(exportedAs: "com.twocentsapp.secondcents")
 }
 
-func getMediaView(widget: CanvasWidget) -> AnyView {
+func getMediaView(widget: CanvasWidget, spaceId: String) -> AnyView {
     switch (widget.media) {
-    case .text:
-        return textWidget(widget: widget)
-  
-    case .video:
-        return videoWidget(widget: widget)
-    case .image:
-        return imageWidget(widget: widget)
-    case .chat:
-        return chatWidget(widget: widget)
+        case .text:
+            return textWidget(widget: widget)
+      
+        case .video:
+            return videoWidget(widget: widget)
+        case .image:
+            return imageWidget(widget: widget)
+        case .chat:
+            return chatWidget(widget: widget)
+        case .poll:
+            //@TODO: Test if this works. We usually use functions but pollWidget is struct
+            return pollWidget(widget: widget, spaceId: spaceId)
+        default:
+            return imageWidget(widget: widget)
     }
     
     

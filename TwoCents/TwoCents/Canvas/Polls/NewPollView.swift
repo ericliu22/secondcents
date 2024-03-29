@@ -1,4 +1,5 @@
 //
+//
 //  NewPoll.swift
 //  TwoCents
 //
@@ -8,26 +9,29 @@
 import Foundation
 import SwiftUI
 
-struct newPoll: View{
-    @State private var zm = FunctionModel()
+struct NewPoll: View{
+    private var spaceId: String
+    @State private var pollModel: NewPollModel
+    
+    init(spaceId: String) {
+        self.spaceId = spaceId
+        self.pollModel = NewPollModel(spaceId: spaceId)
+    }
     
     var body: some View{
         VStack{
             newPollSection
             addOptionSection
-//            Button("submit") {
-//                Task{await zm.createNewPoll()}
-//                //Task{zm.createNewPoll}
-//            }
             Button(action: {
-                Task{await zm.createNewPoll()}
+                //@TODO: Replace with NewWidgetView temp widget behavior
+                Task{await pollModel.createNewPoll()}
             }, label: {
                 Text("Submit")
                     .font(.headline)
                     .frame(height: 55)
                     .frame(maxWidth: .infinity)
             })
-            .disabled(zm.isCreateNewPollButtonDisabled)
+            .disabled(pollModel.isCreateNewPollButtonDisabled)
                 .buttonStyle(.bordered)
                 .tint(.accentColor)
                 .frame(height: 55)
@@ -39,7 +43,7 @@ struct newPoll: View{
     var newPollSection: some View{
         Section{
         } header: {
-            TextField("Poll Name", text: $zm.newPollName)
+            TextField("Poll Name", text: $pollModel.newPollName)
                 .font(.largeTitle)
                 .fontWeight(.bold)
                 
@@ -57,25 +61,25 @@ struct newPoll: View{
     }
     
     var addOptionSection: some View{
-        Section ("Options") {
-            TextField("Enter option name", text: $zm.newOptionName)
+        VStack {
+            TextField("Enter option name", text: $pollModel.newOptionName)
                 .autocorrectionDisabled()
                 .textInputAutocapitalization(.never)
                 .padding()
                 .background(Color(UIColor.secondarySystemBackground))
                 .cornerRadius(10)
             Button("+ Add Option") {
-                zm.addOption()
-            }.disabled(zm.isAddOptionsButtonDisabled)
+                pollModel.addOption()
+            }.disabled(pollModel.isAddOptionsButtonDisabled)
                 .buttonStyle(.borderedProminent)
                 .tint(Color(Color.accentColor))
                 .frame(height: 55)
                 .cornerRadius(10)
-            ForEach(zm.newPollOptions) {
-                Text($0)
+            ForEach(pollModel.newPollOptions) { option in
+                Text(option.name)
             }.onDelete{
                 indexSet in
-                zm.newPollOptions.remove(atOffsets: indexSet)
+                pollModel.newPollOptions.remove(atOffsets: indexSet)
             }
         }
     }
@@ -85,6 +89,8 @@ extension String: Identifiable{
     public var id: Self { self }
 }
 
-#Preview{
-    NavigationStack{newPoll()}
-}
+/*
+ #Preview{
+ NavigationStack{newPoll()}
+ }
+ */

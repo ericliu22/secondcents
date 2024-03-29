@@ -97,7 +97,7 @@ struct NewWidgetView: View {
                                                     //main widget/photopicker
                                                     PhotosPicker(selection: $selectedPhoto, matching: .images, photoLibrary: .shared()){
                                                         
-                                                        getMediaView(widget: viewModel.widgets[index])
+                                                        getMediaView(widget: viewModel.widgets[index], spaceId: spaceId)
                                                             .aspectRatio(1, contentMode: .fit)
                                                             .shadow(radius: 20, y: 10)
                                                             .cornerRadius(30)
@@ -122,7 +122,7 @@ struct NewWidgetView: View {
                                                     //main widget/photopicker
                                                     PhotosPicker(selection: $selectedPhoto, matching: .videos, photoLibrary: .shared()){
                                                         
-                                                        getMediaView(widget: viewModel.widgets[index])
+                                                        getMediaView(widget: viewModel.widgets[index], spaceId: spaceId)
                                                             .aspectRatio(1, contentMode: .fit)
                                                             .shadow(radius: 20, y: 10)
                                                             .cornerRadius(30)
@@ -145,7 +145,7 @@ struct NewWidgetView: View {
                                                 ZStack{
                                                     
                                                     //default widgets
-                                                    getMediaView(widget: viewModel.widgets[index])
+                                                    getMediaView(widget: viewModel.widgets[index], spaceId: spaceId)
                                                         .aspectRatio(1, contentMode: .fit)
                                                         .shadow(radius: 20, y: 10)
                                                         .cornerRadius(30)
@@ -173,7 +173,6 @@ struct NewWidgetView: View {
                                     switch index {
                                     case 0:
                                         Button {
-                                            //No need for NewWidgetViewModel just directly upload
                                             //@TODO: look into just making it index instead of hardcoding each index
                                             viewModel.saveWidget(index: index)
                                             

@@ -50,7 +50,7 @@ struct VideoWidget: View{
 
 func videoWidget(widget: CanvasWidget) -> AnyView {
         assert(widget.media == .video)
-        var isPlaying = true
+        var isMuted = true
         let videoplayer = AVPlayer(url: widget.mediaURL!)
         videoplayer.play()
         return AnyView(
@@ -58,11 +58,10 @@ func videoWidget(widget: CanvasWidget) -> AnyView {
                 .frame(width: widget.width ,height: widget.height, alignment: .center)
                 .clipShape(RoundedRectangle(cornerRadius: CORNER_RADIUS))
                 .draggable(widget)
-            /*
+                /*
                 .gesture(TapGesture().onEnded({
-                    isPlaying ? videoplayer.pause() : videoplayer.play()
-                    isPlaying.toggle()
+                    videoplayer.isMuted.toggle()
                 }))
-             */
+                */
         )
 }

@@ -81,7 +81,6 @@ struct CanvasPage: View {
     
     func pullDocuments() async {
         db.collection("spaces").document(spaceId).addSnapshotListener { documentSnapshot, error in
-            
             guard let document = documentSnapshot else {
                 print("Error fetching document: \(error!)")
                 return
@@ -97,7 +96,6 @@ struct CanvasPage: View {
                 return
             }
             
-
             //@TODO: Add checks for what writes type it is
             if let drawingAccess = data["drawing"] as? Data {
                 let databaseDrawing = try! PKDrawingReference(data: drawingAccess)
@@ -106,7 +104,6 @@ struct CanvasPage: View {
             } else {
                 print("No database drawing")
             }
-
         }
         
         db.collection("spaces").document(spaceId).collection("widgets").addSnapshotListener { querySnapshot, error in
@@ -137,7 +134,7 @@ struct CanvasPage: View {
             
             ForEach(canvasWidgets, id:\.id) { widget in
                 //main widget
-                getMediaView(widget: widget)
+                getMediaView(widget: widget, spaceId: spaceId)
                     .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
                     .cornerRadius(CORNER_RADIUS)
                     
@@ -174,17 +171,12 @@ struct CanvasPage: View {
                 //emoji react
                     .overlay( alignment: .top, content: {
                         if widgetDoubleTapped && selectedWidget == widget {
-                            
-                            
                             EmojiReactionsView()
-                            //                                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                            
                                 .offset(y:-60)
                         }
-                        
                     })
                     .draggable(widget) {
-                        getMediaView(widget: widget)
+                        getMediaView(widget: widget, spaceId: spaceId)
                             .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
                             .onAppear{
                                 draggingItem = widget
@@ -275,11 +267,17 @@ struct CanvasPage: View {
     }
     
     private func removeExpiredStrokes() {
+        var changed: Bool = false
         let strokes = canvas.drawing.strokes.filter { stroke in
-                return !stroke.isExpired()
+            if (stroke.isExpired()) {
+                changed = true
+            }
+            return !stroke.isExpired()
         }
-        canvas.drawing = PKDrawing(strokes: strokes)
-        //@TODO: Check if strokes were actually removed, if so then upload new PKDrawing to database
+        if changed {
+            canvas.drawing = PKDrawing(strokes: strokes)
+            canvas.upload(spaceId: spaceId)
+        }
     }
     
     var magnify: some Gesture {

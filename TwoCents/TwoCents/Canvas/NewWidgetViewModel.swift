@@ -89,6 +89,7 @@ final class NewWidgetViewModel: ObservableObject{
     func saveWidget(index: Int) {
         //Need to copy to variable before uploading (something about actor-isolate whatever)
         var uploadWidget: CanvasWidget = widgets[index]
+        //ensure shits are right dimensions
         uploadWidget.width = TILE_SIZE
         uploadWidget.height = TILE_SIZE
         //space call should never fail so we manly exclamation mark
