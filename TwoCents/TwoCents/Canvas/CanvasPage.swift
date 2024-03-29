@@ -111,7 +111,7 @@ struct CanvasPage: View {
                 print("Error fetching query: \(error!)")
                 return
             }
-            
+            self.canvasWidgets = []
             for document in query.documents {
                 let newWidget = try! document.data(as: CanvasWidget.self)
                 self.canvasWidgets.append(newWidget)
