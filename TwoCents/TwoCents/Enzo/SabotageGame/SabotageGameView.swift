@@ -18,9 +18,10 @@ struct SabotageView: View {
     @State var isSpread = false
     
     @StateObject private var viewModel = SabotageGameViewModel()
+    @State private var navPath = NavigationPath()
     
     var body: some View {
-        NavigationStack{
+        NavigationStack(path: $navPath){
             ZStack{
                 Color("SabotageBg")
                     .edgesIgnoringSafeArea(.all)
@@ -40,7 +41,7 @@ struct SabotageView: View {
                             let memberColor: Color = viewModel.getUserColor(userColor:myMemberInfo[member].userColor ?? "")
                             let urlString: String = myMemberInfo[member].profileImageUrl ?? ""
                             
-                            CardView(player: myMemberInfo[member], playerIndex: member, isSpread: $isSpread, playerColor: memberColor, playerImage: urlString, urlString: urlString)
+                            CardView(player: myMemberInfo[member], playerIndex: member, isSpread: $isSpread, path: $navPath, playerColor: memberColor, playerImage: urlString, urlString: urlString)
                                 .rotationEffect(.degrees(isSpread ? CGFloat((member*5)+5) : 0))
                         }
                         

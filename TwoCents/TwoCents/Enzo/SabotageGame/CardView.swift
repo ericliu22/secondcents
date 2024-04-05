@@ -15,6 +15,7 @@ struct CardView: View {
     @State private var offset = CGSize.zero
     @State private var index: Double = 0
     @Binding var isSpread: Bool
+    @Binding var path: NavigationPath
     
     var playerColor: Color
     var playerImage: String
@@ -56,26 +57,29 @@ struct CardView: View {
                         .font(.title)
                         .bold()
                     Spacer()
-                    NavigationLink(value: playerData[playerIndex]) {
-                        ZStack{
-                            Rectangle()
-                                .foregroundColor(playerColor)
-                                .background(.regularMaterial)
-                                .frame(width: 200, height: 50)
-                                .cornerRadius(10)
-                                .opacity(0.5)
-                                .shadow(radius: 5)
-                            Text("Sabotage")
-                                .font(.custom("LuckiestGuy-Regular", size: 28))
-                                .foregroundColor(.white)
-                        }
+                    Button("Hi") {
+                        path.append("AAA")
                     }
+//                    NavigationLink(value: playerData[playerIndex]) {
+//                        ZStack{
+//                            Rectangle()
+//                                .foregroundColor(playerColor)
+//                                .background(.regularMaterial)
+//                                .frame(width: 200, height: 50)
+//                                .cornerRadius(10)
+//                                .opacity(0.5)
+//                                .shadow(radius: 5)
+//                            Text("Sabotage")
+//                                .font(.custom("LuckiestGuy-Regular", size: 28))
+//                                .foregroundColor(.white)
+//                        }
+//                    }
                     Spacer()
                 }
             }
-            .navigationDestination(for: Int.self) { player in
-                SabotageSelectionView(playerIndex: player)
-            }
+//            .navigationDestination(for: DBUser.self) { player in
+//                SabotageSelectionView(playerIndex: player)
+//            }
             .zIndex(index)
             .offset(x: offset.width, y: offset.height)
 //            .rotationEffect(.degrees(Double.random(in: -5...5)))
