@@ -48,9 +48,7 @@ final class CreateSpacesViewModel: ObservableObject{
 //          }
 //          
 
-        print("asd")
-        print(selectedMembersUserId)
-        print("asd")
+        print("Selected members: \(selectedMembersUserId)")
         if let user = user {
             if !selectedMembersUserId.contains(user.userId){
                 selectedMembersUserId.append(user.userId)

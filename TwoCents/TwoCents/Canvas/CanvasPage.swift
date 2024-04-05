@@ -263,11 +263,10 @@ struct CanvasPage: View {
             //hovering action menu when widget is clicked
             .overlay(selectedWidget != nil
                      ? HStack{
-                         Text("omg hi")
-                         
                          Button(action: {
                              if let selectedWidget, let index = canvasWidgets.firstIndex(of: selectedWidget){
                                  canvasWidgets.remove(at: index)
+                                 SpaceManager.shared.removeWidget(spaceId: spaceId, widget: selectedWidget)
                              }
                              selectedWidget = nil
                              widgetDoubleTapped = false

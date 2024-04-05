@@ -97,6 +97,12 @@ final class SpaceManager{
         }
     }
 
+    func removeWidget(spaceId: String, widget: CanvasWidget) {
+          spaceDocument(spaceId: spaceId)
+                .collection("widgets")
+                .document(widget.id.uuidString)
+                .delete()
+    }
     
     func setImageWidgetPic(spaceId: String, widgetId: String, url: String, path: String) async throws {
         let data: [String: Any] = [

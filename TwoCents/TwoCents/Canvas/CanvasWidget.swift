@@ -44,10 +44,14 @@ struct CanvasWidget: Hashable, Codable, Identifiable, Transferable, Equatable {
     var widgetName: String?
     var widgetDescription: String?
     var textString: String?
-    
-    
-    
-    
+    var emojis: [String: Int] = [
+        "❤️":0,
+        "👍":0,
+        "👎":0,
+        "😭":0,
+        "🫵":0,
+        "⁉️":0
+    ]
     
     static func == (lhs: CanvasWidget, rhs: CanvasWidget) -> Bool {
         return lhs.id == rhs.id
@@ -97,11 +101,11 @@ extension CanvasWidget {
         case widgetName
         case widgetDescription
         case textString
+        case emojis
         
     }
     
     init(from decoder: Decoder) throws {
-        
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.id = try container.decode(UUID.self, forKey: .id)
         self.borderColor = Color.fromString(name: try container.decode(String.self, forKey: .borderColor))
@@ -112,8 +116,8 @@ extension CanvasWidget {
         self.height = try container.decode(CGFloat.self, forKey: .height)
         self.widgetName = try container.decode(String.self, forKey: .widgetName)
         self.widgetDescription = try container.decode(String.self, forKey: .widgetDescription)
-        
-        self.textString = try container.decode(String.self, forKey: .textString)
+        self.emojis = try container.decode([String: Int].self, forKey: .emojis)
+        self.textString = try container.decode(String?.self, forKey: .textString)
     }
     
     func encode(to encoder: Encoder) throws {
@@ -125,18 +129,13 @@ extension CanvasWidget {
         try container.encode(mediaURL, forKey: .mediaURL)
         try container.encode(width, forKey: .width)
         try container.encode(height, forKey: .height)
-        try container.encode(userId, forKey: .widgetName)
-        try container.encode(userId, forKey: .widgetDescription)
-        try container.encode(userId, forKey: .textString)
+        try container.encode(widgetName, forKey: .widgetName)
+        try container.encode(widgetDescription, forKey: .widgetDescription)
+        try container.encode(textString, forKey: .textString)
+        try container.encode(emojis, forKey: .emojis)
         
     }
-    
-    
-    
-    
-    
-    
-    
+
     
 }
 
