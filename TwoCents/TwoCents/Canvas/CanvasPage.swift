@@ -173,7 +173,7 @@ struct CanvasPage: View {
                 //emoji react
                     .overlay( alignment: .top, content: {
                         if widgetDoubleTapped && selectedWidget == widget {
-                            EmojiReactionsView()
+                            EmojiReactionsView(spaceId: spaceId, widget: widget)
                                 .offset(y:-60)
                         }
                     })
@@ -199,19 +199,11 @@ struct CanvasPage: View {
                                     //deselect
                                     selectedWidget = nil
                                     widgetDoubleTapped = false
+                                    
                                 }
                             }
                         }
                     }
-                
-                
-            
-//                    
-//                //add blank space after widget if its a long widget
-//                if widget.width > TILE_SIZE {
-//                    Color.clear
-//                        .gridCellUnsizedAxes([.horizontal, .vertical])
-//                }
             }
         }
                                 )

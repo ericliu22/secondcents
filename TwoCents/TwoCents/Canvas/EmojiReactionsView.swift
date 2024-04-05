@@ -4,50 +4,71 @@
 import SwiftUI
 
 struct EmojiReactionsView: View {
-    @State private var heartCount = 0
-    @State private var thumbsUpCount = 0
-    @State private var thumbsDownCount = 0
-    @State private var cryCount = 0
-    @State private var questionCount = 0
-    @State private var fingerCount = 0
-    @State private var isLoved = false
-    @State private var isLiked = false
     
+    @State private var emojiPressed: [String: Bool] = [
+        "❤️":false,
+        "👍":false,
+        "👎":false,
+        "😭":false,
+        "🫵":false,
+        "⁉️":false
+    ]
+    
+    
+    private var spaceId: String
+    private var widget: CanvasWidget
+    private var userUID: String
+    
+    init(spaceId: String, widget: CanvasWidget) {
+        self.spaceId = spaceId
+        self.widget = widget
+        self.userUID = try! AuthenticationManager.shared.getAuthenticatedUser().uid
+    }
+    
+    private func addEmoji(emoji: String) {
+        db.collection("spaces")
+            .document(spaceId)
+            .collection("widgets")
+            .document(widget.id.uuidString)
+    }
+    
+    private func removeEmoji() {
+        
+    }
     
     let inboundBubbleColor = Color(#colorLiteral(red: 0.07058823529, green: 0.07843137255, blue: 0.0862745098, alpha: 1))
     let reactionsBGColor = Color(#colorLiteral(red: 0.05490196078, green: 0.09019607843, blue: 0.137254902, alpha: 1))
     var body: some View {
         HStack(spacing: 10) {
             Button {
-                heartCount += 1
                 
                 withAnimation(.interpolatingSpring(stiffness: 170, damping: 5)) {
-                    isLoved.toggle()
+                    emojiPressed["❤️"]!.toggle()
                 }
                 
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.45) {
                     withAnimation(.interpolatingSpring(stiffness: 170, damping: 10)) {
-                        isLoved = false
+                        emojiPressed["❤️"] = false
                     }
                 }
             } label: {
                 ZStack {
                     SplashView()
-                        .opacity(isLoved ? 0 : 1)
-                        .animation(.easeInOut(duration: 0.5).delay(0.25), value: isLoved)
-                        .scaleEffect(isLoved ? 1.25 : 0)
-                        .animation(.easeInOut(duration: 0.5), value: isLoved)
+                        .opacity(emojiPressed["❤️"]! ? 0 : 1)
+                        .animation(.easeInOut(duration: 0.5).delay(0.25), value: emojiPressed["❤️"])
+                        .scaleEffect(emojiPressed["❤️"]! ? 1.25 : 0)
+                        .animation(.easeInOut(duration: 0.5), value: emojiPressed["❤️"])
                     
                     SplashView()
                         .rotationEffect(.degrees(90))
-                        .opacity(isLoved ? 0 : 1)
-                        .offset(y: isLoved ? 6 : -6)
-                        .animation(.easeInOut(duration: 0.5).delay(0.2), value: isLoved)
-                        .scaleEffect(isLoved ? 1.25 : 0)
-                        .animation(.easeOut(duration: 0.5), value: isLoved)
+                        .opacity(emojiPressed["❤️"]! ? 0 : 1)
+                        .offset(y: emojiPressed["❤️"]! ? 6 : -6)
+                        .animation(.easeInOut(duration: 0.5).delay(0.2), value: emojiPressed["❤️"])
+                        .scaleEffect(emojiPressed["❤️"]! ? 1.25 : 0)
+                        .animation(.easeOut(duration: 0.5), value: emojiPressed["❤️"])
                     
                    Text("❤️")
-                        .phaseAnimator([false, true], trigger: heartCount) { icon, scaleFromBottom in
+                        .phaseAnimator([false, true], trigger: emojiPressed["❤️"]) { icon, scaleFromBottom in
                             icon
                                 .scaleEffect(scaleFromBottom ? 1.5 : 1, anchor: .bottom)
                         } animation: { scaleFromBottom in
@@ -55,48 +76,47 @@ struct EmojiReactionsView: View {
                         }
                         .background(
                             Circle()
-                                .strokeBorder(lineWidth: isLoved ? 0 : 4)
-                                .animation(.easeInOut(duration: 0.5).delay(0.1),value: isLoved)
+                                .strokeBorder(lineWidth: emojiPressed["❤️"]! ? 0 : 4)
+                                .animation(.easeInOut(duration: 0.5).delay(0.1),value: emojiPressed["❤️"])
                                 .frame(width: 70, height: 70)
                                 .foregroundColor(Color(.systemPink))
-                                .hueRotation(.degrees(isLoved ? 300 : 200))
-                                .scaleEffect(isLoved ? 1.15 : 0)
-                                .animation(.easeInOut(duration: 0.5), value: isLoved)
+                                .hueRotation(.degrees(emojiPressed["❤️"]! ? 300 : 200))
+                                .scaleEffect(emojiPressed["❤️"]! ? 1.15 : 0)
+                                .animation(.easeInOut(duration: 0.5), value: emojiPressed["❤️"])
                         )
                         
                 }
             }
             
             Button {
-                thumbsUpCount += 1
                 
                 withAnimation(.interpolatingSpring(stiffness: 170, damping: 5)) {
-                    isLiked.toggle()
+                    emojiPressed["👍"]!.toggle()
                 }
                 
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.45) {
                     withAnimation(.interpolatingSpring(stiffness: 170, damping: 10)) {
-                        isLiked = false
+                        emojiPressed["👍"] = false
                     }
                 }
             } label: {
                 ZStack {
                   
                     SplashView()
-                        .opacity(isLiked ? 0 : 1)
-                        .animation(.easeInOut(duration: 0.5).delay(0.25), value: isLiked)
-                        .scaleEffect(isLiked ? 1.25 : 0)
-                        .animation(.easeInOut(duration: 0.5), value: isLiked)
+                        .opacity(emojiPressed["👍"]! ? 0 : 1)
+                        .animation(.easeInOut(duration: 0.5).delay(0.25), value: emojiPressed["👍"])
+                        .scaleEffect(emojiPressed["👍"]! ? 1.25 : 0)
+                        .animation(.easeInOut(duration: 0.5), value: emojiPressed["👍"])
                     
                     SplashView()
                         .rotationEffect(.degrees(90))
-                        .opacity(isLiked ? 0 : 1)
-                        .offset(y: isLiked ? 6 : -6)
-                        .animation(.easeInOut(duration: 0.5).delay(0.2), value: isLiked)
-                        .scaleEffect(isLiked ? 1.25 : 0)
-                        .animation(.easeOut(duration: 0.5), value: isLiked)
+                        .opacity(emojiPressed["👍"]! ? 0 : 1)
+                        .offset(y: emojiPressed["👍"]! ? 6 : -6)
+                        .animation(.easeInOut(duration: 0.5).delay(0.2), value: emojiPressed["👍"])
+                        .scaleEffect(emojiPressed["👍"]! ? 1.25 : 0)
+                        .animation(.easeOut(duration: 0.5), value: emojiPressed["👍"])
                     Text("👍")
-                        .phaseAnimator([false, true], trigger: thumbsUpCount) { icon, scaleRotate in
+                        .phaseAnimator([false, true], trigger: emojiPressed["👍"]) { icon, scaleRotate in
                             icon
                                 .rotationEffect(.degrees(scaleRotate ? -5 : 0), anchor: .bottomLeading)
                                 .scaleEffect(scaleRotate ? 1.5 : 1)
@@ -105,13 +125,13 @@ struct EmojiReactionsView: View {
                         }
                         .background(
                             Circle()
-                                .strokeBorder(lineWidth: isLiked ? 0 : 4)
-                                .animation(.easeInOut(duration: 0.5).delay(0.1),value: isLiked)
+                                .strokeBorder(lineWidth: emojiPressed["👍"]! ? 0 : 4)
+                                .animation(.easeInOut(duration: 0.5).delay(0.1),value: emojiPressed["👍"])
                                 .frame(width: 70, height: 70)
                                 .foregroundColor(Color(.systemPink))
-                                .hueRotation(.degrees(isLiked ? 300 : 200))
-                                .scaleEffect(isLiked ? 1.15 : 0)
-                                .animation(.easeInOut(duration: 0.5), value: isLiked)
+                                .hueRotation(.degrees(emojiPressed["👍"]! ? 300 : 200))
+                                .scaleEffect(emojiPressed["👍"]! ? 1.15 : 0)
+                                .animation(.easeInOut(duration: 0.5), value: emojiPressed["👍"])
                             
                         )
                 }
@@ -119,11 +139,11 @@ struct EmojiReactionsView: View {
             }
             
             Button {
-                thumbsDownCount += 1
+                
             } label: {
                 Text("👎")
             }
-            .phaseAnimator([false, true], trigger: thumbsDownCount) { icon, dislike in
+            .phaseAnimator([false, true], trigger: emojiPressed["👎"]) { icon, dislike in
                 icon
                     .rotationEffect(.degrees(dislike ? -45 : 0), anchor: .leading)
                     .scaleEffect(dislike ? 1.5 : 1)
@@ -132,11 +152,11 @@ struct EmojiReactionsView: View {
             }
             
             Button {
-                cryCount += 1
+
             } label: {
                 Text("😭")
             }
-            .phaseAnimator([false, true], trigger: cryCount) { icon, crying in
+            .phaseAnimator([false, true], trigger: emojiPressed["😭"]) { icon, crying in
                 icon
                     .offset(y: crying ? -20 : 0)
                     .scaleEffect(crying ? 1.5 : 1)
@@ -145,11 +165,11 @@ struct EmojiReactionsView: View {
             }
             
             Button {
-                fingerCount += 1
+                
             } label: {
                 Text("🫵")
             }
-            .phaseAnimator([false, true], trigger: fingerCount) { icon, point in
+            .phaseAnimator([false, true], trigger: emojiPressed["🫵"]) { icon, point in
                 icon
 //                    .offset(y: point ? -20 : 0)
                     .scaleEffect(point ? 2 : 1)
@@ -159,11 +179,11 @@ struct EmojiReactionsView: View {
             
             
             Button {
-                questionCount += 1
+                
             } label: {
                 Text("⁉️")
             }
-            .phaseAnimator([false, true], trigger: questionCount) { icon, question in
+            .phaseAnimator([false, true], trigger: emojiPressed["⁉️"]) { icon, question in
                 icon
 //                    .offset(y: question ? -20 : 0)
                 
@@ -191,8 +211,9 @@ struct EmojiReactionsView: View {
 //        .cornerRadius(16)
     }
 }
-
+/*
 #Preview {
     EmojiReactionsView()
         .preferredColorScheme(.dark)
 }
+*/

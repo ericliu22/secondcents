@@ -52,6 +52,14 @@ struct CanvasWidget: Hashable, Codable, Identifiable, Transferable, Equatable {
         "🫵":0,
         "⁉️":0
     ]
+    var emojiPressed: [String: [String]] = [
+        "❤️":[],
+        "👍":[],
+        "👎":[],
+        "😭":[],
+        "🫵":[],
+        "⁉️":[]
+    ]
     
     static func == (lhs: CanvasWidget, rhs: CanvasWidget) -> Bool {
         return lhs.id == rhs.id
