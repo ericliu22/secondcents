@@ -110,6 +110,7 @@ extension CanvasWidget {
         case widgetDescription
         case textString
         case emojis
+        case emojiPressed
         
     }
     
@@ -126,6 +127,7 @@ extension CanvasWidget {
         self.widgetDescription = try container.decode(String.self, forKey: .widgetDescription)
         self.emojis = try container.decode([String: Int].self, forKey: .emojis)
         self.textString = try container.decode(String?.self, forKey: .textString)
+        self.emojiPressed = try container.decode([String: [String]].self, forKey: .emojiPressed)
     }
     
     func encode(to encoder: Encoder) throws {
@@ -141,7 +143,7 @@ extension CanvasWidget {
         try container.encode(widgetDescription, forKey: .widgetDescription)
         try container.encode(textString, forKey: .textString)
         try container.encode(emojis, forKey: .emojis)
-        
+        try container.encode(emojiPressed, forKey: .emojiPressed)
     }
 
     
@@ -163,7 +165,6 @@ func getMediaView(widget: CanvasWidget, spaceId: String) -> AnyView {
         case .chat:
             return chatWidget(widget: widget)
         case .poll:
-            //@TODO: Test if this works. We usually use functions but pollWidget is struct
             return pollWidget(widget: widget, spaceId: spaceId)
         default:
             return imageWidget(widget: widget)

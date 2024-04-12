@@ -2,6 +2,7 @@
 //  EmotionalReactions.swift
 
 import SwiftUI
+import FirebaseFirestore
 
 struct EmojiReactionsView: View {
     
@@ -25,15 +26,48 @@ struct EmojiReactionsView: View {
         self.userUID = try! AuthenticationManager.shared.getAuthenticatedUser().uid
     }
     
+    private func updateEmoji(emoji: String) {
+        emojiPressed[emoji]!.toggle()
+        if emojiPressed[emoji]! {
+            addEmoji(emoji: emoji)
+        } else {
+            removeEmoji(emoji: emoji)
+        }
+    }
+    
     private func addEmoji(emoji: String) {
+        var newEmojiPressed = widget.emojiPressed
+        newEmojiPressed[emoji]!.append(userUID)
         db.collection("spaces")
             .document(spaceId)
             .collection("widgets")
             .document(widget.id.uuidString)
+            .updateData([
+                "emojiPressed": newEmojiPressed
+            ])
     }
     
-    private func removeEmoji() {
+    private func removeEmoji(emoji: String) {
+        var newEmojiPressed = widget.emojiPressed
+        var changed: Bool = false
         
+        newEmojiPressed[emoji] = newEmojiPressed[emoji]!.filter {
+            if ($0 == userUID) {
+                changed = true
+            }
+            return $0 != userUID
+        }
+        
+        //Safety catch
+        if (!changed) { return }
+        
+        db.collection("spaces")
+            .document(spaceId)
+            .collection("widgets")
+            .document(widget.id.uuidString)
+            .updateData([
+                "emojiPressed": newEmojiPressed
+            ])
     }
     
     let inboundBubbleColor = Color(#colorLiteral(red: 0.07058823529, green: 0.07843137255, blue: 0.0862745098, alpha: 1))
@@ -43,7 +77,7 @@ struct EmojiReactionsView: View {
             Button {
                 
                 withAnimation(.interpolatingSpring(stiffness: 170, damping: 5)) {
-                    emojiPressed["❤️"]!.toggle()
+                    updateEmoji(emoji: "❤️")
                 }
                 
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.45) {
