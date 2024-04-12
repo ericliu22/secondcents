@@ -59,6 +59,7 @@ struct DrawingCanvas: UIViewRepresentable {
             @objc func drawing(_ gestureRecognizer: UIGestureRecognizer) {
                 if gestureRecognizer.state == .ended {
                     canvas.upload(spaceId: spaceId)
+          
                 }
             }
         }

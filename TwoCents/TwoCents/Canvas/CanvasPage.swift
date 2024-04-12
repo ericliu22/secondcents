@@ -128,9 +128,9 @@ struct CanvasPage: View {
     
     func GridView() -> AnyView {
         @State var isShowingPopup = false
-        let columns = Array(repeating: GridItem(.fixed(TILE_SIZE), spacing: 30, alignment: .leading), count: 3)
+        let columns = Array(repeating: GridItem(.fixed(TILE_SIZE), spacing: 30, alignment: .center), count: 3)
 
-        return AnyView(LazyVGrid(columns: columns, alignment: .leading, spacing: 30, content: {
+        return AnyView(LazyVGrid(columns: columns, alignment: .center, spacing: 30, content: {
             
             ForEach(canvasWidgets, id:\.id) { widget in
                 //main widget
@@ -180,6 +180,7 @@ struct CanvasPage: View {
                     .draggable(widget) {
                         getMediaView(widget: widget, spaceId: spaceId)
                             .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
+                            .scaleEffect(zoomValue + 1)
                             .onAppear{
                                 draggingItem = widget
                             }
@@ -205,7 +206,9 @@ struct CanvasPage: View {
                         }
                     }
             }
+            
         }
+      
                                 )
         )
     }
@@ -214,11 +217,16 @@ struct CanvasPage: View {
     func canvasView() -> AnyView {
         
         return AnyView(
+            
             ScrollView([.horizontal,.vertical], content: {
                 ZStack {
+          
+                    Color(UIColor.systemBackground)
+                             .allowsHitTesting(toolPickerActive)
                     GridView()
                         .frame(width: FRAME_SIZE, height: FRAME_SIZE, alignment: .center)
-                        .border(Color.secondary, width: 1)
+//                        .border(Color.secondary, width: 1)
+                    
                       
                     DrawingCanvas(canvas: $canvas, toolPickerActive: $toolPickerActive, toolPicker: $toolkit, spaceId: spaceId)
                         .allowsHitTesting(toolPickerActive)
@@ -229,7 +237,12 @@ struct CanvasPage: View {
 //                .scaleEffect(magnification)
                 
                 .scaleEffect(zoomValue + 1)
-            })
+            }
+                
+              
+                
+                      )
+            
             
             .gesture(
                 MagnificationGesture()
@@ -278,6 +291,7 @@ struct CanvasPage: View {
                      :  nil
                     )
                     .animation(.easeInOut)
+                    .background( Color(UIColor.secondarySystemBackground))
            
         )
     }
@@ -291,8 +305,11 @@ struct CanvasPage: View {
             return !stroke.isExpired()
         }
         if changed {
-            canvas.drawing = PKDrawing(strokes: strokes)
-            canvas.upload(spaceId: spaceId)
+    
+                canvas.drawing = PKDrawing(strokes: strokes)
+                canvas.upload(spaceId: spaceId)
+            
+           
         }
     }
 //    
@@ -332,6 +349,7 @@ struct CanvasPage: View {
                 
             })
             .onReceive(Timer.publish(every: 5, on: .main, in: .common).autoconnect()) { _ in
+       
                 removeExpiredStrokes()
             }
         //toolbar

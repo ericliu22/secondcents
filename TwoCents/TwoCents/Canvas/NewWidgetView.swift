@@ -26,12 +26,7 @@ struct NewWidgetView: View {
     @State var widgetId: String
     
     
-    
-    
     @StateObject private var viewModel = NewWidgetViewModel()
-    
-    
-    
     
     
     @Environment(\.dismiss) var dismissScreen
