@@ -359,6 +359,10 @@ struct CreateSpacesView: View {
             ToolbarItem(placement: .navigationBarLeading) {
                 
                 Button(action: {
+                    print("HI")
+                    Task{
+                        try? await viewModel.deleteSpace(spaceId: spaceId)
+                    }
                     dismissScreen()
                 }, label: {
                     Image(systemName: "xmark")

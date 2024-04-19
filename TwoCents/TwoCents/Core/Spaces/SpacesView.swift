@@ -221,8 +221,14 @@ struct SpacesView: View {
             .onChange(of: isShowingCreateSpaces, { oldValue, newValue in
                 if !isShowingCreateSpaces {
                     print("YO")
+                    
                     Task{
+                        
+                    
+                        
+                        
                     try? await viewModel.loadCurrentUser()
+                       
                     if let user = viewModel.user {
                         try? await viewModel.getAllSpaces(userId: user.userId)
                         newSpaceUUID = UUID().uuidString
@@ -257,6 +263,7 @@ struct SpacesView: View {
         .task {
             try? await viewModel.loadCurrentUser()
             if let user = viewModel.user {
+                
                 try? await viewModel.getAllSpaces(userId: user.userId)
             }
         }

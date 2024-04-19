@@ -33,6 +33,14 @@ final class CreateSpacesViewModel: ObservableObject{
         self.user = try await UserManager.shared.getUser(userId: authDataResult.uid)
     }
     
+    func deleteSpace(spaceId: String) async throws {
+
+        
+          
+          try await SpaceManager.shared.deleteSpace(spaceId: spaceId)
+        
+          
+      }
     
       
     func createSpace(spaceId: String) async throws {

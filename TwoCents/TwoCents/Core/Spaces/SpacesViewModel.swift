@@ -32,6 +32,11 @@ final class SpacesViewModel: ObservableObject {
     }
     
     
+
+    
+    
+    
+    
     func getUserColor(userColor: String) -> Color{
 
         switch userColor {

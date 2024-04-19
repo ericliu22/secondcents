@@ -66,6 +66,11 @@ final class SpaceManager{
         try spaceDocument(spaceId: space.spaceId).setData(from: space, merge: false)
     }
     
+    func deleteSpace(spaceId: String) async throws {
+
+        try await spaceDocument(spaceId: spaceId).delete()
+    }
+    
     
     
     func getSpace(spaceId: String) async throws -> DBSpace {
