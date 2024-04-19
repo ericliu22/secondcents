@@ -22,7 +22,7 @@ struct SpaceProfilePicView: View {
     @State private var selectedPhoto: PhotosPickerItem? = nil
     
 
-
+    @Binding var isShowingCreateSpaces: Bool
     
     var body: some View {
         
@@ -116,6 +116,8 @@ struct SpaceProfilePicView: View {
             
             
             Button {
+                
+                isShowingCreateSpaces = false
                
 //                    
 //                CanvasPage(chatroom: db.collection("spaces").document(spaceId))
@@ -185,7 +187,7 @@ struct SpaceProfilePicView: View {
 struct SpaceProfilePicView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack{
-            SpaceProfilePicView(spaceId: "56456522-E7FC-466E-83C1-85A0AE3DEC5B")
+            SpaceProfilePicView(spaceId: "56456522-E7FC-466E-83C1-85A0AE3DEC5B", isShowingCreateSpaces: .constant(false))
         }
     }
 }

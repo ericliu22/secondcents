@@ -30,6 +30,7 @@ struct CreateSpacesView: View {
         "looking a little lonely here...",
         "whole lotta silence !!"
     ]
+    @Binding var isShowingCreateSpaces: Bool
     
     
     
@@ -258,7 +259,7 @@ struct CreateSpacesView: View {
             
             NavigationLink {
                 
-                SpaceProfilePicView(spaceId: spaceId)
+                SpaceProfilePicView(spaceId: spaceId,isShowingCreateSpaces: $isShowingCreateSpaces)
                 
             } label: {
                 Text("Create")
@@ -357,7 +358,7 @@ struct CreateSpacesView: View {
 struct CreateSpacesView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack{
-            CreateSpacesView(spaceId: UUID().uuidString)
+            CreateSpacesView(spaceId: UUID().uuidString, isShowingCreateSpaces: .constant(false))
         }
     }
 }

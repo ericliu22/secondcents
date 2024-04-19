@@ -23,7 +23,7 @@ struct SpacesView: View {
     
     
     @State private var showDetail = false
-    
+    @State var isShowingCreateSpaces: Bool = false
     
     var filteredSearch: [DBSpace]{
         guard !searchTerm.isEmpty else { return viewModel.allSpaces}
@@ -207,13 +207,22 @@ struct SpacesView: View {
                 
                 
             }
+//            .fullScreenCover(isPresented: $isShowingCreateSpaces, content: {
+//                CreateSpacesView(spaceId: UUID().uuidString)
+//
+//            }
+            .fullScreenCover(isPresented: $isShowingCreateSpaces, content: {
+                NavigationView{
+                    CreateSpacesView(spaceId: UUID().uuidString, isShowingCreateSpaces: $isShowingCreateSpaces)
+                }
+            })
             .toolbar{
                 
                 ToolbarItem(placement: .navigationBarTrailing) {
                     
                     
-                    NavigationLink{
-                        CreateSpacesView(spaceId: UUID().uuidString)
+                    Button{
+                      isShowingCreateSpaces = true
                         
                     } label: {
                         Image (systemName: "square.and.pencil")
@@ -229,6 +238,7 @@ struct SpacesView: View {
             
             
         }
+       
         .task {
             try? await viewModel.loadCurrentUser()
             if let user = viewModel.user {
