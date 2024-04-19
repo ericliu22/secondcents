@@ -280,7 +280,8 @@ struct CreateSpacesView: View {
             .simultaneousGesture(TapGesture().onEnded{
                 Task{
                     do {
-                        if !viewModel.name.isEmpty || !viewModel.selectedMembers.isEmpty {
+                        if !viewModel.name.isEmpty && !viewModel.selectedMembers.isEmpty {
+                     
                             try await viewModel.createSpace(spaceId: spaceId)
                         }
                         
