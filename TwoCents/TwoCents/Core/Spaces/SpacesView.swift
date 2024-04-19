@@ -25,6 +25,8 @@ struct SpacesView: View {
     @State private var showDetail = false
     @State var isShowingCreateSpaces: Bool = false
     
+    @State private var newSpaceUUID = UUID().uuidString
+    
     var filteredSearch: [DBSpace]{
         guard !searchTerm.isEmpty else { return viewModel.allSpaces}
         return viewModel.allSpaces.filter{$0.name!.localizedCaseInsensitiveContains(searchTerm)}
@@ -213,7 +215,7 @@ struct SpacesView: View {
 //            }
             .fullScreenCover(isPresented: $isShowingCreateSpaces, content: {
                 NavigationView{
-                    CreateSpacesView(spaceId: UUID().uuidString, isShowingCreateSpaces: $isShowingCreateSpaces)
+                    CreateSpacesView(spaceId: newSpaceUUID, isShowingCreateSpaces: $isShowingCreateSpaces)
                 }
             })
             .onChange(of: isShowingCreateSpaces, { oldValue, newValue in
@@ -223,6 +225,7 @@ struct SpacesView: View {
                     try? await viewModel.loadCurrentUser()
                     if let user = viewModel.user {
                         try? await viewModel.getAllSpaces(userId: user.userId)
+                        newSpaceUUID = UUID().uuidString
                     }
                     }
                 }
@@ -244,6 +247,7 @@ struct SpacesView: View {
                 
             }
             .navigationTitle( "Spaces 💬" )
+         
          
             .searchable(text: $searchTerm, placement: .navigationBarDrawer(displayMode: .always), prompt: "Search")
             

@@ -31,35 +31,34 @@ struct CreateSpacesView: View {
         "whole lotta silence !!"
     ]
     @Binding var isShowingCreateSpaces: Bool
-    
-    
+    @Environment(\.dismiss) var dismissScreen
     
     var body: some View {
-        
+
         VStack {
-          
+            
             //Name Textfield
             TextField("Enter a name", text: $viewModel.name)
                 .font(.largeTitle)
                 .fontWeight(.bold)
-                
-                .foregroundStyle(Color.accentColor)
-//                .padding(.bottom)
             
-//            
-////
-//            Spacer()
-//                .frame(height: 100)
-                
-   
-    
+                .foregroundStyle(Color.accentColor)
+            //                .padding(.bottom)
+            
+            //
+            ////
+            //            Spacer()
+            //                .frame(height: 100)
+            
+            
+            
             //Selected Members
             VStack(alignment:.leading){
                 
                 Text("Members 👯‍♀️")
                     .font(.title3)
                     .fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/)
-                    
+                
                 
                 
                 
@@ -235,7 +234,7 @@ struct CreateSpacesView: View {
                                     Text(userTile.name!)
                                         .font(.headline)
                                     
-                                   
+                                    
                                     
                                 }
                             }
@@ -255,7 +254,7 @@ struct CreateSpacesView: View {
             .background(Color(UIColor.secondarySystemBackground))
             .cornerRadius(10)
             
-
+            
             
             NavigationLink {
                 
@@ -266,9 +265,9 @@ struct CreateSpacesView: View {
                     .font(.headline)
                     .frame(height: 55)
                     .frame(maxWidth: .infinity)
-                    
-            
-            
+                
+                
+                
             }
             .disabled(viewModel.name.isEmpty || viewModel.selectedMembers.isEmpty)
             
@@ -287,45 +286,45 @@ struct CreateSpacesView: View {
                     } catch {
                     }
                 }
-              
+                
             })
             
-   
-           
-//
-//            NavigationLink {
-//              
-//                SpaceProfilePicView(spaceId: spaceId)
-//            } label: {
-//                Button {
-////                    Task {
-////                        do {
-////                            try await viewModel.createSpace(spaceId: spaceId)
-////                            
-////                            return
-////                        } catch {
-////                        }
-////                    }
-//                } label: {
-//                    Text("Create")
-//                        .font(.headline)
-//                        .frame(height: 55)
-//                        .frame(maxWidth: .infinity)
-//                        
-//                }
-//                .disabled(viewModel.name.isEmpty || viewModel.selectedMembers.isEmpty)
-//                .buttonStyle(.bordered)
-//                .tint(.accentColor)
-//                .frame(height: 55)
-//                .cornerRadius(10)
-//
-//                
-//            }
-
             
-
             
-           
+            //
+            //            NavigationLink {
+            //
+            //                SpaceProfilePicView(spaceId: spaceId)
+            //            } label: {
+            //                Button {
+            ////                    Task {
+            ////                        do {
+            ////                            try await viewModel.createSpace(spaceId: spaceId)
+            ////
+            ////                            return
+            ////                        } catch {
+            ////                        }
+            ////                    }
+            //                } label: {
+            //                    Text("Create")
+            //                        .font(.headline)
+            //                        .frame(height: 55)
+            //                        .frame(maxWidth: .infinity)
+            //
+            //                }
+            //                .disabled(viewModel.name.isEmpty || viewModel.selectedMembers.isEmpty)
+            //                .buttonStyle(.bordered)
+            //                .tint(.accentColor)
+            //                .frame(height: 55)
+            //                .cornerRadius(10)
+            //
+            //
+            //            }
+            
+            
+            
+            
+            
             
             
         }
@@ -336,7 +335,7 @@ struct CreateSpacesView: View {
             //to prevent list from refreshing when one exits tab and comes back
             if viewModel.selectedMembers.isEmpty {
                 try? await viewModel.getAllFriends()
-      
+                
             }
             
             randomIndex = Int.random(in: 0..<(noMembersMessage.count))
@@ -350,6 +349,29 @@ struct CreateSpacesView: View {
         //            }
         //        })
         .navigationTitle("Create Space 💭")
+     
+        .toolbar{
+            
+            ToolbarItem(placement: .navigationBarLeading) {
+                
+                Button(action: {
+                    dismissScreen()
+                }, label: {
+                    Image(systemName: "xmark")
+                        .foregroundColor(Color(UIColor.label))
+//                        .font(.title2)
+//                        .padding()
+                })
+                
+                
+            }
+        }
+            
+            
+            
+           
+            
+        
     }
     
 }
