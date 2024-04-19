@@ -216,6 +216,17 @@ struct SpacesView: View {
                     CreateSpacesView(spaceId: UUID().uuidString, isShowingCreateSpaces: $isShowingCreateSpaces)
                 }
             })
+            .onChange(of: isShowingCreateSpaces, { oldValue, newValue in
+                if !isShowingCreateSpaces {
+                    print("YO")
+                    Task{
+                    try? await viewModel.loadCurrentUser()
+                    if let user = viewModel.user {
+                        try? await viewModel.getAllSpaces(userId: user.userId)
+                    }
+                    }
+                }
+            })
             .toolbar{
                 
                 ToolbarItem(placement: .navigationBarTrailing) {
