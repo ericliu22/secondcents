@@ -33,7 +33,7 @@ struct CanvasPage: View {
     //var for widget onTap
     //@State var isShowingPopup = false
     
-    @State private var userUID: String = ""
+    @State private var username: String = ""
     @State var canvas: PKCanvasView = PKCanvasView()
     @State var toolPickerActive: Bool = false
     @State private var currentMode: canvasState = .normal
@@ -48,6 +48,7 @@ struct CanvasPage: View {
     @State private var toolkit: PKToolPicker = PKToolPicker.init()
     @State private var pendingWrites: Bool = false
     @State private var timer: Timer?
+    
     
     @State private var selectedWidget: CanvasWidget?
  
@@ -123,9 +124,6 @@ struct CanvasPage: View {
         await pullDocuments()
     }
     
-    
-    
-    
     func GridView() -> AnyView {
         @State var isShowingPopup = false
         let columns = Array(repeating: GridItem(.fixed(TILE_SIZE), spacing: 30, alignment: .center), count: 3)
@@ -146,9 +144,9 @@ struct CanvasPage: View {
                             .cornerRadius(CORNER_RADIUS)
                         
                             .onTapGesture(count: 2, perform: {
-                                
                                 if selectedWidget != widget || !widgetDoubleTapped {
                                     //select
+                                    
                                     selectedWidget = widget
                                     widgetDoubleTapped = true
                                     
@@ -157,13 +155,15 @@ struct CanvasPage: View {
                                     selectedWidget = nil
                                     widgetDoubleTapped = false
                                 }
+                                Task {
+                                    username = try! await UserManager.shared.getUser(userId: widget.userId).username!
+                                }
                             })
                     )
                 
                 //username below widget
                     .overlay(content: {
-                        
-                        Text(widgetDoubleTapped ? widget.userId : ""  )
+                        Text(widgetDoubleTapped ? username : "" )
                             .font(.caption2)
                             .foregroundStyle(.secondary)
                             .offset(y:90)

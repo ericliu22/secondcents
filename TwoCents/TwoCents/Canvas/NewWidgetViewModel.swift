@@ -67,8 +67,9 @@ final class NewWidgetViewModel: ObservableObject{
                 
                 self.path = path
                 self.url = url.absoluteString
-    
-                widgets[0] = CanvasWidget(width: 250, height:  250, borderColor: .black, userId: "jennierubyjane", media: .image, mediaURL: URL(string: self.url)!, widgetName: "Photo Widget", widgetDescription: "Add a photo to spice the convo")
+                let uid = try! AuthenticationManager.shared.getAuthenticatedUser().uid
+                
+                widgets[0] = CanvasWidget(width: 250, height:  250, borderColor: .black, userId: uid, media: .image, mediaURL: URL(string: self.url)!, widgetName: "Photo Widget", widgetDescription: "Add a photo to spice the convo")
                 
                 
                 loading = false

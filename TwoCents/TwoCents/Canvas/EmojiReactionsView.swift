@@ -6,7 +6,7 @@ import FirebaseFirestore
 
 struct EmojiReactionsView: View {
     
-    @State private var emojiPressed: [String: Bool] = [
+    private var userPressed: [String: Bool] = [
         "❤️":false,
         "👍":false,
         "👎":false,
@@ -14,8 +14,7 @@ struct EmojiReactionsView: View {
         "🫵":false,
         "⁉️":false
     ]
-    
-    
+    @State private var emojiCount: [String: Int]
     private var spaceId: String
     private var widget: CanvasWidget
     private var userUID: String
@@ -24,11 +23,29 @@ struct EmojiReactionsView: View {
         self.spaceId = spaceId
         self.widget = widget
         self.userUID = try! AuthenticationManager.shared.getAuthenticatedUser().uid
+        self.emojiCount = widget.emojis
+        self.userPressed = checkUser(emojiPressed: widget.emojiPressed)
+    }
+    
+    private func checkUser(emojiPressed: [String: [String]]) -> [String: Bool]{
+        var pressedValues: [String: Bool] = [:]
+        var pressed: Bool
+        
+        for (emoji, users) in emojiPressed {
+            pressed = false
+            for user in users {
+                if (userUID == user) {
+                    pressed = true
+                    break
+                }
+            }
+            pressedValues[emoji] = pressed
+        }
+        return pressedValues
     }
     
     private func updateEmoji(emoji: String) {
-        emojiPressed[emoji]!.toggle()
-        if emojiPressed[emoji]! {
+        if !userPressed[emoji]! {
             addEmoji(emoji: emoji)
         } else {
             removeEmoji(emoji: emoji)
@@ -36,37 +53,28 @@ struct EmojiReactionsView: View {
     }
     
     private func addEmoji(emoji: String) {
-        var newEmojiPressed = widget.emojiPressed
-        newEmojiPressed[emoji]!.append(userUID)
+        emojiCount[emoji]! += 1
+        
         db.collection("spaces")
             .document(spaceId)
             .collection("widgets")
             .document(widget.id.uuidString)
             .updateData([
-                "emojiPressed": newEmojiPressed
+                "emojis": emojiCount,
+                "emojiPressed.\(emoji)": FieldValue.arrayUnion([userUID])
             ])
     }
     
     private func removeEmoji(emoji: String) {
-        var newEmojiPressed = widget.emojiPressed
-        var changed: Bool = false
-        
-        newEmojiPressed[emoji] = newEmojiPressed[emoji]!.filter {
-            if ($0 == userUID) {
-                changed = true
-            }
-            return $0 != userUID
-        }
-        
-        //Safety catch
-        if (!changed) { return }
+        emojiCount[emoji]! -= 1
         
         db.collection("spaces")
             .document(spaceId)
             .collection("widgets")
             .document(widget.id.uuidString)
             .updateData([
-                "emojiPressed": newEmojiPressed
+                "emojis": emojiCount,
+                "emojiPressed.\(emoji)": FieldValue.arrayRemove([userUID])
             ])
     }
     
@@ -80,29 +88,24 @@ struct EmojiReactionsView: View {
                     updateEmoji(emoji: "❤️")
                 }
                 
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.45) {
-                    withAnimation(.interpolatingSpring(stiffness: 170, damping: 10)) {
-                        emojiPressed["❤️"] = false
-                    }
-                }
             } label: {
                 ZStack {
                     SplashView()
-                        .opacity(emojiPressed["❤️"]! ? 0 : 1)
-                        .animation(.easeInOut(duration: 0.5).delay(0.25), value: emojiPressed["❤️"])
-                        .scaleEffect(emojiPressed["❤️"]! ? 1.25 : 0)
-                        .animation(.easeInOut(duration: 0.5), value: emojiPressed["❤️"])
+                        .opacity(userPressed["❤️"]! ? 0 : 1)
+                        .animation(.easeInOut(duration: 0.5).delay(0.25), value: userPressed["❤️"])
+                        .scaleEffect(userPressed["❤️"]! ? 1.25 : 0)
+                        .animation(.easeInOut(duration: 0.5), value: userPressed["❤️"])
                     
                     SplashView()
                         .rotationEffect(.degrees(90))
-                        .opacity(emojiPressed["❤️"]! ? 0 : 1)
-                        .offset(y: emojiPressed["❤️"]! ? 6 : -6)
-                        .animation(.easeInOut(duration: 0.5).delay(0.2), value: emojiPressed["❤️"])
-                        .scaleEffect(emojiPressed["❤️"]! ? 1.25 : 0)
-                        .animation(.easeOut(duration: 0.5), value: emojiPressed["❤️"])
+                        .opacity(userPressed["❤️"]! ? 0 : 1)
+                        .offset(y: userPressed["❤️"]! ? 6 : -6)
+                        .animation(.easeInOut(duration: 0.5).delay(0.2), value: userPressed["❤️"])
+                        .scaleEffect(userPressed["❤️"]! ? 1.25 : 0)
+                        .animation(.easeOut(duration: 0.5), value: userPressed["❤️"])
                     
                    Text("❤️")
-                        .phaseAnimator([false, true], trigger: emojiPressed["❤️"]) { icon, scaleFromBottom in
+                        .phaseAnimator([false, true], trigger: userPressed["❤️"]) { icon, scaleFromBottom in
                             icon
                                 .scaleEffect(scaleFromBottom ? 1.5 : 1, anchor: .bottom)
                         } animation: { scaleFromBottom in
@@ -110,47 +113,41 @@ struct EmojiReactionsView: View {
                         }
                         .background(
                             Circle()
-                                .strokeBorder(lineWidth: emojiPressed["❤️"]! ? 0 : 4)
-                                .animation(.easeInOut(duration: 0.5).delay(0.1),value: emojiPressed["❤️"])
+                                .strokeBorder(lineWidth: userPressed["❤️"]! ? 0 : 4)
+                                .animation(.easeInOut(duration: 0.5).delay(0.1),value: userPressed["❤️"])
                                 .frame(width: 70, height: 70)
                                 .foregroundColor(Color(.systemPink))
-                                .hueRotation(.degrees(emojiPressed["❤️"]! ? 300 : 200))
-                                .scaleEffect(emojiPressed["❤️"]! ? 1.15 : 0)
-                                .animation(.easeInOut(duration: 0.5), value: emojiPressed["❤️"])
+                                .hueRotation(.degrees(userPressed["❤️"]! ? 300 : 200))
+                                .scaleEffect(userPressed["❤️"]! ? 1.15 : 0)
+                                .animation(.easeInOut(duration: 0.5), value: userPressed["❤️"])
                         )
-                        
                 }
             }
             
             Button {
                 
                 withAnimation(.interpolatingSpring(stiffness: 170, damping: 5)) {
-                    emojiPressed["👍"]!.toggle()
+                    updateEmoji(emoji: "👍")
                 }
                 
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.45) {
-                    withAnimation(.interpolatingSpring(stiffness: 170, damping: 10)) {
-                        emojiPressed["👍"] = false
-                    }
-                }
             } label: {
                 ZStack {
                   
                     SplashView()
-                        .opacity(emojiPressed["👍"]! ? 0 : 1)
-                        .animation(.easeInOut(duration: 0.5).delay(0.25), value: emojiPressed["👍"])
-                        .scaleEffect(emojiPressed["👍"]! ? 1.25 : 0)
-                        .animation(.easeInOut(duration: 0.5), value: emojiPressed["👍"])
+                        .opacity(userPressed["👍"]! ? 0 : 1)
+                        .animation(.easeInOut(duration: 0.5).delay(0.25), value: userPressed["👍"])
+                        .scaleEffect(userPressed["👍"]! ? 1.25 : 0)
+                        .animation(.easeInOut(duration: 0.5), value: userPressed["👍"])
                     
                     SplashView()
                         .rotationEffect(.degrees(90))
-                        .opacity(emojiPressed["👍"]! ? 0 : 1)
-                        .offset(y: emojiPressed["👍"]! ? 6 : -6)
-                        .animation(.easeInOut(duration: 0.5).delay(0.2), value: emojiPressed["👍"])
-                        .scaleEffect(emojiPressed["👍"]! ? 1.25 : 0)
-                        .animation(.easeOut(duration: 0.5), value: emojiPressed["👍"])
+                        .opacity(userPressed["👍"]! ? 0 : 1)
+                        .offset(y: userPressed["👍"]! ? 6 : -6)
+                        .animation(.easeInOut(duration: 0.5).delay(0.2), value: userPressed["👍"])
+                        .scaleEffect(userPressed["👍"]! ? 1.25 : 0)
+                        .animation(.easeOut(duration: 0.5), value: userPressed["👍"])
                     Text("👍")
-                        .phaseAnimator([false, true], trigger: emojiPressed["👍"]) { icon, scaleRotate in
+                        .phaseAnimator([false, true], trigger: userPressed["👍"]) { icon, scaleRotate in
                             icon
                                 .rotationEffect(.degrees(scaleRotate ? -5 : 0), anchor: .bottomLeading)
                                 .scaleEffect(scaleRotate ? 1.5 : 1)
@@ -159,13 +156,13 @@ struct EmojiReactionsView: View {
                         }
                         .background(
                             Circle()
-                                .strokeBorder(lineWidth: emojiPressed["👍"]! ? 0 : 4)
-                                .animation(.easeInOut(duration: 0.5).delay(0.1),value: emojiPressed["👍"])
+                                .strokeBorder(lineWidth: userPressed["👍"]! ? 0 : 4)
+                                .animation(.easeInOut(duration: 0.5).delay(0.1),value: userPressed["👍"])
                                 .frame(width: 70, height: 70)
                                 .foregroundColor(Color(.systemPink))
-                                .hueRotation(.degrees(emojiPressed["👍"]! ? 300 : 200))
-                                .scaleEffect(emojiPressed["👍"]! ? 1.15 : 0)
-                                .animation(.easeInOut(duration: 0.5), value: emojiPressed["👍"])
+                                .hueRotation(.degrees(userPressed["👍"]! ? 300 : 200))
+                                .scaleEffect(userPressed["👍"]! ? 1.15 : 0)
+                                .animation(.easeInOut(duration: 0.5), value: userPressed["👍"])
                             
                         )
                 }
@@ -174,10 +171,14 @@ struct EmojiReactionsView: View {
             
             Button {
                 
+                withAnimation(.interpolatingSpring(stiffness: 170, damping: 5)) {
+                    updateEmoji(emoji: "👎")
+                }
+                
             } label: {
                 Text("👎")
             }
-            .phaseAnimator([false, true], trigger: emojiPressed["👎"]) { icon, dislike in
+            .phaseAnimator([false, true], trigger: userPressed["👎"]) { icon, dislike in
                 icon
                     .rotationEffect(.degrees(dislike ? -45 : 0), anchor: .leading)
                     .scaleEffect(dislike ? 1.5 : 1)
@@ -186,11 +187,15 @@ struct EmojiReactionsView: View {
             }
             
             Button {
-
+                
+                withAnimation(.interpolatingSpring(stiffness: 170, damping: 5)) {
+                    updateEmoji(emoji: "😭")
+                }
+                
             } label: {
                 Text("😭")
             }
-            .phaseAnimator([false, true], trigger: emojiPressed["😭"]) { icon, crying in
+            .phaseAnimator([false, true], trigger: userPressed["😭"]) { icon, crying in
                 icon
                     .offset(y: crying ? -20 : 0)
                     .scaleEffect(crying ? 1.5 : 1)
@@ -200,10 +205,14 @@ struct EmojiReactionsView: View {
             
             Button {
                 
+                withAnimation(.interpolatingSpring(stiffness: 170, damping: 5)) {
+                    updateEmoji(emoji: "🫵")
+                }
+                
             } label: {
                 Text("🫵")
             }
-            .phaseAnimator([false, true], trigger: emojiPressed["🫵"]) { icon, point in
+            .phaseAnimator([false, true], trigger: userPressed["🫵"]) { icon, point in
                 icon
 //                    .offset(y: point ? -20 : 0)
                     .scaleEffect(point ? 2 : 1)
@@ -214,14 +223,18 @@ struct EmojiReactionsView: View {
             
             Button {
                 
+                withAnimation(.interpolatingSpring(stiffness: 170, damping: 5)) {
+                    updateEmoji(emoji: "⁉️")
+                }
+                
             } label: {
                 Text("⁉️")
             }
-            .phaseAnimator([false, true], trigger: emojiPressed["⁉️"]) { icon, question in
+            .phaseAnimator([false, true], trigger: userPressed["⁉️"]) { icon, question in
                 icon
 //                    .offset(y: question ? -20 : 0)
                 
-                                    .rotationEffect(.degrees(question ? 15 : 0))
+                    .rotationEffect(.degrees(question ? 15 : 0))
                     .scaleEffect(question ? 2 : 1)
             } animation: { question in
                     .bouncy(duration: 0.2, extraBounce: 0.4)
