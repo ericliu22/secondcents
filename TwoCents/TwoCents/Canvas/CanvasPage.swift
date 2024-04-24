@@ -170,13 +170,21 @@ struct CanvasPage: View {
                     })
                     .blur(radius: widgetDoubleTapped && selectedWidget != widget ? 20 : 0)
                     .scaleEffect(widgetDoubleTapped && selectedWidget == widget ? 1.05 : 1)
-                //emoji react
+                //emoji react MENU
                     .overlay( alignment: .top, content: {
                         if widgetDoubleTapped && selectedWidget == widget {
                             EmojiReactionsView(spaceId: spaceId, widget: widget)
                                 .offset(y:-60)
                         }
                     })
+                //list of what users reacted with
+//                    .overlay( alignment: .top, content: {
+//                        if widgetDoubleTapped && selectedWidget == widget {
+//                            EmojiCountView(spaceId: spaceId, widget: widget)
+//                                
+//                                .offset(y:140)
+//                        }
+//                    })
                     .draggable(widget) {
                         getMediaView(widget: widget, spaceId: spaceId)
                             .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
@@ -267,27 +275,40 @@ struct CanvasPage: View {
 //            .gesture(magnify)
             //hovering action menu when widget is clicked
             .overlay(selectedWidget != nil
-                     ? HStack{
-                         Button(action: {
-                             if let selectedWidget, let index = canvasWidgets.firstIndex(of: selectedWidget){
-                                 canvasWidgets.remove(at: index)
-                                 SpaceManager.shared.removeWidget(spaceId: spaceId, widget: selectedWidget)
-                             }
-                             selectedWidget = nil
-                             widgetDoubleTapped = false
+                     ? VStack {
+                      
+                         
+                         
+                         EmojiCountView(spaceId: spaceId, widget: selectedWidget!)
+                             .padding(.top, 120)
+                         
+                       Spacer()
+                         
+                         HStack{
+                             Button(action: {
+                                 if let selectedWidget, let index = canvasWidgets.firstIndex(of: selectedWidget){
+                                     canvasWidgets.remove(at: index)
+                                     SpaceManager.shared.removeWidget(spaceId: spaceId, widget: selectedWidget)
+                                 }
+                                 selectedWidget = nil
+                                 widgetDoubleTapped = false
+                               
+                             }, label: {
+                                 Image(systemName: "trash")
+                                     .foregroundColor(.red)
+                             })
+                         }
+                            .padding(.horizontal, 15)
+                            .padding(.vertical, 8)
+                            .background(Color(UIColor.systemBackground), in: .capsule)
+                            .contentShape(.capsule)
+                            .shadow(color: Color.black.opacity(0.2), radius: 20, x: 0, y: 2)
                            
-                         }, label: {
-                             Image(systemName: "trash")
-                                 .foregroundColor(.red)
-                         })
+                       
                      }
-                        .padding(.horizontal, 15)
-                        .padding(.vertical, 8)
-                        .background(Color(UIColor.systemBackground), in: .capsule)
-                        .contentShape(.capsule)
-                        .shadow(color: Color.black.opacity(0.2), radius: 20, x: 0, y: 2)
                         .frame(maxHeight: .infinity, alignment: .bottom)
                         .padding(.bottom, 50)
+
                      :  nil
                     )
                     .animation(.easeInOut)

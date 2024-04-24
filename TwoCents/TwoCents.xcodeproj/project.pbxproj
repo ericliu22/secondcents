@@ -83,6 +83,7 @@
 		AB9455232A9468130055B44A /* ColorPickerWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB9455222A9468130055B44A /* ColorPickerWidget.swift */; };
 		AB9909AB2ABE3BF2004B3021 /* FriendRequestsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB9909AA2ABE3BF2004B3021 /* FriendRequestsView.swift */; };
 		AB9909AD2ABE3C1B004B3021 /* FriendRequestsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB9909AC2ABE3C1B004B3021 /* FriendRequestsViewModel.swift */; };
+		AB9C7F682BD83B1E004FC549 /* EmojiCountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB9C7F672BD83B1E004FC549 /* EmojiCountView.swift */; };
 		AB9EB95D2B1E805300F58EA5 /* ChatManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB9EB95C2B1E805300F58EA5 /* ChatManager.swift */; };
 		ABA45E7E2A7C8D8C0015F000 /* SignInEmailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABA45E7D2A7C8D8C0015F000 /* SignInEmailViewModel.swift */; };
 		ABA45E812A7C8DC50015F000 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABA45E802A7C8DC50015F000 /* ProfileView.swift */; };
@@ -204,6 +205,7 @@
 		AB9455222A9468130055B44A /* ColorPickerWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorPickerWidget.swift; sourceTree = "<group>"; };
 		AB9909AA2ABE3BF2004B3021 /* FriendRequestsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendRequestsView.swift; sourceTree = "<group>"; };
 		AB9909AC2ABE3C1B004B3021 /* FriendRequestsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendRequestsViewModel.swift; sourceTree = "<group>"; };
+		AB9C7F672BD83B1E004FC549 /* EmojiCountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiCountView.swift; sourceTree = "<group>"; };
 		AB9EB95C2B1E805300F58EA5 /* ChatManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatManager.swift; sourceTree = "<group>"; };
 		ABA45E7D2A7C8D8C0015F000 /* SignInEmailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInEmailViewModel.swift; sourceTree = "<group>"; };
 		ABA45E802A7C8DC50015F000 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
@@ -405,6 +407,7 @@
 				AB6778E32AB8F67800C11AA7 /* CanvasWidget.swift */,
 				A2F563182AB4E6240026D8C9 /* CanvasPage.swift */,
 				AB6EA60B2B87A1FE00CC90FF /* EmojiReactionsView.swift */,
+				AB9C7F672BD83B1E004FC549 /* EmojiCountView.swift */,
 				AB6EA60F2B87A27D00CC90FF /* SplashView.swift */,
 				AB6EA6092B879B7C00CC90FF /* CanvasPageViewModel.swift */,
 				AB90EDB82B54EB78002AD855 /* CustomizeWidgetView.swift */,
@@ -777,6 +780,7 @@
 				85741EA82AD03A0C0085423E /* CarouselPractice.swift in Sources */,
 				AB2E56D32AE9C6F00096A58C /* VoteGameViewModel.swift in Sources */,
 				A2DDB1BB2BB693FD00243E1B /* NewPollViewModel.swift in Sources */,
+				AB9C7F682BD83B1E004FC549 /* EmojiCountView.swift in Sources */,
 				AB2E56CD2AE9C59D0096A58C /* VoteGameView.swift in Sources */,
 				A2F5631E2AB4E6240026D8C9 /* CanvasPage.swift in Sources */,
 				8534B8B92B8001660089AD5C /* NewPollView.swift in Sources */,
