@@ -71,6 +71,22 @@ final class SpaceManager{
         try await spaceDocument(spaceId: spaceId).delete()
     }
     
+    func removeUserFromSpace(userId: String, spaceId: String) async throws {
+        
+        
+        
+        //put friend uid in user database
+        let newArray: [String: Any] = [
+            "members": FieldValue.arrayRemove([userId])
+          
+        ]
+        try await spaceDocument(spaceId: spaceId).updateData(newArray)
+        
+        
+     
+    }
+    
+    
     
     
     func getSpace(spaceId: String) async throws -> DBSpace {

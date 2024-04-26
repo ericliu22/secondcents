@@ -175,6 +175,7 @@ struct CanvasPage: View {
                         if widgetDoubleTapped && selectedWidget == widget {
                             EmojiReactionsView(spaceId: spaceId, widget: widget)
                                 .offset(y:-60)
+                            
                         }
                     })
                 //list of what users reacted with
@@ -220,7 +221,7 @@ struct CanvasPage: View {
                                 )
         )
     }
-    @State var zoomValue: CGFloat = 0
+    @State var zoomValue: CGFloat = -0.1
     
     func canvasView() -> AnyView {
         
@@ -246,10 +247,12 @@ struct CanvasPage: View {
                 
                 .scaleEffect(zoomValue + 1)
             }
+            
                 
               
                 
-                      )
+          )
+            .defaultScrollAnchor(.center)
             
             
             .gesture(
@@ -426,10 +429,28 @@ struct CanvasPage: View {
                     })
                 }
                 
+                
+                
+                //SPACE SETTINGS
+                ToolbarItem(placement: .topBarTrailing) {
+                    NavigationLink {
+                        SpaceSettingsView(spaceId: spaceId)
+                    } label: {
+                        Image(systemName: "ellipsis")
+                    }
+
+                }
+                
+                
+                
+                
+                
+                
             }
             .navigationBarTitleDisplayMode(.inline)
-            .toolbarBackground(.ultraThinMaterial, for: .navigationBar)
-            .toolbarBackground(.visible, for: .navigationBar)
+//            .toolbarBackground(.ultraThinMaterial, for: .navigationBar)
+           //SHOW BACKGROUND BY CHANGING BELOW TO VISIBLE
+            .toolbarBackground(.hidden, for: .navigationBar)
             .task{
                 try? await viewModel.loadCurrentSpace(spaceId: spaceId)
             }
