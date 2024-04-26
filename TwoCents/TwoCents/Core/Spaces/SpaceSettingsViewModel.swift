@@ -30,6 +30,17 @@ final class SpaceSettingsViewModel: ObservableObject {
     }
     
     
+    func getMembersInfo() async throws {
+        
+        guard let space else {return }
+       
+        self.allMembers = try await UserManager.shared.getMembersInfo(members: (space.members)!)
+    }
+    
+    
+    
+    @Published private(set) var allMembers: [DBUser] = []
+    
     
     
     func removeSelf( spaceId: String) async throws  {
@@ -39,14 +50,64 @@ final class SpaceSettingsViewModel: ObservableObject {
         
     }
     
+    func removeUser(userId: String, spaceId: String) async throws  {
+  
+      
+        try await SpaceManager.shared.removeUserFromSpace(userId: userId, spaceId: spaceId)
+        
+    }
+    
+    func deleteSpace(spaceId: String) async throws {
+
+        
+          
+          try await SpaceManager.shared.deleteSpace(spaceId: spaceId)
+        
+          
+      }
     
     
     
-    
-    
-    
-    
-    
+    func getUserColor(userColor: String) -> Color{
+        
+        switch userColor {
+            
+        case "red":
+            return Color.red
+        case "orange":
+            return Color.orange
+        case "yellow":
+            return Color.yellow
+        case "green":
+            return Color.green
+        case "mint":
+            return Color.mint
+        case "teal":
+            return Color.teal
+        case "cyan":
+            return Color.cyan
+        case "blue":
+            return Color.blue
+        case "indigo":
+            return Color.indigo
+        case "purple":
+            return Color.purple
+        case "pink":
+            return Color.pink
+        case "brown":
+            return Color.brown
+        default:
+            return Color.gray
+        }
+        
+        
+        
+        
+        
+        
+        
+        
+    }
     
     
 }

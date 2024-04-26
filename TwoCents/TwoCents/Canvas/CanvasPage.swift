@@ -186,12 +186,21 @@ struct CanvasPage: View {
 //                        }
 //                    })
                     .draggable(widget) {
-                        getMediaView(widget: widget, spaceId: spaceId)
-                            .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
-                            .scaleEffect(zoomValue + 1)
-                            .onAppear{
-                                draggingItem = widget
-                            }
+                 
+                        VStack{
+                            getMediaView(widget: widget, spaceId: spaceId)
+                                .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
+                                .scaleEffect(zoomValue + 1)
+                                .onAppear{
+                                    draggingItem = widget
+                                    
+                                    
+                        }
+                            
+                            
+                            
+                        }
+                        
                     }
                 //where its dropped
                     .dropDestination(for: CanvasWidget.self) { items, location in
@@ -231,9 +240,30 @@ struct CanvasPage: View {
           
                     Color(UIColor.systemBackground)
                              .allowsHitTesting(toolPickerActive)
+                    
+                    GeometryReader { geometry in
+                                    Path { path in
+                                        let spacing: CGFloat = 30 // Adjust this value for the spacing between dots
+                                        let width = geometry.size.width
+                                        let height = geometry.size.height
+                                        
+                                        for x in stride(from: 0, through: width, by: spacing) {
+                                            for y in stride(from: 0, through: height, by: spacing) {
+                                                path.addEllipse(in: CGRect(x: x, y: y, width: 2, height: 2))
+                                            }
+                                        }
+                                    }
+                                    .fill(Color.gray) // Dot color
+                                    .allowsHitTesting(toolPickerActive)
+                                }
+                                .drawingGroup()
+//                    
+                    
                     GridView()
                         .frame(width: FRAME_SIZE, height: FRAME_SIZE, alignment: .center)
 //                        .border(Color.secondary, width: 1)
+                    
+                    
                     
                       
                     DrawingCanvas(canvas: $canvas, toolPickerActive: $toolPickerActive, toolPicker: $toolkit, spaceId: spaceId)
@@ -245,6 +275,8 @@ struct CanvasPage: View {
 //                .scaleEffect(magnification)
                 
                 .scaleEffect(zoomValue + 1)
+                
+                
             }
             
                 
@@ -451,13 +483,22 @@ struct CanvasPage: View {
            //SHOW BACKGROUND BY CHANGING BELOW TO VISIBLE
             .toolbarBackground(.hidden, for: .navigationBar)
             .task{
-                try? await viewModel.loadCurrentSpace(spaceId: spaceId)
-//                
+                
+                
+                do {
+                    try await viewModel.loadCurrentSpace(spaceId: spaceId)
+                } catch {
+                    //EXIT IF SPACE DOES NOT EXIST
+                    self.presentationMode.wrappedValue.dismiss()
+                }
+                 
                 if let userInSpace = try? await viewModel.space?.members?.contains(getUID() ?? ""){
                     print(userInSpace)
                     if !userInSpace {
+                        
+                        //if user not in space, exit
                         self.presentationMode.wrappedValue.dismiss()
-//                        dismissScreen()
+
                     }
                 }
             }

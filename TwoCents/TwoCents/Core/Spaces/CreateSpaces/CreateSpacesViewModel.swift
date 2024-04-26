@@ -118,41 +118,40 @@ final class CreateSpacesViewModel: ObservableObject{
     
     func addMember(friend: DBUser) {
         
-        //remove user from all friends array
-        allFriends.removeAll { user in
-            return user.userId == friend.userId
+        // Check if the user is already in the selected members array
+        if !selectedMembers.contains(where: { $0.userId == friend.userId }) {
+            // Remove user from all friends array
+            allFriends.removeAll { user in
+                return user.userId == friend.userId
+            }
+            
+            // Add user to selected member array
+            selectedMembers.append(friend)
+            
+            // Add user to selected member UserID array
+            selectedMembersUserId.append(friend.userId)
         }
-        
-        
-        //add user to selected member array
-        selectedMembers.append(friend)
-        
-        //add user to selected member UserID array
-        selectedMembersUserId.append(friend.userId)
-        
-        
     }
-    
+
     func removeMember(friend: DBUser) {
         
-        //remove user from members array
-        selectedMembers.removeAll { user in
-            return user.userId == friend.userId
+        // Check if the user is already in the selected members array
+        if selectedMembers.contains(where: { $0.userId == friend.userId }) {
+            // Remove user from members array
+            selectedMembers.removeAll { user in
+                return user.userId == friend.userId
+            }
+            
+            // Remove user from members UID array
+            selectedMembersUserId.removeAll { user in
+                return user == friend.userId
+            }
+            
+            // Add user to all friends array
+            allFriends.append(friend)
         }
-        
-        //remove user from members UID array
-        selectedMembersUserId.removeAll { user in
-            return user == friend.userId
-        }
-        
-        
-        
-        //add user to selected member array
-        allFriends.append(friend)
-        
-        
     }
-    
+
     
     
     
