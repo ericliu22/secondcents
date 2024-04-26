@@ -29,7 +29,7 @@ func getUID() async throws -> String? {
 
 
 struct CanvasPage: View {
-    
+    @Environment(\.presentationMode) var presentationMode
     //var for widget onTap
     //@State var isShowingPopup = false
     
@@ -48,8 +48,7 @@ struct CanvasPage: View {
     @State private var toolkit: PKToolPicker = PKToolPicker.init()
     @State private var pendingWrites: Bool = false
     @State private var timer: Timer?
-    
-    
+  
     @State private var selectedWidget: CanvasWidget?
  
     @StateObject private var viewModel = CanvasPageViewModel()
@@ -59,7 +58,7 @@ struct CanvasPage: View {
     
     
     @State private var widgetDoubleTapped: Bool = false
-    
+//    @Environment(\.dismiss) var dismissScreen
     
     private var chatroomDocument: DocumentReference
     private var drawingDocument: DocumentReference
@@ -453,6 +452,14 @@ struct CanvasPage: View {
             .toolbarBackground(.hidden, for: .navigationBar)
             .task{
                 try? await viewModel.loadCurrentSpace(spaceId: spaceId)
+//                
+                if let userInSpace = try? await viewModel.space?.members?.contains(getUID() ?? ""){
+                    print(userInSpace)
+                    if !userInSpace {
+                        self.presentationMode.wrappedValue.dismiss()
+//                        dismissScreen()
+                    }
+                }
             }
             .navigationTitle(toolPickerActive ? "" : viewModel.space?.name ?? "" )
     }

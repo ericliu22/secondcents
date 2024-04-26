@@ -25,6 +25,7 @@ struct SpacesView: View {
     @State private var showDetail = false
     @State var isShowingCreateSpaces: Bool = false
     
+    
     @State private var newSpaceUUID = UUID().uuidString
     
     var filteredSearch: [DBSpace]{
@@ -50,6 +51,7 @@ struct SpacesView: View {
                         
                         NavigationLink {
                             CanvasPage(spaceId: spaceTile.spaceId)
+                                
                             
                         } label: {
                             ZStack{
@@ -261,12 +263,14 @@ struct SpacesView: View {
         }
        
         .task {
+     
             try? await viewModel.loadCurrentUser()
             if let user = viewModel.user {
                 
                 try? await viewModel.getAllSpaces(userId: user.userId)
             }
         }
+        
         
         
     }

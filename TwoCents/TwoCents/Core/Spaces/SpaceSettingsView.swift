@@ -10,8 +10,7 @@ import FirebaseCore
 import FirebaseFirestore
 
 struct SpaceSettingsView: View {
-    @Environment(\.dismiss) var dismissScreen
-    
+    @Environment(\.presentationMode) var presentationMode
     @StateObject private var viewModel = SpaceSettingsViewModel()
     
     private var spaceId: String
@@ -93,6 +92,7 @@ struct SpaceSettingsView: View {
                 Text(viewModel.space?.name ?? "")
                     .font(.largeTitle)
                     .fontWeight(.bold)
+                    .foregroundStyle(Color.accentColor)
                 
                     .minimumScaleFactor(0.7)
                     .lineLimit(1)
@@ -127,8 +127,8 @@ struct SpaceSettingsView: View {
                 Task{
                     try? await viewModel.removeSelf(spaceId: spaceId)
                 }
+                self.presentationMode.wrappedValue.dismiss()
                 
-                dismissScreen()
             }, label: {
                 Text("Leave Space")
                     .font(.headline)
