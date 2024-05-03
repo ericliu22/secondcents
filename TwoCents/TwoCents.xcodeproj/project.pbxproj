@@ -93,6 +93,7 @@
 		ABB84C342A8CBA03009C7550 /* FrontPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABB84C332A8CBA03009C7550 /* FrontPageView.swift */; };
 		ABC426B12A863D9F00873EE1 /* SignUpEmailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABC426B02A863D9F00873EE1 /* SignUpEmailView.swift */; };
 		ABC426B32A86438400873EE1 /* SignUpEmailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABC426B22A86438400873EE1 /* SignUpEmailViewModel.swift */; };
+		ABC461E52BE28ECF00AE47FF /* TestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABC461E42BE28ECE00AE47FF /* TestView.swift */; };
 		ABCA39CA2A79F97D009447C3 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = ABCA39C92A79F97D009447C3 /* FirebaseAnalytics */; };
 		ABCA39CC2A79F97D009447C3 /* FirebaseAnalyticsSwift in Frameworks */ = {isa = PBXBuildFile; productRef = ABCA39CB2A79F97D009447C3 /* FirebaseAnalyticsSwift */; };
 		ABCA39CF2A79FBB5009447C3 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = ABCA39CE2A79FBB5009447C3 /* FirebaseAuth */; };
@@ -217,6 +218,7 @@
 		ABB84C332A8CBA03009C7550 /* FrontPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrontPageView.swift; sourceTree = "<group>"; };
 		ABC426B02A863D9F00873EE1 /* SignUpEmailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpEmailView.swift; sourceTree = "<group>"; };
 		ABC426B22A86438400873EE1 /* SignUpEmailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpEmailViewModel.swift; sourceTree = "<group>"; };
+		ABC461E42BE28ECE00AE47FF /* TestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestView.swift; sourceTree = "<group>"; };
 		ABCA39D12A79FC16009447C3 /* AuthenticationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationView.swift; sourceTree = "<group>"; };
 		ABCA39D32A79FFAD009447C3 /* SignInEmailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInEmailView.swift; sourceTree = "<group>"; };
 		ABCA39D52A7A0159009447C3 /* AuthenticationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationManager.swift; sourceTree = "<group>"; };
@@ -410,6 +412,7 @@
 				A2E5F52A2B5A12D30019C6ED /* DrawingCanvas.swift */,
 				AB6778E32AB8F67800C11AA7 /* CanvasWidget.swift */,
 				A2F563182AB4E6240026D8C9 /* CanvasPage.swift */,
+				ABC461E42BE28ECE00AE47FF /* TestView.swift */,
 				AB6EA60B2B87A1FE00CC90FF /* EmojiReactionsView.swift */,
 				AB9C7F672BD83B1E004FC549 /* EmojiCountView.swift */,
 				AB6EA60F2B87A27D00CC90FF /* SplashView.swift */,
@@ -762,6 +765,7 @@
 				AB58C1E62BDAF54B000B0AC1 /* SpaceSettingsViewModel.swift in Sources */,
 				856E80BD2B50EB260078A2CE /* SabotageGameViewModel.swift in Sources */,
 				850958A72AB8F41D00018A32 /* HotSeat.swift in Sources */,
+				ABC461E52BE28ECF00AE47FF /* TestView.swift in Sources */,
 				85C6759B2AB8EE6100FACCB2 /* SuperlativeGame.swift in Sources */,
 				85BB02F02B5D077E00B9A9EA /* ToolPickerPractice.swift in Sources */,
 				85C6759A2AB8EE5B00FACCB2 /* HotSeatManager.swift in Sources */,
@@ -1173,8 +1177,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
 			requirement = {
-				kind = upToNextMinorVersion;
-				minimumVersion = 10.13.0;
+				kind = exactVersion;
+				version = 10.22.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
