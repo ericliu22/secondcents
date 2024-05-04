@@ -269,94 +269,74 @@ struct CanvasPage: View {
                                 }
                             }
                         }
-                        .fill(Color.gray) // Dot color
+                        .fill(Color(UIColor.secondaryLabel)) // Dot color
                         .allowsHitTesting(toolPickerActive)
                     }
                     .drawingGroup()
+                    .frame(width: FRAME_SIZE, height: FRAME_SIZE)
+                    .blur(radius: widgetDoubleTapped ? 3 : 0)
                     
                     
                     GridView()
-                        .frame(width: FRAME_SIZE, height: FRAME_SIZE, alignment: .center)
-                        
-
+                        .frame(width: FRAME_SIZE, height: FRAME_SIZE)
+                    
+                    
                     
                     
                     DrawingCanvas(canvas: $canvas, toolPickerActive: $toolPickerActive, toolPicker: $toolkit, spaceId: spaceId)
                         .allowsHitTesting(toolPickerActive)
                         .frame(width: FRAME_SIZE, height: FRAME_SIZE)
-       
+                    
                 }
                 
-                 .frame(
-                     width: FRAME_SIZE,
-                     height: FRAME_SIZE
-                 )
+                .frame(
+                    width: FRAME_SIZE,
+                    height: FRAME_SIZE
+                )
                 
                 .scaleEffect(scale)
+                .frame(
+                    width: FRAME_SIZE * 2,
+                    height: FRAME_SIZE * 2
+                )
+                
 //                .frame(
 //                    width: FRAME_SIZE * scale,
 //                    height: FRAME_SIZE * scale
 //                )
+//                
+//
                 
             }
-                       
-                       
-                       
-                       
                       )
+            .contentShape(Rectangle())
             .defaultScrollAnchor(.center)
             
-            //
-            //            .gesture(
-            //                MagnificationGesture()
-            //                    .onChanged{value in
-            //                        print(value)
-            //
-            //
-            //                        zoomValue = value - 1
-            //                    }
-            ////                        .onEnded({ value in
-            ////                            withAnimation(.spring()) {
-            ////                                currentAmount = 0
-            ////                            }
-            ////                        })
-            //            )
-            //
-                .gesture(
-                    MagnificationGesture()
-                        .onChanged { val in
-                            let delta = val / self.lastScaleValue
-                            self.lastScaleValue = val
-                            let newScale = self.scale * delta
-                            
-                            //... anything else e.g. clamping the newScale
-                            
-                            self.scale = newScale
-                        }.onEnded { val in
-                            // without this the next gesture will be broken
-                            self.lastScaleValue = 1.0
-                        }
-                )
-            
-            
-                .onTapGesture {
-                    //deselect
-                    selectedWidget = nil
-                    widgetDoubleTapped = false
-                }
+            .gesture(
+                MagnificationGesture()
+                    .onChanged { val in
+                        let delta = val / self.lastScaleValue
+                        self.lastScaleValue = val
+                        let newScale = self.scale * delta
+                        self.scale = min(max(newScale, 0.1), 2)
+                        
+                        
+                    }.onEnded { val in
+                        self.lastScaleValue = 1.0
+                    }
+            )
+            .onTapGesture {
+                //deselect
+                selectedWidget = nil
+                widgetDoubleTapped = false
+            }
                 .scrollDisabled(currentMode != .normal)
-            //            .gesture(magnify)
             //hovering action menu when widget is clicked
                 .overlay(selectedWidget != nil
                          ? VStack {
-                             
-                             
-                             
                              EmojiCountView(spaceId: spaceId, widget: selectedWidget!)
                                  .padding(.top, 120)
-                             
                              Spacer()
-                             
                              HStack{
                                  Button(action: {
                                      if let selectedWidget, let index = canvasWidgets.firstIndex(of: selectedWidget){
@@ -365,7 +345,6 @@ struct CanvasPage: View {
                                      }
                                      selectedWidget = nil
                                      widgetDoubleTapped = false
-                                     
                                  }, label: {
                                      Image(systemName: "trash")
                                          .foregroundColor(.red)
@@ -376,12 +355,9 @@ struct CanvasPage: View {
                              .background(Color(UIColor.systemBackground), in: .capsule)
                              .contentShape(.capsule)
                              .shadow(color: Color.black.opacity(0.2), radius: 20, x: 0, y: 2)
-                             
-                             
                          }
                     .frame(maxHeight: .infinity, alignment: .bottom)
                     .padding(.bottom, 50)
-                         
                          :  nil
                         )
                 .animation(.easeInOut)
