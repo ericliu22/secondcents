@@ -44,7 +44,8 @@ struct CanvasPage: View {
     @State private var scrollPosition: CGPoint = CGPointZero
     @State private var activeGestures: GestureMask = .subviews
     @State private var showNewWidgetView: Bool = false
-    @State private var showChat: Bool = true
+    @State private var showSheet: Bool = true
+    @State private var inSettingsView: Bool = false
     @State private var photoLinkedToProfile: Bool = false
     @State private var widgetId: String = UUID().uuidString
     @State private var magnification: CGSize = CGSize(width: 1.0, height: 1.0);
@@ -151,13 +152,15 @@ struct CanvasPage: View {
                                     
                                     selectedWidget = widget
                                     widgetDoubleTapped = true
-                                    showChat = false
+                                    showSheet = false
+                                    showNewWidgetView = false
                                     
                                 } else {
                                     //deselect
                                     selectedWidget = nil
                                     widgetDoubleTapped = false
-                                    showChat = true
+                                    showSheet = true
+                                    showNewWidgetView = false
                                 }
                                 Task {
                                     username = try! await UserManager.shared.getUser(userId: widget.userId).username!
@@ -230,7 +233,8 @@ struct CanvasPage: View {
                                     selectedWidget = nil
                                     widgetDoubleTapped = false
                                 
-                                showChat = true
+                                showSheet = true
+                                showNewWidgetView = false
                                     
 //                                }
                             }
@@ -353,7 +357,8 @@ struct CanvasPage: View {
                 selectedWidget = nil
                 widgetDoubleTapped = false
                 
-                showChat = true
+                showSheet = true
+                showNewWidgetView = false
             }
 //                .scrollDisabled(currentMode != .normal)
             //hovering action menu when widget is clicked
@@ -415,7 +420,8 @@ struct CanvasPage: View {
                                      selectedWidget = nil
                                      widgetDoubleTapped = false
                                      
-                                     showChat = true
+                                     showSheet = true
+                                     showNewWidgetView = false
                                  }, label: {
                                      Image(systemName: "trash")
                                          .foregroundColor(.red)
@@ -465,18 +471,27 @@ struct CanvasPage: View {
             }
         
         //chat sheet
-            .sheet(isPresented: $showChat, content: {
-                VStack{
-                    ChatView(spaceId: spaceId)
-                }
-                    .presentationBackground(.regularMaterial)
-                    .presentationDetents([.height(50), .medium, .large])
-                    .presentationCornerRadius(20)
-                    .presentationBackgroundInteraction(.enabled)
-                    
-            })
+//            .sheet(isPresented: $showChat, content: {
+//                VStack{
+//                    ChatView(spaceId: spaceId)
+//                }
+//                    .presentationBackground(.regularMaterial)
+//                    .presentationDetents([.height(50), .medium, .large])
+//                    .presentationCornerRadius(20)
+//                    .presentationBackgroundInteraction(.enabled)
+//                    
+//            })
         //add new widget view
-            .sheet(isPresented: $showNewWidgetView, onDismiss: {
+            .sheet(isPresented: $showSheet, onDismiss: {
+                showNewWidgetView = false
+                
+                
+                //get chat to show up at all times
+                if !widgetDoubleTapped && !inSettingsView {
+                    showSheet = true
+                }
+            
+                
                 if photoLinkedToProfile {
                     photoLinkedToProfile = false
                     widgetId = UUID().uuidString
@@ -485,9 +500,26 @@ struct CanvasPage: View {
                         try await StorageManager.shared.deleteTempWidgetPic(spaceId:spaceId, widgetId: widgetId)
                     }
                 }
+                
             }, content: {
-                NewWidgetView(widgetId: widgetId, showNewWidgetView: $showNewWidgetView,  spaceId: spaceId, photoLinkedToProfile: $photoLinkedToProfile)
-                    .presentationBackground(Color(UIColor.systemBackground))
+               
+                //show add new widget view
+                if showNewWidgetView {
+                    NewWidgetView(widgetId: widgetId, showNewWidgetView: $showNewWidgetView,  spaceId: spaceId, photoLinkedToProfile: $photoLinkedToProfile)
+                        .presentationBackground(Color(UIColor.systemBackground))
+                    
+                }else {
+                    //show chat instead
+                    VStack{
+                        ChatView(spaceId: spaceId)
+                    }
+                        .presentationBackground(.regularMaterial)
+                        .presentationDetents([.height(50), .medium, .large])
+                        .presentationCornerRadius(20)
+                        .presentationBackgroundInteraction(.enabled)
+                     
+                    
+                }
                 
             })
             .onReceive(Timer.publish(every: 5, on: .main, in: .common).autoconnect()) { _ in
@@ -518,6 +550,7 @@ struct CanvasPage: View {
                 //pencilkit
                 ToolbarItem(placement: .topBarTrailing) {
                     Button(action: {
+                      
                         self.toolPickerActive.toggle()
                         if toolPickerActive {
                             self.toolkit = PKToolPicker()
@@ -528,9 +561,11 @@ struct CanvasPage: View {
                         if currentMode != .drawing {
                             self.currentMode = .drawing
                             self.activeGestures = .all
+                            showSheet = false
                         } else {
                             self.currentMode = .normal
                             self.activeGestures = .subviews
+                            showSheet = true
                         }
                     }, label: {
                         toolPickerActive
@@ -541,6 +576,7 @@ struct CanvasPage: View {
                 //add widget
                 ToolbarItem(placement: .topBarTrailing) {
                     Button(action: {
+                        showSheet = true
                         showNewWidgetView = true
                         
                     }, label: {
@@ -552,11 +588,24 @@ struct CanvasPage: View {
                 
                 //SPACE SETTINGS
                 ToolbarItem(placement: .topBarTrailing) {
+                    
                     NavigationLink {
+                       
                         SpaceSettingsView(spaceId: spaceId)
+                            .onAppear {
+                                showSheet = false
+                                inSettingsView = true
+                            }
+                            .onDisappear {
+                                showSheet = true
+                                inSettingsView = false
+                            }
                     } label: {
                         Image(systemName: "ellipsis")
+                        
                     }
+                  
+                    
                     
                 }
                 
