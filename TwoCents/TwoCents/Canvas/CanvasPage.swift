@@ -404,15 +404,7 @@ struct CanvasPage: View {
 //
 //
 //
-                    DrawingCanvas(canvas: $canvas, toolPickerActive: $toolPickerActive, toolPicker: $toolkit, spaceId: spaceId)
-                        .allowsHitTesting(toolPickerActive)
-                    
-                        .scaleEffect(scale)
-                        .offset(offset)
-                        .clipped() // Ensure the content does not overflow
-                        .animation(.spring()) // Optional: Add some animation
-                        .frame(width: FRAME_SIZE, height: FRAME_SIZE)
-                    
+                 
                     
 //                        .frame(width: FRAME_SIZE, height: FRAME_SIZE)
 
@@ -461,6 +453,18 @@ struct CanvasPage: View {
             }
 //                .scrollDisabled(currentMode != .normal)
             //hovering action menu when widget is clicked
+                
+                    .overlay(
+                        DrawingCanvas(canvas: $canvas, toolPickerActive: $toolPickerActive, toolPicker: $toolkit, spaceId: spaceId)
+                            .allowsHitTesting(toolPickerActive)
+                        
+                            .scaleEffect(scale)
+                            .offset(offset)
+                            .clipped() // Ensure the content does not overflow
+                            .animation(.spring()) // Optional: Add some animation
+                            .frame(width: FRAME_SIZE, height: FRAME_SIZE)
+                        
+                    )
                 .overlay(selectedWidget != nil
                          ? VStack {
                              EmojiCountView(spaceId: spaceId, widget: selectedWidget!)
