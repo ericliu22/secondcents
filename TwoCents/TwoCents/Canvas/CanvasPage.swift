@@ -14,6 +14,8 @@ import PencilKit
 //CONSTANTS
 let db = Firestore.firestore()
 
+
+
 let TILE_SIZE: CGFloat = 150
 let MAX_ZOOM: CGFloat = 3.0
 let MIN_ZOOM: CGFloat = 0.6
@@ -468,7 +470,7 @@ struct CanvasPage: View {
                 .overlay(selectedWidget != nil
                          ? VStack {
                              EmojiCountView(spaceId: spaceId, widget: selectedWidget!)
-                                 .padding(.top, 120)
+                                 .padding(.top, 150)
                              Spacer()
                              HStack{
                                  Button(action: {
@@ -490,7 +492,7 @@ struct CanvasPage: View {
                              .shadow(color: Color.black.opacity(0.2), radius: 20, x: 0, y: 2)
                          }
                     .frame(maxHeight: .infinity, alignment: .bottom)
-                    .padding(.bottom, 50)
+                    .padding(.bottom, 150)
                          :  nil
                         )
                 .animation(.easeInOut)
