@@ -179,14 +179,7 @@ struct CanvasPage: View {
                             
                         }
                     })
-                //list of what users reacted with
-                //                    .overlay( alignment: .top, content: {
-                //                        if widgetDoubleTapped && selectedWidget == widget {
-                //                            EmojiCountView(spaceId: spaceId, widget: widget)
-                //
-                //                                .offset(y:140)
-                //                        }
-                //                    })
+     
                     .draggable(widget) {
                         
                         VStack{
@@ -194,17 +187,7 @@ struct CanvasPage: View {
                                 .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
                             
                             
-                            //                                .scaleEffect(scale)
-                            
-//                                .frame(
-//                                    width: TILE_SIZE,
-//                                    height: TILE_SIZE
-//                                )
-//                                .scaleEffect(scale)
-//                                .frame(
-//                                    width: TILE_SIZE * scale,
-//                                    height: TILE_SIZE * scale
-//                                )
+                     
                                
                             
                                 .onAppear{
@@ -226,7 +209,7 @@ struct CanvasPage: View {
                         if let draggingItem, status, draggingItem != widget {
                             if let sourceIndex = canvasWidgets.firstIndex(of: draggingItem),
                                let destinationIndex = canvasWidgets.firstIndex(of: widget) {
-                                withAnimation(.bouncy) {
+//                                withAnimation(.bouncy) {
                                     //move widget
                                     let sourceItem = canvasWidgets.remove(at: sourceIndex)
                                     canvasWidgets.insert(sourceItem, at: destinationIndex)
@@ -234,7 +217,7 @@ struct CanvasPage: View {
                                     selectedWidget = nil
                                     widgetDoubleTapped = false
                                     
-                                }
+//                                }
                             }
                         }
                     }
@@ -245,113 +228,20 @@ struct CanvasPage: View {
                                 )
         )
     }
-    //    @State var zoomValue: CGFloat = -0.1
-//    @State var lastScaleValue: CGFloat = 1.0
-//    @State private var scale: CGFloat = 1.0
-    
+
     @State private var scale: CGFloat = 1.0
     @State private var offset: CGSize = .zero
     @State private var lastOffset: CGSize = .zero
     @State private var cumulativeScale: CGFloat = 1.0
+    @State private var scaleChanging: Bool = false
     
     
-//    @State private var offset = CGSize.zero
-//    @State private var lastOffset = CGSize.zero
     @State private var animator: UIViewPropertyAnimator?
     
     func canvasView() -> AnyView {
         
         return AnyView(
-            
-//            ScrollView([.horizontal,.vertical], content: {
-            
-            
-//                ZStack {
-//                    
-//                    Color(UIColor.systemBackground)
-//                        .allowsHitTesting(toolPickerActive)
-//                    
-//                    GeometryReader { geometry in
-//                        Path { path in
-//                            let spacing: CGFloat = 30 // Adjust this value for the spacing between dots
-//                            let width = geometry.size.width
-//                            let height = geometry.size.height
-//                            
-//                            for x in stride(from: 0, through: width, by: spacing) {
-//                                for y in stride(from: 0, through: height, by: spacing) {
-//                                    path.addEllipse(in: CGRect(x: x, y: y, width: 2, height: 2))
-//                                }
-//                            }
-//                        }
-//                        .fill(Color(UIColor.secondaryLabel)) // Dot color
-//                        .allowsHitTesting(toolPickerActive)
-//                    }
-//                    .drawingGroup()
-//                    .frame(width: FRAME_SIZE, height: FRAME_SIZE)
-//                    .blur(radius: widgetDoubleTapped ? 3 : 0)
-//                    
-//                    
-//                    GridView()
-//                        .frame(width: FRAME_SIZE, height: FRAME_SIZE)
-//                    
-//                    
-//                    
-//                    
-//                    DrawingCanvas(canvas: $canvas, toolPickerActive: $toolPickerActive, toolPicker: $toolkit, spaceId: spaceId)
-//                        .allowsHitTesting(toolPickerActive)
-//                        .frame(width: FRAME_SIZE, height: FRAME_SIZE)
-//                    
-//                }
-                
-                
-            
-            
-//                .frame(
-//                    width: FRAME_SIZE,
-//                    height: FRAME_SIZE
-//                )
-//                
-//                .scaleEffect(scale)
-//                .frame(
-//                    width: FRAME_SIZE * 2,
-//                    height: FRAME_SIZE * 2
-//                )
-                
-//                .frame(
-//                    width: FRAME_SIZE * scale,
-//                    height: FRAME_SIZE * scale
-//                )
-//                
-//
-                
-//            }
-//                      )
-//            .contentShape(Rectangle())
-//            .defaultScrollAnchor(.center)
-            
-//            .gesture(
-//                MagnificationGesture()
-//                    .onChanged { val in
-//                        let delta = val / self.lastScaleValue
-//                        self.lastScaleValue = val
-//                        let newScale = self.scale * delta
-//                        self.scale = min(max(newScale, 0.1), 2)
-//                        
-//                        
-//                    }.onEnded { val in
-//                        self.lastScaleValue = 1.0
-//                    }
-//            )
-            
-//            GeometryReader { geometry in
-//                VStack {
-//                    Text("Zoomable and Draggable Canvas")
-//                        .font(.headline)
-//                    CanvasView(scale: $scale, offset: $offset, cumulativeScale: $cumulativeScale)
-//                        .frame(width: FRAME_SIZE, height: FRAME_SIZE)
-//                        .border(Color.gray)
-//                        
-//                }
+         
                 ZStack {
                     
 
@@ -369,8 +259,8 @@ struct CanvasPage: View {
                             let width = geometry.size.width
                             let height = geometry.size.height
 
-                            for x in stride(from: 0, through: width, by: spacing) {
-                                for y in stride(from: 0, through: height, by: spacing) {
+                            for x in stride(from: 4, through: width, by: spacing) {
+                                for y in stride(from: 4, through: height, by: spacing) {
                                     path.addEllipse(in: CGRect(x: x, y: y, width: 2, height: 2))
                                 }
                             }
@@ -390,10 +280,7 @@ struct CanvasPage: View {
                     .frame(width: FRAME_SIZE, height: FRAME_SIZE)
                     
                     
-
-//
                     GridView()
-//           
                         .scaleEffect(scale)
                         .offset(offset)
 //                        .clipped() // Ensure the content does not overflow
@@ -401,15 +288,6 @@ struct CanvasPage: View {
                         .frame(width: FRAME_SIZE, height: FRAME_SIZE)
                     
                     
-//                        .frame(width: geometry.size.width, height: geometry.size.height * 0.8)
-//                        .border(Color.black)
-//
-//
-//
-                 
-                    
-//                        .frame(width: FRAME_SIZE, height: FRAME_SIZE)
-
                 }
                
                 
@@ -439,9 +317,16 @@ struct CanvasPage: View {
                     MagnificationGesture()
                         .onChanged { value in
                             self.scale = self.cumulativeScale * value
+                            withAnimation {
+                                scaleChanging = true
+                            }
+                            
                         }
                         .onEnded { value in
                             self.cumulativeScale *= value
+                            withAnimation {
+                                scaleChanging = false
+                            }
                         }
                 )
 //            }
@@ -455,6 +340,38 @@ struct CanvasPage: View {
             }
 //                .scrollDisabled(currentMode != .normal)
             //hovering action menu when widget is clicked
+                
+                    .overlay(
+                        //if user is magnifying out or canvas is less than 50 percent...
+                        //show zoom percentage
+                        scaleChanging || scale < CGFloat(0.5) ?
+                            Text(String(format: "%.0f", scale * CGFloat(100)) + "%")
+                    
+                            .padding(.vertical, 8)
+                            .frame(width:80)
+                            
+                            .background(
+                            Rectangle()
+                                .fill(.ultraThinMaterial)
+                                .clipShape(Capsule())
+                           
+                            )
+                            .frame(maxHeight: .infinity, alignment: .bottom)
+                            .padding(.bottom, 200)
+                            .onTapGesture(perform: {
+                                
+                                //zoom back in
+                                withAnimation {
+                                    self.scale = 1.0
+                                    self.cumulativeScale = 1.0
+                                }
+                              
+                            })
+                        
+                         : nil
+                       
+                        
+                    )
                 
                     .overlay(
                         DrawingCanvas(canvas: $canvas, toolPickerActive: $toolPickerActive, toolPicker: $toolkit, spaceId: spaceId)
@@ -495,7 +412,7 @@ struct CanvasPage: View {
                     .padding(.bottom, 150)
                          :  nil
                         )
-                .animation(.easeInOut)
+//                .animation(.easeInOut)
                 .background( Color(UIColor.secondarySystemBackground))
             
         )
@@ -517,19 +434,7 @@ struct CanvasPage: View {
             
         }
     }
-    //
-    //    var magnify: some Gesture {
-    //        MagnificationGesture().onChanged { value in
-    //            // Adjust sensitivity by multiplying the value
-    //            let sensitivityMultiplier: CGFloat = 0.5 // Adjust this value as needed
-    //            let adjustedValue = value * sensitivityMultiplier
-    //
-    //            // Calculate new magnification
-    //            let newMagnification = min(max(self.magnification.width * adjustedValue, MIN_ZOOM), MAX_ZOOM)
-    //            self.magnification = CGSize(width: newMagnification, height: newMagnification)
-    //
-    //        }
-    //    }
+   
     
     @Environment(\.undoManager) private var undoManager
     
