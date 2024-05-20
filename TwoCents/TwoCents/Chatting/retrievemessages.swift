@@ -11,14 +11,19 @@ import FirebaseFirestore
 import FirebaseFirestoreSwift
 
 class MessageManager: ObservableObject{
-    let testchatUser = "Josh"
+   
     let testchatRoom = "ChatRoom1"
     @Published private(set) var messages: [Message] = []
     @Published private(set) var lastMessageId = ""
     let db = Firestore.firestore()
     
+    private var userUID: String
+  
+    
     init() {
+        self.userUID = try! AuthenticationManager.shared.getAuthenticatedUser().uid
         fetchMessages()
+       
     }
     
     func fetchMessages() {
@@ -74,7 +79,7 @@ class MessageManager: ObservableObject{
                 let property = document.get("lastSend")
                
                 do {
-                    let newMessage = Message(id: "\(UUID())", sendBy: self.testchatUser, text: text, ts: Date(), parent: property as! String)
+                    let newMessage = Message(id: "\(UUID())", sendBy: userUID, text: text, ts: Date(), parent: (property as? String) ?? "")
                     try self.db.collection("Chatrooms").document(self.testchatRoom).collection("Chats").document().setData(from: newMessage)
                     self.db.collection("Chatrooms").document(self.testchatRoom).setData(["lastSend": newMessage.sendBy], merge: true)
                     db.collection("Chatrooms").document(self.testchatRoom).setData(["lastTs": newMessage.ts], merge: true)

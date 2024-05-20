@@ -20,6 +20,15 @@ struct Message: Identifiable, Codable {
 
 struct chatStruct: View{
     @StateObject var messageManager = MessageManager()
+    private var userUID: String
+    init() {
+       
+        self.userUID = try! AuthenticationManager.shared.getAuthenticatedUser().uid
+ 
+    }
+
+//    let user: DBUser
+    
     var body: some View{
         ForEach(messageManager.messages, id:\.id) {
             message in
@@ -44,7 +53,12 @@ struct chatStruct: View{
              */
             
             //Jonathan combined above stucts into one
-            universalMessageBubble(message: message, sentByMe: message.sendBy == "Josh", isFirstMsg: message.sendBy != message.parent)
+   
+            
+            
+         
+            
+            universalMessageBubble(message: message, sentByMe: message.sendBy == userUID, isFirstMsg: message.sendBy != message.parent)
             
             
         }
@@ -67,6 +81,7 @@ struct chattingView_Previews: PreviewProvider {
 struct ChatView: View {
     @StateObject  var messagesManager = MessageManager()
     @State var Tapped = false
+    
     //check for data to use this boolean
     var body: some View{
         
@@ -79,31 +94,31 @@ struct ChatView: View {
                         })
                 
             }
-            .frame(width: Tapped ? .infinity: TILE_SIZE, height: Tapped ? .infinity: TILE_SIZE)
+//            .frame(width: Tapped ? .infinity: TILE_SIZE, height: Tapped ? .infinity: TILE_SIZE)
             .onChange(of: messagesManager.lastMessageId) {
                     id in proxy.scrollTo(id, anchor: .bottom)
                 }
-            .overlay(
-                RoundedRectangle(cornerRadius:20)
-                    .stroke(Tapped ? .clear : .black, lineWidth: 5)
-//                    .ignoresSafeArea()
-            )
-            .onTapGesture {
-                withAnimation(.spring()){
-                    Tapped.toggle()
-                }
-                proxy.scrollTo(messagesManager.lastMessageId, anchor: .bottom)
-            }
+//            .overlay(
+//                RoundedRectangle(cornerRadius:20)
+//                    .stroke(Tapped ? .clear : .black, lineWidth: 5)
+////                    .ignoresSafeArea()
+//            )
+//            .onTapGesture {
+//                withAnimation(.spring()){
+//                    Tapped.toggle()
+//                }
+//                proxy.scrollTo(messagesManager.lastMessageId, anchor: .bottom)
+//            }
             }
             .padding(.horizontal)
             
             
             
             
-            if Tapped{
+//            if Tapped{
                 MessageField().environmentObject(messagesManager)
                 
-            }
+//            }
         }
         
         .scrollIndicators(.hidden)

@@ -72,12 +72,18 @@ struct universalMessageBubble: View{
     var isFirstMsg: Bool
     
     
+    @State private var name: String = ""
+    
+   
+
     var body: some View{
         VStack(alignment: sentByMe ? .trailing : .leading){
             
             
             if isFirstMsg && !sentByMe {
-                Text(message.sendBy)
+                
+             
+                Text(name)
                     .foregroundStyle(.green)
                     .font(.caption)
                     .padding(.leading, 10)
@@ -103,6 +109,9 @@ struct universalMessageBubble: View{
 
         }
         .frame(maxWidth: .infinity, alignment: sentByMe ?  .trailing : .leading)
+        .task {
+            self.name = try! await UserManager.shared.getUser(userId: message.sendBy).name!
+        }
     }
 }
 

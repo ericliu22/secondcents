@@ -44,6 +44,7 @@ struct CanvasPage: View {
     @State private var scrollPosition: CGPoint = CGPointZero
     @State private var activeGestures: GestureMask = .subviews
     @State private var showNewWidgetView: Bool = false
+    @State private var showChat: Bool = true
     @State private var photoLinkedToProfile: Bool = false
     @State private var widgetId: String = UUID().uuidString
     @State private var magnification: CGSize = CGSize(width: 1.0, height: 1.0);
@@ -150,11 +151,13 @@ struct CanvasPage: View {
                                     
                                     selectedWidget = widget
                                     widgetDoubleTapped = true
+                                    showChat = false
                                     
                                 } else {
                                     //deselect
                                     selectedWidget = nil
                                     widgetDoubleTapped = false
+                                    showChat = true
                                 }
                                 Task {
                                     username = try! await UserManager.shared.getUser(userId: widget.userId).username!
@@ -186,6 +189,16 @@ struct CanvasPage: View {
                             getMediaView(widget: widget, spaceId: spaceId)
                                 .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
                             
+                                //a bad way of resizing the draggable items but oh well
+                                .frame(
+                                      width: TILE_SIZE,
+                                      height: TILE_SIZE
+                                  )
+                                  .scaleEffect(scale)
+                                  .frame(
+                                      width: TILE_SIZE * scale,
+                                      height: TILE_SIZE * scale
+                                  )
                             
                      
                                
@@ -216,6 +229,8 @@ struct CanvasPage: View {
                                     //deselect
                                     selectedWidget = nil
                                     widgetDoubleTapped = false
+                                
+                                showChat = true
                                     
 //                                }
                             }
@@ -337,6 +352,8 @@ struct CanvasPage: View {
                 //deselect
                 selectedWidget = nil
                 widgetDoubleTapped = false
+                
+                showChat = true
             }
 //                .scrollDisabled(currentMode != .normal)
             //hovering action menu when widget is clicked
@@ -397,6 +414,8 @@ struct CanvasPage: View {
                                      }
                                      selectedWidget = nil
                                      widgetDoubleTapped = false
+                                     
+                                     showChat = true
                                  }, label: {
                                      Image(systemName: "trash")
                                          .foregroundColor(.red)
@@ -444,6 +463,18 @@ struct CanvasPage: View {
             .task {
                 await onChange()
             }
+        
+        //chat sheet
+            .sheet(isPresented: $showChat, content: {
+                VStack{
+                    ChatView()
+                }
+                    .presentationBackground(.regularMaterial)
+                    .presentationDetents([.height(50), .medium, .large])
+                    .presentationCornerRadius(20)
+                    .presentationBackgroundInteraction(.enabled)
+                    
+            })
         //add new widget view
             .sheet(isPresented: $showNewWidgetView, onDismiss: {
                 if photoLinkedToProfile {
