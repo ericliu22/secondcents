@@ -467,7 +467,7 @@ struct CanvasPage: View {
         //chat sheet
             .sheet(isPresented: $showChat, content: {
                 VStack{
-                    ChatView()
+                    ChatView(spaceId: spaceId)
                 }
                     .presentationBackground(.regularMaterial)
                     .presentationDetents([.height(50), .medium, .large])
@@ -487,6 +487,7 @@ struct CanvasPage: View {
                 }
             }, content: {
                 NewWidgetView(widgetId: widgetId, showNewWidgetView: $showNewWidgetView,  spaceId: spaceId, photoLinkedToProfile: $photoLinkedToProfile)
+                    .presentationBackground(Color(UIColor.systemBackground))
                 
             })
             .onReceive(Timer.publish(every: 5, on: .main, in: .common).autoconnect()) { _ in
@@ -541,6 +542,7 @@ struct CanvasPage: View {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button(action: {
                         showNewWidgetView = true
+                        
                     }, label: {
                         Image(systemName: "plus.circle")
                     })
@@ -597,7 +599,7 @@ struct CanvasPage: View {
 
 struct CanvasPage_Previews: PreviewProvider {
     static var previews: some View {
-        CanvasPage(spaceId:"F531C015-E840-4B1B-BB3E-B9E7A3DFB80F")
+        CanvasPage(spaceId:"87D5AC3A-24D8-4B23-BCC7-E268DBBB036F")
     }
 }
 

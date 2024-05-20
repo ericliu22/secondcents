@@ -19,10 +19,12 @@ struct Message: Identifiable, Codable {
 
 
 struct chatStruct: View{
-    @StateObject var messageManager = MessageManager()
+    private var spaceId: String
+    @StateObject var messageManager: MessageManager
     private var userUID: String
-    init() {
-       
+    init(spaceId: String) {
+        self.spaceId = spaceId
+        _messageManager = StateObject(wrappedValue: MessageManager(spaceId: spaceId))
         self.userUID = try! AuthenticationManager.shared.getAuthenticatedUser().uid
  
     }
@@ -72,15 +74,29 @@ struct chatStruct: View{
 
 struct chattingView_Previews: PreviewProvider {
     static var previews: some View {
-        ChatView()
+        ChatView(spaceId: "87D5AC3A-24D8-4B23-BCC7-E268DBBB036F")
     }
 }
 
 //originally part of separate file
 
 struct ChatView: View {
-    @StateObject  var messagesManager = MessageManager()
-    @State var Tapped = false
+    
+    private var spaceId: String
+    @StateObject var messageManager: MessageManager
+   
+    init(spaceId: String) {
+        self.spaceId = spaceId
+        _messageManager = StateObject(wrappedValue: MessageManager(spaceId: spaceId))
+      
+ 
+    }
+    
+    
+//    
+//    private var spaceId: String
+//    @StateObject  var messagesManager = MessageManager(spaceId: spaceId)
+//    @State var Tapped = false
     
     //check for data to use this boolean
     var body: some View{
@@ -89,13 +105,13 @@ struct ChatView: View {
             ScrollViewReader{ proxy in
             ScrollView{
                 
-                chatStruct().onAppear(perform: {
-                            proxy.scrollTo(messagesManager.lastMessageId, anchor: .bottom)
+                chatStruct(spaceId: spaceId).onAppear(perform: {
+                            proxy.scrollTo(messageManager.lastMessageId, anchor: .bottom)
                         })
                 
             }
 //            .frame(width: Tapped ? .infinity: TILE_SIZE, height: Tapped ? .infinity: TILE_SIZE)
-            .onChange(of: messagesManager.lastMessageId) {
+            .onChange(of: messageManager.lastMessageId) {
                     id in proxy.scrollTo(id, anchor: .bottom)
                 }
 //            .overlay(
@@ -116,7 +132,7 @@ struct ChatView: View {
             
             
 //            if Tapped{
-                MessageField().environmentObject(messagesManager)
+                MessageField().environmentObject(messageManager)
                 
 //            }
         }

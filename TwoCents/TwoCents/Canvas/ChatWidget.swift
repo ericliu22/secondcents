@@ -12,7 +12,7 @@ func chatWidget(widget: CanvasWidget) -> AnyView {
     assert(widget.media == .chat)
     
     return AnyView(
-        ChatView()
+        ChatView(spaceId: "87D5AC3A-24D8-4B23-BCC7-E268DBBB036F")
     )//AnyView
     
 }
