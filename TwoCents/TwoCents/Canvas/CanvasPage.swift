@@ -194,16 +194,16 @@ struct CanvasPage: View {
                             
                             //                                .scaleEffect(scale)
                             
-                                .frame(
-                                    width: TILE_SIZE,
-                                    height: TILE_SIZE
-                                )
-                                .scaleEffect(scale)
-                                .frame(
-                                    width: TILE_SIZE * scale,
-                                    height: TILE_SIZE * scale
-                                )
-                            
+//                                .frame(
+//                                    width: TILE_SIZE,
+//                                    height: TILE_SIZE
+//                                )
+//                                .scaleEffect(scale)
+//                                .frame(
+//                                    width: TILE_SIZE * scale,
+//                                    height: TILE_SIZE * scale
+//                                )
+                               
                             
                                 .onAppear{
                                     draggingItem = widget
@@ -244,25 +244,129 @@ struct CanvasPage: View {
         )
     }
     //    @State var zoomValue: CGFloat = -0.1
-    @State var lastScaleValue: CGFloat = 1.0
+//    @State var lastScaleValue: CGFloat = 1.0
+//    @State private var scale: CGFloat = 1.0
+    
     @State private var scale: CGFloat = 1.0
+    @State private var offset: CGSize = .zero
+    @State private var lastOffset: CGSize = .zero
+    @State private var cumulativeScale: CGFloat = 1.0
+    
+    
+//    @State private var offset = CGSize.zero
+//    @State private var lastOffset = CGSize.zero
+    @State private var animator: UIViewPropertyAnimator?
     
     func canvasView() -> AnyView {
         
         return AnyView(
             
-            ScrollView([.horizontal,.vertical], content: {
+//            ScrollView([.horizontal,.vertical], content: {
+            
+            
+//                ZStack {
+//                    
+//                    Color(UIColor.systemBackground)
+//                        .allowsHitTesting(toolPickerActive)
+//                    
+//                    GeometryReader { geometry in
+//                        Path { path in
+//                            let spacing: CGFloat = 30 // Adjust this value for the spacing between dots
+//                            let width = geometry.size.width
+//                            let height = geometry.size.height
+//                            
+//                            for x in stride(from: 0, through: width, by: spacing) {
+//                                for y in stride(from: 0, through: height, by: spacing) {
+//                                    path.addEllipse(in: CGRect(x: x, y: y, width: 2, height: 2))
+//                                }
+//                            }
+//                        }
+//                        .fill(Color(UIColor.secondaryLabel)) // Dot color
+//                        .allowsHitTesting(toolPickerActive)
+//                    }
+//                    .drawingGroup()
+//                    .frame(width: FRAME_SIZE, height: FRAME_SIZE)
+//                    .blur(radius: widgetDoubleTapped ? 3 : 0)
+//                    
+//                    
+//                    GridView()
+//                        .frame(width: FRAME_SIZE, height: FRAME_SIZE)
+//                    
+//                    
+//                    
+//                    
+//                    DrawingCanvas(canvas: $canvas, toolPickerActive: $toolPickerActive, toolPicker: $toolkit, spaceId: spaceId)
+//                        .allowsHitTesting(toolPickerActive)
+//                        .frame(width: FRAME_SIZE, height: FRAME_SIZE)
+//                    
+//                }
+                
+                
+            
+            
+//                .frame(
+//                    width: FRAME_SIZE,
+//                    height: FRAME_SIZE
+//                )
+//                
+//                .scaleEffect(scale)
+//                .frame(
+//                    width: FRAME_SIZE * 2,
+//                    height: FRAME_SIZE * 2
+//                )
+                
+//                .frame(
+//                    width: FRAME_SIZE * scale,
+//                    height: FRAME_SIZE * scale
+//                )
+//                
+//
+                
+//            }
+//                      )
+//            .contentShape(Rectangle())
+//            .defaultScrollAnchor(.center)
+            
+//            .gesture(
+//                MagnificationGesture()
+//                    .onChanged { val in
+//                        let delta = val / self.lastScaleValue
+//                        self.lastScaleValue = val
+//                        let newScale = self.scale * delta
+//                        self.scale = min(max(newScale, 0.1), 2)
+//                        
+//                        
+//                    }.onEnded { val in
+//                        self.lastScaleValue = 1.0
+//                    }
+//            )
+            
+//            GeometryReader { geometry in
+//                VStack {
+//                    Text("Zoomable and Draggable Canvas")
+//                        .font(.headline)
+//                    CanvasView(scale: $scale, offset: $offset, cumulativeScale: $cumulativeScale)
+//                        .frame(width: FRAME_SIZE, height: FRAME_SIZE)
+//                        .border(Color.gray)
+//                        
+//                }
                 ZStack {
                     
+
                     Color(UIColor.systemBackground)
-                        .allowsHitTesting(toolPickerActive)
-                    
+//                        .allowsHitTesting(toolPickerActive)
+                        .scaleEffect(scale)
+                        .offset(offset)
+                        .clipped() // Ensure the content does not overflow
+                        .animation(.spring()) // Optional: Add some animation
+                        .frame(width: FRAME_SIZE, height: FRAME_SIZE)
+
                     GeometryReader { geometry in
                         Path { path in
                             let spacing: CGFloat = 30 // Adjust this value for the spacing between dots
                             let width = geometry.size.width
                             let height = geometry.size.height
-                            
+
                             for x in stride(from: 0, through: width, by: spacing) {
                                 for y in stride(from: 0, through: height, by: spacing) {
                                     path.addEllipse(in: CGRect(x: x, y: y, width: 2, height: 2))
@@ -273,64 +377,89 @@ struct CanvasPage: View {
                         .allowsHitTesting(toolPickerActive)
                     }
                     .drawingGroup()
-                    .frame(width: FRAME_SIZE, height: FRAME_SIZE)
+//                    .frame(width: FRAME_SIZE, height: FRAME_SIZE)
                     .blur(radius: widgetDoubleTapped ? 3 : 0)
                     
                     
+                    .scaleEffect(scale)
+                    .offset(offset)
+                    .clipped() // Ensure the content does not overflow
+                    .animation(.spring()) // Optional: Add some animation
+                    .frame(width: FRAME_SIZE, height: FRAME_SIZE)
+                    
+                    
+
+//
                     GridView()
+//           
+                        .scaleEffect(scale)
+                        .offset(offset)
+//                        .clipped() // Ensure the content does not overflow
+                        .animation(.spring()) // Optional: Add some animation
                         .frame(width: FRAME_SIZE, height: FRAME_SIZE)
                     
                     
-                    
-                    
+//                        .frame(width: geometry.size.width, height: geometry.size.height * 0.8)
+//                        .border(Color.black)
+//
+//
+//
                     DrawingCanvas(canvas: $canvas, toolPickerActive: $toolPickerActive, toolPicker: $toolkit, spaceId: spaceId)
                         .allowsHitTesting(toolPickerActive)
+                    
+                        .scaleEffect(scale)
+                        .offset(offset)
+                        .clipped() // Ensure the content does not overflow
+                        .animation(.spring()) // Optional: Add some animation
                         .frame(width: FRAME_SIZE, height: FRAME_SIZE)
                     
+                    
+//                        .frame(width: FRAME_SIZE, height: FRAME_SIZE)
+
                 }
+               
                 
-                .frame(
-                    width: FRAME_SIZE,
-                    height: FRAME_SIZE
+                    .gesture(
+                                    DragGesture()
+                                        .onChanged { value in
+                                            self.animator?.stopAnimation(true)
+                                            self.offset = CGSize(
+                                                width: self.lastOffset.width + value.translation.width,
+                                                height: self.lastOffset.height + value.translation.height
+                                            )
+                                        }
+                                        .onEnded { value in
+                                            let springTiming = UISpringTimingParameters(dampingRatio: 0.7)
+                                            self.animator = UIViewPropertyAnimator(duration: 0.5, timingParameters: springTiming)
+                                            self.animator?.addAnimations {
+                                                self.offset = CGSize(
+                                                    width: self.lastOffset.width + value.translation.width,
+                                                    height: self.lastOffset.height + value.translation.height
+                                                )
+                                            }
+                                            self.animator?.startAnimation()
+                                            self.lastOffset = self.offset
+                                        }
+                                )
+                .gesture(
+                    MagnificationGesture()
+                        .onChanged { value in
+                            self.scale = self.cumulativeScale * value
+                        }
+                        .onEnded { value in
+                            self.cumulativeScale *= value
+                        }
                 )
-                
-                .scaleEffect(scale)
-                .frame(
-                    width: FRAME_SIZE * 2,
-                    height: FRAME_SIZE * 2
-                )
-                
-//                .frame(
-//                    width: FRAME_SIZE * scale,
-//                    height: FRAME_SIZE * scale
-//                )
-//                
-//
-                
-            }
-                      )
-            .contentShape(Rectangle())
-            .defaultScrollAnchor(.center)
+//            }
             
-            .gesture(
-                MagnificationGesture()
-                    .onChanged { val in
-                        let delta = val / self.lastScaleValue
-                        self.lastScaleValue = val
-                        let newScale = self.scale * delta
-                        self.scale = min(max(newScale, 0.1), 2)
-                        
-                        
-                    }.onEnded { val in
-                        self.lastScaleValue = 1.0
-                    }
-            )
+            
+            
             .onTapGesture {
                 //deselect
                 selectedWidget = nil
                 widgetDoubleTapped = false
             }
-                .scrollDisabled(currentMode != .normal)
+//                .scrollDisabled(currentMode != .normal)
             //hovering action menu when widget is clicked
                 .overlay(selectedWidget != nil
                          ? VStack {
@@ -529,3 +658,5 @@ struct CanvasPage_Previews: PreviewProvider {
         CanvasPage(spaceId:"F531C015-E840-4B1B-BB3E-B9E7A3DFB80F")
     }
 }
+
+

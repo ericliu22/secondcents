@@ -1,81 +1,79 @@
-//
-//  TestView.swift
-//  TwoCents
-//
-//  Created by jonathan on 5/1/24.
-//
-
 import SwiftUI
 
-
-import SwiftUI
-
-
-struct TestView: View {
-    @State var screenW = 0.0
-    @State var scale = 1.0
-    @State var lastScale = 0.0
-    @State var offset: CGSize = .zero
-    @State var lastOffset: CGSize = .zero
+struct ContentView: View {
+    @State private var scale: CGFloat = 1.0
+    @State private var offset: CGSize = .zero
+    @State private var lastOffset: CGSize = .zero
+    @State private var cumulativeScale: CGFloat = 1.0
 
     var body: some View {
         GeometryReader { geometry in
             VStack {
-                Text("Mily")
-                    .font(.largeTitle)
-                Image("jennie kim")
-                    .resizable()
-                    .scaleEffect(scale)
-                    .offset(offset)
-                    .scaledToFill()
-                    .frame(width: screenW, height: screenW)
-                    .clipped()
+                Text("Zoomable and Draggable Canvas")
+                    .font(.headline)
+                CanvasView(scale: $scale, offset: $offset, cumulativeScale: $cumulativeScale)
+                    .frame(width: geometry.size.width, height: geometry.size.height * 0.8)
+                    .border(Color.gray)
                     .gesture(
-                        MagnificationGesture(minimumScaleDelta: 0)
-                            .onChanged({ value in
-                                withAnimation(.interactiveSpring()) {
-                                    scale = handleScaleChange(value)
-                                }
-                            })
-                            .onEnded({ _ in
-                                lastScale = scale
-                            })
-                            .simultaneously(
-                                with: DragGesture(minimumDistance: 0)
-                                    .onChanged({ value in
-                                        withAnimation(.interactiveSpring()) {
-                                            offset = handleOffsetChange(value.translation)
-                                        }
-                                    })
-                                    .onEnded({ _ in
-                                        lastOffset = offset
-                                    })
-
-                            )
+                        DragGesture()
+                            .onChanged { value in
+                                self.offset = CGSize(
+                                    width: self.lastOffset.width + value.translation.width,
+                                    height: self.lastOffset.height + value.translation.height
+                                )
+                            }
+                            .onEnded { value in
+                                self.lastOffset = self.offset
+                            }
                     )
-            }
-            .onAppear {
-                screenW = geometry.size.width
+                    .gesture(
+                        MagnificationGesture()
+                            .onChanged { value in
+                                self.scale = self.cumulativeScale * value
+                            }
+                            .onEnded { value in
+                                self.cumulativeScale *= value
+                            }
+                    )
             }
         }
     }
+}
 
-    private func handleScaleChange(_ zoom: CGFloat) -> CGFloat {
-        max ( 0.1, lastScale + zoom - (lastScale == 0 ? 0 : 1))
-        
-        
-    }
+struct CanvasView: View {
+    @Binding var scale: CGFloat
+    @Binding var offset: CGSize
+    @Binding var cumulativeScale: CGFloat
 
-    private func handleOffsetChange(_ offset: CGSize) -> CGSize {
-        var newOffset: CGSize = .zero
+    var body: some View {
+        ZStack {
+            // Your canvas content goes here
+            Color.white
 
-        newOffset.width = offset.width + lastOffset.width
-        newOffset.height = offset.height + lastOffset.height
-
-        return newOffset
+            // Example content: A grid of rectangles
+            ForEach(0..<10) { i in
+                ForEach(0..<10) { j in
+                    Rectangle()
+                        .fill(Color.blue.opacity(0.2))
+                        .frame(width: 50, height: 50)
+                        .position(
+                            x: CGFloat(i) * 60 + 30,
+                            y: CGFloat(j) * 60 + 30
+                        )
+                }
+            }
+        }
+        .scaleEffect(scale)
+        .offset(offset)
+        .clipped() // Ensure the content does not overflow
+        .animation(.spring()) // Optional: Add some animation
     }
 }
 
-#Preview {
-    TestView()
+
+
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        ContentView()
+    }
 }
