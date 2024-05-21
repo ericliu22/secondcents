@@ -19,9 +19,12 @@ struct Message: Identifiable, Codable {
 
 
 struct chatStruct: View{
+    
     private var spaceId: String
     @StateObject var messageManager: MessageManager
     private var userUID: String
+    
+    
     init(spaceId: String) {
         self.spaceId = spaceId
         _messageManager = StateObject(wrappedValue: MessageManager(spaceId: spaceId))
@@ -29,43 +32,49 @@ struct chatStruct: View{
  
     }
 
+    
 //    let user: DBUser
     
     var body: some View{
-        ForEach(messageManager.messages, id:\.id) {
-            message in
+        VStack (spacing: 3){
+            ForEach(messageManager.messages, id:\.id) {
+                message in
+                
+                /*
+                 //other user, texted once
+                 if(message.sendBy != "Josh" && message.sendBy != message.parent){
+                 messageBubbleLead(message: message)
+                 }
+                 //other user, texted twice
+                 else if(message.sendBy != "Josh" && message.sendBy == message.parent){
+                 messageBubbleSameLead(message: message)
+                 }
+                 //I texted twice
+                 else if(message.sendBy == "Josh" && message.sendBy == message.parent){
+                 messageBubbleSameTrail(message: message)
+                 }
+                 //I texted once
+                 else if(message.sendBy == "Josh" && message.sendBy != message.parent){
+                 messageBubbleTrail(message: message)
+                 }
+                 */
+                
+                //Jonathan combined above stucts into one
+                
+                
+                
+                
+                
+                universalMessageBubble(message: message, sentByMe: message.sendBy == userUID, isFirstMsg: message.sendBy != message.parent)
+                
+                
+                
+            }
             
-            /*
-             //other user, texted once
-             if(message.sendBy != "Josh" && message.sendBy != message.parent){
-             messageBubbleLead(message: message) 
-             }
-             //other user, texted twice
-             else if(message.sendBy != "Josh" && message.sendBy == message.parent){
-             messageBubbleSameLead(message: message)
-             }
-             //I texted twice
-             else if(message.sendBy == "Josh" && message.sendBy == message.parent){
-             messageBubbleSameTrail(message: message)
-             }
-             //I texted once
-             else if(message.sendBy == "Josh" && message.sendBy != message.parent){
-             messageBubbleTrail(message: message)
-             }
-             */
-            
-            //Jonathan combined above stucts into one
-   
-            
-            
-         
-            
-            universalMessageBubble(message: message, sentByMe: message.sendBy == userUID, isFirstMsg: message.sendBy != message.parent)
-            
-            
+            .frame(maxWidth: .infinity)
         }
-        .frame(maxWidth: .infinity)
-        .padding(.bottom, 60)
+        
+//        .padding(.bottom, 60)
         
     }
 }
@@ -82,14 +91,21 @@ struct chattingView_Previews: PreviewProvider {
 
 struct ChatView: View {
     
+//    @StateObject private var viewModel = CanvasPageViewModel()
+    
+    
+    
+    
+    
     private var spaceId: String
+//    @State private var userColor: Color
     @StateObject var messageManager: MessageManager
    
     init(spaceId: String) {
         self.spaceId = spaceId
         _messageManager = StateObject(wrappedValue: MessageManager(spaceId: spaceId))
-      
- 
+//        self.userColor = .gray
+
     }
     
     
@@ -108,6 +124,7 @@ struct ChatView: View {
                     chatStruct(spaceId: spaceId).onAppear(perform: {
                         proxy.scrollTo(messageManager.lastMessageId, anchor: .bottom)
                     })
+             
                     
                 }
                
@@ -116,11 +133,14 @@ struct ChatView: View {
                 }
                
             }
+            .padding(.top)
             .padding(.horizontal)
             
             MessageField().environmentObject(messageManager)
+            
     
         }
+        
         
         .scrollIndicators(.hidden)
         

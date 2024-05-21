@@ -51,6 +51,7 @@ struct SpacesView: View {
                         
                         NavigationLink {
                             CanvasPage(spaceId: spaceTile.spaceId)
+                          
                                 .onDisappear {
                                     //refresh spaces list to check if user left a space
                                     Task {

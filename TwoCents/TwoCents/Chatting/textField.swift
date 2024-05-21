@@ -12,11 +12,18 @@ import UIKit
 struct MessageField: View{
     @EnvironmentObject var messagesManager: MessageManager
     @State private var message = ""
+    
+    
+    @State private var userColor: Color = .gray
+    
+    @StateObject private var viewModel = ChattingViewModel()
+    
+    
     var body: some View{
 //        ZStack (alignment: .bottomTrailing){
             
         
-        ZStack (alignment: .bottomTrailing){
+        ZStack (alignment: .trailing){
                 //            customTextField(placeholder: Text("message..."), text: $message)
                 
                 TextField("Message", text: $message, axis: .vertical)
@@ -40,13 +47,14 @@ struct MessageField: View{
                     messagesManager.sendMessages(text: message)
                     message = ""
                 } label: {
-                    Image(systemName: "paperplane.fill")
-                        .frame(width: 30, height: 30)
+                    Image(systemName: "arrow.up")
                         .font(.headline )
+                        .frame(width: 30, height: 30, alignment: .center)
+             
                         .foregroundColor(message.isEmpty ? .clear : .white)
-                        .background(message.isEmpty ? .clear : .green)
+                        .background(message.isEmpty ? .clear : userColor)
                         .clipShape(Circle())
-                    //                    .padding(10)
+                     
                     
                 }
                 .clipped()
@@ -56,28 +64,37 @@ struct MessageField: View{
                 .disabled(message.isEmpty)
 //                .clipShape(Circle())
 //                .padding(.horizontal)
-                .offset(x: -10, y: 2)
+//                .offset(x: -10, y: 2)
                 
-               
+                .padding(.trailing, 5)
                 
                 
 
                 
             }
-            .background(.thickMaterial)
-            .background(.green)
+        .foregroundStyle(Color(UIColor.label))
+            .background(.ultraThickMaterial)
+            .background(userColor)
             .cornerRadius(20)
             .padding(.horizontal)
             .padding(.top, 5)
-            .background(.thickMaterial)
+//            .background(.thickMaterial)
        
+            .frame(height:50, alignment: .center)
             
             
-            
-       
+            .task{
+                
+                try? await viewModel.loadCurrentUser()
+                self.userColor = viewModel.getUserColor(userColor:viewModel.user?.userColor ?? "")
+    //            print (userColor)
+            }
+        
+        
      
 //        }
     }
+
 }
 
 struct customTextField: View{

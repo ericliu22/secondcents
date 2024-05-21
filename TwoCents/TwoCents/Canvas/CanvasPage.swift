@@ -53,6 +53,7 @@ struct CanvasPage: View {
     @State private var pendingWrites: Bool = false
     @State private var timer: Timer?
     
+    
     @State private var selectedWidget: CanvasWidget?
     
     @StateObject private var viewModel = CanvasPageViewModel()
@@ -320,7 +321,9 @@ struct CanvasPage: View {
                                             )
                                         }
                                         .onEnded { value in
-                                            let springTiming = UISpringTimingParameters(dampingRatio: 0.7)
+                                            
+                                            //was 0.7
+                                            let springTiming = UISpringTimingParameters(dampingRatio: 1)
                                             self.animator = UIViewPropertyAnimator(duration: 0.5, timingParameters: springTiming)
                                             self.animator?.addAnimations {
                                                 self.offset = CGSize(
@@ -512,6 +515,7 @@ struct CanvasPage: View {
                     //show chat instead
                     VStack{
                         ChatView(spaceId: spaceId)
+                          
                     }
                         .presentationBackground(.regularMaterial)
                         .presentationDetents([.height(50),.medium])
