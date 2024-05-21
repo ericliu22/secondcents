@@ -103,38 +103,23 @@ struct ChatView: View {
         
         VStack(spacing: 0){
             ScrollViewReader{ proxy in
-            ScrollView{
-                
-                chatStruct(spaceId: spaceId).onAppear(perform: {
-                            proxy.scrollTo(messageManager.lastMessageId, anchor: .bottom)
-                        })
-                
-            }
-//            .frame(width: Tapped ? .infinity: TILE_SIZE, height: Tapped ? .infinity: TILE_SIZE)
-            .onChange(of: messageManager.lastMessageId) {
+                ScrollView{
+                    
+                    chatStruct(spaceId: spaceId).onAppear(perform: {
+                        proxy.scrollTo(messageManager.lastMessageId, anchor: .bottom)
+                    })
+                    
+                }
+               
+                .onChange(of: messageManager.lastMessageId) {
                     id in proxy.scrollTo(id, anchor: .bottom)
                 }
-//            .overlay(
-//                RoundedRectangle(cornerRadius:20)
-//                    .stroke(Tapped ? .clear : .black, lineWidth: 5)
-////                    .ignoresSafeArea()
-//            )
-//            .onTapGesture {
-//                withAnimation(.spring()){
-//                    Tapped.toggle()
-//                }
-//                proxy.scrollTo(messagesManager.lastMessageId, anchor: .bottom)
-//            }
+               
             }
             .padding(.horizontal)
             
-            
-            
-            
-//            if Tapped{
-                MessageField().environmentObject(messageManager)
-                
-//            }
+            MessageField().environmentObject(messageManager)
+    
         }
         
         .scrollIndicators(.hidden)

@@ -514,8 +514,9 @@ struct CanvasPage: View {
                         ChatView(spaceId: spaceId)
                     }
                         .presentationBackground(.regularMaterial)
-                        .presentationDetents([.height(50), .medium, .large])
+                        .presentationDetents([.height(50),.medium])
                         .presentationCornerRadius(20)
+                        
                         .presentationBackgroundInteraction(.enabled)
                      
                     
