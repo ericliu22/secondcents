@@ -297,7 +297,7 @@ struct CanvasPage: View {
                     
                     
                     .scaleEffect(scale)
-                    .offset(offset)
+                   .offset(offset)
                     .clipped() // Ensure the content does not overflow
 //                    .animation(.spring()) // Optional: Add some animation
                     .frame(width: FRAME_SIZE, height: FRAME_SIZE)
@@ -305,6 +305,7 @@ struct CanvasPage: View {
                     
                     GridView()
                         .scaleEffect(scale)
+
                         .offset(offset)
 //                        .clipped() // Ensure the content does not overflow
 //                        .animation(.spring()) // Optional: Add some animation
@@ -324,6 +325,8 @@ struct CanvasPage: View {
                                                     height: self.lastOffset.height + value.translation.height
                                                 )
                                             }
+                                            
+                                           
                                         }
                                         .onEnded { value in
                                             withAnimation(.spring) {
@@ -359,6 +362,12 @@ struct CanvasPage: View {
                                 scaleChanging = false
                             }
                         }
+                    
+                    
+                      
+                    
+                    
+                    
                 )
 //            }
             

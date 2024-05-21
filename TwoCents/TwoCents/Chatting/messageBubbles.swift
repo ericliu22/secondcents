@@ -88,7 +88,8 @@ struct universalMessageBubble: View{
                     .foregroundStyle(userColor)
                     .font(.caption)
 //                    .padding(.leading, 12)
-                
+                    .padding(.leading, 6)
+
                     
             }
             
@@ -100,13 +101,16 @@ struct universalMessageBubble: View{
                 .padding(.horizontal, 12)
                 .padding(.vertical, 8)
       
-                .foregroundStyle(Color(UIColor.label))
-                .background(.regularMaterial)
+//                .foregroundStyle(Color(UIColor.label))
+                .foregroundStyle(userColor)
+                .background(.ultraThickMaterial)
                 .background(userColor)
             
-                
-                .clipShape(chatBubbleShape (sentByMe: sentByMe, isFirstMsg: isFirstMsg))
-                .clipShape(RoundedRectangle(cornerRadius: 5))
+                //FOR ASYMETRIC ROUNDING...
+//                .clipShape(chatBubbleShape (sentByMe: sentByMe, isFirstMsg: isFirstMsg))
+//                .clipShape(RoundedRectangle(cornerRadius: 5))
+                .clipShape(RoundedRectangle(cornerRadius: 20))
+  
                 .frame(maxWidth: 300, alignment: sentByMe ?  .trailing : .leading)
             
             
