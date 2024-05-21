@@ -482,18 +482,8 @@ struct CanvasPage: View {
                 await onChange()
             }
         
-        //chat sheet
-//            .sheet(isPresented: $showChat, content: {
-//                VStack{
-//                    ChatView(spaceId: spaceId)
-//                }
-//                    .presentationBackground(.regularMaterial)
-//                    .presentationDetents([.height(50), .medium, .large])
-//                    .presentationCornerRadius(20)
-//                    .presentationBackgroundInteraction(.enabled)
-//                    
-//            })
-        //add new widget view
+  
+        //add new widget view and ChatSHEET
             .sheet(isPresented: $showSheet, onDismiss: {
                 showNewWidgetView = false
                 
@@ -526,7 +516,10 @@ struct CanvasPage: View {
                         ChatView(spaceId: spaceId)
                           
                     }
-                        .presentationBackground(.regularMaterial)
+                   
+//                        .presentationBackground(.ultraThickMaterial)
+                    .presentationBackground(Color(UIColor.systemBackground))
+                     
                         .presentationDetents([.height(50),.medium])
                         .presentationCornerRadius(20)
                         

@@ -12,6 +12,8 @@ import FirebaseFirestore
 struct SpaceSettingsView: View {
     @Environment(\.presentationMode) var presentationMode
     @StateObject private var viewModel = SpaceSettingsViewModel()
+    @State var isShowingAddMember: Bool = false
+    
     
     private var spaceId: String
     private var chatroomDocument: DocumentReference
@@ -244,6 +246,9 @@ struct SpaceSettingsView: View {
                     }
                 }
                 
+           
+                
+                
                 
                 
                 
@@ -252,6 +257,26 @@ struct SpaceSettingsView: View {
                 
                 Divider()
                     .padding(.vertical)
+                
+                
+                Button(action: {
+                    isShowingAddMember = true
+                    
+                }, label: {
+                    Text("Edit Members")
+                        .font(.headline)
+                        .frame(height: 55)
+                        .frame(maxWidth: .infinity)
+                    
+                })
+                
+                
+                .buttonStyle(.bordered)
+                .tint(.gray)
+                .frame(height: 55)
+                .cornerRadius(10)
+                
+                
                 
                 Button(action: {
                     Task{
@@ -294,7 +319,23 @@ struct SpaceSettingsView: View {
             try? await viewModel.getMembersInfo()
             
         }
-     
+       
+
+        .fullScreenCover(isPresented: $isShowingAddMember,onDismiss: {
+            Task{
+                try? await viewModel.loadCurrentSpace(spaceId: spaceId)
+                try? await viewModel.getMembersInfo()
+            }
+           
+        }, content: {
+            NavigationView{
+                AddMemberView(spaceId: spaceId)
+            }
+        })
+        
+        
+        
+        
     }
 }
 

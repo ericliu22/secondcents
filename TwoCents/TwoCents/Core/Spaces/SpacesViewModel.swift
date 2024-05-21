@@ -28,7 +28,9 @@ final class SpacesViewModel: ObservableObject {
     
     func getAllSpaces(userId: String) async throws {
         try? await loadCurrentUser()
+
         self.allSpaces = try await UserManager.shared.getAllSpaces(userId: userId)
+
     }
     
     

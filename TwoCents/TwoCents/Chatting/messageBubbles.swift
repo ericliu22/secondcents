@@ -101,7 +101,7 @@ struct universalMessageBubble: View{
                 .padding(.vertical, 8)
       
                 .foregroundStyle(Color(UIColor.label))
-                .background(.ultraThickMaterial)
+                .background(.regularMaterial)
                 .background(userColor)
             
                 

@@ -280,6 +280,8 @@ struct SpacesView: View {
             if let user = viewModel.user {
                 
                 try? await viewModel.getAllSpaces(userId: user.userId)
+                
+                
             }
         }
         

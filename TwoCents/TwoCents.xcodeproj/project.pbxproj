@@ -103,6 +103,8 @@
 		ABCA39D82A7A0671009447C3 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCA39D72A7A0671009447C3 /* RootView.swift */; };
 		ABCA39DA2A7A0881009447C3 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCA39D92A7A0881009447C3 /* SettingsView.swift */; };
 		ABF172A52BFC47FC000B6F9B /* ChattingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABF172A42BFC47FC000B6F9B /* ChattingViewModel.swift */; };
+		ABF172A72BFC6686000B6F9B /* AddMemberView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABF172A62BFC6686000B6F9B /* AddMemberView.swift */; };
+		ABF172A92BFC66AD000B6F9B /* AddMemberViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABF172A82BFC66AD000B6F9B /* AddMemberViewModel.swift */; };
 		ABF556842A95046D00103880 /* ColorPickerWidgetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABF556832A95046D00103880 /* ColorPickerWidgetViewModel.swift */; };
 		ABF556862A950BCB00103880 /* RootViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABF556852A950BCB00103880 /* RootViewModel.swift */; };
 		ABF56DF72A7C8B7A00F959DB /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = ABF56DF62A7C8B7A00F959DB /* FirebaseFirestore */; };
@@ -226,6 +228,8 @@
 		ABCA39D72A7A0671009447C3 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		ABCA39D92A7A0881009447C3 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		ABF172A42BFC47FC000B6F9B /* ChattingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChattingViewModel.swift; sourceTree = "<group>"; };
+		ABF172A62BFC6686000B6F9B /* AddMemberView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMemberView.swift; sourceTree = "<group>"; };
+		ABF172A82BFC66AD000B6F9B /* AddMemberViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMemberViewModel.swift; sourceTree = "<group>"; };
 		ABF556832A95046D00103880 /* ColorPickerWidgetViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorPickerWidgetViewModel.swift; sourceTree = "<group>"; };
 		ABF556852A950BCB00103880 /* RootViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewModel.swift; sourceTree = "<group>"; };
 		ABF56DFE2A7C8C5200F959DB /* SettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
@@ -449,6 +453,8 @@
 				AB2E56C42AE9B9120096A58C /* CreateSpaces */,
 				AB58C1E12BDAED9A000B0AC1 /* SpaceSettingsView.swift */,
 				AB58C1E52BDAF54B000B0AC1 /* SpaceSettingsViewModel.swift */,
+				ABF172A62BFC6686000B6F9B /* AddMemberView.swift */,
+				ABF172A82BFC66AD000B6F9B /* AddMemberViewModel.swift */,
 			);
 			path = Spaces;
 			sourceTree = "<group>";
@@ -825,6 +831,7 @@
 				AB9EB95D2B1E805300F58EA5 /* ChatManager.swift in Sources */,
 				AB15AC0D2AF6F01B0055D5D0 /* SpaceProfilePicViewModel.swift in Sources */,
 				AB01CB5F2B855E83004BEB5B /* TextWidget.swift in Sources */,
+				ABF172A92BFC66AD000B6F9B /* AddMemberViewModel.swift in Sources */,
 				856E80BA2B50EB260078A2CE /* SabotageSelectionView.swift in Sources */,
 				856E80B92B50EB260078A2CE /* CardView.swift in Sources */,
 				AB6778E22AB8F67300C11AA7 /* ImageWidget.swift in Sources */,
@@ -843,6 +850,7 @@
 				AB7438432AAA34AD001B4988 /* SearchUserViewModel.swift in Sources */,
 				AB2E56CA2AE9BB410096A58C /* SpaceManager.swift in Sources */,
 				AB90EDBD2B55BB59002AD855 /* NewWidgetViewModel.swift in Sources */,
+				ABF172A72BFC6686000B6F9B /* AddMemberView.swift in Sources */,
 				ABA45E812A7C8DC50015F000 /* ProfileView.swift in Sources */,
 				ABC426B32A86438400873EE1 /* SignUpEmailViewModel.swift in Sources */,
 				ABC426B12A863D9F00873EE1 /* SignUpEmailView.swift in Sources */,

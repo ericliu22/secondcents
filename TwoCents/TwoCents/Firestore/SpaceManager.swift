@@ -87,6 +87,24 @@ final class SpaceManager{
     }
     
     
+    func updateSpaceMembers(spaceId: String, members: [String]) async throws {
+        
+        
+        
+        //put friend uid in user database
+        let newArray: [String: Any] = [
+            "members": members
+          
+        ]
+        
+        
+        try await spaceDocument(spaceId: spaceId).updateData(newArray)
+        
+        
+     
+    }
+    
+    
     
     
     func getSpace(spaceId: String) async throws -> DBSpace {

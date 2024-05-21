@@ -36,6 +36,7 @@ struct MessageField: View{
 //                    .clipShape(Capsule())
                     .font(.headline)
                     .fontWeight(.regular)
+                    
                 
                 
                 
@@ -59,13 +60,7 @@ struct MessageField: View{
                 }
                 .clipped()
                 .buttonStyle(PlainButtonStyle())
-//                .tint(.green)
-//                .buttonStyle(.borderedProminent)
                 .disabled(message.isEmpty)
-//                .clipShape(Circle())
-//                .padding(.horizontal)
-//                .offset(x: -10, y: 2)
-                
                 .padding(.trailing, 5)
                 
                 
@@ -73,8 +68,8 @@ struct MessageField: View{
                 
             }
         .foregroundStyle(Color(UIColor.label))
-            .background(.ultraThickMaterial)
-            .background(userColor)
+            .background(.regularMaterial)
+//            .background(userColor)
             .cornerRadius(20)
             .padding(.horizontal)
             .padding(.top, 5)

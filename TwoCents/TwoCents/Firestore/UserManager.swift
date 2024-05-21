@@ -176,11 +176,6 @@ final class UserManager{
     
     func getMembersInfo(members: Array<String>) async throws -> [DBUser]{
         
-//        let snapshot: QuerySnapshot
-//       
-//        snapshot = try await userCollection.whereField("friends", arrayContains: userId).getDocuments()
-//        
-        
         
         var membersInfo: [DBUser] = []
         
@@ -190,18 +185,14 @@ final class UserManager{
                 
                 membersInfo.append(memberInfo)
             }
-            
-            
-            
-//            let friend = try document.data(as: DBUser.self)
-         
-            
-           
         }
-        
         return membersInfo
         
     }
+    
+   
+    
+    
     
     
 //    func getUser(spaceId: String) async throws -> DBSpace {
@@ -224,9 +215,8 @@ final class UserManager{
        
         for document in snapshot.documents{
             
-            
-            let space = try document.data(as: DBSpace.self)
         
+            let space = try document.data(as: DBSpace.self)
             
             spaces.append(space)
         }

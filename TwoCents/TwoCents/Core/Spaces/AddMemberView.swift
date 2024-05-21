@@ -9,12 +9,12 @@
 import SwiftUI
 import PhotosUI
 
-struct CreateSpacesView: View {
+struct AddMemberView: View {
     
     @State private var url: URL? = nil
     @State var spaceId: String
     
-    @StateObject private var viewModel = CreateSpacesViewModel()
+    @StateObject private var viewModel = AddMemberViewModel()
     @State private var randomIndex: Int = 0
     
     
@@ -30,26 +30,14 @@ struct CreateSpacesView: View {
         "looking a little lonely here...",
         "whole lotta silence !!"
     ]
-    @Binding var isShowingCreateSpaces: Bool
+   
     @Environment(\.dismiss) var dismissScreen
     
     var body: some View {
 
         VStack {
             
-            //Name Textfield
-            TextField("Enter a name", text: $viewModel.name)
-                .font(.largeTitle)
-                .fontWeight(.bold)
-            
-                .foregroundStyle(Color.accentColor)
-            //                .padding(.bottom)
-            
-            //
-            ////
-            //            Spacer()
-            //                .frame(height: 100)
-            
+         
             
             
             //Selected Members
@@ -82,67 +70,69 @@ struct CreateSpacesView: View {
                         
                         ForEach(viewModel.selectedMembers) { userTile    in
                             let targetUserColor: Color = viewModel.getUserColor(userColor: userTile.userColor!)
-                            Group{
-                                HStack{
-                                    Group{
-                                        //Circle or Profile Pic
-                                        if let urlString = userTile.profileImageUrl,
-                                           let url = URL(string: urlString) {
-                                            
-                                            
-                                            
-                                            //If there is URL for profile pic, show
-                                            //circle with stroke
-                                            AsyncImage(url: url) {image in
-                                                image
-                                                    .resizable()
-                                                    .scaledToFill()
-                                                    .clipShape(Circle())
+                            
+                            if userTile.userId != viewModel.user?.userId {
+                                Group{
+                                    HStack{
+                                        Group{
+                                            //Circle or Profile Pic
+                                            if let urlString = userTile.profileImageUrl,
+                                               let url = URL(string: urlString) {
+                                                
+                                                
+                                                
+                                                //If there is URL for profile pic, show
+                                                //circle with stroke
+                                                AsyncImage(url: url) {image in
+                                                    image
+                                                        .resizable()
+                                                        .scaledToFill()
+                                                        .clipShape(Circle())
+                                                        .frame(width: 16, height: 16)
+                                                    
+                                                    
+                                                    
+                                                } placeholder: {
+                                                    //else show loading after user uploads but sending/downloading from database
+                                                    
+                                                    ProgressView()
+                                                        .progressViewStyle(CircularProgressViewStyle(tint: Color(UIColor.systemBackground)))
+                                                        .scaleEffect(0.5, anchor: .center)
+                                                        .frame(width: 16, height: 16)
+                                                        .background(
+                                                            Circle()
+                                                                .fill(targetUserColor)
+                                                                .frame(width: 16, height: 16)
+                                                        )
+                                                }
+                                                
+                                            } else {
+                                                
+                                                //if user has not uploaded profile pic, show circle
+                                                Circle()
+                                                
+                                                    .strokeBorder(targetUserColor, lineWidth:0)
+                                                    .background(Circle().fill(targetUserColor))
                                                     .frame(width: 16, height: 16)
                                                 
-                                                
-                                                
-                                            } placeholder: {
-                                                //else show loading after user uploads but sending/downloading from database
-                                                
-                                                ProgressView()
-                                                    .progressViewStyle(CircularProgressViewStyle(tint: Color(UIColor.systemBackground)))
-                                                    .scaleEffect(0.5, anchor: .center)
-                                                    .frame(width: 16, height: 16)
-                                                    .background(
-                                                        Circle()
-                                                            .fill(targetUserColor)
-                                                            .frame(width: 16, height: 16)
-                                                    )
                                             }
                                             
-                                        } else {
                                             
-                                            //if user has not uploaded profile pic, show circle
-                                            Circle()
                                             
-                                                .strokeBorder(targetUserColor, lineWidth:0)
-                                                .background(Circle().fill(targetUserColor))
-                                                .frame(width: 16, height: 16)
                                             
                                         }
-                                        
-                                        
-                                        
-                                        
+                                        Text(userTile.name!)
+                                            .font(.headline)
                                     }
-                                    Text(userTile.name!)
-                                        .font(.headline)
                                 }
+                                .onTapGesture {
+                                    viewModel.removeMember(friend: userTile)
+                                }
+                                .padding(.horizontal,5)
+                                .padding(.vertical,2.5)
+                                .background(.thickMaterial, in: Capsule())
+                                .background(targetUserColor, in: Capsule())
                             }
-                            .onTapGesture {
-                                viewModel.removeMember(friend: userTile)
-                            }
-                            .padding(.horizontal,5)
-                            .padding(.vertical,2.5)
-                            .background(.thickMaterial, in: Capsule())
-                            .background(targetUserColor, in: Capsule())
-                            
                         }
                     }
                 }
@@ -177,7 +167,7 @@ struct CreateSpacesView: View {
                         }
                         
                         
-                        ForEach(viewModel.allFriends) { userTile    in
+                        ForEach(viewModel.filterFriends()) { userTile    in
                             let targetUserColor: Color = viewModel.getUserColor(userColor: userTile.userColor!)
                             Group{
                                 HStack{
@@ -256,12 +246,15 @@ struct CreateSpacesView: View {
             
             
             
-            NavigationLink {
-                
-                SpaceProfilePicView(spaceId: spaceId,isShowingCreateSpaces: $isShowingCreateSpaces)
+            Button {
+                Task{
+                    try? await viewModel.saveSpace(spaceId: spaceId)
+                    
+                }
+                dismissScreen()
                 
             } label: {
-                Text("Create")
+                Text("Save")
                     .font(.headline)
                     .frame(height: 55)
                     .frame(maxWidth: .infinity)
@@ -269,63 +262,12 @@ struct CreateSpacesView: View {
                 
                 
             }
-            .disabled(viewModel.name.isEmpty || viewModel.selectedMembers.isEmpty)
+            .disabled(viewModel.selectedMembers.isEmpty)
             
             .buttonStyle(.bordered)
             .tint(.accentColor)
             .frame(height: 55)
             .cornerRadius(10)
-            
-            
-            .simultaneousGesture(TapGesture().onEnded{
-                Task{
-                    do {
-                        if !viewModel.name.isEmpty && !viewModel.selectedMembers.isEmpty {
-                     
-                            try await viewModel.createSpace(spaceId: spaceId)
-                            
-                            print("created  ")
-                        }
-                        
-                        
-                        return
-                    } catch {
-                    }
-                }
-                
-            })
-            
-            
-            
-            //
-            //            NavigationLink {
-            //
-            //                SpaceProfilePicView(spaceId: spaceId)
-            //            } label: {
-            //                Button {
-            ////                    Task {
-            ////                        do {
-            ////                            try await viewModel.createSpace(spaceId: spaceId)
-            ////
-            ////                            return
-            ////                        } catch {
-            ////                        }
-            ////                    }
-            //                } label: {
-            //                    Text("Create")
-            //                        .font(.headline)
-            //                        .frame(height: 55)
-            //                        .frame(maxWidth: .infinity)
-            //
-            //                }
-            //                .disabled(viewModel.name.isEmpty || viewModel.selectedMembers.isEmpty)
-            //                .buttonStyle(.bordered)
-            //                .tint(.accentColor)
-            //                .frame(height: 55)
-            //                .cornerRadius(10)
-            //
-            //
-            //            }
             
             
             
@@ -346,6 +288,12 @@ struct CreateSpacesView: View {
             
             randomIndex = Int.random(in: 0..<(noMembersMessage.count))
             
+            
+            try? await viewModel.getSelectedMembers()
+            
+            
+            
+            
         }
         
         //        .onChange(of: selectedPhoto, perform: { newValue in
@@ -354,7 +302,7 @@ struct CreateSpacesView: View {
         //                viewModel.saveProfileImage(item: newValue, spaceId: spaceId)
         //            }
         //        })
-        .navigationTitle("Create Space 💭")
+        .navigationTitle("Edit Members 😈")
      
         .toolbar{
             
@@ -363,7 +311,7 @@ struct CreateSpacesView: View {
                 Button(action: {
                     print("HI")
                     Task{
-                        try? await viewModel.deleteSpace(spaceId: spaceId)
+//                        try? await viewModel.deleteSpace(spaceId: spaceId)
                     }
                     dismissScreen()
                 }, label: {
@@ -387,10 +335,10 @@ struct CreateSpacesView: View {
 }
 
 
-struct CreateSpacesView_Previews: PreviewProvider {
+struct AddMemberView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack{
-            CreateSpacesView(spaceId: UUID().uuidString, isShowingCreateSpaces: .constant(false))
+            AddMemberView(spaceId: UUID().uuidString)
         }
     }
 }
