@@ -117,11 +117,13 @@ struct universalMessageBubble: View{
         .task {
             self.name = try! await UserManager.shared.getUser(userId: message.sendBy).name!
             
-            
-            try? await viewModel.loadCurrentUser()
+        
+            try? await viewModel.loadUser(userId: message.sendBy)
             withAnimation{
                 self.userColor = viewModel.getUserColor(userColor:viewModel.user?.userColor ?? "")
             }
+            
+   
             //            print (userColor)
             
         }
