@@ -264,6 +264,9 @@ struct CanvasPage: View {
          
                 ZStack {
                     
+                    Color(UIColor.secondarySystemBackground)
+
+                       
 
                     Color(UIColor.systemBackground)
 //                        .allowsHitTesting(toolPickerActive)
@@ -319,6 +322,7 @@ struct CanvasPage: View {
                                                 width: self.lastOffset.width + value.translation.width,
                                                 height: self.lastOffset.height + value.translation.height
                                             )
+                                        
                                         }
                                         .onEnded { value in
                                             
