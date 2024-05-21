@@ -273,7 +273,7 @@ struct CanvasPage: View {
                         .scaleEffect(scale)
                         .offset(offset)
                         .clipped() // Ensure the content does not overflow
-                        .animation(.spring()) // Optional: Add some animation
+//                        .animation(.spring()) // Optional: Add some animation
                         .frame(width: FRAME_SIZE, height: FRAME_SIZE)
 
                     GeometryReader { geometry in
@@ -299,7 +299,7 @@ struct CanvasPage: View {
                     .scaleEffect(scale)
                     .offset(offset)
                     .clipped() // Ensure the content does not overflow
-                    .animation(.spring()) // Optional: Add some animation
+//                    .animation(.spring()) // Optional: Add some animation
                     .frame(width: FRAME_SIZE, height: FRAME_SIZE)
                     
                     
@@ -307,7 +307,7 @@ struct CanvasPage: View {
                         .scaleEffect(scale)
                         .offset(offset)
 //                        .clipped() // Ensure the content does not overflow
-                        .animation(.spring()) // Optional: Add some animation
+//                        .animation(.spring()) // Optional: Add some animation
                         .frame(width: FRAME_SIZE, height: FRAME_SIZE)
                     
                     
@@ -317,40 +317,45 @@ struct CanvasPage: View {
                     .gesture(
                                     DragGesture()
                                         .onChanged { value in
-                                            self.animator?.stopAnimation(true)
-                                            self.offset = CGSize(
-                                                width: self.lastOffset.width + value.translation.width,
-                                                height: self.lastOffset.height + value.translation.height
-                                            )
-                                        
-                                        }
-                                        .onEnded { value in
-                                            
-                                            //was 0.7
-                                            let springTiming = UISpringTimingParameters(dampingRatio: 1)
-                                            self.animator = UIViewPropertyAnimator(duration: 0.5, timingParameters: springTiming)
-                                            self.animator?.addAnimations {
+                                            withAnimation(.spring) {
+                                                self.animator?.stopAnimation(true)
                                                 self.offset = CGSize(
                                                     width: self.lastOffset.width + value.translation.width,
                                                     height: self.lastOffset.height + value.translation.height
                                                 )
                                             }
-                                            self.animator?.startAnimation()
-                                            self.lastOffset = self.offset
                                         }
+                                        .onEnded { value in
+                                            withAnimation(.spring) {
+                                                //was 0.7
+                                                let springTiming = UISpringTimingParameters(dampingRatio: 1)
+                                                self.animator = UIViewPropertyAnimator(duration: 0.5, timingParameters: springTiming)
+                                                self.animator?.addAnimations {
+                                                    self.offset = CGSize(
+                                                        width: self.lastOffset.width + value.translation.width,
+                                                        height: self.lastOffset.height + value.translation.height
+                                                    )
+                                                }
+                                                self.animator?.startAnimation()
+                                                self.lastOffset = self.offset
+                                            }
+                                        }
+                                            
                                 )
                 .gesture(
                     MagnificationGesture()
                         .onChanged { value in
+                            withAnimation(.spring) {
                             self.scale = self.cumulativeScale * value
-                            withAnimation {
+                           
                                 scaleChanging = true
                             }
                             
                         }
                         .onEnded { value in
+                            withAnimation(.spring) {
                             self.cumulativeScale *= value
-                            withAnimation {
+             
                                 scaleChanging = false
                             }
                         }
