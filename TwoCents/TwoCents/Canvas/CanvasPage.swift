@@ -143,7 +143,7 @@ struct CanvasPage: View {
                 //clickable area/outline when clicked
                     .overlay(
                         RoundedRectangle(cornerRadius: CORNER_RADIUS)
-                            .strokeBorder(selectedWidget == widget ? Color.secondary : .clear, lineWidth: 2)
+                            .strokeBorder(selectedWidget == widget ? Color.secondary : .clear, lineWidth: 3)
                             .contentShape(RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
                             .cornerRadius(CORNER_RADIUS)
                         
@@ -178,6 +178,7 @@ struct CanvasPage: View {
                     })
                     .blur(radius: widgetDoubleTapped && selectedWidget != widget ? 20 : 0)
                     .scaleEffect(widgetDoubleTapped && selectedWidget == widget ? 1.05 : 1)
+                    .animation(.spring)
                 //emoji react MENU
                     .overlay( alignment: .top, content: {
                         if widgetDoubleTapped && selectedWidget == widget {
@@ -592,6 +593,8 @@ struct CanvasPage: View {
                 //add widget
                 ToolbarItem(placement: .topBarTrailing) {
                     Button(action: {
+                        
+                        
                         showSheet = true
                         showNewWidgetView = true
                         

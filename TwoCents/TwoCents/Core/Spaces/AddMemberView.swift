@@ -26,9 +26,9 @@ struct AddMemberView: View {
     
     
     private let noMembersMessage: [String] = [
-        "crickets...",
-        "looking a little lonely here...",
-        "whole lotta silence !!"
+        "no friends in the industry...",
+        "lonely at the top...",
+        "solo queuing social media !!"
     ]
    
     @Environment(\.dismiss) var dismissScreen
@@ -57,7 +57,7 @@ struct AddMemberView: View {
                         
                         
                         //No members selected message
-                        if viewModel.selectedMembers.count == 0 {                            Text(noMembersMessage[randomIndex])
+                        if viewModel.selectedMembers.count == 1 && (viewModel.selectedMembersUserId[0] == viewModel.user?.userId )  {                            Text(noMembersMessage[randomIndex])
                                 .italic()
                                 .font(.headline)
                                 .foregroundStyle(.tertiary)
@@ -158,7 +158,7 @@ struct AddMemberView: View {
                     HStack{
                         
                         //No friends  message
-                        if viewModel.allFriends.count == 0 {                            Text("It's a party!")
+                        if viewModel.allFriends.count == 0 {                            Text("All the homies are cordially invited")
                                 .italic()
                                 .font(.headline)
                                 .foregroundStyle(.tertiary)

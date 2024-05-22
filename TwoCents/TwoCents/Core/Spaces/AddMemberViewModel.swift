@@ -96,6 +96,7 @@ final class AddMemberViewModel: ObservableObject{
         
         guard let space else {return }
        
+      
         
         //append Members DBUser info
         self.selectedMembers = try await UserManager.shared.getMembersInfo(members: (space.members)!)
@@ -104,6 +105,21 @@ final class AddMemberViewModel: ObservableObject{
         if let membersId = space.members {
             self.selectedMembersUserId.append(contentsOf: membersId)
         }
+        
+        
+        //remove member from friends
+        for member in selectedMembers{
+           
+            // Remove user from members UID array
+            
+            allFriends.removeAll { friend in
+                friend.id == member.id
+            }
+           
+            
+            
+        }
+        
        
         
         
