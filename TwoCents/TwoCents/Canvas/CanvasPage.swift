@@ -199,7 +199,17 @@ struct CanvasPage: View {
                                       width: TILE_SIZE,
                                       height: TILE_SIZE
                                   )
-                                  .scaleEffect(scale)
+                                .scaleEffect(scale, anchor:
+                                        .init(
+                                            x: min(1,
+                                                   max(0, ((offset.width / FRAME_SIZE) * -1 ) + 0.5)
+                                                  ),
+                                            y: min(1,
+                                                   max(0, ((offset.height / FRAME_SIZE) * -1 ) + 0.5)
+                                                  )
+                                        )
+                                )
+                            
                                   .frame(
                                       width: TILE_SIZE * scale,
                                       height: TILE_SIZE * scale
@@ -268,10 +278,26 @@ struct CanvasPage: View {
                     Color(UIColor.secondarySystemBackground)
 
                        
-
+                    
                     Color(UIColor.systemBackground)
-//                        .allowsHitTesting(toolPickerActive)
-                        .scaleEffect(scale)
+                    //                        .allowsHitTesting(toolPickerActive)
+                    //                        .scaleEffect(scale)
+                        .scaleEffect(scale, anchor:
+                                .init(
+                                    x: min(1,
+                                           max(0, ((offset.width / FRAME_SIZE) * -1 ) + 0.5)
+                                          ),
+                                    y: min(1,
+                                           max(0, ((offset.height / FRAME_SIZE) * -1 ) + 0.5)
+                                          )
+                                )
+                        )
+                    
+//                            .scaleEffect(scale, anchor: UnitPoint(
+//                                       x: 0.5 + offset.width / (2 * UIScreen.main.bounds.width),
+//                                       y: 0.5 + offset.height / (2 * UIScreen.main.bounds.height)
+//                                   ))
+//                                     
                         .offset(offset)
                         .clipped() // Ensure the content does not overflow
 //                        .animation(.spring()) // Optional: Add some animation
@@ -297,7 +323,17 @@ struct CanvasPage: View {
                     .blur(radius: widgetDoubleTapped ? 3 : 0)
                     
                     
-                    .scaleEffect(scale)
+                    .scaleEffect(scale, anchor:
+                            .init(
+                                x: min(1,
+                                       max(0, ((offset.width / FRAME_SIZE) * -1 ) + 0.5)
+                                      ),
+                                y: min(1,
+                                       max(0, ((offset.height / FRAME_SIZE) * -1 ) + 0.5)
+                                      )
+                            )
+                    )
+                
                    .offset(offset)
                     .clipped() // Ensure the content does not overflow
 //                    .animation(.spring()) // Optional: Add some animation
@@ -305,12 +341,23 @@ struct CanvasPage: View {
                     
                     
                     GridView()
-                        .scaleEffect(scale)
-
-                        .offset(offset)
-//                        .clipped() // Ensure the content does not overflow
-//                        .animation(.spring()) // Optional: Add some animation
                         .frame(width: FRAME_SIZE, height: FRAME_SIZE)
+                    
+                    .scaleEffect(scale, anchor:
+                            .init(
+                                x: min(1,
+                                       max(0, ((offset.width / FRAME_SIZE) * -1 ) + 0.5)
+                                      ),
+                                y: min(1,
+                                       max(0, ((offset.height / FRAME_SIZE) * -1 ) + 0.5)
+                                      )
+                            )
+                    )
+                
+                   .offset(offset)
+//                    .clipped() // Ensure the content does not overflow
+//                    .animation(.spring()) // Optional: Add some animation
+                   
                     
                     
                 }
@@ -327,6 +374,14 @@ struct CanvasPage: View {
                                                 )
                                             }
                                             
+//                                            print("Width \(offset.width)")
+//                                            print(((offset.width / UIScreen.main.bounds.width) * -1 ) + 0.5)
+//                                            
+//                                            print(min(1,
+//                                                max(0, ((offset.width / FRAME_SIZE) * -1 ) + 0.5)
+//                                                      )
+//                                               )
+                                                
                                            
                                         }
                                         .onEnded { value in
@@ -421,7 +476,17 @@ struct CanvasPage: View {
                         DrawingCanvas(canvas: $canvas, toolPickerActive: $toolPickerActive, toolPicker: $toolkit, spaceId: spaceId)
                             .allowsHitTesting(toolPickerActive)
                         
-                            .scaleEffect(scale)
+                            .scaleEffect(scale, anchor:
+                                    .init(
+                                        x: min(1,
+                                               max(0, ((offset.width / FRAME_SIZE) * -1 ) + 0.5)
+                                              ),
+                                        y: min(1,
+                                               max(0, ((offset.height / FRAME_SIZE) * -1 ) + 0.5)
+                                              )
+                                    )
+                            )
+                        
                             .offset(offset)
                             .clipped() // Ensure the content does not overflow
                             .animation(.spring()) // Optional: Add some animation
