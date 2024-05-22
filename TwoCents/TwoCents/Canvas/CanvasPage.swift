@@ -53,8 +53,16 @@ struct CanvasPage: View {
     @State private var pendingWrites: Bool = false
     @State private var timer: Timer?
     
+    @State private var replyMode: Bool = false
+    
+    
     
     @State private var selectedWidget: CanvasWidget?
+    @State private var replyWidget: CanvasWidget?
+    
+    @State private var selectedDetent: PresentationDetent = .height(50)
+    
+    
     
     @StateObject private var viewModel = CanvasPageViewModel()
     
@@ -441,34 +449,40 @@ struct CanvasPage: View {
             //hovering action menu when widget is clicked
                 
                     .overlay(
-                        //if user is magnifying out or canvas is less than 50 percent...
+                        //if user is magnifying out 
+                        //or canvas is less than 50 percent...
+                        //or is out of bounds
                         //show zoom percentage
-                        scaleChanging || scale < CGFloat(0.5) ?
-                            Text(String(format: "%.0f", scale * CGFloat(100)) + "%")
-                    
+                        scaleChanging
+                        || scale < CGFloat(0.5)
+                        || (((offset.width / FRAME_SIZE) * -1 ) + 0.5) > 1
+                        || (((offset.width / FRAME_SIZE) * -1 ) + 0.5) < 0
+                        || (((offset.height / FRAME_SIZE) * -1 ) + 0.5) > 1
+                        || (((offset.height / FRAME_SIZE) * -1 ) + 0.5) < 0
+                        ? Text(String(format: "%.0f", scale * CGFloat(100)) + "%")
                             .padding(.vertical, 8)
                             .frame(width:80)
-                            
                             .background(
-                            Rectangle()
-                                .fill(.ultraThinMaterial)
-                                .clipShape(Capsule())
-                           
+                                Rectangle()
+                                    .fill(.ultraThinMaterial)
+                                    .clipShape(Capsule())
                             )
                             .frame(maxHeight: .infinity, alignment: .bottom)
                             .padding(.bottom, 200)
                             .onTapGesture(perform: {
-                                
-                                //zoom back in
                                 withAnimation {
+                                    //zoom back in
                                     self.scale = 1.0
                                     self.cumulativeScale = 1.0
+                                    //recenter
+                                    offset.width = 0
+                                    offset.height = 0
                                 }
-                              
+                                
                             })
                         
-                         : nil
-                       
+                        : nil
+                        
                         
                     )
                 
@@ -499,6 +513,33 @@ struct CanvasPage: View {
                                  .padding(.top, 150)
                              Spacer()
                              HStack{
+                                 
+                                 Button(action: {
+                                     
+                                     replyMode = true
+                            
+                                     replyWidget = selectedWidget
+                                     if let selectedWidget, let index = canvasWidgets.firstIndex(of: selectedWidget){
+//                                         canvasWidgets.remove(at: index)
+//                                         SpaceManager.shared.removeWidget(spaceId: spaceId, widget: selectedWidget)
+                                         
+                                         
+                                         
+                                     }
+                                     
+                                     
+                                     selectedWidget = nil
+                                     widgetDoubleTapped = false
+                                     
+                                     showSheet = true
+                                     showNewWidgetView = false
+                                 }, label: {
+                                     Image(systemName: "arrowshape.turn.up.left")
+                                         .foregroundColor(Color(UIColor.label))
+                                 })
+                                 
+                                 
+                                 //delete button
                                  Button(action: {
                                      if let selectedWidget, let index = canvasWidgets.firstIndex(of: selectedWidget){
                                          canvasWidgets.remove(at: index)
@@ -518,7 +559,7 @@ struct CanvasPage: View {
                              .padding(.vertical, 8)
                              .background(Color(UIColor.systemBackground), in: .capsule)
                              .contentShape(.capsule)
-                             .shadow(color: Color.black.opacity(0.2), radius: 20, x: 0, y: 2)
+                             .shadow(color: Color(UIColor.label).opacity(0.2), radius: 20, x: 0, y: 2)
                          }
                     .frame(maxHeight: .infinity, alignment: .bottom)
                     .padding(.bottom, 150)
@@ -562,6 +603,8 @@ struct CanvasPage: View {
             .sheet(isPresented: $showSheet, onDismiss: {
                 showNewWidgetView = false
                 
+                replyMode = false
+                replyWidget = nil
                 
                 //get chat to show up at all times
                 if !widgetDoubleTapped && !inSettingsView {
@@ -588,18 +631,31 @@ struct CanvasPage: View {
                 }else {
                     //show chat instead
                     VStack{
-                        ChatView(spaceId: spaceId)
+                        ChatView(spaceId: spaceId,replyMode: $replyMode, replyWidget: $replyWidget)
                           
                     }
                    
 //                        .presentationBackground(.ultraThickMaterial)
                     .presentationBackground(Color(UIColor.systemBackground))
                      
-                        .presentationDetents([.height(50),.medium])
+                        .presentationDetents([.height(50),.medium], selection: $selectedDetent)
+                        
+                        
                         .presentationCornerRadius(20)
                         
                         .presentationBackgroundInteraction(.enabled)
-                     
+                        .onChange(of: selectedDetent) { selectedDetent in
+                            if selectedDetent != .medium && replyMode {
+                                
+                                withAnimation {
+                                    replyWidget = nil
+                                    replyMode = false
+                                }
+                               
+                                
+                                print("detent is 50")
+                            }
+                        }
                     
                 }
                 

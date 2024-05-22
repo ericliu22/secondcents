@@ -18,6 +18,9 @@ struct MessageField: View{
     
     @StateObject private var viewModel = ChattingViewModel()
     
+    @Binding  var replyMode: Bool
+    
+    @FocusState private var isFocused: Bool
     
     var body: some View{
 //        ZStack (alignment: .bottomTrailing){
@@ -36,6 +39,12 @@ struct MessageField: View{
 //                    .clipShape(Capsule())
                     .font(.headline)
                     .fontWeight(.regular)
+                    .focused($isFocused)
+                    .onAppear(perform: {
+                        isFocused = replyMode
+                        
+                    })
+                    
                     
                 
                 
@@ -47,6 +56,11 @@ struct MessageField: View{
                 Button{
                     messagesManager.sendMessages(text: message)
                     message = ""
+                    
+                    withAnimation{
+                        replyMode = false
+                    }
+
                 } label: {
                     Image(systemName: "arrow.up")
                         .font(.headline )
@@ -56,6 +70,7 @@ struct MessageField: View{
                         .background(message.isEmpty ? .clear : userColor)
                         .clipShape(Circle())
                      
+                    
                     
                 }
                 .clipped()
