@@ -65,11 +65,27 @@ class MessageManager: ObservableObject{
                 
                
                 do {
+                    //if there is both text and widget, send widget first seperately, then the text.
+                    if text != nil && widget != nil {
+                        sendMessages(text: nil, widget: widget)
+                        sendMessages(text: text, widget: nil)
+                 
+                     
+                        
+                        
+                    } else {
+                        
+                        let newMessage = Message(id: "\(UUID())", sendBy: userUID, text: text, ts: Date(), parent: (property as? String) ?? "", widgetId: widget?.id.uuidString)
+                        try self.db.collection("spaces").document(spaceId).collection("chat").document("mainChat").collection("chatlogs").document().setData(from: newMessage)
+                        self.db.collection("spaces").document(spaceId).collection("chat").document("mainChat").setData(["lastSend": newMessage.sendBy], merge: true)
+                        db.collection("spaces").document(spaceId).collection("chat").document("mainChat").setData(["lastTs": newMessage.ts], merge: true)
+                        
+                        
+                    }
                     
-                    let newMessage = Message(id: "\(UUID())", sendBy: userUID, text: text, ts: Date(), parent: (property as? String) ?? "", widgetId: widget?.id.uuidString)
-                    try self.db.collection("spaces").document(spaceId).collection("chat").document("mainChat").collection("chatlogs").document().setData(from: newMessage)
-                    self.db.collection("spaces").document(spaceId).collection("chat").document("mainChat").setData(["lastSend": newMessage.sendBy], merge: true)
-                    db.collection("spaces").document(spaceId).collection("chat").document("mainChat").setData(["lastTs": newMessage.ts], merge: true)
+                    
+                    
+                    
                     } catch {
                     print("Error adding message to Firestore: \(error)")
                 }

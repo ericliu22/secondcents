@@ -93,7 +93,7 @@ struct universalMessageBubble: View{
                     
             }
             
-            if message.text != "" {
+            if message.text != "" &&  message.text != nil{
                 //show text message if text is not nill
                 Text(message.text! )
                     .font(.headline)
