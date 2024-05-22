@@ -52,8 +52,10 @@ struct MessageField: View{
                     messagesManager.sendMessages(text: message, widget: replyWidget)
                     message = ""
                     
+                    replyWidget = nil
                     withAnimation{
                         replyMode = false
+                        
                     }
 
                 } label: {
