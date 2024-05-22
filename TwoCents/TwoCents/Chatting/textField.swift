@@ -19,6 +19,8 @@ struct MessageField: View{
     @StateObject private var viewModel = ChattingViewModel()
     
     @Binding  var replyMode: Bool
+    @Binding  var replyWidget: CanvasWidget?
+    
     
     @FocusState private var isFocused: Bool
     
@@ -26,13 +28,11 @@ struct MessageField: View{
 //        ZStack (alignment: .bottomTrailing){
             
         
-        ZStack (alignment: .trailing){
-                //            customTextField(placeholder: Text("message..."), text: $message)
+        ZStack (alignment: .bottomTrailing){
+            
                 
                 TextField("Message", text: $message, axis: .vertical)
                     .lineLimit(0...5)
-//                    .padding(.leading, nil)
-//                    .padding(.vertical, 10)
                     .padding(.horizontal, 12)
                     .padding(.vertical, 8)
                     .padding(.trailing, 48)
@@ -46,15 +46,10 @@ struct MessageField: View{
                     })
                     
                     
-                
-                
-                
-//                Spacer()
-//                    .frame(width: 60, height: 30)
- 
-                
+                    
                 Button{
-                    messagesManager.sendMessages(text: message)
+                    
+                    messagesManager.sendMessages(text: message, widget: replyWidget)
                     message = ""
                     
                     withAnimation{
@@ -66,18 +61,20 @@ struct MessageField: View{
                         .font(.headline )
                         .frame(width: 30, height: 30, alignment: .center)
              
-                        .foregroundColor(message.isEmpty ? .clear : .white)
-                        .background(message.isEmpty ? .clear : userColor)
+                        .foregroundColor(message.isEmpty && !replyMode  ? .clear : .white)
+                        .background(message.isEmpty && !replyMode ? .clear : userColor)
                         .clipShape(Circle())
+                        .padding(.bottom, 4)
                      
                     
                     
                 }
                 .clipped()
                 .buttonStyle(PlainButtonStyle())
-                .disabled(message.isEmpty)
+                .disabled(message.isEmpty && !replyMode)
                 .padding(.trailing, 5)
                 
+  
                 
 
                 
@@ -90,7 +87,7 @@ struct MessageField: View{
             .padding(.top, 5)
 //            .background(.thickMaterial)
        
-            .frame(height:50, alignment: .center)
+            .frame(minHeight:50, alignment: .center)
             
             
             .task{
@@ -105,29 +102,4 @@ struct MessageField: View{
 //        }
     }
 
-}
-
-struct customTextField: View{
-//    var placeholder: Text
-    @Binding var text: String
-//    var editingChanged: (Bool) -> () = {_ in}
-//    var commit: () -> () = {}
-//    
-    var body: some View{
-//        ZStack(alignment: .leading) {
-//            if text.isEmpty{
-//                placeholder.opacity(0.5)
-//            }
-//            TextField("", text:$text, onEditingChanged: editingChanged, onCommit: commit)
-//             
-//        }
-        
-        
-        
-        TextField("Message", text:$text, axis: .vertical)
-            .lineLimit(0...5)
-        
-        
-        
-    }
 }

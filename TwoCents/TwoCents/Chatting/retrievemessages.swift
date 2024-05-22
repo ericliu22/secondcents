@@ -56,15 +56,17 @@ class MessageManager: ObservableObject{
         }
     }
    
-    func sendMessages(text: String) {
+    func sendMessages(text: String?, widget: CanvasWidget?) {
         let docRef = db.collection("spaces").document(spaceId).collection("chat").document("mainChat")
 
         docRef.getDocument{ [self] (document, error) in
             if let document = document {
                 let property = document.get("lastSend")
+                
                
                 do {
-                    let newMessage = Message(id: "\(UUID())", sendBy: userUID, text: text, ts: Date(), parent: (property as? String) ?? "")
+                    
+                    let newMessage = Message(id: "\(UUID())", sendBy: userUID, text: text, ts: Date(), parent: (property as? String) ?? "", widgetId: widget?.id.uuidString)
                     try self.db.collection("spaces").document(spaceId).collection("chat").document("mainChat").collection("chatlogs").document().setData(from: newMessage)
                     self.db.collection("spaces").document(spaceId).collection("chat").document("mainChat").setData(["lastSend": newMessage.sendBy], merge: true)
                     db.collection("spaces").document(spaceId).collection("chat").document("mainChat").setData(["lastTs": newMessage.ts], merge: true)
@@ -78,5 +80,10 @@ class MessageManager: ObservableObject{
         }
         
     }
+    
+    
+    
+    
+    
 }
            

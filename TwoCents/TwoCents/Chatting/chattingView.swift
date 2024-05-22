@@ -12,10 +12,14 @@ import UIKit
 struct Message: Identifiable, Codable {
     var id: String
     var sendBy: String
-    var text: String
+    var text: String?
     var ts: Date
     var parent: String
+    var widgetId: String?
 }
+
+
+
 
 
 
@@ -30,11 +34,11 @@ struct chatStruct: View{
         self.spaceId = spaceId
         _messageManager = StateObject(wrappedValue: MessageManager(spaceId: spaceId))
         self.userUID = try! AuthenticationManager.shared.getAuthenticatedUser().uid
- 
+        
     }
-
     
-//    let user: DBUser
+    
+    //    let user: DBUser
     
     var body: some View{
         VStack (spacing: 3){
@@ -66,7 +70,7 @@ struct chatStruct: View{
                 
                 
                 
-                universalMessageBubble(message: message, sentByMe: message.sendBy == userUID, isFirstMsg: message.sendBy != message.parent)
+                universalMessageBubble(message: message, sentByMe: message.sendBy == userUID, isFirstMsg: message.sendBy != message.parent, spaceId: spaceId)
                 
                 
                 
@@ -75,7 +79,7 @@ struct chatStruct: View{
             .frame(maxWidth: .infinity)
         }
         
-//        .padding(.bottom, 60)
+        //        .padding(.bottom, 60)
         
     }
 }
@@ -92,105 +96,85 @@ struct chattingView_Previews: PreviewProvider {
 
 struct ChatView: View {
     
-//    @StateObject private var viewModel = CanvasPageViewModel()
+    //    @StateObject private var viewModel = CanvasPageViewModel()
     
     
     
     
     
     private var spaceId: String
-//    @State private var userColor: Color
+    //    @State private var userColor: Color
     @StateObject var messageManager: MessageManager
     @Binding private var replyMode: Bool
     
     @Binding private var replyWidget: CanvasWidget?
-   
+    
     init(spaceId: String, replyMode: Binding<Bool>, replyWidget: Binding<CanvasWidget?>) {
         self.spaceId = spaceId
         _messageManager = StateObject(wrappedValue: MessageManager(spaceId: spaceId))
-//        self.userColor = .gray
+        //        self.userColor = .gray
         
         self._replyMode = replyMode
         self._replyWidget = replyWidget
-
+        
     }
     
     
-//    
-//    private var spaceId: String
-//    @StateObject  var messagesManager = MessageManager(spaceId: spaceId)
-//    @State var Tapped = false
+    //
+    //    private var spaceId: String
+    //    @StateObject  var messagesManager = MessageManager(spaceId: spaceId)
+    //    @State var Tapped = false
     
     //check for data to use this boolean
     var body: some View{
-                VStack(spacing: 0){
+        VStack(spacing: 0){
             
-           
-                ScrollViewReader{ proxy in
+            
+            ScrollViewReader{ proxy in
+                
+                
+                
+                ScrollView{
+                    
+                    chatStruct(spaceId: spaceId).onAppear(perform: {
+                        proxy.scrollTo(messageManager.lastMessageId, anchor: .bottom)
+                    })
+                    .blur(radius: replyMode ? 2 : 0)
                     
                     
                     
-                    ScrollView{
+                    
+                    if replyWidget != nil && replyMode {
                         
-                        chatStruct(spaceId: spaceId).onAppear(perform: {
-                            proxy.scrollTo(messageManager.lastMessageId, anchor: .bottom)
-                        })
-                        .blur(radius: replyMode ? 2 : 0)
+                        getMediaView(widget: replyWidget!, spaceId: spaceId)
+                            .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
+                            .cornerRadius(CORNER_RADIUS)
                         
-                        
-                        
-                        
-                        if replyWidget != nil && replyMode {
-                            
-                            getMediaView(widget: replyWidget!, spaceId: spaceId)
-                                .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
-                                .cornerRadius(CORNER_RADIUS)
-                                
-                                .frame(maxWidth: .infinity, alignment: .trailing)
-                                .id("replyWidget")
-                        }
-                       
-                        
-                        
-                        
+                            .frame(maxWidth: .infinity, alignment: .trailing)
+                            .id("replyWidget")
                     }
-                    .onTapGesture {
-                        
-                        withAnimation {
-                            replyMode = false
-                            replyWidget = nil
-                        }
-                      
-                    }
-                    
-                    .onChange(of: messageManager.lastMessageId) {
-                        id in proxy.scrollTo(id, anchor: .bottom)
-                    }
-                    
-                    .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardDidChangeFrameNotification)) { _ in
-                        if replyWidget != nil {
-                            proxy.scrollTo("replyWidget", anchor: .bottom)
-                        }
-                       
-                    }
-                    
-                    
-                    
-                    
                 }
-                .padding(.top)
-                .padding(.horizontal)
-               
+                .onTapGesture {
+                    withAnimation {
+                        replyMode = false
+                        replyWidget = nil
+                    }
+                }
+                .onChange(of: messageManager.lastMessageId) {
+                    id in proxy.scrollTo(id, anchor: .bottom)
+                }
                 
-              
-                
-           
-            
-            MessageField( replyMode: $replyMode).environmentObject(messageManager)
-            
+                .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardDidChangeFrameNotification)) { _ in
+                    if replyWidget != nil {
+                        proxy.scrollTo("replyWidget", anchor: .bottom)
+                    }
+                }
+            }
+            .padding(.top)
+            .padding(.horizontal)
+            MessageField( replyMode: $replyMode, replyWidget: $replyWidget).environmentObject(messageManager)
         }
         
-       
         .scrollIndicators(.hidden)
         
         

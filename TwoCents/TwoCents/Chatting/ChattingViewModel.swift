@@ -37,6 +37,17 @@ final class ChattingViewModel: ObservableObject {
     }
     
     
+    
+    @Published private(set) var WidgetMessage: CanvasWidget? = nil
+    func loadWidget(spaceId: String, widgetId: String) async throws {
+        
+        self.WidgetMessage = try await SpaceManager.shared.getWidget(spaceId: spaceId, widgetId: widgetId)
+        
+    }
+    
+    
+    
+    
     @Published private(set) var userColor:  Color? = nil
     
     func getUserColor(userColor: String) -> Color{

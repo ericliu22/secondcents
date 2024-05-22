@@ -76,7 +76,7 @@ struct universalMessageBubble: View{
     
     @StateObject private var viewModel = ChattingViewModel()
     @State private var userColor: Color = .gray
-
+    @State var spaceId: String
     var body: some View{
         VStack(alignment: sentByMe ? .trailing : .leading, spacing: 3){
             
@@ -93,27 +93,45 @@ struct universalMessageBubble: View{
                     
             }
             
-            
-            Text(message.text)
-                .font(.headline)
-                .fontWeight(.regular)
-//                .padding(10)
-                .padding(.horizontal, 12)
-                .padding(.vertical, 8)
-      
-//                .foregroundStyle(Color(UIColor.label))
-                .foregroundStyle(userColor)
-                .background(.ultraThickMaterial)
-                .background(userColor)
-            
+            if message.text != "" {
+                //show text message if text is not nill
+                Text(message.text! )
+                    .font(.headline)
+                    .fontWeight(.regular)
+                //                .padding(10)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 8)
+                
+                //                .foregroundStyle(Color(UIColor.label))
+                    .foregroundStyle(userColor)
+                    .background(.ultraThickMaterial)
+                    .background(userColor)
+                
                 //FOR ASYMETRIC ROUNDING...
-//                .clipShape(chatBubbleShape (sentByMe: sentByMe, isFirstMsg: isFirstMsg))
-//                .clipShape(RoundedRectangle(cornerRadius: 5))
-                .clipShape(RoundedRectangle(cornerRadius: 20))
-  
-                .frame(maxWidth: 300, alignment: sentByMe ?  .trailing : .leading)
-            
-            
+                //                .clipShape(chatBubbleShape (sentByMe: sentByMe, isFirstMsg: isFirstMsg))
+                //                .clipShape(RoundedRectangle(cornerRadius: 5))
+                    .clipShape(RoundedRectangle(cornerRadius: 20))
+                
+                    .frame(maxWidth: 300, alignment: sentByMe ?  .trailing : .leading)
+                
+            } else {
+                
+                //show widget message if text is nil
+               
+                
+               
+                if viewModel.WidgetMessage != nil {
+                                      
+                    getMediaView(widget: viewModel.WidgetMessage!, spaceId: spaceId)
+                        .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
+                        .cornerRadius(CORNER_RADIUS)
+                    
+                        .frame(maxWidth: .infinity, alignment: sentByMe ?  .trailing : .leading)
+                    
+                }
+
+               
+            }
             
 
         }
@@ -127,6 +145,10 @@ struct universalMessageBubble: View{
                 self.userColor = viewModel.getUserColor(userColor:viewModel.user?.userColor ?? "")
             }
             
+            if message.widgetId != nil {
+                
+                try? await viewModel.loadWidget(spaceId: spaceId , widgetId: message.widgetId!)
+            }
    
             //            print (userColor)
             

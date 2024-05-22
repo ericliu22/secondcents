@@ -115,6 +115,12 @@ final class SpaceManager{
     
     
     
+    func getWidget(spaceId: String, widgetId: String) async throws -> CanvasWidget {
+
+        try await spaceDocument(spaceId: spaceId).collection("widgets").document(widgetId).getDocument(as: CanvasWidget.self)
+        
+    }
+    
     func updateSpaceProfileImage(spaceId: String, url: String, path: String) async throws {
         let data: [String: Any] = [
             "profileImagePath": path,
