@@ -109,6 +109,9 @@ struct ChatView: View {
     
     @Binding private var replyWidget: CanvasWidget?
     
+    @State private var scroll: Bool
+    
+    
     init(spaceId: String, replyMode: Binding<Bool>, replyWidget: Binding<CanvasWidget?>) {
         self.spaceId = spaceId
         _messageManager = StateObject(wrappedValue: MessageManager(spaceId: spaceId))
@@ -116,6 +119,8 @@ struct ChatView: View {
         
         self._replyMode = replyMode
         self._replyWidget = replyWidget
+        
+        self.scroll = false
         
     }
     
@@ -169,10 +174,26 @@ struct ChatView: View {
                         proxy.scrollTo("replyWidget", anchor: .bottom)
                     }
                 }
+                
+                .onChange(of: scroll) {
+                    if replyMode {
+                        proxy.scrollTo("replyWidget", anchor: .bottom)
+                    } else {
+                        proxy.scrollTo( messageManager.lastMessageId, anchor: .bottom)
+                    }
+                    
+                    scroll = false
+                }
+                
+                
+                
             }
             .padding(.top)
             .padding(.horizontal)
             MessageField( replyMode: $replyMode, replyWidget: $replyWidget).environmentObject(messageManager)
+                .onTapGesture {
+                    scroll = true
+                }
         }
         
         .scrollIndicators(.hidden)
