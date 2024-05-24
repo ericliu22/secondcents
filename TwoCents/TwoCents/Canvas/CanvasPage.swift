@@ -195,18 +195,23 @@ struct CanvasPage: View {
                             
                         }
                     })
-     
+                
+//                    .overlay(content: {
+//                        EmojiCountView(spaceId: spaceId, widget: widget)
+//                            .padding(.top, 150)
+//                    })
+                
                     .draggable(widget) {
                         
                         VStack{
                             getMediaView(widget: widget, spaceId: spaceId)
                                 .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
                             
-                                //a bad way of resizing the draggable items but oh well
+                            //a bad way of resizing the draggable items but oh well
                                 .frame(
-                                      width: TILE_SIZE,
-                                      height: TILE_SIZE
-                                  )
+                                    width: TILE_SIZE,
+                                    height: TILE_SIZE
+                                )
                                 .scaleEffect(scale, anchor:
                                         .init(
                                             x: min(1,
@@ -218,13 +223,13 @@ struct CanvasPage: View {
                                         )
                                 )
                             
-                                  .frame(
-                                      width: TILE_SIZE * scale,
-                                      height: TILE_SIZE * scale
-                                  )
+                                .frame(
+                                    width: TILE_SIZE * scale,
+                                    height: TILE_SIZE * scale
+                                )
                             
-                     
-                               
+                            
+                            
                             
                                 .onAppear{
                                     draggingItem = widget
@@ -245,18 +250,18 @@ struct CanvasPage: View {
                         if let draggingItem, status, draggingItem != widget {
                             if let sourceIndex = canvasWidgets.firstIndex(of: draggingItem),
                                let destinationIndex = canvasWidgets.firstIndex(of: widget) {
-//                                withAnimation(.bouncy) {
-                                    //move widget
-                                    let sourceItem = canvasWidgets.remove(at: sourceIndex)
-                                    canvasWidgets.insert(sourceItem, at: destinationIndex)
-                                    //deselect
-                                    selectedWidget = nil
-                                    widgetDoubleTapped = false
+                                //                                withAnimation(.bouncy) {
+                                //move widget
+                                let sourceItem = canvasWidgets.remove(at: sourceIndex)
+                                canvasWidgets.insert(sourceItem, at: destinationIndex)
+                                //deselect
+                                selectedWidget = nil
+                                widgetDoubleTapped = false
                                 
                                 showSheet = true
                                 showNewWidgetView = false
-                                    
-//                                }
+                                
+                                //                                }
                             }
                         }
                     }
@@ -267,7 +272,7 @@ struct CanvasPage: View {
                                 )
         )
     }
-
+    
     @State private var scale: CGFloat = 1.0
     @State private var offset: CGSize = .zero
     @State private var lastOffset: CGSize = .zero
@@ -280,16 +285,209 @@ struct CanvasPage: View {
     func canvasView() -> AnyView {
         
         return AnyView(
-         
-                ZStack {
+            
+            ZStack {
+                
+                Color(UIColor.secondarySystemBackground)
+                
+                
+                
+                Color(UIColor.systemBackground)
+                //                        .allowsHitTesting(toolPickerActive)
+                //                        .scaleEffect(scale)
+                    .scaleEffect(scale, anchor:
+                            .init(
+                                x: min(1,
+                                       max(0, ((offset.width / FRAME_SIZE) * -1 ) + 0.5)
+                                      ),
+                                y: min(1,
+                                       max(0, ((offset.height / FRAME_SIZE) * -1 ) + 0.5)
+                                      )
+                            )
+                    )
+                
+                //                            .scaleEffect(scale, anchor: UnitPoint(
+                //                                       x: 0.5 + offset.width / (2 * UIScreen.main.bounds.width),
+                //                                       y: 0.5 + offset.height / (2 * UIScreen.main.bounds.height)
+                //                                   ))
+                //
+                    .offset(offset)
+                    .clipped() // Ensure the content does not overflow
+                //                        .animation(.spring()) // Optional: Add some animation
+                    .frame(width: FRAME_SIZE, height: FRAME_SIZE)
+                
+                GeometryReader { geometry in
+                    Path { path in
+                        let spacing: CGFloat = 30 // Adjust this value for the spacing between dots
+                        let width = geometry.size.width
+                        let height = geometry.size.height
+                        
+                        for x in stride(from: 4, through: width, by: spacing) {
+                            for y in stride(from: 4, through: height, by: spacing) {
+                                path.addEllipse(in: CGRect(x: x, y: y, width: 2, height: 2))
+                            }
+                        }
+                    }
+                    .fill(Color(UIColor.secondaryLabel)) // Dot color
+                    .allowsHitTesting(toolPickerActive)
+                }
+                .drawingGroup()
+                //                    .frame(width: FRAME_SIZE, height: FRAME_SIZE)
+                .blur(radius: widgetDoubleTapped ? 3 : 0)
+                
+                
+                .scaleEffect(scale, anchor:
+                        .init(
+                            x: min(1,
+                                   max(0, ((offset.width / FRAME_SIZE) * -1 ) + 0.5)
+                                  ),
+                            y: min(1,
+                                   max(0, ((offset.height / FRAME_SIZE) * -1 ) + 0.5)
+                                  )
+                        )
+                )
+                
+                .offset(offset)
+                .clipped() // Ensure the content does not overflow
+                //                    .animation(.spring()) // Optional: Add some animation
+                .frame(width: FRAME_SIZE, height: FRAME_SIZE)
+                
+                
+                GridView()
+                    .frame(width: FRAME_SIZE, height: FRAME_SIZE)
+                
+                    .scaleEffect(scale, anchor:
+                            .init(
+                                x: min(1,
+                                       max(0, ((offset.width / FRAME_SIZE) * -1 ) + 0.5)
+                                      ),
+                                y: min(1,
+                                       max(0, ((offset.height / FRAME_SIZE) * -1 ) + 0.5)
+                                      )
+                            )
+                    )
+                
+                    .offset(offset)
+                //                    .clipped() // Ensure the content does not overflow
+                //                    .animation(.spring()) // Optional: Add some animation
+                
+                
+                
+            }
+            
+            
+            
+            
+                .gesture(
+                    DragGesture()
+                        .onChanged { value in
+                            withAnimation(.spring) {
+                                self.animator?.stopAnimation(true)
+                                self.offset = CGSize(
+                                    width: self.lastOffset.width + value.translation.width,
+                                    height: self.lastOffset.height + value.translation.height
+                                )
+                            }
+                            
+                        }
+                        .onEnded { value in
+                            withAnimation(.spring) {
+                                //was 0.7
+                                let springTiming = UISpringTimingParameters(dampingRatio: 1)
+                                self.animator = UIViewPropertyAnimator(duration: 0.5, timingParameters: springTiming)
+                                self.animator?.addAnimations {
+                                    self.offset = CGSize(
+                                        width: self.lastOffset.width + value.translation.width,
+                                        height: self.lastOffset.height + value.translation.height
+                                    )
+                                }
+                                self.animator?.startAnimation()
+                                self.lastOffset = self.offset
+                            }
+                        }
                     
-                    Color(UIColor.secondarySystemBackground)
-
-                       
+                )
+                .gesture(
+                    MagnificationGesture()
+                        .onChanged { value in
+                            withAnimation(.spring) {
+                                self.scale = self.cumulativeScale * value
+                                
+                                scaleChanging = true
+                            }
+                            
+                        }
+                        .onEnded { value in
+                            withAnimation(.spring) {
+                                self.cumulativeScale *= value
+                                
+                                scaleChanging = false
+                            }
+                        }
                     
-                    Color(UIColor.systemBackground)
-                    //                        .allowsHitTesting(toolPickerActive)
-                    //                        .scaleEffect(scale)
+                    
+                    
+                    
+                    
+                    
+                )
+            //            }
+            
+            
+            
+                .onTapGesture {
+                    //deselect
+                    selectedWidget = nil
+                    widgetDoubleTapped = false
+                    
+                    showSheet = true
+                    showNewWidgetView = false
+                }
+            //                .scrollDisabled(currentMode != .normal)
+            //hovering action menu when widget is clicked
+            
+                .overlay(
+                    //if user is magnifying out
+                    //or canvas is less than 50 percent...
+                    //or is out of bounds
+                    //show zoom percentage
+                    scaleChanging
+                    || scale < CGFloat(0.5)
+                    || (((offset.width / FRAME_SIZE) * -1 ) + 0.5) > 1
+                    || (((offset.width / FRAME_SIZE) * -1 ) + 0.5) < 0
+                    || (((offset.height / FRAME_SIZE) * -1 ) + 0.5) > 1
+                    || (((offset.height / FRAME_SIZE) * -1 ) + 0.5) < 0
+                    ? Text(String(format: "%.0f", scale * CGFloat(100)) + "%")
+                        .padding(.vertical, 8)
+                        .frame(width:80)
+                        .background(
+                            Rectangle()
+                                .fill(.ultraThinMaterial)
+                                .clipShape(Capsule())
+                        )
+                        .frame(maxHeight: .infinity, alignment: .bottom)
+                        .padding(.bottom, 200)
+                        .onTapGesture(perform: {
+                            withAnimation {
+                                //zoom back in
+                                self.scale = 1.0
+                                self.cumulativeScale = 1.0
+                                //recenter
+                                offset.width = 0
+                                offset.height = 0
+                            }
+                            
+                        })
+                    
+                    : nil
+                    
+                    
+                )
+            
+                .overlay(
+                    DrawingCanvas(canvas: $canvas, toolPickerActive: $toolPickerActive, toolPicker: $toolkit, spaceId: spaceId)
+                        .allowsHitTesting(toolPickerActive)
+                    
                         .scaleEffect(scale, anchor:
                                 .init(
                                     x: min(1,
@@ -301,212 +499,12 @@ struct CanvasPage: View {
                                 )
                         )
                     
-//                            .scaleEffect(scale, anchor: UnitPoint(
-//                                       x: 0.5 + offset.width / (2 * UIScreen.main.bounds.width),
-//                                       y: 0.5 + offset.height / (2 * UIScreen.main.bounds.height)
-//                                   ))
-//                                     
                         .offset(offset)
                         .clipped() // Ensure the content does not overflow
-//                        .animation(.spring()) // Optional: Add some animation
+                        .animation(.spring()) // Optional: Add some animation
                         .frame(width: FRAME_SIZE, height: FRAME_SIZE)
-
-                    GeometryReader { geometry in
-                        Path { path in
-                            let spacing: CGFloat = 30 // Adjust this value for the spacing between dots
-                            let width = geometry.size.width
-                            let height = geometry.size.height
-
-                            for x in stride(from: 4, through: width, by: spacing) {
-                                for y in stride(from: 4, through: height, by: spacing) {
-                                    path.addEllipse(in: CGRect(x: x, y: y, width: 2, height: 2))
-                                }
-                            }
-                        }
-                        .fill(Color(UIColor.secondaryLabel)) // Dot color
-                        .allowsHitTesting(toolPickerActive)
-                    }
-                    .drawingGroup()
-//                    .frame(width: FRAME_SIZE, height: FRAME_SIZE)
-                    .blur(radius: widgetDoubleTapped ? 3 : 0)
-                    
-                    
-                    .scaleEffect(scale, anchor:
-                            .init(
-                                x: min(1,
-                                       max(0, ((offset.width / FRAME_SIZE) * -1 ) + 0.5)
-                                      ),
-                                y: min(1,
-                                       max(0, ((offset.height / FRAME_SIZE) * -1 ) + 0.5)
-                                      )
-                            )
-                    )
-                
-                   .offset(offset)
-                    .clipped() // Ensure the content does not overflow
-//                    .animation(.spring()) // Optional: Add some animation
-                    .frame(width: FRAME_SIZE, height: FRAME_SIZE)
-                    
-                    
-                    GridView()
-                        .frame(width: FRAME_SIZE, height: FRAME_SIZE)
-                    
-                    .scaleEffect(scale, anchor:
-                            .init(
-                                x: min(1,
-                                       max(0, ((offset.width / FRAME_SIZE) * -1 ) + 0.5)
-                                      ),
-                                y: min(1,
-                                       max(0, ((offset.height / FRAME_SIZE) * -1 ) + 0.5)
-                                      )
-                            )
-                    )
-                
-                   .offset(offset)
-//                    .clipped() // Ensure the content does not overflow
-//                    .animation(.spring()) // Optional: Add some animation
-                   
-                    
-                    
-                }
-               
-                
-                    .gesture(
-                                    DragGesture()
-                                        .onChanged { value in
-                                            withAnimation(.spring) {
-                                                self.animator?.stopAnimation(true)
-                                                self.offset = CGSize(
-                                                    width: self.lastOffset.width + value.translation.width,
-                                                    height: self.lastOffset.height + value.translation.height
-                                                )
-                                            }
-                                            
-//                                            print("Width \(offset.width)")
-//                                            print(((offset.width / UIScreen.main.bounds.width) * -1 ) + 0.5)
-//                                            
-//                                            print(min(1,
-//                                                max(0, ((offset.width / FRAME_SIZE) * -1 ) + 0.5)
-//                                                      )
-//                                               )
-                                                
-                                           
-                                        }
-                                        .onEnded { value in
-                                            withAnimation(.spring) {
-                                                //was 0.7
-                                                let springTiming = UISpringTimingParameters(dampingRatio: 1)
-                                                self.animator = UIViewPropertyAnimator(duration: 0.5, timingParameters: springTiming)
-                                                self.animator?.addAnimations {
-                                                    self.offset = CGSize(
-                                                        width: self.lastOffset.width + value.translation.width,
-                                                        height: self.lastOffset.height + value.translation.height
-                                                    )
-                                                }
-                                                self.animator?.startAnimation()
-                                                self.lastOffset = self.offset
-                                            }
-                                        }
-                                            
-                                )
-                .gesture(
-                    MagnificationGesture()
-                        .onChanged { value in
-                            withAnimation(.spring) {
-                            self.scale = self.cumulativeScale * value
-                           
-                                scaleChanging = true
-                            }
-                            
-                        }
-                        .onEnded { value in
-                            withAnimation(.spring) {
-                            self.cumulativeScale *= value
-             
-                                scaleChanging = false
-                            }
-                        }
-                    
-                    
-                      
-                    
-                    
                     
                 )
-//            }
-            
-            
-            
-            .onTapGesture {
-                //deselect
-                selectedWidget = nil
-                widgetDoubleTapped = false
-                
-                showSheet = true
-                showNewWidgetView = false
-            }
-//                .scrollDisabled(currentMode != .normal)
-            //hovering action menu when widget is clicked
-                
-                    .overlay(
-                        //if user is magnifying out 
-                        //or canvas is less than 50 percent...
-                        //or is out of bounds
-                        //show zoom percentage
-                        scaleChanging
-                        || scale < CGFloat(0.5)
-                        || (((offset.width / FRAME_SIZE) * -1 ) + 0.5) > 1
-                        || (((offset.width / FRAME_SIZE) * -1 ) + 0.5) < 0
-                        || (((offset.height / FRAME_SIZE) * -1 ) + 0.5) > 1
-                        || (((offset.height / FRAME_SIZE) * -1 ) + 0.5) < 0
-                        ? Text(String(format: "%.0f", scale * CGFloat(100)) + "%")
-                            .padding(.vertical, 8)
-                            .frame(width:80)
-                            .background(
-                                Rectangle()
-                                    .fill(.ultraThinMaterial)
-                                    .clipShape(Capsule())
-                            )
-                            .frame(maxHeight: .infinity, alignment: .bottom)
-                            .padding(.bottom, 200)
-                            .onTapGesture(perform: {
-                                withAnimation {
-                                    //zoom back in
-                                    self.scale = 1.0
-                                    self.cumulativeScale = 1.0
-                                    //recenter
-                                    offset.width = 0
-                                    offset.height = 0
-                                }
-                                
-                            })
-                        
-                        : nil
-                        
-                        
-                    )
-                
-                    .overlay(
-                        DrawingCanvas(canvas: $canvas, toolPickerActive: $toolPickerActive, toolPicker: $toolkit, spaceId: spaceId)
-                            .allowsHitTesting(toolPickerActive)
-                        
-                            .scaleEffect(scale, anchor:
-                                    .init(
-                                        x: min(1,
-                                               max(0, ((offset.width / FRAME_SIZE) * -1 ) + 0.5)
-                                              ),
-                                        y: min(1,
-                                               max(0, ((offset.height / FRAME_SIZE) * -1 ) + 0.5)
-                                              )
-                                    )
-                            )
-                        
-                            .offset(offset)
-                            .clipped() // Ensure the content does not overflow
-                            .animation(.spring()) // Optional: Add some animation
-                            .frame(width: FRAME_SIZE, height: FRAME_SIZE)
-                        
-                    )
                 .overlay(selectedWidget != nil
                          ? VStack {
                              EmojiCountView(spaceId: spaceId, widget: selectedWidget!)
@@ -517,11 +515,11 @@ struct CanvasPage: View {
                                  Button(action: {
                                      
                                      replyMode = true
-                            
+                                     
                                      replyWidget = selectedWidget
                                      if let selectedWidget, let index = canvasWidgets.firstIndex(of: selectedWidget){
-//                                         canvasWidgets.remove(at: index)
-//                                         SpaceManager.shared.removeWidget(spaceId: spaceId, widget: selectedWidget)
+                                         //                                         canvasWidgets.remove(at: index)
+                                         //                                         SpaceManager.shared.removeWidget(spaceId: spaceId, widget: selectedWidget)
                                          
                                          
                                          
@@ -565,7 +563,7 @@ struct CanvasPage: View {
                     .padding(.bottom, 150)
                          :  nil
                         )
-//                .animation(.easeInOut)
+            //                .animation(.easeInOut)
                 .background( Color(UIColor.secondarySystemBackground))
             
         )
@@ -587,7 +585,7 @@ struct CanvasPage: View {
             
         }
     }
-   
+    
     
     @Environment(\.undoManager) private var undoManager
     
@@ -598,7 +596,7 @@ struct CanvasPage: View {
                 await onChange()
             }
         
-  
+        
         //add new widget view and ChatSHEET
             .sheet(isPresented: $showSheet, onDismiss: {
                 showNewWidgetView = false
@@ -610,7 +608,7 @@ struct CanvasPage: View {
                 if !widgetDoubleTapped && !inSettingsView {
                     showSheet = true
                 }
-            
+                
                 
                 if photoLinkedToProfile {
                     photoLinkedToProfile = false
@@ -622,7 +620,7 @@ struct CanvasPage: View {
                 }
                 
             }, content: {
-               
+                
                 //show add new widget view
                 if showNewWidgetView {
                     NewWidgetView(widgetId: widgetId, showNewWidgetView: $showNewWidgetView,  spaceId: spaceId, photoLinkedToProfile: $photoLinkedToProfile)
@@ -632,30 +630,30 @@ struct CanvasPage: View {
                     //show chat instead
                     VStack{
                         ChatView(spaceId: spaceId,replyMode: $replyMode, replyWidget: $replyWidget)
-                          
+                        
                     }
-                   
-//                        .presentationBackground(.ultraThickMaterial)
+                    
+                    //                        .presentationBackground(.ultraThickMaterial)
                     .presentationBackground(Color(UIColor.systemBackground))
-                     
-                        .presentationDetents([.height(50),.medium], selection: $selectedDetent)
-                        
-                        
-                        .presentationCornerRadius(20)
-                        
-                        .presentationBackgroundInteraction(.enabled)
-                        .onChange(of: selectedDetent) { selectedDetent in
-                            if selectedDetent != .medium && replyMode {
-                                
-                                withAnimation {
-                                    replyWidget = nil
-                                    replyMode = false
-                                }
-                               
-                                
-                                print("detent is 50")
+                    
+                    .presentationDetents([.height(50),.medium], selection: $selectedDetent)
+                    
+                    
+                    .presentationCornerRadius(20)
+                    
+                    .presentationBackgroundInteraction(.enabled)
+                    .onChange(of: selectedDetent) { selectedDetent in
+                        if selectedDetent != .medium && replyMode {
+                            
+                            withAnimation {
+                                replyWidget = nil
+                                replyMode = false
                             }
+                            
+                            
+                            print("detent is 50")
                         }
+                    }
                     
                 }
                 
@@ -688,7 +686,7 @@ struct CanvasPage: View {
                 //pencilkit
                 ToolbarItem(placement: .topBarTrailing) {
                     Button(action: {
-                      
+                        
                         self.toolPickerActive.toggle()
                         if toolPickerActive {
                             self.toolkit = PKToolPicker()
@@ -730,7 +728,7 @@ struct CanvasPage: View {
                 ToolbarItem(placement: .topBarTrailing) {
                     
                     NavigationLink {
-                       
+                        
                         SpaceSettingsView(spaceId: spaceId)
                             .onAppear {
                                 showSheet = false
@@ -744,7 +742,7 @@ struct CanvasPage: View {
                         Image(systemName: "ellipsis")
                         
                     }
-                  
+                    
                     
                     
                 }
