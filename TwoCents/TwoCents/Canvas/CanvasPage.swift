@@ -196,10 +196,16 @@ struct CanvasPage: View {
                         }
                     })
                 
-//                    .overlay(content: {
-//                        EmojiCountView(spaceId: spaceId, widget: widget)
-//                            .padding(.top, 150)
-//                    })
+                    .overlay(content: {
+                   
+                            
+                        selectedWidget == nil ?
+                        EmojiCountOverlayView(spaceId: spaceId, widget: widget)
+                            .offset(y: TILE_SIZE/2)
+                        : nil
+                            
+                    
+                    })
                 
                     .draggable(widget) {
                         
@@ -507,7 +513,7 @@ struct CanvasPage: View {
                 )
                 .overlay(selectedWidget != nil
                          ? VStack {
-                             EmojiCountView(spaceId: spaceId, widget: selectedWidget!)
+                             EmojiCountHeaderView(spaceId: spaceId, widget: selectedWidget!)
                                  .padding(.top, 150)
                              Spacer()
                              HStack{
