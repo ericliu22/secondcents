@@ -5,38 +5,41 @@ import SwiftUI
 
 struct SplashView: View {
     @State private var innerGap = true
-    let streamBlue = Color(#colorLiteral(red: 0, green: 0.3725490196, blue: 1, alpha: 1))
+//    let streamBlue = Color(.purple)
+    @State  var userColor: Color
     
     var body: some View {
         ZStack {
             ForEach(0..<8) {
                 Circle()
                     .foregroundStyle(
-                        .linearGradient(
-                            colors: [.green, .red],
-                            startPoint: .bottom,
-                            endPoint: .leading
-                        )
+//                        .linearGradient(
+//                            colors: [.green, streamBlue],
+//                            startPoint: .bottom,
+//                            endPoint: .leading
+//                        )
+                        userColor
                     )
-                    .frame(width: 3, height: 3)
+                    .frame(width: 4, height: 4)
                     .offset(x: innerGap ? 24 : 0)
                     .rotationEffect(.degrees(Double($0) * 45))
-                    .hueRotation(.degrees(300))
+                    .hueRotation(.degrees(20))
             }
             
             ForEach(0..<8) {
                 Circle()
                     .foregroundStyle(
-                        .linearGradient(
-                            colors: [.green, streamBlue],
-                            startPoint: .bottom,
-                            endPoint: .leading
-                        )
+//                        .linearGradient(
+//                            colors: [.green, streamBlue],
+//                            startPoint: .bottom,
+//                            endPoint: .leading
+//                        )
+                        userColor
                     )
-                    .frame(width: 4, height: 4)
+                    .frame(width: 5, height: 5)
                     .offset(x: innerGap ? 26 : 0)
                     .rotationEffect(.degrees(Double($0) * 45))
-                    .hueRotation(.degrees(60))
+                    .hueRotation(.degrees(-20))
                 
             }
             .rotationEffect(.degrees(12))
@@ -45,5 +48,7 @@ struct SplashView: View {
 }
 
 #Preview {
-    SplashView()
+    SplashView(userColor: .red)
 }
+
+

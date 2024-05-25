@@ -88,15 +88,18 @@ struct EmojiReactionsView: View {
                     updateEmoji(emoji: "❤️")
                 }
                 
+                let generator = UIImpactFeedbackGenerator(style: .heavy)
+                generator.impactOccurred()
+                
             } label: {
                 ZStack {
-                    SplashView()
+                    SplashView(userColor: Color.accentColor)
                         .opacity(userPressed["❤️"]! ? 0 : 1)
                         .animation(.easeInOut(duration: 0.5).delay(0.25), value: userPressed["❤️"])
                         .scaleEffect(userPressed["❤️"]! ? 1.25 : 0)
                         .animation(.easeInOut(duration: 0.5), value: userPressed["❤️"])
                     
-                    SplashView()
+                    SplashView(userColor: Color.accentColor)
                         .rotationEffect(.degrees(90))
                         .opacity(userPressed["❤️"]! ? 0 : 1)
                         .offset(y: userPressed["❤️"]! ? 6 : -6)
@@ -105,22 +108,41 @@ struct EmojiReactionsView: View {
                         .animation(.easeOut(duration: 0.5), value: userPressed["❤️"])
                     
                    Text("❤️")
+                    
                         .phaseAnimator([false, true], trigger: userPressed["❤️"]) { icon, scaleFromBottom in
                             icon
+                            
                                 .scaleEffect(scaleFromBottom ? 1.5 : 1, anchor: .bottom)
                         } animation: { scaleFromBottom in
-                                .bouncy(duration: 0.4, extraBounce: 0.4)
+                            if userPressed["❤️"]! {
+                                       return .bouncy(duration: 0.4, extraBounce: 0.4)
+                                   } else {
+                                       return .none // No animation when userPressed is false
+                                   }
                         }
                         .background(
                             Circle()
-                                .strokeBorder(lineWidth: userPressed["❤️"]! ? 0 : 4)
+                                .strokeBorder(lineWidth: userPressed["❤️"]! ? 4 : 0)
                                 .animation(.easeInOut(duration: 0.5).delay(0.1),value: userPressed["❤️"])
                                 .frame(width: 70, height: 70)
-                                .foregroundColor(Color(.systemPink))
-                                .hueRotation(.degrees(userPressed["❤️"]! ? 300 : 200))
-                                .scaleEffect(userPressed["❤️"]! ? 1.15 : 0)
+                                .foregroundColor(Color.accentColor)
+                                .hueRotation(.degrees(userPressed["❤️"]! ? -10 : 10))
+                                .scaleEffect(userPressed["❤️"]! ? 0 : 1.15)
                                 .animation(.easeInOut(duration: 0.5), value: userPressed["❤️"])
                         )
+                        
+                        .background(
+                            userPressed["❤️"]!
+                            ? Circle()
+//                                .frame(width: 50, height: 50)
+//                                .fill(Color.accentColor)
+                                .fill(Color(UIColor.systemFill))
+//                                .fill(.thickMaterial)
+                                .frame(width: 30, height: 30)
+                                .animation(.easeInOut(duration: 0.5),value: userPressed["❤️"])
+                            
+                            : nil)
+                        
                 }
             }
             
@@ -130,16 +152,19 @@ struct EmojiReactionsView: View {
                     updateEmoji(emoji: "👍")
                 }
                 
+                let generator = UIImpactFeedbackGenerator(style: .heavy)
+                generator.impactOccurred()
+                
             } label: {
                 ZStack {
                   
-                    SplashView()
+                    SplashView(userColor: Color.accentColor)
                         .opacity(userPressed["👍"]! ? 0 : 1)
                         .animation(.easeInOut(duration: 0.5).delay(0.25), value: userPressed["👍"])
                         .scaleEffect(userPressed["👍"]! ? 1.25 : 0)
                         .animation(.easeInOut(duration: 0.5), value: userPressed["👍"])
                     
-                    SplashView()
+                    SplashView(userColor: Color.accentColor)
                         .rotationEffect(.degrees(90))
                         .opacity(userPressed["👍"]! ? 0 : 1)
                         .offset(y: userPressed["👍"]! ? 6 : -6)
@@ -152,19 +177,37 @@ struct EmojiReactionsView: View {
                                 .rotationEffect(.degrees(scaleRotate ? -5 : 0), anchor: .bottomLeading)
                                 .scaleEffect(scaleRotate ? 1.5 : 1)
                         } animation: { scaleRotate in
-                                .bouncy(duration: 0.4, extraBounce: 0.4)
+                            
+                            
+                            if userPressed["👍"]! {
+                                       return .bouncy(duration: 0.4, extraBounce: 0.4)
+                                   } else {
+                                       return .none // No animation when userPressed is false
+                                   }
                         }
                         .background(
                             Circle()
-                                .strokeBorder(lineWidth: userPressed["👍"]! ? 0 : 4)
+                                .strokeBorder(lineWidth: userPressed["👍"]! ? 4 : 0)
                                 .animation(.easeInOut(duration: 0.5).delay(0.1),value: userPressed["👍"])
                                 .frame(width: 70, height: 70)
-                                .foregroundColor(Color(.systemPink))
-                                .hueRotation(.degrees(userPressed["👍"]! ? 300 : 200))
-                                .scaleEffect(userPressed["👍"]! ? 1.15 : 0)
+                                .foregroundColor(Color.accentColor)
+                                .hueRotation(.degrees(userPressed["👍"]! ? -10 : 10))
+                                .scaleEffect(userPressed["👍"]! ? 0 : 1.15)
                                 .animation(.easeInOut(duration: 0.5), value: userPressed["👍"])
                             
                         )
+                        .background(
+                            userPressed["👍"]!
+                            ? Circle()
+//                                .frame(width: 50, height: 50)
+//                                .fill(Color.accentColor)
+                                .fill(Color(UIColor.systemFill))
+//                                .fill(.thickMaterial)
+                                .frame(width: 30, height: 30)
+                                .animation(.easeInOut(duration: 0.5),value: userPressed["👍"])
+                            
+                            : nil)
+                    
                 }
                 
             }
@@ -175,6 +218,9 @@ struct EmojiReactionsView: View {
                     updateEmoji(emoji: "👎")
                 }
                 
+                let generator = UIImpactFeedbackGenerator(style: .heavy)
+                generator.impactOccurred()
+                
             } label: {
                 Text("👎")
             }
@@ -183,14 +229,35 @@ struct EmojiReactionsView: View {
                     .rotationEffect(.degrees(dislike ? -45 : 0), anchor: .leading)
                     .scaleEffect(dislike ? 1.5 : 1)
             } animation: { dislike in
-                    .bouncy(duration: 0.2, extraBounce: 0.4)
+                if userPressed["👎"]! {
+                    return  .bouncy(duration: 0.4, extraBounce: 0.4)
+                       } else {
+                           return .none // No animation when userPressed is false
+                       }
+                   
             }
+            .background(
+                userPressed["👎"]!
+                ? Circle()
+//                                .frame(width: 50, height: 50)
+//                                .fill(Color.accentColor)
+                    .fill(Color(UIColor.systemFill))
+//                                .fill(.thickMaterial)
+                    .frame(width: 30, height: 30)
+                    .animation(.easeInOut(duration: 0.5),value: userPressed["👎"])
+                
+                : nil)
+            
+            
             
             Button {
                 
                 withAnimation(.interpolatingSpring(stiffness: 170, damping: 5)) {
                     updateEmoji(emoji: "😭")
                 }
+                
+                let generator = UIImpactFeedbackGenerator(style: .heavy)
+                generator.impactOccurred()
                 
             } label: {
                 Text("😭")
@@ -200,14 +267,34 @@ struct EmojiReactionsView: View {
                     .offset(y: crying ? -20 : 0)
                     .scaleEffect(crying ? 1.5 : 1)
             } animation: { crying in
-                    .bouncy(duration: 0.2, extraBounce: 0.4)
+                 
+                
+                if userPressed["😭"]! {
+                           return     .bouncy(duration: 0.4, extraBounce: 0.4)
+                       } else {
+                           return .none // No animation when userPressed is false
+                       }
             }
+            .background(
+                userPressed["😭"]!
+                ? Circle()
+//                                .frame(width: 50, height: 50)
+//                                .fill(Color.accentColor)
+                    .fill(Color(UIColor.systemFill))
+//                                .fill(.thickMaterial)
+                    .frame(width: 30, height: 30)
+                    .animation(.easeInOut(duration: 0.5).delay(0.1),value: userPressed["😭"])
+                
+                : nil)
             
             Button {
                 
                 withAnimation(.interpolatingSpring(stiffness: 170, damping: 5)) {
                     updateEmoji(emoji: "🫵")
                 }
+                
+                let generator = UIImpactFeedbackGenerator(style: .heavy)
+                generator.impactOccurred()
                 
             } label: {
                 Text("🫵")
@@ -217,8 +304,24 @@ struct EmojiReactionsView: View {
 //                    .offset(y: point ? -20 : 0)
                     .scaleEffect(point ? 2 : 1)
             } animation: { point in
-                    .bouncy(duration: 0.2, extraBounce: 0.4)
+                  
+                if userPressed["🫵"]! {
+                           return     .bouncy(duration: 0.4, extraBounce: 0.4)
+                       } else {
+                           return .none // No animation when userPressed is false
+                       }
             }
+            .background(
+                userPressed["🫵"]!
+                ? Circle()
+//                                .frame(width: 50, height: 50)
+//                                .fill(Color.accentColor)
+                    .fill(Color(UIColor.systemFill))
+//                                .fill(.thickMaterial)
+                    .frame(width: 30, height: 30)
+                    .animation(.easeInOut(duration: 0.5),value: userPressed["🫵"])
+                
+                : nil)
             
             
             Button {
@@ -226,6 +329,13 @@ struct EmojiReactionsView: View {
                 withAnimation(.interpolatingSpring(stiffness: 170, damping: 5)) {
                     updateEmoji(emoji: "⁉️")
                 }
+                
+                // Trigger haptic feedback multiple times
+               let generator = UIImpactFeedbackGenerator(style: .heavy)
+               for _ in 0..<5 { // Triggering it five times 
+                   generator.impactOccurred()
+                   Thread.sleep(forTimeInterval: 0.1) // Adding a small delay between each feedback
+               }
                 
             } label: {
                 Text("⁉️")
@@ -237,8 +347,25 @@ struct EmojiReactionsView: View {
                     .rotationEffect(.degrees(question ? 15 : 0))
                     .scaleEffect(question ? 2 : 1)
             } animation: { question in
-                    .bouncy(duration: 0.2, extraBounce: 0.4)
+                
+                if userPressed["⁉️"]! {
+                           return     .bouncy(duration: 0.4, extraBounce: 0.4)
+                       } else {
+                           return .none // No animation when userPressed is false
+                       }
+                    
             }
+            .background(
+                userPressed["⁉️"]!
+                ? Circle()
+//                                .frame(width: 50, height: 50)
+//                                .fill(Color.accentColor)
+                    .fill(Color(UIColor.systemFill))
+//                                .fill(.thickMaterial)
+                    .frame(width: 30, height: 30)
+                    .animation(.easeInOut(duration: 0.5),value: userPressed["⁉️"])
+                
+                : nil)
             
             
           

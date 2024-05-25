@@ -17,6 +17,8 @@ struct EmojiCountHeaderView: View {
     private var userUID: String
     @State private var emojiCount: [String: Int]
     @State private var totalReactions: Int = 0
+    
+    @State private var allValuesAboveZero: Bool
 
     init(spaceId: String, widget: CanvasWidget) {
         self.spaceId = spaceId
@@ -24,6 +26,9 @@ struct EmojiCountHeaderView: View {
         self.userUID = try! AuthenticationManager.shared.getAuthenticatedUser().uid
         self.emojiCount = widget.emojis
         self._emojiCount = State(initialValue: widget.emojis)
+        
+        self.allValuesAboveZero = true
+        
      
     }
 
@@ -32,66 +37,71 @@ struct EmojiCountHeaderView: View {
     
     var body: some View {
         
-        HStack{
-            
-            ForEach(emojiCount.sorted(by: { $0.key < $1.key }), id: \.key) { (key, value) in
-
+       
+            HStack{
                 
-                if value > 0{
-                    HStack{
-                        
-                        Text("\(key)")
-                            
-                        Text("\(value)")
-                    }
-                    .padding(.horizontal, 15)
-                    .padding(.vertical, 8)
-                    .background(
-                        totalReactions > 0
-                            ? Rectangle()
-                            .fill(.ultraThinMaterial)
-                            .clipShape(Capsule())
-                        : nil
-                    )
+                ForEach(emojiCount.sorted(by: { $0.key < $1.key }), id: \.key) { (key, value) in
                     
-//                        .font(.caption)
+                    
+                    if value > 0{
+                        HStack{
+                            
+                            Text("\(key)")
+                            
+                            Text("\(value)")
+                        }
+                        .padding(.horizontal, 15)
+                        .padding(.vertical, 8)
+                        .background(
+                            totalReactions > 0
+                            ? Rectangle()
+                                .fill(.ultraThinMaterial)
+                                .clipShape(Capsule())
+                            : nil
+                        )
+                        
+                        //                        .font(.caption)
+                    }
+                    
+                    
+                   
+                    
                 }
+                
                 
             }
             
             
-
+            //
+            //            if totalReactions > 0{
+            //
+            //                Text(" \(totalReactions)")
+            //                    .fontWeight(.semibold)
+            //                    .background(
+            //                        totalReactions > 0
+            //                            ? Rectangle()
+            //                            .fill(.ultraThinMaterial)
+            //                            .clipShape(Capsule())
+            //                        : nil
+            //                    )
+            //
+            //            }
             
-//            
-//            if totalReactions > 0{
-//                
-//                Text(" \(totalReactions)")
-//                    .fontWeight(.semibold)
-//                    .background(
-//                        totalReactions > 0
-//                            ? Rectangle()
-//                            .fill(.ultraThinMaterial)
-//                            .clipShape(Capsule())
-//                        : nil
-//                    )
-//                
-//            }
             
-          
-
-
+            
+            
+            
+            
+            
+            .onAppear {
+                // Calculate the total reactions when the view appears
+                totalReactions = emojiCount.values.reduce(0, +)
+            }
             
             
         }
  
-        
-        .onAppear {
-                    // Calculate the total reactions when the view appears
-                    totalReactions = emojiCount.values.reduce(0, +)
-        }
-        
    
-    }
     
 }
 

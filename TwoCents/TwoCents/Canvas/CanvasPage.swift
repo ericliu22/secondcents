@@ -199,9 +199,10 @@ struct CanvasPage: View {
                     .overlay(content: {
                    
                             
-                        selectedWidget == nil ?
+                        selectedWidget == nil/* && draggingItem == nil */?
                         EmojiCountOverlayView(spaceId: spaceId, widget: widget)
                             .offset(y: TILE_SIZE/2)
+                        
                         : nil
                             
                     
@@ -248,6 +249,7 @@ struct CanvasPage: View {
                         }
                         
                     }
+                
                 //where its dropped
                     .dropDestination(for: CanvasWidget.self) { items, location in
                         draggingItem = nil
@@ -270,7 +272,11 @@ struct CanvasPage: View {
                                 //                                }
                             }
                         }
+                        
+                        //added this line for emoji overlay... if it breaks delete this
+                        draggingItem = nil
                     }
+                    
             }
             
         }
@@ -513,6 +519,7 @@ struct CanvasPage: View {
                 )
                 .overlay(selectedWidget != nil
                          ? VStack {
+                             
                              EmojiCountHeaderView(spaceId: spaceId, widget: selectedWidget!)
                                  .padding(.top, 150)
                              Spacer()
