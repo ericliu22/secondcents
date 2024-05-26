@@ -19,12 +19,19 @@ struct FrontPageView: View {
     var body: some View {
         TabView{
 //            UploadExample()
-            VoteGameView()
+            
+            SpacesView(showSignInView: $showSignInView, loadedColor: $loadedColor, showCreateProfileView: $showCreateProfileView)
                 .tabItem {
-                    Image(systemName: "house")
-                    Text("Vote Game")
-                    
+                    Image(systemName: "rectangle.3.group.fill")
+                    Text("Spaces")
                 }
+            
+//            VoteGameView()
+//                .tabItem {
+//                    Image(systemName: "house")
+//                    Text("Vote Game")
+//                    
+//                }
 //            ChatView()
 //                .tabItem {
 //                    Image(systemName: "house")
@@ -38,17 +45,12 @@ struct FrontPageView: View {
                     Image(systemName: "magnifyingglass")
                     Text("Search")
                 }
-            CanvasPage(spaceId:"F531C015-E840-4B1B-BB3E-B9E7A3DFB80F")
-                .tabItem {
-                    Image(systemName: "house")
-                    Text("Canvas Page")
-                }
-            SpacesView(showSignInView: $showSignInView, loadedColor: $loadedColor, showCreateProfileView: $showCreateProfileView)
-                .tabItem {
-                    Image(systemName: "rectangle.3.group.fill")
-                    Text("Spaces")
-                }
-            
+//            CanvasPage(spaceId:"F531C015-E840-4B1B-BB3E-B9E7A3DFB80F")
+//                .tabItem {
+//                    Image(systemName: "house")
+//                    Text("Canvas Page")
+//                }
+//     
             
             
             NavigationStack {
