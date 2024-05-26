@@ -122,6 +122,8 @@ struct ChatView: View {
         
         self.scroll = false
         
+        
+        
     }
     
     
@@ -165,14 +167,18 @@ struct ChatView: View {
                         replyWidget = nil
                     }
                 }
+               
                 .onChange(of: messageManager.lastMessageId) {
-                    id in proxy.scrollTo(id, anchor: .bottom)
+//                    id in proxy.scrollTo(id, anchor: .bottom)
+                    
+                    scroll = true
                 }
                 
                 .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardDidChangeFrameNotification)) { _ in
-                    if replyWidget != nil {
-                        proxy.scrollTo("replyWidget", anchor: .bottom)
-                    }
+//                    if replyWidget != nil {
+//                        proxy.scrollTo("replyWidget", anchor: .bottom)
+//                    }
+                    scroll = true
                 }
                 
                 .onChange(of: scroll) {
@@ -184,6 +190,9 @@ struct ChatView: View {
                     
                     scroll = false
                 }
+             
+                
+              
                 
                 
                 
@@ -191,9 +200,10 @@ struct ChatView: View {
             .padding(.top)
             .padding(.horizontal)
             MessageField( replyMode: $replyMode, replyWidget: $replyWidget).environmentObject(messageManager)
-                .onTapGesture {
-                    scroll = true
-                }
+              
+        }
+        .onTapGesture {
+            scroll = true
         }
         
         .scrollIndicators(.hidden)

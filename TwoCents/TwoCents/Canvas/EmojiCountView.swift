@@ -78,8 +78,11 @@ struct EmojiCountHeaderView: View {
             
         }
         .onAppear {
+            
             // Calculate the total reactions when the view appears
             totalReactions = emojiCount.values.reduce(0, +)
+       
+
         }
     }
 }
@@ -95,7 +98,7 @@ struct EmojiCountOverlayView: View {
     @State private var emojiCount: [String: Int]
     @State private var totalReactions: Int = 0
     
-    @State private var totalValue: Int = 0
+//    @State private var totalValue: Int = 0
     
     init(spaceId: String, widget: CanvasWidget) {
         self.spaceId = spaceId
@@ -120,9 +123,9 @@ struct EmojiCountOverlayView: View {
                     HStack{
                         
                         Text("\(key)")
-                            .onAppear{
-                                totalValue += value
-                            }
+//                            .onAppear{
+//                                totalValue += value
+//                            }
                     }
                     
                     
@@ -135,9 +138,9 @@ struct EmojiCountOverlayView: View {
                 
             }
             
-            if totalValue > 0 {
+            if totalReactions > 0 {
                 
-                Text("\(totalValue)")
+                Text("\(totalReactions)")
                 
             }
             

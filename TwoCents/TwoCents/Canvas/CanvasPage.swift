@@ -750,6 +750,10 @@ struct CanvasPage: View {
                             .onDisappear {
                                 showSheet = true
                                 inSettingsView = false
+                                
+                               
+                                
+                                
                             }
                     } label: {
                         Image(systemName: "ellipsis")
