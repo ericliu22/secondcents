@@ -41,7 +41,7 @@ struct NewPoll: View{
                         .frame(height: 55)
                         .frame(maxWidth: .infinity)
                 })
-                .disabled(pollModel.isCreateNewPollButtonDisabled)
+//                .disabled(pollModel.isCreateNewPollButtonDisabled)
                 .buttonStyle(.bordered)
                 .tint(.accentColor)
                 .frame(height: 55)

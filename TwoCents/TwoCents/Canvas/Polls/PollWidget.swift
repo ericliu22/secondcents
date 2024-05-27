@@ -95,8 +95,7 @@ struct PollWidget: View {
                             Section{
                                 VStack{
                                     //Text("Idk how to change chart colors lmao").foregroundColor(.black)
-                                    Chart{
-                                        ForEach(poll!.options) {option in
+                                    Chart(poll!.options) {option in
                                             SectorMark(
                                                 angle: .value("Count", option.count),
                                                 innerRadius: .ratio(0.618),
@@ -106,7 +105,7 @@ struct PollWidget: View {
                                             .foregroundStyle(by: .value("Name", option.name))
                                         }
                                         .padding()
-                                    }
+                                    
                                 }
                                 Section("Vote") {
                                     //Some warning about non-constant range but yolo
@@ -124,16 +123,17 @@ struct PollWidget: View {
                             }
                         }
                     }.draggable(widget)
-                } else {
-                    
-                    ProgressView()
-                        .progressViewStyle(
-                            CircularProgressViewStyle(tint:
-                                    .primary)
-                        )
-                        .background(.thickMaterial)
+                
+//                } else {
+//                    
+//                    ProgressView()
+//                        .progressViewStyle(
+//                            CircularProgressViewStyle(tint:
+//                                    .primary)
+//                        )
+//                        .background(.thickMaterial)
                 }
-            })
+            }})
         }
 }
 
