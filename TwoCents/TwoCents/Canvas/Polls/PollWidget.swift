@@ -33,7 +33,10 @@ struct PollWidget: View {
         assert(widget.media == .poll)
         self.widget = widget
         self.spaceId = spaceId
+        print("1", poll)
+        print("2",self.poll as Any)
         self.poll = poll
+        print("SELF.POLL: \(self.poll!)")
     }
     
     func listenToPoll() {
@@ -68,7 +71,8 @@ struct PollWidget: View {
     
     var body: some View {
         VStack{
-            Text("poll")
+            //Poll widgets must have a name lest they crash
+            Text(widget.widgetName!)
         }
         .frame(width: widget.width, height: widget.height)
         .onTapGesture{isShowingPoll.toggle()}
@@ -101,38 +105,42 @@ struct PollWidget: View {
                                             .cornerRadius(5)
                                             .foregroundStyle(by: .value("Name", option.name))
                                         }
+                                        .padding()
                                     }
-                                    .padding()
                                 }
-                            }
-                            Section("Vote") {
-                                //Some warning about non-constant range but yolo
-                                ForEach(0..<poll!.options.count) { index in
-                                    Button(action: {
-                                        poll!.incrementOption(index: index)
-                                    }, label: {
-                                        HStack{
-                                            Text(poll!.options[index].name)
-                                                .foregroundColor(.black)
-                                        }
-                                    })
+                                Section("Vote") {
+                                    //Some warning about non-constant range but yolo
+                                    ForEach(0..<poll!.options.count) { index in
+                                        Button(action: {
+                                            poll!.incrementOption(index: index)
+                                        }, label: {
+                                            HStack{
+                                                Text(poll!.options[index].name)
+                                                    .foregroundColor(.black)
+                                            }
+                                        })
+                                    }
                                 }
                             }
                         }
-                    }
-                }.draggable(widget)
-            } else {
-                ProgressView()
-                    .progressViewStyle(
-                        CircularProgressViewStyle(tint:
-                                .primary)
-                    )
-                    .background(.thickMaterial)
-            }
-        })
-    }
+                    }.draggable(widget)
+                } else {
+                    
+                    ProgressView()
+                        .progressViewStyle(
+                            CircularProgressViewStyle(tint:
+                                    .primary)
+                        )
+                        .background(.thickMaterial)
+                }
+            })
+        }
 }
 
 func pollWidget(widget: CanvasWidget, spaceId: String) -> AnyView {
     return AnyView(PollWidget(widget: widget, spaceId: spaceId))
+    
+//    return AnyView(Color.red)
+//    return AnyView(PollWidget(widget: <#T##CanvasWidget#>, spaceId: <#T##String#>))
 }
+

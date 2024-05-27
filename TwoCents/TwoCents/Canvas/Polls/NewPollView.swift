@@ -12,32 +12,43 @@ import SwiftUI
 struct NewPoll: View{
     private var spaceId: String
     @State private var pollModel: NewPollModel
+    @State private var showingView: Bool = false
     
     init(spaceId: String) {
         self.spaceId = spaceId
         self.pollModel = NewPollModel(spaceId: spaceId)
     }
     
+    @State var OptionsArray: [String] = []
+    
     var body: some View{
         VStack{
-            newPollSection
-            addOptionSection
-            Button(action: {
-                //@TODO: Replace with NewWidgetView temp widget behavior
-                Task{await pollModel.createNewPoll()}
-            }, label: {
-                Text("Submit")
-                    .font(.headline)
-                    .frame(height: 55)
-                    .frame(maxWidth: .infinity)
-            })
-            .disabled(pollModel.isCreateNewPollButtonDisabled)
+            //Poll widgets must have a name lest they crash
+            Text("New Poll")
+        }
+        .frame(width: 250, height: 250)
+        .onTapGesture{showingView.toggle()}
+        .fullScreenCover(isPresented: $showingView, content: {
+            VStack{
+                newPollSection
+                addOptionSection
+                Button(action: {
+                    //@TODO: Replace with NewWidgetView temp widget behavior
+                    Task{await pollModel.createNewPoll()}
+                }, label: {
+                    Text("Submit")
+                        .font(.headline)
+                        .frame(height: 55)
+                        .frame(maxWidth: .infinity)
+                })
+                .disabled(pollModel.isCreateNewPollButtonDisabled)
                 .buttonStyle(.bordered)
                 .tint(.accentColor)
                 .frame(height: 55)
                 .cornerRadius(10)
                 
-        }.padding()
+            }.padding()
+        })
     }
     
     var newPollSection: some View{
@@ -48,8 +59,6 @@ struct NewPoll: View{
                 .fontWeight(.bold)
                 
                 .foregroundStyle(Color.accentColor)
-        } footer: {
-            Text("2-10 options")
         }
     }
     
@@ -62,15 +71,22 @@ struct NewPoll: View{
     
     var addOptionSection: some View{
         VStack {
-            TextField("Enter option name", text: $pollModel.newOptionName)
-                .autocorrectionDisabled()
-                .textInputAutocapitalization(.never)
-                .padding()
-                .background(Color(UIColor.secondarySystemBackground))
-                .cornerRadius(10)
+            ForEach(OptionsArray.indices, id: \.self) { index in
+                TextField("Enter option name", text:
+                            $OptionsArray[index]
+                    //$pollModel.newOptionName
+                )
+                    .autocorrectionDisabled()
+                    .textInputAutocapitalization(.never)
+                    .padding()
+                    .background(Color(UIColor.secondarySystemBackground))
+                    .cornerRadius(10)
+            }
             Button("+ Add Option") {
-                pollModel.addOption()
-            }.disabled(pollModel.isAddOptionsButtonDisabled)
+                //pollModel.addOption()
+                //TODO: cannot add options if isempty or contains only spaces
+                OptionsArray.append("")
+            }/*.disabled(pollModel.isAddOptionsButtonDisabled)*/
                 .buttonStyle(.borderedProminent)
                 .tint(Color(Color.accentColor))
                 .frame(height: 55)
@@ -89,8 +105,10 @@ extension String: Identifiable{
     public var id: Self { self }
 }
 
-/*
- #Preview{
- NavigationStack{newPoll()}
- }
- */
+
+#Preview {
+    NavigationStack{
+        NewPoll(spaceId: "099E9885-EE75-401D-9045-0F6DA64D29B1")
+    }
+}
+ 

@@ -18,7 +18,11 @@ struct Option: Codable, Identifiable, Hashable {
     }
 }
 
-struct Poll: Codable, Identifiable, Hashable {
+struct Poll: Codable, Identifiable {
+//    static func == (lhs: Poll, rhs: Poll) -> Bool {
+//        lhs.id == rhs.id
+//    }
+    
     var id: UUID
     var name: String
     var options: [Option] = []
@@ -32,6 +36,7 @@ struct Poll: Codable, Identifiable, Hashable {
     }
      */
     
+
     mutating func incrementOption(index: Int) {
         options[index].count += 1
     }

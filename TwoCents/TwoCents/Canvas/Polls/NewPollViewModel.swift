@@ -21,17 +21,17 @@ class NewPollModel {
     
     private var spaceId: String
     
-    var isCreateNewPollButtonDisabled: Bool {
-        isLoading ||
-        newPollName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ||
-        newPollOptions.count < 2
-    }
+//    var isCreateNewPollButtonDisabled: Bool {
+//        isLoading ||
+//        newPollName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ||
+//        newPollOptions.count < 2
+//    }
     
-    var isAddOptionsButtonDisabled: Bool {
-        isLoading ||
-        newOptionName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ||
-        newPollOptions.count == 10
-    }
+//    var isAddOptionsButtonDisabled: Bool {
+//        isLoading ||
+//        newOptionName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ||
+//        newPollOptions.count == 10
+//    }
     
     init(spaceId: String) {
         self.spaceId = spaceId
@@ -69,9 +69,16 @@ class NewPollModel {
         //@TODO: Dismiss after submission
     }
     
-    func addOption() {
-        let newOption = Option(name: newOptionName.trimmingCharacters(in: .whitespacesAndNewlines))
-        self.newPollOptions.append(newOption)
-        self.newOptionName = ""
+//    func addOption() {
+//        let newOption = Option(name: newOptionName.trimmingCharacters(in: .whitespacesAndNewlines))
+//        self.newPollOptions.append(newOption)
+//        self.newOptionName = ""
+//    }
+    
+    func addOptions(OptionArray: [String]) {
+        for object in OptionArray {
+            let newOption = Option(name: object.trimmingCharacters(in: .whitespacesAndNewlines))
+            self.newPollOptions.append(newOption)
+        }
     }
 }
