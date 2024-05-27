@@ -18,7 +18,7 @@ struct EmojiCountHeaderView: View {
     @State private var emojiCount: [String: Int]
     @State private var totalReactions: Int = 0
     
-    @State private var numReactionsUsed: Int
+    @State private var   allAboveZero : Bool
     
     init(spaceId: String, widget: CanvasWidget) {
         self.spaceId = spaceId
@@ -27,7 +27,7 @@ struct EmojiCountHeaderView: View {
         self.emojiCount = widget.emojis
         self._emojiCount = State(initialValue: widget.emojis)
         
-        self.numReactionsUsed = 0
+        self.allAboveZero = false
         
         
     }
@@ -37,29 +37,9 @@ struct EmojiCountHeaderView: View {
         
         
         HStack{
-            ForEach(emojiCount.sorted(by: { $0.key < $1.key }), id: \.key) { (key, value) in
-                
-                if value > 0 && numReactionsUsed < 6 {
-                    HStack{
-                        Text("\(key)")
-                        Text("\(value)")
-                    }
-                    .padding(.horizontal, 15)
-                    .padding(.vertical, 8)
-                    .background(
-                        totalReactions > 0
-                        ? Rectangle()
-                            .fill(.ultraThinMaterial)
-                            .clipShape(Capsule())
-                        : nil
-                    )
-                    .task {
-                        numReactionsUsed += 1
-                    }
-                }
-            }
+           
             
-            if numReactionsUsed >= 6 {
+            if allAboveZero{
                 HStack{
                     Text("🐐🐐🐐")
                     Text("\(totalReactions)")
@@ -74,14 +54,45 @@ struct EmojiCountHeaderView: View {
                     : nil
                 )
                 
+            } else {
+                
+                ForEach(emojiCount.sorted(by: { $0.key < $1.key }), id: \.key) { (key, value) in
+                    
+                    if value > 0 {
+                        HStack{
+                            Text("\(key)")
+                            Text("\(value)")
+                        }
+                        .padding(.horizontal, 15)
+                        .padding(.vertical, 8)
+                        .background(
+                            totalReactions > 0
+                            ? Rectangle()
+                                .fill(.ultraThinMaterial)
+                                .clipShape(Capsule())
+                            : nil
+                        )
+                        
+                    }
+                }
+                
+                
+                
+                
             }
+             
+            
             
         }
         .onAppear {
             
             // Calculate the total reactions when the view appears
             totalReactions = emojiCount.values.reduce(0, +)
-       
+            
+            
+            allAboveZero = emojiCount.values.allSatisfy { $0 > 0 }
+
+          
 
         }
     }
@@ -123,47 +134,39 @@ struct EmojiCountOverlayView: View {
                     HStack{
                         
                         Text("\(key)")
-//                            .onAppear{
-//                                totalValue += value
-//                            }
                     }
-                    
                     
                     .font(.caption)
                 }
-                
-                
-                
-                
                 
             }
             
             if totalReactions > 0 {
                 
                 Text("\(totalReactions)")
+                    .font(.caption)
                 
             }
-            
-            
-            
             
         }
         
         .padding(.horizontal, 8)
-        .padding(.vertical, 4)
+        .padding(.vertical, 6)
         
         .background(
             totalReactions > 0
             ? Rectangle()
                 .fill(.ultraThinMaterial)
+              
                 .clipShape(Capsule())
+               
             : nil
         )
         .onAppear {
             // Calculate the total reactions when the view appears
             totalReactions = emojiCount.values.reduce(0, +)
         }
-        
+       
         
     }
     

@@ -202,6 +202,7 @@ struct CanvasPage: View {
                         selectedWidget == nil/* && draggingItem == nil */?
                         EmojiCountOverlayView(spaceId: spaceId, widget: widget)
                             .offset(y: TILE_SIZE/2)
+                            
                         
                         : nil
                             
@@ -547,6 +548,7 @@ struct CanvasPage: View {
                                  }, label: {
                                      Image(systemName: "arrowshape.turn.up.left")
                                          .foregroundColor(Color(UIColor.label))
+                                         .font(.title3)
                                  })
                                  
                                  
@@ -564,6 +566,7 @@ struct CanvasPage: View {
                                  }, label: {
                                      Image(systemName: "trash")
                                          .foregroundColor(.red)
+                                         .font(.title3)
                                  })
                              }
                              .padding(.horizontal, 15)

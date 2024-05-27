@@ -130,123 +130,127 @@ struct SpaceSettingsView: View {
                 
                 VStack{
                     
-                    
-                    ForEach(viewModel.allMembers) { userTile    in
+                    if viewModel.allMembers.isEmpty {
+                        ProgressView()
+                            .progressViewStyle(CircularProgressViewStyle(tint: Color(UIColor.label)))
                         
-                    
-                        if userTile.userId != viewModel.user?.userId {
-                       
-//                        
-                        let targetUserColor: Color = viewModel.getUserColor(userColor: userTile.userColor!)
-                        
-                        HStack(spacing: 20){
-                            Group{
-                                //Circle or Profile Pic
-                                if let urlString = userTile.profileImageUrl,
-                                   let url = URL(string: urlString) {
-                                    
-                                    
-                                    
-                                    //If there is URL for profile pic, show
-                                    //circle with stroke
-                                    AsyncImage(url: url) {image in
-                                        image
-                                            .resizable()
-                                            .scaledToFill()
-                                            .clipShape(Circle())
-                                            .frame(width: 64, height: 64)
-                                        
-                                        
-                                        
-                                    } placeholder: {
-                                        //else show loading after user uploads but sending/downloading from database
-                                        
-                                        ProgressView()
-                                            .progressViewStyle(CircularProgressViewStyle(tint: Color(UIColor.systemBackground)))
-                                        //                                                .scaleEffect(0.5, anchor: .center)
-                                            .frame(width: 64, height: 64)
-                                            .background(
-                                                Circle()
-                                                    .fill(targetUserColor)
+                    } else {
+                        ForEach(viewModel.allMembers) { userTile    in
+                            
+                            
+                            if userTile.userId != viewModel.user?.userId {
+                                
+                                //
+                                let targetUserColor: Color = viewModel.getUserColor(userColor: userTile.userColor!)
+                                
+                                HStack(spacing: 20){
+                                    Group{
+                                        //Circle or Profile Pic
+                                        if let urlString = userTile.profileImageUrl,
+                                           let url = URL(string: urlString) {
+                                            
+                                            
+                                            
+                                            //If there is URL for profile pic, show
+                                            //circle with stroke
+                                            AsyncImage(url: url) {image in
+                                                image
+                                                    .resizable()
+                                                    .scaledToFill()
+                                                    .clipShape(Circle())
                                                     .frame(width: 64, height: 64)
-                                            )
+                                                
+                                                
+                                                
+                                            } placeholder: {
+                                                //else show loading after user uploads but sending/downloading from database
+                                                
+                                                ProgressView()
+                                                    .progressViewStyle(CircularProgressViewStyle(tint: Color(UIColor.systemBackground)))
+                                                //                                                .scaleEffect(0.5, anchor: .center)
+                                                    .frame(width: 64, height: 64)
+                                                    .background(
+                                                        Circle()
+                                                            .fill(targetUserColor)
+                                                            .frame(width: 64, height: 64)
+                                                    )
+                                            }
+                                            
+                                        } else {
+                                            
+                                            //if user has not uploaded profile pic, show circle
+                                            Circle()
+                                            
+                                                .strokeBorder(targetUserColor, lineWidth:0)
+                                                .background(Circle().fill(targetUserColor))
+                                                .frame(width: 64, height: 64)
+                                            
+                                        }
+                                        
+                                        
+                                        
+                                        
                                     }
                                     
-                                } else {
+                                    VStack(alignment: .leading){
+                                        
+                                        Text(userTile.name!)
+                                            .font(.headline)
+                                        
+                                        
+                                        Text(
+                                            "@\(userTile.username!)")
+                                        .foregroundStyle(.secondary)
+                                        .font(.caption)
+                                        
+                                    }
                                     
-                                    //if user has not uploaded profile pic, show circle
-                                    Circle()
                                     
-                                        .strokeBorder(targetUserColor, lineWidth:0)
-                                        .background(Circle().fill(targetUserColor))
-                                        .frame(width: 64, height: 64)
+                                    
+                                    Spacer()
+                                    
+                                    
+                                    
+                                    Button {
+                                        Task{
+                                            try? await viewModel.removeUser(userId: userTile.userId, spaceId: spaceId)
+                                            try? await viewModel.loadCurrentSpace(spaceId: spaceId)
+                                            //                                viewModel.declineFriendRequest(friendUserId: userTile.userId)
+                                            try? await viewModel.getMembersInfo()
+                                        }
+                                    } label: {
+                                        Text("Kick")
+                                            .font(.caption)
+                                        
+                                        
+                                        //                                    .frame(maxWidth: .infinity)
+                                        
+                                    }
+                                    .tint(.gray)
+                                    .buttonStyle(.bordered)
+                                    .cornerRadius(10)
+                                    
                                     
                                 }
+                                .frame(maxWidth: .infinity,  alignment: .leading)
                                 
                                 
+                                
+                                .padding(.horizontal)
+                                .padding(.vertical, 8)
+                                
+                                .background(.thickMaterial)
+                                .background(targetUserColor)
+                                .cornerRadius(10)
                                 
                                 
                             }
-                            
-                            VStack(alignment: .leading){
-                                
-                                Text(userTile.name!)
-                                    .font(.headline)
-                                
-                                
-                                Text(
-                                    "@\(userTile.username!)")
-                                .foregroundStyle(.secondary)
-                                .font(.caption)
-                                
-                            }
-                            
-                            
-                            
-                            Spacer()
-                            
-                            
-                            
-                            Button {
-                                Task{
-                                    try? await viewModel.removeUser(userId: userTile.userId, spaceId: spaceId)
-                                    try? await viewModel.loadCurrentSpace(spaceId: spaceId)
-                                    //                                viewModel.declineFriendRequest(friendUserId: userTile.userId)
-                                    try? await viewModel.getMembersInfo()
-                                }
-                            } label: {
-                                Text("Kick")
-                                    .font(.caption)
-                                
-                                
-//                                    .frame(maxWidth: .infinity)
-                                
-                            }
-                            .tint(.gray)
-                            .buttonStyle(.bordered)
-                            .cornerRadius(10)
-                            
-                            
                         }
-                        .frame(maxWidth: .infinity,  alignment: .leading)
-                   
-                        
-                        
-                        .padding(.horizontal)
-                        .padding(.vertical, 8)
-                       
-                        .background(.thickMaterial)
-                        .background(targetUserColor)
-                        .cornerRadius(10)
-                       
-                        
                     }
-                    }
+                    
+                    
+                    
                 }
-                
-           
-                
-                
                 
                 
                 
@@ -317,14 +321,14 @@ struct SpaceSettingsView: View {
             try? await viewModel.getMembersInfo()
             
         }
-       
-
+        
+        
         .fullScreenCover(isPresented: $isShowingAddMember,onDismiss: {
             Task{
                 try? await viewModel.loadCurrentSpace(spaceId: spaceId)
                 try? await viewModel.getMembersInfo()
             }
-           
+            
         }, content: {
             NavigationView{
                 AddMemberView(spaceId: spaceId)

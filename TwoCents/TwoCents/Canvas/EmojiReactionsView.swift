@@ -88,7 +88,7 @@ struct EmojiReactionsView: View {
                     updateEmoji(emoji: "❤️")
                 }
                 
-                let generator = UIImpactFeedbackGenerator(style: .heavy)
+                let generator = UIImpactFeedbackGenerator(style: .medium)
                 generator.impactOccurred()
                 
             } label: {
@@ -152,7 +152,7 @@ struct EmojiReactionsView: View {
                     updateEmoji(emoji: "👍")
                 }
                 
-                let generator = UIImpactFeedbackGenerator(style: .heavy)
+                let generator = UIImpactFeedbackGenerator(style: .medium)
                 generator.impactOccurred()
                 
             } label: {
@@ -218,7 +218,7 @@ struct EmojiReactionsView: View {
                     updateEmoji(emoji: "👎")
                 }
                 
-                let generator = UIImpactFeedbackGenerator(style: .heavy)
+                let generator = UIImpactFeedbackGenerator(style: .medium)
                 generator.impactOccurred()
                 
             } label: {
@@ -256,7 +256,7 @@ struct EmojiReactionsView: View {
                     updateEmoji(emoji: "😭")
                 }
                 
-                let generator = UIImpactFeedbackGenerator(style: .heavy)
+                let generator = UIImpactFeedbackGenerator(style: .medium)
                 generator.impactOccurred()
                 
             } label: {
@@ -293,7 +293,7 @@ struct EmojiReactionsView: View {
                     updateEmoji(emoji: "🫵")
                 }
                 
-                let generator = UIImpactFeedbackGenerator(style: .heavy)
+                let generator = UIImpactFeedbackGenerator(style: .medium)
                 generator.impactOccurred()
                 
             } label: {
@@ -331,11 +331,8 @@ struct EmojiReactionsView: View {
                 }
                 
                 // Trigger haptic feedback multiple times
-               let generator = UIImpactFeedbackGenerator(style: .heavy)
-               for _ in 0..<5 { // Triggering it five times 
-                   generator.impactOccurred()
-                   Thread.sleep(forTimeInterval: 0.1) // Adding a small delay between each feedback
-               }
+                let generator = UIImpactFeedbackGenerator(style: .medium)
+                generator.impactOccurred()
                 
             } label: {
                 Text("⁉️")
