@@ -142,8 +142,6 @@ struct SpaceSettingsView: View {
                         HStack(spacing: 20){
                             Group{
                                 //Circle or Profile Pic
-                                
-                                
                                 if let urlString = userTile.profileImageUrl,
                                    let url = URL(string: urlString) {
                                     

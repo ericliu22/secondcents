@@ -274,7 +274,7 @@ struct CanvasPage: View {
                         }
                         
                         //added this line for emoji overlay... if it breaks delete this
-                        draggingItem = nil
+//                        draggingItem = nil
                     }
                     
             }
