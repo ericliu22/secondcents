@@ -59,14 +59,18 @@ class NewPollModel {
             userId: uid,
             media: .poll,
             widgetName: newPollName
+            
         )
         
+        
+        print(newPollOptions)
         let poll=Poll(canvasWidget: newCanvasWidget, options: newPollOptions)
         poll.uploadPoll(spaceId: spaceId)
         self.newPollName = ""
         self.newOptionName = ""
         self.newPollOptions = []
         //@TODO: Dismiss after submission
+        
     }
     
 //    func addOption() {
