@@ -12,6 +12,7 @@ import SwiftUI
 struct NewPoll: View{
     private var spaceId: String
     @State private var pollModel: NewPollModel
+    @State private var showingView: Bool = false
     
     init(spaceId: String) {
         self.spaceId = spaceId
@@ -20,24 +21,32 @@ struct NewPoll: View{
     
     var body: some View{
         VStack{
-            newPollSection
-            addOptionSection
-            Button(action: {
-                //@TODO: Replace with NewWidgetView temp widget behavior
-                Task{await pollModel.createNewPoll()}
-            }, label: {
-                Text("Submit")
-                    .font(.headline)
-                    .frame(height: 55)
-                    .frame(maxWidth: .infinity)
-            })
-            .disabled(pollModel.isCreateNewPollButtonDisabled)
+            //Poll widgets must have a name lest they crash
+            Text("New Poll")
+        }
+        .frame(width: 250, height: 250)
+        .onTapGesture{showingView.toggle()}
+        .fullScreenCover(isPresented: $showingView, content: {
+            VStack{
+                newPollSection
+                addOptionSection
+                Button(action: {
+                    //@TODO: Replace with NewWidgetView temp widget behavior
+                    Task{await pollModel.createNewPoll()}
+                }, label: {
+                    Text("Submit")
+                        .font(.headline)
+                        .frame(height: 55)
+                        .frame(maxWidth: .infinity)
+                })
+                .disabled(pollModel.isCreateNewPollButtonDisabled)
                 .buttonStyle(.bordered)
                 .tint(.accentColor)
                 .frame(height: 55)
                 .cornerRadius(10)
                 
-        }.padding()
+            }.padding()
+        })
     }
     
     var newPollSection: some View{

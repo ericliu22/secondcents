@@ -34,6 +34,7 @@ struct PollWidget: View {
         self.widget = widget
         self.spaceId = spaceId
         self.poll = poll
+        print("SELF.POLL: \(self.poll!)")
     }
     
     func listenToPoll() {
@@ -68,7 +69,8 @@ struct PollWidget: View {
     
     var body: some View {
         VStack{
-            Text("poll")
+            //Poll widgets must have a name lest they crash
+            Text(widget.widgetName!)
         }
         .frame(width: widget.width, height: widget.height)
         .onTapGesture{isShowingPoll.toggle()}
