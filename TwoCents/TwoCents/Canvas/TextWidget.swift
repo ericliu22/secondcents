@@ -10,11 +10,9 @@ import SwiftUI
 
 func textWidget(widget: CanvasWidget) -> AnyView {
     @State var isPresented: Bool = false
-
+    
     assert(widget.media == .text)
-    
-
-    
+    @State var inputText: String = ""
     return AnyView(
         
         

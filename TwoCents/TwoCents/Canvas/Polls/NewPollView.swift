@@ -19,6 +19,8 @@ struct NewPoll: View{
         self.pollModel = NewPollModel(spaceId: spaceId)
     }
     
+    @State var OptionsArray: [String] = []
+    
     var body: some View{
         VStack{
             //Poll widgets must have a name lest they crash
@@ -57,8 +59,6 @@ struct NewPoll: View{
                 .fontWeight(.bold)
                 
                 .foregroundStyle(Color.accentColor)
-        } footer: {
-            Text("2-10 options")
         }
     }
     
@@ -71,15 +71,22 @@ struct NewPoll: View{
     
     var addOptionSection: some View{
         VStack {
-            TextField("Enter option name", text: $pollModel.newOptionName)
-                .autocorrectionDisabled()
-                .textInputAutocapitalization(.never)
-                .padding()
-                .background(Color(UIColor.secondarySystemBackground))
-                .cornerRadius(10)
+            ForEach(OptionsArray.indices, id: \.self) { index in
+                TextField("Enter option name", text:
+                            $OptionsArray[index]
+                    //$pollModel.newOptionName
+                )
+                    .autocorrectionDisabled()
+                    .textInputAutocapitalization(.never)
+                    .padding()
+                    .background(Color(UIColor.secondarySystemBackground))
+                    .cornerRadius(10)
+            }
             Button("+ Add Option") {
-                pollModel.addOption()
-            }.disabled(pollModel.isAddOptionsButtonDisabled)
+                //pollModel.addOption()
+                //TODO: cannot add options if isempty or contains only spaces
+                OptionsArray.append("")
+            }/*.disabled(pollModel.isAddOptionsButtonDisabled)*/
                 .buttonStyle(.borderedProminent)
                 .tint(Color(Color.accentColor))
                 .frame(height: 55)
@@ -98,8 +105,10 @@ extension String: Identifiable{
     public var id: Self { self }
 }
 
-/*
- #Preview{
- NavigationStack{newPoll()}
- }
- */
+
+#Preview {
+    NavigationStack{
+        NewPoll(spaceId: "099E9885-EE75-401D-9045-0F6DA64D29B1")
+    }
+}
+ 

@@ -162,8 +162,8 @@ func getMediaView(widget: CanvasWidget, spaceId: String) -> AnyView {
             return videoWidget(widget: widget)
         case .image:
             return imageWidget(widget: widget)
-        case .chat:
-            return chatWidget(widget: widget)
+//        case .chat:
+//            return chatWidget(widget: widget)
         case .poll:
             return pollWidget(widget: widget, spaceId: spaceId)
         default:
