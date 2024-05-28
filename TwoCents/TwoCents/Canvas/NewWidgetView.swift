@@ -173,6 +173,7 @@ struct NewWidgetView: View {
                                                 newVideoView(index: index)
                                             case .poll:
                                                 newPollView(index: index)
+//                                                .tint(.red)
                                         default:
                                                 ZStack{
                                                     
@@ -184,6 +185,7 @@ struct NewWidgetView: View {
                                                         .containerRelativeFrame(.horizontal, count: 1, spacing: 0)
                                                 }
                                         }
+                                        
                                         
                                     }
                                     .scrollTransition(.animated, axis: .horizontal) { content, phase in

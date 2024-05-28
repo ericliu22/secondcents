@@ -10,6 +10,9 @@ import SwiftUI
 import FirebaseFirestore
 
 class NewPollModel: ObservableObject {
+    
+    
+    
     let db = Firestore.firestore()
     
     var error: String? = nil
@@ -36,6 +39,7 @@ class NewPollModel: ObservableObject {
     init(spaceId: String) {
         self.spaceId = spaceId
     }
+    
     
     @MainActor
     func createNewPoll() async {
@@ -73,6 +77,11 @@ class NewPollModel: ObservableObject {
         
     }
     
+
+    
+    
+    
+    
 //    func addOption() {
 //        let newOption = Option(name: newOptionName.trimmingCharacters(in: .whitespacesAndNewlines))
 //        self.newPollOptions.append(newOption)
@@ -86,4 +95,6 @@ class NewPollModel: ObservableObject {
             self.newPollOptions.append(newOption)
         }
     }
+    
+    
 }

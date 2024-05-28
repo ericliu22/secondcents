@@ -51,6 +51,7 @@ struct SpacesView: View {
                         
                         NavigationLink {
                             CanvasPage(spaceId: spaceTile.spaceId)
+                                .tint(loadedColor)
                           
                                 .onDisappear {
                                     //refresh spaces list to check if user left a space

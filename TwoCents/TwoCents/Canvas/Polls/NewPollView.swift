@@ -15,6 +15,8 @@ struct NewPoll: View{
     
     @State private var showingView: Bool = false
     
+    @State private var userColor: Color = Color.gray
+    
    
     
     init(spaceId: String) {
@@ -55,7 +57,7 @@ struct NewPoll: View{
                 }
                 
                 
-                //main cotnents
+                //main contents
                 VStack{
                     
                     newPollSection
@@ -63,8 +65,12 @@ struct NewPoll: View{
                     Button(action: {
                         //@TODO: Replace with NewWidgetView temp widget behavior
                         Task{
+                            
+                            
                             pollModel.addOptions(OptionArray: OptionsArray)
                             await pollModel.createNewPoll()
+                            showingView = false
+                            
                             
                         }
                     }, label: {
@@ -72,19 +78,28 @@ struct NewPoll: View{
                             .font(.headline)
                             .frame(height: 55)
                             .frame(maxWidth: .infinity)
+//                            .foregroundStyle(Color.accentColor)
                     })
-                    .disabled(pollModel.newPollName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-                              )
-//                                    .disabled(pollModel.isCreateNewPollButtonDisabled)
+                    .disabled(
+                        pollModel.newPollName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                        || OptionsArray .allSatisfy { $0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
+                    )
+                    //                                    .disabled(pollModel.isCreateNewPollButtonDisabled)
                     .buttonStyle(.bordered)
-                    .tint(.accentColor)
+//                    .foregroundColor(Color.accentColor)
                     .frame(height: 55)
                     .cornerRadius(10)
                     
                 }
+               
                 .padding()
             }
+      
         })
+        .task {
+            userColor = try! await Color.fromString(name: UserManager.shared.getUser(userId: AuthenticationManager.shared.getAuthenticatedUser().uid).userColor ?? "")
+            
+        }
     }
     
     var newPollSection: some View{
@@ -94,8 +109,9 @@ struct NewPoll: View{
                 .font(.largeTitle)
                 .fontWeight(.bold)
                 
-                .foregroundStyle(Color.accentColor)
+                .foregroundStyle(userColor)
         }
+        
     }
     
     var addOptionSectionTextField: some View{
@@ -104,6 +120,7 @@ struct NewPoll: View{
             }
         }
     }
+    
     
     var addOptionSection: some View{
         VStack {
@@ -124,25 +141,8 @@ struct NewPoll: View{
                 if newValue != "" && OptionsArray.count <= 3{
                     OptionsArray.append("")
                 }
-
-              
             }
-            
-//            Button("+ Add Option") {
-//              
-//                OptionsArray.append("")
-//               
-//            }/*.disabled(pollModel.isAddOptionsButtonDisabled)*/
-//                .buttonStyle(.borderedProminent)
-//                .tint(Color(Color.accentColor))
-//                .frame(height: 55)
-//                .cornerRadius(10)
-//            ForEach(pollModel.newPollOptions) { option in
-//                Text(option.name)
-//            }.onDelete{
-//                indexSet in
-//                pollModel.newPollOptions.remove(atOffsets: indexSet)
-//            }
+           
         }
     }
 }

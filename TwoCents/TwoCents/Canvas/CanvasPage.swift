@@ -641,6 +641,7 @@ struct CanvasPage: View {
                 if showNewWidgetView {
                     NewWidgetView(widgetId: widgetId, showNewWidgetView: $showNewWidgetView,  spaceId: spaceId, photoLinkedToProfile: $photoLinkedToProfile)
                         .presentationBackground(Color(UIColor.systemBackground))
+//                        .tint(.red)
                     
                 }else {
                     //show chat instead
