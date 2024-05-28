@@ -53,6 +53,10 @@ struct Poll: Codable, Identifiable {
         }
     }
     
+    func totalVotes() -> Int {
+           return options.reduce(0) { $0 + $1.count }
+       }
+    
     init(canvasWidget: CanvasWidget, options: [Option]) {
         assert(canvasWidget.media == .poll)
         self.id = canvasWidget.id

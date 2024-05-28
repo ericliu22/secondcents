@@ -20,54 +20,55 @@ struct PollWidget: View {
     private var widget: CanvasWidget
     @State var poll: Poll?
     @State var isShowingPoll: Bool = false
-
+    @State var totalVotes: Int = 0
+    
     
     init(widget: CanvasWidget, spaceId: String) {
         assert(widget.media == .poll)
         self.widget = widget
         self.spaceId = spaceId
-//        fetchPoll()
-//        listenToPoll()
+        //        fetchPoll()
+        //        listenToPoll()
         
     }
     
-//    init(widget: CanvasWidget, spaceId: String, poll: Poll) {
-//        assert(widget.media == .poll)
-//        self.widget = widget
-//        self.spaceId = spaceId
-//        print("1", poll)
-//        print("2",self.poll as Any)
-//        self.poll = poll
-//        print("SELF.POLL: \(self.poll!)")
-//    }
-////    
-//    func listenToPoll() {
-//        db.collection("spaces")
-//            .document(spaceId)
-//            .collection("polls")
-//            .document(widget.id.uuidString)
-//            .addSnapshotListener { document , error in
-//                guard let document else {return}
-//                do {
-//                    let newPoll = try document.data(as: Poll.self)
-//                    withAnimation{
-//                        poll?.options = newPoll.options
-//                        poll?.name = newPoll.name
-//                        poll?.uploadPoll(spaceId: spaceId)
-//                    }
-//                } catch {
-//                    print("Failed to Fetch Poll")
-//                }
-//            }
-//    }
-//    
-//    
+    //    init(widget: CanvasWidget, spaceId: String, poll: Poll) {
+    //        assert(widget.media == .poll)
+    //        self.widget = widget
+    //        self.spaceId = spaceId
+    //        print("1", poll)
+    //        print("2",self.poll as Any)
+    //        self.poll = poll
+    //        print("SELF.POLL: \(self.poll!)")
+    //    }
+    ////
+    //    func listenToPoll() {
+    //        db.collection("spaces")
+    //            .document(spaceId)
+    //            .collection("polls")
+    //            .document(widget.id.uuidString)
+    //            .addSnapshotListener { document , error in
+    //                guard let document else {return}
+    //                do {
+    //                    let newPoll = try document.data(as: Poll.self)
+    //                    withAnimation{
+    //                        poll?.options = newPoll.options
+    //                        poll?.name = newPoll.name
+    //                        poll?.uploadPoll(spaceId: spaceId)
+    //                    }
+    //                } catch {
+    //                    print("Failed to Fetch Poll")
+    //                }
+    //            }
+    //    }
+    //
+    //
     
     
     
     func fetchPoll() {
         Task {
-//            print("fetching")
+            //            print("fetching")
             //
             //            do {
             //                self.poll = try await db.collection("spaces")
@@ -91,18 +92,18 @@ struct PollWidget: View {
                         return
                     }
                     
-//                    guard let document = document, document.exists else {
-//                        print("Document does not exist")
-//                        return
-//                    }
+                    //                    guard let document = document, document.exists else {
+                    //                        print("Document does not exist")
+                    //                        return
+                    //                    }
                     
                     do {
                         if let pollData = try snapshot?.data(as: Poll?.self) {
-//                            print(pollData)
-                        
-                           self.poll = pollData
+                            //                            print(pollData)
+                            
+                            self.poll = pollData
                             print("THIS PART \(self.poll)")
-                                           
+                            
                             // Update your SwiftUI view with the retrieved poll data.
                         } else {
                             print("Document data is empty.")
@@ -112,7 +113,7 @@ struct PollWidget: View {
                         // Handle the decoding error, such as displaying an error message to the user.
                     }
                 }
-
+            
         }
     }
     
@@ -134,73 +135,160 @@ struct PollWidget: View {
         }
         
         .frame(width: widget.width, height: widget.height)
-       
+        
         .fullScreenCover(isPresented: $isShowingPoll, content: {
-//            if poll != nil {
-//                Color.green
-//                 
-//                
-//            } else {
-//                Color.red
-//                    .onAppear {
-//                                   fetchPoll()
-//                               }
-//            }
+            //            if poll != nil {
+            //                Color.green
+            //
+            //
+            //            } else {
+            //                Color.red
+            //                    .onAppear {
+            //                                   fetchPoll()
+            //                               }
+            //            }
             
             
             if poll != nil {
-
-                ZStack{
-                    ZStack (alignment: .topLeading) {
+                
+                NavigationStack{
+               
+                    //main content
+                   
                         
-                        Color.clear
-                            .edgesIgnoringSafeArea(.all)
+                        VStack{
+                            let hasNoVotes =  poll!.options.allSatisfy { $0.count == 0 }
+                            ZStack{
+                                if hasNoVotes {
+                                    Chart {
+                                        SectorMark(
+                                            angle: .value("Vote", 1),
+                                            innerRadius: .ratio(0.618),
+                                            angularInset: 2
+                                        )
+                                        .cornerRadius(5)
+                                        .foregroundStyle(Color.gray)
+                                        //                                    .annotation(position: .overlay, alignment: .center) {
+                                        //                                                            Text("No Votes")
+                                        //                                                                .font(.caption)
+                                        //                                                                .foregroundColor(.white)
+                                        //                                                        }
+                                    }
+                                    
+                                    .padding(.bottom)
+                                    .chartLegend(.hidden)
+                                    //                                .frame(height: 350)
+                                    
+                                    
+                                } else {
+                                    Chart(poll!.options) {option in
+                                        SectorMark(
+                                            //                                        angle: .value("Count", option.count),
+                                            angle: .value("Count", option.count),
+                                            innerRadius: .ratio(0.618),
+                                            angularInset: 2
+                                        )
+                                        .cornerRadius(5)
+                                        
+                                        
+                                        //                                    .foregroundStyle(by: .value("Name", option.name))
+                                        .foregroundStyle(colorForIndex(index: poll!.options.firstIndex(of: option)!))
+                                        
+                                        //                                    .annotation(position: .overlay) {
+                                        //                                        Text(option.count == 0 ? "" : "\(option.count)")
+                                        ////
+                                        //                                    }
+                                        
+                                        
+                                    }
+                                    .padding(.bottom)
+                                    .chartLegend(.hidden)
+                                    //                                .frame(height: 400)
+                                    
+                                    
+                                    //
+                                }
+                                
+                               
+
+                                VStack{
+                                    Text("\(totalVotes)")
+                                        .font(.title)
+                                        .fontWeight(.bold)
+                                        .foregroundStyle(.secondary)
+                                    
+                                    Text("Votes")
+                                        .font(.headline)
+                                        .fontWeight(.regular)
+//                                        .fill(.ultraThickMaterial)
+                                        .foregroundStyle(.secondary)
+                                }
+                                
+                   
+                                
+                            }
+                         
+                               
+                            
+//                            LazyVGrid(columns:   [ GridItem(.flexible()),
+//                                      GridItem(.flexible())], spacing: nil){
+                            ForEach(0..<poll!.options.count) { index in
+                                Button(action: {
+                                    poll!.incrementOption(index: index)
+                                    totalVotes = poll!.totalVotes()
+                                }, label: {
+                                    
+                                  
+                                        Text(poll!.options[index].name)
+                                            .font(.headline)
+                                            .frame(maxWidth:.infinity)
+                                        .frame(height: 55)
+                                        
+
+                                    
+                                })
+
+                                .buttonStyle(.bordered)
+                                .tint(colorForIndex(index: index))
+//
+                         
+                                .cornerRadius(10)
+                              
+                              
+                                
+                                
+                                
+                                
+                            }
+                            
+                            
+                            
+                        }
+//                    }
+                        .padding(.horizontal)
+                      
+                    
+                
+                .navigationTitle(poll!.name)
+                .toolbar{
+                    
+                    ToolbarItem(placement: .navigationBarLeading) {
                         
                         Button(action: {
                             isShowingPoll = false
                         }, label: {
                             Image(systemName: "xmark")
                                 .foregroundColor(Color(UIColor.label))
-                                .font(.title2)
-                                .padding()
+        //                        .font(.title2)
+        //                        .padding()
                         })
-                    }
-                    
-                    VStack{
-                        Text(poll!.name)
-                            .padding(.top, 10)
-                        Section{
-                            VStack{
-                                //Text("Idk how to change chart colors lmao").foregroundColor(.black)
-                                Chart(poll!.options) {option in
-                                    SectorMark(
-                                        angle: .value("Count", option.count),
-                                        innerRadius: .ratio(0.618),
-                                        angularInset: 1.5
-                                    )
-                                    .cornerRadius(5)
-                                    .foregroundStyle(by: .value("Name", option.name))
-                                }
-                                .padding()
-                                
-                            }
-                            Section("Vote") {
-                                //Some warning about non-constant range but yolo
-                                ForEach(0..<poll!.options.count) { index in
-                                    Button(action: {
-                                        poll!.incrementOption(index: index)
-                                    }, label: {
-                                        HStack{
-                                            Text(poll!.options[index].name)
-                                                .foregroundColor(.black)
-                                        }
-                                    })
-                                }
-                            }
-                        }
+                        
+                        
                     }
                 }
-                  
+            }
+                
+                
             } else {
                 ProgressView()
                 
@@ -208,8 +296,9 @@ struct PollWidget: View {
                         fetchPoll()
                     }
             }
-                
-                    
+            
+            
+            
         })
         
     }
@@ -217,9 +306,16 @@ struct PollWidget: View {
 
 func pollWidget(widget: CanvasWidget, spaceId: String) -> AnyView {
     return AnyView(PollWidget(widget: widget, spaceId: spaceId))
-  
+    
 }
 
+
+func colorForIndex(index: Int) -> Color {
+    // Define your color logic based on the index
+    // For example:
+    let colors: [Color] = [.red,  .orange, .green, .cyan] // Define your colors
+    return colors[index % colors.count] // Ensure index doesn't exceed the color array length
+}
 
 
 
