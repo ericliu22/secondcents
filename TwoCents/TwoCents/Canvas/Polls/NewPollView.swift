@@ -11,17 +11,20 @@ import SwiftUI
 
 struct NewPoll: View{
     private var spaceId: String
-    @State private var pollModel: NewPollModel
+    @StateObject private var pollModel: NewPollModel
+    
     @State private var showingView: Bool = false
     
    
     
     init(spaceId: String) {
         self.spaceId = spaceId
-        self.pollModel = NewPollModel(spaceId: spaceId)
+//        self.pollModel = NewPollModel(spaceId: spaceId)
+        _pollModel = StateObject(wrappedValue:NewPollModel(spaceId: spaceId))
+           
     }
     
-    @State var OptionsArray: [String] = []
+    @State var OptionsArray: [String] = [""]
     
     var body: some View{
         VStack{
@@ -70,7 +73,9 @@ struct NewPoll: View{
                             .frame(height: 55)
                             .frame(maxWidth: .infinity)
                     })
-                    //                .disabled(pollModel.isCreateNewPollButtonDisabled)
+                    .disabled(pollModel.newPollName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                              )
+//                                    .disabled(pollModel.isCreateNewPollButtonDisabled)
                     .buttonStyle(.bordered)
                     .tint(.accentColor)
                     .frame(height: 55)
@@ -107,28 +112,37 @@ struct NewPoll: View{
                             $OptionsArray[index]
                     //$pollModel.newOptionName
                 )
+                
                     .autocorrectionDisabled()
                     .textInputAutocapitalization(.never)
                     .padding()
                     .background(Color(UIColor.secondarySystemBackground))
                     .cornerRadius(10)
             }
-            Button("+ Add Option") {
-                //pollModel.addOption()
-                //TODO: cannot add options if isempty or contains only spaces
-                OptionsArray.append("")
-               
-            }/*.disabled(pollModel.isAddOptionsButtonDisabled)*/
-                .buttonStyle(.borderedProminent)
-                .tint(Color(Color.accentColor))
-                .frame(height: 55)
-                .cornerRadius(10)
-            ForEach(pollModel.newPollOptions) { option in
-                Text(option.name)
-            }.onDelete{
-                indexSet in
-                pollModel.newPollOptions.remove(atOffsets: indexSet)
+            .onChange(of: OptionsArray.last) { oldValue, newValue in
+//                print(newValue)
+                if newValue != "" && OptionsArray.count <= 3{
+                    OptionsArray.append("")
+                }
+
+              
             }
+            
+//            Button("+ Add Option") {
+//              
+//                OptionsArray.append("")
+//               
+//            }/*.disabled(pollModel.isAddOptionsButtonDisabled)*/
+//                .buttonStyle(.borderedProminent)
+//                .tint(Color(Color.accentColor))
+//                .frame(height: 55)
+//                .cornerRadius(10)
+//            ForEach(pollModel.newPollOptions) { option in
+//                Text(option.name)
+//            }.onDelete{
+//                indexSet in
+//                pollModel.newPollOptions.remove(atOffsets: indexSet)
+//            }
         }
     }
 }

@@ -9,11 +9,11 @@ import Foundation
 import SwiftUI
 import FirebaseFirestore
 
-class NewPollModel {
+class NewPollModel: ObservableObject {
     let db = Firestore.firestore()
     
     var error: String? = nil
-    var newPollName: String = ""
+    @Published var newPollName: String = ""
     var newOptionName: String = ""
     var newPollOptions: [Option] = []
     
@@ -81,6 +81,7 @@ class NewPollModel {
     
     func addOptions(OptionArray: [String]) {
         for object in OptionArray {
+            if object.trimmingCharacters(in: .whitespacesAndNewlines) == "" { continue }
             let newOption = Option(name: object.trimmingCharacters(in: .whitespacesAndNewlines))
             self.newPollOptions.append(newOption)
         }
