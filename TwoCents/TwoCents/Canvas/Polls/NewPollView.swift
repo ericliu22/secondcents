@@ -72,6 +72,8 @@ struct NewPoll: View{
                             showingView = false
                             
                             
+                            
+                            
                         }
                     }, label: {
                         Text("Submit")

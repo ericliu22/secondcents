@@ -225,6 +225,8 @@ struct NewWidgetView: View {
                                         .padding(.horizontal)
                                         .disabled(viewModel.loading || (selectedPhoto == nil))
                                     case 1:
+                                        
+                                        
                                         Button {
                                             viewModel.saveWidget(index: index)
                                             
@@ -243,12 +245,14 @@ struct NewWidgetView: View {
                                         .padding(.horizontal)
                                         .disabled(viewModel.loading || (selectedVideo == nil))
                                     case 2:
+                                        
+                                        
                                             Button {
                                                 viewModel.saveWidget(index: index)
                                                 
-                                                if !viewModel.loading {
-                                                    photoLinkedToProfile = true
-                                                }
+//                                                if !viewModel.loading {
+//                                                    photoLinkedToProfile = true
+//                                                }
                                                 
                                                 dismissScreen()
                                             } label: {

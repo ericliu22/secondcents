@@ -61,7 +61,7 @@ struct PollWidget: View {
     
     func fetchPoll() {
         Task {
-            self.poll = try! await db.collection("spaces")
+            self.poll = try? await db.collection("spaces")
                 .document(spaceId)
                 .collection("polls")
                 .document(widget.id.uuidString)

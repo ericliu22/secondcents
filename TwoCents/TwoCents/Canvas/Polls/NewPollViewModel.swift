@@ -73,11 +73,22 @@ class NewPollModel: ObservableObject {
         self.newPollName = ""
         self.newOptionName = ""
         self.newPollOptions = []
+        
+        saveWidget(widget: newCanvasWidget)
         //@TODO: Dismiss after submission
         
     }
     
-
+    func saveWidget(widget: CanvasWidget) {
+        //Need to copy to variable before uploading (something about actor-isolate whatever)
+        var uploadWidget: CanvasWidget = widget
+        //ensure shits are right dimensions
+        uploadWidget.width = TILE_SIZE
+        uploadWidget.height = TILE_SIZE
+        //space call should never fail so we manly exclamation mark
+        SpaceManager.shared.uploadWidget(spaceId: spaceId, widget: uploadWidget)
+    }
+    
     
     
     
