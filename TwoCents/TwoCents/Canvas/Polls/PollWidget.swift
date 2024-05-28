@@ -14,7 +14,7 @@ import Charts
 
 struct PollWidget: View {
     
-    @Environment(\.presentationMode) var presentationMode
+    
     
     private var spaceId: String
     private var widget: CanvasWidget
@@ -136,76 +136,88 @@ struct PollWidget: View {
         .frame(width: widget.width, height: widget.height)
        
         .fullScreenCover(isPresented: $isShowingPoll, content: {
-            if poll != nil {
-                Color.green
-                 
-                
-            } else {
-                Color.red
-                    .onAppear {
-                                   fetchPoll()
-                               }
-            }
-            
-            
-//            if (poll != nil) {
-//                ZStack{
-//                    ZStack(alignment: .topLeading) {
-//                        Color.white.edgesIgnoringSafeArea(.all)
-//                        Button(action: {
-//                            presentationMode.wrappedValue.dismiss()
-//                        }, label: {
-//                            Image(systemName: "xmark")
-//                                .foregroundColor(.black)
-//                                .font(.largeTitle)
-//                                .padding(20)
-//                        })
-//                        VStack{
-//                            Text(poll!.name)
-//                                .padding(.top, 10)
-//                            Section{
-//                                VStack{
-//                                    //Text("Idk how to change chart colors lmao").foregroundColor(.black)
-//                                    Chart(poll!.options) {option in
-//                                        SectorMark(
-//                                            angle: .value("Count", option.count),
-//                                            innerRadius: .ratio(0.618),
-//                                            angularInset: 1.5
-//                                        )
-//                                        .cornerRadius(5)
-//                                        .foregroundStyle(by: .value("Name", option.name))
-//                                    }
-//                                    .padding()
-//                                    
-//                                }
-//                                Section("Vote") {
-//                                    //Some warning about non-constant range but yolo
-//                                    ForEach(0..<poll!.options.count) { index in
-//                                        Button(action: {
-//                                            poll!.incrementOption(index: index)
-//                                        }, label: {
-//                                            HStack{
-//                                                Text(poll!.options[index].name)
-//                                                    .foregroundColor(.black)
-//                                            }
-//                                        })
-//                                    }
-//                                }
-//                            }
-//                        }
-//                    }.draggable(widget)
-//                    
-//                }
+//            if poll != nil {
+//                Color.green
+//                 
+//                
+//            } else {
+//                Color.red
+//                    .onAppear {
+//                                   fetchPoll()
+//                               }
 //            }
+            
+            
+            if poll != nil {
+
+                ZStack{
+                    ZStack (alignment: .topLeading) {
+                        
+                        Color.clear
+                            .edgesIgnoringSafeArea(.all)
+                        
+                        Button(action: {
+                            isShowingPoll = false
+                        }, label: {
+                            Image(systemName: "xmark")
+                                .foregroundColor(Color(UIColor.label))
+                                .font(.title2)
+                                .padding()
+                        })
+                    }
+                    
+                    VStack{
+                        Text(poll!.name)
+                            .padding(.top, 10)
+                        Section{
+                            VStack{
+                                //Text("Idk how to change chart colors lmao").foregroundColor(.black)
+                                Chart(poll!.options) {option in
+                                    SectorMark(
+                                        angle: .value("Count", option.count),
+                                        innerRadius: .ratio(0.618),
+                                        angularInset: 1.5
+                                    )
+                                    .cornerRadius(5)
+                                    .foregroundStyle(by: .value("Name", option.name))
+                                }
+                                .padding()
+                                
+                            }
+                            Section("Vote") {
+                                //Some warning about non-constant range but yolo
+                                ForEach(0..<poll!.options.count) { index in
+                                    Button(action: {
+                                        poll!.incrementOption(index: index)
+                                    }, label: {
+                                        HStack{
+                                            Text(poll!.options[index].name)
+                                                .foregroundColor(.black)
+                                        }
+                                    })
+                                }
+                            }
+                        }
+                    }
+                }
+                  
+            } else {
+                ProgressView()
+                
+                    .onAppear {
+                        fetchPoll()
+                    }
+            }
+                
+                    
         })
+        
     }
 }
 
 func pollWidget(widget: CanvasWidget, spaceId: String) -> AnyView {
     return AnyView(PollWidget(widget: widget, spaceId: spaceId))
-    
-//    return AnyView(Color.red)
-//    return AnyView(PollWidget(widget: <#T##CanvasWidget#>, spaceId: <#T##String#>))
+  
 }
 
 
