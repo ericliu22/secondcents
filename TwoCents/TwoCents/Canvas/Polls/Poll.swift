@@ -16,6 +16,17 @@ struct Option: Codable, Identifiable, Hashable {
     init(name: String) {
         self.name = name
     }
+    
+    func toDictionary() -> [String: Any] {
+           return [
+               "id": id,
+               "count": count,
+               "name": name
+           ]
+       }
+    
+  
+    
 }
 
 struct Poll: Codable, Identifiable {
@@ -40,6 +51,26 @@ struct Poll: Codable, Identifiable {
     mutating func incrementOption(index: Int) {
         options[index].count += 1
     }
+    
+    
+    
+    
+    func updatePoll(spaceId: String) {
+        // Convert options to an array of dictionaries
+        let optionsData = options.map { $0.toDictionary() }
+        
+        let data: [String: Any] = [
+            "options": optionsData
+        ]
+     
+            try db.collection("spaces")
+                .document(spaceId)
+                .collection("polls")
+                .document(id.uuidString)
+                .updateData(data)
+      
+    }
+
     
     func uploadPoll(spaceId: String) {
         do {

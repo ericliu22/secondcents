@@ -650,7 +650,7 @@ struct CanvasPage: View {
                 }else {
                     //show chat instead
                     VStack{
-                        ChatView(spaceId: spaceId,replyMode: $replyMode, replyWidget: $replyWidget)
+                        ChatView(spaceId: spaceId,replyMode: $replyMode, replyWidget: $replyWidget, selectedDetent: $selectedDetent)
                         
                     }
                     

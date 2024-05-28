@@ -88,7 +88,7 @@ struct chatStruct: View{
 
 struct chattingView_Previews: PreviewProvider {
     static var previews: some View {
-        ChatView(spaceId: "87D5AC3A-24D8-4B23-BCC7-E268DBBB036F", replyMode: .constant(false), replyWidget: .constant(nil))
+        ChatView(spaceId: "87D5AC3A-24D8-4B23-BCC7-E268DBBB036F", replyMode: .constant(false), replyWidget: .constant(nil), selectedDetent: .constant(.medium))
     }
 }
 
@@ -111,8 +111,9 @@ struct ChatView: View {
     
     @State private var scroll: Bool
     
+    @Binding private var selectedDetent: PresentationDetent
     
-    init(spaceId: String, replyMode: Binding<Bool>, replyWidget: Binding<CanvasWidget?>) {
+    init(spaceId: String, replyMode: Binding<Bool>, replyWidget: Binding<CanvasWidget?>, selectedDetent: Binding<PresentationDetent>) {
         self.spaceId = spaceId
         _messageManager = StateObject(wrappedValue: MessageManager(spaceId: spaceId))
         //        self.userColor = .gray
@@ -122,7 +123,7 @@ struct ChatView: View {
         
         self.scroll = false
         
-        
+        self._selectedDetent = selectedDetent
         
     }
     
@@ -169,6 +170,11 @@ struct ChatView: View {
                 }
                
                 .onChange(of: messageManager.lastMessageId) {
+//                    id in proxy.scrollTo(id, anchor: .bottom)
+                    
+                    scroll = true
+                }
+                .onChange(of: selectedDetent) {
 //                    id in proxy.scrollTo(id, anchor: .bottom)
                     
                     scroll = true

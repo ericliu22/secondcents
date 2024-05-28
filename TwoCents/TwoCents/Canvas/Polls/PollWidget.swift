@@ -27,6 +27,7 @@ struct PollWidget: View {
         assert(widget.media == .poll)
         self.widget = widget
         self.spaceId = spaceId
+        
         //        fetchPoll()
         //        listenToPoll()
         
@@ -68,20 +69,8 @@ struct PollWidget: View {
     
     func fetchPoll() {
         Task {
-            //            print("fetching")
-            //
-            //            do {
-            //                self.poll = try await db.collection("spaces")
-            //                                        .document(spaceId)
-            //                                        .collection("polls")
-            //                                        .document(widget.id.uuidString)
-            //
-            //                                        .getDocument(as: Poll.self)
-            //                print("DONE")
-            //            } catch {
-            //                print("Error fetching poll document: \(error)")
-            //            }
-            
+//                        print("fetching")
+
             db.collection("spaces")
                 .document(spaceId)
                 .collection("polls")
@@ -92,17 +81,14 @@ struct PollWidget: View {
                         return
                     }
                     
-                    //                    guard let document = document, document.exists else {
-                    //                        print("Document does not exist")
-                    //                        return
-                    //                    }
-                    
+            
                     do {
                         if let pollData = try snapshot?.data(as: Poll?.self) {
-                            //                            print(pollData)
+//                                                        print(pollData)
                             
                             self.poll = pollData
-                            print("THIS PART \(self.poll)")
+                            totalVotes = poll!.totalVotes()
+                            print("YOUR POLL IS \(self.poll)")
                             
                             // Update your SwiftUI view with the retrieved poll data.
                         } else {
@@ -157,6 +143,20 @@ struct PollWidget: View {
                    
                         
                         VStack{
+                            HStack{
+                                Text(poll!.name)
+                                    .font(.title)
+                                    .minimumScaleFactor(0.5)
+                                    .lineLimit(0...3)
+                                    .multilineTextAlignment(.leading)
+                                    
+                                    .truncationMode(.tail)
+                               
+                                
+                                Spacer()
+                                
+                            }
+                            .frame(maxWidth: .infinity)
                             let hasNoVotes =  poll!.options.allSatisfy { $0.count == 0 }
                             ZStack{
                                 if hasNoVotes {
@@ -236,6 +236,7 @@ struct PollWidget: View {
                                 Button(action: {
                                     poll!.incrementOption(index: index)
                                     totalVotes = poll!.totalVotes()
+                                    poll!.updatePoll(spaceId: spaceId)
                                 }, label: {
                                     
                                   
@@ -269,7 +270,9 @@ struct PollWidget: View {
                       
                     
                 
-                .navigationTitle(poll!.name)
+//                .navigationTitle(poll!.name)
+//                        .navigationTitle("Poll 🤓")
+                      
                 .toolbar{
                     
                     ToolbarItem(placement: .navigationBarLeading) {
@@ -293,7 +296,10 @@ struct PollWidget: View {
                 ProgressView()
                 
                     .onAppear {
+                        
                         fetchPoll()
+                        
+                        
                     }
             }
             
@@ -317,12 +323,12 @@ func colorForIndex(index: Int) -> Color {
     return colors[index % colors.count] // Ensure index doesn't exceed the color array length
 }
 
-
+ 
 
 struct PollWidget_Previews: PreviewProvider {
     
     static var previews: some View {
-        pollWidget(widget: CanvasWidget(id: UUID(uuidString: "03FC19D8-BA51-4EE3-B012-BED5AA075ACC")!, width: 150.0, height: 150.0, borderColor: .orange, userId: "zqH9h9e8bMbHZVHR5Pb8O903qI13", media: TwoCents.Media.poll, mediaURL: nil, widgetName: Optional("Yo"), widgetDescription: nil, textString: nil, emojis: ["👍": 0, "👎": 0, "😭": 1, "❤️": 0, "🫵": 1, "⁉️": 0], emojiPressed: ["⁉️": [], "❤️": [], "🫵": ["zqH9h9e8bMbHZVHR5Pb8O903qI13"], "👎": [], "😭": ["zqH9h9e8bMbHZVHR5Pb8O903qI13"], "👍": []]), spaceId: "CF5BDBDF-44C0-4382-AD32-D92EC05AA35E")
+        pollWidget(widget: CanvasWidget(id: UUID(uuidString: "B2A0B128-5877-4312-8FE4-9D66AEC76768")!, width: 150.0, height: 150.0, borderColor: .orange, userId: "zqH9h9e8bMbHZVHR5Pb8O903qI13", media: TwoCents.Media.poll, mediaURL: nil, widgetName: Optional("Yo"), widgetDescription: nil, textString: nil, emojis: ["👍": 0, "👎": 0, "😭": 1, "❤️": 0, "🫵": 1, "⁉️": 0], emojiPressed: ["⁉️": [], "❤️": [], "🫵": ["zqH9h9e8bMbHZVHR5Pb8O903qI13"], "👎": [], "😭": ["zqH9h9e8bMbHZVHR5Pb8O903qI13"], "👍": []]), spaceId: "CF5BDBDF-44C0-4382-AD32-D92EC05AA35E")
     }
 }
 
