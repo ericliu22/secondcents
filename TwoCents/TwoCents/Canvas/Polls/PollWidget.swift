@@ -20,13 +20,15 @@ struct PollWidget: View {
     private var widget: CanvasWidget
     @State var poll: Poll?
     @State var isShowingPoll: Bool = false
+
     
     init(widget: CanvasWidget, spaceId: String) {
         assert(widget.media == .poll)
         self.widget = widget
         self.spaceId = spaceId
-        fetchPoll()
-        listenToPoll()
+//        fetchPoll()
+//        listenToPoll()
+        
     }
     
 //    init(widget: CanvasWidget, spaceId: String, poll: Poll) {
@@ -38,30 +40,34 @@ struct PollWidget: View {
 //        self.poll = poll
 //        print("SELF.POLL: \(self.poll!)")
 //    }
+////    
+//    func listenToPoll() {
+//        db.collection("spaces")
+//            .document(spaceId)
+//            .collection("polls")
+//            .document(widget.id.uuidString)
+//            .addSnapshotListener { document , error in
+//                guard let document else {return}
+//                do {
+//                    let newPoll = try document.data(as: Poll.self)
+//                    withAnimation{
+//                        poll?.options = newPoll.options
+//                        poll?.name = newPoll.name
+//                        poll?.uploadPoll(spaceId: spaceId)
+//                    }
+//                } catch {
+//                    print("Failed to Fetch Poll")
+//                }
+//            }
+//    }
 //    
-    func listenToPoll() {
-        db.collection("spaces")
-            .document(spaceId)
-            .collection("polls")
-            .document(widget.id.uuidString)
-            .addSnapshotListener { document , error in
-                guard let document else {return}
-                do {
-                    let newPoll = try document.data(as: Poll.self)
-                    withAnimation{
-                        poll?.options = newPoll.options
-                        poll?.name = newPoll.name
-                        poll?.uploadPoll(spaceId: spaceId)
-                    }
-                } catch {
-                    print("Failed to Fetch Poll")
-                }
-            }
-    }
+//    
+    
+    
     
     func fetchPoll() {
         Task {
-            print("fetching")
+//            print("fetching")
             //
             //            do {
             //                self.poll = try await db.collection("spaces")
@@ -79,22 +85,23 @@ struct PollWidget: View {
                 .document(spaceId)
                 .collection("polls")
                 .document(widget.id.uuidString)
-                .getDocument { document, error in
+                .addSnapshotListener { snapshot, error in
                     if let error = error {
                         print("Error getting document: \(error)")
                         return
                     }
                     
-                    guard let document = document, document.exists else {
-                        print("Document does not exist")
-                        return
-                    }
+//                    guard let document = document, document.exists else {
+//                        print("Document does not exist")
+//                        return
+//                    }
                     
                     do {
-                        if let pollData = try document.data(as: Poll?.self) {
+                        if let pollData = try snapshot?.data(as: Poll?.self) {
 //                            print(pollData)
                         
-                               self.poll = pollData
+                           self.poll = pollData
+                            print("THIS PART \(self.poll)")
                                            
                             // Update your SwiftUI view with the retrieved poll data.
                         } else {
@@ -108,6 +115,7 @@ struct PollWidget: View {
 
         }
     }
+    
     
     var body: some View {
         ZStack{
@@ -130,9 +138,16 @@ struct PollWidget: View {
         .fullScreenCover(isPresented: $isShowingPoll, content: {
             if poll != nil {
                 Color.green
+                 
+                
             } else {
                 Color.red
+                    .onAppear {
+                                   fetchPoll()
+                               }
             }
+            
+            
 //            if (poll != nil) {
 //                ZStack{
 //                    ZStack(alignment: .topLeading) {
