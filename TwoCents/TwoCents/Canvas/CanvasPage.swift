@@ -226,8 +226,14 @@ struct CanvasPage: View {
 //                            Color.yellow
                             RoundedRectangle(cornerRadius: CORNER_RADIUS)
                                 .foregroundStyle(.clear)
+                            
+                         
                         })
                         : nil
+                        
+                       
+                        
+                        
                         
                         
                     
@@ -615,9 +621,25 @@ struct CanvasPage: View {
                                      if let selectedWidget, let index = canvasWidgets.firstIndex(of: selectedWidget){
                                          canvasWidgets.remove(at: index)
                                          SpaceManager.shared.removeWidget(spaceId: spaceId, widget: selectedWidget)
+                                         
+                                         
+                                         //delete poll on DB
+                                         if selectedWidget.media == .poll {
+                                             Task{
+                                                 deletePoll(spaceId: spaceId, pollId: selectedWidget.id.uuidString)
+                                                 
+                                                 
+                                                 
+                                             }
+                                           
+                                         }
                                      }
                                      selectedWidget = nil
                                      widgetDoubleTapped = false
+                                     
+                                     
+                                     
+                                    
                                      
                                      //                                     showSheet = true
                                      //                                     showNewWidgetView = false

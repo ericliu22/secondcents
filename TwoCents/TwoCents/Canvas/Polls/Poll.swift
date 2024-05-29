@@ -84,6 +84,9 @@ struct Poll: Codable, Identifiable {
         }
     }
     
+ 
+    
+    
     func totalVotes() -> Int {
            return options.reduce(0) { $0 + $1.count }
        }
@@ -94,5 +97,18 @@ struct Poll: Codable, Identifiable {
         self.options = options
         //Theoretically all polls will have names so we manly exclamation mark
         self.name = canvasWidget.widgetName!
+    }
+}
+
+
+func deletePoll(spaceId: String, pollId: String) {
+    do {
+        try db.collection("spaces")
+            .document(spaceId)
+            .collection("polls")
+            .document(pollId)
+            .delete()
+    } catch {
+        print("Error deleting poll")
     }
 }

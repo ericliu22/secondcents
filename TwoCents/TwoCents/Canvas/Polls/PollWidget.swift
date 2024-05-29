@@ -154,7 +154,8 @@ struct PollWidget: View {
                 
             } else {
                 ProgressView()
-                    .foregroundColor(Color(UIColor.label))
+                    .foregroundStyle(Color(UIColor.label))
+                    .frame(width: TILE_SIZE,height: TILE_SIZE)
                 
                     .onAppear {
                         
