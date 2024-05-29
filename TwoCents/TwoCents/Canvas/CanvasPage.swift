@@ -209,7 +209,7 @@ struct CanvasPage: View {
                 
                     .overlay(
                         
-                        widget.media == .poll && selectedWidget == nil
+                        widget.media == .poll && activeSheet == .chat
                         
                         ? Button(action: {
 //                            activeSheet = nil
@@ -585,30 +585,7 @@ struct CanvasPage: View {
                              Spacer()
                              HStack{
                                  
-                                 
-                                 Button(action: {
-                                     
-                                     replyMode = true
-                                     
-                                     replyWidget = selectedWidget
-                                     if let selectedWidget, let index = canvasWidgets.firstIndex(of: selectedWidget){
-                                     
-                                     }
-                                     
-                                     
-                                     selectedWidget = nil
-                                     widgetDoubleTapped = false
-                                     
-                                     //                                     showSheet = true
-                                     //                                     showNewWidgetView = false
-                                     activeSheet = .chat
-                                 }, label: {
-                                     Image(systemName: "arrowshape.turn.up.left")
-                                         .foregroundColor(Color(UIColor.label))
-                                         .font(.title3)
-                                 })
-                                 
-                                 
+                             
                                  
                                  Button(action: {
                                      
