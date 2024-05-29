@@ -107,11 +107,13 @@ struct PollWidget: View {
     var body: some View {
         ZStack{
             
+            
             Color.blue
-                .onTapGesture{
-                    isShowingPoll.toggle()
-                    print("tapped")
-                }
+//                .onTapGesture{
+//                    isShowingPoll.toggle()
+//                    print("tapped")
+//                }
+               
             //Poll widgets must have a name lest they crash
             Text(widget.widgetName!)
             

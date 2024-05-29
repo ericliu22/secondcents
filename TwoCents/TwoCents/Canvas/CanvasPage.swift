@@ -43,8 +43,8 @@ struct CanvasPage: View {
     @State private var draggingItem: CanvasWidget?
     @State private var scrollPosition: CGPoint = CGPointZero
     @State private var activeGestures: GestureMask = .subviews
-    @State private var showNewWidgetView: Bool = false
-    @State private var showSheet: Bool = true
+//    @State private var showNewWidgetView: Bool = false
+//    @State private var showSheet: Bool = true
     @State private var inSettingsView: Bool = false
     @State private var photoLinkedToProfile: Bool = false
     @State private var widgetId: String = UUID().uuidString
@@ -55,7 +55,7 @@ struct CanvasPage: View {
     
     @State private var replyMode: Bool = false
     
-    
+    @State private var activeSheet: sheetTypes?
     
     @State private var selectedWidget: CanvasWidget?
     @State private var replyWidget: CanvasWidget?
@@ -81,6 +81,23 @@ struct CanvasPage: View {
         case drawing, normal
         
     }
+    
+    
+    enum sheetTypes: Identifiable  {
+      
+        
+        
+        case newWidgetView, chat, poll
+        
+        var id: Self {
+              return self
+          }
+        
+    }
+    
+    
+    
+    
     
     init(spaceId: String) {
         self.spaceId = spaceId
@@ -151,6 +168,7 @@ struct CanvasPage: View {
                 getMediaView(widget: widget, spaceId: spaceId)
                     .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
                     .cornerRadius(CORNER_RADIUS)
+                
                   
                 //clickable area/outline when clicked
                     .overlay(
@@ -165,15 +183,17 @@ struct CanvasPage: View {
                                     
                                     selectedWidget = widget
                                     widgetDoubleTapped = true
-                                    showSheet = false
-                                    showNewWidgetView = false
+//                                    showSheet = false
+//                                    showNewWidgetView = false
+                                    activeSheet = nil
                                     
                                 } else {
                                     //deselect
                                     selectedWidget = nil
                                     widgetDoubleTapped = false
-                                    showSheet = true
-                                    showNewWidgetView = false
+//                                    showSheet = true
+//                                    showNewWidgetView = false
+                                    activeSheet = .chat
                                 }
                                 Task {
                                     username = try! await UserManager.shared.getUser(userId: widget.userId).username!
@@ -271,8 +291,9 @@ struct CanvasPage: View {
                                 selectedWidget = nil
                                 widgetDoubleTapped = false
                                 
-                                showSheet = true
-                                showNewWidgetView = false
+//                                showSheet = true
+//                                showNewWidgetView = false
+                                activeSheet = .chat
                                 
                                 //                                }
                             }
@@ -457,8 +478,9 @@ struct CanvasPage: View {
                     selectedWidget = nil
                     widgetDoubleTapped = false
                     
-                    showSheet = true
-                    showNewWidgetView = false
+//                    showSheet = true
+//                    showNewWidgetView = false
+                    activeSheet = .chat
                 }
             //                .scrollDisabled(currentMode != .normal)
             //hovering action menu when widget is clicked
@@ -547,8 +569,9 @@ struct CanvasPage: View {
                                      selectedWidget = nil
                                      widgetDoubleTapped = false
                                      
-                                     showSheet = true
-                                     showNewWidgetView = false
+//                                     showSheet = true
+//                                     showNewWidgetView = false
+                                     activeSheet = .chat
                                  }, label: {
                                      Image(systemName: "arrowshape.turn.up.left")
                                          .foregroundColor(Color(UIColor.label))
@@ -565,8 +588,9 @@ struct CanvasPage: View {
                                      selectedWidget = nil
                                      widgetDoubleTapped = false
                                      
-                                     showSheet = true
-                                     showNewWidgetView = false
+//                                     showSheet = true
+//                                     showNewWidgetView = false
+                                     activeSheet = .chat
                                  }, label: {
                                      Image(systemName: "trash")
                                          .foregroundColor(.red)
@@ -618,66 +642,76 @@ struct CanvasPage: View {
         
         
         //add new widget view and ChatSHEET
-            .sheet(isPresented: $showSheet, onDismiss: {
-                showNewWidgetView = false
-                
-                replyMode = false
-                replyWidget = nil
-                
-                //get chat to show up at all times
-                if !widgetDoubleTapped && !inSettingsView {
-                    showSheet = true
-                }
-                
-                
-                if photoLinkedToProfile {
-                    photoLinkedToProfile = false
-                    widgetId = UUID().uuidString
-                } else {
-                    Task{
-                        try await StorageManager.shared.deleteTempWidgetPic(spaceId:spaceId, widgetId: widgetId)
-                    }
-                }
-                
-            }, content: {
-                
-                //show add new widget view
-                if showNewWidgetView {
-                    NewWidgetView(widgetId: widgetId, showNewWidgetView: $showNewWidgetView,  spaceId: spaceId, photoLinkedToProfile: $photoLinkedToProfile)
-                        .presentationBackground(Color(UIColor.systemBackground))
-//                        .tint(.red)
-                    
-                }else {
-                    //show chat instead
-                    VStack{
-                        ChatView(spaceId: spaceId,replyMode: $replyMode, replyWidget: $replyWidget, selectedDetent: $selectedDetent)
-                        
-                    }
-                    
-                    //                        .presentationBackground(.ultraThickMaterial)
-                    .presentationBackground(Color(UIColor.systemBackground))
-                    
-                    .presentationDetents([.height(50),.medium], selection: $selectedDetent)
-                    
-                    
-                    .presentationCornerRadius(20)
-                    
-                    .presentationBackgroundInteraction(.enabled)
-                    .onChange(of: selectedDetent) { selectedDetent in
-                        if selectedDetent != .medium && replyMode {
+            .sheet(item: $activeSheet, onDismiss: {
+//                showNewWidgetView = false
+//                            activeSheet = .chat
                             
-                            withAnimation {
-                                replyWidget = nil
-                                replyMode = false
+                            replyMode = false
+                            replyWidget = nil
+                            
+                
+                
+                            //get chat to show up at all times
+                            if !widgetDoubleTapped && !inSettingsView && activeSheet == nil{
+//                                showSheet = true
+                                activeSheet = .chat
+                                
                             }
                             
                             
-                            print("detent is 50")
-                        }
-                    }
+                            if photoLinkedToProfile {
+                                photoLinkedToProfile = false
+                                widgetId = UUID().uuidString
+                            } else {
+                                Task{
+                                    try await StorageManager.shared.deleteTempWidgetPic(spaceId:spaceId, widgetId: widgetId)
+                                }
+                            }
+                            
+            }, content: { item in
+                
+                switch item {
+                case .newWidgetView:
+                    NewWidgetView(widgetId: widgetId,   spaceId: spaceId, photoLinkedToProfile: $photoLinkedToProfile)
+                        .presentationBackground(Color(UIColor.systemBackground))
+                case .chat:
+                    ChatView(spaceId: spaceId,replyMode: $replyMode, replyWidget: $replyWidget, selectedDetent: $selectedDetent)
                     
+                    
+                    
+                    
+                        .presentationBackground(Color(UIColor.systemBackground))
+                    
+                        .presentationDetents([.height(50),.medium], selection: $selectedDetent)
+                    
+                    
+                        .presentationCornerRadius(20)
+                    
+                        .presentationBackgroundInteraction(.enabled)
+                        .onChange(of: selectedDetent) { selectedDetent in
+                            if selectedDetent != .medium && replyMode {
+                                
+                                withAnimation {
+                                    replyWidget = nil
+                                    replyMode = false
+                                }
+                                
+                                
+                                print("detent is 50")
+                            }
+                        }
+                    
+                    
+                case .poll:
+                    Color.blue
+//                case .off:
+//                    Color.red
                 }
                 
+                
+            })
+            .onAppear(perform: {
+                activeSheet = .chat
             })
             .onReceive(Timer.publish(every: 5, on: .main, in: .common).autoconnect()) { _ in
                 
@@ -718,11 +752,13 @@ struct CanvasPage: View {
                         if currentMode != .drawing {
                             self.currentMode = .drawing
                             self.activeGestures = .all
-                            showSheet = false
+//                            showSheet = false
+                            activeSheet = nil
                         } else {
                             self.currentMode = .normal
                             self.activeGestures = .subviews
-                            showSheet = true
+//                            showSheet = true
+                            activeSheet = .chat
                         }
                     }, label: {
                         toolPickerActive
@@ -735,8 +771,9 @@ struct CanvasPage: View {
                     Button(action: {
                         
                         
-                        showSheet = true
-                        showNewWidgetView = true
+//                        showSheet = true
+//                        showNewWidgetView = true
+                        activeSheet = .newWidgetView
                         
                     }, label: {
                         Image(systemName: "plus.circle")
@@ -752,11 +789,13 @@ struct CanvasPage: View {
                         
                         SpaceSettingsView(spaceId: spaceId)
                             .onAppear {
-                                showSheet = false
+//                                showSheet = false
+                                activeSheet = nil
                                 inSettingsView = true
                             }
                             .onDisappear {
-                                showSheet = true
+//                                showSheet = true
+                                activeSheet = .chat
                                 inSettingsView = false
                                 
                                

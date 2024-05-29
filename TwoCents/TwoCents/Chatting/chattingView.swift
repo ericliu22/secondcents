@@ -178,6 +178,13 @@ struct ChatView: View {
 //                    id in proxy.scrollTo(id, anchor: .bottom)
                     
                     scroll = true
+                    
+                    if selectedDetent == .height(50) {
+                        
+                        replyMode = false
+                        replyWidget = nil
+                        
+                    }
                 }
                 
                 .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardDidChangeFrameNotification)) { _ in
