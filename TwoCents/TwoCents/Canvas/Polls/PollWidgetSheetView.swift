@@ -164,17 +164,17 @@ struct PollWidgetSheetView: View {
 
                                 VStack{
                                     Text("\(totalVotes)")
-                                        .font(.title)
+                                        .font(.largeTitle   )
                                         .fontWeight(.bold)
                                         .foregroundStyle(.secondary)
                                     
                                     Text("Votes")
-                                        .font(.headline)
+                                        .font(.title3)
                                         .fontWeight(.regular)
 //                                        .fill(.ultraThickMaterial)
                                         .foregroundStyle(.secondary)
                                 }
-                                
+                                .padding(.bottom)
                    
                                 
                             }

@@ -12,12 +12,16 @@ import Charts
 
 
 
+
 struct PollWidget: View {
     
     
     
     private var spaceId: String
     private var widget: CanvasWidget
+    @State var poll: Poll?
+    @State var totalVotes: Int = 0
+    
     
     init(widget: CanvasWidget, spaceId: String) {
         assert(widget.media == .poll)
@@ -27,28 +31,144 @@ struct PollWidget: View {
         
     }
     
-    
+    func fetchPoll() {
+        Task {
+//                        print("fetching")
+
+            db.collection("spaces")
+                .document(spaceId)
+                .collection("polls")
+                .document(widget.id.uuidString)
+                .addSnapshotListener { snapshot, error in
+                    if let error = error {
+                        print("Error getting document: \(error)")
+                        return
+                    }
+                    
+            
+                    do {
+                        if let pollData = try snapshot?.data(as: Poll?.self) {
+//                                                        print(pollData)
+                            
+                            self.poll = pollData
+                            totalVotes = poll!.totalVotes()
+                            print("YOUR POLL IS \(self.poll)")
+                            
+                            // Update your SwiftUI view with the retrieved poll data.
+                        } else {
+                            print("Document data is empty.")
+                        }
+                    } catch {
+                        print("Error decoding document: \(error)")
+                        // Handle the decoding error, such as displaying an error message to the user.
+                    }
+                }
+            
+        }
+    }
     
     
     var body: some View {
-        ZStack{
+  
+      
+            
+            if poll != nil {
+                
+             
+               
+                    //main content
+                   
+                        
+                  
+                           
+                let hasNoVotes =  poll!.options.allSatisfy { $0.count == 0 }
+                ZStack{
+                    if hasNoVotes {
+                        Chart {
+                            SectorMark(
+                                angle: .value("Vote", 1),
+                                innerRadius: .ratio(0.618),
+                                angularInset: 2
+                            )
+                            .cornerRadius(5)
+                            .foregroundStyle(Color.gray)
+                            //                                    .annotation(position: .overlay, alignment: .center) {
+                            //                                                            Text("No Votes")
+                            //                                                                .font(.caption)
+                            //                                                                .foregroundColor(.white)
+                            //                                                        }
+                        }
+                        
+                        .padding(5)
+                        .chartLegend(.hidden)
+                        //                                .frame(height: 350)
+                        
+                        
+                    } else {
+                        Chart(poll!.options) {option in
+                            SectorMark(
+                                //                                        angle: .value("Count", option.count),
+                                angle: .value("Count", option.count),
+                                innerRadius: .ratio(0.618),
+                                angularInset: 2
+                            )
+                            .cornerRadius(3)
+                            
+                            
+                            .foregroundStyle(colorForIndex(index: poll!.options.firstIndex(of: option)!))
+                            
+                            
+                        }
+                        .padding(5)
+                        .chartLegend(.hidden)
+                      
+                        
+                    }
+                    
+                    
+                    
+                    VStack{
+                        Text("\(totalVotes)")
+                            .font(.title)
+                            .fontWeight(.bold)
+                            .foregroundStyle(Color.accentColor)
+                        Text("Votes")
+                            .font(.headline)
+                            .fontWeight(.regular)
+                        //                                        .fill(.ultraThickMaterial)
+                            .foregroundStyle(Color.accentColor)
+//
+//                            .padding(.bottom)
+                    }
+                    .frame(maxWidth: .infinity,maxHeight: .infinity,alignment: .center)
+                    
+                    
+                    
+                }
+              
+                
+              
+                .background(.regularMaterial)
+//                .background(Color.accentColor)
+                
+                
+            } else {
+                ProgressView()
+                
+                    .onAppear {
+                        
+                        fetchPoll()
+                        
+                        
+                    }
+            }
             
             
-            Color.blue
-            Text(widget.widgetName!)
             
-            
-            
-            
-        }
-        
-        .frame(width: widget.width, height: widget.height)
-        
-    
+       
         
     }
 }
-
 
 
 
@@ -62,7 +182,15 @@ func pollWidget(widget: CanvasWidget, spaceId: String) -> AnyView {
     
 }
 
-
+//
+//func colorForIndex(index: Int) -> Color {
+//    // Define your color logic based on the index
+//    // For example:
+//    let colors: [Color] = [.red,  .orange, .green, .cyan] // Define your colors
+//    return colors[index % colors.count] // Ensure index doesn't exceed the color array length
+//}
+//
+// 
 
 struct PollWidget_Previews: PreviewProvider {
     
