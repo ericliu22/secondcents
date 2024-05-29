@@ -89,6 +89,7 @@
 		AB9455232A9468130055B44A /* ColorPickerWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB9455222A9468130055B44A /* ColorPickerWidget.swift */; };
 		AB9909AB2ABE3BF2004B3021 /* FriendRequestsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB9909AA2ABE3BF2004B3021 /* FriendRequestsView.swift */; };
 		AB9909AD2ABE3C1B004B3021 /* FriendRequestsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB9909AC2ABE3C1B004B3021 /* FriendRequestsViewModel.swift */; };
+		AB9BF6D52C06ECDB00C72883 /* PollWidgetSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB9BF6D42C06ECDB00C72883 /* PollWidgetSheetView.swift */; };
 		AB9C7F682BD83B1E004FC549 /* EmojiCountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB9C7F672BD83B1E004FC549 /* EmojiCountView.swift */; };
 		AB9EB95D2B1E805300F58EA5 /* ChatManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB9EB95C2B1E805300F58EA5 /* ChatManager.swift */; };
 		ABA45E7E2A7C8D8C0015F000 /* SignInEmailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABA45E7D2A7C8D8C0015F000 /* SignInEmailViewModel.swift */; };
@@ -221,6 +222,7 @@
 		AB9455222A9468130055B44A /* ColorPickerWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorPickerWidget.swift; sourceTree = "<group>"; };
 		AB9909AA2ABE3BF2004B3021 /* FriendRequestsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendRequestsView.swift; sourceTree = "<group>"; };
 		AB9909AC2ABE3C1B004B3021 /* FriendRequestsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendRequestsViewModel.swift; sourceTree = "<group>"; };
+		AB9BF6D42C06ECDB00C72883 /* PollWidgetSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollWidgetSheetView.swift; sourceTree = "<group>"; };
 		AB9C7F672BD83B1E004FC549 /* EmojiCountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiCountView.swift; sourceTree = "<group>"; };
 		AB9EB95C2B1E805300F58EA5 /* ChatManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatManager.swift; sourceTree = "<group>"; };
 		ABA45E7D2A7C8D8C0015F000 /* SignInEmailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInEmailViewModel.swift; sourceTree = "<group>"; };
@@ -410,6 +412,7 @@
 			isa = PBXGroup;
 			children = (
 				A2DDB1B82BB6806C00243E1B /* PollWidget.swift */,
+				AB9BF6D42C06ECDB00C72883 /* PollWidgetSheetView.swift */,
 				8534B8B82B8001660089AD5C /* NewPollView.swift */,
 				A2DDB1BA2BB693FD00243E1B /* NewPollViewModel.swift */,
 				A2DDB1BD2BB69DD800243E1B /* Poll.swift */,
@@ -810,6 +813,7 @@
 				856E80BC2B50EB260078A2CE /* SabotageCarouselView.swift in Sources */,
 				A257D7862A6D707600A4E7BD /* ContentView.swift in Sources */,
 				AB9909AD2ABE3C1B004B3021 /* FriendRequestsViewModel.swift in Sources */,
+				AB9BF6D52C06ECDB00C72883 /* PollWidgetSheetView.swift in Sources */,
 				ABCA39DA2A7A0881009447C3 /* SettingsView.swift in Sources */,
 				ABF172A52BFC47FC000B6F9B /* ChattingViewModel.swift in Sources */,
 				A246A42E2B43A1B700F0F6E6 /* NewWidgetView.swift in Sources */,

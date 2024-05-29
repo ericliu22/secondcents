@@ -43,8 +43,8 @@ struct CanvasPage: View {
     @State private var draggingItem: CanvasWidget?
     @State private var scrollPosition: CGPoint = CGPointZero
     @State private var activeGestures: GestureMask = .subviews
-//    @State private var showNewWidgetView: Bool = false
-//    @State private var showSheet: Bool = true
+    //    @State private var showNewWidgetView: Bool = false
+    //    @State private var showSheet: Bool = true
     @State private var inSettingsView: Bool = false
     @State private var photoLinkedToProfile: Bool = false
     @State private var widgetId: String = UUID().uuidString
@@ -57,10 +57,14 @@ struct CanvasPage: View {
     
     @State private var activeSheet: sheetTypes?
     
+    @State private var activePollWidget: CanvasWidget?
+    
     @State private var selectedWidget: CanvasWidget?
     @State private var replyWidget: CanvasWidget?
     
     @State private var selectedDetent: PresentationDetent = .height(50)
+    
+    
     
     
     
@@ -84,14 +88,14 @@ struct CanvasPage: View {
     
     
     enum sheetTypes: Identifiable  {
-      
+        
         
         
         case newWidgetView, chat, poll
         
         var id: Self {
-              return self
-          }
+            return self
+        }
         
     }
     
@@ -143,11 +147,11 @@ struct CanvasPage: View {
             }
             self.canvasWidgets = []
             for document in query.documents {
-              
+                
                 let newWidget = try! document.data(as: CanvasWidget.self)
                 self.canvasWidgets.append(newWidget)
                 
-              
+                
             }
         }
     }
@@ -163,13 +167,15 @@ struct CanvasPage: View {
         return AnyView(LazyVGrid(columns: columns, alignment: .center, spacing: 30, content: {
             
             ForEach(canvasWidgets, id:\.id) { widget in
-              
+                
                 //main widget
                 getMediaView(widget: widget, spaceId: spaceId)
                     .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
                     .cornerRadius(CORNER_RADIUS)
                 
-                  
+                
+                 
+                
                 //clickable area/outline when clicked
                     .overlay(
                         RoundedRectangle(cornerRadius: CORNER_RADIUS)
@@ -183,16 +189,16 @@ struct CanvasPage: View {
                                     
                                     selectedWidget = widget
                                     widgetDoubleTapped = true
-//                                    showSheet = false
-//                                    showNewWidgetView = false
+                                    //                                    showSheet = false
+                                    //                                    showNewWidgetView = false
                                     activeSheet = nil
                                     
                                 } else {
                                     //deselect
                                     selectedWidget = nil
                                     widgetDoubleTapped = false
-//                                    showSheet = true
-//                                    showNewWidgetView = false
+                                    //                                    showSheet = true
+                                    //                                    showNewWidgetView = false
                                     activeSheet = .chat
                                 }
                                 Task {
@@ -200,6 +206,33 @@ struct CanvasPage: View {
                                 }
                             })
                     )
+                
+                    .overlay(
+                        
+                        widget.media == .poll && selectedWidget == nil
+                        
+                        ? Button(action: {
+//                            activeSheet = nil
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                                
+                                activePollWidget = widget
+                            }
+                            activeSheet = .poll
+                          
+                            
+                            
+                          
+                        }, label: {
+//                            Color.yellow
+                            RoundedRectangle(cornerRadius: CORNER_RADIUS)
+                                .foregroundStyle(.clear)
+                        })
+                        : nil
+                        
+                        
+                    
+                    )
+                
                 
                 //username below widget
                     .overlay(content: {
@@ -221,16 +254,16 @@ struct CanvasPage: View {
                     })
                 
                     .overlay(content: {
-                   
-                            
+                        
+                        
                         selectedWidget == nil/* && draggingItem == nil */?
                         EmojiCountOverlayView(spaceId: spaceId, widget: widget)
                             .offset(y: TILE_SIZE/2)
-                            
+                        
                         
                         : nil
-                            
-                    
+                        
+                        
                     })
                 
                     .draggable(widget) {
@@ -291,8 +324,8 @@ struct CanvasPage: View {
                                 selectedWidget = nil
                                 widgetDoubleTapped = false
                                 
-//                                showSheet = true
-//                                showNewWidgetView = false
+                                //                                showSheet = true
+                                //                                showNewWidgetView = false
                                 activeSheet = .chat
                                 
                                 //                                }
@@ -300,9 +333,9 @@ struct CanvasPage: View {
                         }
                         
                         //added this line for emoji overlay... if it breaks delete this
-//                        draggingItem = nil
+                        //                        draggingItem = nil
                     }
-                    
+                
             }
             
         }
@@ -478,8 +511,8 @@ struct CanvasPage: View {
                     selectedWidget = nil
                     widgetDoubleTapped = false
                     
-//                    showSheet = true
-//                    showNewWidgetView = false
+                    //                    showSheet = true
+                    //                    showNewWidgetView = false
                     activeSheet = .chat
                 }
             //                .scrollDisabled(currentMode != .normal)
@@ -552,25 +585,46 @@ struct CanvasPage: View {
                              Spacer()
                              HStack{
                                  
+                                 
                                  Button(action: {
                                      
                                      replyMode = true
                                      
                                      replyWidget = selectedWidget
                                      if let selectedWidget, let index = canvasWidgets.firstIndex(of: selectedWidget){
-                                         //                                         canvasWidgets.remove(at: index)
-                                         //                                         SpaceManager.shared.removeWidget(spaceId: spaceId, widget: selectedWidget)
-                                         
-                                         
-                                         
+                                     
                                      }
                                      
                                      
                                      selectedWidget = nil
                                      widgetDoubleTapped = false
                                      
-//                                     showSheet = true
-//                                     showNewWidgetView = false
+                                     //                                     showSheet = true
+                                     //                                     showNewWidgetView = false
+                                     activeSheet = .chat
+                                 }, label: {
+                                     Image(systemName: "arrowshape.turn.up.left")
+                                         .foregroundColor(Color(UIColor.label))
+                                         .font(.title3)
+                                 })
+                                 
+                                 
+                                 
+                                 Button(action: {
+                                     
+                                     replyMode = true
+                                     
+                                     replyWidget = selectedWidget
+                                     if let selectedWidget, let index = canvasWidgets.firstIndex(of: selectedWidget){
+                                     
+                                     }
+                                     
+                                     
+                                     selectedWidget = nil
+                                     widgetDoubleTapped = false
+                                     
+                                     //                                     showSheet = true
+                                     //                                     showNewWidgetView = false
                                      activeSheet = .chat
                                  }, label: {
                                      Image(systemName: "arrowshape.turn.up.left")
@@ -588,8 +642,8 @@ struct CanvasPage: View {
                                      selectedWidget = nil
                                      widgetDoubleTapped = false
                                      
-//                                     showSheet = true
-//                                     showNewWidgetView = false
+                                     //                                     showSheet = true
+                                     //                                     showNewWidgetView = false
                                      activeSheet = .chat
                                  }, label: {
                                      Image(systemName: "trash")
@@ -643,31 +697,31 @@ struct CanvasPage: View {
         
         //add new widget view and ChatSHEET
             .sheet(item: $activeSheet, onDismiss: {
-//                showNewWidgetView = false
-//                            activeSheet = .chat
-                            
-                            replyMode = false
-                            replyWidget = nil
-                            
+                //                showNewWidgetView = false
+                //                            activeSheet = .chat
+                
+                replyMode = false
+                replyWidget = nil
+                
+                activePollWidget = nil
+                
+                //get chat to show up at all times
+                if !widgetDoubleTapped && !inSettingsView && activeSheet == nil{
+                    //                                showSheet = true
+                    activeSheet = .chat
+                    
+                }
                 
                 
-                            //get chat to show up at all times
-                            if !widgetDoubleTapped && !inSettingsView && activeSheet == nil{
-//                                showSheet = true
-                                activeSheet = .chat
-                                
-                            }
-                            
-                            
-                            if photoLinkedToProfile {
-                                photoLinkedToProfile = false
-                                widgetId = UUID().uuidString
-                            } else {
-                                Task{
-                                    try await StorageManager.shared.deleteTempWidgetPic(spaceId:spaceId, widgetId: widgetId)
-                                }
-                            }
-                            
+                if photoLinkedToProfile {
+                    photoLinkedToProfile = false
+                    widgetId = UUID().uuidString
+                } else {
+                    Task{
+                        try await StorageManager.shared.deleteTempWidgetPic(spaceId:spaceId, widgetId: widgetId)
+                    }
+                }
+                
             }, content: { item in
                 
                 switch item {
@@ -703,9 +757,23 @@ struct CanvasPage: View {
                     
                     
                 case .poll:
-                    Color.blue
-//                case .off:
-//                    Color.red
+                    
+                    
+                  
+                    
+//                    if let myWidget = activePollWidget {
+                        
+//                       getMediaView(widget: myWidget, spaceId: spaceId)
+//                        PollWidgetSheetView(widget: activePollWidget!, spaceId: spaceId)
+                    if let widget = activePollWidget {
+                        PollWidgetSheetView(widget: widget, spaceId: spaceId)
+                    } else {
+                        ProgressView()
+                            .foregroundStyle(Color(UIColor.label))
+                            .presentationBackground(Color(UIColor.systemBackground))
+                          
+                    }
+
                 }
                 
                 
@@ -752,12 +820,12 @@ struct CanvasPage: View {
                         if currentMode != .drawing {
                             self.currentMode = .drawing
                             self.activeGestures = .all
-//                            showSheet = false
+                            //                            showSheet = false
                             activeSheet = nil
                         } else {
                             self.currentMode = .normal
                             self.activeGestures = .subviews
-//                            showSheet = true
+                            //                            showSheet = true
                             activeSheet = .chat
                         }
                     }, label: {
@@ -771,8 +839,8 @@ struct CanvasPage: View {
                     Button(action: {
                         
                         
-//                        showSheet = true
-//                        showNewWidgetView = true
+                        //                        showSheet = true
+                        //                        showNewWidgetView = true
                         activeSheet = .newWidgetView
                         
                     }, label: {
@@ -789,16 +857,16 @@ struct CanvasPage: View {
                         
                         SpaceSettingsView(spaceId: spaceId)
                             .onAppear {
-//                                showSheet = false
+                                //                                showSheet = false
                                 activeSheet = nil
                                 inSettingsView = true
                             }
                             .onDisappear {
-//                                showSheet = true
+                                //                                showSheet = true
                                 activeSheet = .chat
                                 inSettingsView = false
                                 
-                               
+                                
                                 
                                 
                             }
