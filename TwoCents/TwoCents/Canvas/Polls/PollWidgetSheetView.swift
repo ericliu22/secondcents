@@ -31,14 +31,14 @@ struct PollWidgetSheetView: View {
         assert(widget.media == .poll)
         self.widget = widget
         self.spaceId = spaceId
-    
+        
         
     }
     
     func fetchPoll() {
         Task {
-//                        print("fetching")
-
+            //                        print("fetching")
+            
             db.collection("spaces")
                 .document(spaceId)
                 .collection("polls")
@@ -49,10 +49,10 @@ struct PollWidgetSheetView: View {
                         return
                     }
                     
-            
+                    
                     do {
                         if let pollData = try snapshot?.data(as: Poll?.self) {
-//                                                        print(pollData)
+                            //                                                        print(pollData)
                             
                             self.poll = pollData
                             totalVotes = poll!.totalVotes()
@@ -73,190 +73,199 @@ struct PollWidgetSheetView: View {
     
     
     var body: some View {
-       
-            //            if poll != nil {
-            //                Color.green
-            //
-            //
-            //            } else {
-            //                Color.red
-            //                    .onAppear {
-            //                                   fetchPoll()
-            //                               }
-            //            }
+        
+        //            if poll != nil {
+        //                Color.green
+        //
+        //
+        //            } else {
+        //                Color.red
+        //                    .onAppear {
+        //                                   fetchPoll()
+        //                               }
+        //            }
+        
+        
+        if poll != nil {
             
-            
-            if poll != nil {
+            NavigationStack{
                 
-                NavigationStack{
-               
-                    //main content
-                   
+                //main content
+                
+                
+                
+                let hasNoVotes =  poll!.options.allSatisfy { $0.count == 0 }
+                ZStack{
+                    if hasNoVotes {
+                        Chart {
+                            SectorMark(
+                                angle: .value("Vote", 1),
+                                innerRadius: .ratio(0.618),
+                                angularInset: 2
+                            )
+                            .cornerRadius(5)
+                            .foregroundStyle(Color.gray)
+                            //                                    .annotation(position: .overlay, alignment: .center) {
+                            //                                                            Text("No Votes")
+                            //                                                                .font(.caption)
+                            //                                                                .foregroundColor(.white)
+                            //                                                        }
+                        }
+                        .padding(.horizontal)
+                        .padding(.top)
+                        .chartLegend(.hidden)
                         
-                        VStack{
-                            HStack{
-                                Text(poll!.name)
-                                    .font(.title)
-                                    .minimumScaleFactor(0.5)
-                                    .lineLimit(0...3)
-                                    .multilineTextAlignment(.leading)
-                                    
-                                    .truncationMode(.tail)
-                               
-                                
-                                Spacer()
-                                
-                            }
-                            .frame(maxWidth: .infinity)
-                            let hasNoVotes =  poll!.options.allSatisfy { $0.count == 0 }
-                            ZStack{
-                                if hasNoVotes {
-                                    Chart {
-                                        SectorMark(
-                                            angle: .value("Vote", 1),
-                                            innerRadius: .ratio(0.618),
-                                            angularInset: 2
-                                        )
-                                        .cornerRadius(5)
-                                        .foregroundStyle(Color.gray)
-                                        //                                    .annotation(position: .overlay, alignment: .center) {
-                                        //                                                            Text("No Votes")
-                                        //                                                                .font(.caption)
-                                        //                                                                .foregroundColor(.white)
-                                        //                                                        }
-                                    }
-                                    
-                                    .padding(.bottom)
-                                    .chartLegend(.hidden)
-                                    //                                .frame(height: 350)
-                                    
-                                    
-                                } else {
-                                    Chart(poll!.options) {option in
-                                        SectorMark(
-                                            //                                        angle: .value("Count", option.count),
-                                            angle: .value("Count", option.count),
-                                            innerRadius: .ratio(0.618),
-                                            angularInset: 2
-                                        )
-                                        .cornerRadius(5)
-                                        
-                                        
-                                        //                                    .foregroundStyle(by: .value("Name", option.name))
-                                        .foregroundStyle(colorForIndex(index: poll!.options.firstIndex(of: option)!))
-                                        
-                                        //                                    .annotation(position: .overlay) {
-                                        //                                        Text(option.count == 0 ? "" : "\(option.count)")
-                                        ////
-                                        //                                    }
-                                        
-                                        
-                                    }
-                                    .padding(.bottom)
-                                    .chartLegend(.hidden)
-                                    //                                .frame(height: 400)
-                                    
-                                    
-                                    //
-                                }
-                                
-                               
-
-                                VStack{
-                                    Text("\(totalVotes)")
-                                        .font(.largeTitle   )
-                                        .fontWeight(.bold)
-                                        .foregroundStyle(.secondary)
-                                    
-                                    Text("Votes")
-                                        .font(.title3)
-                                        .fontWeight(.regular)
-//                                        .fill(.ultraThickMaterial)
-                                        .foregroundStyle(.secondary)
-                                }
-                                .padding(.bottom)
-                   
-                                
-                            }
-                         
-                               
+                        
+                        
+                    } else {
+                        Chart(poll!.options) {option in
+                            SectorMark(
+                                //                                        angle: .value("Count", option.count),
+                                angle: .value("Count", option.count),
+                                innerRadius: .ratio(0.618),
+                                angularInset: 2
+                            )
+                            .cornerRadius(5)
                             
-//                            LazyVGrid(columns:   [ GridItem(.flexible()),
-//                                      GridItem(.flexible())], spacing: nil){
-                            ForEach(0..<poll!.options.count) { index in
-                                Button(action: {
-                                    poll!.incrementOption(index: index)
-                                    totalVotes = poll!.totalVotes()
-                                    poll!.updatePoll(spaceId: spaceId)
-                                }, label: {
-                                    
-                                  
-                                        Text(poll!.options[index].name)
-                                            .font(.headline)
-                                            .frame(maxWidth:.infinity)
-                                        .frame(height: 55)
-                                        
-
-                                    
-                                })
-
-                                .buttonStyle(.bordered)
-                                .tint(colorForIndex(index: index))
-//
-                         
-                                .cornerRadius(10)
-                              
-                              
-                                
-                                
-                                
-                                
-                            }
                             
+                            //                                    .foregroundStyle(by: .value("Name", option.name))
+                            .foregroundStyle(colorForIndex(index: poll!.options.firstIndex(of: option)!))
+                            
+                            //                                    .annotation(position: .overlay) {
+                            //                                        Text(option.count == 0 ? "" : "\(option.count)")
+                            ////
+                            //                                    }
                             
                             
                         }
-//                    }
                         .padding(.horizontal)
-                      
+                        .padding(.top)
+                        .chartLegend(.hidden)
+                        
+                        
+                        
+                        
+                        //
+                    }
                     
+                    
+                    
+                    VStack{
+                        Text("\(totalVotes)")
+                            .font(.largeTitle   )
+                            .fontWeight(.bold)
+                            .foregroundStyle(.secondary)
+                        
+                        Text("Votes")
+                            .font(.title3)
+                            .fontWeight(.regular)
+                        //                                        .fill(.ultraThickMaterial)
+                            .foregroundStyle(.secondary)
+                    }
+                    //                                .padding(.bottom)
+                    
+                    
+                    
+                }
                 
-//                .navigationTitle(poll!.name)
-//                        .navigationTitle("Poll 🤓")
-                      
+                VStack{
+                    HStack{
+                        Text(poll!.name)
+                            .font(.title)
+                        
+                            .minimumScaleFactor(0.5)
+                            .lineLimit(0...3)
+                            .multilineTextAlignment(.leading)
+                        
+                            .truncationMode(.tail)
+                        
+                        
+                        Spacer()
+                        
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+                    
+                    
+                    
+                    //                            LazyVGrid(columns:   [ GridItem(.flexible()),
+                    //                                      GridItem(.flexible())], spacing: nil){
+                    ForEach(0..<poll!.options.count) { index in
+                        Button(action: {
+                            poll!.incrementOption(index: index)
+                            totalVotes = poll!.totalVotes()
+                            poll!.updatePoll(spaceId: spaceId)
+                        }, label: {
+                            
+                            
+                            Text(poll!.options[index].name)
+                                .font(.headline)
+                                .frame(maxWidth:.infinity)
+                                .frame(minHeight: 55, maxHeight: .infinity)
+                            
+                            
+                            
+                        })
+                        
+                        .buttonStyle(.bordered)
+                        .tint(colorForIndex(index: index))
+                        //
+                        
+                        .cornerRadius(10)
+                        
+                        
+                        
+                        
+                        
+                        
+                    }
+                    
+                    
+                    
+                }
+                //                    }
+                
+                
+                
+                
+                //                .navigationTitle(poll!.name)
+                //                        .navigationTitle("Poll 🤓")
+                
                 .toolbar{
                     
                     ToolbarItem(placement: .navigationBarLeading) {
                         
                         Button(action: {
-                    dismissScreen()
+                            dismissScreen()
                             
                         }, label: {
                             Image(systemName: "xmark")
                                 .foregroundColor(Color(UIColor.label))
-        //                        .font(.title2)
-        //                        .padding()
+                            //                        .font(.title2)
+                            //                        .padding()
                         })
                         
                         
                     }
                 }
-            }
-                
-                
-            } else {
-                ProgressView()
-                    .backgroundStyle(Color(UIColor.systemBackground) )
-                    .onAppear {
-                        
-                        fetchPoll()
-                        
-                        
-                    }
+                .navigationTitle("Poll Time 🤓")
+                .navigationBarTitleDisplayMode(.inline)
+                .padding(.horizontal)
             }
             
             
-            
+        } else {
+            ProgressView()
+                .backgroundStyle(Color(UIColor.systemBackground) )
+                .onAppear {
+                    
+                    fetchPoll()
+                    
+                    
+                }
+        }
+        
+        
+        
         
         
     }
@@ -275,10 +284,10 @@ func colorForIndex(index: Int) -> Color {
     return colors[index % colors.count] // Ensure index doesn't exceed the color array length
 }
 
- 
+
 #Preview {
     
-   
+    
     PollWidgetSheetView(widget: CanvasWidget(id: UUID(uuidString: "B2A0B128-5877-4312-8FE4-9D66AEC76768")!, width: 150.0, height: 150.0, borderColor: .orange, userId: "zqH9h9e8bMbHZVHR5Pb8O903qI13", media: TwoCents.Media.poll, mediaURL: nil, widgetName: Optional("Yo"), widgetDescription: nil, textString: nil, emojis: ["👍": 0, "👎": 0, "😭": 1, "❤️": 0, "🫵": 1, "⁉️": 0], emojiPressed: ["⁉️": [], "❤️": [], "🫵": ["zqH9h9e8bMbHZVHR5Pb8O903qI13"], "👎": [], "😭": ["zqH9h9e8bMbHZVHR5Pb8O903qI13"], "👍": []]), spaceId: "CF5BDBDF-44C0-4382-AD32-D92EC05AA35E")
     
 }
