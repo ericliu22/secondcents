@@ -207,38 +207,38 @@ struct CanvasPage: View {
                             })
                     )
                 
-                    .overlay(
-                        
-                        widget.media == .poll && activeSheet == .chat
-                        
-                        ? Button(action: {
-//                            activeSheet = nil
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                                
-                                activePollWidget = widget
-                            }
-                            activeSheet = .poll
-                          
-                            
-                            
-                          
-                        }, label: {
-//                            Color.yellow
-                            RoundedRectangle(cornerRadius: CORNER_RADIUS)
-                                .foregroundStyle(.clear)
-                            
-                         
-                        })
-                        : nil
-                        
-                       
-                        
-                        
-                        
-                        
-                    
-                    )
-                
+//                    .overlay(
+//                        
+//                        widget.media == .poll && activeSheet == .chat
+//                        
+//                        ? Button(action: {
+////                            activeSheet = nil
+//                            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+//                                
+//                                activePollWidget = widget
+//                            }
+//                            activeSheet = .poll
+//                          
+//                            
+//                            
+//                          
+//                        }, label: {
+////                            Color.yellow
+//                            RoundedRectangle(cornerRadius: CORNER_RADIUS)
+//                                .foregroundStyle(.clear)
+//                            
+//                         
+//                        })
+//                        : nil
+//                        
+//                       
+//                        
+//                        
+//                        
+//                        
+//                    
+//                    )
+//                
                 
                 //username below widget
                     .overlay(content: {
@@ -590,6 +590,56 @@ struct CanvasPage: View {
                                  .padding(.top, 150)
                              Spacer()
                              HStack{
+                                 
+                                 
+                                 
+                 //                    .overlay(
+                 //
+                 //                        widget.media == .poll && activeSheet == .chat
+                 //
+                 //                        ? Button(action: {
+                 ////                            activeSheet = nil
+                 //                            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                 //
+                 //                                activePollWidget = widget
+                 //                            }
+                 //                            activeSheet = .poll
+                 //
+                 //
+                 //
+                 //
+                 //                        }, label: {
+                 ////                            Color.yellow
+                 //                            RoundedRectangle(cornerRadius: CORNER_RADIUS)
+                 //                                .foregroundStyle(.clear)
+                 //
+                 //
+                 //                        })
+                 //                        : nil
+                 //
+                                 
+                                 if selectedWidget!.media == .poll {
+                                     
+                                     Button(action: {
+                                         
+                                         activePollWidget = selectedWidget
+                                         
+                                         
+                                         
+                                         
+                                         
+                                         selectedWidget = nil
+                                         widgetDoubleTapped = false
+                                         
+                                         //                                     showSheet = true
+                                         //                                     showNewWidgetView = false
+                                         activeSheet = .poll
+                                     }, label: {
+                                         Image(systemName: "checklist")
+                                             .foregroundColor(Color(UIColor.label))
+                                             .font(.title3)
+                                     })
+                                 }
                                  
                              
                                  
