@@ -43,6 +43,7 @@
 		A257D7A12A6D707800A4E7BD /* TwoCentsUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A257D7A02A6D707800A4E7BD /* TwoCentsUITestsLaunchTests.swift */; };
 		A26809CA2AB8A77E003B30DE /* VoteGameReal.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20EBD072AB8A36100EFDDE8 /* VoteGameReal.swift */; };
 		A2AFFDDC2B154C7000B14C1E /* ChatWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2AFFDDB2B154C7000B14C1E /* ChatWidget.swift */; };
+		A2DAF34B2C07CB1C00E778FA /* Notifcations.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2DAF34A2C07CB1C00E778FA /* Notifcations.swift */; };
 		A2DDB1B92BB6806C00243E1B /* PollWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2DDB1B82BB6806C00243E1B /* PollWidget.swift */; };
 		A2DDB1BB2BB693FD00243E1B /* NewPollViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2DDB1BA2BB693FD00243E1B /* NewPollViewModel.swift */; };
 		A2DDB1BE2BB69DD800243E1B /* Poll.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2DDB1BD2BB69DD800243E1B /* Poll.swift */; };
@@ -176,6 +177,7 @@
 		A257D79E2A6D707800A4E7BD /* TwoCentsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwoCentsUITests.swift; sourceTree = "<group>"; };
 		A257D7A02A6D707800A4E7BD /* TwoCentsUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwoCentsUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		A2AFFDDB2B154C7000B14C1E /* ChatWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatWidget.swift; sourceTree = "<group>"; };
+		A2DAF34A2C07CB1C00E778FA /* Notifcations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notifcations.swift; sourceTree = "<group>"; };
 		A2DDB1B82BB6806C00243E1B /* PollWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollWidget.swift; sourceTree = "<group>"; };
 		A2DDB1BA2BB693FD00243E1B /* NewPollViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewPollViewModel.swift; sourceTree = "<group>"; };
 		A2DDB1BD2BB69DD800243E1B /* Poll.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Poll.swift; sourceTree = "<group>"; };
@@ -408,6 +410,14 @@
 			path = TwoCentsUITests;
 			sourceTree = "<group>";
 		};
+		A2DAF3492C07CB0300E778FA /* API */ = {
+			isa = PBXGroup;
+			children = (
+				A2DAF34A2C07CB1C00E778FA /* Notifcations.swift */,
+			);
+			path = API;
+			sourceTree = "<group>";
+		};
 		A2DDB1BC2BB69D7100243E1B /* Polls */ = {
 			isa = PBXGroup;
 			children = (
@@ -608,6 +618,7 @@
 		ABF56DFA2A7C8BC700F959DB /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				A2DAF3492C07CB0300E778FA /* API */,
 				AB9909A52ABE3B78004B3021 /* FriendRequests */,
 				AB0D07642AE6FB7C003AC8A4 /* Spaces */,
 				AB300FAC2AC7403900C6719D /* Friends */,
@@ -826,6 +837,7 @@
 				AB2E56CD2AE9C59D0096A58C /* VoteGameView.swift in Sources */,
 				A2F5631E2AB4E6240026D8C9 /* CanvasPage.swift in Sources */,
 				8534B8B92B8001660089AD5C /* NewPollView.swift in Sources */,
+				A2DAF34B2C07CB1C00E778FA /* Notifcations.swift in Sources */,
 				AB90021D2A8B85DA00F970B8 /* UploadExampleViewModel.swift in Sources */,
 				85A6766D2AE9C6BB003ECAAA /* textField.swift in Sources */,
 				A2F563232AB4E6700026D8C9 /* chattingView.swift in Sources */,

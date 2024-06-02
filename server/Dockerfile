@@ -1,11 +1,9 @@
-FROM rust:slim-bookworm
+FROM oven/bun:debian
 
-COPY Cargo.lock Cargo.lock
-COPY Cargo.toml Cargo.toml
-COPY src src
+COPY package.json ./
+COPY bun.lockb ./
+COPY src ./
+COPY .env ./
 
-RUN apt update && \
-    apt install -y python3-dev
-RUN cargo build --release
-
-CMD ["./target/release/twocents-server"]
+RUN bun install
+CMD bun --bun run index.ts
