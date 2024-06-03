@@ -9,7 +9,8 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
-    "elysia": "^1.0.22"
+    "elysia": "^1.0.22",
+    "firebase-admin": "^12.1.1"
   },
   "scripts": {
     "dev": "bun --watch src/index.ts",
