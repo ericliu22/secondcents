@@ -6,13 +6,13 @@
 //
 import Foundation
 import SwiftUI
+import FirebaseFirestore
 
 struct TextView: View {
+    //@StateObject private var nvm = NewWidgetViewModel()
     @State private var inputText: String = ""
-    @State private var displayedText: String? = nil
     @Binding var showPopup: Bool
-    @Binding var showTextDisplay: Bool
-    @Binding var textToDisplay: String
+    @FocusState private var isTextFieldFocused: Bool
 
     var body: some View {
         VStack {
@@ -20,14 +20,14 @@ struct TextView: View {
             TextField("Enter text", text: $inputText)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .padding()
+                .focused($isTextFieldFocused)
 
             // Button to submit text
             Button(action: {
                 if !inputText.isEmpty {
-                    textToDisplay = inputText
-                    displayedText = inputText
+                    let newText = CanvasWidget(borderColor: Color.accentColor, userId: "fOBAypBOWBVkpHEft3V3Dq9JJgX2", media: .text, textString: inputText)
+                    SpaceManager.shared.uploadWidget(spaceId: "865CE76B-9948-4310-A2C7-5BE32B302E4A", widget: newText)
                     inputText = ""
-                    showTextDisplay = true
                 }
                 showPopup.toggle()
             }) {
@@ -37,27 +37,40 @@ struct TextView: View {
                     .foregroundColor(.white)
                     .cornerRadius(8)
             }
-
-            // Display the text if it's not nil
-            if let text = displayedText {
-                TextDisplayView(text: text)
-            }
         }
         .padding()
+        .onAppear {
+                    isTextFieldFocused = true // Add this line to focus text field on appear
+                }
     }
+//    func uploadText(text: String) {
+//        let newText = CanvasWidget(borderColor: Color.accentColor, userId: "fOBAypBOWBVkpHEft3V3Dq9JJgX2", media: .text, textString: text)
+//        let newTextWidget = textWidget(widget: newText)
+//        do{
+//    //        db.collection("spaces")
+//    //            .document("865CE76B-9948-4310-A2C7-5BE32B302E4A")
+//    //            .collection("widgets")
+//    //            .addDocument(data: newTextWidget)
+//            nvm.saveWidget(index: 0)
+//        }
+//        catch {
+//            print("unable to upload text widget")
+//        }
+//    }
+
 }
 
-// View to display the submitted text
-struct TextDisplayView: View {
-    var text: String
-
-    var body: some View {
-        Text(text)
-            .multilineTextAlignment(.leading)
-            .font(.custom("LuckiestGuy-Regular", size: 24, relativeTo: .headline))
-            .foregroundColor(Color.accentColor)
-            .background(.thickMaterial)
-    }
-}
-
-
+//func uploadText(text: String) {
+//    let newText = CanvasWidget(borderColor: Color.accentColor, userId: "fOBAypBOWBVkpHEft3V3Dq9JJgX2", media: .text, textString: text)
+//    let newTextWidget = textWidget(widget: newText)
+//    do{
+////        db.collection("spaces")
+////            .document("865CE76B-9948-4310-A2C7-5BE32B302E4A")
+////            .collection("widgets")
+////            .addDocument(data: newTextWidget)
+//        nvm.saveWidget(index: index)
+//    }
+//    catch {
+//        print("unable to upload text widget")
+//    }
+//}

@@ -1,17 +1,8 @@
-//
-//  TextWidgetAlphaTest.swift
-//  TwoCents
-//
-//  Created by Joshua Shen on 5/22/24.
-//
-
 import Foundation
 import SwiftUI
 
 struct testView: View {
     @State private var showPopup = false
-    @State private var showTextDisplay = false
-    @State private var displayedText: String = ""
 
     var body: some View {
         ZStack {
@@ -19,11 +10,10 @@ struct testView: View {
                 Rectangle()
                     .fill(Color.red)
                     .frame(width: 100, height: 100)
+                    .onLongPressGesture {
+                        showPopup = true
+                    }
             }
-            .onLongPressGesture {
-                showPopup = true
-            }
-
             if showPopup {
                 Color.black.opacity(0.4)
                     .edgesIgnoringSafeArea(.all)
@@ -31,15 +21,9 @@ struct testView: View {
                         showPopup = false
                     }
 
-                TextView(showPopup: $showPopup, showTextDisplay: $showTextDisplay, textToDisplay: $displayedText)
+                TextView(showPopup: $showPopup)
                     .transition(.scale)
                     .zIndex(1)
-            }
-
-            if showTextDisplay {
-                TextDisplayView(text: displayedText)
-                    .transition(.scale)
-                    .zIndex(2)
             }
         }
     }

@@ -83,7 +83,7 @@ final class SpaceManager{
         try await spaceDocument(spaceId: spaceId).updateData(newArray)
         
         
-     
+    
     }
     
     

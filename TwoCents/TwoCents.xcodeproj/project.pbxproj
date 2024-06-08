@@ -13,6 +13,7 @@
 		850958AB2AB8F82D00018A32 /* LuckiestGuy-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 850958A92AB8F82D00018A32 /* LuckiestGuy-Regular.ttf */; };
 		850958AC2AB8F82D00018A32 /* LuckiestGuy-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 850958A92AB8F82D00018A32 /* LuckiestGuy-Regular.ttf */; };
 		8534B8B92B8001660089AD5C /* NewPollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8534B8B82B8001660089AD5C /* NewPollView.swift */; };
+		853A641C2C0D380E00041CA1 /* textTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 853A641B2C0D380E00041CA1 /* textTest.swift */; };
 		856E80B12B50E9D00078A2CE /* PencilKitPractice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 856E80B02B50E9CF0078A2CE /* PencilKitPractice.swift */; };
 		856E80B92B50EB260078A2CE /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 856E80B42B50EB260078A2CE /* CardView.swift */; };
 		856E80BA2B50EB260078A2CE /* SabotageSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 856E80B52B50EB260078A2CE /* SabotageSelectionView.swift */; };
@@ -25,8 +26,6 @@
 		85741EAA2AD03B2C0085423E /* SnapCarouselPractice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85741EA92AD03B2C0085423E /* SnapCarouselPractice.swift */; };
 		85741EAF2AD03D370085423E /* PostModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85741EAE2AD03D370085423E /* PostModel.swift */; };
 		858128412BFE454000AAF1D1 /* TextWidgetAlpha.swift in Sources */ = {isa = PBXBuildFile; fileRef = 858128402BFE454000AAF1D1 /* TextWidgetAlpha.swift */; };
-		858128432BFE4AAA00AAF1D1 /* TextWidgetAlphaTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 858128422BFE4AAA00AAF1D1 /* TextWidgetAlphaTest.swift */; };
-		858128472C04165800AAF1D1 /* textTestTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 858128462C04165800AAF1D1 /* textTestTest.swift */; };
 		85A6766B2AE9C19B003ECAAA /* messageBubbles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A6766A2AE9C19B003ECAAA /* messageBubbles.swift */; };
 		85A6766D2AE9C6BB003ECAAA /* textField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A6766C2AE9C6BB003ECAAA /* textField.swift */; };
 		85BB02F02B5D077E00B9A9EA /* ToolPickerPractice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85BB02EF2B5D077E00B9A9EA /* ToolPickerPractice.swift */; };
@@ -140,6 +139,7 @@
 		850958A82AB8F81200018A32 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		850958A92AB8F82D00018A32 /* LuckiestGuy-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "LuckiestGuy-Regular.ttf"; sourceTree = "<group>"; };
 		8534B8B82B8001660089AD5C /* NewPollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewPollView.swift; sourceTree = "<group>"; };
+		853A641B2C0D380E00041CA1 /* textTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = textTest.swift; sourceTree = "<group>"; };
 		856E80B02B50E9CF0078A2CE /* PencilKitPractice.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PencilKitPractice.swift; sourceTree = "<group>"; };
 		856E80B42B50EB260078A2CE /* CardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 		856E80B52B50EB260078A2CE /* SabotageSelectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SabotageSelectionView.swift; sourceTree = "<group>"; };
@@ -152,8 +152,6 @@
 		85741EA92AD03B2C0085423E /* SnapCarouselPractice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapCarouselPractice.swift; sourceTree = "<group>"; };
 		85741EAE2AD03D370085423E /* PostModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostModel.swift; sourceTree = "<group>"; };
 		858128402BFE454000AAF1D1 /* TextWidgetAlpha.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextWidgetAlpha.swift; sourceTree = "<group>"; };
-		858128422BFE4AAA00AAF1D1 /* TextWidgetAlphaTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextWidgetAlphaTest.swift; sourceTree = "<group>"; };
-		858128462C04165800AAF1D1 /* textTestTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = textTestTest.swift; sourceTree = "<group>"; };
 		85A6766A2AE9C19B003ECAAA /* messageBubbles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = messageBubbles.swift; sourceTree = "<group>"; };
 		85A6766C2AE9C6BB003ECAAA /* textField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = textField.swift; sourceTree = "<group>"; };
 		85BB02EF2B5D077E00B9A9EA /* ToolPickerPractice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolPickerPractice.swift; sourceTree = "<group>"; };
@@ -435,10 +433,9 @@
 			children = (
 				A2DDB1BC2BB69D7100243E1B /* Polls */,
 				AB6778E12AB8F67300C11AA7 /* ImageWidget.swift */,
-				858128422BFE4AAA00AAF1D1 /* TextWidgetAlphaTest.swift */,
-				858128462C04165800AAF1D1 /* textTestTest.swift */,
 				AB01CB5E2B855E83004BEB5B /* TextWidget.swift */,
 				858128402BFE454000AAF1D1 /* TextWidgetAlpha.swift */,
+				853A641B2C0D380E00041CA1 /* textTest.swift */,
 				A2AFFDDB2B154C7000B14C1E /* ChatWidget.swift */,
 				AB6778E52AB8F67D00C11AA7 /* VideoWidget.swift */,
 				A2E5F52A2B5A12D30019C6ED /* DrawingCanvas.swift */,
@@ -809,13 +806,11 @@
 				A26809CA2AB8A77E003B30DE /* VoteGameReal.swift in Sources */,
 				A2AFFDDC2B154C7000B14C1E /* ChatWidget.swift in Sources */,
 				AB842C142A91F36D00E4A7CE /* CustomizeProfileViewModel.swift in Sources */,
-				858128472C04165800AAF1D1 /* textTestTest.swift in Sources */,
 				AB2E56C62AE9B9210096A58C /* CreateSpacesView.swift in Sources */,
 				AB2E56C82AE9B9590096A58C /* CreateSpacesViewModel.swift in Sources */,
 				A257D7862A6D707600A4E7BD /* ContentView.swift in Sources */,
 				AB2E56D12AE9C62C0096A58C /* CapsuleView.swift in Sources */,
 				AB6EA60C2B87A1FE00CC90FF /* EmojiReactionsView.swift in Sources */,
-				858128432BFE4AAA00AAF1D1 /* TextWidgetAlphaTest.swift in Sources */,
 				ABCA39DA2A7A0881009447C3 /* SettingsView.swift in Sources */,
 				AB90EDBB2B54FDAD002AD855 /* CustomizeWidgetViewModel.swift in Sources */,
 				AB58C1E22BDAED9A000B0AC1 /* SpaceSettingsView.swift in Sources */,
@@ -862,6 +857,7 @@
 				858128412BFE454000AAF1D1 /* TextWidgetAlpha.swift in Sources */,
 				AB6EA6102B87A27D00CC90FF /* SplashView.swift in Sources */,
 				AB9EB95D2B1E805300F58EA5 /* ChatManager.swift in Sources */,
+				853A641C2C0D380E00041CA1 /* textTest.swift in Sources */,
 				AB15AC0D2AF6F01B0055D5D0 /* SpaceProfilePicViewModel.swift in Sources */,
 				AB01CB5F2B855E83004BEB5B /* TextWidget.swift in Sources */,
 				ABF172A92BFC66AD000B6F9B /* AddMemberViewModel.swift in Sources */,

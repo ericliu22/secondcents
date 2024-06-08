@@ -154,9 +154,15 @@ extension UTType {
 }
 
 func getMediaView(widget: CanvasWidget, spaceId: String) -> AnyView {
+    
+    
+    @State var user: DBUser?
+    
+    
+    
     switch (widget.media) {
         case .text:
-            return textWidget(widget: widget)
+        return textWidget(widget: widget, inputColor: getUserColor(userColor: "red"))
       
         case .video:
             return videoWidget(widget: widget)
@@ -171,6 +177,7 @@ func getMediaView(widget: CanvasWidget, spaceId: String) -> AnyView {
             return imageWidget(widget: widget)
     }
     
+     
         
     
     
