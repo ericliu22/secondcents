@@ -24,7 +24,6 @@ struct DBUser: Identifiable, Codable{
     let friends: Array<String>?
     let incomingFriendRequests: Array<String>?
     let outgoingFriendRequests: Array<String>?
-    let registrationToken: String?
     
     
     

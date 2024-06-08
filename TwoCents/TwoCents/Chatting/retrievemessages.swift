@@ -80,7 +80,8 @@ class MessageManager: ObservableObject{
                         self.db.collection("spaces").document(spaceId).collection("chat").document("mainChat").setData(["lastSend": newMessage.sendBy], merge: true)
                         db.collection("spaces").document(spaceId).collection("chat").document("mainChat").setData(["lastTs": newMessage.ts], merge: true)
                         
-                        
+                        let firstNotification = Notification(title: "HELLO FROM ERIC", body: "FIRST NOTIFICATION");
+                        sendSingleNotification(to: "eZx-VtX3Lkm-iyK4Ky99rL:APA91bEvnTqEI0asvDcqYKxQPIurbjvUFIdxKDCjgssBRjWq8W8LU8VOilnoJ_TWClLKrToJY4if-UMsnUEQwSzuoHmjYq1wb4Bodtl5Qk05y4uee8HzXhbI9ySbwl-UmJcV5mnJPORs", notification: firstNotification, completion: <#(Bool) -> Void#>)
                     }
                     
                     

@@ -37,7 +37,6 @@ struct RootView: View {
                 .task{
                     try? await viewModel.loadCurrentUser()
                     
-                    if viewModel.user
                     if let myColor = viewModel.user?.userColor{
                         tintLoaded = true
                         userColor = myColor
