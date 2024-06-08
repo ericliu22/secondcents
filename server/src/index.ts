@@ -1,18 +1,15 @@
 import { Elysia } from 'elysia';
 import { sendNotification, sendNotificationTopic } from "./lib/notification.ts";
-import * as admin from "firebase-admin";
+import { config } from "dotenv";
+
+//NECESSARY TO IMPORT ENV FILES
+config();
 
 const app = new Elysia()
 
-
-if (!process.env.SERVICE_ACCOUNT_FILEPATH) {
-	throw new Error("Failed to start server: enviornment variable SERVICE_ACCOUNT_FILEPATH not set");
-}
-
-var serviceAccount = require(process.env.SERVICE_ACCOUNT_FILEPATH);
-
+const admin = require("firebase-admin");
 admin.initializeApp({
-	credential: admin.credential.cert(serviceAccount)
+	credential: admin.credential.applicationDefault()
 });
 
 app.post('/api/notification', ({ body }) => {
