@@ -326,6 +326,8 @@ struct CanvasPage: View {
                                 //move widget
                                 let sourceItem = canvasWidgets.remove(at: sourceIndex)
                                 canvasWidgets.insert(sourceItem, at: destinationIndex)
+                                
+                                
                                 //deselect
                                 selectedWidget = nil
                                 widgetDoubleTapped = false

@@ -1,18 +1,62 @@
+import { getMessaging } from "firebase-admin/messaging";
+
+
+/*DEPRECATED
+
 const FCM_API_URL = "https://fcm.googleapis.com/fcm/send";
 
-function getNotification(httpBody: any) {
-	const { to, notification } = httpBody.title
-
-	const fcmMessage = JSON.stringify({
-		to,
-		notification,
-	});
+function newNotificationRequest() {
 	const request = new XMLHttpRequest();
 	request.open("POST", FCM_API_URL, true);
 	request.setRequestHeader('Content-Type', 'application/json');
 	request.setRequestHeader('Authorization', `key=${process.env.FCM_SERVER_KEY}`);
+	return request;
+}
+*/
+
+function sendNotification(httpBody: any) {
+	const { to, notification } = httpBody
+
+	var tokens;
+	if(typeof to === 'string') {
+		tokens = [to];
+	} else {
+		tokens = to;
+	}
+	const message = {
+		notification: notification,
+		token: tokens
+	};
+
+	getMessaging().send(message)
+	.then((response) => {
+		// Response is a message ID string.
+		console.log('Successfully sent message:', response);
+	})
+	.catch((error) => {
+		console.log('Error sending message:', error);
+	});
+}
+
+function sendNotificationTopic(httpBody: any) {
+	const { topic, notification } = httpBody
+
+	const message = {
+		notification: notification,
+		topic: topic
+	}
+
+	getMessaging().send(message)
+	.then((response) => {
+		// Response is a message ID string.
+		console.log('Successfully sent message:', response);
+	})
+	.catch((error) => {
+		console.log('Error sending message:', error);
+	});
 }
 
 export {
-	getNotification
+	sendNotification,
+	sendNotificationTopic
 }
