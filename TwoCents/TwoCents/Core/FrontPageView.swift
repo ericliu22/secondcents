@@ -25,11 +25,11 @@ struct FrontPageView: View {
                     Image(systemName: "rectangle.3.group.fill")
                     Text("Spaces")
                 }
-            testView()
-                .tabItem {
-                    Image(systemName: "rectangle.3.group.fill")
-                    Text("test")
-                }
+//            testView()
+//                .tabItem {
+//                    Image(systemName: "rectangle.3.group.fill")
+//                    Text("test")
+//                }
             
 //            VoteGameView()
 //                .tabItem {
