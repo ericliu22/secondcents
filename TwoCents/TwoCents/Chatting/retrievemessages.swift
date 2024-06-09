@@ -80,37 +80,7 @@ class MessageManager: ObservableObject{
                         self.db.collection("spaces").document(spaceId).collection("chat").document("mainChat").setData(["lastSend": newMessage.sendBy], merge: true)
                         db.collection("spaces").document(spaceId).collection("chat").document("mainChat").setData(["lastTs": newMessage.ts], merge: true)
                         
-                        db.collection("spaces").document(spaceId).getDocument { documentSnapshot, error  in
-                            guard let members = documentSnapshot!.data()!["members"] as? [String] else {
-                                return
-                            }
-                            
-                            Task {
-                                
-                                var tokens: [String] = []
-                                for m in members {
-                                    if (m == self.userUID) {
-                                        continue
-                                    }
-                                    
-                                    let token = await getToken(uid: m)
-                                    if (!token.isEmpty) {
-                                        tokens.append(token)
-                                    }
-                                    
-                                }
-                                let name = try await UserManager.shared.getUser(userId: self.userUID).name
-                                let notification = Notification(title: name!, body: text!);
-                                for token in tokens {
-                                    sendSingleNotification(to: token, notification: notification) { completion in
-                                        if (completion) {
-                                            print("SUCCEDED")
-                                        }
-                                    }
-                                }
-                            }
-
-                        }
+                        messageNotification(spaceId: spaceId, userUID: self.userUID, message: text!)
                     }
                     
                     

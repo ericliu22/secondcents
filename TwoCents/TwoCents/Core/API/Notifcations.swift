@@ -16,7 +16,7 @@ struct Notification: Codable {
         self.title = title
         self.body = body
     }
-    
+
     init(title: String, body: String, image: String) {
         self.title = title
         self.body = body
@@ -160,5 +160,70 @@ func getToken(uid: String) async -> String {
     } catch {
         print("Failed to get token")
         return ""
+    }
+}
+
+
+
+func spaceNotification(spaceId: String, userUID: String, notification: Notification) {
+    db.collection("spaces").document(spaceId).getDocument { documentSnapshot, error  in
+        guard let members = documentSnapshot!.data()!["members"] as? [String] else {
+            return
+        }
+        Task {
+            var tokens: [String] = []
+            for m in members {
+                if (m == userUID) {
+                    continue
+                }
+                
+                let token = await getToken(uid: m)
+                if (!token.isEmpty) {
+                    tokens.append(token)
+                }
+                
+            }
+            for token in tokens {
+                sendSingleNotification(to: token, notification: notification) { completion in
+                    if (completion) {
+                        print("Succeded sending")
+                    }
+                }
+            }
+        }
+        
+    }
+}
+
+func messageNotification(spaceId: String, userUID: String, message: String) {
+    Task {
+        let space = try await SpaceManager.shared.getSpace(spaceId: spaceId)
+        let spaceName: String = space.name!
+        let name = try await UserManager.shared.getUser(userId: userUID).name
+        
+        if let spaceImage: String = space.profileImageUrl {
+            print("Space image \(spaceImage)")
+            let notification = Notification(title: "[\(spaceName)] \(name!)", body: message, image: spaceImage);
+            print(notification.title)
+            spaceNotification(spaceId: spaceId, userUID: userUID, notification: notification)
+        } else {
+            let notification = Notification(title: "[\(spaceName)] \(name!)", body: message);
+            spaceNotification(spaceId: spaceId, userUID: userUID, notification: notification)
+        }
+    }
+}
+
+func widgetNotification(spaceId: String, userUID: String, widget: CanvasWidget) {
+    Task {
+        let space = try await SpaceManager.shared.getSpace(spaceId: spaceId)
+        let spaceName: String = space.name!
+        let name = try await UserManager.shared.getUser(userId: userUID).name
+        if let spaceImage: String = space.profileImageUrl {
+            let notification = Notification(title: "[\(spaceName)] \(name!)", body: "Added a new \(widget.media.name()) widget", image: spaceImage);
+            spaceNotification(spaceId: spaceId, userUID: userUID, notification: notification)
+        } else {
+            let notification = Notification(title: "[\(spaceName)] \(name!)", body: "Added a new \(widget.media.name()) widget");
+            spaceNotification(spaceId: spaceId, userUID: userUID, notification: notification)
+        }
     }
 }

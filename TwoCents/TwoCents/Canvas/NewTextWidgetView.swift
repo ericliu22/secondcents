@@ -67,8 +67,8 @@ struct NewTextWidgetView: View {
                         let newText = CanvasWidget(borderColor: Color.accentColor, userId: userId, media: .text, textString: inputText)
                         SpaceManager.shared.uploadWidget(spaceId: spaceId, widget: newText)
                         
-                     
-                        
+                        widgetNotification(spaceId: spaceId, userUID: userId, widget: newText)
+
                         
                         inputText = ""
                         

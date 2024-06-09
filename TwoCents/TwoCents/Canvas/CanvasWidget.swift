@@ -93,6 +93,21 @@ extension Media: Codable {
         }
     }
     
+    func name() -> String {
+        switch self {
+        case .video:
+            return "video"
+        case .text:
+            return "text"
+        case .image:
+            return "image"
+        case .poll:
+            return "poll"
+        case .chat:
+            return "chat"
+        }
+    }
+    
 }
 
 extension CanvasWidget {
