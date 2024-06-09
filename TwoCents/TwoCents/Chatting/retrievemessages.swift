@@ -74,20 +74,36 @@ class MessageManager: ObservableObject{
                         
                         
                     } else {
-                        
+                        let mainChatReference = db.collection("spaces").document(spaceId).collection("chat").document("mainChat")
                         let newMessage = Message(id: "\(UUID())", sendBy: userUID, text: text, ts: Date(), parent: (property as? String) ?? "", widgetId: widget?.id.uuidString)
                         try self.db.collection("spaces").document(spaceId).collection("chat").document("mainChat").collection("chatlogs").document().setData(from: newMessage)
                         self.db.collection("spaces").document(spaceId).collection("chat").document("mainChat").setData(["lastSend": newMessage.sendBy], merge: true)
                         db.collection("spaces").document(spaceId).collection("chat").document("mainChat").setData(["lastTs": newMessage.ts], merge: true)
                         
-                        let firstNotification = Notification(title: "HELLO FROM ERIC", body: "FIRST NOTIFICATION");
-                        sendSingleNotification(to: "coc5utRXp00vkWGM7met4r:APA91bFyMUyzKCQu2c45Pm-hqWE_eppgoDIqiIIkIwLGVOy2rUORVmtwBNDpQaD8LX1T9YtSeNmBJlKIsp4iL5jwvrPF9XEKCKtu9U4PmF7dpdkr8C3kvlBtRkqzqG8wPOYb7CBhC1aa", notification: firstNotification) { completion in
-                                
-                            if (completion) {
-                                
-                                print("SUCCEDED")
-                            
+                        db.collection("spaces").document(spaceId).getDocument { documentSnapshot, error  in
+                            guard let members = documentSnapshot!.data()!["members"] as? [String] else {
+                                return
                             }
+                            
+                            Task {
+                                
+                                var tokens: [String] = []
+                                for m in members {
+                                    let token = await getToken(uid: m)
+                                    if (!token.isEmpty) {
+                                        tokens.append(token)
+                                    }
+                                }
+                                print(tokens)
+                                let username = try await UserManager.shared.getUser(userId: self.userUID).username
+                                let notification = Notification(title: username!, body: text!);
+                                sendMultipleNotifcation(to: tokens, notification: notification) { completion in
+                                    if (completion) {
+                                        print("SUCCEDED")
+                                    }
+                                }
+                            }
+
                         }
                     }
                     

@@ -19,8 +19,10 @@ function sendNotification(httpBody: any) {
 
 	var tokens;
 	if(typeof to === 'string') {
+		console.log("STRING DETECTED")
 		tokens = [to];
 	} else {
+		console.log("NOT STRING")
 		tokens = to;
 	}
 	const message = {

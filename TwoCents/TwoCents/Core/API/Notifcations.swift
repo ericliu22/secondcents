@@ -81,10 +81,17 @@ func sendMultipleNotifcation(to: [String], notification: Notification, completio
     request.httpMethod = "POST"
     request.setValue("application/json", forHTTPHeaderField: "Content-Type")
 
+    guard let notificationDict = notification.toDictionary() else {
+        print("Error converting notification to dictionary")
+        completion(false)
+        return
+    }
+
+    let parameters: [String: Any] = ["to": to, "notification": notificationDict]
+
     do {
-        let jsonData = try JSONEncoder().encode(notification)
-        request.httpBody = try JSONSerialization.data(withJSONObject: jsonData, options: [])
-        request.httpBody?.append(try JSONEncoder().encode(to))
+        let jsonData = try JSONSerialization.data(withJSONObject: parameters, options: [])
+        request.httpBody = jsonData
     } catch let error {
         print("Error encoding parameters: \(error)")
         completion(false)
@@ -142,4 +149,16 @@ func sendNotificationTopic(topic: String, notification: Notification, completion
     }
 
     task.resume()
+}
+
+func getToken(uid: String) async -> String {
+    do {
+        guard let token = try await db.collection("users").document(uid).getDocument().data()?["token"] as? String else {
+            return ""
+        }
+        return token
+    } catch {
+        print("Failed to get token")
+        return ""
+    }
 }

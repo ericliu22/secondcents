@@ -69,10 +69,20 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 
 extension AppDelegate: MessagingDelegate {
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
-
-      let deviceToken:[String: String] = ["token": fcmToken ?? ""]
+        let deviceToken: [String: String] = ["token": fcmToken ?? ""]
         print("Device token: ", deviceToken) // This token can be used for testing notifications on FCM
+        uploadTokenToServer(fcmToken ?? "")
     }
+    
+    func uploadTokenToServer(_ token: String) {
+        do {
+            let uid = try AuthenticationManager.shared.getAuthenticatedUser().uid
+            db.collection("users").document(uid).setData(["token": token], merge: true)
+        } catch {
+            print("FAILED TO UPLOAD DEVICE TOKEN")
+        }
+    }
+    
 }
 
 @available(iOS 10, *)
