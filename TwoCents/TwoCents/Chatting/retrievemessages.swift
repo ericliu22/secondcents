@@ -89,10 +89,15 @@ class MessageManager: ObservableObject{
                                 
                                 var tokens: [String] = []
                                 for m in members {
+                                    if (m == self.userUID) {
+                                        continue
+                                    }
+                                    
                                     let token = await getToken(uid: m)
                                     if (!token.isEmpty) {
                                         tokens.append(token)
                                     }
+                                    
                                 }
                                 let username = try await UserManager.shared.getUser(userId: self.userUID).username
                                 let notification = Notification(title: username!, body: text!);
