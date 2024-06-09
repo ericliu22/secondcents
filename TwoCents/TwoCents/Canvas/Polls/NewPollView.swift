@@ -210,8 +210,8 @@ struct NewPoll: View{
                     //$pollModel.newOptionName
                 )
                 
-                    .autocorrectionDisabled()
-                    .textInputAutocapitalization(.never)
+//                    .autocorrectionDisabled()
+//                    .textInputAutocapitalization(.never)
                     .padding()
                     .background(Color(UIColor.secondarySystemBackground))
                     .cornerRadius(10)

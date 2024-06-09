@@ -21,7 +21,7 @@ struct testView: View {
                         showPopup = false
                     }
 
-                TextView(showPopup: $showPopup)
+                TextView()
                     .transition(.scale)
                     .zIndex(1)
             }

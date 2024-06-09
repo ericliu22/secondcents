@@ -20,20 +20,22 @@ struct TextWidgetView: View {
         Text(widget.textString ?? "")
             .multilineTextAlignment(.leading)
             .font(.custom("LuckiestGuy-Regular", size: 24, relativeTo: .headline))
+            .padding(5)
+            .minimumScaleFactor(0.8)
             .frame(width: widget.width, height: widget.height)
-          
             .background(.ultraThickMaterial)
             .background(userColor)
             .foregroundColor(userColor)
             .task {
                 try? await viewModel.loadUser(userId: widget.userId)
                 
- 
+                
                 
                 withAnimation{
                     self.userColor = viewModel.getUserColor(userColor:viewModel.user?.userColor ?? "")
                 }
                 
             }
+            
     }
 }

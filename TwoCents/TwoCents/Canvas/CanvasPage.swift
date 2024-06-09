@@ -91,7 +91,7 @@ struct CanvasPage: View {
         
         
         
-        case newWidgetView, chat, poll
+        case newWidgetView, chat, poll, newTextView
         
         var id: Self {
             return self
@@ -468,10 +468,11 @@ struct CanvasPage: View {
                 )
 
              
-            
-            
-            
-            
+                
+                .onTapGesture(count: 2, perform: {
+                    
+                    activeSheet = .newTextView
+                })
             
                 .onTapGesture {
                     //deselect
@@ -786,8 +787,14 @@ struct CanvasPage: View {
                             .presentationBackground(Color(UIColor.systemBackground))
                           
                     }
+                    
+                case .newTextView:
+                    
+                    TextView()
+                        .presentationBackground(Color(UIColor.systemBackground))
 
                 }
+                
                 
                 
             })
