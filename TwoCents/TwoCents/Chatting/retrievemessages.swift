@@ -99,8 +99,8 @@ class MessageManager: ObservableObject{
                                     }
                                     
                                 }
-                                let username = try await UserManager.shared.getUser(userId: self.userUID).username
-                                let notification = Notification(title: username!, body: text!);
+                                let name = try await UserManager.shared.getUser(userId: self.userUID).name
+                                let notification = Notification(title: name!, body: text!);
                                 for token in tokens {
                                     sendSingleNotification(to: token, notification: notification) { completion in
                                         if (completion) {
