@@ -35,12 +35,12 @@ app.listen(process.env.PORT ?? 8080, () => {
 });
 
 const testNotification = {
-	title: "HELLO FROM SERVER",
-	body: "An actual notification from the server"
+	title: "I like james charles",
+	body: "Gyatt"
 };
 
 const testBody = {
-	to: "coc5utRXp00vkWGM7met4r:APA91bFyMUyzKCQu2c45Pm-hqWE_eppgoDIqiIIkIwLGVOy2rUORVmtwBNDpQaD8LX1T9YtSeNmBJlKIsp4iL5jwvrPF9XEKCKtu9U4PmF7dpdkr8C3kvlBtRkqzqG8wPOYb7CBhC1aa",
+	to: "eZx-VtX3Lkm-iyK4Ky99rL:APA91bEvnTqEI0asvDcqYKxQPIurbjvUFIdxKDCjgssBRjWq8W8LU8VOilnoJ_TWClLKrToJY4if-UMsnUEQwSzuoHmjYq1wb4Bodtl5Qk05y4uee8HzXhbI9ySbwl-UmJcV5mnJPORs",
 	notification: testNotification
 }
 

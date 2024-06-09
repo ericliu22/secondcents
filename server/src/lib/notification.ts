@@ -25,8 +25,10 @@ function sendNotification(httpBody: any) {
 	}
 	const message = {
 		notification: notification,
-		token: tokens
+		token: to
 	};
+
+	console.log(message.token);
 
 	getMessaging().send(message)
 	.then((response) => {
