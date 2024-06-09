@@ -207,38 +207,7 @@ struct CanvasPage: View {
                             })
                     )
                 
-//                    .overlay(
-//                        
-//                        widget.media == .poll && activeSheet == .chat
-//                        
-//                        ? Button(action: {
-////                            activeSheet = nil
-//                            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-//                                
-//                                activePollWidget = widget
-//                            }
-//                            activeSheet = .poll
-//                          
-//                            
-//                            
-//                          
-//                        }, label: {
-////                            Color.yellow
-//                            RoundedRectangle(cornerRadius: CORNER_RADIUS)
-//                                .foregroundStyle(.clear)
-//                            
-//                         
-//                        })
-//                        : nil
-//                        
-//                       
-//                        
-//                        
-//                        
-//                        
-//                    
-//                    )
-//                
+
                 
                 //username below widget
                     .overlay(content: {
@@ -456,61 +425,51 @@ struct CanvasPage: View {
             
             
             
-            
                 .gesture(
                     DragGesture()
                         .onChanged { value in
-                            withAnimation(.spring) {
+                            withAnimation {
                                 self.animator?.stopAnimation(true)
                                 self.offset = CGSize(
-                                    width: self.lastOffset.width + value.translation.width,
-                                    height: self.lastOffset.height + value.translation.height
+                                    width: self.lastOffset.width + value.translation.width / self.scale,
+                                    height: self.lastOffset.height + value.translation.height / self.scale
                                 )
                             }
-                            
                         }
                         .onEnded { value in
-                            withAnimation(.spring) {
-                                //was 0.7
-                                let springTiming = UISpringTimingParameters(dampingRatio: 1)
-                                self.animator = UIViewPropertyAnimator(duration: 0.5, timingParameters: springTiming)
+                            withAnimation {
+                                let timingParameters = UICubicTimingParameters(controlPoint1: CGPoint(x: 0.25, y: 0.1), controlPoint2: CGPoint(x: 0.25, y: 1))
+                                self.animator = UIViewPropertyAnimator(duration: 0.5, timingParameters: timingParameters)
                                 self.animator?.addAnimations {
                                     self.offset = CGSize(
-                                        width: self.lastOffset.width + value.translation.width,
-                                        height: self.lastOffset.height + value.translation.height
+                                        width: self.lastOffset.width + value.translation.width / self.scale,
+                                        height: self.lastOffset.height + value.translation.height / self.scale
                                     )
                                 }
                                 self.animator?.startAnimation()
                                 self.lastOffset = self.offset
                             }
                         }
-                    
                 )
                 .gesture(
                     MagnificationGesture()
                         .onChanged { value in
-                            withAnimation(.spring) {
+                            withAnimation {
                                 self.scale = self.cumulativeScale * value
-                                
                                 scaleChanging = true
                             }
-                            
                         }
                         .onEnded { value in
-                            withAnimation(.spring) {
+                            withAnimation {
                                 self.cumulativeScale *= value
-                                
                                 scaleChanging = false
                             }
                         }
-                    
-                    
-                    
-                    
-                    
-                    
                 )
-            //            }
+
+             
+            
+            
             
             
             
@@ -640,6 +599,7 @@ struct CanvasPage: View {
                                          Image(systemName: "checklist")
                                              .foregroundColor(Color(UIColor.label))
                                              .font(.title3)
+                                             .background(Color.clear)
                                      })
                                  }
                                  
@@ -665,6 +625,7 @@ struct CanvasPage: View {
                                      Image(systemName: "arrowshape.turn.up.left")
                                          .foregroundColor(Color(UIColor.label))
                                          .font(.title3)
+                                         .background(Color.clear)
                                  })
                                  
                                  
@@ -700,6 +661,7 @@ struct CanvasPage: View {
                                      Image(systemName: "trash")
                                          .foregroundColor(.red)
                                          .font(.title3)
+                                         .background(Color.clear)
                                  })
                              }
                              .padding(.horizontal, 15)
