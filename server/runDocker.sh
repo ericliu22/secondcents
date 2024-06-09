@@ -25,14 +25,14 @@ then
 	    docker run \
 		--name twocents-server-container \
 		--rm \
-		--network host \
+		-p 8080:8080 \
 		twocents-server-image
 	else
 	    docker run \
 		--name twocents-server-container \
 		--rm \
 		--detach \
-		--network host \
+		-p 8080:8080 \
 		twocents-server-image
 	fi
 fi
