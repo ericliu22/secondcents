@@ -7,86 +7,33 @@
 
 import Foundation
 import SwiftUI
+import SwiftUI
 
-func textWidget(widget: CanvasWidget, inputColor: Color) -> AnyView {
-    @State var isPresented: Bool = false
+struct TextWidgetView: View {
+    @State private var isPresented: Bool = false
+    let widget: CanvasWidget // Assuming CanvasWidget is a defined type
+    @StateObject private var viewModel = TextWidgetViewModel()
     
+    @State private var userColor: Color = .gray
     
-    
-    
-    
-    
-    assert(widget.media == .text)
-    @State var inputText: String = ""
-    
-//    @State var inputColor: Color
-    
-    return AnyView(
-        
-        
+    var body: some View {
         Text(widget.textString ?? "")
             .multilineTextAlignment(.leading)
             .font(.custom("LuckiestGuy-Regular", size: 24, relativeTo: .headline))
-            .foregroundColor(inputColor)
             .frame(width: widget.width, height: widget.height)
-            .background(.thickMaterial)
+          
+            .background(.ultraThickMaterial)
+            .background(userColor)
+            .foregroundColor(userColor)
             .task {
+                try? await viewModel.loadUser(userId: widget.userId)
                 
-                
-//                user = loadUser(userId: widget.userId)
-//               user = loadUser(userId: widget.userId)
-//                getUserColor(userColor: user?.userColor)
-               
-            }
-//            .foregroundColor()
-            
-        
-   
-    )//AnyView
-}
-
-
-func getUserColor(userColor: String) -> Color{
-
-    switch userColor {
-        
-    case "red":
-        return Color.red
-    case "orange":
-        return Color.orange
-    case "yellow":
-        return Color.yellow
-    case "green":
-        return Color.green
-    case "mint":
-        return Color.mint
-    case "teal":
-        return Color.teal
-    case "cyan":
-        return Color.cyan
-    case "blue":
-        return Color.blue
-    case "indigo":
-        return Color.indigo
-    case "purple":
-        return Color.purple
-    case "pink":
-        return Color.pink
-    case "brown":
-        return Color.brown
-    default:
-        return Color.gray
-    }
-    
-    
-    
-}
-
-
-
-
-
-func loadUser(userId: String) async throws -> DBUser {
  
-    return try await UserManager.shared.getUser(userId: userId)
+                
+                withAnimation{
+                    self.userColor = viewModel.getUserColor(userColor:viewModel.user?.userColor ?? "")
+                }
+                
+            }
+    }
 }

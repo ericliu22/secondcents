@@ -162,7 +162,7 @@ func getMediaView(widget: CanvasWidget, spaceId: String) -> AnyView {
     
     switch (widget.media) {
         case .text:
-        return textWidget(widget: widget, inputColor: getUserColor(userColor: "red"))
+        return AnyView(TextWidgetView(widget: widget))
       
         case .video:
             return videoWidget(widget: widget)

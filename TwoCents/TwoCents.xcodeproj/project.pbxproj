@@ -95,6 +95,7 @@
 		ABA45E7E2A7C8D8C0015F000 /* SignInEmailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABA45E7D2A7C8D8C0015F000 /* SignInEmailViewModel.swift */; };
 		ABA45E812A7C8DC50015F000 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABA45E802A7C8DC50015F000 /* ProfileView.swift */; };
 		ABA45E842A7C92B00015F000 /* UserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABA45E832A7C92B00015F000 /* UserManager.swift */; };
+		ABB68DB02C15268D00406948 /* TextWidgetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABB68DAF2C15268D00406948 /* TextWidgetViewModel.swift */; };
 		ABB84C342A8CBA03009C7550 /* FrontPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABB84C332A8CBA03009C7550 /* FrontPageView.swift */; };
 		ABC426B12A863D9F00873EE1 /* SignUpEmailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABC426B02A863D9F00873EE1 /* SignUpEmailView.swift */; };
 		ABC426B32A86438400873EE1 /* SignUpEmailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABC426B22A86438400873EE1 /* SignUpEmailViewModel.swift */; };
@@ -228,6 +229,7 @@
 		ABA45E7D2A7C8D8C0015F000 /* SignInEmailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInEmailViewModel.swift; sourceTree = "<group>"; };
 		ABA45E802A7C8DC50015F000 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 		ABA45E832A7C92B00015F000 /* UserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManager.swift; sourceTree = "<group>"; };
+		ABB68DAF2C15268D00406948 /* TextWidgetViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextWidgetViewModel.swift; sourceTree = "<group>"; };
 		ABB84C332A8CBA03009C7550 /* FrontPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrontPageView.swift; sourceTree = "<group>"; };
 		ABC426B02A863D9F00873EE1 /* SignUpEmailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpEmailView.swift; sourceTree = "<group>"; };
 		ABC426B22A86438400873EE1 /* SignUpEmailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpEmailViewModel.swift; sourceTree = "<group>"; };
@@ -434,6 +436,7 @@
 				A2DDB1BC2BB69D7100243E1B /* Polls */,
 				AB6778E12AB8F67300C11AA7 /* ImageWidget.swift */,
 				AB01CB5E2B855E83004BEB5B /* TextWidget.swift */,
+				ABB68DAF2C15268D00406948 /* TextWidgetViewModel.swift */,
 				858128402BFE454000AAF1D1 /* TextWidgetAlpha.swift */,
 				853A641B2C0D380E00041CA1 /* textTest.swift */,
 				A2AFFDDB2B154C7000B14C1E /* ChatWidget.swift */,
@@ -872,6 +875,7 @@
 				AB6EA60A2B879B7C00CC90FF /* CanvasPageViewModel.swift in Sources */,
 				AB2E56CF2AE9C5E60096A58C /* ResultView.swift in Sources */,
 				ABB84C342A8CBA03009C7550 /* FrontPageView.swift in Sources */,
+				ABB68DB02C15268D00406948 /* TextWidgetViewModel.swift in Sources */,
 				AB6778E42AB8F67800C11AA7 /* CanvasWidget.swift in Sources */,
 				ABF56DFF2A7C8C5200F959DB /* SettingsViewModel.swift in Sources */,
 				AB842C102A91E52000E4A7CE /* ProfileViewModel.swift in Sources */,
