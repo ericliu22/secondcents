@@ -790,7 +790,7 @@ struct CanvasPage: View {
                     
                 case .newTextView:
                     
-                    TextView()
+                    NewTextWidgetView(spaceId: spaceId)
                         .presentationBackground(Color(UIColor.systemBackground))
 
                 }

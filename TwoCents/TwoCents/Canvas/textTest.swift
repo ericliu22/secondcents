@@ -21,7 +21,7 @@ struct testView: View {
                         showPopup = false
                     }
 
-                TextView()
+                NewTextWidgetView(spaceId: "a")
                     .transition(.scale)
                     .zIndex(1)
             }

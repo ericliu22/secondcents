@@ -8,10 +8,15 @@ import Foundation
 import SwiftUI
 import FirebaseFirestore
 
-struct TextView: View {
+struct NewTextWidgetView: View {
     //@StateObject private var nvm = NewWidgetViewModel()
     @State private var inputText: String = ""
 //    @Binding var showPopup: Bool
+    
+    @StateObject private var viewModel = NewTextWidgetViewModel()
+    
+    @State var spaceId: String
+    
     @FocusState private var isTextFieldFocused: Bool
     @Environment(\.dismiss) var dismissScreen
     var body: some View {
@@ -50,11 +55,30 @@ struct TextView: View {
                 // Button to submit text
                 
                 Button(action: {
-                    if !inputText.isEmpty {
-                        let newText = CanvasWidget(borderColor: Color.accentColor, userId: "fOBAypBOWBVkpHEft3V3Dq9JJgX2", media: .text, textString: inputText)
-                        SpaceManager.shared.uploadWidget(spaceId: "865CE76B-9948-4310-A2C7-5BE32B302E4A", widget: newText)
+                    
+                    
+              
+     
+                    if let userId = viewModel.user?.userId {
+                        
+                        dismissScreen()
+                        
+                        
+                        let newText = CanvasWidget(borderColor: Color.accentColor, userId: userId, media: .text, textString: inputText)
+                        SpaceManager.shared.uploadWidget(spaceId: spaceId, widget: newText)
+                        
+                     
+                        
+                        
                         inputText = ""
+                        
+                     
+                        
+                        
                     }
+                    
+                    
+                    
                 }, label: {
                     Text("Submit")
                         .font(.headline)
@@ -71,12 +95,13 @@ struct TextView: View {
                 //                    .foregroundColor(Color.accentColor)
                 .frame(height: 55)
                 .cornerRadius(10)
-                
+                .disabled(inputText.isEmpty)
                 .onAppear {
                     isTextFieldFocused = true // Add this line to focus text field on appear
                 }
             }
             .navigationTitle("New Text 🗣️")
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar{
                 
                 ToolbarItem(placement: .navigationBarLeading) {
@@ -96,6 +121,19 @@ struct TextView: View {
                 
             }
             .padding(.horizontal)
+            
+            
+            .task {
+                try? await viewModel.loadCurrentUser()
+                
+//                try? await viewModel.loadCurrentSpace(spaceId: spaceId)
+                
+               
+                
+            }
+            
+            
+            
             
         }
      
