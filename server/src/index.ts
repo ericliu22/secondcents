@@ -1,13 +1,13 @@
 import { Elysia } from 'elysia';
 import { sendNotification, sendNotificationTopic } from "./lib/notification.ts";
 import { config } from "dotenv";
+import admin from "firebase-admin";
 
 //NECESSARY TO IMPORT ENV FILES
 config();
 
 const app = new Elysia()
 
-const admin = require("firebase-admin");
 admin.initializeApp({
 	credential: admin.credential.applicationDefault()
 });
@@ -33,3 +33,15 @@ app.get('/', () => {
 app.listen(process.env.PORT ?? 8080, () => {
 	console.log(`Server is running at on port ${app.server?.port}...`)
 });
+
+const testNotification = {
+	title: "HELLO FROM SERVER",
+	body: "An actual notification from the server"
+};
+
+const testBody = {
+	to: "coc5utRXp00vkWGM7met4r:APA91bFyMUyzKCQu2c45Pm-hqWE_eppgoDIqiIIkIwLGVOy2rUORVmtwBNDpQaD8LX1T9YtSeNmBJlKIsp4iL5jwvrPF9XEKCKtu9U4PmF7dpdkr8C3kvlBtRkqzqG8wPOYb7CBhC1aa",
+	notification: testNotification
+}
+
+sendNotification(testBody)
