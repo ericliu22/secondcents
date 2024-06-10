@@ -202,7 +202,6 @@ func messageNotification(spaceId: String, userUID: String, message: String) {
         let name = try await UserManager.shared.getUser(userId: userUID).name
         
         if let spaceImage: String = space.profileImageUrl {
-            print("Space image \(spaceImage)")
             let notification = Notification(title: "[\(spaceName)] \(name!)", body: message, image: spaceImage);
             print(notification.title)
             spaceNotification(spaceId: spaceId, userUID: userUID, notification: notification)
@@ -218,11 +217,28 @@ func widgetNotification(spaceId: String, userUID: String, widget: CanvasWidget) 
         let space = try await SpaceManager.shared.getSpace(spaceId: spaceId)
         let spaceName: String = space.name!
         let name = try await UserManager.shared.getUser(userId: userUID).name
+        
         if let spaceImage: String = space.profileImageUrl {
             let notification = Notification(title: "[\(spaceName)] \(name!)", body: "Added a new \(widget.media.name()) widget", image: spaceImage);
             spaceNotification(spaceId: spaceId, userUID: userUID, notification: notification)
         } else {
             let notification = Notification(title: "[\(spaceName)] \(name!)", body: "Added a new \(widget.media.name()) widget");
+            spaceNotification(spaceId: spaceId, userUID: userUID, notification: notification)
+        }
+    }
+}
+
+func reactionNotification(spaceId: String, userUID: String, message: String) {
+    Task {
+        let space = try await SpaceManager.shared.getSpace(spaceId: spaceId)
+        let spaceName: String = space.name!
+        let name = try await UserManager.shared.getUser(userId: userUID).name
+        
+        if let spaceImage: String = space.profileImageUrl {
+            let notification = Notification(title: "[\(spaceName)] \(name!)", body: "\(message) a widget", image: spaceImage);
+            spaceNotification(spaceId: spaceId, userUID: userUID, notification: notification)
+        } else {
+            let notification = Notification(title: "[\(spaceName)] \(name!)", body: "\(message) a widget");
             spaceNotification(spaceId: spaceId, userUID: userUID, notification: notification)
         }
     }

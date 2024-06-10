@@ -297,6 +297,7 @@ struct CanvasPage: View {
                                 canvasWidgets.insert(sourceItem, at: destinationIndex)
                                 
                                 
+                                
                                 //deselect
                                 selectedWidget = nil
                                 widgetDoubleTapped = false

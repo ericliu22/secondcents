@@ -52,6 +52,25 @@ struct EmojiReactionsView: View {
         }
     }
     
+    private func emojiNotification(emoji: String) -> String {
+        switch emoji {
+        case "❤️":
+            return "loved"
+        case "👍":
+            return "liked"
+        case "👎":
+            return "disliked"
+        case "😭":
+            return "cried"
+        case "🫵":
+            return "pointed"
+        case "⁉️":
+            return "questioned"
+        default:
+            return "reacted"
+        }
+    }
+    
     private func addEmoji(emoji: String) {
         emojiCount[emoji]! += 1
         
@@ -63,6 +82,7 @@ struct EmojiReactionsView: View {
                 "emojis": emojiCount,
                 "emojiPressed.\(emoji)": FieldValue.arrayUnion([userUID])
             ])
+        reactionNotification(spaceId: spaceId, userUID: userUID, message: emojiNotification(emoji: emoji))
     }
     
     private func removeEmoji(emoji: String) {

@@ -76,9 +76,9 @@ class MessageManager: ObservableObject{
                     } else {
                         let mainChatReference = db.collection("spaces").document(spaceId).collection("chat").document("mainChat")
                         let newMessage = Message(id: "\(UUID())", sendBy: userUID, text: text, ts: Date(), parent: (property as? String) ?? "", widgetId: widget?.id.uuidString)
-                        try self.db.collection("spaces").document(spaceId).collection("chat").document("mainChat").collection("chatlogs").document().setData(from: newMessage)
-                        self.db.collection("spaces").document(spaceId).collection("chat").document("mainChat").setData(["lastSend": newMessage.sendBy], merge: true)
-                        db.collection("spaces").document(spaceId).collection("chat").document("mainChat").setData(["lastTs": newMessage.ts], merge: true)
+                        try mainChatReference.collection("chatlogs").document().setData(from: newMessage)
+                        mainChatReference.setData(["lastSend": newMessage.sendBy], merge: true)
+                        mainChatReference.setData(["lastTs": newMessage.ts], merge: true)
                         
                         messageNotification(spaceId: spaceId, userUID: self.userUID, message: text!)
                     }
