@@ -7,12 +7,16 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - .reverseproxy/conf.d:/etc/nginx/conf.d
-      - .reverseproxy/ssl:/etc/nginx/ssl
-      - .reverseproxy/html:/usr/share/nginx/html
-      - .reverseproxy/logs:/var/log/nginx
+      - ./reverseproxy/conf.d:/etc/nginx/conf.d
+      - ./reverseproxy/ssl:/etc/nginx/ssl
+      - ./reverseproxy/html:/usr/share/nginx/html
+      - ./reverseproxy/logs:/var/log/nginx
+    depends_on:
+      - server
   server:
     image: twocents-server-image
     build: ./server
+    expose:
+      - "8080"
     ports:
       - "8080:8080"
