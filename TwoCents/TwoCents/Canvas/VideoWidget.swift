@@ -15,25 +15,13 @@ struct VideoWidget: View{
     var videoplayer: AVPlayer;
     var width: CGFloat;
     var height: CGFloat;
-    @State private var isPlaying = false;
     
     var body: some View {
         VideoPlayer(player: videoplayer)
             .ignoresSafeArea()
-                 
             .frame(width: width, height: height, alignment: .center)
-        
-            
             .clipShape(RoundedRectangle(cornerRadius: CORNER_RADIUS))
-          
-        
-            .gesture(TapGesture().onEnded({
-                isPlaying ? videoplayer.pause() : videoplayer.play()
-                isPlaying.toggle()
-                
-            })).draggable(url)
-        
-        
+            .draggable(url)
     }
     
     

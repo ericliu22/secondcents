@@ -1,0 +1,18 @@
+version: "3.9"
+services:
+  reverseproxy:
+    image: twocents-reverseproxy-image
+    build: ./reverseproxy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./conf.d:/etc/nginx/conf.d
+      - ./ssl:/etc/nginx/ssl
+      - ./html:/usr/share/nginx/html
+      - ./logs:/var/log/nginx
+  server:
+    image: twocents-server-image
+    build: ./server
+    ports:
+      - "8080:8080"
