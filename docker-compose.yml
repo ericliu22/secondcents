@@ -7,10 +7,10 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ./conf.d:/etc/nginx/conf.d
-      - ./ssl:/etc/nginx/ssl
-      - ./html:/usr/share/nginx/html
-      - ./logs:/var/log/nginx
+      - .reverseproxy/conf.d:/etc/nginx/conf.d
+      - .reverseproxy/ssl:/etc/nginx/ssl
+      - .reverseproxy/html:/usr/share/nginx/html
+      - .reverseproxy/logs:/var/log/nginx
   server:
     image: twocents-server-image
     build: ./server
