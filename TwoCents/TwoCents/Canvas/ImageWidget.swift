@@ -25,11 +25,6 @@ func imageWidget(widget: CanvasWidget) -> AnyView {
                 .clipShape(
                     RoundedRectangle(cornerRadius: CORNER_RADIUS)
                 )
-//                .onTapGesture {
-////                    print(isPresented)
-//                    isPresented.toggle();
-////                    print(isPresented)
-//                }
         } placeholder: {
             ProgressView()
                 .progressViewStyle(

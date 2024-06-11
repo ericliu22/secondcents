@@ -24,12 +24,12 @@ struct Notification: Codable {
     }
     
     func toDictionary() -> [String: Any]? {
-            guard let data = try? JSONEncoder().encode(self),
-                  let dictionary = try? JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String: Any] else {
-                return nil
-            }
-            return dictionary
+        guard let data = try? JSONEncoder().encode(self),
+              let dictionary = try? JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String: Any] else {
+            return nil
         }
+        return dictionary
+    }
 }
 
 let NOTIFICATION_URL: URL = URL(string: "http://24.90.210.9:8080/api/notification")!

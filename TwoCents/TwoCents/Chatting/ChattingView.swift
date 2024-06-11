@@ -24,7 +24,7 @@ struct Message: Identifiable, Codable {
 
 
 struct chatStruct: View{
-    
+    //@TODO: Fix messageManager
     private var spaceId: String
     @StateObject var messageManager: MessageManager
     private var userUID: String
@@ -32,6 +32,7 @@ struct chatStruct: View{
     
     init(spaceId: String) {
         self.spaceId = spaceId
+        
         _messageManager = StateObject(wrappedValue: MessageManager(spaceId: spaceId))
         self.userUID = try! AuthenticationManager.shared.getAuthenticatedUser().uid
         
@@ -42,9 +43,10 @@ struct chatStruct: View{
     
     var body: some View{
         VStack (spacing: 3){
+            //Eric: The ForEach doesn't update here even though messageManager.messages changed
+            //Maybe look into setting messageManager as ObservableObject instead of StateObject?
             ForEach(messageManager.messages, id:\.id) {
                 message in
-                
                 /*
                  //other user, texted once
                  if(message.sendBy != "Josh" && message.sendBy != message.parent){
@@ -66,10 +68,6 @@ struct chatStruct: View{
                 
                 //Jonathan combined above stucts into one
                 
-                
-                
-                
-                
                 universalMessageBubble(message: message, sentByMe: message.sendBy == userUID, isFirstMsg: message.sendBy != message.parent, spaceId: spaceId)
                 
                 
@@ -84,8 +82,6 @@ struct chatStruct: View{
     }
 }
 
-
-
 struct chattingView_Previews: PreviewProvider {
     static var previews: some View {
         ChatView(spaceId: "87D5AC3A-24D8-4B23-BCC7-E268DBBB036F", replyMode: .constant(false), replyWidget: .constant(nil), selectedDetent: .constant(.medium))
@@ -98,10 +94,6 @@ struct ChatView: View {
     
     //    @StateObject private var viewModel = CanvasPageViewModel()
     
-    
-    
-    
-    
     private var spaceId: String
     //    @State private var userColor: Color
     @StateObject var messageManager: MessageManager
@@ -109,6 +101,7 @@ struct ChatView: View {
     
     @Binding private var replyWidget: CanvasWidget?
     
+    @State private var position: Message.ID?
     @State private var scroll: Bool
     
     @Binding private var selectedDetent: PresentationDetent
@@ -127,48 +120,48 @@ struct ChatView: View {
         
     }
     
-    
-    //
-    //    private var spaceId: String
-    //    @StateObject  var messagesManager = MessageManager(spaceId: spaceId)
-    //    @State var Tapped = false
-    
-    //check for data to use this boolean
     var body: some View{
         VStack(spacing: 0){
             
             
             ScrollViewReader{ proxy in
                 
-                
-                
                 ScrollView{
-                    
-                    chatStruct(spaceId: spaceId).onAppear(perform: {
-                        proxy.scrollTo(messageManager.lastMessageId, anchor: .bottom)
-                    })
-                    .blur(radius: replyMode ? 2 : 0)
-                    
-                    
-                    
-                    
-                    if replyWidget != nil && replyMode {
+                        chatStruct(spaceId: spaceId).onAppear(perform: {
+                            proxy.scrollTo(messageManager.lastMessageId, anchor: .bottom)
+                        })
+                        .scrollTargetLayout()
+                        .blur(radius: replyMode ? 2 : 0)
                         
-                        getMediaView(widget: replyWidget!, spaceId: spaceId)
-                            .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
-                            .cornerRadius(CORNER_RADIUS)
-                        
-                            .frame(maxWidth: .infinity, alignment: .trailing)
-                            .id("replyWidget")
-                    }
+                        if replyWidget != nil && replyMode {
+                            
+                            getMediaView(widget: replyWidget!, spaceId: spaceId)
+                                .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
+                                .cornerRadius(CORNER_RADIUS)
+                            
+                                .frame(maxWidth: .infinity, alignment: .trailing)
+                                .id("replyWidget")
+                        }
                 }
+                
                 .onTapGesture {
                     withAnimation {
                         replyMode = false
                         replyWidget = nil
                     }
                 }
-               
+                .onChange(of: position) {
+                    let index: Int = messageManager.messages.firstIndex(where: {$0.id == position}) ?? 0
+                    //Eric: As you can see here the index updates when scrolling
+                    print(index)
+                    
+                    if (index == 0) {
+                        //Eric: Here it prints when the users scrolls to the top
+                        print("reached the end")
+                        messageManager.messageCount += 10
+                        messageManager.fetchMoreMessages()
+                    }
+                }
                 .onChange(of: messageManager.lastMessageId) {
 //                    id in proxy.scrollTo(id, anchor: .bottom)
                     
@@ -203,11 +196,7 @@ struct ChatView: View {
                     
                     scroll = false
                 }
-             
-                
-              
-                
-                
+   
                 
             }
             .padding(.top)
@@ -220,7 +209,7 @@ struct ChatView: View {
         }
         
         .scrollIndicators(.hidden)
-        
+        .scrollPosition(id: $position)
         
         
     }
