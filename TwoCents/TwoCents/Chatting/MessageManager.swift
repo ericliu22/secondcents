@@ -29,6 +29,7 @@ class MessageManager: ObservableObject {
         self.spaceId = spaceId
         self.userUID = try! AuthenticationManager.shared.getAuthenticatedUser().uid
         fetchMessages()
+        
        
     }
     
@@ -92,7 +93,9 @@ class MessageManager: ObservableObject {
                     self.lastMessageId = id
                 }
                 //Eric: is able to print out 20 which is in fact 10 more than the initla message count of 10
-                print(self.messages.count)
+                print("new fetch count:\(self.messages.count)")
+              
+               
         }
     }
    

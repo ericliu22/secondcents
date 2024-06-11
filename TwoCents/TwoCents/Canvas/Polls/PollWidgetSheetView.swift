@@ -56,7 +56,7 @@ struct PollWidgetSheetView: View {
                             
                             self.poll = pollData
                             totalVotes = poll!.totalVotes()
-                            print("YOUR POLL IS \(self.poll)")
+//                            print("YOUR POLL IS \(self.poll)")
                             
                             // Update your SwiftUI view with the retrieved poll data.
                         } else {

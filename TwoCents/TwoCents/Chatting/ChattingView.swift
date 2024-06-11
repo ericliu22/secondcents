@@ -26,14 +26,14 @@ struct Message: Identifiable, Codable {
 struct chatStruct: View{
     //@TODO: Fix messageManager
     private var spaceId: String
-    @StateObject var messageManager: MessageManager
+    @ObservedObject var messageManager: MessageManager
     private var userUID: String
     
     
     init(spaceId: String) {
         self.spaceId = spaceId
         
-        _messageManager = StateObject(wrappedValue: MessageManager(spaceId: spaceId))
+        _messageManager = ObservedObject(wrappedValue: MessageManager(spaceId: spaceId))
         self.userUID = try! AuthenticationManager.shared.getAuthenticatedUser().uid
         
     }
@@ -47,29 +47,8 @@ struct chatStruct: View{
             //Maybe look into setting messageManager as ObservableObject instead of StateObject?
             ForEach(messageManager.messages, id:\.id) {
                 message in
-                /*
-                 //other user, texted once
-                 if(message.sendBy != "Josh" && message.sendBy != message.parent){
-                 messageBubbleLead(message: message)
-                 }
-                 //other user, texted twice
-                 else if(message.sendBy != "Josh" && message.sendBy == message.parent){
-                 messageBubbleSameLead(message: message)
-                 }
-                 //I texted twice
-                 else if(message.sendBy == "Josh" && message.sendBy == message.parent){
-                 messageBubbleSameTrail(message: message)
-                 }
-                 //I texted once
-                 else if(message.sendBy == "Josh" && message.sendBy != message.parent){
-                 messageBubbleTrail(message: message)
-                 }
-                 */
-                
-                //Jonathan combined above stucts into one
-                
+               
                 universalMessageBubble(message: message, sentByMe: message.sendBy == userUID, isFirstMsg: message.sendBy != message.parent, spaceId: spaceId)
-                
                 
                 
             }
@@ -160,6 +139,8 @@ struct ChatView: View {
                         print("reached the end")
                         messageManager.messageCount += 10
                         messageManager.fetchMoreMessages()
+                        
+                        
                     }
                 }
                 .onChange(of: messageManager.lastMessageId) {
