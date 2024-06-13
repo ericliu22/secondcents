@@ -97,15 +97,21 @@ struct ChatView: View {
     }
     
     func callFetch(proxy: ScrollViewProxy) {
+        if (messageManager.limitReached) {
+            return
+        }
+
         guard let index: Int = messageManager.messages.firstIndex(where: {$0.id == position}) else {
             return
         }
         if (index == 0) {
             Task {
-                do {try await Task.sleep(nanoseconds: 50000000)}
+                do {try await Task.sleep(nanoseconds: 100000000)}
                 catch {return}
-                messageManager.messageCount += 10
                 messageManager.fetchMoreMessages()
+                if (messageManager.limitReached) {
+                    return
+                }
                 proxy.scrollTo(messageManager.messages[9].id, anchor: .top)
             }
         }

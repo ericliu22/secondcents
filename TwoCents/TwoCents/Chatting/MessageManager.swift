@@ -15,7 +15,7 @@ class MessageManager: ObservableObject {
 //    let testchatRoom = "ChatRoom1"
     @Published private(set) var messages: [Message] = []
     @Published private(set) var lastMessageId = ""
-    @Published var messageCount: Int = 10
+    @Published private(set) var limitReached: Bool = false
     let db = Firestore.firestore()
     
     private var userUID: String
@@ -86,6 +86,10 @@ class MessageManager: ObservableObject {
                         print("error decoding document into message")
                         return nil
                     }
+                }
+                if (newMessages.isEmpty) {
+                    self.limitReached = true
+                    return
                 }
                 let filteredMessages = newMessages.filter({message in
                     message.id != self.messages.first?.id
