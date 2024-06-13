@@ -23,17 +23,15 @@ struct Message: Identifiable, Codable {
 
 
 
-struct chatStruct: View{
-    //@TODO: Fix messageManager
+struct ChatStruct: View{
     private var spaceId: String
     @ObservedObject var messageManager: MessageManager
     private var userUID: String
     
     
-    init(spaceId: String) {
+    init(spaceId: String, messageManager: MessageManager) {
         self.spaceId = spaceId
-        
-        _messageManager = ObservedObject(wrappedValue: MessageManager(spaceId: spaceId))
+        self.messageManager = messageManager
         self.userUID = try! AuthenticationManager.shared.getAuthenticatedUser().uid
         
     }
@@ -67,29 +65,28 @@ struct chattingView_Previews: PreviewProvider {
     }
 }
 
-//originally part of separate file
-
 struct ChatView: View {
     
     //    @StateObject private var viewModel = CanvasPageViewModel()
     
     private var spaceId: String
     //    @State private var userColor: Color
-    @StateObject var messageManager: MessageManager
-    @Binding private var replyMode: Bool
+    @ObservedObject var messageManager: MessageManager
     
+    @Binding private var replyMode: Bool
     @Binding private var replyWidget: CanvasWidget?
     
+    @State private var scrollViewContentOffset: CGFloat = 0
+    @State private var lastOffset: CGFloat = 0
     @State private var position: Message.ID?
     @State private var scroll: Bool
+    @State private var fetching: Bool = false
     
     @Binding private var selectedDetent: PresentationDetent
     
     init(spaceId: String, replyMode: Binding<Bool>, replyWidget: Binding<CanvasWidget?>, selectedDetent: Binding<PresentationDetent>) {
         self.spaceId = spaceId
-        _messageManager = StateObject(wrappedValue: MessageManager(spaceId: spaceId))
-        //        self.userColor = .gray
-        
+        self.messageManager = MessageManager(spaceId: spaceId)
         self._replyMode = replyMode
         self._replyWidget = replyWidget
         
@@ -99,6 +96,21 @@ struct ChatView: View {
         
     }
     
+    func callFetch(proxy: ScrollViewProxy) {
+        guard let index: Int = messageManager.messages.firstIndex(where: {$0.id == position}) else {
+            return
+        }
+        if (index == 0) {
+            Task {
+                do {try await Task.sleep(nanoseconds: 50000000)}
+                catch {return}
+                messageManager.messageCount += 10
+                messageManager.fetchMoreMessages()
+                proxy.scrollTo(messageManager.messages[9].id, anchor: .top)
+            }
+        }
+    }
+    
     var body: some View{
         VStack(spacing: 0){
             
@@ -106,7 +118,7 @@ struct ChatView: View {
             ScrollViewReader{ proxy in
                 
                 ScrollView{
-                        chatStruct(spaceId: spaceId).onAppear(perform: {
+                        ChatStruct(spaceId: spaceId, messageManager: messageManager).onAppear(perform: {
                             proxy.scrollTo(messageManager.lastMessageId, anchor: .bottom)
                         })
                         .scrollTargetLayout()
@@ -122,7 +134,6 @@ struct ChatView: View {
                                 .id("replyWidget")
                         }
                 }
-                
                 .onTapGesture {
                     withAnimation {
                         replyMode = false
@@ -130,18 +141,7 @@ struct ChatView: View {
                     }
                 }
                 .onChange(of: position) {
-                    let index: Int = messageManager.messages.firstIndex(where: {$0.id == position}) ?? 0
-                    //Eric: As you can see here the index updates when scrolling
-                    print(index)
-                    
-                    if (index == 0) {
-                        //Eric: Here it prints when the users scrolls to the top
-                        print("reached the end")
-                        messageManager.messageCount += 10
-                        messageManager.fetchMoreMessages()
-                        
-                        
-                    }
+                    callFetch(proxy: proxy)
                 }
                 .onChange(of: messageManager.lastMessageId) {
 //                    id in proxy.scrollTo(id, anchor: .bottom)
@@ -191,8 +191,6 @@ struct ChatView: View {
         
         .scrollIndicators(.hidden)
         .scrollPosition(id: $position)
-        
-        
     }
 }
 

@@ -87,7 +87,10 @@ class MessageManager: ObservableObject {
                         return nil
                     }
                 }
-                self.messages.append(contentsOf: newMessages)
+                let filteredMessages = newMessages.filter({message in
+                    message.id != self.messages.first?.id
+                })
+                self.messages.append(contentsOf: filteredMessages)
                 self.messages.sort {$0.ts < $1.ts}
                 if let id = self.messages.last?.id{
                     self.lastMessageId = id
@@ -112,9 +115,6 @@ class MessageManager: ObservableObject {
                     if text != nil && widget != nil {
                         sendMessages(text: nil, widget: widget)
                         sendMessages(text: text, widget: nil)
-                 
-                     
-                        
                         
                     } else {
                         let mainChatReference = db.collection("spaces").document(spaceId).collection("chat").document("mainChat")

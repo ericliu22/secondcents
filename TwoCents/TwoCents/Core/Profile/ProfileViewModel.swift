@@ -59,8 +59,9 @@ final class ProfileViewModel: ObservableObject {
             
             guard authDataResultUserId != friendUserId else { return }
             
-            
             try? await UserManager.shared.sendFriendRequest(userId: authDataResultUserId, friendUserId: friendUserId)
+            
+            await friendRequestNotification(userUID: authDataResultUserId, friendUID: friendUserId)
         }
     }
     

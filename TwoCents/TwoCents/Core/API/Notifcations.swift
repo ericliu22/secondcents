@@ -243,3 +243,28 @@ func reactionNotification(spaceId: String, userUID: String, message: String) {
         }
     }
 }
+
+func friendRequestNotification(userUID: String, friendUID: String) async {
+    let user: DBUser
+    do {
+        user = try await UserManager.shared.getUser(userId: userUID)
+    } catch {
+        print("friendRequestNotification: Failed to obtain user")
+        return
+    }
+    let token: String = await getToken(uid: friendUID)
+    guard let name: String = user.name else {
+        print("friendRequestNotification: Failed to obtain name")
+        return
+    }
+    guard let username: String = user.username else {
+        print("friendRequestNotification: Failed to obtain username")
+        return
+    }
+    let notification = Notification(title: "\(username) sent you a friend request", body: "\(name) wants to be your friend!")
+    sendSingleNotification(to: token, notification: notification) { completion in
+        if (completion) {
+            print("Succeeded sending")
+        }
+    }
+}
