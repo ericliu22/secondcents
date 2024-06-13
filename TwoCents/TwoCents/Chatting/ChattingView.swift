@@ -78,9 +78,9 @@ struct ChatView: View {
     
     @State private var scrollViewContentOffset: CGFloat = 0
     @State private var lastOffset: CGFloat = 0
-    @State private var position: Message.ID?
     @State private var scroll: Bool
     @State private var fetching: Bool = false
+    @State private var userColor: Color = .gray
     
     @Binding private var selectedDetent: PresentationDetent
     
@@ -97,24 +97,43 @@ struct ChatView: View {
     }
     
     func callFetch(proxy: ScrollViewProxy) {
-        if (messageManager.limitReached) {
-            return
+        Task {
+            do {try await Task.sleep(nanoseconds: 100000000)}
+            catch {return}
+            messageManager.fetchMoreMessages()
+            proxy.scrollTo(messageManager.messages[messageManager.fetchCount-1].id, anchor: .top)
         }
-
-        guard let index: Int = messageManager.messages.firstIndex(where: {$0.id == position}) else {
-            return
+    }
+    
+    func button(proxy: ScrollViewProxy) -> some View {
+        /*
+        if messageManager.limitReached {
+            Text("End of Conversation")
         }
-        if (index == 0) {
-            Task {
-                do {try await Task.sleep(nanoseconds: 100000000)}
-                catch {return}
-                messageManager.fetchMoreMessages()
-                if (messageManager.limitReached) {
+        */
+            Button(action: {
+                if !messageManager.limitReached {
+                    print("LIMIT REACHED")
                     return
                 }
-                proxy.scrollTo(messageManager.messages[9].id, anchor: .top)
+                    callFetch(proxy: proxy)
+            }) {
+                Text("Load More")
             }
-        }
+            .buttonStyle(.bordered)
+            .tint(userColor)
+            .controlSize(.regular)
+            .onAppear(perform: {
+                Task {
+                    guard let userUID: String = try? AuthenticationManager.shared.getAuthenticatedUser().uid else {
+                        return
+                    }
+                    guard let stringColor: String = try? await UserManager.shared.getUser(userId: userUID).userColor else {
+                        return
+                    }
+                    self.userColor = Color.fromString(name: stringColor)
+                }
+            })
     }
     
     var body: some View{
@@ -124,6 +143,8 @@ struct ChatView: View {
             ScrollViewReader{ proxy in
                 
                 ScrollView{
+                    VStack {
+                        button(proxy: proxy)
                         ChatStruct(spaceId: spaceId, messageManager: messageManager).onAppear(perform: {
                             proxy.scrollTo(messageManager.lastMessageId, anchor: .bottom)
                         })
@@ -139,15 +160,13 @@ struct ChatView: View {
                                 .frame(maxWidth: .infinity, alignment: .trailing)
                                 .id("replyWidget")
                         }
+                    }
                 }
                 .onTapGesture {
                     withAnimation {
                         replyMode = false
                         replyWidget = nil
                     }
-                }
-                .onChange(of: position) {
-                    callFetch(proxy: proxy)
                 }
                 .onChange(of: messageManager.lastMessageId) {
 //                    id in proxy.scrollTo(id, anchor: .bottom)
@@ -196,7 +215,6 @@ struct ChatView: View {
         }
         
         .scrollIndicators(.hidden)
-        .scrollPosition(id: $position)
     }
 }
 

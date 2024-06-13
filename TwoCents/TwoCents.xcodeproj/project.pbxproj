@@ -755,6 +755,7 @@
 			mainGroup = A257D7772A6D707600A4E7BD;
 			packageReferences = (
 				ABCA39C82A79F97D009447C3 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				A23317AE2C1A9E3C00F20A0E /* XCRemoteSwiftPackageReference "swiftui-introspect" */,
 			);
 			productRefGroup = A257D7812A6D707600A4E7BD /* Products */;
 			projectDirPath = "";
@@ -1224,6 +1225,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		A23317AE2C1A9E3C00F20A0E /* XCRemoteSwiftPackageReference "swiftui-introspect" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/siteline/swiftui-introspect";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.1.4;
+			};
+		};
 		ABCA39C82A79F97D009447C3 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";

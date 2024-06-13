@@ -16,6 +16,8 @@ class MessageManager: ObservableObject {
     @Published private(set) var messages: [Message] = []
     @Published private(set) var lastMessageId = ""
     @Published private(set) var limitReached: Bool = false
+    var fetchCount = 0
+    let MESSAGE_LIMIT = 100
     let db = Firestore.firestore()
     
     private var userUID: String
@@ -41,7 +43,7 @@ class MessageManager: ObservableObject {
             .document("mainChat")
             .collection("chatlogs")
             .order(by: "ts", descending: true)
-            .limit(to: 10)
+            .limit(to: MESSAGE_LIMIT)
             .addSnapshotListener { querySnapshot, error in
                 guard let documents = querySnapshot?.documents else {
                     print("message not retrieved")
@@ -55,6 +57,10 @@ class MessageManager: ObservableObject {
                         return nil
                     }
                 }
+                if (self.messages.count < self.MESSAGE_LIMIT) {
+                    self.limitReached = true
+                }
+                self.fetchCount = self.messages.count
                 self.messages.sort {$0.ts < $1.ts}
                 if let id = self.messages.last?.id{
                     self.lastMessageId = id
@@ -62,8 +68,7 @@ class MessageManager: ObservableObject {
         }
     }
     
-    //Eric: A function that reads 10 documents after the last document currently read
-    //Then adds the 10 messages to MessageManager.messages
+   
     func fetchMoreMessages() {
         print("fetched more messages")
         db.collection("spaces")
@@ -73,7 +78,7 @@ class MessageManager: ObservableObject {
             .collection("chatlogs")
             .order(by: "ts", descending: true)
             .start(after: [messages.first?.ts as Any])
-            .limit(to: 10)
+            .limit(to: MESSAGE_LIMIT)
             .addSnapshotListener { querySnapshot, error in
                 guard let documents = querySnapshot?.documents else {
                     print("message not retrieved")
@@ -87,13 +92,13 @@ class MessageManager: ObservableObject {
                         return nil
                     }
                 }
-                if (newMessages.isEmpty) {
+                if (newMessages.count < self.MESSAGE_LIMIT) {
                     self.limitReached = true
-                    return
                 }
                 let filteredMessages = newMessages.filter({message in
                     message.id != self.messages.first?.id
                 })
+                self.fetchCount = self.messages.count
                 self.messages.append(contentsOf: filteredMessages)
                 self.messages.sort {$0.ts < $1.ts}
                 if let id = self.messages.last?.id{
