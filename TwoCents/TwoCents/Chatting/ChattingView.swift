@@ -112,7 +112,7 @@ struct ChatView: View {
         }
         */
             Button(action: {
-                if !messageManager.limitReached {
+                if messageManager.limitReached {
                     print("LIMIT REACHED")
                     return
                 }
