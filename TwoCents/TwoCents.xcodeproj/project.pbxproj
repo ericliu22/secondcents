@@ -77,8 +77,6 @@
 		AB6EA60A2B879B7C00CC90FF /* CanvasPageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB6EA6092B879B7C00CC90FF /* CanvasPageViewModel.swift */; };
 		AB6EA60C2B87A1FE00CC90FF /* EmojiReactionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB6EA60B2B87A1FE00CC90FF /* EmojiReactionsView.swift */; };
 		AB6EA6102B87A27D00CC90FF /* SplashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB6EA60F2B87A27D00CC90FF /* SplashView.swift */; };
-		AB7365812C1BE6F8003A9120 /* SignUpPhoneNumberView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB7365802C1BE6F8003A9120 /* SignUpPhoneNumberView.swift */; };
-		AB7365832C1BE711003A9120 /* SignUpPhoneNumberViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB7365822C1BE711003A9120 /* SignUpPhoneNumberViewModel.swift */; };
 		AB7365BB2A85060F00799D31 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = AB7365BA2A85060F00799D31 /* GoogleService-Info.plist */; };
 		AB7438412AAA349C001B4988 /* SearchUserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB7438402AAA349C001B4988 /* SearchUserView.swift */; };
 		AB7438432AAA34AD001B4988 /* SearchUserViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB7438422AAA34AD001B4988 /* SearchUserViewModel.swift */; };
@@ -219,8 +217,6 @@
 		AB6EA6092B879B7C00CC90FF /* CanvasPageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasPageViewModel.swift; sourceTree = "<group>"; };
 		AB6EA60B2B87A1FE00CC90FF /* EmojiReactionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiReactionsView.swift; sourceTree = "<group>"; };
 		AB6EA60F2B87A27D00CC90FF /* SplashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashView.swift; sourceTree = "<group>"; };
-		AB7365802C1BE6F8003A9120 /* SignUpPhoneNumberView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpPhoneNumberView.swift; sourceTree = "<group>"; };
-		AB7365822C1BE711003A9120 /* SignUpPhoneNumberViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpPhoneNumberViewModel.swift; sourceTree = "<group>"; };
 		AB7365BA2A85060F00799D31 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		AB7438402AAA349C001B4988 /* SearchUserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchUserView.swift; sourceTree = "<group>"; };
 		AB7438422AAA34AD001B4988 /* SearchUserViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchUserViewModel.swift; sourceTree = "<group>"; };
@@ -570,8 +566,6 @@
 		AB9455242A94A2D50055B44A /* SignUp */ = {
 			isa = PBXGroup;
 			children = (
-				AB7365822C1BE711003A9120 /* SignUpPhoneNumberViewModel.swift */,
-				AB7365802C1BE6F8003A9120 /* SignUpPhoneNumberView.swift */,
 				ABC426B22A86438400873EE1 /* SignUpEmailViewModel.swift */,
 				ABC426B02A863D9F00873EE1 /* SignUpEmailView.swift */,
 			);
@@ -835,7 +829,6 @@
 				856E80BD2B50EB260078A2CE /* SabotageGameViewModel.swift in Sources */,
 				850958A72AB8F41D00018A32 /* HotSeat.swift in Sources */,
 				ABC461E52BE28ECF00AE47FF /* TestView.swift in Sources */,
-				AB7365812C1BE6F8003A9120 /* SignUpPhoneNumberView.swift in Sources */,
 				85C6759B2AB8EE6100FACCB2 /* SuperlativeGame.swift in Sources */,
 				85BB02F02B5D077E00B9A9EA /* ToolPickerPractice.swift in Sources */,
 				85C6759A2AB8EE5B00FACCB2 /* HotSeatManager.swift in Sources */,
@@ -869,7 +862,6 @@
 				A2DDB1BB2BB693FD00243E1B /* NewPollViewModel.swift in Sources */,
 				AB9C7F682BD83B1E004FC549 /* EmojiCountView.swift in Sources */,
 				AB2E56CD2AE9C59D0096A58C /* VoteGameView.swift in Sources */,
-				AB7365832C1BE711003A9120 /* SignUpPhoneNumberViewModel.swift in Sources */,
 				A2F5631E2AB4E6240026D8C9 /* CanvasPage.swift in Sources */,
 				8534B8B92B8001660089AD5C /* NewPollView.swift in Sources */,
 				A2DAF34B2C07CB1C00E778FA /* Notifcations.swift in Sources */,

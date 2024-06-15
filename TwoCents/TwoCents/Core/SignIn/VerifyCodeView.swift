@@ -15,6 +15,8 @@ struct VerifyCodeView: View {
     @Binding var showCreateProfileView: Bool
  
     
+    @State private var isActive = false
+    
     
     @StateObject private var viewModel = VerifyCodeViewModel()
     var body: some View {
@@ -41,21 +43,60 @@ struct VerifyCodeView: View {
 //                }
                 //signIn
                 Task {
+                    
+                   
+                    
+                    
                     do {
                         
                      
                         try await viewModel.verifyCode() {success in
                             
                             if success {
+//                                print("success")
+//                                
+//                                    
+//
+//
+//                                    showSignInView = false
+//                                    showCreateProfileView = false
+//                                
                                 
-                                print("success")
-                                                        showSignInView = false
-                                                        showCreateProfileView = false
+                                Task {
+                                            do {
+                                                try await viewModel.loadCurrentUser()
+                                                
+                                                // User exists, update UI accordingly
+                                                showCreateProfileView = false
+                                                showSignInView = false
+                                                
+                                                
+                                                
+                                            } catch {
+                                                // User doesn't exist or other error, update UI accordingly
+                                                
+//                                                viewModel.signUp()
+//                                                isActive = true
+//                                                
+                                       
+                                                
+//                                                showCreateProfileView = true
+//                                                showSignInView = false
+                                                
+                                                
+                                                
+                                                
+                                            }
+                                        }
+                               
+                                
                                 
                             }
                             
                           
                         }
+                        
+                   
                           
                         return
                     } catch {
@@ -81,9 +122,16 @@ struct VerifyCodeView: View {
             .padding(.top)
 //            .disabled(viewModel.phoneNumber.isEmpty)
             
-          
-           
-      
+//          
+//            NavigationLink(
+//                destination: VerifyCodeView(showSignInView: $showSignInView, showCreateProfileView: $showCreateProfileView),
+//                isActive: $isActive,
+//                label: {
+//                    EmptyView()
+//                }
+//            )
+//
+
                 
                 
             
@@ -104,7 +152,8 @@ struct VerifyCodeView: View {
                }
             )
         
-      
+       
+        
                    
     }
         

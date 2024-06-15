@@ -68,8 +68,16 @@ struct RootView: View {
             
             NavigationStack {
                 AuthenticationView(showSignInView: $showSignInView, showCreateProfileView: $showCreateProfileView)
+                
+                   
+                
             }
         }
+        
+        
+        
+        
+        
         .fullScreenCover(isPresented: $showCreateProfileView,  content: {
             NavigationStack{
                 CustomizeProfileView(showCreateProfileView: $showCreateProfileView, selectedColor: $loadedColor)
