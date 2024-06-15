@@ -54,9 +54,9 @@ struct NewWidgetView: View {
         ZStack{
             
             //main widget/photopicker
-            PhotosPicker(selection: $selectedPhoto, matching: .videos, photoLibrary: .shared()){
+            PhotosPicker(selection: $selectedVideo, matching: .videos, photoLibrary: .shared()){
                 
-                getMediaView(widget: viewModel.widgets[index], spaceId: spaceId)
+                getMediaView(widget: viewModel.widgets[index], spaceId: spaceId, newWidget: true)
                     .aspectRatio(1, contentMode: .fit)
 //                    .shadow(radius: 20, y: 10)
                     .cornerRadius(30)
@@ -328,6 +328,14 @@ struct NewWidgetView: View {
                 
                 viewModel.loading = true
                 viewModel.saveTempImage(item: newValue, widgetId: widgetId)
+                
+            }
+        })
+        .onChange(of: selectedVideo, perform: { newValue in
+            print("Selected Video")
+            if let newValue {
+                viewModel.loading = true
+                viewModel.saveTempVideo(item: newValue, widgetId: widgetId)
                 
             }
         })
