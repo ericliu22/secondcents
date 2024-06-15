@@ -56,5 +56,15 @@
 			<dict/>
 		</dict>
 	</array>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
+	<key>NSContactsUsageDescription</key>
+	<string>Allow TwoCents to access your contacts</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Allow TwoCents to access the Camera</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Allow TwoCents to access the Microphone</string>
+	<key>FirebaseAppDelegateProxyEnabled</key>
+	<false/>
 </dict>
 </plist>

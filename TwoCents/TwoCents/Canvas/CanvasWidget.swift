@@ -68,9 +68,6 @@ struct CanvasWidget: Hashable, Codable, Identifiable, Transferable, Equatable {
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
-    
-    
-    
 }
 
 enum Media {
