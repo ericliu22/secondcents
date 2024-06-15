@@ -24,6 +24,13 @@ final class SignInPhoneNumberViewModel: ObservableObject{
 //        }
 //        try await AuthenticationManager.shared.signInUser(email: email, password: password)
       
+      
+        
+        
+       
+        
+        
+        
         let number = "+1\(phoneNumber)"
         
         AuthenticationManager.shared.startAuth(phoneNumber: number) { [weak self] success in

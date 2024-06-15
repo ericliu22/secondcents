@@ -47,17 +47,21 @@ struct VerifyCodeView: View {
                         try await viewModel.verifyCode() {success in
                             
                             if success {
+                                
+                                print("success")
                                                         showSignInView = false
                                                         showCreateProfileView = false
-
+                                
                             }
                             
+                          
                         }
                           
                         return
                     } catch {
                         print("Error verifying code: \(error)")
                     }
+                    
                 }
                 
             } label: {

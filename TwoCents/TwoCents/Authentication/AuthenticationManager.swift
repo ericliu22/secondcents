@@ -64,6 +64,14 @@ final class AuthenticationManager{
     private var verificationId: String?
 
     public func startAuth(phoneNumber: String, completion: @escaping (Bool) -> Void) {
+        
+//        
+//        //disable captcha
+//        Auth.auth().settings?.isAppVerificationDisabledForTesting = true
+        
+
+        
+        
         PhoneAuthProvider.provider().verifyPhoneNumber(phoneNumber, uiDelegate: nil) { verificationId, error in
             
             

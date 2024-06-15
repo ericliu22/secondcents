@@ -73,40 +73,40 @@ struct AuthenticationView: View {
                     .cornerRadius(10)
             }
             
-//            
-//            NavigationLink {
-//                
-//               
-//                SignInEmailView(showSignInView: $showSignInView, showCreateProfileView: $showCreateProfileView)
-//            } label: {
-//                Text("Sign In With Email")
-//                    .font(.headline)
-//                    .foregroundColor(Color(UIColor.systemBackground))
-//                    .frame(height: 55)
-//                    .frame(maxWidth: .infinity)
-//                    .background(Color(UIColor.label))
-//                    .cornerRadius(10)
-//            }
-//            
-//
+            
+            NavigationLink {
+                
+               
+                SignInEmailView(showSignInView: $showSignInView, showCreateProfileView: $showCreateProfileView)
+            } label: {
+                Text("Sign In With Email")
+                    .font(.headline)
+                    .foregroundColor(Color(UIColor.systemBackground))
+                    .frame(height: 55)
+                    .frame(maxWidth: .infinity)
+                    .background(Color(UIColor.label))
+                    .cornerRadius(10)
+            }
+            
+
             
             
-//            NavigationLink{
-//             
-//
-////                SignUpEmailView(showSignInView: $showSignInView, showCreateProfileView: $showCreateProfileView)
-//                
-//                SignUpPhoneNumberView(showSignInView: $showSignInView, showCreateProfileView: $showCreateProfileView)
-//
-//
-//            } label: {
-//                Text("New? Ugh. Create a new account")
-//                    .font(.footnote)
-//                    .foregroundColor(Color(UIColor.secondaryLabel))
-//                    .frame(height: 30)
-//                    .frame(maxWidth: .infinity)
-//
-//            }
+            NavigationLink{
+             
+
+//                SignUpEmailView(showSignInView: $showSignInView, showCreateProfileView: $showCreateProfileView)
+                
+                SignUpPhoneNumberView(showSignInView: $showSignInView, showCreateProfileView: $showCreateProfileView)
+
+
+            } label: {
+                Text("New? Ugh. Create a new account")
+                    .font(.footnote)
+                    .foregroundColor(Color(UIColor.secondaryLabel))
+                    .frame(height: 30)
+                    .frame(maxWidth: .infinity)
+
+            }
             
             
 
