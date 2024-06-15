@@ -1,4 +1,4 @@
-x//
+//
 //  FrontPageView.swift
 //  TwoCents
 //

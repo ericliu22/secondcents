@@ -25,15 +25,14 @@
 		85741EA82AD03A0C0085423E /* CarouselPractice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85741EA72AD03A0C0085423E /* CarouselPractice.swift */; };
 		85741EAA2AD03B2C0085423E /* SnapCarouselPractice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85741EA92AD03B2C0085423E /* SnapCarouselPractice.swift */; };
 		85741EAF2AD03D370085423E /* PostModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85741EAE2AD03D370085423E /* PostModel.swift */; };
-		858128412BFE454000AAF1D1 /* NewTextWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 858128402BFE454000AAF1D1 /* NewTextWidgetView.swift */; };
+		8576048E2C1A56B9007F5B0E /* SendLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8576048D2C1A56B9007F5B0E /* SendLink.swift */; };
 		85A6766B2AE9C19B003ECAAA /* MessageBubble.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A6766A2AE9C19B003ECAAA /* MessageBubble.swift */; };
 		85A6766D2AE9C6BB003ECAAA /* MessageField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A6766C2AE9C6BB003ECAAA /* MessageField.swift */; };
-		8576048E2C1A56B9007F5B0E /* SendLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8576048D2C1A56B9007F5B0E /* SendLink.swift */; };
-		858128412BFE454000AAF1D1 /* TextWidgetAlpha.swift in Sources */ = {isa = PBXBuildFile; fileRef = 858128402BFE454000AAF1D1 /* TextWidgetAlpha.swift */; };
 		85BB02F02B5D077E00B9A9EA /* ToolPickerPractice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85BB02EF2B5D077E00B9A9EA /* ToolPickerPractice.swift */; };
 		85C6759A2AB8EE5B00FACCB2 /* HotSeatManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20EBD082AB8A36100EFDDE8 /* HotSeatManager.swift */; };
 		85C6759B2AB8EE6100FACCB2 /* SuperlativeGame.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20EBD092AB8A36100EFDDE8 /* SuperlativeGame.swift */; };
 		A200F21B2C0026B400BC1005 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = A200F21A2C0026B400BC1005 /* FirebaseMessaging */; };
+		A21244E32C1E234B005E8C8B /* NewTextWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A21244E22C1E234B005E8C8B /* NewTextWidgetView.swift */; };
 		A246A42E2B43A1B700F0F6E6 /* NewWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A246A42D2B43A1B700F0F6E6 /* NewWidgetView.swift */; };
 		A257D7842A6D707600A4E7BD /* TwoCentsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A257D7832A6D707600A4E7BD /* TwoCentsApp.swift */; };
 		A257D7862A6D707600A4E7BD /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A257D7852A6D707600A4E7BD /* ContentView.swift */; };
@@ -161,11 +160,9 @@
 		85741EA72AD03A0C0085423E /* CarouselPractice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarouselPractice.swift; sourceTree = "<group>"; };
 		85741EA92AD03B2C0085423E /* SnapCarouselPractice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapCarouselPractice.swift; sourceTree = "<group>"; };
 		85741EAE2AD03D370085423E /* PostModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostModel.swift; sourceTree = "<group>"; };
-		858128402BFE454000AAF1D1 /* NewTextWidgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewTextWidgetView.swift; sourceTree = "<group>"; };
+		8576048D2C1A56B9007F5B0E /* SendLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendLink.swift; sourceTree = "<group>"; };
 		85A6766A2AE9C19B003ECAAA /* MessageBubble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageBubble.swift; sourceTree = "<group>"; };
 		85A6766C2AE9C6BB003ECAAA /* MessageField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageField.swift; sourceTree = "<group>"; };
-		8576048D2C1A56B9007F5B0E /* SendLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendLink.swift; sourceTree = "<group>"; };
-		858128402BFE454000AAF1D1 /* TextWidgetAlpha.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextWidgetAlpha.swift; sourceTree = "<group>"; };
 		85BB02EF2B5D077E00B9A9EA /* ToolPickerPractice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolPickerPractice.swift; sourceTree = "<group>"; };
 		85DDD0CC2AB4E79A008A9C56 /* VoteGameReal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VoteGameReal.swift; sourceTree = "<group>"; };
 		A2003C942AABA08300B1E551 /* Line.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Line.swift; sourceTree = "<group>"; };
@@ -173,6 +170,7 @@
 		A20EBD072AB8A36100EFDDE8 /* VoteGameReal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VoteGameReal.swift; sourceTree = "<group>"; };
 		A20EBD082AB8A36100EFDDE8 /* HotSeatManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HotSeatManager.swift; sourceTree = "<group>"; };
 		A20EBD092AB8A36100EFDDE8 /* SuperlativeGame.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuperlativeGame.swift; sourceTree = "<group>"; };
+		A21244E22C1E234B005E8C8B /* NewTextWidgetView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewTextWidgetView.swift; sourceTree = "<group>"; };
 		A2354EF52AA0D6CB0092BF1C /* ImageWidget.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageWidget.swift; sourceTree = "<group>"; };
 		A2354EF72AA0D6CB0092BF1C /* CanvasWidget.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CanvasWidget.swift; sourceTree = "<group>"; };
 		A246A42D2B43A1B700F0F6E6 /* NewWidgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewWidgetView.swift; sourceTree = "<group>"; };
@@ -463,7 +461,7 @@
 				AB6778E12AB8F67300C11AA7 /* ImageWidget.swift */,
 				AB01CB5E2B855E83004BEB5B /* TextWidget.swift */,
 				ABB68DAF2C15268D00406948 /* TextWidgetViewModel.swift */,
-				858128402BFE454000AAF1D1 /* NewTextWidgetView.swift */,
+				A21244E22C1E234B005E8C8B /* NewTextWidgetView.swift */,
 				AB7F3AED2C164CF000690EF1 /* NewTextWidgetViewModel.swift */,
 				853A641B2C0D380E00041CA1 /* textTest.swift */,
 				A2AFFDDB2B154C7000B14C1E /* ChatWidget.swift */,
@@ -786,7 +784,6 @@
 			mainGroup = A257D7772A6D707600A4E7BD;
 			packageReferences = (
 				ABCA39C82A79F97D009447C3 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
-				A23317AE2C1A9E3C00F20A0E /* XCRemoteSwiftPackageReference "swiftui-introspect" */,
 			);
 			productRefGroup = A257D7812A6D707600A4E7BD /* Products */;
 			projectDirPath = "";
@@ -858,6 +855,7 @@
 				AB6778E62AB8F67D00C11AA7 /* VideoWidget.swift in Sources */,
 				856E80BC2B50EB260078A2CE /* SabotageCarouselView.swift in Sources */,
 				A257D7862A6D707600A4E7BD /* ContentView.swift in Sources */,
+				A21244E32C1E234B005E8C8B /* NewTextWidgetView.swift in Sources */,
 				AB7F3AEE2C164CF000690EF1 /* NewTextWidgetViewModel.swift in Sources */,
 				AB9909AD2ABE3C1B004B3021 /* FriendRequestsViewModel.swift in Sources */,
 				AB9BF6D52C06ECDB00C72883 /* PollWidgetSheetView.swift in Sources */,
@@ -898,7 +896,6 @@
 				ABA45E842A7C92B00015F000 /* UserManager.swift in Sources */,
 				AB842C0E2A91E2B500E4A7CE /* StorageManager.swift in Sources */,
 				AB15AC0B2AF6F00C0055D5D0 /* SpaceProfilePicView.swift in Sources */,
-				858128412BFE454000AAF1D1 /* NewTextWidgetView.swift in Sources */,
 				AB6EA6102B87A27D00CC90FF /* SplashView.swift in Sources */,
 				AB69F03F2C1D189800B81E79 /* SignInPhoneNumberViewModel.swift in Sources */,
 				AB9EB95D2B1E805300F58EA5 /* ChatManager.swift in Sources */,
@@ -1100,6 +1097,9 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TwoCents/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "Allow TwoCents to access the Camera";
+				INFOPLIST_KEY_NSContactsUsageDescription = "Allow TwoCents to access your contacts";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Allow TwoCents to access the Microphone";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -1131,6 +1131,9 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TwoCents/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "Allow TwoCents to access the Camera";
+				INFOPLIST_KEY_NSContactsUsageDescription = "Allow TwoCents to access your contacts";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Allow TwoCents to access the Microphone";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -1263,14 +1266,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		A23317AE2C1A9E3C00F20A0E /* XCRemoteSwiftPackageReference "swiftui-introspect" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/siteline/swiftui-introspect";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.1.4;
-			};
-		};
 		ABCA39C82A79F97D009447C3 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
