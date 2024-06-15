@@ -432,8 +432,8 @@ struct CanvasPage: View {
                             withAnimation {
                                 self.animator?.stopAnimation(true)
                                 self.offset = CGSize(
-                                    width: self.lastOffset.width + value.translation.width / self.scale,
-                                    height: self.lastOffset.height + value.translation.height / self.scale
+                                    width: self.lastOffset.width + value.translation.width,
+                                    height: self.lastOffset.height + value.translation.height
                                 )
                             }
                         }
@@ -443,8 +443,8 @@ struct CanvasPage: View {
                                 self.animator = UIViewPropertyAnimator(duration: 0.5, timingParameters: timingParameters)
                                 self.animator?.addAnimations {
                                     self.offset = CGSize(
-                                        width: self.lastOffset.width + value.translation.width / self.scale,
-                                        height: self.lastOffset.height + value.translation.height / self.scale
+                                        width: self.lastOffset.width + value.translation.width,
+                                        height: self.lastOffset.height + value.translation.height
                                     )
                                 }
                                 self.animator?.startAnimation()

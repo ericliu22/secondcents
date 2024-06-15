@@ -57,6 +57,8 @@ struct AuthenticationView: View {
             
             Spacer()
             
+            
+            
             NavigationLink {
                 
                
@@ -76,9 +78,10 @@ struct AuthenticationView: View {
             NavigationLink{
              
 
-                SignUpEmailView(showSignInView: $showSignInView, showCreateProfileView: $showCreateProfileView)
-//                    .navigationBarTitleDisplayMode(.large)
-//                    .navigationBarBackButtonHidden(true)
+//                SignUpEmailView(showSignInView: $showSignInView, showCreateProfileView: $showCreateProfileView)
+                
+                SignUpPhoneNumberView(showSignInView: $showSignInView, showCreateProfileView: $showCreateProfileView)
+
 
             } label: {
                 Text("New? Ugh. Create a new account")
