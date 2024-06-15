@@ -1,0 +1,130 @@
+//
+//  SignInEmailView.swift
+//  TwoCents
+//
+//  Created by jonathan on 8/2/23.
+//
+
+import SwiftUI
+
+
+struct SignInPhoneNumberView: View {
+    @Environment(\.presentationMode) var presentation
+    
+    @Binding var showSignInView: Bool
+    @Binding var showCreateProfileView: Bool
+    @State private var isActive = false
+    
+    
+    @StateObject private var viewModel = SignInPhoneNumberViewModel()
+    var body: some View {
+        
+        VStack {
+            //Email Textfield
+            TextField("Phone Number", text: $viewModel.phoneNumber)
+                .disableAutocorrection(true)
+                .textInputAutocapitalization(.never)
+                .padding()
+                .background(Color(UIColor.secondarySystemBackground))
+                .cornerRadius(10)
+                .onChange(of: viewModel.phoneNumber, perform: { value in
+                    viewModel.formatPhoneNumber()
+                })
+                .keyboardType(.phonePad)
+            
+//            
+//            //Password Textfield
+//            SecureField("Password", text: $viewModel.password)
+//                .disableAutocorrection(true)
+//                .textInputAutocapitalization(.never)
+//                .padding()
+//                .background(Color(UIColor.secondarySystemBackground))
+//                .cornerRadius(10)
+//            
+                
+            NavigationLink(
+                destination: VerifyCodeView(showSignInView: $showSignInView, showCreateProfileView: $showCreateProfileView),
+                isActive: $isActive,
+                label: {
+                    EmptyView()
+                }
+            )
+           
+            
+            Button {
+                //signUp
+//                Task {
+//                    do {
+//                        try await viewModel.signUp()
+//                        showSignInView = false
+//                        return
+//                    } catch {
+//                    }
+//                }
+                //signIn
+                Task {
+                    do {
+                        try await viewModel.sendCode()
+                        
+                        isActive = true
+                        
+//                        showSignInView = false
+//                        showCreateProfileView = false
+                        return
+                    } catch {
+                    }
+                }
+                
+            } label: {
+                Text("Sign In")
+                    .font(.headline)
+//                    .foregroundColor(Color(UIColor.systemBackground))
+                    .frame(height: 55)
+                    .frame(maxWidth: .infinity)
+//                    .background(Color(UIColor.label))
+//                    .cornerRadius(10)
+                   
+            }
+            .buttonStyle(.borderedProminent)
+            .tint(Color("TwoCentsGreen"))
+            .frame(height: 55)
+            .cornerRadius(10)
+            .padding(.top)
+            .disabled(viewModel.phoneNumber.isEmpty)
+            
+          
+           
+      
+                
+                
+            
+            
+            
+        }
+        .padding()
+        .navigationTitle("Sign In")
+        .tint(Color("TwoCentsGreen"))
+        .navigationBarTitleDisplayMode(.inline)
+        //make back button black... (Gotta have the enviorment line on top)
+        .navigationBarBackButtonHidden(true)
+        .navigationBarItems(leading:
+               Image(systemName: "chevron.backward")
+            .foregroundColor(Color(UIColor.label))
+               .onTapGesture {
+                  self.presentation.wrappedValue.dismiss()
+               }
+            )
+        
+      
+                   
+    }
+        
+}
+
+struct SignInPhoneNumberView_Previews: PreviewProvider {
+    static var previews: some View {
+        NavigationStack{
+            SignInEmailView(showSignInView: .constant(false),showCreateProfileView: .constant(false))
+        }
+    }
+}

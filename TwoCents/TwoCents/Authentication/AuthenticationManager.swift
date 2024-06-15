@@ -47,6 +47,8 @@ final class AuthenticationManager{
         
     }
     
+    
+    //WITH EMAIL
     @discardableResult
     func createUser(email: String, password: String) async throws -> AuthDataResultModel {
         let authDataResult = try await Auth.auth().createUser(withEmail: email, password: password)
@@ -56,6 +58,53 @@ final class AuthenticationManager{
         
         return AuthDataResultModel(user: authDataResult.user)
     }
+    
+    
+    
+    private var verificationId: String?
+
+    public func startAuth(phoneNumber: String, completion: @escaping (Bool) -> Void) {
+        PhoneAuthProvider.provider().verifyPhoneNumber(phoneNumber, uiDelegate: nil) { verificationId, error in
+            
+            
+            
+            guard let verificationId = verificationId, error == nil else {
+                completion(false)
+                return
+            }
+            
+            self.verificationId = verificationId
+            completion(true)
+            
+            
+        }
+    }
+    
+    
+    
+    public func verifyCode(smsCode: String, completion: @escaping (Bool) -> Void) {
+        guard let verificationId = self.verificationId else {
+            completion(false)
+            return
+        }
+        
+        let credential = PhoneAuthProvider.provider().credential(withVerificationID: verificationId, verificationCode: smsCode)
+        
+        Auth.auth().signIn(with: credential) { result, error in
+            
+            guard result != nil, error == nil else {
+                
+                completion(false)
+                return
+            }
+            
+            completion(true)
+        }
+        
+        
+        
+    }
+    
     
     @discardableResult
     func signInUser(email: String, password: String) async throws -> AuthDataResultModel {
