@@ -12,7 +12,7 @@ enum sheetTypes: Identifiable  {
     
     
     
-    case customizeProfileView, signInView, verifyCodeView
+    case customizeProfileView, signInView, verifyCodeView, signUpPhoneNumberView
     
     var id: Self {
         return self
@@ -99,6 +99,8 @@ struct RootView: View {
                     
                 case .verifyCodeView:
                     VerifyCodeView(activeSheet: $activeSheet)
+                case .signUpPhoneNumberView:
+                    SignUpPhoneNumberView(activeSheet: $activeSheet)
                 }}
             
             //                AuthenticationView(showSignInView: $showSignInView, showCreateProfileView: $showCreateProfileView)
@@ -122,7 +124,7 @@ struct RootView: View {
         //        })
         
         
-        .onChange(of: activeSheet) { newValue in
+        .onChange(of: activeSheet) { oldValue, newValue in
             switch newValue {
             case .signInView:
                 Task{
@@ -157,15 +159,16 @@ struct RootView: View {
                 break
             }
             
+    
+            
             Task{
                 
                 do {
                     try await viewModel.loadCurrentUser()
                 } catch {
                     if activeSheet == nil{
-//                    activeSheet = .createProfileView
+                        activeSheet = .signUpPhoneNumberView
                         
-                    //TODOJONATHAN add page
                         
                         
                         
@@ -173,42 +176,26 @@ struct RootView: View {
                     
                 }
             }
+            
+            if oldValue == .customizeProfileView {
+                Task{
+                    
+                    try? await viewModel.loadCurrentUser()
+                    
+                    if let myColor = viewModel.user?.userColor{
+                        tintLoaded = true
+                        userColor = myColor
+                        print("USERCOLOR: \(userColor)")
+                        loadedColor = viewModel.getUserColor(userColor: userColor)
+                    }
+                    
+                }
+            }
+            
+            
+            
         }
-        //        .onChange(of: showCreateProfileView) { newValue in
-        //            Task{
-        //                try? await viewModel.loadCurrentUser()
-        //
-        //                if let myColor = viewModel.user?.userColor{
-        //                    tintLoaded = true
-        //
-        //                    userColor = myColor
-        //                    print("USERCOLOR: \(userColor)")
-        //                    loadedColor = viewModel.getUserColor(userColor: userColor)
-        //                }
-        //
-        //
-        //            }
-        //        }
-        //        .onChange(of: showSignInView) { newValue in
-        //            Task{
-        //                try? await viewModel.loadCurrentUser()
-        //
-        //                if let myColor = viewModel.user?.userColor{
-        //                    tintLoaded = true
-        //
-        //                    userColor = myColor
-        //                    print("USERCOLOR: \(userColor)")
-        //                    loadedColor = viewModel.getUserColor(userColor: userColor)
-        //                }
-        //
-        //
-        //            }
-        //        }
-        //
-        
-        
-        
-        
+      
         
         
     }

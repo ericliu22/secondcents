@@ -61,6 +61,7 @@ final class AuthenticationManager{
     
     
     
+    
     private var verificationId: String?
 
     public func startAuth(phoneNumber: String, completion: @escaping (Bool) -> Void) {

@@ -26,6 +26,26 @@ struct DBUser: Identifiable, Codable{
     let outgoingFriendRequests: Array<String>?
     
     
+    //create from just name
+    
+    init(uid: String, name: String) {
+        self.userId = uid
+        self.email = ""
+       
+        self.dateCreated = Date()
+        self.name = name
+        self.username = ""
+        self.profileImagePath = nil
+        self.profileImageUrl = nil
+        self.userColor = nil
+        self.friends = []
+        self.incomingFriendRequests = []
+        self.outgoingFriendRequests = []
+        
+    }
+    
+    
+    
     
     //create from auth data result
     init(auth: AuthDataResultModel, name: String, username: String) {

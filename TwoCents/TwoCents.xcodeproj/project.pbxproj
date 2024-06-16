@@ -114,6 +114,8 @@
 		ABCA39D62A7A0159009447C3 /* AuthenticationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCA39D52A7A0159009447C3 /* AuthenticationManager.swift */; };
 		ABCA39D82A7A0671009447C3 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCA39D72A7A0671009447C3 /* RootView.swift */; };
 		ABCA39DA2A7A0881009447C3 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCA39D92A7A0881009447C3 /* SettingsView.swift */; };
+		ABD9F2392C1F34C30041F110 /* SignUpPhoneNumberView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABD9F2382C1F34C30041F110 /* SignUpPhoneNumberView.swift */; };
+		ABD9F23B2C1F34D30041F110 /* SignUpPhoneNumberViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABD9F23A2C1F34D30041F110 /* SignUpPhoneNumberViewModel.swift */; };
 		ABF172A52BFC47FC000B6F9B /* ChattingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABF172A42BFC47FC000B6F9B /* ChattingViewModel.swift */; };
 		ABF172A72BFC6686000B6F9B /* AddMemberView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABF172A62BFC6686000B6F9B /* AddMemberView.swift */; };
 		ABF172A92BFC66AD000B6F9B /* AddMemberViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABF172A82BFC66AD000B6F9B /* AddMemberViewModel.swift */; };
@@ -251,6 +253,8 @@
 		ABCA39D52A7A0159009447C3 /* AuthenticationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationManager.swift; sourceTree = "<group>"; };
 		ABCA39D72A7A0671009447C3 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		ABCA39D92A7A0881009447C3 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		ABD9F2382C1F34C30041F110 /* SignUpPhoneNumberView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpPhoneNumberView.swift; sourceTree = "<group>"; };
+		ABD9F23A2C1F34D30041F110 /* SignUpPhoneNumberViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpPhoneNumberViewModel.swift; sourceTree = "<group>"; };
 		ABF172A42BFC47FC000B6F9B /* ChattingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChattingViewModel.swift; sourceTree = "<group>"; };
 		ABF172A62BFC6686000B6F9B /* AddMemberView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMemberView.swift; sourceTree = "<group>"; };
 		ABF172A82BFC66AD000B6F9B /* AddMemberViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMemberViewModel.swift; sourceTree = "<group>"; };
@@ -566,6 +570,8 @@
 		AB9455242A94A2D50055B44A /* SignUp */ = {
 			isa = PBXGroup;
 			children = (
+				ABD9F2382C1F34C30041F110 /* SignUpPhoneNumberView.swift */,
+				ABD9F23A2C1F34D30041F110 /* SignUpPhoneNumberViewModel.swift */,
 				ABC426B22A86438400873EE1 /* SignUpEmailViewModel.swift */,
 				ABC426B02A863D9F00873EE1 /* SignUpEmailView.swift */,
 			);
@@ -833,6 +839,7 @@
 				85BB02F02B5D077E00B9A9EA /* ToolPickerPractice.swift in Sources */,
 				85C6759A2AB8EE5B00FACCB2 /* HotSeatManager.swift in Sources */,
 				A26809CA2AB8A77E003B30DE /* VoteGameReal.swift in Sources */,
+				ABD9F23B2C1F34D30041F110 /* SignUpPhoneNumberViewModel.swift in Sources */,
 				A2AFFDDC2B154C7000B14C1E /* ChatWidget.swift in Sources */,
 				AB842C142A91F36D00E4A7CE /* CustomizeProfileViewModel.swift in Sources */,
 				AB2E56C62AE9B9210096A58C /* CreateSpacesView.swift in Sources */,
@@ -918,6 +925,7 @@
 				ABF172A72BFC6686000B6F9B /* AddMemberView.swift in Sources */,
 				ABA45E812A7C8DC50015F000 /* ProfileView.swift in Sources */,
 				ABC426B32A86438400873EE1 /* SignUpEmailViewModel.swift in Sources */,
+				ABD9F2392C1F34C30041F110 /* SignUpPhoneNumberView.swift in Sources */,
 				ABC426B12A863D9F00873EE1 /* SignUpEmailView.swift in Sources */,
 				ABA45E7E2A7C8D8C0015F000 /* SignInEmailViewModel.swift in Sources */,
 				AB0D07662AE6FB95003AC8A4 /* SpacesView.swift in Sources */,
