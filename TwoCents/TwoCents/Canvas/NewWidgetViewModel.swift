@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import PhotosUI
+import AVFoundation
 
 
 
@@ -40,6 +41,30 @@ final class NewWidgetViewModel: ObservableObject{
     
     
     
+    func saveTempVideo(item: PhotosPickerItem, widgetId: String) {
+        
+        print("saving temp video")
+        guard let space else { return }
+        Task {
+            guard let data = try await item.loadTransferable(type: Data.self) else { return }
+            await resizeVideo(data: data, maxWidth: 1280, maxHeight: 800) { completion in
+                switch completion {
+                case .success(let data):
+                    let videoData = data
+                    Task {
+                        let (path, name) = try await StorageManager.shared.saveTempWidgetVideo(data: videoData, spaceId: self.space!.spaceId, widgetId: widgetId)
+                        print(path)
+                        let uid: String = try! AuthenticationManager.shared.getAuthenticatedUser().uid
+                        self.widgets[1] = CanvasWidget(width: 250, height:  250, borderColor: .black, userId: uid, media: .video, mediaURL: URL(string: self.url)!, widgetName: "Photo Widget", widgetDescription: "Add a photo to spice the convo")
+                        self.loading = false
+                    }
+                case .failure(let error):
+                    return
+                }
+            }
+        }
+        
+    }
     
     
     
@@ -101,8 +126,9 @@ final class NewWidgetViewModel: ObservableObject{
     }
     
     
-    
-    
+    func resizeVideo(data: Data, maxWidth: CGFloat, maxHeight: CGFloat, completion: @escaping (Result<Data, Error>) -> Void) {
+        
+    }
     
     func resizeImage(image: UIImage, targetSize: CGSize) -> UIImage? {
         let size = image.size

@@ -11,43 +11,50 @@ import AVKit
 
 struct VideoWidget: View{
     
-    var url: URL;
-    var videoplayer: AVPlayer;
-    var width: CGFloat;
-    var height: CGFloat;
+    private var videoPlayer: AVQueuePlayer
+    private var playerLooper: AVPlayerLooper
+    private var widget: CanvasWidget;
+    private var width: CGFloat;
+    private var height: CGFloat;
+    private var newWidget: Bool;
     
     var body: some View {
-        VideoPlayer(player: videoplayer)
-            .ignoresSafeArea()
-            .frame(width: width, height: height, alignment: .center)
-            .clipShape(RoundedRectangle(cornerRadius: CORNER_RADIUS))
-            .draggable(url)
-    }
-    
-    
-    init(url: URL, width: CGFloat, height: CGFloat) {
-        self.url = url
-        self.videoplayer = AVPlayer(url: self.url)
-        self.width = width
-        self.height = height
-        
-        
-    }
-    
-}
-
-func videoWidget(widget: CanvasWidget) -> AnyView {
-        assert(widget.media == .video)
-        let videoplayer = AVPlayer(url: widget.mediaURL!)
-        videoplayer.isMuted = true
-        videoplayer.play()
-        return AnyView(
-            VideoPlayer(player: videoplayer)
-                .frame(width: widget.width ,height: widget.height, alignment: .center)
+        if newWidget {
+            VideoPlayer(player: videoPlayer)
+                .ignoresSafeArea()
+                .frame(width: width, height: height, alignment: .center)
+                .clipShape(RoundedRectangle(cornerRadius: CORNER_RADIUS))
+                .draggable(widget)
+        } else {
+            VideoPlayer(player: videoPlayer)
+                .ignoresSafeArea()
+                .frame(width: width, height: height, alignment: .center)
                 .clipShape(RoundedRectangle(cornerRadius: CORNER_RADIUS))
                 .draggable(widget)
                 .gesture(TapGesture().onEnded({
-                    videoplayer.isMuted.toggle()
+                    videoPlayer.isMuted.toggle()
                 }))
+        }
+    }
+    
+    
+    init(widget: CanvasWidget, width: CGFloat, height: CGFloat, newWidget: Bool) {
+        self.widget = widget
+        self.newWidget = newWidget
+        let asset: AVAsset = AVAsset(url: widget.mediaURL!)
+        let playerItem = AVPlayerItem(asset: asset)
+        self.videoPlayer = AVQueuePlayer(playerItem: playerItem)
+        self.playerLooper = AVPlayerLooper(player: videoPlayer, templateItem: playerItem)
+        self.videoPlayer.play()
+        self.videoPlayer.isMuted = true
+        self.width = width
+        self.height = height
+    }
+}
+
+func videoWidget(widget: CanvasWidget, newWidget: Bool) -> AnyView {
+        assert(widget.media == .video)
+        return AnyView(
+            VideoWidget(widget: widget, width: widget.width, height: widget.height, newWidget: newWidget)
         )
 }

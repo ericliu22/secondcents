@@ -36,6 +36,10 @@ final class StorageManager{
         storage.child("spaces").child(spaceId).child("imageWidgets")
     }
     
+    private func videoWidgetReference(spaceId: String) -> StorageReference{
+        storage.child("spaces").child(spaceId).child("videoWidgets")
+    }
+
     
     
     func saveProfilePic(data: Data, userId: String)async throws -> (path: String, name: String){
@@ -86,7 +90,10 @@ final class StorageManager{
         
         try await  Storage.storage().reference(withPath: path).downloadURL()
         
-        
+    }
+    
+    func getURLForVideo(path: String) async throws -> URL {
+        try await Storage.storage().reference(withPath: path).downloadURL()
     }
     
     //for spaces
@@ -122,6 +129,21 @@ final class StorageManager{
     }
     
     
+    func saveTempWidgetVideo(data: Data, spaceId: String, widgetId: String) async throws -> (path: String, name: String) {
+        
+        let meta = StorageMetadata()
+        meta.contentType = "video/mp4"
+        
+        let path = "\(widgetId).mp4"
+        let returnedMetaData = try await videoWidgetReference(spaceId: spaceId).child(path).putDataAsync(data, metadata: meta)
+        
+        guard let returnedPath = returnedMetaData.path, let returnedName = returnedMetaData.name else {
+            throw URLError(.badServerResponse)
+            
+        }
+        
+        return (returnedPath, returnedName)
+    }
     //for widgets
     
     func saveTempWidgetPic(data: Data, spaceId: String, widgetId: String)async throws -> ( path: String, name: String){

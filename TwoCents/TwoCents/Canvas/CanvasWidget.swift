@@ -165,7 +165,7 @@ extension UTType {
     static let canvasWidget = UTType(exportedAs: "com.twocentsapp.secondcents")
 }
 
-func getMediaView(widget: CanvasWidget, spaceId: String) -> AnyView {
+func getMediaView(widget: CanvasWidget, spaceId: String, newWidget: Bool = false) -> AnyView {
     
     
     @State var user: DBUser?
@@ -174,10 +174,9 @@ func getMediaView(widget: CanvasWidget, spaceId: String) -> AnyView {
     
     switch (widget.media) {
         case .text:
-        return AnyView(TextWidgetView(widget: widget))
-      
+            return AnyView(TextWidgetView(widget: widget))
         case .video:
-            return videoWidget(widget: widget)
+            return videoWidget(widget: widget, newWidget: newWidget)
         case .image:
             return imageWidget(widget: widget)
 //        case .chat:
