@@ -10,12 +10,12 @@ import SwiftUI
 
 struct SignUpEmailView: View {
     @Environment(\.presentationMode) var presentation
-    
-    @Binding var showSignInView: Bool
+    @Binding var activeSheet: sheetTypes?
+//    @Binding var showSignInView: Bool
     
     @StateObject private var viewModel = SignUpEmailViewModel()
     
-    @Binding var showCreateProfileView: Bool
+//    @Binding var showCreateProfileView: Bool
     
     
     var body: some View {
@@ -80,10 +80,10 @@ struct SignUpEmailView: View {
                         try await viewModel.signUp()
                         
                         
-                        showSignInView = false
+//                        showSignInView = false
                         
-                        
-                        showCreateProfileView = true
+                        activeSheet  = .createProfileView
+//                        showCreateProfileView = true
                         return
                     } catch {
                     }
@@ -138,7 +138,8 @@ struct SignUpEmailView: View {
 struct SignUpEmailView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack {
-            SignUpEmailView(showSignInView: .constant(false), showCreateProfileView: .constant(false))
+//            SignUpEmailView(showSignInView: .constant(false), showCreateProfileView: .constant(false))
+            SignUpEmailView(activeSheet: .constant(nil))
         }
         
     }

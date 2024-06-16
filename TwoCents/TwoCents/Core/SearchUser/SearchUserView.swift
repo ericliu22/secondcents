@@ -8,10 +8,10 @@
 import SwiftUI
 
 struct SearchUserView: View {
-    
-    @Binding var showSignInView: Bool
+    @Binding var activeSheet: sheetTypes?
+//    @Binding var showSignInView: Bool
     @Binding var loadedColor: Color
-    @Binding var showCreateProfileView: Bool
+//    @Binding var showCreateProfileView: Bool
     
    
     @State var targetUserId: String
@@ -49,7 +49,8 @@ struct SearchUserView: View {
                     
                     NavigationLink {
                         
-                        ProfileView(showSignInView: $showSignInView, loadedColor: $loadedColor,targetUserColor: targetUserColor, showCreateProfileView: $showCreateProfileView, targetUserId: userTile.userId)
+//                        ProfileView(showSignInView: $showSignInView, loadedColor: $loadedColor,targetUserColor: targetUserColor, showCreateProfileView: $showCreateProfileView, targetUserId: userTile.userId)
+                        ProfileView(activeSheet: $activeSheet, loadedColor: $loadedColor, targetUserId: userTile.userId)
                     } label: {
                         HStack(spacing: 20){
                             
@@ -145,6 +146,7 @@ struct SearchUserView: View {
 
 struct SearchUserView_Previews: PreviewProvider {
     static var previews: some View {
-        SearchUserView(showSignInView: .constant(false),loadedColor: .constant(.red),showCreateProfileView: .constant(false),  targetUserId: "")
+//        SearchUserView(showSignInView: .constant(false),loadedColor: .constant(.red),showCreateProfileView: .constant(false),  targetUserId: "")
+        SearchUserView(activeSheet: .constant(.signInView), loadedColor: .constant(.red), targetUserId: "")
     }
 }

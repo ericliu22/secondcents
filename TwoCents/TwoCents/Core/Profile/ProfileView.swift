@@ -8,12 +8,12 @@
 import SwiftUI
 
 struct ProfileView: View {
-    
+    @Binding var activeSheet: sheetTypes?
     @StateObject private var viewModel = ProfileViewModel()
-    @Binding var showSignInView: Bool
+//    @Binding var showSignInView: Bool
     @Binding var loadedColor: Color
     @State var targetUserColor: Color?
-    @Binding var showCreateProfileView: Bool
+//    @Binding var showCreateProfileView: Bool
     
     @State var targetUserId: String
     
@@ -115,7 +115,8 @@ struct ProfileView: View {
                                     
                                     .offset(x:44, y:44)
                                     .onTapGesture{
-                                        showCreateProfileView = true
+//                                        showCreateProfileView = true
+                                        activeSheet = .createProfileView
                                         
                                     }
                                 }
@@ -201,7 +202,8 @@ struct ProfileView: View {
                         
                         
                         NavigationLink {
-                            FriendsView(showSignInView: $showSignInView, loadedColor: $loadedColor, showCreateProfileView: $showCreateProfileView, targetUserId: viewModel.user?.userId ?? "")
+//                            FriendsView(showSignInView: $showSignInView, loadedColor: $loadedColor, showCreateProfileView: $showCreateProfileView, targetUserId: viewModel.user?.userId ?? "")
+                            FriendsView(activeSheet: $activeSheet, loadedColor: $loadedColor, targetUserId: viewModel.user?.userId ?? "")
                         } label: {
                             
                             VStack{
@@ -230,7 +232,9 @@ struct ProfileView: View {
                         if targetUserId.isEmpty {
                             
                             NavigationLink {
-                                FriendRequestsView(showSignInView: $showSignInView, loadedColor: $loadedColor, showCreateProfileView: $showCreateProfileView, targetUserId: viewModel.user?.userId ?? "")
+//                                FriendRequestsView(showSignInView: $showSignInView, loadedColor: $loadedColor, showCreateProfileView: $showCreateProfileView, targetUserId: viewModel.user?.userId ?? "")
+                                
+                                FriendRequestsView(activeSheet: $activeSheet, loadedColor: $loadedColor, targetUserId: viewModel.user?.userId ?? "")
                             } label: {
                                 
                                 VStack{
@@ -403,7 +407,9 @@ struct ProfileView: View {
             if (targetUserId.isEmpty) {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     NavigationLink{
-                        SettingsView(showSignInView: $showSignInView)
+//                        SettingsView(showSignInView: $showSignInView)
+                        
+                        SettingsView(activeSheet: $activeSheet)
                     } label: {
                         Image (systemName: "gear")
                             .font(.headline)
@@ -418,7 +424,8 @@ struct ProfileView: View {
 struct ProfileView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack {
-            ProfileView(showSignInView: .constant(false),loadedColor: .constant(.red),showCreateProfileView: .constant(false), targetUserId: "")
+//            ProfileView(showSignInView: .constant(false),loadedColor: .constant(.red),showCreateProfileView: .constant(false), targetUserId: "")
+            ProfileView(activeSheet: .constant(nil), loadedColor: .constant(.red), targetUserId: "")
         }
     }
 }

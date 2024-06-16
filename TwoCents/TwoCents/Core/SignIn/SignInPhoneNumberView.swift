@@ -10,9 +10,9 @@ import SwiftUI
 
 struct SignInPhoneNumberView: View {
     @Environment(\.presentationMode) var presentation
-    
-    @Binding var showSignInView: Bool
-    @Binding var showCreateProfileView: Bool
+    @Binding var activeSheet: sheetTypes?
+//    @Binding var showSignInView: Bool
+//    @Binding var showCreateProfileView: Bool
     @State private var isActive = false
     
     
@@ -43,7 +43,7 @@ struct SignInPhoneNumberView: View {
 //            
                 
             NavigationLink(
-                destination: VerifyCodeView(showSignInView: $showSignInView, showCreateProfileView: $showCreateProfileView),
+                destination: /*VerifyCodeView(showSignInView: $showSignInView, showCreateProfileView: $showCreateProfileView)*/ VerifyCodeView(activeSheet: $activeSheet),
                 isActive: $isActive,
                 label: {
                     EmptyView()
@@ -124,7 +124,9 @@ struct SignInPhoneNumberView: View {
 struct SignInPhoneNumberView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack{
-            SignInEmailView(showSignInView: .constant(false),showCreateProfileView: .constant(false))
+//            SignInEmailView(showSignInView: .constant(false),showCreateProfileView: .constant(false))
+            
+            SignInEmailView(activeSheet: .constant(nil))
         }
     }
 }

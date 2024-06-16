@@ -10,15 +10,12 @@ import SwiftUI
 
 struct VerifyCodeView: View {
     @Environment(\.presentationMode) var presentation
-    
-    @Binding var showSignInView: Bool
-    @Binding var showCreateProfileView: Bool
- 
-    
-    @State private var isActive = false
-    
-    
-    @StateObject private var viewModel = VerifyCodeViewModel()
+
+//    @Binding var showSignInView: Bool
+//    @Binding var showCreateProfileView: Bool
+// 
+    @Binding var activeSheet: sheetTypes?
+      @StateObject private var viewModel = VerifyCodeViewModel()
     var body: some View {
         
         VStack {
@@ -30,18 +27,11 @@ struct VerifyCodeView: View {
                 .background(Color(UIColor.secondarySystemBackground))
                 .cornerRadius(10)
                 .keyboardType(.phonePad)
+          
+           
             
             Button {
-                //signUp
-//                Task {
-//                    do {
-//                        try await viewModel.signUp()
-//                        showSignInView = false
-//                        return
-//                    } catch {
-//                    }
-//                }
-                //signIn
+
                 Task {
                     
                    
@@ -53,44 +43,10 @@ struct VerifyCodeView: View {
                         try await viewModel.verifyCode() {success in
                             
                             if success {
-//                                print("success")
-//                                
-//                                    
-//
-//
-//                                    showSignInView = false
-//                                    showCreateProfileView = false
-//                                
                                 
-                                Task {
-                                            do {
-                                                try await viewModel.loadCurrentUser()
+                                                activeSheet = nil
                                                 
-                                                // User exists, update UI accordingly
-                                                showCreateProfileView = false
-                                                showSignInView = false
-                                                
-                                                
-                                                
-                                            } catch {
-                                                // User doesn't exist or other error, update UI accordingly
-                                                
-//                                                viewModel.signUp()
-//                                                isActive = true
-//                                                
-                                       
-                                                
-//                                                showCreateProfileView = true
-//                                                showSignInView = false
-                                                
-                                                
-                                                
-                                                
-                                            }
-                                        }
                                
-                                
-                                
                             }
                             
                           
@@ -121,16 +77,7 @@ struct VerifyCodeView: View {
             .cornerRadius(10)
             .padding(.top)
 //            .disabled(viewModel.phoneNumber.isEmpty)
-            
-//          
-//            NavigationLink(
-//                destination: VerifyCodeView(showSignInView: $showSignInView, showCreateProfileView: $showCreateProfileView),
-//                isActive: $isActive,
-//                label: {
-//                    EmptyView()
-//                }
-//            )
-//
+
 
                 
                 
@@ -152,8 +99,8 @@ struct VerifyCodeView: View {
                }
             )
         
-       
         
+
                    
     }
         
@@ -162,7 +109,9 @@ struct VerifyCodeView: View {
 struct VerifytCodeView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack{
-            SignInEmailView(showSignInView: .constant(false),showCreateProfileView: .constant(false))
+//            SignInEmailView(showSignInView: .constant(false),showCreateProfileView: .constant(false))
+            
+            SignInEmailView(activeSheet: .constant(nil))
         }
     }
 }

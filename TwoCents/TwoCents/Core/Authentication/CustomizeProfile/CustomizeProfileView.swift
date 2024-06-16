@@ -9,13 +9,13 @@ import SwiftUI
 import PhotosUI
 
 struct CustomizeProfileView: View {
-    
+    @Binding var activeSheet: sheetTypes?
     @State private var url: URL? = nil
     
     
     @StateObject private var viewModel = CustomizeProfileViewModel()
     
-    @Binding var showCreateProfileView: Bool
+//    @Binding var showCreateProfileView: Bool
     
     
     @State private var selectedPhoto: PhotosPickerItem? = nil
@@ -167,7 +167,9 @@ struct CustomizeProfileView: View {
             
             Button {
                 
-                showCreateProfileView.toggle()
+//                showCreateProfileView.toggle()
+                
+                activeSheet = nil
                 
             } label: {
                 Text("Done")
@@ -209,7 +211,9 @@ struct CustomizeProfileView: View {
 struct CustomizeProfileView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack{
-            CustomizeProfileView(showCreateProfileView: .constant(true), selectedColor: .constant(.red))
+//            CustomizeProfileView(showCreateProfileView: .constant(true), selectedColor: .constant(.red))
+            
+            CustomizeProfileView(activeSheet: .constant(nil), selectedColor: .constant(.red))
         }
     }
 }

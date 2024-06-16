@@ -8,10 +8,10 @@
 import SwiftUI
 
 struct FriendRequestsView: View {
-    
-    @Binding var showSignInView: Bool
+    @Binding var activeSheet: sheetTypes?
+//    @Binding var showSignInView: Bool
     @Binding var loadedColor: Color
-    @Binding var showCreateProfileView: Bool
+//    @Binding var showCreateProfileView: Bool
     
 
     @State var targetUserId: String
@@ -62,7 +62,9 @@ struct FriendRequestsView: View {
                         
                         NavigationLink  {
                             
-                            ProfileView(showSignInView: $showSignInView, loadedColor: $loadedColor,targetUserColor: targetUserColor, showCreateProfileView: $showCreateProfileView, targetUserId: userTile.userId)
+//                            ProfileView(showSignInView: $showSignInView, loadedColor: $loadedColor,targetUserColor: targetUserColor, showCreateProfileView: $showCreateProfileView, targetUserId: userTile.userId)
+                            
+                            ProfileView(activeSheet:$activeSheet, loadedColor: $loadedColor,targetUserColor: targetUserColor, targetUserId: userTile.userId)
                         } label: {
                             HStack(spacing: 20){
                                 
@@ -206,6 +208,7 @@ struct FriendRequestsView: View {
 
 struct FriendRequestsView_Previews: PreviewProvider {
     static var previews: some View {
-        FriendRequestsView(showSignInView: .constant(false),loadedColor: .constant(.red),showCreateProfileView: .constant(false), targetUserId: "")
+//        FriendRequestsView(showSignInView: .constant(false),loadedColor: .constant(.red),showCreateProfileView: .constant(false), targetUserId: "")
+        FriendsView(activeSheet: .constant(nil), loadedColor: .constant(.red), targetUserId: "")
     }
 }

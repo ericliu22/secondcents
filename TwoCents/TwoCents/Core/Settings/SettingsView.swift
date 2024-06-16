@@ -9,7 +9,8 @@ import SwiftUI
 
 struct SettingsView: View {
     @StateObject private var viewModel = SettingsViewModel()
-    @Binding var showSignInView: Bool
+//    @Binding var showSignInView: Bool
+    @Binding var activeSheet: sheetTypes?
     var body: some View {
         List{
             
@@ -21,7 +22,9 @@ struct SettingsView: View {
                 Task {
                     do{
                         try viewModel.signOut()
-                        showSignInView = true
+//                        showSignInView = true
+                        
+                        activeSheet  = .signInView
                     }  catch {
                         print(error)
                     }
@@ -37,7 +40,9 @@ struct SettingsView: View {
 struct SettingsView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack{
-            SettingsView(showSignInView: .constant(false))
+//            SettingsView(showSignInView: .constant(false))
+            
+            SettingsView(activeSheet: .constant(nil))
         }
     }
 }

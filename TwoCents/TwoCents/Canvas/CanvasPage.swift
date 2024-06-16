@@ -55,7 +55,7 @@ struct CanvasPage: View {
     
     @State private var replyMode: Bool = false
     
-    @State private var activeSheet: sheetTypes?
+    @State private var activeSheet: sheetTypesCanvasPage?
     
     @State private var activePollWidget: CanvasWidget?
     
@@ -87,7 +87,7 @@ struct CanvasPage: View {
     }
     
     
-    enum sheetTypes: Identifiable  {
+    enum sheetTypesCanvasPage: Identifiable  {
         
         
         

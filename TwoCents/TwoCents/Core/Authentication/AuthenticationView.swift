@@ -9,11 +9,11 @@ import SwiftUI
 
 struct AuthenticationView: View {
     
-    @Binding var showSignInView: Bool
-    
+//    @Binding var showSignInView: Bool
+    @Binding var activeSheet: sheetTypes?
     @State private var animateGradient: Bool = false
     
-    @Binding var showCreateProfileView: Bool
+//    @Binding var showCreateProfileView: Bool
     
     
     var body: some View {
@@ -62,7 +62,9 @@ struct AuthenticationView: View {
             NavigationLink {
                 
                
-                SignInPhoneNumberView(showSignInView: $showSignInView, showCreateProfileView: $showCreateProfileView)
+//                SignInPhoneNumberView(showSignInView: $showSignInView, showCreateProfileView: $showCreateProfileView)
+                SignInPhoneNumberView(activeSheet: $activeSheet )
+                
             } label: {
                 Text("Sign In With Phone Number")
                     .font(.headline)
@@ -77,7 +79,9 @@ struct AuthenticationView: View {
             NavigationLink {
                 
                
-                SignInEmailView(showSignInView: $showSignInView, showCreateProfileView: $showCreateProfileView)
+//                SignInEmailView(showSignInView: $showSignInView, showCreateProfileView: $showCreateProfileView)
+                
+                SignInEmailView(activeSheet: $activeSheet )
             } label: {
                 Text("Sign In With Email")
                     .font(.headline)
@@ -94,8 +98,8 @@ struct AuthenticationView: View {
             NavigationLink{
              
 
-                SignUpEmailView(showSignInView: $showSignInView, showCreateProfileView: $showCreateProfileView)
-           
+//                SignUpEmailView(showSignInView: $showSignInView, showCreateProfileView: $showCreateProfileView)
+                SignUpEmailView(activeSheet: $activeSheet )
 
             } label: {
                 Text("New? Ugh. Create a new account")
@@ -120,7 +124,8 @@ struct AuthenticationView: View {
 struct AuthenticationView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack{
-            AuthenticationView(showSignInView: .constant(false), showCreateProfileView: .constant(false))
+//            AuthenticationView(showSignInView: .constant(false), showCreateProfileView: .constant(false))
+            AuthenticationView(activeSheet: .constant(nil))
         }
        
     }

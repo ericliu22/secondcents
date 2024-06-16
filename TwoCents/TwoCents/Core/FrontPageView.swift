@@ -11,16 +11,17 @@ struct FrontPageView: View {
     
    
     
-    @Binding var showSignInView: Bool
+//    @Binding var showSignInView: Bool
     @Binding var loadedColor: Color
-    @Binding var showCreateProfileView: Bool
-    
+//    @Binding var showCreateProfileView: Bool
+    @Binding var activeSheet: sheetTypes?
     
     var body: some View {
         TabView{
 //            UploadExample()
             
-            SpacesView(showSignInView: $showSignInView, loadedColor: $loadedColor, showCreateProfileView: $showCreateProfileView)
+//            SpacesView(showSignInView: $showSignInView, loadedColor: $loadedColor, showCreateProfileView: $showCreateProfileView)
+            SpacesView(activeSheet: $activeSheet, loadedColor: $loadedColor)
                 .tabItem {
                     Image(systemName: "rectangle.3.group.fill")
                     Text("Spaces")
@@ -50,7 +51,8 @@ struct FrontPageView: View {
 //                }
 //            
             
-            SearchUserView(showSignInView: $showSignInView, loadedColor: $loadedColor, showCreateProfileView: $showCreateProfileView, targetUserId: "")
+//            SearchUserView(showSignInView: $showSignInView, loadedColor: $loadedColor, showCreateProfileView: $showCreateProfileView, targetUserId: "")
+            SearchUserView(activeSheet: $activeSheet, loadedColor: $loadedColor, targetUserId: "")
                 .tabItem {
                     Image(systemName: "magnifyingglass")
                     Text("Search")
@@ -64,7 +66,8 @@ struct FrontPageView: View {
             
             
             NavigationStack {
-                ProfileView(showSignInView: $showSignInView, loadedColor: $loadedColor, showCreateProfileView: $showCreateProfileView, targetUserId: "")
+//                ProfileView(showSignInView: $showSignInView, loadedColor: $loadedColor, showCreateProfileView: $showCreateProfileView, targetUserId: "")
+                ProfileView(activeSheet: $activeSheet, loadedColor: $loadedColor, targetUserId: "")
             }
             .tabItem {
                 Image(systemName: "person")
@@ -87,6 +90,7 @@ struct FrontPageView: View {
 struct FrontPageView_Previews: PreviewProvider {
     
     static var previews: some View {
-        FrontPageView(showSignInView: .constant(false), loadedColor: .constant(.red),showCreateProfileView: .constant(false))
+//        FrontPageView(showSignInView: .constant(false), loadedColor: .constant(.red),showCreateProfileView: .constant(false))
+        FrontPageView(loadedColor: .constant(.red), activeSheet: .constant(nil))
     }
 }
