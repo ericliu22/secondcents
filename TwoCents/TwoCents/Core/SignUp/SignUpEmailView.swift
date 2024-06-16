@@ -82,7 +82,7 @@ struct SignUpEmailView: View {
                         
 //                        showSignInView = false
                         
-                        activeSheet  = .createProfileView
+                        activeSheet  = .customizeProfileView
 //                        showCreateProfileView = true
                         return
                     } catch {

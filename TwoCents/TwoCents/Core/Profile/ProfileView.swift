@@ -116,7 +116,7 @@ struct ProfileView: View {
                                     .offset(x:44, y:44)
                                     .onTapGesture{
 //                                        showCreateProfileView = true
-                                        activeSheet = .createProfileView
+                                        activeSheet = .customizeProfileView
                                         
                                     }
                                 }

@@ -12,7 +12,7 @@ enum sheetTypes: Identifiable  {
     
     
     
-    case createProfileView, signInView, verifyCodeView
+    case customizeProfileView, signInView, verifyCodeView
     
     var id: Self {
         return self
@@ -94,7 +94,7 @@ struct RootView: View {
                 switch item {
                 case .signInView:
                     AuthenticationView(activeSheet: $activeSheet)
-                case .createProfileView:
+                case .customizeProfileView:
                     CustomizeProfileView(activeSheet: $activeSheet, selectedColor: $loadedColor)
                     
                 case .verifyCodeView:
@@ -138,7 +138,7 @@ struct RootView: View {
                     
                     
                 }
-            case .createProfileView:
+            case .customizeProfileView:
                 Task{
                     try? await viewModel.loadCurrentUser()
                     
@@ -166,6 +166,9 @@ struct RootView: View {
 //                    activeSheet = .createProfileView
                         
                     //TODOJONATHAN add page
+                        
+                        
+                        
                     }
                     
                 }
