@@ -26,11 +26,7 @@ struct FrontPageView: View {
                     Image(systemName: "rectangle.3.group.fill")
                     Text("Spaces")
                 }
-            testView()
-                .tabItem {
-                    Image(systemName: "rectangle.3.group.fill")
-                    Text("test")
-                }
+
             ContactsView()
                 .tabItem {
                     Image(systemName: "rectangle.3.group.fill")

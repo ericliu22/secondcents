@@ -25,7 +25,7 @@
 		85741EA82AD03A0C0085423E /* CarouselPractice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85741EA72AD03A0C0085423E /* CarouselPractice.swift */; };
 		85741EAA2AD03B2C0085423E /* SnapCarouselPractice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85741EA92AD03B2C0085423E /* SnapCarouselPractice.swift */; };
 		85741EAF2AD03D370085423E /* PostModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85741EAE2AD03D370085423E /* PostModel.swift */; };
-		8576048E2C1A56B9007F5B0E /* SendLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8576048D2C1A56B9007F5B0E /* SendLink.swift */; };
+		8576048E2C1A56B9007F5B0E /* ContactsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8576048D2C1A56B9007F5B0E /* ContactsView.swift */; };
 		85A6766B2AE9C19B003ECAAA /* MessageBubble.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A6766A2AE9C19B003ECAAA /* MessageBubble.swift */; };
 		85A6766D2AE9C6BB003ECAAA /* MessageField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A6766C2AE9C6BB003ECAAA /* MessageField.swift */; };
 		85BB02F02B5D077E00B9A9EA /* ToolPickerPractice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85BB02EF2B5D077E00B9A9EA /* ToolPickerPractice.swift */; };
@@ -160,7 +160,7 @@
 		85741EA72AD03A0C0085423E /* CarouselPractice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarouselPractice.swift; sourceTree = "<group>"; };
 		85741EA92AD03B2C0085423E /* SnapCarouselPractice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapCarouselPractice.swift; sourceTree = "<group>"; };
 		85741EAE2AD03D370085423E /* PostModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostModel.swift; sourceTree = "<group>"; };
-		8576048D2C1A56B9007F5B0E /* SendLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendLink.swift; sourceTree = "<group>"; };
+		8576048D2C1A56B9007F5B0E /* ContactsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsView.swift; sourceTree = "<group>"; };
 		85A6766A2AE9C19B003ECAAA /* MessageBubble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageBubble.swift; sourceTree = "<group>"; };
 		85A6766C2AE9C6BB003ECAAA /* MessageField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageField.swift; sourceTree = "<group>"; };
 		85BB02EF2B5D077E00B9A9EA /* ToolPickerPractice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolPickerPractice.swift; sourceTree = "<group>"; };
@@ -329,7 +329,7 @@
 		8576048A2C1A5531007F5B0E /* Contacts */ = {
 			isa = PBXGroup;
 			children = (
-				8576048D2C1A56B9007F5B0E /* SendLink.swift */,
+				8576048D2C1A56B9007F5B0E /* ContactsView.swift */,
 			);
 			path = Contacts;
 			sourceTree = "<group>";
@@ -843,7 +843,7 @@
 				A2AFFDDC2B154C7000B14C1E /* ChatWidget.swift in Sources */,
 				AB842C142A91F36D00E4A7CE /* CustomizeProfileViewModel.swift in Sources */,
 				AB2E56C62AE9B9210096A58C /* CreateSpacesView.swift in Sources */,
-				8576048E2C1A56B9007F5B0E /* SendLink.swift in Sources */,
+				8576048E2C1A56B9007F5B0E /* ContactsView.swift in Sources */,
 				AB2E56C82AE9B9590096A58C /* CreateSpacesViewModel.swift in Sources */,
 				A257D7862A6D707600A4E7BD /* ContentView.swift in Sources */,
 				AB2E56D12AE9C62C0096A58C /* CapsuleView.swift in Sources */,
