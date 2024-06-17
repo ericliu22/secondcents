@@ -18,17 +18,21 @@ struct AddFriendFromContactsView: View {
             List(filteredSearch, id: \.self) { contact in
                 VStack(alignment: .leading) {
                     Text("\(contact.givenName) \(contact.familyName)")
-
-                    Text(viewModel.user?.id ?? "NONE")
-                        .task {
-//                            print(contact.phoneNumbers.first?.value.stringValue)
-                           await viewModel.getUserWithPhoneNumber(phoneNumber: contact.phoneNumbers.first?.value.stringValue ?? "")
-//                            await viewModel.getUserWithPhoneNumber(phoneNumber: "6505551234")
-                            
-                        }
+                    
+                    if let phoneNumber = contact.phoneNumbers.first?.value.stringValue,
+                       let user = viewModel.userDictionary[viewModel.getCleanPhoneNumber(phoneNumber: phoneNumber)] {
+                        Text(user.name!)
+                    } else {
+                        Text("NONE")
+                    }
+                    
                     Text(contact.phoneNumbers.first?.value.stringValue ?? "")
                         .foregroundColor(.gray)
-                  
+                        .task {
+                            if let phoneNumber = contact.phoneNumbers.first?.value.stringValue {
+                                await viewModel.getUserWithPhoneNumber(phoneNumber: phoneNumber)
+                            }
+                        }
                 }
                 .onTapGesture {
                     viewModel.inviteContact(contact)
@@ -48,16 +52,29 @@ struct AddFriendFromContactsView: View {
 final class AddFriendFromContactsViewModel: NSObject, ObservableObject, MFMessageComposeViewControllerDelegate {
     private let store = CNContactStore()
     @Published var contacts = [CNContact]()
+    @Published var userDictionary = [String: DBUser]()
     private var hasFetchedContacts = false
     
     
     
     func getUserWithPhoneNumber(phoneNumber: String) async {
-        
-        self.user = try? await UserManager.shared.getUserWithPhoneNumber(phoneNumber: phoneNumber)
-   
+        do {
+            let cleanedPhoneNumber = getCleanPhoneNumber(phoneNumber: phoneNumber)
+            let user = try await UserManager.shared.getUserWithPhoneNumber(phoneNumber: cleanedPhoneNumber)
+            userDictionary[cleanedPhoneNumber] = user
+        } catch {
+            print("Failed to fetch user for phone number \(phoneNumber): \(error)")
+        }
     }
-    @Published private(set) var user:  DBUser? = nil
+    
+    
+    
+    
+    
+    func getCleanPhoneNumber(phoneNumber: String) -> String {
+        return phoneNumber.components(separatedBy: CharacterSet.decimalDigits.inverted).joined()
+    }
+    
     
     
     func fetchContactsIfNeeded() {
