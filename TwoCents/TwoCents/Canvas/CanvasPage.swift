@@ -501,6 +501,7 @@ struct CanvasPage: View {
                     ? Text(String(format: "%.0f", scale * CGFloat(100)) + "%")
                         .padding(.vertical, 8)
                         .frame(width:80)
+                       
                         .background(
                             Rectangle()
                                 .fill(.ultraThinMaterial)

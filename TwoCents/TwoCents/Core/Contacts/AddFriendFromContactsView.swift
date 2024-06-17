@@ -4,6 +4,7 @@ import MessageUI
 
 struct AddFriendFromContactsView: View {
     @StateObject private var viewModel = AddFriendFromContactsViewModel()
+    
     @State private var searchTerm = ""
     
     var filteredSearch: [CNContact]{
@@ -33,7 +34,7 @@ struct AddFriendFromContactsView: View {
                     viewModel.inviteContact(contact)
                 }
             }
-            .navigationBarTitle("Contacts")
+            .navigationBarTitle("Contacts 📇")
             .searchable(text: $searchTerm, prompt: "Search")
         }
         .onAppear {
@@ -43,7 +44,8 @@ struct AddFriendFromContactsView: View {
 }
 
 
-class AddFriendFromContactsViewModel: NSObject, ObservableObject, MFMessageComposeViewControllerDelegate {
+@MainActor
+final class AddFriendFromContactsViewModel: NSObject, ObservableObject, MFMessageComposeViewControllerDelegate {
     private let store = CNContactStore()
     @Published var contacts = [CNContact]()
     private var hasFetchedContacts = false

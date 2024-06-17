@@ -26,7 +26,7 @@ struct ContactsView: View {
                     viewModel.inviteContact(contact)
                 }
             }
-            .navigationBarTitle("Contacts")
+            .navigationBarTitle("Contacts 📇")
             .searchable(text: $searchTerm, prompt: "Search")
         }
         .onAppear {
@@ -35,8 +35,8 @@ struct ContactsView: View {
     }
 }
 
-
-class ContactsViewModel: NSObject, ObservableObject, MFMessageComposeViewControllerDelegate {
+@MainActor
+final class ContactsViewModel: NSObject, ObservableObject, MFMessageComposeViewControllerDelegate {
     private let store = CNContactStore()
     @Published var contacts = [CNContact]()
     private var hasFetchedContacts = false

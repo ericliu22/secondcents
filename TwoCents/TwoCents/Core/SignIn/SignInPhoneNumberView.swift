@@ -20,6 +20,21 @@ struct SignInPhoneNumberView: View {
     var body: some View {
         
         VStack {
+            Text("heyy, can i get your number?")
+                .font(.caption)
+                .foregroundColor(Color(UIColor.secondaryLabel))
+                .multilineTextAlignment(.leading)
+                .padding(.bottom, 5)
+            
+            Text("(as a joke, haha)")
+                .font(.caption2)
+                .foregroundColor(Color(UIColor.tertiaryLabel))
+                .multilineTextAlignment(.leading)
+                .padding(.bottom, 50)
+            
+            
+            
+            
             //Email Textfield
             TextField("Phone Number", text: $viewModel.phoneNumber)
                 .disableAutocorrection(true)
@@ -77,13 +92,15 @@ struct SignInPhoneNumberView: View {
                 }
                 
             } label: {
-                Text("Sign In")
+                Text("Let's go!")
                     .font(.headline)
 //                    .foregroundColor(Color(UIColor.systemBackground))
                     .frame(height: 55)
                     .frame(maxWidth: .infinity)
 //                    .background(Color(UIColor.label))
 //                    .cornerRadius(10)
+                
+                
                    
             }
             .buttonStyle(.borderedProminent)
@@ -92,7 +109,7 @@ struct SignInPhoneNumberView: View {
             .cornerRadius(10)
             .padding(.top)
             .disabled(viewModel.phoneNumber.isEmpty)
-            
+            .padding(.bottom, 50)
           
            
       
@@ -103,7 +120,7 @@ struct SignInPhoneNumberView: View {
             
         }
         .padding()
-        .navigationTitle("Sign In")
+        .navigationTitle("Portal to the beyond")
         .tint(Color("TwoCentsGreen"))
         .navigationBarTitleDisplayMode(.inline)
         //make back button black... (Gotta have the enviorment line on top)

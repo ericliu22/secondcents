@@ -86,7 +86,7 @@ struct VerifyCodeView: View {
             
         }
         .padding()
-        .navigationTitle("Sign In")
+        .navigationTitle("Into the abyss...")
         .tint(Color("TwoCentsGreen"))
         .navigationBarTitleDisplayMode(.inline)
         //make back button black... (Gotta have the enviorment line on top)

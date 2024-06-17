@@ -86,21 +86,24 @@ struct AuthenticationView: View {
             } label: {
                 Text("Sign In With Email")
                     .font(.headline)
-                    .foregroundColor(Color(UIColor.systemBackground))
+                    .foregroundColor(Color(UIColor.label))
                     .frame(height: 55)
                     .frame(maxWidth: .infinity)
-                    .background(Color(UIColor.label))
+//                    .background(Color(UIColor.secondaryLabel))
+                    .overlay(
+                                  RoundedRectangle(cornerRadius: 10)
+                                    .stroke(Color(UIColor.secondaryLabel), lineWidth: 2)
+                              )
                     .cornerRadius(10)
             }
-            
-
             
             
             NavigationLink{
              
 
 //                SignUpEmailView(showSignInView: $showSignInView, showCreateProfileView: $showCreateProfileView)
-                SignUpEmailView(activeSheet: $activeSheet )
+//                SignUpEmailView(activeSheet: $activeSheet )
+                SignInPhoneNumberView(activeSheet: $activeSheet, userPhoneNumber: $userPhoneNumber )
 
             } label: {
                 Text("New? Ugh. Create a new account")
