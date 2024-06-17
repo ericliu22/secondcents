@@ -6,7 +6,7 @@ struct AddFriendFromContactsView: View {
     @StateObject private var viewModel = AddFriendFromContactsViewModel()
     
     @State private var searchTerm = ""
-    
+    @Binding var activeSheet: sheetTypes?
     var filteredSearch: [CNContact] {
         guard !searchTerm.isEmpty else { return viewModel.contacts.filter { !$0.givenName.isEmpty && !$0.familyName.isEmpty && !$0.phoneNumbers.isEmpty } }
         return viewModel.contacts.filter {
@@ -214,11 +214,23 @@ struct AddFriendFromContactsView: View {
                 .padding(.horizontal)
             }
             .navigationBarTitle("Contacts 📇")
-            .searchable(text: $searchTerm, prompt: "Search")
+            
             .onAppear {
                 viewModel.fetchContactsIfNeeded()
             }
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        activeSheet  = .customizeProfileView
+                    } label: {
+                        Image(systemName: "arrow.right")
+                            .foregroundColor(Color(UIColor.label))
+                    }
+
+                }
+            }
         }
+        .searchable(text: $searchTerm, prompt: "Search")
     }
 }
 

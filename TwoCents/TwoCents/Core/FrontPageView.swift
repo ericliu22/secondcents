@@ -27,7 +27,7 @@ struct FrontPageView: View {
                     Text("Spaces")
                 }
 
-            AddFriendFromContactsView()
+            AddFriendFromContactsView(activeSheet: $activeSheet)
                 .tabItem {
                     Image(systemName: "rectangle.3.group.fill")
                     Text("test")

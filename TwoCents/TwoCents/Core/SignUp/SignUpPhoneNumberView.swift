@@ -43,7 +43,7 @@ struct SignUpPhoneNumberView: View {
                     do {
                         try await viewModel.signUp(userPhoneNumber: userPhoneNumber ?? "")
                         
-                        activeSheet  = .customizeProfileView
+                        activeSheet  = .addFriendFromContactsView
                         return
                     } catch {
                     }

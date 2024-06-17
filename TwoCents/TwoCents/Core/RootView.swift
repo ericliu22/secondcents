@@ -12,7 +12,7 @@ enum sheetTypes: Identifiable  {
     
     
     
-    case customizeProfileView, signInView, verifyCodeView, signUpPhoneNumberView
+    case customizeProfileView, signInView, verifyCodeView, signUpPhoneNumberView, addFriendFromContactsView
     
     var id: Self {
         return self
@@ -91,8 +91,10 @@ struct RootView: View {
         
         .fullScreenCover(item: $activeSheet) { item in
             NavigationStack {
+                
                 switch item {
                 case .signInView:
+                  
                     AuthenticationView(activeSheet: $activeSheet, userPhoneNumber: $userPhoneNumber)
                 case .customizeProfileView:
                     CustomizeProfileView(activeSheet: $activeSheet, selectedColor: $loadedColor)
@@ -101,16 +103,14 @@ struct RootView: View {
                     VerifyCodeView(activeSheet: $activeSheet)
                 case .signUpPhoneNumberView:
                     SignUpPhoneNumberView(activeSheet: $activeSheet, userPhoneNumber: $userPhoneNumber)
-                }}
-            
-            //                AuthenticationView(showSignInView: $showSignInView, showCreateProfileView: $showCreateProfileView)
-            
-            
-            
-            //            }
+                case .addFriendFromContactsView:
+                    AddFriendFromContactsView(activeSheet:$activeSheet)
+                }
+            }
+        
         }
         
-        
+ 
         
         
         
