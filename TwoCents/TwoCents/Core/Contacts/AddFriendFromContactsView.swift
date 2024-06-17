@@ -2,8 +2,8 @@ import SwiftUI
 import Contacts
 import MessageUI
 
-struct ContactsView: View {
-    @StateObject private var viewModel = ContactsViewModel()
+struct AddFriendFromContactsView: View {
+    @StateObject private var viewModel = AddFriendFromContactsViewModel()
     @State private var searchTerm = ""
     
     var filteredSearch: [CNContact]{
@@ -35,7 +35,7 @@ struct ContactsView: View {
 }
 
 
-class ContactsViewModel: NSObject, ObservableObject, MFMessageComposeViewControllerDelegate {
+class AddFriendFromContactsViewModel: NSObject, ObservableObject, MFMessageComposeViewControllerDelegate {
     private let store = CNContactStore()
     @Published var contacts = [CNContact]()
     private var hasFetchedContacts = false

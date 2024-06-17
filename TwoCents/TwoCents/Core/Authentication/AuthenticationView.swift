@@ -16,6 +16,7 @@ struct AuthenticationView: View {
 //    @Binding var showCreateProfileView: Bool
     
     
+    @Binding  var userPhoneNumber: String?
     var body: some View {
         VStack{
             
@@ -63,7 +64,7 @@ struct AuthenticationView: View {
                 
                
 //                SignInPhoneNumberView(showSignInView: $showSignInView, showCreateProfileView: $showCreateProfileView)
-                SignInPhoneNumberView(activeSheet: $activeSheet )
+                SignInPhoneNumberView(activeSheet: $activeSheet, userPhoneNumber: $userPhoneNumber )
                 
             } label: {
                 Text("Sign In With Phone Number")
@@ -125,7 +126,7 @@ struct AuthenticationView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack{
 //            AuthenticationView(showSignInView: .constant(false), showCreateProfileView: .constant(false))
-            AuthenticationView(activeSheet: .constant(nil))
+            AuthenticationView(activeSheet: .constant(nil), userPhoneNumber: .constant(""))
         }
        
     }

@@ -24,11 +24,11 @@ struct DBUser: Identifiable, Codable{
     let friends: Array<String>?
     let incomingFriendRequests: Array<String>?
     let outgoingFriendRequests: Array<String>?
-    
+    let userPhoneNumber: String?
     
     //create from just name
     
-    init(uid: String, name: String) {
+    init(uid: String, name: String, userPhoneNumber: String) {
         self.userId = uid
         self.email = ""
        
@@ -41,6 +41,7 @@ struct DBUser: Identifiable, Codable{
         self.friends = []
         self.incomingFriendRequests = []
         self.outgoingFriendRequests = []
+        self.userPhoneNumber = userPhoneNumber
         
     }
     
@@ -61,7 +62,7 @@ struct DBUser: Identifiable, Codable{
         self.friends = []
         self.incomingFriendRequests = []
         self.outgoingFriendRequests = []
-        
+        self.userPhoneNumber = ""
     }
     
     
@@ -93,6 +94,7 @@ struct DBUser: Identifiable, Codable{
         self.friends = []
         self.incomingFriendRequests = []
         self.outgoingFriendRequests = []
+        self.userPhoneNumber = ""
     }
     
     
@@ -144,6 +146,13 @@ final class UserManager{
         try await userDocument(userId: userId).getDocument(as: DBUser.self)
         
     }
+    
+    
+//    func getUserWithPhoneNumber(userId: String) async throws -> DBUser {
+////        try await userDocument(userId: userId).getDocument(as: DBUser.self, decoder: decoder)
+////        try await userCollection.whereFi
+//        
+//    }
     
     
     func getAllUsers(userId: String) async throws -> [DBUser]{

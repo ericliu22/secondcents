@@ -35,7 +35,7 @@ struct RootView: View {
     
     @State private var activeSheet: sheetTypes?
     
-    
+    @State private var userPhoneNumber: String?
     
     
     
@@ -93,14 +93,14 @@ struct RootView: View {
             NavigationStack {
                 switch item {
                 case .signInView:
-                    AuthenticationView(activeSheet: $activeSheet)
+                    AuthenticationView(activeSheet: $activeSheet, userPhoneNumber: $userPhoneNumber)
                 case .customizeProfileView:
                     CustomizeProfileView(activeSheet: $activeSheet, selectedColor: $loadedColor)
                     
                 case .verifyCodeView:
                     VerifyCodeView(activeSheet: $activeSheet)
                 case .signUpPhoneNumberView:
-                    SignUpPhoneNumberView(activeSheet: $activeSheet)
+                    SignUpPhoneNumberView(activeSheet: $activeSheet, userPhoneNumber: $userPhoneNumber)
                 }}
             
             //                AuthenticationView(showSignInView: $showSignInView, showCreateProfileView: $showCreateProfileView)

@@ -116,6 +116,7 @@
 		ABCA39DA2A7A0881009447C3 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCA39D92A7A0881009447C3 /* SettingsView.swift */; };
 		ABD9F2392C1F34C30041F110 /* SignUpPhoneNumberView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABD9F2382C1F34C30041F110 /* SignUpPhoneNumberView.swift */; };
 		ABD9F23B2C1F34D30041F110 /* SignUpPhoneNumberViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABD9F23A2C1F34D30041F110 /* SignUpPhoneNumberViewModel.swift */; };
+		ABD9F23D2C1F3F910041F110 /* AddFriendFromContactsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABD9F23C2C1F3F910041F110 /* AddFriendFromContactsView.swift */; };
 		ABF172A52BFC47FC000B6F9B /* ChattingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABF172A42BFC47FC000B6F9B /* ChattingViewModel.swift */; };
 		ABF172A72BFC6686000B6F9B /* AddMemberView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABF172A62BFC6686000B6F9B /* AddMemberView.swift */; };
 		ABF172A92BFC66AD000B6F9B /* AddMemberViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABF172A82BFC66AD000B6F9B /* AddMemberViewModel.swift */; };
@@ -255,6 +256,7 @@
 		ABCA39D92A7A0881009447C3 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		ABD9F2382C1F34C30041F110 /* SignUpPhoneNumberView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpPhoneNumberView.swift; sourceTree = "<group>"; };
 		ABD9F23A2C1F34D30041F110 /* SignUpPhoneNumberViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpPhoneNumberViewModel.swift; sourceTree = "<group>"; };
+		ABD9F23C2C1F3F910041F110 /* AddFriendFromContactsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFriendFromContactsView.swift; sourceTree = "<group>"; };
 		ABF172A42BFC47FC000B6F9B /* ChattingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChattingViewModel.swift; sourceTree = "<group>"; };
 		ABF172A62BFC6686000B6F9B /* AddMemberView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMemberView.swift; sourceTree = "<group>"; };
 		ABF172A82BFC66AD000B6F9B /* AddMemberViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMemberViewModel.swift; sourceTree = "<group>"; };
@@ -330,6 +332,7 @@
 			isa = PBXGroup;
 			children = (
 				8576048D2C1A56B9007F5B0E /* ContactsView.swift */,
+				ABD9F23C2C1F3F910041F110 /* AddFriendFromContactsView.swift */,
 			);
 			path = Contacts;
 			sourceTree = "<group>";
@@ -872,6 +875,7 @@
 				A2F5631E2AB4E6240026D8C9 /* CanvasPage.swift in Sources */,
 				8534B8B92B8001660089AD5C /* NewPollView.swift in Sources */,
 				A2DAF34B2C07CB1C00E778FA /* Notifcations.swift in Sources */,
+				ABD9F23D2C1F3F910041F110 /* AddFriendFromContactsView.swift in Sources */,
 				AB90021D2A8B85DA00F970B8 /* UploadExampleViewModel.swift in Sources */,
 				85A6766D2AE9C6BB003ECAAA /* MessageField.swift in Sources */,
 				A2F563232AB4E6700026D8C9 /* ChattingView.swift in Sources */,

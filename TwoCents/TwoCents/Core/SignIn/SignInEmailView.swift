@@ -56,6 +56,8 @@ struct SignInEmailView: View {
 //                        showCreateProfileView = false
                         
                         activeSheet = nil
+                        
+                        
                         return
                     } catch {
                     }

@@ -14,7 +14,7 @@ struct SignInPhoneNumberView: View {
 //    @Binding var showSignInView: Bool
 //    @Binding var showCreateProfileView: Bool
     @State private var isActive = false
-    
+    @Binding var userPhoneNumber: String?
     
     @StateObject private var viewModel = SignInPhoneNumberViewModel()
     var body: some View {
@@ -67,6 +67,7 @@ struct SignInPhoneNumberView: View {
                         try await viewModel.sendCode()
                         
                         isActive = true
+                        userPhoneNumber = viewModel.getCleanPhoneNumber()
                         
 //                        showSignInView = false
 //                        showCreateProfileView = false

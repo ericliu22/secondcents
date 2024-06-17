@@ -16,7 +16,7 @@ struct SignUpPhoneNumberView: View {
     @StateObject private var viewModel = SignUpPhoneNumberViewModel()
     
 //    @Binding var showCreateProfileView: Bool
-    
+    @Binding  var userPhoneNumber: String?
     
     var body: some View {
         
@@ -41,7 +41,7 @@ struct SignUpPhoneNumberView: View {
                 //signUp
                 Task {
                     do {
-                        try await viewModel.signUp()
+                        try await viewModel.signUp(userPhoneNumber: userPhoneNumber ?? "")
                         
                         activeSheet  = .customizeProfileView
                         return

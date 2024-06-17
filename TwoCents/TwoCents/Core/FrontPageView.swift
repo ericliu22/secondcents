@@ -27,7 +27,7 @@ struct FrontPageView: View {
                     Text("Spaces")
                 }
 
-            ContactsView()
+            AddFriendFromContactsView()
                 .tabItem {
                     Image(systemName: "rectangle.3.group.fill")
                     Text("test")

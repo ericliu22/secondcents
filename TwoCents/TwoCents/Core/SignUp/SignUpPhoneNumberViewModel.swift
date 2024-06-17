@@ -19,7 +19,7 @@ final class SignUpPhoneNumberViewModel: ObservableObject{
     
   
     
-    func signUp() async throws {
+    func signUp(userPhoneNumber: String) async throws {
         guard !name.isEmpty else {
             print("Fields are empty")
             throw URLError(.badServerResponse)
@@ -28,9 +28,10 @@ final class SignUpPhoneNumberViewModel: ObservableObject{
         
         
         let uid = try await AuthenticationManager.shared.getAuthenticatedUser().uid
+        
 
         
-        let user = DBUser( uid: uid, name: name)
+        let user = DBUser( uid: uid, name: name, userPhoneNumber: userPhoneNumber)
         try await UserManager.shared.createNewUser(user: user)
       
         
