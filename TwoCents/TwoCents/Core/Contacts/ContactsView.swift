@@ -17,6 +17,7 @@ struct ContactsView: View {
             List(filteredSearch, id: \.self) { contact in
                 VStack(alignment: .leading) {
                     Text("\(contact.givenName) \(contact.familyName)")
+                    
                     Text(contact.phoneNumbers.first?.value.stringValue ?? "")
                         .foregroundColor(.gray)
                   

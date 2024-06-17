@@ -17,6 +17,14 @@ struct AddFriendFromContactsView: View {
             List(filteredSearch, id: \.self) { contact in
                 VStack(alignment: .leading) {
                     Text("\(contact.givenName) \(contact.familyName)")
+
+                    Text(viewModel.user?.id ?? "NONE")
+                        .task {
+//                            print(contact.phoneNumbers.first?.value.stringValue)
+                           await viewModel.getUserWithPhoneNumber(phoneNumber: contact.phoneNumbers.first?.value.stringValue ?? "")
+//                            await viewModel.getUserWithPhoneNumber(phoneNumber: "6505551234")
+                            
+                        }
                     Text(contact.phoneNumbers.first?.value.stringValue ?? "")
                         .foregroundColor(.gray)
                   
@@ -39,6 +47,16 @@ class AddFriendFromContactsViewModel: NSObject, ObservableObject, MFMessageCompo
     private let store = CNContactStore()
     @Published var contacts = [CNContact]()
     private var hasFetchedContacts = false
+    
+    
+    
+    func getUserWithPhoneNumber(phoneNumber: String) async {
+        
+        self.user = try? await UserManager.shared.getUserWithPhoneNumber(phoneNumber: phoneNumber)
+   
+    }
+    @Published private(set) var user:  DBUser? = nil
+    
     
     func fetchContactsIfNeeded() {
         if !hasFetchedContacts {

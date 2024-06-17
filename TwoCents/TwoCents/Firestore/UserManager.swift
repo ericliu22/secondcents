@@ -148,11 +148,13 @@ final class UserManager{
     }
     
     
-//    func getUserWithPhoneNumber(userId: String) async throws -> DBUser {
-////        try await userDocument(userId: userId).getDocument(as: DBUser.self, decoder: decoder)
-////        try await userCollection.whereFi
-//        
-//    }
+    func getUserWithPhoneNumber(phoneNumber: String) async throws -> DBUser? {
+            let querySnapshot = try await userCollection.whereField("userPhoneNumber", isEqualTo: phoneNumber).getDocuments()
+            let users = querySnapshot.documents.compactMap { document -> DBUser? in
+                try? document.data(as: DBUser.self)
+            }
+            return users.first
+        }
     
     
     func getAllUsers(userId: String) async throws -> [DBUser]{
