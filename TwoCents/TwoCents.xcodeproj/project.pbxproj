@@ -508,7 +508,6 @@
 				AB58C1E12BDAED9A000B0AC1 /* SpaceSettingsView.swift */,
 				AB58C1E52BDAF54B000B0AC1 /* SpaceSettingsViewModel.swift */,
 				ABF172A62BFC6686000B6F9B /* AddMemberView.swift */,
-				ABF172A82BFC66AD000B6F9B /* AddMemberViewModel.swift */,
 			);
 			path = Spaces;
 			sourceTree = "<group>";
@@ -673,6 +672,7 @@
 		ABF56DFB2A7C8C1200F959DB /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				ABF172A82BFC66AD000B6F9B /* AddMemberViewModel.swift */,
 				ABF56DFE2A7C8C5200F959DB /* SettingsViewModel.swift */,
 				ABCA39D92A7A0881009447C3 /* SettingsView.swift */,
 			);

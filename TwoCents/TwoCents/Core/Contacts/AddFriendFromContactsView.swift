@@ -7,9 +7,13 @@ struct AddFriendFromContactsView: View {
     
     @State private var searchTerm = ""
     
-    var filteredSearch: [CNContact]{
-        guard !searchTerm.isEmpty else { return viewModel.contacts}
-        return viewModel.contacts.filter{$0.givenName.localizedCaseInsensitiveContains(searchTerm) || $0.familyName.localizedCaseInsensitiveContains(searchTerm)}
+    var filteredSearch: [CNContact] {
+        guard !searchTerm.isEmpty else { return viewModel.contacts.filter { !$0.givenName.isEmpty && !$0.familyName.isEmpty && !$0.phoneNumbers.isEmpty } }
+        return viewModel.contacts.filter {
+            ($0.givenName.localizedCaseInsensitiveContains(searchTerm) || $0.familyName.localizedCaseInsensitiveContains(searchTerm)) &&
+            (!$0.givenName.isEmpty || !$0.familyName.isEmpty) &&
+            !$0.phoneNumbers.isEmpty
+        }
     }
     
     
@@ -26,16 +30,26 @@ struct AddFriendFromContactsView: View {
                         
                         let targetUserColor = viewModel.getUserColor(userColor: user?.userColor ?? "")
                         
-                    
-                        
+                       
                       
                             
                             HStack(spacing:20){
                                 
+                                //here
+                                
                                 Group{
-                                    //Circle or Profile Pic
-                                    if let urlString = user?.profileImageUrl,
-                                       let url = URL(string: urlString) {
+                                    if let imageData = contact.thumbnailImageData, let image = UIImage(data: imageData) {
+                                        Image(uiImage: image)
+                                            .resizable()
+                                            .scaledToFill()
+                                            .clipShape(Circle())
+                                            .frame(width: 64, height: 64)
+                                        
+                                        
+                                    } else
+                                    
+                                     if let urlString = user?.profileImageUrl,
+                                              let url = URL(string: urlString) {
                                         
                                         
                                         
@@ -112,7 +126,8 @@ struct AddFriendFromContactsView: View {
                                 if let user, let clickedState = viewModel.clickedStates[user.userId] {
                             
                                     Button {
-                                        
+                                        let generator = UIImpactFeedbackGenerator(style: .medium)
+                                        generator.impactOccurred()
                                   
 
                                         Task{
@@ -127,7 +142,7 @@ struct AddFriendFromContactsView: View {
                                        
                                             }
                                             
-                                        
+                                          
                                         }
                                         
                                     } label: {
@@ -303,8 +318,9 @@ final class AddFriendFromContactsViewModel: NSObject, ObservableObject, MFMessag
     
     func fetchContacts() {
         DispatchQueue.global(qos: .userInitiated).async {
-            let keys = [CNContactGivenNameKey, CNContactFamilyNameKey, CNContactPhoneNumbersKey] as [CNKeyDescriptor]
+            let keys = [CNContactGivenNameKey, CNContactFamilyNameKey, CNContactPhoneNumbersKey, CNContactThumbnailImageDataKey] as [CNKeyDescriptor]
             let request = CNContactFetchRequest(keysToFetch: keys)
+                    
             
             do {
                 try self.store.enumerateContacts(with: request) { contact, stop in
