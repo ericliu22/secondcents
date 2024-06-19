@@ -8,10 +8,10 @@ struct AddFriendFromContactsView: View {
     @State private var searchTerm = ""
     @Binding var activeSheet: sheetTypes?
     var filteredSearch: [CNContact] {
-        guard !searchTerm.isEmpty else { return viewModel.contacts.filter { !$0.givenName.isEmpty && !$0.familyName.isEmpty && !$0.phoneNumbers.isEmpty } }
+        guard !searchTerm.isEmpty else { return viewModel.contacts.filter { !$0.phoneNumbers.isEmpty } }
         return viewModel.contacts.filter {
             ($0.givenName.localizedCaseInsensitiveContains(searchTerm) || $0.familyName.localizedCaseInsensitiveContains(searchTerm)) &&
-            (!$0.givenName.isEmpty || !$0.familyName.isEmpty) &&
+            
             !$0.phoneNumbers.isEmpty
         }
     }
@@ -399,7 +399,7 @@ final class AddFriendFromContactsViewModel: NSObject, ObservableObject, MFMessag
     func inviteContact(_ contact: CNContact) {
         if MFMessageComposeViewController.canSendText() {
             let messageVC = MFMessageComposeViewController()
-            messageVC.body = "\(contact.givenName.uppercased()) ‼️ \n\nget this app rnrnrnrnn! \(createInviteLink())"
+            messageVC.body = "\(contact.givenName.uppercased()) ‼️ \n\nget this app rnrnrnrnn! \n\n\(createInviteLink())"
        
             
             if let phoneNumber = contact.phoneNumbers.first?.value.stringValue {
