@@ -105,6 +105,7 @@ struct RootView: View {
                     SignUpPhoneNumberView(activeSheet: $activeSheet, userPhoneNumber: $userPhoneNumber)
                 case .addFriendFromContactsView:
                     AddFriendFromContactsView(activeSheet:$activeSheet)
+                    
                 }
             }
         

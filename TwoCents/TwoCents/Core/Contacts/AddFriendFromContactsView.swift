@@ -23,15 +23,24 @@ struct AddFriendFromContactsView: View {
                 LazyVStack(alignment: .leading) {
                     ForEach(filteredSearch, id: \.self) { contact in
                         
+//                        
+//                        let phoneNumber = contact.phoneNumbers.first?.value.stringValue
+//                        
+//                        let user = viewModel.userDictionary[viewModel.getCleanPhoneNumber(phoneNumber: phoneNumber ?? "none")]
+//                        
+//                        let targetUserColor = viewModel.getUserColor(userColor: user?.userColor ?? "")
+//                        
+//                       
+                        let phoneNumbers = contact.phoneNumbers.map { $0.value.stringValue }
+                                               
+                                               let user = phoneNumbers
+                                                   .compactMap { viewModel.userDictionary[viewModel.getCleanPhoneNumber(phoneNumber: $0)] }
+                                                   .first
+                                               
+                                               let targetUserColor = viewModel.getUserColor(userColor: user?.userColor ?? "")
+                                               
                         
-                        let phoneNumber = contact.phoneNumbers.first?.value.stringValue
                         
-                        let user = viewModel.userDictionary[viewModel.getCleanPhoneNumber(phoneNumber: phoneNumber ?? "none")]
-                        
-                        let targetUserColor = viewModel.getUserColor(userColor: user?.userColor ?? "")
-                        
-                       
-                      
                             
                             HStack(spacing:20){
                                 
@@ -129,6 +138,8 @@ struct AddFriendFromContactsView: View {
                                         let generator = UIImpactFeedbackGenerator(style: .medium)
                                         generator.impactOccurred()
                                   
+                                        
+                                        print(clickedState)
 
                                         Task{
 //                                            viewModel.sendFriendRequest(friendUserId: user.userId!)
@@ -160,6 +171,11 @@ struct AddFriendFromContactsView: View {
                                     
                                     Button {
                                         
+                                        
+                                        let generator = UIImpactFeedbackGenerator(style: .medium)
+                                        generator.impactOccurred()
+                                        
+                                        
                                         Task{
                                             viewModel.inviteContact(contact)
                                         }
@@ -179,11 +195,9 @@ struct AddFriendFromContactsView: View {
                                 
                         }
                     
-                        
+                    
                         .task {
-                            if let phoneNumber = contact.phoneNumbers.first?.value.stringValue {
-                                await viewModel.getUserWithPhoneNumber(phoneNumber: phoneNumber)
-                            }
+                            await viewModel.getUserWithPhoneNumber(phoneNumbers: phoneNumbers)
                         }
                         
                         .frame(maxWidth: .infinity,  alignment: .leading)
@@ -219,14 +233,17 @@ struct AddFriendFromContactsView: View {
                 viewModel.fetchContactsIfNeeded()
             }
             .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        activeSheet  = .customizeProfileView
-                    } label: {
-                        Image(systemName: "arrow.right")
-                            .foregroundColor(Color(UIColor.label))
+                
+                if activeSheet != nil {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button {
+                            activeSheet  = .customizeProfileView
+                        } label: {
+                            Image(systemName: "arrow.right")
+                                .foregroundColor(Color(UIColor.label))
+                        }
+                        
                     }
-
                 }
             }
         }
@@ -279,6 +296,8 @@ final class AddFriendFromContactsViewModel: NSObject, ObservableObject, MFMessag
             
             try? await UserManager.shared.unsendFriendRequest(userId: authDataResultUserId, friendUserId: friendUserId)
             
+            
+            
             clickedStates[friendUserId] = false
         }
     }
@@ -286,22 +305,50 @@ final class AddFriendFromContactsViewModel: NSObject, ObservableObject, MFMessag
     
     
     
-    
-    
-    
-    func getUserWithPhoneNumber(phoneNumber: String) async {
+    func getUserWithPhoneNumber(phoneNumbers: [String]) async {
         do {
-            let cleanedPhoneNumber = getCleanPhoneNumber(phoneNumber: phoneNumber)
-            if let user = try await UserManager.shared.getUserWithPhoneNumber(phoneNumber: cleanedPhoneNumber){
-                userDictionary[cleanedPhoneNumber] = user
-                clickedStates[user.userId] = false
+            for phoneNumber in phoneNumbers {
+                let cleanedPhoneNumber = getCleanPhoneNumber(phoneNumber: phoneNumber)
+                if let user = try await UserManager.shared.getUserWithPhoneNumber(phoneNumber: cleanedPhoneNumber) {
+                    
+                    let currentUserId = try AuthenticationManager.shared.getAuthenticatedUser().uid
+                    
+                    userDictionary[cleanedPhoneNumber] = user
+                    
+                    clickedStates[user.userId] = user.incomingFriendRequests?.contains(currentUserId)
+                    
+                    // Exit the loop once a valid user is found
+                    break
+                }
             }
         } catch {
-            print("Failed to fetch user for phone number \(phoneNumber): \(error)")
+            print("Failed to fetch user for phone numbers \(phoneNumbers): \(error)")
         }
     }
     
     
+    
+    
+//    
+//    
+//    func getUserWithPhoneNumber(phoneNumber: String) async {
+//        do {
+//            let cleanedPhoneNumber = getCleanPhoneNumber(phoneNumber: phoneNumber)
+//            if let user = try await UserManager.shared.getUserWithPhoneNumber(phoneNumber: cleanedPhoneNumber){
+//                
+//                let currentUserId = try AuthenticationManager.shared.getAuthenticatedUser().uid
+//                
+//                
+//                userDictionary[cleanedPhoneNumber] = user
+//                
+//                clickedStates[user.userId] = user.incomingFriendRequests?.contains(currentUserId)
+//            }
+//        } catch {
+//            print("Failed to fetch user for phone number \(phoneNumber): \(error)")
+//        }
+//    }
+//    
+//    
     
     
     
