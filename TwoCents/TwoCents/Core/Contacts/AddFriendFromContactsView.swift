@@ -107,10 +107,19 @@ struct AddFriendFromContactsView: View {
                                 
                                 VStack(alignment: .leading) {
                                 
-                                
-                                Text("\(contact.givenName) \(contact.familyName)")
-                                        .font(.headline)
-                                
+                                    if let fullName = contact.givenName.flatMap({ givenName in
+                                        contact.familyName.map({ familyName in
+                                            "\(givenName) \(familyName)"
+                                        })
+                                    }) {
+                                        Text(fullName)
+                                            .font(.headline)
+                                    } else {
+                                        Text("Nameless Contact")
+                                            .font(.headline)
+                                    }
+
+                                    
                                 if let user {
                                     Text("@\(user.name!)")
                                         .foregroundColor(.gray)
