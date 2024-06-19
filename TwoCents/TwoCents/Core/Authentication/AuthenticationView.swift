@@ -67,7 +67,7 @@ struct AuthenticationView: View {
                 SignInPhoneNumberView(activeSheet: $activeSheet, userPhoneNumber: $userPhoneNumber )
                 
             } label: {
-                Text("Sign In With Phone Number")
+                Text("Continue With Phone Number")
                     .font(.headline)
                     .foregroundColor(Color(UIColor.systemBackground))
                     .frame(height: 55)
@@ -84,7 +84,7 @@ struct AuthenticationView: View {
                 
                 SignInEmailView(activeSheet: $activeSheet )
             } label: {
-                Text("Sign In With Email")
+                Text("Continue With Email")
                     .font(.headline)
                     .foregroundColor(Color(UIColor.label))
                     .frame(height: 55)
@@ -97,23 +97,23 @@ struct AuthenticationView: View {
                     .cornerRadius(10)
             }
             
-            
-            NavigationLink{
-             
-
-//                SignUpEmailView(showSignInView: $showSignInView, showCreateProfileView: $showCreateProfileView)
-//                SignUpEmailView(activeSheet: $activeSheet )
-                SignInPhoneNumberView(activeSheet: $activeSheet, userPhoneNumber: $userPhoneNumber )
-
-            } label: {
-                Text("New? Ugh. Create a new account")
-                    .font(.footnote)
-                    .foregroundColor(Color(UIColor.secondaryLabel))
-                    .frame(height: 30)
-                    .frame(maxWidth: .infinity)
-
-            }
-            
+//            
+//            NavigationLink{
+//             
+//
+////                SignUpEmailView(showSignInView: $showSignInView, showCreateProfileView: $showCreateProfileView)
+////                SignUpEmailView(activeSheet: $activeSheet )
+//                SignInPhoneNumberView(activeSheet: $activeSheet, userPhoneNumber: $userPhoneNumber )
+//
+//            } label: {
+//                Text("New? Ugh. Create a new account")
+//                    .font(.footnote)
+//                    .foregroundColor(Color(UIColor.secondaryLabel))
+//                    .frame(height: 30)
+//                    .frame(maxWidth: .infinity)
+//
+//            }
+//            
             
 
         }

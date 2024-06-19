@@ -98,6 +98,7 @@ struct RootView: View {
                     AuthenticationView(activeSheet: $activeSheet, userPhoneNumber: $userPhoneNumber)
                 case .customizeProfileView:
                     CustomizeProfileView(activeSheet: $activeSheet, selectedColor: $loadedColor)
+                        
                     
                 case .verifyCodeView:
                     VerifyCodeView(activeSheet: $activeSheet)
@@ -188,6 +189,8 @@ struct RootView: View {
                         userColor = myColor
                         print("USERCOLOR: \(userColor)")
                         loadedColor = viewModel.getUserColor(userColor: userColor)
+                    } else {
+                        print("gray")
                     }
                     
                 }

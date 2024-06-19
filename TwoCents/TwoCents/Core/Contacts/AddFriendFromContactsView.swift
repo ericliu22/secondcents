@@ -392,13 +392,15 @@ final class AddFriendFromContactsViewModel: NSObject, ObservableObject, MFMessag
     }
     
     func createInviteLink() -> String {
-        return "https://apps.apple.com/app/6499299457"
+//        return "https://apps.apple.com/app/6499299457"
+        return "https://testflight.apple.com/join/peEvYD11"
     }
     
     func inviteContact(_ contact: CNContact) {
         if MFMessageComposeViewController.canSendText() {
             let messageVC = MFMessageComposeViewController()
-            messageVC.body = "Hey, check out this app: \(createInviteLink())"
+            messageVC.body = "\(contact.givenName.uppercased()) ‼️ \n\nget this app rnrnrnrnn! \(createInviteLink())"
+       
             
             if let phoneNumber = contact.phoneNumbers.first?.value.stringValue {
                 messageVC.recipients = [phoneNumber]
@@ -408,6 +410,7 @@ final class AddFriendFromContactsViewModel: NSObject, ObservableObject, MFMessag
             UIApplication.shared.windows.first?.rootViewController?.present(messageVC, animated: true, completion: nil)
         } else {
             print("SMS services are not available")
+    
         }
     }
     

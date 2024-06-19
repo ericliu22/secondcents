@@ -100,7 +100,7 @@ struct SignUpEmailView: View {
             }
             
             .buttonStyle(.borderedProminent)
-            .tint(Color("TwoCentsGreen"))
+            .tint(Color(UIColor.label))
             .frame(height: 55)
             .cornerRadius(10)
             
@@ -112,7 +112,7 @@ struct SignUpEmailView: View {
         
         
         .navigationTitle("Welcome, I guess?")
-        .tint(Color("TwoCentsGreen"))
+        .tint(Color(UIColor.label))
         
         .navigationBarTitleDisplayMode(.inline)
         //make back button black... (Gotta have the enviorment line on top)

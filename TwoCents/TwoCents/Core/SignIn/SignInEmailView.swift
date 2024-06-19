@@ -74,7 +74,7 @@ struct SignInEmailView: View {
                    
             }
             .buttonStyle(.borderedProminent)
-            .tint(Color("TwoCentsGreen"))
+            .tint(Color(UIColor.label))
             .frame(height: 55)
             .cornerRadius(10)
 
@@ -90,7 +90,7 @@ struct SignInEmailView: View {
         }
         .padding()
         .navigationTitle("Sign In With Email")
-        .tint(Color("TwoCentsGreen"))
+        .tint(Color(UIColor.label))
         .navigationBarTitleDisplayMode(.inline)
         //make back button black... (Gotta have the enviorment line on top)
         .navigationBarBackButtonHidden(true)

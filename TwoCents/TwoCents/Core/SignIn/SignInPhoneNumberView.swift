@@ -46,8 +46,8 @@ struct SignInPhoneNumberView: View {
                     viewModel.formatPhoneNumber()
                 })
                 .keyboardType(.phonePad)
-            
-//            
+                .textContentType(.telephoneNumber)
+//
 //            //Password Textfield
 //            SecureField("Password", text: $viewModel.password)
 //                .disableAutocorrection(true)
@@ -104,7 +104,7 @@ struct SignInPhoneNumberView: View {
                    
             }
             .buttonStyle(.borderedProminent)
-            .tint(Color("TwoCentsGreen"))
+            .tint(Color(UIColor.label))
             .frame(height: 55)
             .cornerRadius(10)
             .padding(.top)
@@ -120,8 +120,8 @@ struct SignInPhoneNumberView: View {
             
         }
         .padding()
-        .navigationTitle("Portal to the beyond")
-        .tint(Color("TwoCentsGreen"))
+        .navigationTitle("Portal to the Beyond")
+        .tint(Color(UIColor.label))
         .navigationBarTitleDisplayMode(.inline)
         //make back button black... (Gotta have the enviorment line on top)
         .navigationBarBackButtonHidden(true)

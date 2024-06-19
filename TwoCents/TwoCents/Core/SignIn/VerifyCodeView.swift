@@ -72,7 +72,7 @@ struct VerifyCodeView: View {
                    
             }
             .buttonStyle(.borderedProminent)
-            .tint(Color("TwoCentsGreen"))
+            .tint(Color(UIColor.label))
             .frame(height: 55)
             .cornerRadius(10)
             .padding(.top)
@@ -86,8 +86,8 @@ struct VerifyCodeView: View {
             
         }
         .padding()
-        .navigationTitle("Into the abyss...")
-        .tint(Color("TwoCentsGreen"))
+        .navigationTitle("into the abyss...")
+        .tint(Color(UIColor.label))
         .navigationBarTitleDisplayMode(.inline)
         //make back button black... (Gotta have the enviorment line on top)
         .navigationBarBackButtonHidden(true)
