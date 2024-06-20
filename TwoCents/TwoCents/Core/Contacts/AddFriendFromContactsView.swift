@@ -10,7 +10,7 @@ struct AddFriendFromContactsView: View {
     var filteredSearch: [CNContact] {
         guard !searchTerm.isEmpty else { return viewModel.contacts.filter { !$0.phoneNumbers.isEmpty } }
         return viewModel.contacts.filter {
-            ($0.givenName.localizedCaseInsensitiveContains(searchTerm) || $0.familyName.localizedCaseInsensitiveContains(searchTerm)) &&
+            ($0.givenName.localizedCaseInsensitiveContains(searchTerm) || $0.familyName.localizedCaseInsensitiveContains(searchTerm) || $0.phoneNumbers.contains(where: { $0.value.stringValue.contains(searchTerm) })) &&
             
             !$0.phoneNumbers.isEmpty
         }
@@ -106,10 +106,14 @@ struct AddFriendFromContactsView: View {
                                 
                                 
                                 VStack(alignment: .leading) {
-                                
-                            
-                                Text("\(contact.givenName) \(contact.familyName)")
-                                        .font(.headline)
+                                    
+                                    if (contact.givenName.isEmpty && contact.familyName.isEmpty) {
+                                        Text("Nameless Contact")
+                                            .font(.headline)
+                                    } else {
+                                        Text("\(contact.givenName) \(contact.familyName)")
+                                            .font(.headline)
+                                    }
                                 
                                 if let user {
                                     Text("@\(user.name!)")
