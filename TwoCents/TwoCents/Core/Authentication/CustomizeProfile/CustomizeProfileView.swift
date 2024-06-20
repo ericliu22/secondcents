@@ -187,7 +187,7 @@ struct CustomizeProfileView: View {
             .padding(.horizontal)
             
             
-            
+            .disabled(selectedColor == .gray)
             
             
             

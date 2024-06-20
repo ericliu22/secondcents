@@ -8,7 +8,11 @@ struct AddFriendFromContactsView: View {
     @State private var searchTerm = ""
     @Binding var activeSheet: sheetTypes?
     var filteredSearch: [CNContact] {
-        guard !searchTerm.isEmpty else { return viewModel.contacts.filter { !$0.phoneNumbers.isEmpty } }
+        guard !searchTerm.isEmpty else { 
+            return viewModel.contacts
+            .filter { !$0.phoneNumbers.isEmpty } }
+            
+           
         return viewModel.contacts.filter {
             ($0.givenName.localizedCaseInsensitiveContains(searchTerm) || $0.familyName.localizedCaseInsensitiveContains(searchTerm) || $0.phoneNumbers.contains(where: { $0.value.stringValue.contains(searchTerm) })) &&
             
@@ -32,16 +36,16 @@ struct AddFriendFromContactsView: View {
 //                        
 //                       
                         let phoneNumbers = contact.phoneNumbers.map { $0.value.stringValue }
-                                               
-                                               let user = phoneNumbers
-                                                   .compactMap { viewModel.userDictionary[viewModel.getCleanPhoneNumber(phoneNumber: $0)] }
-                                                   .first
-                                               
-                                               let targetUserColor = viewModel.getUserColor(userColor: user?.userColor ?? "")
-                                               
+                        
+                        let user = phoneNumbers
+                            .compactMap { viewModel.userDictionary[viewModel.getCleanPhoneNumber(phoneNumber: $0)] }
+                            .first
+                        
+                        let targetUserColor = viewModel.getUserColor(userColor: user?.userColor ?? "")
+                          
                         
                         
-                            
+                        
                             HStack(spacing:20){
                                 
                                 //here
@@ -116,6 +120,7 @@ struct AddFriendFromContactsView: View {
                                     }
                                 
                                 if let user {
+                                    
                                     Text("@\(user.name!)")
                                         .foregroundColor(.gray)
                                         .font(.caption)
@@ -218,7 +223,7 @@ struct AddFriendFromContactsView: View {
                         
           
                         
-                        
+                        .animation(.easeIn, value: targetUserColor != .gray)
                         
                         
                         
@@ -228,6 +233,7 @@ struct AddFriendFromContactsView: View {
                         
                         
                     }
+                    
                 }
                 .padding(.horizontal)
             }
