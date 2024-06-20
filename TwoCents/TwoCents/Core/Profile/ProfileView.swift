@@ -362,10 +362,45 @@ struct ProfileView: View {
                     
                     
                     
-                    RoundedRectangle(cornerRadius: 20)
-                        .fill(.thinMaterial)
-                        .aspectRatio(1, contentMode: .fit)
                     
+                    VStack {
+                        if let user = viewModel.user, let dateCreated = user.dateCreated {
+                            // Calculate user's age in days
+                            let calendar = Calendar.current
+                            let currentDate = Date()
+
+                            if let userAge = calendar.dateComponents([.day], from: dateCreated, to: currentDate).day {
+                                Text("\(userAge) days")
+                                    .font(.title)
+                                    .fontWeight(.bold)
+                                    .foregroundStyle(.secondary)
+
+                                Text("of adventure")
+                                    .font(.headline)
+                                    .fontWeight(.regular)
+                                    .foregroundStyle(.tertiary)
+                                    .multilineTextAlignment(.center)
+                                  
+                            }
+                        }
+                    }
+
+
+           
+                
+                
+                .frame(maxWidth:.infinity, maxHeight: .infinity)
+                .aspectRatio(1, contentMode: .fit)
+                .background(.thickMaterial)
+             
+                
+                .cornerRadius(20)
+                
+//                
+//                    RoundedRectangle(cornerRadius: 20)
+//                        .fill(.thinMaterial)
+//                        .aspectRatio(1, contentMode: .fit)
+//                    
                     
                     RoundedRectangle(cornerRadius: 20)
                         .fill(.thinMaterial)

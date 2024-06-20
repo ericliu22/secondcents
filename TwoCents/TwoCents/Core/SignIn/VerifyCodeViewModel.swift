@@ -12,6 +12,8 @@ import Foundation
 final class VerifyCodeViewModel: ObservableObject{
    
     @Published var verificationCode = ""
+    
+    @Published var verificationCodeArray: [String] = ["", "", "", "", "", ""]
 //    @Published var password = ""
     
   

@@ -20,6 +20,8 @@ struct VerifyCodeView: View {
         
         VStack {
      
+            
+            
             TextField("Verification Code", text: $viewModel.verificationCode)
                 .disableAutocorrection(true)
                 .textInputAutocapitalization(.never)
