@@ -8,16 +8,21 @@ struct AddFriendFromContactsView: View {
     @State private var searchTerm = ""
     @Binding var activeSheet: sheetTypes?
     var filteredSearch: [CNContact] {
-        guard !searchTerm.isEmpty else { 
+        guard !searchTerm.isEmpty else {
             return viewModel.contacts
-            .filter { !$0.phoneNumbers.isEmpty } }
+                .filter { !$0.phoneNumbers.isEmpty }
+                .sorted { $0.givenName < $1.givenName }
+        }
+        
             
            
         return viewModel.contacts.filter {
             ($0.givenName.localizedCaseInsensitiveContains(searchTerm) || $0.familyName.localizedCaseInsensitiveContains(searchTerm) || $0.phoneNumbers.contains(where: { $0.value.stringValue.contains(searchTerm) })) &&
             
             !$0.phoneNumbers.isEmpty
+            
         }
+        .sorted { $0.givenName < $1.givenName }
     }
     
     
