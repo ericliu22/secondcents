@@ -22,9 +22,23 @@ func mapWidget(widget: CanvasWidget) -> AnyView {
     return AnyView(
         
         DisplayLocationWidgetView(latitude: latitude, longitude: longitude)
+         
+        
            
           
        
     )//AnyView
     
+}
+
+func openMapsApp(lat: String, long: String) {
+    
+    let url = URL(string: "http://maps.apple.com/?ll=\(lat),\(long)")!
+    
+    if UIApplication.shared.canOpenURL(url) {
+        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+    } else {
+        // Handle error if the Maps app cannot be opened
+        print("Cannot open Maps app")
+    }
 }

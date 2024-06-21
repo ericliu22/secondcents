@@ -32,14 +32,14 @@ struct FrontPageView: View {
 //                    Image(systemName: "rectangle.3.group.fill")
 //                    Text("test2")
 //                }
-//            
-//            DisplayLocationWidgetView(latitude: "40.7791151", longitude: "-73.9626129")
-//                .frame(width: 150, height: 150)
-//                .clipShape(RoundedRectangle(cornerRadius: 20))
-//                .tabItem {
-//                    Image(systemName: "rectangle.3.group.fill")
-//                    Text("test2")
-//                }
+            
+            DisplayLocationWidgetView(latitude: "40.7791151", longitude: "-73.9626129")
+                .frame(width: 150, height: 150)
+                .clipShape(RoundedRectangle(cornerRadius: 20))
+                .tabItem {
+                    Image(systemName: "rectangle.3.group.fill")
+                    Text("test2")
+                }
             
             
 //            VoteGameView()
