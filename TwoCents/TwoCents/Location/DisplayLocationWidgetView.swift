@@ -11,7 +11,7 @@ import MapKit
 struct DisplayLocationWidgetView: UIViewRepresentable {
     var latitude: String
     var longitude: String
-    var radius: CLLocationDistance = 30
+    var radius: CLLocationDistance = 500
 
     func makeUIView(context: Context) -> MKMapView {
         let mapView = MKMapView()

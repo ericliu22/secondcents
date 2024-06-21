@@ -39,7 +39,7 @@ struct FrontPageView: View {
                     Text("test2")
                 }
             
-            DisplayLocationWidgetView(latitude: "37.7749", longitude: "-122.4194")
+            DisplayLocationWidgetView(latitude: "40.7791151", longitude: "-73.9626129")
                 .frame(width: 150, height: 150)
                 .clipShape(RoundedRectangle(cornerRadius: 20))
                 .tabItem {
