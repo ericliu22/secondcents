@@ -33,6 +33,12 @@ struct FrontPageView: View {
                     Text("test")
                 }
             
+            LocationWidgetView()
+                .tabItem {
+                    Image(systemName: "rectangle.3.group.fill")
+                    Text("test2")
+                }
+            
 //            VoteGameView()
 //                .tabItem {
 //                    Image(systemName: "house")

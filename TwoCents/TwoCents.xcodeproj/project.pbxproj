@@ -80,6 +80,8 @@
 		AB7365BB2A85060F00799D31 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = AB7365BA2A85060F00799D31 /* GoogleService-Info.plist */; };
 		AB7438412AAA349C001B4988 /* SearchUserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB7438402AAA349C001B4988 /* SearchUserView.swift */; };
 		AB7438432AAA34AD001B4988 /* SearchUserViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB7438422AAA34AD001B4988 /* SearchUserViewModel.swift */; };
+		AB77664A2C25266300F95E65 /* LocationWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB7766492C25266300F95E65 /* LocationWidgetView.swift */; };
+		AB77664C2C2526BE00F95E65 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB77664B2C2526BE00F95E65 /* LocationManager.swift */; };
 		AB7F3AEE2C164CF000690EF1 /* NewTextWidgetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB7F3AED2C164CF000690EF1 /* NewTextWidgetViewModel.swift */; };
 		AB842C0B2A91E27E00E4A7CE /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = AB842C0A2A91E27E00E4A7CE /* FirebaseStorage */; };
 		AB842C0E2A91E2B500E4A7CE /* StorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB842C0D2A91E2B500E4A7CE /* StorageManager.swift */; };
@@ -223,6 +225,8 @@
 		AB7365BA2A85060F00799D31 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		AB7438402AAA349C001B4988 /* SearchUserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchUserView.swift; sourceTree = "<group>"; };
 		AB7438422AAA34AD001B4988 /* SearchUserViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchUserViewModel.swift; sourceTree = "<group>"; };
+		AB7766492C25266300F95E65 /* LocationWidgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationWidgetView.swift; sourceTree = "<group>"; };
+		AB77664B2C2526BE00F95E65 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		AB7F3AED2C164CF000690EF1 /* NewTextWidgetViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewTextWidgetViewModel.swift; sourceTree = "<group>"; };
 		AB842C0D2A91E2B500E4A7CE /* StorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageManager.swift; sourceTree = "<group>"; };
 		AB842C0F2A91E52000E4A7CE /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
@@ -482,6 +486,8 @@
 				AB90EDBC2B55BB59002AD855 /* NewWidgetViewModel.swift */,
 				8507204A2B54692F0057B8BC /* widgetPopup.swift */,
 				A246A42D2B43A1B700F0F6E6 /* NewWidgetView.swift */,
+				AB7766492C25266300F95E65 /* LocationWidgetView.swift */,
+				AB77664B2C2526BE00F95E65 /* LocationManager.swift */,
 			);
 			path = Canvas;
 			sourceTree = "<group>";
@@ -868,6 +874,7 @@
 				AB842C122A91F36300E4A7CE /* CustomizeProfileView.swift in Sources */,
 				856E80BB2B50EB260078A2CE /* SabotageGameView.swift in Sources */,
 				85741EA82AD03A0C0085423E /* CarouselPractice.swift in Sources */,
+				AB77664C2C2526BE00F95E65 /* LocationManager.swift in Sources */,
 				AB2E56D32AE9C6F00096A58C /* VoteGameViewModel.swift in Sources */,
 				A2DDB1BB2BB693FD00243E1B /* NewPollViewModel.swift in Sources */,
 				AB9C7F682BD83B1E004FC549 /* EmojiCountView.swift in Sources */,
@@ -886,6 +893,7 @@
 				ABF556862A950BCB00103880 /* RootViewModel.swift in Sources */,
 				856E80B12B50E9D00078A2CE /* PencilKitPractice.swift in Sources */,
 				8507204B2B54692F0057B8BC /* widgetPopup.swift in Sources */,
+				AB77664A2C25266300F95E65 /* LocationWidgetView.swift in Sources */,
 				ABF556842A95046D00103880 /* ColorPickerWidgetViewModel.swift in Sources */,
 				85741EAF2AD03D370085423E /* PostModel.swift in Sources */,
 				AB69F0432C1D2C1D00B81E79 /* VerifyCodeViewModel.swift in Sources */,

@@ -47,5 +47,9 @@
 	<string>Allow TwoCents to access the Camera</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Allow TwoCents to access the Microphone</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>We need your location to show it on the map.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>We need your location to show it on the map.</string>
 </dict>
 </plist>
