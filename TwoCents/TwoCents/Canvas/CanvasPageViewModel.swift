@@ -32,6 +32,27 @@ final class CanvasPageViewModel: ObservableObject {
     
     
     
+    func openMapsApp(location: String) {
+        
+        
+        let locationAray = location.split(separator: ", ")
+        let latitude = String(locationAray[0])
+        let longitude = String(locationAray[1])
+            
+                print(location)
+               
+               
+        let url = URL(string: "http://maps.apple.com/?ll=\(latitude),\(longitude)")!
+        
+        if UIApplication.shared.canOpenURL(url) {
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        } else {
+            // Handle error if the Maps app cannot be opened
+            print("Cannot open Maps app")
+        }
+    }
+
+    
     func getUserColor(userColor: String) -> Color{
 
         switch userColor {

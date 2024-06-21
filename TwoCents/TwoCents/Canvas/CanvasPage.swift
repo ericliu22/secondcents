@@ -548,40 +548,44 @@ struct CanvasPage: View {
                                  
                                  
                                  
-                 //                    .overlay(
-                 //
-                 //                        widget.media == .poll && activeSheet == .chat
-                 //
-                 //                        ? Button(action: {
-                 ////                            activeSheet = nil
-                 //                            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                 //
-                 //                                activePollWidget = widget
-                 //                            }
-                 //                            activeSheet = .poll
-                 //
-                 //
-                 //
-                 //
-                 //                        }, label: {
-                 ////                            Color.yellow
-                 //                            RoundedRectangle(cornerRadius: CORNER_RADIUS)
-                 //                                .foregroundStyle(.clear)
-                 //
-                 //
-                 //                        })
-                 //                        : nil
-                 //
+                                 //map button
+                                 if selectedWidget!.media == .map {
+                                     
+                                     Button(action: {
+                                         
+                                         
+                                         
+                                         
+                                         if let location = selectedWidget?.location {
+                                             
+                                             viewModel.openMapsApp(location: location)
+                                         }
+                                         
+                                         
+                                         selectedWidget = nil
+                                         widgetDoubleTapped = false
+                                      
+                                     }, label: {
+                                         Image(systemName: "mappin.and.ellipse")
+                                             .foregroundColor(Color(UIColor.label))
+                                             .font(.title3)
+                                             .padding(.vertical, 8)
+                                          
+                                     })
+                                     .background(Color.clear, in: Rectangle())
+                                 }
                                  
+                                 
+                                 
+                                 
+                                 
+                                 
+                                 //poll button
                                  if selectedWidget!.media == .poll {
                                      
                                      Button(action: {
                                          
                                          activePollWidget = selectedWidget
-                                         
-                                         
-                                         
-                                         
                                          
                                          selectedWidget = nil
                                          widgetDoubleTapped = false
