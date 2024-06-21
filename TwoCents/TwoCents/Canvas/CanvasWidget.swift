@@ -185,10 +185,10 @@ func MediaView(widget: CanvasWidget, spaceId: String, newWidget: Bool = false) -
         case .image:
             ImageWidget(widget: widget)
         case .poll:
-            return pollWidget(widget: widget, spaceId: spaceId)
-    case .map:
-        return mapWidget(widget: widget)
-        
+            pollWidget(widget: widget, spaceId: spaceId)
+        case .map:
+            mapWidget(widget: widget)
+            
         default:
             ImageWidget(widget: widget)
         }
