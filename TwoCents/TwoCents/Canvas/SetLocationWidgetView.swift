@@ -1,7 +1,7 @@
 import SwiftUI
 import MapKit
 
-struct LocationWidgetView: View {
+struct SetLocationWidgetView: View {
     @StateObject private var locationManager = LocationManager()
     @State private var region = MKCoordinateRegion(
         center: CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194),
@@ -18,7 +18,22 @@ struct LocationWidgetView: View {
             } else {
                 Text("Locating your position...")
             }
+            
+            Button(action: {
+                if let location = locationManager.location {
+                    print("Current location: \(location.coordinate.latitude), \(location.coordinate.longitude)")
+                } else {
+                    print("Location not available")
+                }
+            }) {
+                Text("Get Current Location")
+                    .padding()
+                    .background(Color.blue)
+                    .foregroundColor(.white)
+                    .cornerRadius(10)
+            }
         }
+        .padding()
     }
     
     private func setRegion(_ coordinate: CLLocationCoordinate2D) {
@@ -29,7 +44,7 @@ struct LocationWidgetView: View {
     }
 }
 
-struct LocationWidgetView_Previews: PreviewProvider {
+struct SetLocationWidgetView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
     }
