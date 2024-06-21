@@ -165,6 +165,24 @@ struct NewWidgetView: View {
     
     
     
+    func imageButton(index: Int) {
+        //@TODO: look into just making it index instead of hardcoding each index
+        viewModel.saveWidget(index: index)
+        
+        if !viewModel.loading {
+            photoLinkedToProfile = true
+        }
+        dismissScreen()
+    }
+    
+    func videoButton(index: Int) {
+        viewModel.saveWidget(index: index)
+        if !viewModel.loading {
+            photoLinkedToProfile = true
+        }
+        dismissScreen()
+    }
+    
     
     var body: some View {
         
@@ -248,15 +266,9 @@ struct NewWidgetView: View {
                                     switch index {
                                     case 0:
                                         Button {
-                                            //@TODO: look into just making it index instead of hardcoding each index
-                                            viewModel.saveWidget(index: index)
-                                            
-                                            if !viewModel.loading {
-                                                photoLinkedToProfile = true
-                                            }
-                                            
-                                            dismissScreen()
-                                        } label: {
+                                            imageButton(index: index)
+                                        }
+                                        label: {
                                             Text("Add Widget")
                                                 .padding(.vertical, 10)
                                                 .frame(maxWidth: .infinity)
@@ -266,17 +278,10 @@ struct NewWidgetView: View {
                                         .padding(.horizontal)
                                         .disabled(viewModel.loading || (selectedPhoto == nil))
                                     case 1:
-                                        
-                                        
                                         Button {
-                                            viewModel.saveWidget(index: index)
-                                            
-                                            if !viewModel.loading {
-                                                photoLinkedToProfile = true
-                                            }
-                                            
-                                            dismissScreen()
-                                        } label: {
+                                            videoButton(index: index)
+                                        }
+                                        label: {
                                             Text("Add Widget")
                                                 .padding(.vertical, 10)
                                                 .frame(maxWidth: .infinity)
@@ -286,8 +291,6 @@ struct NewWidgetView: View {
                                         .padding(.horizontal)
                                         .disabled(viewModel.loading || (selectedVideo == nil))
                                     case 2:
-                                        
-                                        
                                             Button {
                                                 viewModel.saveWidget(index: index)
                                                 

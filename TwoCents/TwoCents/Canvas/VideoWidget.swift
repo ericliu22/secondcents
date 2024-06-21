@@ -9,10 +9,29 @@ import Foundation
 import SwiftUI
 import AVKit
 
-struct VideoWidget: WidgetView{
+class VideoPlayerModel: ObservableObject {
+    var videoPlayer: AVQueuePlayer
+    var playerLooper: AVPlayerLooper
+    private var playerItem: AVPlayerItem
     
-    private var videoPlayer: AVQueuePlayer
-    private var playerLooper: AVPlayerLooper
+    init(url: URL) {
+        let asset = AVAsset(url: url)
+        self.playerItem = AVPlayerItem(asset: asset)
+        self.videoPlayer = AVQueuePlayer(playerItem: playerItem)
+        self.playerLooper = AVPlayerLooper(player: videoPlayer, templateItem: playerItem)
+        self.videoPlayer.play()
+        self.videoPlayer.isMuted = true
+    }
+    
+    deinit {
+        self.videoPlayer.pause()
+    }
+}
+
+
+struct VideoWidget: WidgetView{
+    @ObservedObject private var playerModel: VideoPlayerModel
+
     var widget: CanvasWidget;
     private var width: CGFloat;
     private var height: CGFloat;
@@ -20,33 +39,29 @@ struct VideoWidget: WidgetView{
     
     var body: some View {
         if newWidget {
-            VideoPlayer(player: videoPlayer)
+            VideoPlayer(player: playerModel.videoPlayer)
                 .ignoresSafeArea()
                 .frame(width: width, height: height, alignment: .center)
                 .clipShape(RoundedRectangle(cornerRadius: CORNER_RADIUS))
                 .draggable(widget)
         } else {
-            VideoPlayer(player: videoPlayer)
+            VideoPlayer(player: playerModel.videoPlayer)
                 .ignoresSafeArea()
                 .frame(width: width, height: height, alignment: .center)
                 .clipShape(RoundedRectangle(cornerRadius: CORNER_RADIUS))
                 .draggable(widget)
                 .gesture(TapGesture().onEnded({
-                    videoPlayer.isMuted.toggle()
+                    playerModel.videoPlayer.isMuted.toggle()
                 }))
         }
     }
     
     
     init(widget: CanvasWidget, newWidget: Bool) {
+        print("INITIALIZED A THING")
         self.widget = widget
         self.newWidget = newWidget
-        let asset: AVAsset = AVAsset(url: widget.mediaURL!)
-        let playerItem = AVPlayerItem(asset: asset)
-        self.videoPlayer = AVQueuePlayer(playerItem: playerItem)
-        self.playerLooper = AVPlayerLooper(player: videoPlayer, templateItem: playerItem)
-        self.videoPlayer.play()
-        self.videoPlayer.isMuted = true
+        self.playerModel = VideoPlayerModel(url: widget.mediaURL!)
         self.width = widget.width
         self.height = widget.height
     }
