@@ -105,6 +105,8 @@ extension Media: Codable {
         }
     }
     
+
+    
 }
 
 extension CanvasWidget {
@@ -165,32 +167,56 @@ extension UTType {
     static let canvasWidget = UTType(exportedAs: "com.twocentsapp.secondcents")
 }
 
-func getMediaView(widget: CanvasWidget, spaceId: String, newWidget: Bool = false) -> AnyView {
+protocol WidgetView: View {
+    var widget: CanvasWidget { get }
+}
+
+//There are two implementations and for this one func is faster than struct
+@ViewBuilder
+func MediaView(widget: CanvasWidget, spaceId: String, newWidget: Bool = false) -> some View{
     
-    
-    @State var user: DBUser?
-    
-    
-    
-    switch (widget.media) {
+        switch (widget.media) {
         case .text:
-            return AnyView(TextWidgetView(widget: widget))
+            TextWidget(widget: widget)
         case .video:
-            return videoWidget(widget: widget, newWidget: newWidget)
+            VideoWidget(widget: widget, newWidget: newWidget)
         case .image:
-            return imageWidget(widget: widget)
-//        case .chat:
-//            return chatWidget(widget: widget)
+            ImageWidget(widget: widget)
         case .poll:
-            return pollWidget(widget: widget, spaceId: spaceId)
-        
+            PollWidget(widget: widget, spaceId: spaceId)
         default:
-            return imageWidget(widget: widget)
-    }
-    
-     
-        
-    
-    
+            ImageWidget(widget: widget)
+        }
     
 }
+
+/*
+ 
+ DO NOT DELETE THIS COMMENT
+struct MediaView<WidgetView>: View where WidgetView: View {
+    let widget: CanvasWidget
+    let spaceId: String
+    let newWidget: Bool
+    
+    init(widget: CanvasWidget, spaceId: String, newWidget: Bool = false) {
+        self.widget = widget
+        self.spaceId = spaceId
+        self.newWidget = newWidget
+    }
+    
+    var body: some View {
+        switch (widget.media) {
+        case .text:
+            TextWidget(widget: widget)
+        case .video:
+            VideoWidget(widget: widget, newWidget: newWidget)
+        case .image:
+            ImageWidget(widget: widget)
+        case .poll:
+            PollWidget(widget: widget, spaceId: spaceId)
+        default:
+            ImageWidget(widget: widget)
+        }
+    }
+}
+*/

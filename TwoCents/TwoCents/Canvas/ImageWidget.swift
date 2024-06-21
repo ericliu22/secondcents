@@ -8,15 +8,16 @@
 import Foundation
 import SwiftUI
 
-func imageWidget(widget: CanvasWidget) -> AnyView {
-
-//    print(isPresented)
-    assert(widget.media == .image)
+struct ImageWidget: WidgetView {
     
-
+    let widget: CanvasWidget
     
-    return AnyView(
-        
+    init(widget: CanvasWidget) {
+        assert(widget.media == .image)
+        self.widget = widget
+    }
+    
+    var body: some View {
         AsyncImage(url: widget.mediaURL) {image in
             image
                 .resizable()
@@ -35,8 +36,5 @@ func imageWidget(widget: CanvasWidget) -> AnyView {
                 .frame(width: widget.width, height: widget.height)
                 .background(.thickMaterial)
         }//AsyncImage
-          
-       
-    )//AnyView
-    
+    }
 }

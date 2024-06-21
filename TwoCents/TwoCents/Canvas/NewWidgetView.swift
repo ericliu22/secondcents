@@ -56,7 +56,7 @@ struct NewWidgetView: View {
             //main widget/photopicker
             PhotosPicker(selection: $selectedVideo, matching: .videos, photoLibrary: .shared()){
                 
-                getMediaView(widget: viewModel.widgets[index], spaceId: spaceId, newWidget: true)
+                MediaView(widget: viewModel.widgets[index], spaceId: spaceId, newWidget: true)
                     .aspectRatio(1, contentMode: .fit)
 //                    .shadow(radius: 20, y: 10)
                     .cornerRadius(30)
@@ -83,7 +83,7 @@ struct NewWidgetView: View {
         ZStack{
             PhotosPicker(selection: $selectedPhoto, matching: .images, photoLibrary: .shared()){
                 
-                getMediaView(widget: viewModel.widgets[index], spaceId: spaceId)
+                MediaView(widget: viewModel.widgets[index], spaceId: spaceId)
                     .aspectRatio(1, contentMode: .fit)
 //                    .shadow(radius: 20, y: 10)
                     .cornerRadius(30)
@@ -186,7 +186,7 @@ struct NewWidgetView: View {
                                                 ZStack{
                                                     
                                                     //default widgets
-                                                    getMediaView(widget: viewModel.widgets[index], spaceId: spaceId)
+                                                    MediaView(widget: viewModel.widgets[index], spaceId: spaceId)
                                                         .aspectRatio(1, contentMode: .fit)
 //                                                        .shadow(radius: 20, y: 10)
                                                         .cornerRadius(30)

@@ -22,6 +22,8 @@ app.post('/api/notification-topic', ({ body }) => {
 	return "Sent notification";
 })
 
+app.post("")
+
 app.get('/api', ({ redirect }) => {
 	return redirect('https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstley')
 })

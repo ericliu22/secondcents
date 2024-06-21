@@ -153,7 +153,7 @@ struct ChatView: View {
                         
                         if replyWidget != nil && replyMode {
                             
-                            getMediaView(widget: replyWidget!, spaceId: spaceId)
+                            MediaView(widget: replyWidget!, spaceId: spaceId)
                                 .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
                                 .cornerRadius(CORNER_RADIUS)
                             

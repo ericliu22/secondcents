@@ -122,7 +122,7 @@ struct universalMessageBubble: View{
                
                 if viewModel.WidgetMessage != nil {
                                       
-                    getMediaView(widget: viewModel.WidgetMessage!, spaceId: spaceId)
+                    MediaView(widget: viewModel.WidgetMessage!, spaceId: spaceId)
                         .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
                         .cornerRadius(CORNER_RADIUS)
                     
