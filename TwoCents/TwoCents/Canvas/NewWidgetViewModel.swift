@@ -164,7 +164,8 @@ final class NewWidgetViewModel: ObservableObject{
         guard let outputURL = try? compressVideo(inputURL: tempURL, outputURL: outputURL) else {
             throw VideoCompressionError.compressionFailed
         }
-        return outputURL.dataRepresentation
+        print("OUTPUT URL: \(outputURL.absoluteString)")
+        return try Data(contentsOf: outputURL)
     }
     
     func resizeImage(image: UIImage, targetSize: CGSize) -> UIImage? {
