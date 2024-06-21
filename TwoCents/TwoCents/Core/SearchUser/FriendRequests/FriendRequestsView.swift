@@ -192,6 +192,7 @@ struct FriendRequestsView: View {
                     
                     
                 }
+                .listStyle(PlainListStyle())
                 
                 .navigationTitle("Friend Requests ✨")
                 .searchable(text: $searchTerm, placement: .navigationBarDrawer(displayMode: .always), prompt: "Search")

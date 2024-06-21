@@ -132,6 +132,7 @@ struct SearchUserView: View {
                 
                 
             }
+            .listStyle(PlainListStyle())
             .navigationTitle( "Search 👀")
             .searchable(text: $searchTerm, prompt: "Search")
             

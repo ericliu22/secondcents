@@ -133,6 +133,7 @@ import SwiftUI
                 
                 
             }
+            .listStyle(PlainListStyle())
             .navigationTitle( "Friends 💛" )
             .searchable(text: $searchTerm, placement: .navigationBarDrawer(displayMode: .always), prompt: "Search")
             

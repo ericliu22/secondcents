@@ -27,12 +27,6 @@ struct FrontPageView: View {
                     Text("Spaces")
                 }
 
-            AddFriendFromContactsView(activeSheet: $activeSheet)
-                .tabItem {
-                    Image(systemName: "rectangle.3.group.fill")
-                    Text("test")
-                }
-            
             SetLocationWidgetView(userColor: .constant(.green))
                 .tabItem {
                     Image(systemName: "rectangle.3.group.fill")
