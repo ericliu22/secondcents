@@ -11,41 +11,57 @@ struct SetLocationWidgetView: View {
     @StateObject private var locationManager = LocationManager()
     @State private var region = MKCoordinateRegion(
         center: CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194),
-        span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
+        span: MKCoordinateSpan(latitudeDelta: 0.005, longitudeDelta: 0.005)
     )
     @State private var searchText = ""
     @State private var showingSearchResults = false
     @State private var searchResults: [MKMapItem] = []
     @State private var selectedLocation: IdentifiableLocation?
-
+    
+    @Binding  var userColor: Color
+    @State private var isFocused = false
     var body: some View {
         VStack {
-            Map(
-                coordinateRegion: $region,
-                showsUserLocation: true,
-                annotationItems: [selectedLocation].compactMap { $0 }
-            ) { location in
-                MapPin(coordinate: location.coordinate, tint: .red)
-            }
-
+            
             HStack {
-                TextField("Search for a location", text: $searchText, onCommit: {
+                TextField("Search for a location", text: $searchText, onEditingChanged: { editing in
+                    // Show cancel button when editing
+                    withAnimation{
+                        isFocused = editing // Track focus state
+                    }
+                }, onCommit: {
                     searchForLocation()
                 })
-                .textFieldStyle(RoundedBorderTextFieldStyle())
                 .padding()
-
-                Button(action: {
-                    searchForLocation()
-                }) {
-                    Image(systemName: "magnifyingglass")
-                        .padding()
-                        .background(Color.blue)
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
+                .background(Color(UIColor.secondarySystemBackground))
+                .cornerRadius(10)
+                .submitLabel(.search)
+                
+                if isFocused ||  searchText != ""{
+                    Button(action: {
+                        searchText = "" // Clear search text
+                        // Other actions to reset state
+                        
+                      
+                        searchResults.removeAll()
+                        showingSearchResults = false
+                   
+                        
+                        
+                        withAnimation{
+                            isFocused = false // Reset focus state
+                            
+                        }
+                        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                    }) {
+                        Text("Cancel")
+                            .foregroundColor(userColor) // Adjust color as needed
+                    }
                 }
             }
-
+            .padding(.horizontal)
+            
+            
             if showingSearchResults {
                 List(searchResults, id: \.self) { item in
                     Button(action: {
@@ -53,15 +69,17 @@ struct SetLocationWidgetView: View {
                             let location = IdentifiableLocation(coordinate: coordinate)
                             setRegion(coordinate)
                             selectedLocation = location
-                            showingSearchResults = false
+                            
+                            withAnimation {
+                                showingSearchResults = false
+                            }
+                         
                         }
                     }) {
                         Text(item.placemark.name ?? "Unknown location")
                     }
                 }
-            }
-
-            HStack {
+                
                 Button(action: {
                     withAnimation{
                         if let location = locationManager.location {
@@ -77,6 +95,25 @@ struct SetLocationWidgetView: View {
                         .foregroundColor(.white)
                         .cornerRadius(10)
                 }
+                
+                
+            } else {
+                
+                
+                Map(
+                    coordinateRegion: $region,
+                    showsUserLocation: true,
+                    annotationItems: [selectedLocation].compactMap { $0 }
+                ) { location in
+                    MapPin(coordinate: location.coordinate, tint: userColor)
+                }
+                .disabled(true)
+                .cornerRadius(10)
+                
+            }
+
+      
+          
 
                 Button(action: {
                     if let location = selectedLocation {
@@ -91,9 +128,10 @@ struct SetLocationWidgetView: View {
                         .foregroundColor(.white)
                         .cornerRadius(10)
                 }
-            }
+      
         }
-        .padding()
+        .tint(userColor)
+      
         .onAppear {
             // Ensure updates are done on the main thread
             DispatchQueue.main.async {
@@ -128,14 +166,21 @@ struct SetLocationWidgetView: View {
                 }
                 
                 searchResults = response.mapItems
-                showingSearchResults = true
+                
+                withAnimation {
+                    showingSearchResults = true
+                }
+                
             }
         }
     }
+    
+   
+    
 }
 
 struct SetLocationWidgetView_Previews: PreviewProvider {
     static var previews: some View {
-        SetLocationWidgetView()
+        SetLocationWidgetView(userColor: .constant(.green))
     }
 }

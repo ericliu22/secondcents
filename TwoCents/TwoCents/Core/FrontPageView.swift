@@ -33,7 +33,7 @@ struct FrontPageView: View {
                     Text("test")
                 }
             
-            SetLocationWidgetView()
+            SetLocationWidgetView(userColor: .constant(.green))
                 .tabItem {
                     Image(systemName: "rectangle.3.group.fill")
                     Text("test2")

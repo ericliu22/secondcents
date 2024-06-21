@@ -71,7 +71,7 @@ struct CanvasWidget: Hashable, Codable, Identifiable, Transferable, Equatable {
 }
 
 enum Media {
-    case video, image, chat, text, poll
+    case video, image, chat, text, poll, map
 }
 
 extension Media: Codable {
@@ -102,6 +102,8 @@ extension Media: Codable {
             return "poll"
         case .chat:
             return "chat"
+        case .map:
+            return "map"
         }
     }
     
@@ -183,6 +185,8 @@ func getMediaView(widget: CanvasWidget, spaceId: String, newWidget: Bool = false
 //            return chatWidget(widget: widget)
         case .poll:
             return pollWidget(widget: widget, spaceId: spaceId)
+    case .map:
+        return mapWidget(widget: widget)
         
         default:
             return imageWidget(widget: widget)

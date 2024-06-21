@@ -37,7 +37,7 @@ final class NewWidgetViewModel: ObservableObject{
     private var url = ""
     
     
-    @Published var widgets: [CanvasWidget] = [imageViewTest, videoViewTest, pollViewTest]
+    @Published var widgets: [CanvasWidget] = [imageViewTest, videoViewTest, pollViewTest, mapViewTest]
     
     
     

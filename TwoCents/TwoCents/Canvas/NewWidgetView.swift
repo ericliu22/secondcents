@@ -21,6 +21,7 @@ var imageViewTest = CanvasWidget(width: 250, height:  250, borderColor: .black, 
 var videoViewTest = CanvasWidget(width: 250, height: 250, borderColor: .red, userId: "jisookim", media: .video, mediaURL: URL(string: "https://www.pexels.com/video/10167684/download/")!, widgetName: "Video Widget", widgetDescription: "Nice vid")
 
 var pollViewTest = CanvasWidget(width: 250, height: 250, borderColor: .red, userId: "jisookim", media: .poll, mediaURL: URL(string: "https://www.pexels.com/video/10167684/download/")!, widgetName: "Poll Widget", widgetDescription: "Scholars, gather your consensus")
+var mapViewTest = CanvasWidget(width: 250, height: 250, borderColor: .red, userId: "jisookim", media: .map, mediaURL: URL(string: "https://www.pexels.com/video/10167684/download/")!, widgetName: "Map Widget", widgetDescription: "Drop the addy")
 
 
 
@@ -134,6 +135,35 @@ struct NewWidgetView: View {
             }
         }
     }
+    func newMapView(index: Int) -> some View {
+        
+        ZStack{
+          
+//            
+//            getMediaView(widget: viewModel.widgets[index], spaceId: spaceId)
+//                .aspectRatio(1, contentMode: .fit)
+//            //                    .shadow(radius: 20, y: 10)
+//                .cornerRadius(30)
+//                .containerRelativeFrame(.horizontal, count: 1, spacing: 0)
+//            
+            
+            NewMapView(spaceId: spaceId, closeNewWidgetview: $closeNewWidgetview)
+                .cornerRadius(30)
+            //loading circle
+            if viewModel.loading {
+                ProgressView()
+                    .progressViewStyle(
+                        CircularProgressViewStyle(tint:
+                                .primary)
+                    )
+                    .frame(width: viewModel.widgets[index].width, height: viewModel.widgets[index].height)
+                    .cornerRadius(30)
+                
+            }
+        }
+    }
+    
+    
     
     
     var body: some View {
@@ -182,6 +212,9 @@ struct NewWidgetView: View {
                                             case .poll:
                                                 newPollView(index: index)
 //                                                .tint(.red)
+                                            case .map:
+                                                newMapView(index: index)
+                                            
                                         default:
                                                 ZStack{
                                                     

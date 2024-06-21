@@ -77,6 +77,8 @@
 		AB6EA60A2B879B7C00CC90FF /* CanvasPageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB6EA6092B879B7C00CC90FF /* CanvasPageViewModel.swift */; };
 		AB6EA60C2B87A1FE00CC90FF /* EmojiReactionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB6EA60B2B87A1FE00CC90FF /* EmojiReactionsView.swift */; };
 		AB6EA6102B87A27D00CC90FF /* SplashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB6EA60F2B87A27D00CC90FF /* SplashView.swift */; };
+		AB6EE7762C25FBE800F6FDE2 /* MapWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB6EE7752C25FBE800F6FDE2 /* MapWidget.swift */; };
+		AB6EE7782C25FE4400F6FDE2 /* NewMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB6EE7772C25FE4400F6FDE2 /* NewMapView.swift */; };
 		AB7365BB2A85060F00799D31 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = AB7365BA2A85060F00799D31 /* GoogleService-Info.plist */; };
 		AB7438412AAA349C001B4988 /* SearchUserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB7438402AAA349C001B4988 /* SearchUserView.swift */; };
 		AB7438432AAA34AD001B4988 /* SearchUserViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB7438422AAA34AD001B4988 /* SearchUserViewModel.swift */; };
@@ -223,6 +225,8 @@
 		AB6EA6092B879B7C00CC90FF /* CanvasPageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasPageViewModel.swift; sourceTree = "<group>"; };
 		AB6EA60B2B87A1FE00CC90FF /* EmojiReactionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiReactionsView.swift; sourceTree = "<group>"; };
 		AB6EA60F2B87A27D00CC90FF /* SplashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashView.swift; sourceTree = "<group>"; };
+		AB6EE7752C25FBE800F6FDE2 /* MapWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapWidget.swift; sourceTree = "<group>"; };
+		AB6EE7772C25FE4400F6FDE2 /* NewMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewMapView.swift; sourceTree = "<group>"; };
 		AB7365BA2A85060F00799D31 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		AB7438402AAA349C001B4988 /* SearchUserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchUserView.swift; sourceTree = "<group>"; };
 		AB7438422AAA34AD001B4988 /* SearchUserViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchUserViewModel.swift; sourceTree = "<group>"; };
@@ -469,6 +473,7 @@
 			children = (
 				A2DDB1BC2BB69D7100243E1B /* Polls */,
 				AB6778E12AB8F67300C11AA7 /* ImageWidget.swift */,
+				AB6EE7752C25FBE800F6FDE2 /* MapWidget.swift */,
 				AB01CB5E2B855E83004BEB5B /* TextWidget.swift */,
 				ABB68DAF2C15268D00406948 /* TextWidgetViewModel.swift */,
 				A21244E22C1E234B005E8C8B /* NewTextWidgetView.swift */,
@@ -556,6 +561,7 @@
 				AB77664B2C2526BE00F95E65 /* LocationManager.swift */,
 				AB7766492C25266300F95E65 /* SetLocationWidgetView.swift */,
 				AB77664D2C25283A00F95E65 /* DisplayLocationWidgetView.swift */,
+				AB6EE7772C25FE4400F6FDE2 /* NewMapView.swift */,
 			);
 			path = Location;
 			sourceTree = "<group>";
@@ -903,6 +909,7 @@
 				AB8C6E202AE6FBD50005B7F9 /* SpacesViewModel.swift in Sources */,
 				ABCA39D22A79FC16009447C3 /* AuthenticationView.swift in Sources */,
 				ABF556862A950BCB00103880 /* RootViewModel.swift in Sources */,
+				AB6EE7762C25FBE800F6FDE2 /* MapWidget.swift in Sources */,
 				856E80B12B50E9D00078A2CE /* PencilKitPractice.swift in Sources */,
 				8507204B2B54692F0057B8BC /* widgetPopup.swift in Sources */,
 				AB77664A2C25266300F95E65 /* SetLocationWidgetView.swift in Sources */,
@@ -923,6 +930,7 @@
 				AB69F03F2C1D189800B81E79 /* SignInPhoneNumberViewModel.swift in Sources */,
 				AB9EB95D2B1E805300F58EA5 /* ChatManager.swift in Sources */,
 				853A641C2C0D380E00041CA1 /* textTest.swift in Sources */,
+				AB6EE7782C25FE4400F6FDE2 /* NewMapView.swift in Sources */,
 				AB15AC0D2AF6F01B0055D5D0 /* SpaceProfilePicViewModel.swift in Sources */,
 				AB01CB5F2B855E83004BEB5B /* TextWidget.swift in Sources */,
 				ABF172A92BFC66AD000B6F9B /* AddMemberViewModel.swift in Sources */,
