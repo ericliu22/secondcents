@@ -6,7 +6,6 @@ struct IdentifiableLocation: Identifiable {
     let coordinate: CLLocationCoordinate2D
 }
 
-
 struct SetLocationWidgetView: View {
     @StateObject private var locationManager = LocationManager()
     @State private var region = MKCoordinateRegion(
@@ -17,8 +16,7 @@ struct SetLocationWidgetView: View {
     @State private var showingSearchResults = false
     @State private var searchResults: [MKMapItem] = []
     @State private var selectedLocation: IdentifiableLocation?
-    @State private var locationSet = false
-    
+
     var body: some View {
         VStack {
             Map(
@@ -27,14 +25,6 @@ struct SetLocationWidgetView: View {
                 annotationItems: [selectedLocation].compactMap { $0 }
             ) { location in
                 MapPin(coordinate: location.coordinate, tint: .red)
-            }
-            .onChange(of: locationManager.location) { newLocation in
-                if let newLocation = newLocation, !locationSet {
-                    let coordinate = newLocation.coordinate
-                    setRegion(coordinate)
-                    selectedLocation = IdentifiableLocation(coordinate: coordinate)
-                    locationSet = true
-                }
             }
 
             HStack {
@@ -54,7 +44,7 @@ struct SetLocationWidgetView: View {
                         .cornerRadius(10)
                 }
             }
-            
+
             if showingSearchResults {
                 List(searchResults, id: \.self) { item in
                     Button(action: {
@@ -85,12 +75,22 @@ struct SetLocationWidgetView: View {
             }
         }
         .padding()
+        .onAppear {
+            // Ensure updates are done on the main thread
+            DispatchQueue.main.async {
+                if let location = locationManager.location {
+                    let coordinate = location.coordinate
+                    setRegion(coordinate)
+                    selectedLocation = IdentifiableLocation(coordinate: coordinate)
+                }
+            }
+        }
     }
-    
+
     private func setRegion(_ coordinate: CLLocationCoordinate2D) {
         region = MKCoordinateRegion(
             center: coordinate,
-            span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
+            span: MKCoordinateSpan(latitudeDelta: 0.005, longitudeDelta: 0.005)
         )
     }
 
@@ -100,13 +100,15 @@ struct SetLocationWidgetView: View {
         let search = MKLocalSearch(request: request)
         
         search.start { response, error in
-            guard let response = response else {
-                print("Error searching for location: \(error?.localizedDescription ?? "Unknown error")")
-                return
+            DispatchQueue.main.async {
+                guard let response = response else {
+                    print("Error searching for location: \(error?.localizedDescription ?? "Unknown error")")
+                    return
+                }
+                
+                searchResults = response.mapItems
+                showingSearchResults = true
             }
-            
-            searchResults = response.mapItems
-            showingSearchResults = true
         }
     }
 }
