@@ -602,8 +602,9 @@ struct CanvasPage: View {
                                          Image(systemName: "checklist")
                                              .foregroundColor(Color(UIColor.label))
                                              .font(.title3)
-                                             .background(Color.clear)
+                                          
                                      })
+                                     .background(Color.clear, in: Rectangle())
                                  }
                                  
                              
@@ -628,8 +629,9 @@ struct CanvasPage: View {
                                      Image(systemName: "arrowshape.turn.up.left")
                                          .foregroundColor(Color(UIColor.label))
                                          .font(.title3)
-                                         .background(Color.clear)
+                                        
                                  })
+                                 .background(Color.clear, in: Rectangle())
                                  
                                  
                                  //delete button
@@ -652,20 +654,14 @@ struct CanvasPage: View {
                                      }
                                      selectedWidget = nil
                                      widgetDoubleTapped = false
-                                     
-                                     
-                                     
-                                    
-                                     
-                                     //                                     showSheet = true
-                                     //                                     showNewWidgetView = false
                                      activeSheet = .chat
                                  }, label: {
                                      Image(systemName: "trash")
                                          .foregroundColor(.red)
                                          .font(.title3)
-                                         .background(Color.clear)
+                                       
                                  })
+                                 .background(Color.clear, in: Rectangle())
                              }
                              .padding(.horizontal, 15)
                              .padding(.vertical, 8)
