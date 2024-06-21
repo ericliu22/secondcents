@@ -13,11 +13,15 @@ func mapWidget(widget: CanvasWidget) -> AnyView {
 //    print(isPresented)
     assert(widget.media == .map)
     
-
+    
+    let location = widget.location?.split(separator: ", ")
+    
+    let latitude = String(location?[0] ??  "40.7791151")
+    let longitude = String(location?[1] ?? "-73.9626129")
     
     return AnyView(
         
-        DisplayLocationWidgetView(latitude: "40.7791151", longitude: "-73.9626129")
+        DisplayLocationWidgetView(latitude: latitude, longitude: longitude)
            
           
        

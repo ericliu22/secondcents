@@ -46,7 +46,7 @@ struct NewMapView: View{
         .fullScreenCover(isPresented: $showingView, content: {
             NavigationStack{
                 ZStack{
-                    SetLocationWidgetView(userColor: $userColor)
+                    SetLocationWidgetView(userColor: $userColor, closeNewWidgetview: $closeNewWidgetview, spaceId: spaceId)
                       
                 }
                 .navigationTitle("Select Location 📍")

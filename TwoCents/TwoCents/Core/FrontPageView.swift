@@ -26,8 +26,8 @@ struct FrontPageView: View {
                     Image(systemName: "rectangle.3.group.fill")
                     Text("Spaces")
                 }
-
-            SetLocationWidgetView(userColor: .constant(.green))
+ 
+            SetLocationWidgetView(userColor: .constant(.green), closeNewWidgetview: .constant(false), spaceId: "")
                 .tabItem {
                     Image(systemName: "rectangle.3.group.fill")
                     Text("test2")

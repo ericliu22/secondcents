@@ -20,6 +20,11 @@ struct SetLocationWidgetView: View {
     
     @Binding  var userColor: Color
     @State private var isFocused = false
+    
+    
+    @Binding  var closeNewWidgetview: Bool
+    @State  var spaceId: String
+    
     var body: some View {
         VStack {
             
@@ -153,10 +158,18 @@ struct SetLocationWidgetView: View {
                 Button(action: {
                     if let location = selectedLocation {
                         print("Selected location: \(location.coordinate.latitude), \(location.coordinate.longitude)")
+                        
+                        Task{
+                            try? await createNewMapWidget(location: "\(location.coordinate.latitude), \(location.coordinate.longitude)")
+                            
+                            closeNewWidgetview = true
+                        }
                     } else {
                         print("No location selected")
                     }
                     
+                   
+               
                     
                 }) {
                     Text("Select")
@@ -223,12 +236,55 @@ struct SetLocationWidgetView: View {
         }
     }
     
+    func createNewMapWidget(location:String) async {
+        
+       
+        let uid: String
+        let user: DBUser
+        do {
+            uid = try AuthenticationManager.shared.getAuthenticatedUser().uid
+            user = try await UserManager.shared.getUser(userId: uid)
+        } catch {
+            print("Error getting user in NewPollViewModel")
+            return
+        }
+
+        let newCanvasWidget: CanvasWidget = CanvasWidget(
+            borderColor: Color.fromString(name: user.userColor!),
+            userId: uid,
+            media: .map,
+            widgetName: "Map Widget",
+            location: location
+            
+        )
+        
+        
+        saveWidget(widget: newCanvasWidget)
+        //@TODO: Dismiss after submission
+        
+    }
+    
+    
+    func saveWidget(widget: CanvasWidget) {
+        //Need to copy to variable before uploading (something about actor-isolate whatever)
+        var uploadWidget: CanvasWidget = widget
+        //ensure shits are right dimensions
+        uploadWidget.width = TILE_SIZE
+        uploadWidget.height = TILE_SIZE
+        //space call should never fail so we manly exclamation mark
+        SpaceManager.shared.uploadWidget(spaceId: spaceId, widget: uploadWidget)
+    }
+    
+    
+    
+    
+    
    
     
 }
 
 struct SetLocationWidgetView_Previews: PreviewProvider {
     static var previews: some View {
-        SetLocationWidgetView(userColor: .constant(.green))
+        SetLocationWidgetView(userColor: .constant(.green), closeNewWidgetview: .constant(false), spaceId: "")
     }
 }

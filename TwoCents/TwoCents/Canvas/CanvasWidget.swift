@@ -44,6 +44,7 @@ struct CanvasWidget: Hashable, Codable, Identifiable, Transferable, Equatable {
     var widgetName: String?
     var widgetDescription: String?
     var textString: String?
+    var location: String?
     var emojis: [String: Int] = [
         "❤️":0,
         "👍":0,
@@ -125,6 +126,7 @@ extension CanvasWidget {
         case widgetName
         case widgetDescription
         case textString
+        case location
         case emojis
         case emojiPressed
         
@@ -143,6 +145,7 @@ extension CanvasWidget {
         self.widgetDescription = try container.decodeIfPresent(String.self, forKey: .widgetDescription)
         self.emojis = try container.decode([String: Int].self, forKey: .emojis)
         self.textString = try container.decodeIfPresent(String.self, forKey: .textString)
+        self.location = try container.decodeIfPresent(String.self, forKey: .location)
         self.emojiPressed = try container.decode([String: [String]].self, forKey: .emojiPressed)
     }
     
@@ -158,6 +161,7 @@ extension CanvasWidget {
         try container.encodeIfPresent(widgetName, forKey: .widgetName)
         try container.encodeIfPresent(widgetDescription, forKey: .widgetDescription)
         try container.encodeIfPresent(textString, forKey: .textString)
+        try container.encodeIfPresent(location, forKey: .location)
         try container.encode(emojis, forKey: .emojis)
         try container.encode(emojiPressed, forKey: .emojiPressed)
     }
