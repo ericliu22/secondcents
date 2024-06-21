@@ -6,6 +6,7 @@ struct IdentifiableLocation: Identifiable {
     let coordinate: CLLocationCoordinate2D
 }
 
+
 struct SetLocationWidgetView: View {
     @StateObject private var locationManager = LocationManager()
     @State private var region = MKCoordinateRegion(
@@ -60,18 +61,34 @@ struct SetLocationWidgetView: View {
                 }
             }
 
-            Button(action: {
-                if let location = selectedLocation {
-                    print("Selected location: \(location.coordinate.latitude), \(location.coordinate.longitude)")
-                } else {
-                    print("No location selected")
+            HStack {
+                Button(action: {
+                    if let location = locationManager.location {
+                        let coordinate = location.coordinate
+                        setRegion(coordinate)
+                        selectedLocation = IdentifiableLocation(coordinate: coordinate)
+                    }
+                }) {
+                    Text("Recenter to Current Location")
+                        .padding()
+                        .background(Color.blue)
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
                 }
-            }) {
-                Text("Get Selected Location Coordinates")
-                    .padding()
-                    .background(Color.blue)
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
+
+                Button(action: {
+                    if let location = selectedLocation {
+                        print("Selected location: \(location.coordinate.latitude), \(location.coordinate.longitude)")
+                    } else {
+                        print("No location selected")
+                    }
+                }) {
+                    Text("Get Selected Location Coordinates")
+                        .padding()
+                        .background(Color.blue)
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
+                }
             }
         }
         .padding()
