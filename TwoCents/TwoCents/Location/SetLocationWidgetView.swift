@@ -63,10 +63,12 @@ struct SetLocationWidgetView: View {
 
             HStack {
                 Button(action: {
-                    if let location = locationManager.location {
-                        let coordinate = location.coordinate
-                        setRegion(coordinate)
-                        selectedLocation = IdentifiableLocation(coordinate: coordinate)
+                    withAnimation{
+                        if let location = locationManager.location {
+                            let coordinate = location.coordinate
+                            setRegion(coordinate)
+                            selectedLocation = IdentifiableLocation(coordinate: coordinate)
+                        }
                     }
                 }) {
                     Text("Recenter to Current Location")
@@ -95,10 +97,12 @@ struct SetLocationWidgetView: View {
         .onAppear {
             // Ensure updates are done on the main thread
             DispatchQueue.main.async {
-                if let location = locationManager.location {
-                    let coordinate = location.coordinate
-                    setRegion(coordinate)
-                    selectedLocation = IdentifiableLocation(coordinate: coordinate)
+                withAnimation{
+                    if let location = locationManager.location {
+                        let coordinate = location.coordinate
+                        setRegion(coordinate)
+                        selectedLocation = IdentifiableLocation(coordinate: coordinate)
+                    }
                 }
             }
         }
