@@ -26,12 +26,13 @@ struct SetLocationWidgetView: View {
             HStack {
                 TextField("Search for a location", text: $searchText, onEditingChanged: { editing in
                     // Show cancel button when editing
-                    withAnimation{
+                    withAnimation {
                         isFocused = editing // Track focus state
                     }
-                }, onCommit: {
-                    searchForLocation()
                 })
+                .onChange(of: searchText) { newValue in
+                    searchForLocation()
+                }
                 .padding()
                 .background(Color(UIColor.secondarySystemBackground))
                 .cornerRadius(10)
@@ -51,7 +52,19 @@ struct SetLocationWidgetView: View {
                         withAnimation{
                             isFocused = false // Reset focus state
                             
+                       
+                      
+                            if let location = locationManager.location {
+                                let coordinate = location.coordinate
+                                setRegion(coordinate)
+                                selectedLocation = IdentifiableLocation(coordinate: coordinate)
+                            }
+                            
+                            
                         }
+                        
+                        
+                        
                         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
                     }) {
                         Text("Cancel")
@@ -72,29 +85,54 @@ struct SetLocationWidgetView: View {
                             
                             withAnimation {
                                 showingSearchResults = false
+                                
                             }
+                            
+                            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
                          
                         }
                     }) {
                         Text(item.placemark.name ?? "Unknown location")
                     }
                 }
-                
-                Button(action: {
-                    withAnimation{
-                        if let location = locationManager.location {
-                            let coordinate = location.coordinate
-                            setRegion(coordinate)
-                            selectedLocation = IdentifiableLocation(coordinate: coordinate)
-                        }
-                    }
-                }) {
-                    Text("Recenter to Current Location")
-                        .padding()
-                        .background(Color.blue)
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
-                }
+                .listStyle(PlainListStyle())
+                .padding(EdgeInsets())
+//                
+//                Button(action: {
+//                    
+//                    searchText = "" // Clear search text
+//                    // Other actions to reset state
+//                    
+//                  
+//                    searchResults.removeAll()
+//                    showingSearchResults = false
+//               
+//                    
+//                    
+//                    withAnimation{
+//                        isFocused = false // Reset focus state
+//                        
+//                    }
+//                    
+//                    
+//                    withAnimation{
+//                        if let location = locationManager.location {
+//                            let coordinate = location.coordinate
+//                            setRegion(coordinate)
+//                            selectedLocation = IdentifiableLocation(coordinate: coordinate)
+//                        }
+//                        
+//                        
+//                    }
+//                    
+//                    UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+//                }) {
+//                    Text("Recenter to Current Location")
+//                        .padding()
+//                        .background(Color.blue)
+//                        .foregroundColor(.white)
+//                        .cornerRadius(10)
+//                }
                 
                 
             } else {
@@ -109,29 +147,39 @@ struct SetLocationWidgetView: View {
                 }
                 .disabled(true)
                 .cornerRadius(10)
+                .frame(maxHeight:500)
+                .padding(.horizontal)
                 
-            }
-
-      
-          
-
                 Button(action: {
                     if let location = selectedLocation {
                         print("Selected location: \(location.coordinate.latitude), \(location.coordinate.longitude)")
                     } else {
                         print("No location selected")
                     }
+                    
+                    
                 }) {
-                    Text("Get Selected Location Coordinates")
-                        .padding()
-                        .background(Color.blue)
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
+                    Text("Select")
+                        .font(.headline)
+                        .frame(height: 55)
+                        .frame(maxWidth: .infinity)
                 }
+                
+                
+                .buttonStyle(.bordered)
+                .tint(userColor)
+                .frame(height: 55)
+                .cornerRadius(10)
+                .padding(.horizontal)
+            }
+
       
+          Spacer()
+
+              
         }
         .tint(userColor)
-      
+   
         .onAppear {
             // Ensure updates are done on the main thread
             DispatchQueue.main.async {

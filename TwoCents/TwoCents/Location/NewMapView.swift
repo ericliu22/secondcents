@@ -49,7 +49,8 @@ struct NewMapView: View{
                     SetLocationWidgetView(userColor: $userColor)
                       
                 }
-                .navigationTitle("Create Poll 🤓")
+                .navigationTitle("Select Location 📍")
+                .navigationBarTitleDisplayMode(.inline)
                 .toolbar{
                     
                     ToolbarItem(placement: .navigationBarLeading) {
