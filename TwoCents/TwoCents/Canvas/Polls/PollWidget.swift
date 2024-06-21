@@ -13,12 +13,12 @@ import Charts
 
 
 
-struct PollWidget: View {
+struct PollWidget: WidgetView {
     
     
     
     private var spaceId: String
-    private var widget: CanvasWidget
+    var widget: CanvasWidget
     @State var poll: Poll?
     @State var totalVotes: Int = 0
     

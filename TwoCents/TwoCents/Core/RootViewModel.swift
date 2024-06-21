@@ -43,8 +43,6 @@ extension Color {
             return Color.gray
         }
         
-        
-        
     }
 }
 
@@ -62,39 +60,7 @@ final class RootViewModel: ObservableObject{
     
     
     func getUserColor(userColor: String) -> Color{
-        
-        switch userColor {
-            
-        case "red":
-            return Color.red
-        case "orange":
-            return Color.orange
-        case "yellow":
-            return Color.yellow
-        case "green":
-            return Color.green
-        case "mint":
-            return Color.mint
-        case "teal":
-            return Color.teal
-        case "cyan":
-            return Color.cyan
-        case "blue":
-            return Color.blue
-        case "indigo":
-            return Color.indigo
-        case "purple":
-            return Color.purple
-        case "pink":
-            return Color.pink
-        case "brown":
-            return Color.brown
-        default:
-            return Color.gray
-        }
-        
-        
-        
+        return Color.fromString(name: userColor)
     }
     
     

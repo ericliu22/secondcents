@@ -160,16 +160,15 @@ struct CanvasPage: View {
         await pullDocuments()
     }
     
-    func GridView() -> AnyView {
-        @State var isShowingPopup = false
+    func GridView() -> some View {
         let columns = Array(repeating: GridItem(.fixed(TILE_SIZE), spacing: 30, alignment: .center), count: 3)
         
-        return AnyView(LazyVGrid(columns: columns, alignment: .center, spacing: 30, content: {
+        return LazyVGrid(columns: columns, alignment: .center, spacing: 30, content: {
             
             ForEach(canvasWidgets, id:\.id) { widget in
                 
                 //main widget
-                getMediaView(widget: widget, spaceId: spaceId)
+                MediaView(widget: widget, spaceId: spaceId)
                     .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
                     .cornerRadius(CORNER_RADIUS)
                 
@@ -244,7 +243,7 @@ struct CanvasPage: View {
                     .draggable(widget) {
                         
                         VStack{
-                            getMediaView(widget: widget, spaceId: spaceId)
+                            MediaView(widget: widget, spaceId: spaceId)
                                 .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
                             
                             //a bad way of resizing the draggable items but oh well
@@ -319,7 +318,6 @@ struct CanvasPage: View {
         }
                                  
                                 )
-        )
     }
     
     @State private var scale: CGFloat = 1.0
@@ -331,16 +329,9 @@ struct CanvasPage: View {
     
     @State private var animator: UIViewPropertyAnimator?
     
-    func canvasView() -> AnyView {
-        
-        return AnyView(
-            
+    func canvasView() -> some View {
             ZStack {
-                
                 Color(UIColor.secondarySystemBackground)
-                
-                
-                
                 Color(UIColor.systemBackground)
                 //                        .allowsHitTesting(toolPickerActive)
                 //                        .scaleEffect(scale)
@@ -678,8 +669,6 @@ struct CanvasPage: View {
                         )
             //                .animation(.easeInOut)
                 .background( Color(UIColor.secondarySystemBackground))
-            
-        )
     }
     
     private func removeExpiredStrokes() {

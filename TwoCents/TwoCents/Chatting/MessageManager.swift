@@ -27,7 +27,6 @@ class MessageManager: ObservableObject {
   
     
     init(spaceId: String) {
-        print("initialize MessageManager")
         self.spaceId = spaceId
         self.userUID = try! AuthenticationManager.shared.getAuthenticatedUser().uid
         fetchMessages()
@@ -36,7 +35,6 @@ class MessageManager: ObservableObject {
     }
     
     func fetchMessages() {
-        print("fetched messages")
         db.collection("spaces")
             .document(spaceId)
             .collection("chat")
@@ -70,7 +68,6 @@ class MessageManager: ObservableObject {
     
    
     func fetchMoreMessages() {
-        print("fetched more messages")
         db.collection("spaces")
             .document(spaceId)
             .collection("chat")

@@ -9,7 +9,8 @@ import Foundation
 import SwiftUI
 import SwiftUI
 
-struct TextWidgetView: View {
+struct TextWidget: WidgetView {
+    
     @State private var isPresented: Bool = false
     let widget: CanvasWidget // Assuming CanvasWidget is a defined type
     @StateObject private var viewModel = TextWidgetViewModel()

@@ -9,11 +9,11 @@ import Foundation
 import SwiftUI
 import AVKit
 
-struct VideoWidget: View{
+struct VideoWidget: WidgetView{
     
     private var videoPlayer: AVQueuePlayer
     private var playerLooper: AVPlayerLooper
-    private var widget: CanvasWidget;
+    var widget: CanvasWidget;
     private var width: CGFloat;
     private var height: CGFloat;
     private var newWidget: Bool;
@@ -38,7 +38,7 @@ struct VideoWidget: View{
     }
     
     
-    init(widget: CanvasWidget, width: CGFloat, height: CGFloat, newWidget: Bool) {
+    init(widget: CanvasWidget, newWidget: Bool) {
         self.widget = widget
         self.newWidget = newWidget
         let asset: AVAsset = AVAsset(url: widget.mediaURL!)
@@ -47,14 +47,7 @@ struct VideoWidget: View{
         self.playerLooper = AVPlayerLooper(player: videoPlayer, templateItem: playerItem)
         self.videoPlayer.play()
         self.videoPlayer.isMuted = true
-        self.width = width
-        self.height = height
+        self.width = widget.width
+        self.height = widget.height
     }
-}
-
-func videoWidget(widget: CanvasWidget, newWidget: Bool) -> AnyView {
-        assert(widget.media == .video)
-        return AnyView(
-            VideoWidget(widget: widget, width: widget.width, height: widget.height, newWidget: newWidget)
-        )
 }
