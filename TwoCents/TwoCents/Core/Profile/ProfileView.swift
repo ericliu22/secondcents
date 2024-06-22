@@ -368,19 +368,19 @@ struct ProfileView: View {
                             // Calculate user's age in days
                             let calendar = Calendar.current
                             let currentDate = Date()
-
+                            
                             if let userAge = calendar.dateComponents([.day], from: dateCreated, to: currentDate).day {
-                                Text("\(userAge) days")
+                                Text(userAge == 1 ? "\(userAge) day" : "\(userAge) days")
                                     .font(.title)
                                     .fontWeight(.bold)
                                     .foregroundStyle(.secondary)
-
+                                
                                 Text("of adventure")
                                     .font(.headline)
                                     .fontWeight(.regular)
                                     .foregroundStyle(.tertiary)
                                     .multilineTextAlignment(.center)
-                                  
+                                
                             }
                         }
                     }

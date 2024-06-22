@@ -8,22 +8,27 @@
 import Foundation
 import SwiftUI
 
-func MapWidget(widget: CanvasWidget) -> some View {
+
+struct MapWidget: WidgetView {
 
 //    print(isPresented)
-    assert(widget.media == .map)
+    let widget: CanvasWidget
+
+    let latitude: String
+    let longitude: String
     
-    
-    let location = widget.location?.split(separator: ", ")
-    
-    let latitude = String(location?[0] ??  "40.7791151")
-    let longitude = String(location?[1] ?? "-73.9626129")
-          
-    return    DisplayLocationWidgetView(latitude: latitude, longitude: longitude)
-         
-        
-           
-          
+    init(widget: CanvasWidget) {
+        assert(widget.media == .map)
+//        print(widget.name)
+        self.widget = widget
+        let location = widget.location?.split(separator: ", ")
+        self.latitude = String(location?[0] ??  "40.7791151")
+        self.longitude = String(location?[1] ?? "-73.9626129")
+    }
+
+    var body: some View {
+        DisplayLocationWidgetView(latitude: latitude, longitude: longitude)
+    }
        
    
 }
