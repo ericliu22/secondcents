@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-func mapWidget(widget: CanvasWidget) -> AnyView {
+func MapWidget(widget: CanvasWidget) -> some View {
 
 //    print(isPresented)
     assert(widget.media == .map)
@@ -28,5 +28,6 @@ func mapWidget(widget: CanvasWidget) -> AnyView {
           
        
     )//AnyView
+    return DisplayLocationWidgetView(latitude: "40.7791151", longitude: "-73.9626129")
     
 }
