@@ -42,6 +42,7 @@ struct NewMapView: View{
                    showingView.toggle()
                    print("tapped")
                }
+        
         .fullScreenCover(isPresented: $showingView, content: {
             NavigationStack{
                 ZStack{

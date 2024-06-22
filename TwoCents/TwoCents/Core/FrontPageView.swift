@@ -26,52 +26,18 @@ struct FrontPageView: View {
                     Image(systemName: "rectangle.3.group.fill")
                     Text("Spaces")
                 }
-// 
-//            SetLocationWidgetView(userColor: .constant(.green), closeNewWidgetview: .constant(false), spaceId: "")
-//                .tabItem {
-//                    Image(systemName: "rectangle.3.group.fill")
-//                    Text("test2")
-//                }
-            
-            DisplayLocationWidgetView(latitude: "40.7791151", longitude: "-73.9626129")
-                .frame(width: 150, height: 150)
-                .clipShape(RoundedRectangle(cornerRadius: 20))
-                .tabItem {
-                    Image(systemName: "rectangle.3.group.fill")
-                    Text("test2")
-                }
+
             
             
-//            VoteGameView()
-//                .tabItem {
-//                    Image(systemName: "house")
-//                    Text("Vote Game")
-//                    
-//                }
-//            ChatView()
-//                .tabItem {
-//                    Image(systemName: "house")
-//                    Text("Chatting View")
-//                    
-//                }
-//            
-            
-//            SearchUserView(showSignInView: $showSignInView, loadedColor: $loadedColor, showCreateProfileView: $showCreateProfileView, targetUserId: "")
             SearchUserView(activeSheet: $activeSheet, loadedColor: $loadedColor, targetUserId: "")
                 .tabItem {
                     Image(systemName: "magnifyingglass")
                     Text("Search")
                 }
-//            CanvasPage(spaceId:"F531C015-E840-4B1B-BB3E-B9E7A3DFB80F")
-//                .tabItem {
-//                    Image(systemName: "house")
-//                    Text("Canvas Page")
-//                }
-//     
-            
+
             
             NavigationStack {
-//                ProfileView(showSignInView: $showSignInView, loadedColor: $loadedColor, showCreateProfileView: $showCreateProfileView, targetUserId: "")
+
                 ProfileView(activeSheet: $activeSheet, loadedColor: $loadedColor, targetUserId: "")
             }
             .tabItem {

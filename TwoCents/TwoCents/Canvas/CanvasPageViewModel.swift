@@ -42,7 +42,7 @@ final class CanvasPageViewModel: ObservableObject {
                 print(location)
                
                
-        let url = URL(string: "http://maps.apple.com/?ll=\(latitude),\(longitude)")!
+        let url = URL(string: "http://maps.apple.com/?daddr=\(latitude),\(longitude)")!
         
         if UIApplication.shared.canOpenURL(url) {
             UIApplication.shared.open(url, options: [:], completionHandler: nil)

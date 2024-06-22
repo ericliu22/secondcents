@@ -42,12 +42,7 @@ struct RootView: View {
     var body: some View {
         
         ZStack {
-            
-            
-            
-            //
-            //            FrontPageView(showSignInView: $showSignInView, loadedColor: $loadedColor, showCreateProfileView: $showCreateProfileView)
-            FrontPageView(loadedColor: $loadedColor, activeSheet: $activeSheet)
+                        FrontPageView(loadedColor: $loadedColor, activeSheet: $activeSheet)
                 .task{
                     
                     
