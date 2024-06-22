@@ -33,16 +33,15 @@ struct NewMapView: View{
     @State var OptionsArray: [String] = [""]
     
     var body: some View{
-        ZStack{
-            
-            DisplayLocationWidgetView(latitude: "40.7791151", longitude: "-73.9626129")
-           
-        }
-
-        .frame(width: 250, height: 250)
-        
-      
-        .onTapGesture{showingView.toggle()}
+        ZStack {
+                   DisplayLocationWidgetView(latitude: "40.7791151", longitude: "-73.9626129")
+               }
+               .frame(width: 250, height: 250)
+               .contentShape(Rectangle()) // Make the whole area tappable
+               .onTapGesture {
+                   showingView.toggle()
+                   print("tapped")
+               }
         .fullScreenCover(isPresented: $showingView, content: {
             NavigationStack{
                 ZStack{
