@@ -179,8 +179,8 @@ struct PollWidget: WidgetView {
 
 
 
-func pollWidget(widget: CanvasWidget, spaceId: String) -> AnyView {
-    return AnyView(PollWidget(widget: widget, spaceId: spaceId))
+func pollWidget(widget: CanvasWidget, spaceId: String) -> some View {
+    return PollWidget(widget: widget, spaceId: spaceId)
     
 }
 

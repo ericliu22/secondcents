@@ -16,6 +16,7 @@ class VideoPlayerModel: ObservableObject {
     
     init(url: URL) {
         let asset = AVAsset(url: url)
+        let avAssetItemGenerator = AVAssetImageGenerator(asset: asset)
         self.playerItem = AVPlayerItem(asset: asset)
         self.videoPlayer = AVQueuePlayer(playerItem: playerItem)
         self.playerLooper = AVPlayerLooper(player: videoPlayer, templateItem: playerItem)
