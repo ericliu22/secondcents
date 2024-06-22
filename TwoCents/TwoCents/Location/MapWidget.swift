@@ -18,16 +18,12 @@ func MapWidget(widget: CanvasWidget) -> some View {
     
     let latitude = String(location?[0] ??  "40.7791151")
     let longitude = String(location?[1] ?? "-73.9626129")
-    
-    return AnyView(
-        
-        DisplayLocationWidgetView(latitude: latitude, longitude: longitude)
+          
+    return    DisplayLocationWidgetView(latitude: latitude, longitude: longitude)
          
         
            
           
        
-    )//AnyView
-    return DisplayLocationWidgetView(latitude: "40.7791151", longitude: "-73.9626129")
-    
+   
 }

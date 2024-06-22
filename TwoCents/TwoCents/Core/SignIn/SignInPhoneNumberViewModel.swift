@@ -54,8 +54,8 @@ final class SignInPhoneNumberViewModel: ObservableObject{
         var cleanedPhoneNumber = phoneNumber.components(separatedBy: CharacterSet.decimalDigits.inverted).joined()
         
         // Check if the phone number starts with "+1" and remove it if found
-        if cleanedPhoneNumber.hasPrefix("+1") {
-            cleanedPhoneNumber = String(cleanedPhoneNumber.dropFirst(2))
+        if cleanedPhoneNumber.hasPrefix("1") {
+            cleanedPhoneNumber = String(cleanedPhoneNumber.dropFirst(1))
         }
         
         let formattedNumber = applyPhoneNumberFormat(cleanedPhoneNumber)
