@@ -328,141 +328,90 @@ struct CanvasPage: View {
                 .frame(width: FRAME_SIZE, height: FRAME_SIZE)
 
     }
-    
     func doubleTapOverlay() -> some View {
-        
-        selectedWidget != nil
-                         ? VStack {
-                             
-                             EmojiCountHeaderView(spaceId: spaceId, widget: selectedWidget!)
-                                 .padding(.top, 150)
-                             Spacer()
-                             HStack{
-                                 
-                                 
-                                 
-                                 //map button
-                                 if selectedWidget!.media == .map {
-                                     
-                                     Button(action: {
-                                         
-                                         
-                                         
-                                         
-                                         if let location = selectedWidget?.location {
-                                             
-                                             viewModel.openMapsApp(location: location)
-                                         }
-                                         
-                                         
-                                         selectedWidget = nil
-                                         widgetDoubleTapped = false
-                                      
-                                     }, label: {
-                                         Image(systemName: "mappin.and.ellipse")
-                                             .foregroundColor(Color(UIColor.label))
-                                             .font(.title3)
-                                             .padding(.vertical, 8)
-                                          
-                                     })
-                                     .background(Color.clear, in: Rectangle())
-                                 }
-                                 
-                                 
-                                 
-                                 
-                                 
-                                 
-                                 //poll button
-                                 if selectedWidget!.media == .poll {
-                                     
-                                     Button(action: {
-                                         
-                                         activePollWidget = selectedWidget
-                                         
-                                         selectedWidget = nil
-                                         widgetDoubleTapped = false
-                                         
-                                         //                                     showSheet = true
-                                         //                                     showNewWidgetView = false
-                                         activeSheet = .poll
-                                     }, label: {
-                                         Image(systemName: "checklist")
-                                             .foregroundColor(Color(UIColor.label))
-                                             .font(.title3)
-                                             .padding(.vertical, 8)
-                                          
-                                     })
-                                     .background(Color.clear, in: Rectangle())
-                                 }
-                                 
-                             
-                                 
-                                 Button(action: {
-                                     
-                                     replyMode = true
-                                     
-                                     replyWidget = selectedWidget
-                                     if let selectedWidget, let index = canvasWidgets.firstIndex(of: selectedWidget){
-                                     
-                                     }
-                                     
-                                     
-                                     selectedWidget = nil
-                                     widgetDoubleTapped = false
-                                     
-                                     //                                     showSheet = true
-                                     //                                     showNewWidgetView = false
-                                     activeSheet = .chat
-                                 }, label: {
-                                     Image(systemName: "arrowshape.turn.up.left")
-                                         .foregroundColor(Color(UIColor.label))
-                                         .font(.title3)
-                                         .padding(.vertical, 8)
-                                        
-                                 })
-                                 .background(Color.clear, in: Rectangle())
-                                 
-                                 
-                                 //delete button
-                                 Button(action: {
-                                     if let selectedWidget, let index = canvasWidgets.firstIndex(of: selectedWidget){
-                                         canvasWidgets.remove(at: index)
-                                         SpaceManager.shared.removeWidget(spaceId: spaceId, widget: selectedWidget)
-                                         //delete poll on DB
-                                         if selectedWidget.media == .poll {
-                                             Task{
-                                                 deletePoll(spaceId: spaceId, pollId: selectedWidget.id.uuidString)
-                                                 
-                                                 
-                                                 
-                                             }
-                                           
-                                         }
-                                     }
-                                     selectedWidget = nil
-                                     widgetDoubleTapped = false
-                                     activeSheet = .chat
-                                 }, label: {
-                                     Image(systemName: "trash")
-                                         .foregroundColor(.red)
-                                         .font(.title3)
-                                         .padding(.vertical, 8)
-                                       
-                                 })
-                                 .background(Color.clear, in: Rectangle())
-                             }
-                             .padding(.horizontal, 15)
-                             
-                             .background(Color(UIColor.systemBackground), in: .capsule)
-                             .contentShape(.capsule)
-                             .shadow(color: Color(UIColor.label).opacity(0.2), radius: 20, x: 0, y: 2)
-                         }
-                    .frame(maxHeight: .infinity, alignment: .bottom)
-                    .padding(.bottom, 150)
-                         :  nil
-                        
+        selectedWidget != nil ? VStack {
+            EmojiCountHeaderView(spaceId: spaceId, widget: selectedWidget!)
+            Spacer()
+            HStack(spacing: 20) { // Increase spacing between buttons
+                // Map button
+                if selectedWidget!.media == .map {
+                    Button(action: {
+                        if let location = selectedWidget?.location {
+                            viewModel.openMapsApp(location: location)
+                        }
+                        selectedWidget = nil
+                        widgetDoubleTapped = false
+                    }, label: {
+                        Image(systemName: "mappin.and.ellipse")
+                            .foregroundColor(Color(UIColor.label))
+                            .font(.title3)
+                            .padding(5)// Increase padding
+                    })
+                    .contentShape(Rectangle())
+                }
+
+                // Poll button
+                if selectedWidget!.media == .poll {
+                    Button(action: {
+                        activePollWidget = selectedWidget
+                        selectedWidget = nil
+                        widgetDoubleTapped = false
+                        activeSheet = .poll
+                    }, label: {
+                        Image(systemName: "checklist")
+                            .foregroundColor(Color(UIColor.label))
+                            .font(.title3)
+                            .padding(5) // Increase padding
+                    })
+                    .contentShape(Rectangle())
+                }
+
+                // Reply button
+                Button(action: {
+                    replyMode = true
+                    replyWidget = selectedWidget
+                    selectedWidget = nil
+                    widgetDoubleTapped = false
+                    activeSheet = .chat
+                }, label: {
+                    Image(systemName: "arrowshape.turn.up.left")
+                        .foregroundColor(Color(UIColor.label))
+                        .font(.title3)
+                        .padding(5)// Increase padding
+                })
+                .contentShape(Rectangle())
+
+                // Delete button
+                Button(action: {
+                    if let selectedWidget, let index = canvasWidgets.firstIndex(of: selectedWidget) {
+                        canvasWidgets.remove(at: index)
+                        SpaceManager.shared.removeWidget(spaceId: spaceId, widget: selectedWidget)
+                        if selectedWidget.media == .poll {
+                            Task {
+                                deletePoll(spaceId: spaceId, pollId: selectedWidget.id.uuidString)
+                            }
+                        }
+                    }
+                    selectedWidget = nil
+                    widgetDoubleTapped = false
+                    activeSheet = .chat
+                }, label: {
+                    Image(systemName: "trash")
+                        .foregroundColor(.red)
+                        .font(.title3)
+                        .padding(5) // Increase padding
+                })
+                .contentShape(Rectangle())
+            }
+            .padding(.horizontal, 20)
+            .padding(.vertical, 10) // Add vertical padding
+            .background(Color(UIColor.systemBackground), in: Capsule())
+            .shadow(color: Color(UIColor.label).opacity(0.2), radius: 20, x: 0, y: 2)
+        }
+        .frame(maxHeight: .infinity, alignment: .bottom)
+        : nil
     }
+
     
     @ViewBuilder
     func zoomOverlay(proxy: ScrollViewProxy) -> some View {
@@ -484,7 +433,7 @@ struct CanvasPage: View {
                         .clipShape(Capsule())
                 )
                 .frame(maxHeight: .infinity, alignment: .bottom)
-                .padding(.bottom, 200)
+                .padding(.bottom, 80)
                 .onTapGesture(perform: {
                     withAnimation {
                         self.scale = 1.0
@@ -493,6 +442,8 @@ struct CanvasPage: View {
                     }
                     
                 })
+            
+            
         } else {
             VStack{}
         }
@@ -500,7 +451,7 @@ struct CanvasPage: View {
     
     func canvasView(proxy: ScrollViewProxy) -> some View {
             ZStack {
-                                        Color(UIColor.secondarySystemBackground)
+//                                        Color(UIColor.secondarySystemBackground)
                 Color(UIColor.systemBackground)
                 //                        .allowsHitTesting(toolPickerActive)
                 //                        .scaleEffect(scale)
@@ -537,7 +488,7 @@ struct CanvasPage: View {
             //                .scrollDisabled(currentMode != .normal)
             //hovering action menu when widget is clicked
             
-                .overlay(zoomOverlay(proxy: proxy))
+              
             
                 .overlay(
                     DrawingCanvas(canvas: $canvas, toolPickerActive: $toolPickerActive, toolPicker: $toolkit, spaceId: spaceId)
@@ -547,7 +498,7 @@ struct CanvasPage: View {
                         .frame(width: FRAME_SIZE, height: FRAME_SIZE)
                     
                 )
-                .overlay(doubleTapOverlay())
+      
             //                .animation(.easeInOut)
                 .background( Color(UIColor.secondarySystemBackground))
     }
@@ -575,13 +526,19 @@ struct CanvasPage: View {
                 let delta = value.magnification / self.lastScale
                 self.lastScale = value.magnification
                 let newScale = self.scale * delta
-                if (newScale > 2.0 || newScale < 0.5) {
+                if (newScale > 2.0 || newScale < 0.3) {
                     return
                 }
-                self.scaleChanging = true
+                
+                withAnimation {
+                    self.scaleChanging = true
+                }
+              
                 self.scale = newScale
             }.onEnded { value in
-                self.scaleChanging = false
+                withAnimation {
+                    self.scaleChanging = false
+                }
                 self.lastScale = 1.0
             }
     }
@@ -598,7 +555,7 @@ struct CanvasPage: View {
                     .task {
                         await onChange()
                     }
-                
+                  
                 
                 //add new widget view and ChatSHEET
                     .sheet(item: $activeSheet, onDismiss: {
@@ -820,9 +777,11 @@ struct CanvasPage: View {
                     }
                     .navigationTitle(toolPickerActive ? "" : viewModel.space?.name ?? "" )
             }
-            
+            .background(  Color(UIColor.secondarySystemBackground))
+            .overlay(zoomOverlay(proxy: proxy))
         }
         .gesture(magnification)
+        .overlay(doubleTapOverlay())
     }
 
 }
