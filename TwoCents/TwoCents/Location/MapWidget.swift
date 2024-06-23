@@ -27,7 +27,9 @@ struct MapWidget: WidgetView {
     }
 
     var body: some View {
-        DisplayLocationWidgetView(latitude: latitude, longitude: longitude)
+     
+            DisplayLocationWidgetView(latitude: latitude, longitude: longitude)
+      
     }
        
    
