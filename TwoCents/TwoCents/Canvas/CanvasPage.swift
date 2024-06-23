@@ -779,6 +779,7 @@ struct CanvasPage: View {
             }
             .background(  Color(UIColor.secondarySystemBackground))
             .overlay(zoomOverlay(proxy: proxy))
+            
         }
         .gesture(magnification)
         .overlay(doubleTapOverlay())

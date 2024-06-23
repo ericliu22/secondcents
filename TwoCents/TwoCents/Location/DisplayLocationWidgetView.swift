@@ -21,10 +21,7 @@ struct DisplayLocationWidgetView: View {
         ) { annotation in
             MapPin(coordinate: annotation.coordinate, tint: .red)
         }
-        .frame(
-            width: TILE_SIZE,
-            height: TILE_SIZE
-        )
+    
         .onAppear {
             if let lat = Double(latitude), let lon = Double(longitude) {
                 let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: lon)

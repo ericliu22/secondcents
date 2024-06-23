@@ -21,7 +21,7 @@ var imageViewTest = CanvasWidget(width: 250, height:  250, borderColor: .black, 
 var videoViewTest = CanvasWidget(width: 250, height: 250, borderColor: .red, userId: "jisookim", media: .video, mediaURL: URL(string: "https://www.pexels.com/video/10167684/download/")!, widgetName: "Video Widget", widgetDescription: "Nice vid")
 
 var pollViewTest = CanvasWidget(width: 250, height: 250, borderColor: .red, userId: "jisookim", media: .poll, mediaURL: URL(string: "https://www.pexels.com/video/10167684/download/")!, widgetName: "Poll Widget", widgetDescription: "Scholars, gather your consensus")
-var mapViewTest = CanvasWidget(width: 250, height: 250, borderColor: .red, userId: "jisookim", media: .map, mediaURL: URL(string: "https://www.pexels.com/video/10167684/download/")!, widgetName: "Map Widget", widgetDescription: "Drop the addy")
+var mapViewTest = CanvasWidget(width: 250, height: 250, borderColor: .red, userId: "jisookim", media: .map, widgetName: "Map Widget", widgetDescription: "Drop the addy")
 
 
 
@@ -201,7 +201,7 @@ struct NewWidgetView: View {
                                                 .foregroundStyle(.primary)
                                                 .font(.title)
                                                 .fontWeight(.bold)
-                                                .frame(maxWidth: .infinity)
+                                                .frame(maxWidth: .infinity, alignment: .center)
                                                 .visualEffect { content, geometryProxy in
                                                     content
                                                         .offset(x: scrollOffset(geometryProxy))
@@ -214,7 +214,7 @@ struct NewWidgetView: View {
                                                 .foregroundStyle(.secondary)
                                                 .font(.headline)
                                                 .fontWeight(.regular)
-                                                .frame(maxWidth: .infinity)
+                                                .frame(maxWidth: .infinity, alignment: .center)
                                                 .visualEffect { content, geometryProxy in
                                                     content
                                                         .offset(x: scrollOffset(geometryProxy))
@@ -308,6 +308,8 @@ struct NewWidgetView: View {
                                             .buttonBorderShape(.capsule)
                                             .padding(.horizontal)
                                             .disabled(viewModel.loading || (selectedVideo == nil))
+                                        
+                                        
                                     default:
                                         Button {
                                             
@@ -329,7 +331,7 @@ struct NewWidgetView: View {
                         .scrollTargetLayout()
                         
                     }
-                    .frame(maxHeight: .infinity, alignment: .top)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
                     .contentMargins(50, for: .scrollContent)
                     .scrollTargetBehavior(.viewAligned)
                     .safeAreaPadding()
