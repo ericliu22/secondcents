@@ -151,7 +151,7 @@ struct ProfileView: View {
                             }
                             
                             
-                            if let username = user.username  {
+                            if let username = user.username, username != ""  {
                                 Text("@\(username)" )
 //                                    .foregroundColor(Color(UIColor.secondaryLabel))
                                     .foregroundStyle(.secondary)
@@ -194,6 +194,40 @@ struct ProfileView: View {
                 
                 LazyVGrid(columns: columns, spacing: nil) {
                     
+                    
+                    
+                    VStack {
+                        if let user = viewModel.user, let dateCreated = user.dateCreated {
+                            // Calculate user's age in days
+                            let calendar = Calendar.current
+                            let currentDate = Date()
+                            
+                            if let userAge = calendar.dateComponents([.day], from: dateCreated, to: currentDate).day {
+                                Text(userAge == 1 ? "\(userAge) day" : "\(userAge) days")
+                                    .font(.title)
+                                    .fontWeight(.bold)
+                                    .foregroundStyle(.secondary)
+                                
+                                Text("of adventure")
+                                    .font(.headline)
+                                    .fontWeight(.regular)
+                                    .foregroundStyle(.tertiary)
+                                    .multilineTextAlignment(.center)
+                                
+                            }
+                        }
+                    }
+
+
+           
+                
+                
+                .frame(maxWidth:.infinity, maxHeight: .infinity)
+                .aspectRatio(1, contentMode: .fit)
+                .background(.thickMaterial)
+             
+                
+                .cornerRadius(20)
                     
                     
                     
@@ -362,39 +396,7 @@ struct ProfileView: View {
                     
                     
                     
-                    
-                    VStack {
-                        if let user = viewModel.user, let dateCreated = user.dateCreated {
-                            // Calculate user's age in days
-                            let calendar = Calendar.current
-                            let currentDate = Date()
-                            
-                            if let userAge = calendar.dateComponents([.day], from: dateCreated, to: currentDate).day {
-                                Text(userAge == 1 ? "\(userAge) day" : "\(userAge) days")
-                                    .font(.title)
-                                    .fontWeight(.bold)
-                                    .foregroundStyle(.secondary)
-                                
-                                Text("of adventure")
-                                    .font(.headline)
-                                    .fontWeight(.regular)
-                                    .foregroundStyle(.tertiary)
-                                    .multilineTextAlignment(.center)
-                                
-                            }
-                        }
-                    }
-
-
-           
-                
-                
-                .frame(maxWidth:.infinity, maxHeight: .infinity)
-                .aspectRatio(1, contentMode: .fit)
-                .background(.thickMaterial)
-             
-                
-                .cornerRadius(20)
+                   
                 
 //                
 //                    RoundedRectangle(cornerRadius: 20)
