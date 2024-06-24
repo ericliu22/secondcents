@@ -59,13 +59,13 @@ struct EmojiReactionsView: View {
         case "👍":
             return "liked"
         case "👎":
-            return "disliked"
+            return "hated"
         case "😭":
-            return "cried"
+            return "cried at"
         case "🫵":
-            return "pointed"
+            return "SHAMED"
         case "⁉️":
-            return "questioned"
+            return "AYO'd"
         default:
             return "reacted"
         }
