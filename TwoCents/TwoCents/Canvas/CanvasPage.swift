@@ -160,7 +160,7 @@ struct CanvasPage: View {
     }
     
     func GridView() -> some View {
-        let columns = Array(repeating: GridItem(.fixed(TILE_SIZE), spacing: 30, alignment: .center), count: 3)
+        let columns = Array(repeating: GridItem(.fixed(TILE_SIZE), spacing: 30, alignment: .center), count: 5)
         
         return LazyVGrid(columns: columns, alignment: .center, spacing: 30, content: {
             
@@ -438,7 +438,7 @@ struct CanvasPage: View {
                     withAnimation {
                         self.scale = 1.0
                         self.lastScale = 1.0
-                        proxy.scrollTo(canvasWidgets.count/2, anchor: .zero)
+                        proxy.scrollTo(canvasWidgets.count/2, anchor: .center)
                     }
                     
                 })
@@ -781,6 +781,7 @@ struct CanvasPage: View {
             .overlay(zoomOverlay(proxy: proxy))
             
         }
+    
         .gesture(magnification)
         .overlay(doubleTapOverlay())
     }

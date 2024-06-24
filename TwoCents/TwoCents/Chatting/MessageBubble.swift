@@ -9,62 +9,6 @@ import Foundation
 import UIKit
 import SwiftUI
 
-////message bubble leading --> other users
-//struct messageBubbleLead: View{
-//    var message: Message
-//    var body: some View{
-//        VStack(alignment:.leading){
-//            Text(message.sendBy)
-//            Text(message.text)
-//                .background(.green)
-//                .cornerRadius(30)
-//        }
-//        .frame(maxWidth: .infinity, alignment: .leading)
-//    }
-//}
-//
-////message bubble leading --> other users, same user texted twice
-//struct messageBubbleSameLead: View{
-//    var message: Message
-//    var body: some View{
-//        Text(message.text)
-//            .background(.blue)
-//            .cornerRadius(30)
-//            .frame(maxWidth: .infinity, alignment: .leading)
-//    }
-//}
-//
-////message bubble trailing --> the user/self
-//struct messageBubbleTrail: View{
-//    var message: Message
-//    var body: some View{
-//        VStack(alignment:.trailing){
-//            Text(message.sendBy)
-//            Text(message.text)
-//                .background(.red)
-//                .cornerRadius(30)
-//        }
-//            .frame(maxWidth: .infinity, alignment: .trailing)
-//    }
-//}
-//
-//struct messageBubbleSameTrail: View{
-//    var message: Message
-//    var body: some View{
-//        Text(message.text)
-//            .background(.purple)
-//            .cornerRadius(30)
-//            .frame(maxWidth: .infinity, alignment: .trailing)
-//    }
-//}
-//
-
-
-
-
-//Jonathan combined above stucts into one... if there is an error, ask him
-
-
 
 struct universalMessageBubble: View{
     var message: Message
@@ -143,6 +87,7 @@ struct universalMessageBubble: View{
             try? await viewModel.loadUser(userId: message.sendBy)
             withAnimation{
                 self.userColor = viewModel.getUserColor(userColor:viewModel.user?.userColor ?? "")
+                
             }
             
             if message.widgetId != nil {
