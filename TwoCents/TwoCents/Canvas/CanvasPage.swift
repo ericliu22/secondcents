@@ -171,7 +171,7 @@ struct CanvasPage: View {
                     .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
                     .cornerRadius(CORNER_RADIUS)
                 
-                
+                  
                  
                 
                 //clickable area/outline when clicked
@@ -332,7 +332,7 @@ struct CanvasPage: View {
         selectedWidget != nil ? VStack {
             EmojiCountHeaderView(spaceId: spaceId, widget: selectedWidget!)
             Spacer()
-            HStack(spacing: 20) { // Increase spacing between buttons
+            HStack(spacing: 5) { // Increase spacing between buttons
                 // Map button
                 if selectedWidget!.media == .map {
                     Button(action: {
@@ -344,10 +344,9 @@ struct CanvasPage: View {
                     }, label: {
                         Image(systemName: "mappin.and.ellipse")
                             .foregroundColor(Color(UIColor.label))
-                            .font(.title3)
-                            .padding(5)// Increase padding
+                            .padding(.horizontal, 5)
                     })
-                    .contentShape(Rectangle())
+//                    .contentShape(Rectangle())
                 }
 
                 // Poll button
@@ -361,9 +360,9 @@ struct CanvasPage: View {
                         Image(systemName: "checklist")
                             .foregroundColor(Color(UIColor.label))
                             .font(.title3)
-                            .padding(5) // Increase padding
+                            .padding(.horizontal, 5)
                     })
-                    .contentShape(Rectangle())
+//                    .contentShape(Rectangle())
                 }
 
                 // Reply button
@@ -377,9 +376,9 @@ struct CanvasPage: View {
                     Image(systemName: "arrowshape.turn.up.left")
                         .foregroundColor(Color(UIColor.label))
                         .font(.title3)
-                        .padding(5)// Increase padding
+                        .padding(.horizontal, 5)
                 })
-                .contentShape(Rectangle())
+//                .contentShape(Rectangle())
 
                 // Delete button
                 Button(action: {
@@ -399,9 +398,10 @@ struct CanvasPage: View {
                     Image(systemName: "trash")
                         .foregroundColor(.red)
                         .font(.title3)
-                        .padding(5) // Increase padding
+                        .padding(.horizontal, 5) // Increase padding
+                     
                 })
-                .contentShape(Rectangle())
+//                .contentShape(Rectangle())
             }
             .padding(.horizontal, 20)
             .padding(.vertical, 10) // Add vertical padding

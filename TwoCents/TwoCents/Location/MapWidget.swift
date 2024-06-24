@@ -33,6 +33,7 @@ struct MapWidget: WidgetView {
                 width: TILE_SIZE,
                 height: TILE_SIZE
             )
+            
     }
        
    
