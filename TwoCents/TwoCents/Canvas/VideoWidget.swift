@@ -10,18 +10,14 @@ import SwiftUI
 import AVKit
 
 class VideoPlayerModel: ObservableObject {
-    var videoPlayer: AVQueuePlayer
-    var playerLooper: AVPlayerLooper
+    var videoPlayer: AVPlayer
+    @Published var isPlaying: Bool = false
     private var playerItem: AVPlayerItem
     
     init(url: URL) {
         let asset = AVAsset(url: url)
-        let avAssetItemGenerator = AVAssetImageGenerator(asset: asset)
         self.playerItem = AVPlayerItem(asset: asset)
-        self.videoPlayer = AVQueuePlayer(playerItem: playerItem)
-        self.playerLooper = AVPlayerLooper(player: videoPlayer, templateItem: playerItem)
-        self.videoPlayer.play()
-        self.videoPlayer.isMuted = true
+        self.videoPlayer = AVPlayer(playerItem: playerItem)
     }
     
     deinit {
@@ -53,13 +49,19 @@ struct VideoWidget: WidgetView{
                 .draggable(widget)
                 .gesture(TapGesture().onEnded({
                     playerModel.videoPlayer.isMuted.toggle()
+                    playerModel.isPlaying.toggle()
+                    if playerModel.isPlaying {
+                        playerModel.videoPlayer.play()
+                    } else {
+                        playerModel.videoPlayer.pause()
+                    }
                 }))
         }
     }
     
     
     init(widget: CanvasWidget, newWidget: Bool) {
-        print("INITIALIZED A THING")
+        print("Initialized Video Widget")
         self.widget = widget
         self.newWidget = newWidget
         self.playerModel = VideoPlayerModel(url: widget.mediaURL!)

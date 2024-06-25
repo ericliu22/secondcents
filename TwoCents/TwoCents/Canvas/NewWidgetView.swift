@@ -166,7 +166,6 @@ struct NewWidgetView: View {
     
     
     func imageButton(index: Int) {
-        //@TODO: look into just making it index instead of hardcoding each index
         viewModel.saveWidget(index: index)
         
         if !viewModel.loading {
