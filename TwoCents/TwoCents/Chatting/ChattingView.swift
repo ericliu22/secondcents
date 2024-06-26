@@ -169,12 +169,12 @@ struct ChatView: View {
                     }
                 }
                 .onChange(of: messageManager.lastMessageId) {
-//                    id in proxy.scrollTo(id, anchor: .bottom)
+                    id in proxy.scrollTo(id, anchor: .bottom)
                     
                     scroll = true
                 }
                 .onChange(of: selectedDetent) {
-//                    id in proxy.scrollTo(id, anchor: .bottom)
+                    id in proxy.scrollTo(id, anchor: .top)
                     
                     scroll = true
                     

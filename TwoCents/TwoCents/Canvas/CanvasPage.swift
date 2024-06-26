@@ -41,25 +41,17 @@ struct CanvasPage: View {
     @State private var currentMode: canvasState = .normal
     @State private var canvasWidgets: [CanvasWidget] = []
     @State private var draggingItem: CanvasWidget?
-    @State private var scrollPosition: CGPoint = CGPointZero
-    @State private var activeGestures: GestureMask = .subviews
-    //    @State private var showNewWidgetView: Bool = false
-    //    @State private var showSheet: Bool = true
     @State private var inSettingsView: Bool = false
     @State private var photoLinkedToProfile: Bool = false
     @State private var widgetId: String = UUID().uuidString
-    @State private var toolkit: PKToolPicker = PKToolPicker.init()
+    @State private var toolkit: PKToolPicker = PKToolPicker()
     @State private var pendingWrites: Bool = false
     @State private var timer: Timer?
-    
     @State private var replyMode: Bool = false
-    
     @State private var activeSheet: sheetTypesCanvasPage?
-    
     @State private var activePollWidget: CanvasWidget?
     @State private var selectedWidget: CanvasWidget?
     @State private var replyWidget: CanvasWidget?
-    
     @State private var selectedDetent: PresentationDetent = .height(50)
     
     
@@ -106,12 +98,11 @@ struct CanvasPage: View {
         
         self.chatroomDocument = db.collection("spaces").document(spaceId)
         self.drawingDocument = db.collection("spaces").document(spaceId).collection("Widgets").document("Drawings")
-        
     }
     
     
     
-    func pullDocuments() async {
+    func pullDocuments() {
         db.collection("spaces").document(spaceId).addSnapshotListener { documentSnapshot, error in
             guard let document = documentSnapshot else {
                 print("Error fetching document: \(error!)")
@@ -156,7 +147,7 @@ struct CanvasPage: View {
     
     func onChange() async {
         print("ran on change")
-        await pullDocuments()
+        pullDocuments()
     }
     
     func GridView() -> some View {
@@ -297,12 +288,6 @@ struct CanvasPage: View {
                                  
                                 )
     }
-    @State private var scale: CGFloat = 1.0
-    @State private var lastScale: CGFloat = 1.0
-    @State private var scaleChanging: Bool = false
-    
-    
-    @State private var animator: UIViewPropertyAnimator?
     
     func Background() -> some View {
                 GeometryReader { geometry in
@@ -386,9 +371,7 @@ struct CanvasPage: View {
                         canvasWidgets.remove(at: index)
                         SpaceManager.shared.removeWidget(spaceId: spaceId, widget: selectedWidget)
                         if selectedWidget.media == .poll {
-                            Task {
-                                deletePoll(spaceId: spaceId, pollId: selectedWidget.id.uuidString)
-                            }
+                            deletePoll(spaceId: spaceId, pollId: selectedWidget.id.uuidString)
                         }
                     }
                     selectedWidget = nil
@@ -413,41 +396,7 @@ struct CanvasPage: View {
     }
 
     
-    @ViewBuilder
-    func zoomOverlay() -> some View {
-                    //if user is magnifying out
-                    //or canvas is less than 50 percent...
-                    //or is out of bounds
-                    //show zoom percentage
-        
-        let conditions:Bool = scale < CGFloat(0.5) || scale > CGFloat(1.5)
-        
-        if (scaleChanging || conditions) {
-            Text(String(format: "%.0f", scale * CGFloat(100)) + "%")
-                .padding(.vertical, 8)
-                .frame(width:80)
-            
-                .background(
-                    Rectangle()
-                        .fill(.ultraThinMaterial)
-                        .clipShape(Capsule())
-                )
-                .frame(maxHeight: .infinity, alignment: .bottom)
-                .padding(.bottom, 80)
-                .onTapGesture(perform: {
-                    withAnimation {
-                        self.scale = 1.0
-                        self.lastScale = 1.0
-                    }
-                    
-                })
-            
-            
-        } else {
-            VStack{}
-        }
-    }
-    
+
     func canvasView() -> some View {
             ZStack {
 //                                        Color(UIColor.secondarySystemBackground)
@@ -518,40 +467,16 @@ struct CanvasPage: View {
         }
     }
     
-    var magnification: some Gesture {
-        MagnifyGesture()
-            .onChanged { value in
-                let delta = value.magnification / self.lastScale
-                self.lastScale = value.magnification
-                let newScale = self.scale * delta
-                if (newScale > 2.0 || newScale < 0.3) {
-                    return
-                }
-                
-                withAnimation {
-                    self.scaleChanging = true
-                }
-              
-                self.scale = newScale
-            }.onEnded { value in
-                withAnimation {
-                    self.scaleChanging = false
-                }
-                self.lastScale = 1.0
-            }
-    }
     
     @Environment(\.undoManager) private var undoManager
     var body: some View {
-        ZoomableScrollView {
+        ZoomableScrollView(toolPickerActive: $toolPickerActive) {
             canvasView()
                 .frame(width: FRAME_SIZE * 2, height: FRAME_SIZE * 2)
                 .ignoresSafeArea()
                 .task {
                     await onChange()
                 }
-            
-            
             //add new widget view and ChatSHEET
                 .sheet(item: $activeSheet, onDismiss: {
                     //                showNewWidgetView = false
@@ -670,25 +595,7 @@ struct CanvasPage: View {
                     //pencilkit
                     ToolbarItem(placement: .topBarTrailing) {
                         Button(action: {
-                            
                             self.toolPickerActive.toggle()
-                            if toolPickerActive {
-                                self.toolkit = PKToolPicker()
-                                self.toolkit.addObserver(canvas)
-                                canvas.becomeFirstResponder()
-                            }
-                            self.toolkit.setVisible(toolPickerActive, forFirstResponder: canvas)
-                            if currentMode != .drawing {
-                                self.currentMode = .drawing
-                                self.activeGestures = .all
-                                //                            showSheet = false
-                                activeSheet = nil
-                            } else {
-                                self.currentMode = .normal
-                                self.activeGestures = .subviews
-                                //                            showSheet = true
-                                activeSheet = .chat
-                            }
                         }, label: {
                             toolPickerActive
                             ? Image(systemName: "pencil.tip.crop.circle.fill")
@@ -755,6 +662,7 @@ struct CanvasPage: View {
                     
                     do {
                         try await viewModel.loadCurrentSpace(spaceId: spaceId)
+                        print("Done with loadCurrentSpace")
                     } catch {
                         //EXIT IF SPACE DOES NOT EXIST
                         self.presentationMode.wrappedValue.dismiss()
@@ -773,7 +681,6 @@ struct CanvasPage: View {
                 .navigationTitle(toolPickerActive ? "" : viewModel.space?.name ?? "" )
         }
         .background(  Color(UIColor.secondarySystemBackground))
-        .overlay(zoomOverlay())
         .overlay(doubleTapOverlay())
     }
 }

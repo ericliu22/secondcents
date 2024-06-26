@@ -10,8 +10,10 @@ import SwiftUI
 
 struct ZoomableScrollView<Content: View>: UIViewRepresentable {
     private var content: Content
+    @Binding var toolPickerActive: Bool
 
-    init(@ViewBuilder content: () -> Content) {
+    init(toolPickerActive: Binding<Bool>, @ViewBuilder content: () -> Content) {
+        self._toolPickerActive = toolPickerActive
         self.content = content()
     }
 
@@ -22,6 +24,9 @@ struct ZoomableScrollView<Content: View>: UIViewRepresentable {
         scrollView.minimumZoomScale = 0.5
         scrollView.bouncesZoom = true
         scrollView.bounces = true
+        scrollView.showsVerticalScrollIndicator = false
+        scrollView.showsHorizontalScrollIndicator = false
+        scrollView.isScrollEnabled = !toolPickerActive
 
         let hostedView = context.coordinator.hostingController.view!
         hostedView.translatesAutoresizingMaskIntoConstraints = false
@@ -43,6 +48,7 @@ struct ZoomableScrollView<Content: View>: UIViewRepresentable {
     }
 
     func updateUIView(_ uiView: UIScrollView, context: Context) {
+        uiView.isScrollEnabled = !toolPickerActive
         context.coordinator.hostingController.rootView = self.content
         uiView.setNeedsLayout()
         uiView.layoutIfNeeded()

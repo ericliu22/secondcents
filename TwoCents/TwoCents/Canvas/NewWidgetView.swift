@@ -57,7 +57,7 @@ struct NewWidgetView: View {
             //main widget/photopicker
             PhotosPicker(selection: $selectedVideo, matching: .videos, photoLibrary: .shared()){
                 
-                MediaView(widget: viewModel.widgets[index], spaceId: spaceId, newWidget: true)
+                MediaView(widget: viewModel.widgets[index], spaceId: spaceId)
                     .aspectRatio(1, contentMode: .fit)
 //                    .shadow(radius: 20, y: 10)
                     .cornerRadius(30)

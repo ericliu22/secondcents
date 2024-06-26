@@ -32,38 +32,18 @@ struct VideoWidget: WidgetView{
     var widget: CanvasWidget;
     private var width: CGFloat;
     private var height: CGFloat;
-    private var newWidget: Bool;
     
     var body: some View {
-        if newWidget {
-            VideoPlayer(player: playerModel.videoPlayer)
-                .ignoresSafeArea()
-                .frame(width: width, height: height, alignment: .center)
-                .clipShape(RoundedRectangle(cornerRadius: CORNER_RADIUS))
-                .draggable(widget)
-        } else {
-            VideoPlayer(player: playerModel.videoPlayer)
-                .ignoresSafeArea()
-                .frame(width: width, height: height, alignment: .center)
-                .clipShape(RoundedRectangle(cornerRadius: CORNER_RADIUS))
-                .draggable(widget)
-                .gesture(TapGesture().onEnded({
-                    playerModel.videoPlayer.isMuted.toggle()
-                    playerModel.isPlaying.toggle()
-                    if playerModel.isPlaying {
-                        playerModel.videoPlayer.play()
-                    } else {
-                        playerModel.videoPlayer.pause()
-                    }
-                }))
-        }
+        VideoPlayer(player: playerModel.videoPlayer)
+            .ignoresSafeArea()
+            .frame(width: width, height: height, alignment: .center)
+            .clipShape(RoundedRectangle(cornerRadius: CORNER_RADIUS))
+            .draggable(widget)
     }
     
     
-    init(widget: CanvasWidget, newWidget: Bool) {
-        print("Initialized Video Widget")
+    init(widget: CanvasWidget) {
         self.widget = widget
-        self.newWidget = newWidget
         self.playerModel = VideoPlayerModel(url: widget.mediaURL!)
         self.width = widget.width
         self.height = widget.height
