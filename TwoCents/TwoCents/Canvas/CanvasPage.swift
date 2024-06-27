@@ -50,7 +50,6 @@ struct CanvasPage: View {
     @State private var replyMode: Bool = false
     @State private var activeSheet: sheetTypesCanvasPage?
     @State private var activePollWidget: CanvasWidget?
-    @State private var selectedWidget: CanvasWidget?
     @State private var replyWidget: CanvasWidget?
     @State private var selectedDetent: PresentationDetent = .height(50)
     
@@ -71,26 +70,17 @@ struct CanvasPage: View {
     private var drawingDocument: DocumentReference
     
     enum canvasState {
-        
         case drawing, normal
-        
     }
     
     
     enum sheetTypesCanvasPage: Identifiable  {
-        
-        
-        
         case newWidgetView, chat, poll, newTextView
         
         var id: Self {
             return self
         }
-        
     }
-    
-    
-    
     
     
     init(spaceId: String) {
@@ -145,6 +135,7 @@ struct CanvasPage: View {
     }
     
     
+    //For some reason this has to be async or else shit doesn't work
     func onChange() async {
         print("ran on change")
         pullDocuments()
@@ -168,15 +159,15 @@ struct CanvasPage: View {
                 //clickable area/outline when clicked
                     .overlay(
                         RoundedRectangle(cornerRadius: CORNER_RADIUS)
-                            .strokeBorder(selectedWidget == widget ? Color.secondary : .clear, lineWidth: 3)
+                            .strokeBorder(viewModel.selectedWidget == widget ? Color.secondary : .clear, lineWidth: 3)
                             .contentShape(RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
                             .cornerRadius(CORNER_RADIUS)
                         
                             .onTapGesture(count: 2, perform: {
-                                if selectedWidget != widget || !widgetDoubleTapped {
+                                if viewModel.selectedWidget != widget || !widgetDoubleTapped {
                                     //select
                                     
-                                    selectedWidget = widget
+                                    viewModel.selectedWidget = widget
                                     widgetDoubleTapped = true
                                     //                                    showSheet = false
                                     //                                    showNewWidgetView = false
@@ -184,7 +175,7 @@ struct CanvasPage: View {
                                     
                                 } else {
                                     //deselect
-                                    selectedWidget = nil
+                                    viewModel.selectedWidget = nil
                                     widgetDoubleTapped = false
                                     //                                    showSheet = true
                                     //                                    showNewWidgetView = false
@@ -205,12 +196,12 @@ struct CanvasPage: View {
                             .foregroundStyle(.secondary)
                             .offset(y:90)
                     })
-                    .blur(radius: widgetDoubleTapped && selectedWidget != widget ? 20 : 0)
-                    .scaleEffect(widgetDoubleTapped && selectedWidget == widget ? 1.05 : 1)
+                    .blur(radius: widgetDoubleTapped && viewModel.selectedWidget != widget ? 20 : 0)
+                    .scaleEffect(widgetDoubleTapped && viewModel.selectedWidget == widget ? 1.05 : 1)
                     .animation(.spring)
-                //emoji react MENU
+                    //emoji react MENU
                     .overlay( alignment: .top, content: {
-                        if widgetDoubleTapped && selectedWidget == widget {
+                        if widgetDoubleTapped && viewModel.selectedWidget == widget {
                             EmojiReactionsView(spaceId: spaceId, widget: widget)
                                 .offset(y:-60)
                             
@@ -220,7 +211,7 @@ struct CanvasPage: View {
                     .overlay(content: {
                         
                         
-                        selectedWidget == nil/* && draggingItem == nil */?
+                        viewModel.selectedWidget == nil/* && draggingItem == nil */?
                         EmojiCountOverlayView(spaceId: spaceId, widget: widget)
                             .offset(y: TILE_SIZE/2)
                         : nil
@@ -267,7 +258,7 @@ struct CanvasPage: View {
                                 
                                 
                                 //deselect
-                                selectedWidget = nil
+                                viewModel.selectedWidget = nil
                                 widgetDoubleTapped = false
                                 
                                 //                                showSheet = true
@@ -314,17 +305,17 @@ struct CanvasPage: View {
 
     }
     func doubleTapOverlay() -> some View {
-        selectedWidget != nil ? VStack {
-            EmojiCountHeaderView(spaceId: spaceId, widget: selectedWidget!)
+        viewModel.selectedWidget != nil ? VStack {
+            EmojiCountHeaderView(spaceId: spaceId, widget: viewModel.selectedWidget!)
             Spacer()
             HStack(spacing: 5) { // Increase spacing between buttons
                 // Map button
-                if selectedWidget!.media == .map {
+                if viewModel.selectedWidget!.media == .map {
                     Button(action: {
-                        if let location = selectedWidget?.location {
+                        if let location = viewModel.selectedWidget?.location {
                             viewModel.openMapsApp(location: location)
                         }
-                        selectedWidget = nil
+                        viewModel.selectedWidget = nil
                         widgetDoubleTapped = false
                     }, label: {
                         Image(systemName: "mappin.and.ellipse")
@@ -335,10 +326,10 @@ struct CanvasPage: View {
                 }
 
                 // Poll button
-                if selectedWidget!.media == .poll {
+                if viewModel.selectedWidget!.media == .poll {
                     Button(action: {
-                        activePollWidget = selectedWidget
-                        selectedWidget = nil
+                        activePollWidget = viewModel.selectedWidget
+                        viewModel.selectedWidget = nil
                         widgetDoubleTapped = false
                         activeSheet = .poll
                     }, label: {
@@ -353,8 +344,8 @@ struct CanvasPage: View {
                 // Reply button
                 Button(action: {
                     replyMode = true
-                    replyWidget = selectedWidget
-                    selectedWidget = nil
+                    replyWidget = viewModel.selectedWidget
+                    viewModel.selectedWidget = nil
                     widgetDoubleTapped = false
                     activeSheet = .chat
                 }, label: {
@@ -367,14 +358,14 @@ struct CanvasPage: View {
 
                 // Delete button
                 Button(action: {
-                    if let selectedWidget, let index = canvasWidgets.firstIndex(of: selectedWidget) {
+                    if let viewModel.selectedWidget, let index = canvasWidgets.firstIndex(of: viewModel.selectedWidget) {
                         canvasWidgets.remove(at: index)
-                        SpaceManager.shared.removeWidget(spaceId: spaceId, widget: selectedWidget)
-                        if selectedWidget.media == .poll {
-                            deletePoll(spaceId: spaceId, pollId: selectedWidget.id.uuidString)
+                        SpaceManager.shared.removeWidget(spaceId: spaceId, widget: viewModel.selectedWidget)
+                        if viewModel.selectedWidget.media == .poll {
+                            deletePoll(spaceId: spaceId, pollId: viewModel.selectedWidget.id.uuidString)
                         }
                     }
-                    selectedWidget = nil
+                    viewModel.selectedWidget = nil
                     widgetDoubleTapped = false
                     activeSheet = .chat
                 }, label: {
@@ -401,12 +392,8 @@ struct CanvasPage: View {
             ZStack {
 //                                        Color(UIColor.secondarySystemBackground)
                 Color(UIColor.systemBackground)
-                //                        .allowsHitTesting(toolPickerActive)
                 //                        .scaleEffect(scale)
-                //                            .scaleEffect(scale, anchor: UnitPoint(
-                //                                       x: 0.5 + offset.width / (2 * UIScreen.main.bounds.width),
-                //                                       y: 0.5 + offset.height / (2 * UIScreen.main.bounds.height)
-                //                                   ))
+                //                            .scaleEffect(scale,
                     .clipped() // Ensure the content does not overflow
                 //                        .animation(.spring()) // Optional: Add some animation
                     .frame(width: FRAME_SIZE, height: FRAME_SIZE)
@@ -425,18 +412,10 @@ struct CanvasPage: View {
             
                 .onTapGesture {
                     //deselect
-                    selectedWidget = nil
+                    viewModel.selectedWidget = nil
                     widgetDoubleTapped = false
-                    
-                    //                    showSheet = true
-                    //                    showNewWidgetView = false
                     activeSheet = .chat
                 }
-            //                .scrollDisabled(currentMode != .normal)
-            //hovering action menu when widget is clicked
-            
-              
-            
                 .overlay(
                     DrawingCanvas(canvas: $canvas, toolPickerActive: $toolPickerActive, toolPicker: $toolkit, spaceId: spaceId)
                         .allowsHitTesting(toolPickerActive)
@@ -472,7 +451,7 @@ struct CanvasPage: View {
     var body: some View {
         ZoomableScrollView(toolPickerActive: $toolPickerActive) {
             canvasView()
-                .frame(width: FRAME_SIZE * 2, height: FRAME_SIZE * 2)
+                .frame(width: FRAME_SIZE * 1.5, height: FRAME_SIZE * 1.5)
                 .ignoresSafeArea()
                 .task {
                     await onChange()
@@ -490,6 +469,7 @@ struct CanvasPage: View {
                     //get chat to show up at all times
                     if !widgetDoubleTapped && !inSettingsView && activeSheet == nil{
                         //                                showSheet = true
+                        inSettingsView = false
                         activeSheet = .chat
                         
                     }
@@ -542,11 +522,6 @@ struct CanvasPage: View {
                         
                         
                         
-                        
-                        //                    if let myWidget = activePollWidget {
-                        
-                        //                       getMediaView(widget: myWidget, spaceId: spaceId)
-                        //                        PollWidgetSheetView(widget: activePollWidget!, spaceId: spaceId)
                         if let widget = activePollWidget {
                             PollWidgetSheetView(widget: widget, spaceId: spaceId)
                         } else {
@@ -625,18 +600,12 @@ struct CanvasPage: View {
                             
                             SpaceSettingsView(spaceId: spaceId)
                                 .onAppear {
-                                    //                                showSheet = false
                                     activeSheet = nil
                                     inSettingsView = true
                                 }
                                 .onDisappear {
-                                    //                                showSheet = true
                                     activeSheet = .chat
                                     inSettingsView = false
-                                    
-                                    
-                                    
-                                    
                                 }
                         } label: {
                             Image(systemName: "ellipsis")
@@ -680,6 +649,9 @@ struct CanvasPage: View {
                 }
                 .navigationTitle(toolPickerActive ? "" : viewModel.space?.name ?? "" )
         }
+        .onDisappear(perform: {
+            activeSheet = nil
+        })
         .background(  Color(UIColor.secondarySystemBackground))
         .overlay(doubleTapOverlay())
     }

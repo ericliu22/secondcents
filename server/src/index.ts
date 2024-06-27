@@ -29,7 +29,7 @@ app.get('/api', ({ redirect }) => {
 })
 
 app.get('/', () => {
-	return "Guoliang Eric Liu's webiste";
+	return "Guoliang Eric Liu's website";
 })
 
 app.listen(process.env.PORT ?? 8080, () => {

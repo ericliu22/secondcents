@@ -185,7 +185,7 @@ func MediaView(widget: CanvasWidget, spaceId: String) -> some View{
     case .text:
         TextWidget(widget: widget)
     case .video:
-        VideoWidget(widget: widget)
+        VideoWidget(widget: widget, viewModel)
     case .image:
         ImageWidget(widget: widget)
     case .poll:

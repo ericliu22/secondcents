@@ -216,13 +216,15 @@ func widgetNotification(spaceId: String, userUID: String, widget: CanvasWidget) 
     Task {
         let space = try await SpaceManager.shared.getSpace(spaceId: spaceId)
         let spaceName: String = space.name!
-        let name = try await UserManager.shared.getUser(userId: userUID).name
-        
+        guard let name = try? await UserManager.shared.getUser(userId: userUID).name else {
+            print("widgetNotification: Failed to obtain name")
+            return
+        }
         if let spaceImage: String = space.profileImageUrl {
-            let notification = Notification(title: "\(spaceName)", body: "\(name!) added a new \(widget.media.name()) widget", image: spaceImage);
+            let notification = Notification(title: "\(spaceName)", body: "\(name) added a new \(widget.media.name()) widget", image: spaceImage);
             spaceNotification(spaceId: spaceId, userUID: userUID, notification: notification)
         } else {
-            let notification = Notification(title: "\(spaceName)", body: "\(name!) added a new \(widget.media.name()) widget");
+            let notification = Notification(title: "\(spaceName)", body: "\(name) added a new \(widget.media.name()) widget");
             spaceNotification(spaceId: spaceId, userUID: userUID, notification: notification)
         }
     }
@@ -230,15 +232,22 @@ func widgetNotification(spaceId: String, userUID: String, widget: CanvasWidget) 
 
 func reactionNotification(spaceId: String, userUID: String, message: String) {
     Task {
-        let space = try await SpaceManager.shared.getSpace(spaceId: spaceId)
+        guard let space = try? await SpaceManager.shared.getSpace(spaceId: spaceId) else {
+            print("reactionNotification: Failed to obtain space")
+            return
+        }
+        guard let name = try? await UserManager.shared.getUser(userId: userUID).name else {
+            print("reactionNotification: Failed to obtain name")
+            return
+        }
+        
         let spaceName: String = space.name!
-        let name = try await UserManager.shared.getUser(userId: userUID).name
         
         if let spaceImage: String = space.profileImageUrl {
-            let notification = Notification(title: "\(spaceName)", body: "\(name!) \(message) a widget", image: spaceImage);
+            let notification = Notification(title: "[\(spaceName)] \(name) reacted", body: "\(name) \(message) a widget", image: spaceImage);
             spaceNotification(spaceId: spaceId, userUID: userUID, notification: notification)
         } else {
-            let notification = Notification(title: "\(spaceName)", body: "\(name!) \(message) a widget");
+            let notification = Notification(title: "[\(spaceName)] \(name) reacted", body: "\(name) \(message) a widget");
             spaceNotification(spaceId: spaceId, userUID: userUID, notification: notification)
         }
     }
@@ -246,25 +255,30 @@ func reactionNotification(spaceId: String, userUID: String, message: String) {
 
 func friendRequestNotification(userUID: String, friendUID: String) async {
     let user: DBUser
-    do {
-        user = try await UserManager.shared.getUser(userId: userUID)
-    } catch {
+    guard let user = try? await UserManager.shared.getUser(userId: userUID) else {
         print("friendRequestNotification: Failed to obtain user")
         return
     }
     let token: String = await getToken(uid: friendUID)
+    
     guard let name: String = user.name else {
         print("friendRequestNotification: Failed to obtain name")
         return
     }
-    guard let username: String = user.username else {
-        print("friendRequestNotification: Failed to obtain username")
-        return
-    }
-    let notification = Notification(title: "\(username) sent you a friend request", body: "\(name) wants to be your friend!")
-    sendSingleNotification(to: token, notification: notification) { completion in
-        if (completion) {
-            print("Succeeded sending")
+    
+    if let profileImage = user.profileImageUrl {
+        let notification = Notification(title: "\(name) sent you a friend request", body: "\(name) wants to be your friend!", image: profileImage)
+        sendSingleNotification(to: token, notification: notification) { completion in
+            if (completion) {
+                print("Succeeded sending")
+            }
+        }
+    } else {
+        let notification = Notification(title: "\(name) sent you a friend request", body: "\(name) wants to be your friend!")
+        sendSingleNotification(to: token, notification: notification) { completion in
+            if (completion) {
+                print("Succeeded sending")
+            }
         }
     }
 }

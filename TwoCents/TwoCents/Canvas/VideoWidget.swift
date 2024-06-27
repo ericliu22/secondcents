@@ -30,8 +30,8 @@ struct VideoWidget: WidgetView{
     @ObservedObject private var playerModel: VideoPlayerModel
 
     var widget: CanvasWidget;
-    private var width: CGFloat;
-    private var height: CGFloat;
+    @State private var width: CGFloat;
+    @State private var height: CGFloat;
     
     var body: some View {
         VideoPlayer(player: playerModel.videoPlayer)

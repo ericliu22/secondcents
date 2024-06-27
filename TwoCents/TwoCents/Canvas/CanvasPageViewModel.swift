@@ -29,6 +29,8 @@ final class CanvasPageViewModel: ObservableObject {
         
     }
     
+    @Published var selectedWidget: CanvasWidget? = nil
+    
     
     
     
