@@ -358,11 +358,11 @@ struct CanvasPage: View {
 
                 // Delete button
                 Button(action: {
-                    if let viewModel.selectedWidget, let index = canvasWidgets.firstIndex(of: viewModel.selectedWidget) {
+                    if let selectedWidget = viewModel.selectedWidget, let index = canvasWidgets.firstIndex(of: selectedWidget)  {
                         canvasWidgets.remove(at: index)
-                        SpaceManager.shared.removeWidget(spaceId: spaceId, widget: viewModel.selectedWidget)
-                        if viewModel.selectedWidget.media == .poll {
-                            deletePoll(spaceId: spaceId, pollId: viewModel.selectedWidget.id.uuidString)
+                        SpaceManager.shared.removeWidget(spaceId: spaceId, widget: selectedWidget)
+                        if selectedWidget.media == .poll {
+                            deletePoll(spaceId: spaceId, pollId: selectedWidget.id.uuidString)
                         }
                     }
                     viewModel.selectedWidget = nil
