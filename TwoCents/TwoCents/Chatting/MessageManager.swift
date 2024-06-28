@@ -101,9 +101,6 @@ class MessageManager: ObservableObject {
                 if let id = self.messages.last?.id{
                     self.lastMessageId = id
                 }
-                //Eric: is able to print out 20 which is in fact 10 more than the initla message count of 10
-                print("new fetch count:\(self.messages.count)")
-              
                
         }
     }
