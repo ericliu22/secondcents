@@ -72,7 +72,7 @@ final class NewWidgetViewModel: ObservableObject{
     
     
     
-    func saveTempImage(item: PhotosPickerItem, widgetId: String) {
+    func saveTempImage(item: PhotosPickerItem, widgetId: String, completion: @escaping (Bool) -> Void) {
       
     
         guard let space else { return }
@@ -99,7 +99,7 @@ final class NewWidgetViewModel: ObservableObject{
                 
                
             }
-            
+            completion(true)
             
         }
         

@@ -182,7 +182,7 @@ struct CanvasPage: View {
                                     activeSheet = .chat
                                 }
                                 Task {
-                                    username = try! await UserManager.shared.getUser(userId: widget.userId).username!
+//                                    username = try? await UserManager.shared.getUser(userId: widget.userId).username
                                 }
                             })
                     )
