@@ -108,7 +108,7 @@ struct SignInPhoneNumberView: View {
             .frame(height: 55)
             .cornerRadius(10)
             .padding(.top)
-            .disabled(viewModel.phoneNumber.isEmpty)
+            .disabled(viewModel.phoneNumber.count != 14)
             .padding(.bottom, 50)
           
            

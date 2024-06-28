@@ -426,7 +426,7 @@ struct CanvasPage: View {
                 )
       
             //                .animation(.easeInOut)
-                .background( Color(UIColor.secondarySystemBackground))
+//                .background( Color(UIColor.secondarySystemBackground))
     }
     
     private func removeExpiredStrokes() {
@@ -648,6 +648,7 @@ struct CanvasPage: View {
                     }
                 }
                 .navigationTitle(toolPickerActive ? "" : viewModel.space?.name ?? "" )
+                .background(  Color(UIColor.secondarySystemBackground))
         }
         .onDisappear(perform: {
             activeSheet = nil
