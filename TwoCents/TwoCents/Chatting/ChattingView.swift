@@ -207,12 +207,15 @@ struct ChatView: View {
             }
             .padding(.top)
             .padding(.horizontal)
+            
+            
+            
             MessageField( replyMode: $replyMode, replyWidget: $replyWidget).environmentObject(messageManager)
-              
+                .onTapGesture {
+                    scroll = true
+                }
         }
-        .onTapGesture {
-            scroll = true
-        }
+    
         
         .scrollIndicators(.hidden)
     }
