@@ -89,46 +89,33 @@ struct NewWidgetView: View {
 
     }
     
-    @State private var latestImage: UIImage? = nil
+
+    
+   
     
     func newImageView(index: Int) -> some View {
-        
-        Group{
-           
-            //loading circle
-            if viewModel.loading {
-                ProgressView()
-                    .progressViewStyle(
-                        CircularProgressViewStyle(tint:
-                                .primary)
-                    )
-                    .aspectRatio(1, contentMode: .fit)
-//                    .frame(width: viewModel.widgets[index].width, height: viewModel.widgets[index].height)
-                    .cornerRadius(20)
-                
-            } else {
-             
-                    PhotosPicker(selection: $selectedPhoto, matching: .images, photoLibrary: .shared()){
-                        
-                        
-                        
-//
-                        ZStack{
-//                            RoundedRectangle(cornerRadius: 20)
-//                                .fill(.thinMaterial)
-//                                .aspectRatio(1, contentMode: .fit)
-                            
-                            
-                            
-                            if let image = latestImage {
+            Group {
+                if viewModel.loading {
+                    ProgressView()
+                        .progressViewStyle(CircularProgressViewStyle(tint: .primary))
+                        .aspectRatio(1, contentMode: .fit)
+                        .background(.thickMaterial)
+                        .cornerRadius(20)
+                } else {
+                    PhotosPicker(selection: $selectedPhoto, matching: .any(of: [.images, .videos]), photoLibrary: .shared()) {
+                        ZStack {
+                            if let image = viewModel.latestImage {
                                 Image(uiImage: image)
                                     .resizable()
-                                        .scaledToFill()
-                                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                                
-                                        .clipShape(RoundedRectangle(cornerRadius: 20))
-                                
-                                
+                                    .scaledToFill()
+                                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                    .clipShape(RoundedRectangle(cornerRadius: 20))
+                            } else if let videoThumbnail = viewModel.latestVideoThumbnail {
+                                Image(uiImage: videoThumbnail)
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                    .clipShape(RoundedRectangle(cornerRadius: 20))
                             } else {
                                 RoundedRectangle(cornerRadius: 20)
                                     .fill(.thinMaterial)
@@ -136,55 +123,41 @@ struct NewWidgetView: View {
                             }
                         }
                     }
-              
-                  
-                
-
-               
-                
-                
-            }
-            
-            
-            
-            
-            
-        }
-      
-        
-    }
-    
-    
-    func loadLatestPhoto() {
-            PHPhotoLibrary.requestAuthorization { status in
-                if status == .authorized {
-                    let fetchOptions = PHFetchOptions()
-                    fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
-                    fetchOptions.fetchLimit = 1
-                    
-                    let fetchResult = PHAsset.fetchAssets(with: .image, options: fetchOptions)
-                    if let asset = fetchResult.firstObject {
-                        let imageManager = PHImageManager.default()
-                        let options = PHImageRequestOptions()
-                        options.isSynchronous = true
-                        options.deliveryMode = .highQualityFormat
-                        
-                        let targetSize = CGSize(width: 400, height:400)
-                        
-                        imageManager.requestImage(for: asset, targetSize: targetSize, contentMode: .aspectFill, options: options) { image, _ in
-                            if let image = image {
-                                // Crop the image to a square
-                                let croppedImage = self.cropToSquare(image: image)
-                                
-                                DispatchQueue.main.async {
-                                    self.latestImage = croppedImage
-                                }
-                            }
-                        }
-                    }
                 }
             }
-    }
+        }
+    
+//    
+//    func loadLatestPhoto() {
+//            PHPhotoLibrary.requestAuthorization { status in
+//                if status == .authorized {
+//                    let fetchOptions = PHFetchOptions()
+//                    fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
+//                    fetchOptions.fetchLimit = 1
+//                    
+//                    let fetchResult = PHAsset.fetchAssets(with: .image, options: fetchOptions)
+//                    if let asset = fetchResult.firstObject {
+//                        let imageManager = PHImageManager.default()
+//                        let options = PHImageRequestOptions()
+//                        options.isSynchronous = true
+//                        options.deliveryMode = .highQualityFormat
+//                        
+//                        let targetSize = CGSize(width: 400, height:400)
+//                        
+//                        imageManager.requestImage(for: asset, targetSize: targetSize, contentMode: .aspectFill, options: options) { image, _ in
+//                            if let image = image {
+//                                // Crop the image to a square
+//                                let croppedImage = self.cropToSquare(image: image)
+//                                
+//                                DispatchQueue.main.async {
+//                                    self.latestImage = croppedImage
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//    }
     
     func cropToSquare(image: UIImage) -> UIImage {
         let cgImage = image.cgImage!
@@ -466,28 +439,52 @@ struct NewWidgetView: View {
             try? await viewModel.loadCurrentSpace(spaceId: spaceId)
             print(viewModel.space?.name ?? "Space not available")
         }
-        .onAppear(perform: loadLatestPhoto)
-        
-        .onChange(of: selectedPhoto, perform: { newValue in
+        .onAppear {
+                   viewModel.loadLatestMedia()
+               }
+        .onChange(of: selectedPhoto) { newValue in
             if let newValue {
                 viewModel.loading = true
-                viewModel.saveTempImage(item: newValue, widgetId: widgetId) { success in
-                    if success {
-                        // Call your image button function here
-                        imageButton(index: 0)
+                print("Supported Content Types: \(newValue.supportedContentTypes.map { $0.identifier })")
+                
+                let imageUTTypes: [UTType] = [.jpeg, .png]
+        
+                
+                if newValue.supportedContentTypes.contains(where: { imageUTTypes.contains($0) }) {
+                    print("Saving image")
+                    viewModel.saveTempImage(item: newValue, widgetId: widgetId) { success in
+                        if success {
+                            imageButton(index: 0)
+                        } else {
+                            print("Failed to save image.")
+                        }
+                        viewModel.loading = false
+                    }
+                } else {
+                    print("Saving video")
+                    viewModel.saveTempVideo(item: newValue, widgetId: widgetId) { success in
+                        if success {
+                            videoButton(index: 1)
+                        } else {
+                            print("Failed to save video.")
+                        }
+                        viewModel.loading = false
                     }
                 }
             }
-        })
+        }
 
-        .onChange(of: selectedVideo, perform: { newValue in
-            print("Selected Video")
-            if let newValue {
-                viewModel.loading = true
-                viewModel.saveTempVideo(item: newValue, widgetId: widgetId)
-                
-            }
-        })
+
+
+
+//        .onChange(of: selectedVideo, perform: { newValue in
+//            print("Selected Video")
+//            if let newValue {
+//                viewModel.loading = true
+//                viewModel.saveTempVideo(item: newValue, widgetId: widgetId)
+//                
+//            }
+//        })
 //        .presentationBackground(.thickMaterial)
     }
 }
