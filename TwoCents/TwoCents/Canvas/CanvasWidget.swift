@@ -179,22 +179,22 @@ protocol WidgetView: View {
 
 //There are two implementations and for this one func is faster than struct
 @ViewBuilder
-func MediaView(widget: CanvasWidget, spaceId: String, newWidget: Bool = false) -> some View{
+func MediaView(widget: CanvasWidget, spaceId: String) -> some View{
     
-        switch (widget.media) {
-        case .text:
-            TextWidget(widget: widget)
-        case .video:
-            VideoWidget(widget: widget, newWidget: newWidget)
-        case .image:
-            ImageWidget(widget: widget)
-        case .poll:
-            PollWidget(widget: widget, spaceId: spaceId)
-        case .map:
-            MapWidget(widget: widget)
-        default:
-            ImageWidget(widget: widget)
-        }
+    switch (widget.media) {
+    case .text:
+        TextWidget(widget: widget)
+    case .video:
+        VideoWidget(widget: widget)
+    case .image:
+        ImageWidget(widget: widget)
+    case .poll:
+        PollWidget(widget: widget, spaceId: spaceId)
+    case .map:
+        MapWidget(widget: widget)
+    default:
+        ImageWidget(widget: widget)
+    }
     
 }
 

@@ -62,7 +62,7 @@ struct CustomizeWidgetView: View {
                         .frame(width: 250, height: 250)
                     
                     .frame(width: 250, height: 250)
-                    .shadow(radius: 20, y: 10)
+//                    .shadow(radius: 20, y: 10)
                     .cornerRadius(30)
                   
                     
@@ -74,7 +74,7 @@ struct CustomizeWidgetView: View {
 //                        .strokeBorder(selectedColor, lineWidth:15)
                         .fill(Color.accentColor)
                         .frame(width: 250, height: 250)
-                        .shadow(radius: 20, y: 10)
+//                        .shadow(radius: 20, y: 10)
                         .cornerRadius(30)
                 }
                 

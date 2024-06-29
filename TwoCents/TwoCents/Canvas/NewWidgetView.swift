@@ -12,16 +12,18 @@ import PhotosUI
 
 
 
-var imageViewTest = CanvasWidget(width: 250, height:  250, borderColor: .black, userId: "jennierubyjane", media: .image, mediaURL: URL(string: "https://m.media-amazon.com/images/M/MV5BN2Q0OWJmNWYtYzBiNy00ODAyLWI2NGQtZGFhM2VjOWM5NDNkXkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_.jpg")!, widgetName: "Photo Widget", widgetDescription: "Add a photo to spice the convo")
+var imageViewTest = CanvasWidget(width: .infinity, height:  .infinity, borderColor: .black, userId: "jennierubyjane", media: .image, mediaURL: URL(string: "https://m.media-amazon.com/images/M/MV5BN2Q0OWJmNWYtYzBiNy00ODAyLWI2NGQtZGFhM2VjOWM5NDNkXkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_.jpg")!, widgetName: "Library", widgetDescription: "Expose someone")
 
 
 
 
 
-var videoViewTest = CanvasWidget(width: 250, height: 250, borderColor: .red, userId: "jisookim", media: .video, mediaURL: URL(string: "https://www.pexels.com/video/10167684/download/")!, widgetName: "Video Widget", widgetDescription: "Nice vid")
+var videoViewTest = CanvasWidget(width: .infinity, height:  .infinity, borderColor: .red, userId: "jisookim", media: .video, mediaURL: URL(string: "https://www.pexels.com/video/10167684/download/")!, widgetName: "Video", widgetDescription: "Nice vid")
 
-var pollViewTest = CanvasWidget(width: 250, height: 250, borderColor: .red, userId: "jisookim", media: .poll, mediaURL: URL(string: "https://www.pexels.com/video/10167684/download/")!, widgetName: "Poll Widget", widgetDescription: "Scholars, gather your consensus")
-var mapViewTest = CanvasWidget(width: 250, height: 250, borderColor: .red, userId: "jisookim", media: .map, mediaURL: URL(string: "https://www.pexels.com/video/10167684/download/")!, widgetName: "Map Widget", widgetDescription: "Drop the addy")
+var pollViewTest = CanvasWidget(width: .infinity, height:  .infinity, borderColor: .red, userId: "jisookim", media: .poll, mediaURL: URL(string: "https://www.pexels.com/video/10167684/download/")!, widgetName: "Poll", widgetDescription: "Gather consensus")
+var mapViewTest = CanvasWidget(width: .infinity, height:  .infinity, borderColor: .red, userId: "jisookim", media: .map, widgetName: "Map", widgetDescription: "Drop the addy")
+
+var textViewTest = CanvasWidget(width: .infinity, height:  .infinity, borderColor: .red, userId: "jisookim", media: .text, widgetName: "Text", widgetDescription: "A bar is a bar", textString: "Fruits can't even see so how my Apple Watch")
 
 
 
@@ -38,7 +40,7 @@ struct NewWidgetView: View {
     
     
     
-//    @Binding var showNewWidgetView: Bool
+    //    @Binding var showNewWidgetView: Bool
     
     
     @State private var selectedPhoto: PhotosPickerItem? = nil
@@ -51,122 +53,120 @@ struct NewWidgetView: View {
     
     @Binding var photoLinkedToProfile: Bool
     
-    func newVideoView(index: Int) -> some View {
-        ZStack{
-            
-            //main widget/photopicker
-            PhotosPicker(selection: $selectedVideo, matching: .videos, photoLibrary: .shared()){
-                
-                MediaView(widget: viewModel.widgets[index], spaceId: spaceId, newWidget: true)
-                    .aspectRatio(1, contentMode: .fit)
-//                    .shadow(radius: 20, y: 10)
-                    .cornerRadius(30)
-                    .containerRelativeFrame(.horizontal, count: 1, spacing: 0)
-                
-            }
-            //loading circle
-            if viewModel.loading {
-                ProgressView()
-                    .progressViewStyle(
-                        CircularProgressViewStyle(tint:
-                                .primary)
-                    )
-                    .frame(width: viewModel.widgets[index].width, height: viewModel.widgets[index].height)
-                    .cornerRadius(30)
-                
-            }
-        }
-
-    }
+    private let columns = [
+        GridItem(.flexible()),
+        GridItem(.flexible())
+    ]
+    
     
     func newImageView(index: Int) -> some View {
-        
-        ZStack{
-            PhotosPicker(selection: $selectedPhoto, matching: .images, photoLibrary: .shared()){
-                
-                MediaView(widget: viewModel.widgets[index], spaceId: spaceId)
-                    .aspectRatio(1, contentMode: .fit)
-//                    .shadow(radius: 20, y: 10)
-                    .cornerRadius(30)
-                    .containerRelativeFrame(.horizontal, count: 1, spacing: 0)
-                
-            }
-            //loading circle
+        Group {
             if viewModel.loading {
-                ProgressView()
-                    .progressViewStyle(
-                        CircularProgressViewStyle(tint:
-                                .primary)
-                    )
-                    .frame(width: viewModel.widgets[index].width, height: viewModel.widgets[index].height)
-                    .cornerRadius(30)
                 
+                ProgressView()
+                    .progressViewStyle(CircularProgressViewStyle(tint: .primary))
+                    .frame(maxWidth:.infinity, maxHeight: .infinity)
+                    .aspectRatio(1, contentMode: .fit)
+                    .background(.thinMaterial)
+                    .cornerRadius(20)
+                
+            } else {
+                PhotosPicker(selection: $selectedPhoto, matching: .any(of: [.images, .videos]), photoLibrary: .shared()) {
+                    ZStack {
+                        if let image = viewModel.latestImage {
+                            Image(uiImage: image)
+                                .resizable()
+                                .scaledToFill()
+                                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                .clipShape(RoundedRectangle(cornerRadius: 20))
+                        } else if let videoThumbnail = viewModel.latestVideoThumbnail {
+                            Image(uiImage: videoThumbnail)
+                                .resizable()
+                                .scaledToFill()
+                                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                .clipShape(RoundedRectangle(cornerRadius: 20))
+                        } else {
+                            RoundedRectangle(cornerRadius: 20)
+                                .fill(.thinMaterial)
+                                .aspectRatio(1, contentMode: .fit)
+                        }
+                    }
+                }
             }
         }
     }
+    
     
     func newPollView(index: Int) -> some View {
         ZStack{
             
-            //main widget/photopicker
-            //let options: [Option] = [Option(name: "Option 1"), Option(name: "Option 2")]
+           
             NewPoll(spaceId: spaceId, closeNewWidgetview: $closeNewWidgetview)
-                .aspectRatio(1, contentMode: .fit)
-
-//                .shadow(radius: 20, y: 10)
-                .cornerRadius(30)
-                .containerRelativeFrame(.horizontal, count: 1, spacing: 0)
-                
-            //loading circle
-            if viewModel.loading {
-                ProgressView()
-                    .progressViewStyle(
-                        CircularProgressViewStyle(tint:
-                                .primary)
-                    )
-                    .frame(width: viewModel.widgets[index].width, height: viewModel.widgets[index].height)
-                    .cornerRadius(30)
-                
-            }
+          
+                .cornerRadius(20)
+          
         }
-        .onChange(of: closeNewWidgetview) { oldValue, newValue in
-            if newValue {
-                dismissScreen()
-            }
-        }
+       
     }
     func newMapView(index: Int) -> some View {
         
         ZStack{
-          
-//            
-//            getMediaView(widget: viewModel.widgets[index], spaceId: spaceId)
-//                .aspectRatio(1, contentMode: .fit)
-//            //                    .shadow(radius: 20, y: 10)
-//                .cornerRadius(30)
-//                .containerRelativeFrame(.horizontal, count: 1, spacing: 0)
-//            
             
             NewMapView(spaceId: spaceId, closeNewWidgetview: $closeNewWidgetview)
-                .cornerRadius(30)
-            //loading circle
-            if viewModel.loading {
-                ProgressView()
-                    .progressViewStyle(
-                        CircularProgressViewStyle(tint:
-                                .primary)
-                    )
-                    .frame(width: viewModel.widgets[index].width, height: viewModel.widgets[index].height)
-                    .cornerRadius(30)
-                
-            }
+                .cornerRadius(20)
+          
         }
     }
     
     
+    @State private var showingView: Bool = false
     
-    func imageButton(index: Int) {
-        //@TODO: look into just making it index instead of hardcoding each index
+    
+    func newTextView(index: Int) -> some View {
+        
+        
+        
+        ZStack{
+           
+            
+            
+            Text("Fruits can't even see so tell me how my Apple Watch")
+                .multilineTextAlignment(.leading)
+                .font(.custom("LuckiestGuy-Regular", size: 24, relativeTo: .headline))
+                .padding(5)
+                .minimumScaleFactor(0.8)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(.ultraThickMaterial)
+                .background(Color.fromString(name: viewModel.user?.userColor ?? ""))
+                .foregroundColor(Color.fromString(name: viewModel.user?.userColor ?? ""))
+                .cornerRadius(20)
+          
+            
+                .onTapGesture {
+                    showingView.toggle()
+                    print("tapped")
+                }
+            
+                .fullScreenCover(isPresented: $showingView, content: {
+                    
+                    NewTextWidgetView(spaceId: spaceId)
+                        .onDisappear(perform: {
+                            closeNewWidgetview = true
+                        })
+                })
+                
+             
+            
+            
+        }
+        
+    }
+    
+    
+    
+    
+    
+    func imageSave(index: Int) {
         viewModel.saveWidget(index: index)
         
         if !viewModel.loading {
@@ -175,7 +175,7 @@ struct NewWidgetView: View {
         dismissScreen()
     }
     
-    func videoButton(index: Int) {
+    func videoSave(index: Int) {
         viewModel.saveWidget(index: index)
         if !viewModel.loading {
             photoLinkedToProfile = true
@@ -189,209 +189,167 @@ struct NewWidgetView: View {
         ZStack {
             NavigationView{
                 VStack{
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        HStack {
+                  
+                    ScrollView(.vertical, showsIndicators: false) {
+                        Spacer()
+                            .frame(height: 10)
+                        LazyVGrid(columns: columns, spacing: nil) {
+                            
+                            
                             ForEach(0..<viewModel.widgets.count, id: \.self) {index in
-                                VStack{
+                                VStack(spacing: 0) {
                                     
-                                    VStack{
-                                        //name
-                                        if let name = viewModel.widgets[index].widgetName {
-                                            Text(name)
-                                                .foregroundStyle(.primary)
-                                                .font(.title)
-                                                .fontWeight(.bold)
-                                                .frame(maxWidth: .infinity)
-                                                .visualEffect { content, geometryProxy in
-                                                    content
-                                                        .offset(x: scrollOffset(geometryProxy))
-                                                }
-                                        }
+                                    //Widget Body
+                                    switch viewModel.widgets[index].media {
+                                    case .image:
+                                        newImageView(index: index)
+                                            .aspectRatio(1, contentMode: .fit)
+                                            .shadow(color: Color.black.opacity(0.1), radius: 20, x: 8, y: 4)
+                                                                    
                                         
-                                        //description
-                                        if let description = viewModel.widgets[index].widgetDescription {
-                                            Text(description)
-                                                .foregroundStyle(.secondary)
-                                                .font(.headline)
-                                                .fontWeight(.regular)
-                                                .frame(maxWidth: .infinity)
-                                                .visualEffect { content, geometryProxy in
-                                                    content
-                                                        .offset(x: scrollOffset(geometryProxy))
-                                                }
-                                                .padding(.bottom, 60)
-                                        }
-                                        //Widget Body
-                                        switch viewModel.widgets[index].media {
-                                            case .image:
-                                                newImageView(index: index)
-                                            case .video:
-                                                newVideoView(index: index)
-                                            case .poll:
-                                                newPollView(index: index)
-//                                                .tint(.red)
-                                            case .map:
-                                                newMapView(index: index)
-                                            
-                                        default:
-                                                ZStack{
-                                                    
-                                                    //default widgets
-                                                    MediaView(widget: viewModel.widgets[index], spaceId: spaceId)
-                                                        .aspectRatio(1, contentMode: .fit)
-//                                                        .shadow(radius: 20, y: 10)
-                                                        .cornerRadius(30)
-                                                        .containerRelativeFrame(.horizontal, count: 1, spacing: 0)
-                                                }
-                                        }
-                                        
-                                        
-                                    }
-                                    .scrollTransition(.animated, axis: .horizontal) { content, phase in
-                                        content
-                                            .opacity(phase.isIdentity ? 1.0 : 0.8)
-                                            .scaleEffect(phase.isIdentity ? 1.0 : 0.8)
-                                            .blur(radius: phase.isIdentity ? 0 : 3)
-                                        
-                                        
-                                        
-                                    }
-                                    
-                                    
-                                    Spacer()
-                                        .frame(height:30)
-                                    
-                                    
-                                    //button
-                                    switch index {
-                                    case 0:
-                                        Button {
-                                            imageButton(index: index)
-                                        }
-                                        label: {
-                                            Text("Add Widget")
-                                                .padding(.vertical, 10)
-                                                .frame(maxWidth: .infinity)
-                                        }
-                                        .buttonStyle(.bordered)
-                                        .buttonBorderShape(.capsule)
-                                        .padding(.horizontal)
-                                        .disabled(viewModel.loading || (selectedPhoto == nil))
-                                    case 1:
-                                        Button {
-                                            videoButton(index: index)
-                                        }
-                                        label: {
-                                            Text("Add Widget")
-                                                .padding(.vertical, 10)
-                                                .frame(maxWidth: .infinity)
-                                        }
-                                        .buttonStyle(.bordered)
-                                        .buttonBorderShape(.capsule)
-                                        .padding(.horizontal)
-                                        .disabled(viewModel.loading || (selectedVideo == nil))
-                                    case 2:
-                                            Button {
-                                                viewModel.saveWidget(index: index)
-                                                
-//                                                if !viewModel.loading {
-//                                                    photoLinkedToProfile = true
-//                                                }
-                                                
-                                                dismissScreen()
-                                            } label: {
-                                                Text("Add Widget")
-                                                    .padding(.vertical, 10)
-                                                    .frame(maxWidth: .infinity)
-                                            }
-                                            .buttonStyle(.bordered)
-                                            .buttonBorderShape(.capsule)
-                                            .padding(.horizontal)
-                                            .disabled(viewModel.loading || (selectedVideo == nil))
+                                    case .poll:
+                                        newPollView(index: index)
+                                            .aspectRatio(1, contentMode: .fit)
+                                            .shadow(color: Color.black.opacity(0.1), radius: 20, x: 8, y: 4)
+                                                                    
+                                        //
+                                    case .map:
+                                        newMapView(index: index)
+                                            .aspectRatio(1, contentMode: .fit)
+                                            .shadow(color: Color.black.opacity(0.1), radius: 20, x: 8, y: 4)
+                                    case .text:
+                                        newTextView(index: index)
+                                            .aspectRatio(1, contentMode: .fit)
+                                            .shadow(color: Color.black.opacity(0.1), radius: 20, x: 8, y: 4)
+                                                                    
                                     default:
-                                        Button {
+                                        ZStack{
                                             
-                                            dismissScreen()
-                                        } label: {
-                                            Text("Add Widget")
-                                                .padding(.vertical, 10)
-                                                .frame(maxWidth: .infinity)
+                                            //default widgets
+                                            MediaView(widget: viewModel.widgets[index], spaceId: spaceId)
+                                                .aspectRatio(1, contentMode: .fit)
+                                            //                                                        .shadow(radius: 20, y: 10)
+                                                .cornerRadius(30)
+                                            //                                                .containerRelativeFrame(.horizontal, count: 1, spacing: 0)
                                         }
-                                        .buttonStyle(.bordered)
-                                        .buttonBorderShape(.capsule)
-                                        .padding(.horizontal)
-                                        .disabled(true)
-                                        
                                     }
+                                       
+                                        Spacer()
+                                        .frame(height:6)
+                                    
+                                    //name
+                                    if let name = viewModel.widgets[index].widgetName, let description = viewModel.widgets[index].widgetDescription {
+                                        
+                                        Text(name)
+                                            .foregroundStyle(.primary)
+                                            .font(.caption)
+                                            .fontWeight(.semibold)
+                                            .frame(maxWidth: .infinity, alignment: .center)
+                                          
+                                        Text(description)
+                                            .foregroundStyle(.secondary)
+                                            .font(.caption)
+                                            .fontWeight(.regular)
+                                            .frame(maxWidth: .infinity, alignment: .center)
+                                    }
+                                    
+                                   
+                                    Spacer()
+                                    .frame(height:10)
                                 }
+                               
                             }
                         }
-                        .scrollTargetLayout()
+                        .padding(.horizontal)
                         
                     }
-                    .frame(maxHeight: .infinity, alignment: .top)
-                    .contentMargins(50, for: .scrollContent)
-                    .scrollTargetBehavior(.viewAligned)
-                    .safeAreaPadding()
-                    
+                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+                       
+                        
+                    }
+                
+                    .navigationTitle("Add a Widget 🙈")
+//                    .navigationBarTitleDisplayMode(.inline)
                 }
-                .navigationTitle("Add a Widget 🙈")
+                
+                //cross to dismiss screen
+                ZStack (alignment: .topLeading) {
+                    
+                    Color.clear
+                        .edgesIgnoringSafeArea(.all)
+                    
+                    Button(action: {
+                        dismissScreen()
+                    }, label: {
+                        Image(systemName: "xmark")
+                            .foregroundColor(Color(UIColor.label))
+                            .font(.title2)
+                            .padding()
+                    })
+                }
+            }
+            .onChange(of: closeNewWidgetview) { oldValue, newValue in
+                if newValue {
+                    dismissScreen()
+                }
+            }
+            .task{
+                try? await viewModel.loadCurrentSpace(spaceId: spaceId)
+                print(viewModel.space?.name ?? "Space not available")
+                
+                
+                
+                try? await viewModel.loadCurrentUser()
+                
+                       
+               
+            }
+            .onAppear {
+                viewModel.loadLatestMedia()
+            }
+            .onChange(of: selectedPhoto) { newValue in
+                if let newValue {
+                    viewModel.loading = true
+                    print("Supported Content Types: \(newValue.supportedContentTypes.map { $0.identifier })")
+                    
+                    let imageUTTypes: [UTType] = [.jpeg, .png]
+                    
+                    
+                    if newValue.supportedContentTypes.contains(where: { imageUTTypes.contains($0) }) {
+                        print("Saving image")
+                        viewModel.saveTempImage(item: newValue, widgetId: widgetId) { success in
+                            if success {
+                                imageSave(index: 0)
+                            } else {
+                                print("Failed to save image.")
+                            }
+                            viewModel.loading = false
+                        }
+                    } else {
+                        print("Saving video")
+                        viewModel.saveTempVideo(item: newValue, widgetId: widgetId) { success in
+                            if success {
+                                videoSave(index: 1)
+                            } else {
+                                print("Failed to save video.")
+                            }
+                            viewModel.loading = false
+                        }
+                    }
+                }
             }
             
-            //cross to dismiss screen
-            ZStack (alignment: .topLeading) {
-                
-                Color.clear
-                    .edgesIgnoringSafeArea(.all)
-                
-                Button(action: {
-                    dismissScreen()
-                }, label: {
-                    Image(systemName: "xmark")
-                        .foregroundColor(Color(UIColor.label))
-                        .font(.title2)
-                        .padding()
-                })
-            }
+            
+            
+            
         }
-        .task{
-            try? await viewModel.loadCurrentSpace(spaceId: spaceId)
-            print(viewModel.space?.name ?? "Space not available")
-        }
+    }
+    
+    
+    
+    struct NewWidgetView_Previews: PreviewProvider {
         
-        .onChange(of: selectedPhoto, perform: { newValue in
-            if let newValue {
-                
-                viewModel.loading = true
-                viewModel.saveTempImage(item: newValue, widgetId: widgetId)
-                
-            }
-        })
-        .onChange(of: selectedVideo, perform: { newValue in
-            print("Selected Video")
-            if let newValue {
-                viewModel.loading = true
-                viewModel.saveTempVideo(item: newValue, widgetId: widgetId)
-                
-            }
-        })
-//        .presentationBackground(.thickMaterial)
+        static var previews: some View {
+            NewWidgetView(widgetId: UUID().uuidString, spaceId:"F531C015-E840-4B1B-BB3E-B9E7A3DFB80F", photoLinkedToProfile: .constant(false))
+        }
     }
-}
-
-
-//to make scroll transition effect cool
-func scrollOffset(_ proxy: GeometryProxy) -> CGFloat {
-    let minX = proxy.bounds(of: .scrollView)?.minX ?? 0
-    
-    
-    return -minX * 0.6
-}
-
-
-struct NewWidgetView_Previews: PreviewProvider {
-    
-    static var previews: some View {
-        NewWidgetView(widgetId: UUID().uuidString, spaceId:"F531C015-E840-4B1B-BB3E-B9E7A3DFB80F", photoLinkedToProfile: .constant(false))
-    }
-}

@@ -36,7 +36,13 @@ struct SetLocationWidgetView: View {
                     }
                 })
                 .onChange(of: searchText) { newValue in
-                    searchForLocation()
+                    
+                    if newValue.isEmpty {
+                        showingSearchResults = false
+                    } else {
+                        searchForLocation()
+                    }
+                    
                 }
                 .padding()
                 .background(Color(UIColor.secondarySystemBackground))

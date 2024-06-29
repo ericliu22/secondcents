@@ -36,7 +36,7 @@ struct NewMapView: View{
         ZStack {
                    DisplayLocationWidgetView(latitude: "40.7791151", longitude: "-73.9626129")
                }
-               .frame(width: 250, height: 250)
+        .frame(width: .infinity, height: .infinity)
                .contentShape(Rectangle()) // Make the whole area tappable
                .onTapGesture {
                    showingView.toggle()

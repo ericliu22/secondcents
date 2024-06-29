@@ -15,7 +15,11 @@ import AVFoundation
 final class NewWidgetViewModel: ObservableObject{
     
     
-    
+    @Published private(set) var user:  DBUser? = nil
+    func loadCurrentUser() async throws {
+        let authDataResult = try AuthenticationManager.shared.getAuthenticatedUser()
+        self.user = try await UserManager.shared.getUser(userId: authDataResult.uid)
+    }
     
     
     
@@ -36,11 +40,11 @@ final class NewWidgetViewModel: ObservableObject{
     private var url = ""
     
     
-    @Published var widgets: [CanvasWidget] = [imageViewTest, videoViewTest, pollViewTest, mapViewTest]
+    @Published var widgets: [CanvasWidget] = [ imageViewTest, /*videoViewTest,*/ mapViewTest, textViewTest, pollViewTest]
     
+    @Published var tempWidget: CanvasWidget?
     
-    
-    func saveTempVideo(item: PhotosPickerItem, widgetId: String) {
+    func saveTempVideo(item: PhotosPickerItem, widgetId: String, completion: @escaping (Bool) -> Void) {
         
         print("saving temp video")
         guard let space else { return }
@@ -64,15 +68,16 @@ final class NewWidgetViewModel: ObservableObject{
             self.url = url.absoluteString
             let uid = try! AuthenticationManager.shared.getAuthenticatedUser().uid
 
-            widgets[1] = CanvasWidget(width: 250, height: 250, borderColor: .black, userId: uid, media: .video, mediaURL: URL(string: self.url)!, widgetName: "Video Widget", widgetDescription: "Add a video")
+            tempWidget = CanvasWidget(width: 250, height: 250, borderColor: .black, userId: uid, media: .video, mediaURL: URL(string: self.url)!, widgetName: "Video Widget", widgetDescription: "Add a video")
             loading = false
+            completion(true)
         }
-        
+   
     }
     
     
     
-    func saveTempImage(item: PhotosPickerItem, widgetId: String) {
+    func saveTempImage(item: PhotosPickerItem, widgetId: String, completion: @escaping (Bool) -> Void) {
       
     
         guard let space else { return }
@@ -92,15 +97,15 @@ final class NewWidgetViewModel: ObservableObject{
                 self.url = url.absoluteString
                 let uid = try! AuthenticationManager.shared.getAuthenticatedUser().uid
                 
-                widgets[0] = CanvasWidget(width: 250, height:  250, borderColor: .black, userId: uid, media: .image, mediaURL: URL(string: self.url)!, widgetName: "Photo Widget", widgetDescription: "Add a photo to spice the convo")
+                tempWidget = CanvasWidget(width: 250, height:  250, borderColor: .black, userId: uid, media: .image, mediaURL: URL(string: self.url)!, widgetName: "Photo Widget", widgetDescription: "Add a photo to spice the convo")
                 
                 
                 loading = false
+                completion(true)
                 
                
             }
-            
-            
+           
         }
         
     }
@@ -108,7 +113,7 @@ final class NewWidgetViewModel: ObservableObject{
     
     func saveWidget(index: Int) {
         //Need to copy to variable before uploading (something about actor-isolate whatever)
-        var uploadWidget: CanvasWidget = widgets[index]
+        var uploadWidget: CanvasWidget = tempWidget!
         //ensure shits are right dimensions
         uploadWidget.width = TILE_SIZE
         uploadWidget.height = TILE_SIZE
@@ -196,4 +201,107 @@ final class NewWidgetViewModel: ObservableObject{
         
         return newImage
     }
+    
+    
+    
+    func loadLatestMedia() {
+           PHPhotoLibrary.requestAuthorization { status in
+               if status == .authorized {
+                   self.loading = true
+                   
+                   let fetchOptions = PHFetchOptions()
+                   fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
+                   fetchOptions.fetchLimit = 1
+                   
+                   let fetchResult = PHAsset.fetchAssets(with: fetchOptions)
+                   
+                   if let asset = fetchResult.firstObject {
+                       let imageManager = PHImageManager.default()
+                       
+                       if asset.mediaType == .image {
+                           self.loadImage(for: asset, with: imageManager)
+                       } else if asset.mediaType == .video {
+                           self.loadVideoThumbnail(for: asset, with: imageManager)
+                       }
+                   }
+               }
+           }
+       }
+    
+    
+    @Published var latestImage: UIImage? 
+    @Published var latestVideoThumbnail: UIImage?
+    
+    
+       
+       private func loadImage(for asset: PHAsset, with imageManager: PHImageManager) {
+           let options = PHImageRequestOptions()
+           options.isSynchronous = true
+           options.deliveryMode = .highQualityFormat
+           
+           let targetSize = CGSize(width: 400, height: 400)
+           
+           imageManager.requestImage(for: asset, targetSize: targetSize, contentMode: .aspectFill, options: options) { image, _ in
+               if let image = image {
+                   DispatchQueue.main.async {
+                       self.latestImage = self.cropToSquare(image: image)
+                       self.loading = false
+                   }
+               }
+           }
+       }
+       
+       private func loadVideoThumbnail(for asset: PHAsset, with imageManager: PHImageManager) {
+           let targetSize = CGSize(width: 400, height: 400)
+           
+           imageManager.requestAVAsset(forVideo: asset, options: nil) { avAsset, _, _ in
+               guard let avAsset = avAsset else {
+                   DispatchQueue.main.async {
+                       self.loading = false
+                   }
+                   return
+               }
+               
+               let assetGenerator = AVAssetImageGenerator(asset: avAsset)
+               assetGenerator.appliesPreferredTrackTransform = true
+               assetGenerator.maximumSize = targetSize
+               
+               do {
+                   let cgImage = try assetGenerator.copyCGImage(at: .zero, actualTime: nil)
+                   let image = UIImage(cgImage: cgImage)
+                   DispatchQueue.main.async {
+                       self.latestVideoThumbnail = self.cropToSquare(image: image)
+                       self.loading = false
+                   }
+               } catch {
+                   DispatchQueue.main.async {
+                       self.loading = false
+                   }
+               }
+           }
+       }
+       
+       private func cropToSquare(image: UIImage) -> UIImage {
+           let originalWidth = image.size.width
+           let originalHeight = image.size.height
+           let cropSize = min(originalWidth, originalHeight)
+           
+           let cropRect = CGRect(
+               x: (originalWidth - cropSize) / 2,
+               y: (originalHeight - cropSize) / 2,
+               width: cropSize,
+               height: cropSize
+           )
+           
+           guard let cgImage = image.cgImage?.cropping(to: cropRect) else {
+               return image
+           }
+           
+           return UIImage(cgImage: cgImage, scale: image.scale, orientation: image.imageOrientation)
+       }
+    
+    
+    
+    
+    
 }

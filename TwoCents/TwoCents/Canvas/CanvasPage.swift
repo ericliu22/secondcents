@@ -35,33 +35,22 @@ struct CanvasPage: View {
     //var for widget onTap
     //@State var isShowingPopup = false
     
-    @State private var username: String = ""
+    @State private var fullName: String = ""
     @State var canvas: PKCanvasView = PKCanvasView()
     @State var toolPickerActive: Bool = false
     @State private var currentMode: canvasState = .normal
     @State private var canvasWidgets: [CanvasWidget] = []
     @State private var draggingItem: CanvasWidget?
-    @State private var scrollPosition: CGPoint = CGPointZero
-    @State private var activeGestures: GestureMask = .subviews
-    //    @State private var showNewWidgetView: Bool = false
-    //    @State private var showSheet: Bool = true
     @State private var inSettingsView: Bool = false
     @State private var photoLinkedToProfile: Bool = false
     @State private var widgetId: String = UUID().uuidString
-    @State private var magnification: CGSize = CGSize(width: 1.0, height: 1.0);
-    @State private var toolkit: PKToolPicker = PKToolPicker.init()
+    @State private var toolkit: PKToolPicker = PKToolPicker()
     @State private var pendingWrites: Bool = false
     @State private var timer: Timer?
-    
     @State private var replyMode: Bool = false
-    
     @State private var activeSheet: sheetTypesCanvasPage?
-    
     @State private var activePollWidget: CanvasWidget?
-    
-    @State private var selectedWidget: CanvasWidget?
     @State private var replyWidget: CanvasWidget?
-    
     @State private var selectedDetent: PresentationDetent = .height(50)
     
     
@@ -81,26 +70,17 @@ struct CanvasPage: View {
     private var drawingDocument: DocumentReference
     
     enum canvasState {
-        
         case drawing, normal
-        
     }
     
     
     enum sheetTypesCanvasPage: Identifiable  {
-        
-        
-        
         case newWidgetView, chat, poll, newTextView
         
         var id: Self {
             return self
         }
-        
     }
-    
-    
-    
     
     
     init(spaceId: String) {
@@ -108,12 +88,11 @@ struct CanvasPage: View {
         
         self.chatroomDocument = db.collection("spaces").document(spaceId)
         self.drawingDocument = db.collection("spaces").document(spaceId).collection("Widgets").document("Drawings")
-        
     }
     
     
     
-    func pullDocuments() async {
+    func pullDocuments() {
         db.collection("spaces").document(spaceId).addSnapshotListener { documentSnapshot, error in
             guard let document = documentSnapshot else {
                 print("Error fetching document: \(error!)")
@@ -130,7 +109,6 @@ struct CanvasPage: View {
                 return
             }
             
-            //@TODO: Add checks for what writes type it is
             if let drawingAccess = data["drawing"] as? Data {
                 let databaseDrawing = try! PKDrawingReference(data: drawingAccess)
                 let newDrawing = databaseDrawing.appending(self.canvas.drawing)
@@ -156,37 +134,39 @@ struct CanvasPage: View {
         }
     }
     
+    
+    //For some reason this has to be async or else shit doesn't work
     func onChange() async {
-        await pullDocuments()
+        print("ran on change")
+        pullDocuments()
     }
     
     func GridView() -> some View {
-        let columns = Array(repeating: GridItem(.fixed(TILE_SIZE), spacing: 30, alignment: .center), count: 3)
+        let columns = Array(repeating: GridItem(.fixed(TILE_SIZE), spacing: 30, alignment: .center), count: 5)
         
         return LazyVGrid(columns: columns, alignment: .center, spacing: 30, content: {
             
             ForEach(canvasWidgets, id:\.id) { widget in
-                
                 //main widget
                 MediaView(widget: widget, spaceId: spaceId)
                     .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
                     .cornerRadius(CORNER_RADIUS)
                 
-                
+                  
                  
                 
                 //clickable area/outline when clicked
                     .overlay(
                         RoundedRectangle(cornerRadius: CORNER_RADIUS)
-                            .strokeBorder(selectedWidget == widget ? Color.secondary : .clear, lineWidth: 3)
+                            .strokeBorder(viewModel.selectedWidget == widget ? Color.secondary : .clear, lineWidth: 3)
                             .contentShape(RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
                             .cornerRadius(CORNER_RADIUS)
                         
                             .onTapGesture(count: 2, perform: {
-                                if selectedWidget != widget || !widgetDoubleTapped {
+                                if viewModel.selectedWidget != widget || !widgetDoubleTapped {
                                     //select
                                     
-                                    selectedWidget = widget
+                                    viewModel.selectedWidget = widget
                                     widgetDoubleTapped = true
                                     //                                    showSheet = false
                                     //                                    showNewWidgetView = false
@@ -194,33 +174,45 @@ struct CanvasPage: View {
                                     
                                 } else {
                                     //deselect
-                                    selectedWidget = nil
+                                    viewModel.selectedWidget = nil
                                     widgetDoubleTapped = false
                                     //                                    showSheet = true
                                     //                                    showNewWidgetView = false
                                     activeSheet = .chat
                                 }
                                 Task {
-                                    username = try! await UserManager.shared.getUser(userId: widget.userId).username!
+                                    do {
+                                        let user = try await UserManager.shared.getUser(userId: widget.userId)
+                                        if let name = user.name {
+                                            fullName = name
+                                        } else {
+                                            // Handle the case where name is nil
+                                            print("User name is nil")
+                                            
+                                        }
+                                    } catch {
+                                        // Handle the error
+                                        print("Failed to get user: \(error.localizedDescription)")
+                                    }
                                 }
                             })
                     )
                 
 
                 
-                //username below widget
+                //full name below widget
                     .overlay(content: {
-                        Text(widgetDoubleTapped ? username : "" )
+                        Text(widgetDoubleTapped ? fullName : "" )
                             .font(.caption2)
                             .foregroundStyle(.secondary)
                             .offset(y:90)
                     })
-                    .blur(radius: widgetDoubleTapped && selectedWidget != widget ? 20 : 0)
-                    .scaleEffect(widgetDoubleTapped && selectedWidget == widget ? 1.05 : 1)
+                    .blur(radius: widgetDoubleTapped && viewModel.selectedWidget != widget ? 20 : 0)
+                    .scaleEffect(widgetDoubleTapped && viewModel.selectedWidget == widget ? 1.05 : 1)
                     .animation(.spring)
-                //emoji react MENU
+                    //emoji react MENU
                     .overlay( alignment: .top, content: {
-                        if widgetDoubleTapped && selectedWidget == widget {
+                        if widgetDoubleTapped && viewModel.selectedWidget == widget {
                             EmojiReactionsView(spaceId: spaceId, widget: widget)
                                 .offset(y:-60)
                             
@@ -230,11 +222,9 @@ struct CanvasPage: View {
                     .overlay(content: {
                         
                         
-                        selectedWidget == nil/* && draggingItem == nil */?
+                        viewModel.selectedWidget == nil/* && draggingItem == nil */?
                         EmojiCountOverlayView(spaceId: spaceId, widget: widget)
                             .offset(y: TILE_SIZE/2)
-                        
-                        
                         : nil
                         
                         
@@ -251,25 +241,6 @@ struct CanvasPage: View {
                                     width: TILE_SIZE,
                                     height: TILE_SIZE
                                 )
-                                .scaleEffect(scale, anchor:
-                                        .init(
-                                            x: min(1,
-                                                   max(0, ((offset.width / FRAME_SIZE) * -1 ) + 0.5)
-                                                  ),
-                                            y: min(1,
-                                                   max(0, ((offset.height / FRAME_SIZE) * -1 ) + 0.5)
-                                                  )
-                                        )
-                                )
-                            
-                                .frame(
-                                    width: TILE_SIZE * scale,
-                                    height: TILE_SIZE * scale
-                                )
-                            
-                            
-                            
-                            
                                 .onAppear{
                                     draggingItem = widget
                                     
@@ -298,7 +269,7 @@ struct CanvasPage: View {
                                 
                                 
                                 //deselect
-                                selectedWidget = nil
+                                viewModel.selectedWidget = nil
                                 widgetDoubleTapped = false
                                 
                                 //                                showSheet = true
@@ -320,42 +291,7 @@ struct CanvasPage: View {
                                 )
     }
     
-    @State private var scale: CGFloat = 1.0
-    @State private var offset: CGSize = .zero
-    @State private var lastOffset: CGSize = .zero
-    @State private var cumulativeScale: CGFloat = 1.0
-    @State private var scaleChanging: Bool = false
-    
-    
-    @State private var animator: UIViewPropertyAnimator?
-    
-    func canvasView() -> some View {
-            ZStack {
-                Color(UIColor.secondarySystemBackground)
-                Color(UIColor.systemBackground)
-                //                        .allowsHitTesting(toolPickerActive)
-                //                        .scaleEffect(scale)
-                    .scaleEffect(scale, anchor:
-                            .init(
-                                x: min(1,
-                                       max(0, ((offset.width / FRAME_SIZE) * -1 ) + 0.5)
-                                      ),
-                                y: min(1,
-                                       max(0, ((offset.height / FRAME_SIZE) * -1 ) + 0.5)
-                                      )
-                            )
-                    )
-                
-                //                            .scaleEffect(scale, anchor: UnitPoint(
-                //                                       x: 0.5 + offset.width / (2 * UIScreen.main.bounds.width),
-                //                                       y: 0.5 + offset.height / (2 * UIScreen.main.bounds.height)
-                //                                   ))
-                //
-                    .offset(offset)
-                    .clipped() // Ensure the content does not overflow
-                //                        .animation(.spring()) // Optional: Add some animation
-                    .frame(width: FRAME_SIZE, height: FRAME_SIZE)
-                
+    func Background() -> some View {
                 GeometryReader { geometry in
                     Path { path in
                         let spacing: CGFloat = 30 // Adjust this value for the spacing between dots
@@ -374,92 +310,112 @@ struct CanvasPage: View {
                 .drawingGroup()
                 //                    .frame(width: FRAME_SIZE, height: FRAME_SIZE)
                 .blur(radius: widgetDoubleTapped ? 3 : 0)
-                
-                
-                .scaleEffect(scale, anchor:
-                        .init(
-                            x: min(1,
-                                   max(0, ((offset.width / FRAME_SIZE) * -1 ) + 0.5)
-                                  ),
-                            y: min(1,
-                                   max(0, ((offset.height / FRAME_SIZE) * -1 ) + 0.5)
-                                  )
-                        )
-                )
-                
-                .offset(offset)
                 .clipped() // Ensure the content does not overflow
                 //                    .animation(.spring()) // Optional: Add some animation
                 .frame(width: FRAME_SIZE, height: FRAME_SIZE)
-                
-                
-                GridView()
+
+    }
+    func doubleTapOverlay() -> some View {
+        viewModel.selectedWidget != nil ? VStack {
+            EmojiCountHeaderView(spaceId: spaceId, widget: viewModel.selectedWidget!)
+            Spacer()
+            HStack(spacing: 5) { // Increase spacing between buttons
+                // Map button
+                if viewModel.selectedWidget!.media == .map {
+                    Button(action: {
+                        if let location = viewModel.selectedWidget?.location {
+                            viewModel.openMapsApp(location: location)
+                        }
+                        viewModel.selectedWidget = nil
+                        widgetDoubleTapped = false
+                    }, label: {
+                        Image(systemName: "mappin.and.ellipse")
+                            .foregroundColor(Color(UIColor.label))
+                            .padding(.horizontal, 5)
+                    })
+//                    .contentShape(Rectangle())
+                }
+
+                // Poll button
+                if viewModel.selectedWidget!.media == .poll {
+                    Button(action: {
+                        activePollWidget = viewModel.selectedWidget
+                        viewModel.selectedWidget = nil
+                        widgetDoubleTapped = false
+                        activeSheet = .poll
+                    }, label: {
+                        Image(systemName: "checklist")
+                            .foregroundColor(Color(UIColor.label))
+                            .font(.title3)
+                            .padding(.horizontal, 5)
+                    })
+//                    .contentShape(Rectangle())
+                }
+
+                // Reply button
+                Button(action: {
+                    replyMode = true
+                    replyWidget = viewModel.selectedWidget
+                    viewModel.selectedWidget = nil
+                    widgetDoubleTapped = false
+                    activeSheet = .chat
+                }, label: {
+                    Image(systemName: "arrowshape.turn.up.left")
+                        .foregroundColor(Color(UIColor.label))
+                        .font(.title3)
+                        .padding(.horizontal, 5)
+                })
+//                .contentShape(Rectangle())
+
+                // Delete button
+                Button(action: {
+                    if let selectedWidget = viewModel.selectedWidget, let index = canvasWidgets.firstIndex(of: selectedWidget)  {
+                        canvasWidgets.remove(at: index)
+                        SpaceManager.shared.removeWidget(spaceId: spaceId, widget: selectedWidget)
+                        if selectedWidget.media == .poll {
+                            deletePoll(spaceId: spaceId, pollId: selectedWidget.id.uuidString)
+                        }
+                    }
+                    viewModel.selectedWidget = nil
+                    widgetDoubleTapped = false
+                    activeSheet = .chat
+                }, label: {
+                    Image(systemName: "trash")
+                        .foregroundColor(.red)
+                        .font(.title3)
+                        .padding(.horizontal, 5) // Increase padding
+                     
+                })
+//                .contentShape(Rectangle())
+            }
+            .padding(.horizontal, 20)
+            .padding(.vertical, 10) // Add vertical padding
+            .background(Color(UIColor.systemBackground), in: Capsule())
+            .shadow(color: Color.black.opacity(0.2), radius: 20, x: 0, y: 4)
+        }
+        
+        .frame(maxHeight: .infinity, alignment: .bottom)
+        : nil
+    }
+
+    
+
+    func canvasView() -> some View {
+            ZStack {
+//                                        Color(UIColor.secondarySystemBackground)
+                Color(UIColor.systemBackground)
+                //                        .scaleEffect(scale)
+                //                            .scaleEffect(scale,
+                    .clipped() // Ensure the content does not overflow
+                //                        .animation(.spring()) // Optional: Add some animation
                     .frame(width: FRAME_SIZE, height: FRAME_SIZE)
-                
-                    .scaleEffect(scale, anchor:
-                            .init(
-                                x: min(1,
-                                       max(0, ((offset.width / FRAME_SIZE) * -1 ) + 0.5)
-                                      ),
-                                y: min(1,
-                                       max(0, ((offset.height / FRAME_SIZE) * -1 ) + 0.5)
-                                      )
-                            )
-                    )
-                
-                    .offset(offset)
+
+                Background()
+                GridView()
                 //                    .clipped() // Ensure the content does not overflow
                 //                    .animation(.spring()) // Optional: Add some animation
                 
-                
-                
             }
-            
-            
-            
-                .gesture(
-                    DragGesture()
-                        .onChanged { value in
-                            withAnimation {
-                                self.animator?.stopAnimation(true)
-                                self.offset = CGSize(
-                                    width: self.lastOffset.width + value.translation.width,
-                                    height: self.lastOffset.height + value.translation.height
-                                )
-                            }
-                        }
-                        .onEnded { value in
-                            withAnimation {
-                                let timingParameters = UICubicTimingParameters(controlPoint1: CGPoint(x: 0.25, y: 0.1), controlPoint2: CGPoint(x: 0.25, y: 1))
-                                self.animator = UIViewPropertyAnimator(duration: 0.5, timingParameters: timingParameters)
-                                self.animator?.addAnimations {
-                                    self.offset = CGSize(
-                                        width: self.lastOffset.width + value.translation.width,
-                                        height: self.lastOffset.height + value.translation.height
-                                    )
-                                }
-                                self.animator?.startAnimation()
-                                self.lastOffset = self.offset
-                            }
-                        }
-                )
-                .gesture(
-                    MagnificationGesture()
-                        .onChanged { value in
-                            withAnimation {
-                                self.scale = self.cumulativeScale * value
-                                scaleChanging = true
-                            }
-                        }
-                        .onEnded { value in
-                            withAnimation {
-                                self.cumulativeScale *= value
-                                scaleChanging = false
-                            }
-                        }
-                )
-
-             
                 
                 .onTapGesture(count: 2, perform: {
                     
@@ -468,211 +424,19 @@ struct CanvasPage: View {
             
                 .onTapGesture {
                     //deselect
-                    selectedWidget = nil
+                    viewModel.selectedWidget = nil
                     widgetDoubleTapped = false
-                    
-                    //                    showSheet = true
-                    //                    showNewWidgetView = false
                     activeSheet = .chat
                 }
-            //                .scrollDisabled(currentMode != .normal)
-            //hovering action menu when widget is clicked
-            
-                .overlay(
-                    //if user is magnifying out
-                    //or canvas is less than 50 percent...
-                    //or is out of bounds
-                    //show zoom percentage
-                    scaleChanging
-                    || scale < CGFloat(0.5)
-                    || (((offset.width / FRAME_SIZE) * -1 ) + 0.5) > 1
-                    || (((offset.width / FRAME_SIZE) * -1 ) + 0.5) < 0
-                    || (((offset.height / FRAME_SIZE) * -1 ) + 0.5) > 1
-                    || (((offset.height / FRAME_SIZE) * -1 ) + 0.5) < 0
-                    ? Text(String(format: "%.0f", scale * CGFloat(100)) + "%")
-                        .padding(.vertical, 8)
-                        .frame(width:80)
-                       
-                        .background(
-                            Rectangle()
-                                .fill(.ultraThinMaterial)
-                                .clipShape(Capsule())
-                        )
-                        .frame(maxHeight: .infinity, alignment: .bottom)
-                        .padding(.bottom, 200)
-                        .onTapGesture(perform: {
-                            withAnimation {
-                                //zoom back in
-                                self.scale = 1.0
-                                self.cumulativeScale = 1.0
-                                //recenter
-                                offset.width = 0
-                                offset.height = 0
-                            }
-                            
-                        })
-                    
-                    : nil
-                    
-                    
-                )
-            
                 .overlay(
                     DrawingCanvas(canvas: $canvas, toolPickerActive: $toolPickerActive, toolPicker: $toolkit, spaceId: spaceId)
                         .allowsHitTesting(toolPickerActive)
-                    
-                        .scaleEffect(scale, anchor:
-                                .init(
-                                    x: min(1,
-                                           max(0, ((offset.width / FRAME_SIZE) * -1 ) + 0.5)
-                                          ),
-                                    y: min(1,
-                                           max(0, ((offset.height / FRAME_SIZE) * -1 ) + 0.5)
-                                          )
-                                )
-                        )
-                    
-                        .offset(offset)
                         .clipped() // Ensure the content does not overflow
                         .animation(.spring()) // Optional: Add some animation
                         .frame(width: FRAME_SIZE, height: FRAME_SIZE)
                     
                 )
-                .overlay(selectedWidget != nil
-                         ? VStack {
-                             
-                             EmojiCountHeaderView(spaceId: spaceId, widget: selectedWidget!)
-                                 .padding(.top, 150)
-                             Spacer()
-                             HStack{
-                                 
-                                 
-                                 
-                                 //map button
-                                 if selectedWidget!.media == .map {
-                                     
-                                     Button(action: {
-                                         
-                                         
-                                         
-                                         
-                                         if let location = selectedWidget?.location {
-                                             
-                                             viewModel.openMapsApp(location: location)
-                                         }
-                                         
-                                         
-                                         selectedWidget = nil
-                                         widgetDoubleTapped = false
-                                      
-                                     }, label: {
-                                         Image(systemName: "mappin.and.ellipse")
-                                             .foregroundColor(Color(UIColor.label))
-                                             .font(.title3)
-                                             .padding(.vertical, 8)
-                                          
-                                     })
-                                     .background(Color.clear, in: Rectangle())
-                                 }
-                                 
-                                 
-                                 
-                                 
-                                 
-                                 
-                                 //poll button
-                                 if selectedWidget!.media == .poll {
-                                     
-                                     Button(action: {
-                                         
-                                         activePollWidget = selectedWidget
-                                         
-                                         selectedWidget = nil
-                                         widgetDoubleTapped = false
-                                         
-                                         //                                     showSheet = true
-                                         //                                     showNewWidgetView = false
-                                         activeSheet = .poll
-                                     }, label: {
-                                         Image(systemName: "checklist")
-                                             .foregroundColor(Color(UIColor.label))
-                                             .font(.title3)
-                                             .padding(.vertical, 8)
-                                          
-                                     })
-                                     .background(Color.clear, in: Rectangle())
-                                 }
-                                 
-                             
-                                 
-                                 Button(action: {
-                                     
-                                     replyMode = true
-                                     
-                                     replyWidget = selectedWidget
-                                     if let selectedWidget, let index = canvasWidgets.firstIndex(of: selectedWidget){
-                                     
-                                     }
-                                     
-                                     
-                                     selectedWidget = nil
-                                     widgetDoubleTapped = false
-                                     
-                                     //                                     showSheet = true
-                                     //                                     showNewWidgetView = false
-                                     activeSheet = .chat
-                                 }, label: {
-                                     Image(systemName: "arrowshape.turn.up.left")
-                                         .foregroundColor(Color(UIColor.label))
-                                         .font(.title3)
-                                         .padding(.vertical, 8)
-                                        
-                                 })
-                                 .background(Color.clear, in: Rectangle())
-                                 
-                                 
-                                 //delete button
-                                 Button(action: {
-                                     if let selectedWidget, let index = canvasWidgets.firstIndex(of: selectedWidget){
-                                         canvasWidgets.remove(at: index)
-                                         SpaceManager.shared.removeWidget(spaceId: spaceId, widget: selectedWidget)
-                                         
-                                         
-                                         //delete poll on DB
-                                         if selectedWidget.media == .poll {
-                                             Task{
-                                                 deletePoll(spaceId: spaceId, pollId: selectedWidget.id.uuidString)
-                                                 
-                                                 
-                                                 
-                                             }
-                                           
-                                         }
-                                     }
-                                     selectedWidget = nil
-                                     widgetDoubleTapped = false
-                                     activeSheet = .chat
-                                 }, label: {
-                                     Image(systemName: "trash")
-                                         .foregroundColor(.red)
-                                         .font(.title3)
-                                         .padding(.vertical, 8)
-                                       
-                                 })
-                                 .background(Color.clear, in: Rectangle())
-                             }
-                             .padding(.horizontal, 15)
-                             
-                             .background(Color(UIColor.systemBackground), in: .capsule)
-                             .contentShape(.capsule)
-                             .shadow(color: Color(UIColor.label).opacity(0.2), radius: 20, x: 0, y: 2)
-                         }
-                    .frame(maxHeight: .infinity, alignment: .bottom)
-                    .padding(.bottom, 150)
-                         :  nil
-                        )
-            //                .animation(.easeInOut)
-                .background( Color(UIColor.secondarySystemBackground))
+      
     }
     
     private func removeExpiredStrokes() {
@@ -694,239 +458,217 @@ struct CanvasPage: View {
     
     
     @Environment(\.undoManager) private var undoManager
-    
     var body: some View {
-        canvasView()
-            .ignoresSafeArea()
-            .task {
-                await onChange()
-            }
-        
-        
-        //add new widget view and ChatSHEET
-            .sheet(item: $activeSheet, onDismiss: {
-                //                showNewWidgetView = false
-                //                            activeSheet = .chat
-                
-                replyMode = false
-                replyWidget = nil
-                
-                activePollWidget = nil
-                
-                //get chat to show up at all times
-                if !widgetDoubleTapped && !inSettingsView && activeSheet == nil{
-                    //                                showSheet = true
+        ZoomableScrollView(toolPickerActive: $toolPickerActive) {
+            canvasView()
+                .frame(width: FRAME_SIZE * 1.5, height: FRAME_SIZE * 1.5)
+                .ignoresSafeArea()
+                .task {
+                    await onChange()
+                }
+            //add new widget view and ChatSHEET
+               
+                .onAppear(perform: {
                     activeSheet = .chat
+                })
+                .onReceive(Timer.publish(every: 5, on: .main, in: .common).autoconnect()) { _ in
                     
+                    removeExpiredStrokes()
                 }
-                
-                
-                if photoLinkedToProfile {
-                    photoLinkedToProfile = false
-                    widgetId = UUID().uuidString
-                } else {
-                    Task{
-                        try await StorageManager.shared.deleteTempWidgetPic(spaceId:spaceId, widgetId: widgetId)
+            //toolbar
+                .toolbar(.hidden, for: .tabBar)
+                .toolbar {
+                    if toolPickerActive{
+                        //undo
+                        ToolbarItem(placement: .topBarTrailing) {
+                            Button(action: {
+                                undoManager?.undo()
+                            }, label: {
+                                Image(systemName: "arrow.uturn.backward.circle")
+                            })
+                        }
+                        //redo
+                        ToolbarItem(placement: .topBarTrailing) {
+                            Button(action: {
+                                undoManager?.redo()
+                            }, label: {
+                                Image(systemName: "arrow.uturn.forward.circle")
+                            })
+                        }
                     }
-                }
-                
-            }, content: { item in
-                
-                switch item {
-                case .newWidgetView:
-                    NewWidgetView(widgetId: widgetId,   spaceId: spaceId, photoLinkedToProfile: $photoLinkedToProfile)
-                        .presentationBackground(Color(UIColor.systemBackground))
-                case .chat:
-                    ChatView(spaceId: spaceId,replyMode: $replyMode, replyWidget: $replyWidget, selectedDetent: $selectedDetent)
+                    //pencilkit
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button(action: {
+                            self.toolPickerActive.toggle()
+                        }, label: {
+                            toolPickerActive
+                            ? Image(systemName: "pencil.tip.crop.circle.fill")
+                            : Image(systemName: "pencil.tip.crop.circle")
+                        })
+                    }
+                    //add widget
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button(action: {
+                            
+                            
+                            //                        showSheet = true
+                            //                        showNewWidgetView = true
+                            activeSheet = .newWidgetView
+                            
+                        }, label: {
+                            Image(systemName: "plus.circle")
+                        })
+                    }
                     
                     
                     
-                    
-                        .presentationBackground(Color(UIColor.systemBackground))
-                    
-                        .presentationDetents([.height(50),.medium], selection: $selectedDetent)
-                    
-                    
-                        .presentationCornerRadius(20)
-                    
-                        .presentationBackgroundInteraction(.enabled)
-                        .onChange(of: selectedDetent) { selectedDetent in
-                            if selectedDetent != .medium && replyMode {
-                                
-                                withAnimation {
-                                    replyWidget = nil
-                                    replyMode = false
+                    //SPACE SETTINGS
+                    ToolbarItem(placement: .topBarTrailing) {
+                        
+                        NavigationLink {
+                            
+                            SpaceSettingsView(spaceId: spaceId)
+                                .onAppear {
+                                    activeSheet = nil
+                                    inSettingsView = true
                                 }
-                                
-                                
-                                print("detent is 50")
-                            }
+                                .onDisappear {
+                                    activeSheet = .chat
+                                    inSettingsView = false
+                                }
+                        } label: {
+                            Image(systemName: "ellipsis")
+                            
                         }
-                    
-                    
-                case .poll:
-                    
-                    
-                  
-                    
-//                    if let myWidget = activePollWidget {
-                        
-//                       getMediaView(widget: myWidget, spaceId: spaceId)
-//                        PollWidgetSheetView(widget: activePollWidget!, spaceId: spaceId)
-                    if let widget = activePollWidget {
-                        PollWidgetSheetView(widget: widget, spaceId: spaceId)
-                    } else {
-                        ProgressView()
-                            .foregroundStyle(Color(UIColor.label))
-                            .presentationBackground(Color(UIColor.systemBackground))
-                          
-                    }
-                    
-                case .newTextView:
-                    
-                    NewTextWidgetView(spaceId: spaceId)
-                        .presentationBackground(Color(UIColor.systemBackground))
-
-                }
-                
-                
-                
-            })
-            .onAppear(perform: {
-                activeSheet = .chat
-            })
-            .onReceive(Timer.publish(every: 5, on: .main, in: .common).autoconnect()) { _ in
-                
-                removeExpiredStrokes()
-            }
-        //toolbar
-            .toolbar(.hidden, for: .tabBar)
-            .toolbar {
-                if toolPickerActive{
-                    //undo
-                    ToolbarItem(placement: .topBarTrailing) {
-                        Button(action: {
-                            undoManager?.undo()
-                        }, label: {
-                            Image(systemName: "arrow.uturn.backward.circle")
-                        })
-                    }
-                    //redo
-                    ToolbarItem(placement: .topBarTrailing) {
-                        Button(action: {
-                            undoManager?.redo()
-                        }, label: {
-                            Image(systemName: "arrow.uturn.forward.circle")
-                        })
-                    }
-                }
-                //pencilkit
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button(action: {
-                        
-                        self.toolPickerActive.toggle()
-                        if toolPickerActive {
-                            self.toolkit = PKToolPicker()
-                            self.toolkit.addObserver(canvas)
-                            canvas.becomeFirstResponder()
-                        }
-                        self.toolkit.setVisible(toolPickerActive, forFirstResponder: canvas)
-                        if currentMode != .drawing {
-                            self.currentMode = .drawing
-                            self.activeGestures = .all
-                            //                            showSheet = false
-                            activeSheet = nil
-                        } else {
-                            self.currentMode = .normal
-                            self.activeGestures = .subviews
-                            //                            showSheet = true
-                            activeSheet = .chat
-                        }
-                    }, label: {
-                        toolPickerActive
-                        ? Image(systemName: "pencil.tip.crop.circle.fill")
-                        : Image(systemName: "pencil.tip.crop.circle")
-                    })
-                }
-                //add widget
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button(action: {
                         
                         
-                        //                        showSheet = true
-                        //                        showNewWidgetView = true
-                        activeSheet = .newWidgetView
-                        
-                    }, label: {
-                        Image(systemName: "plus.circle")
-                    })
-                }
-                
-                
-                
-                //SPACE SETTINGS
-                ToolbarItem(placement: .topBarTrailing) {
-                    
-                    NavigationLink {
-                        
-                        SpaceSettingsView(spaceId: spaceId)
-                            .onAppear {
-                                //                                showSheet = false
-                                activeSheet = nil
-                                inSettingsView = true
-                            }
-                            .onDisappear {
-                                //                                showSheet = true
-                                activeSheet = .chat
-                                inSettingsView = false
-                                
-                                
-                                
-                                
-                            }
-                    } label: {
-                        Image(systemName: "ellipsis")
                         
                     }
                     
                     
                     
+                    
+                    
+                    
                 }
-                
-                
-                
-                
-                
-                
-            }
-            .navigationBarTitleDisplayMode(.inline)
-        //            .toolbarBackground(.ultraThinMaterial, for: .navigationBar)
-        //SHOW BACKGROUND BY CHANGING BELOW TO VISIBLE
-            .toolbarBackground(.hidden, for: .navigationBar)
-            .task{
-                
-                
-                do {
-                    try await viewModel.loadCurrentSpace(spaceId: spaceId)
-                } catch {
-                    //EXIT IF SPACE DOES NOT EXIST
-                    self.presentationMode.wrappedValue.dismiss()
-                }
-                
-                if let userInSpace = try? await viewModel.space?.members?.contains(getUID() ?? ""){
-                    print(userInSpace)
-                    if !userInSpace {
-                        
-                        //if user not in space, exit
+                .navigationBarTitleDisplayMode(.inline)
+            //            .toolbarBackground(.ultraThinMaterial, for: .navigationBar)
+            //SHOW BACKGROUND BY CHANGING BELOW TO VISIBLE
+                .toolbarBackground(.hidden, for: .navigationBar)
+                .task{
+                    
+                    
+                    do {
+                        try await viewModel.loadCurrentSpace(spaceId: spaceId)
+                        print("Done with loadCurrentSpace")
+                    } catch {
+                        //EXIT IF SPACE DOES NOT EXIST
                         self.presentationMode.wrappedValue.dismiss()
-                        
+                    }
+                    
+                    if let userInSpace = try? await viewModel.space?.members?.contains(getUID() ?? ""){
+                        print(userInSpace)
+                        if !userInSpace {
+                            
+                            //if user not in space, exit
+                            self.presentationMode.wrappedValue.dismiss()
+                            
+                        }
                     }
                 }
+                .navigationTitle(toolPickerActive ? "" : viewModel.space?.name ?? "" )
+                .background(  Color(UIColor.secondarySystemBackground))
+        }
+        .ignoresSafeArea()
+        .sheet(item: $activeSheet, onDismiss: {
+            //                showNewWidgetView = false
+            //                            activeSheet = .chat
+            
+            replyMode = false
+            replyWidget = nil
+            
+            activePollWidget = nil
+            
+            //get chat to show up at all times
+            if !widgetDoubleTapped && !inSettingsView && activeSheet == nil{
+                //                                showSheet = true
+                inSettingsView = false
+                activeSheet = .chat
+                
             }
-            .navigationTitle(toolPickerActive ? "" : viewModel.space?.name ?? "" )
+            
+            
+            if photoLinkedToProfile {
+                photoLinkedToProfile = false
+                widgetId = UUID().uuidString
+            } else {
+                Task{
+                    try await StorageManager.shared.deleteTempWidgetPic(spaceId:spaceId, widgetId: widgetId)
+                }
+            }
+            
+        }, content: { item in
+            
+            switch item {
+            case .newWidgetView:
+                NewWidgetView(widgetId: widgetId,   spaceId: spaceId, photoLinkedToProfile: $photoLinkedToProfile)
+//                            .presentationBackground(Color(UIColor.systemBackground))
+                    .presentationBackground(.thickMaterial)
+            case .chat:
+                ChatView(spaceId: spaceId,replyMode: $replyMode, replyWidget: $replyWidget, selectedDetent: $selectedDetent)
+                
+                
+                
+                
+                    .presentationBackground(Color(UIColor.systemBackground))
+                
+                    .presentationDetents([.height(50),.medium], selection: $selectedDetent)
+                
+                
+                    .presentationCornerRadius(20)
+                
+                    .presentationBackgroundInteraction(.enabled)
+                    .onChange(of: selectedDetent) { selectedDetent in
+                        if selectedDetent != .medium && replyMode {
+                            
+                            withAnimation {
+                                replyWidget = nil
+                                replyMode = false
+                            }
+                            
+                            
+                            print("detent is 50")
+                        }
+                    }
+                
+                
+            case .poll:
+                
+                
+                
+                if let widget = activePollWidget {
+                    PollWidgetSheetView(widget: widget, spaceId: spaceId)
+                } else {
+                    ProgressView()
+                        .foregroundStyle(Color(UIColor.label))
+                        .presentationBackground(Color(UIColor.systemBackground))
+                    
+                }
+                
+            case .newTextView:
+                NewTextWidgetView(spaceId: spaceId)
+                    .presentationBackground(Color(UIColor.systemBackground))
+            }
+            
+            
+            
+        })
+        .onDisappear(perform: {
+            activeSheet = nil
+        })
+        .background(  Color(UIColor.secondarySystemBackground))
+        .overlay(doubleTapOverlay())
     }
-    
-    
 }
 
 

@@ -169,12 +169,12 @@ struct ChatView: View {
                     }
                 }
                 .onChange(of: messageManager.lastMessageId) {
-//                    id in proxy.scrollTo(id, anchor: .bottom)
+                    id in proxy.scrollTo(id, anchor: .bottom)
                     
                     scroll = true
                 }
                 .onChange(of: selectedDetent) {
-//                    id in proxy.scrollTo(id, anchor: .bottom)
+                    id in proxy.scrollTo(id, anchor: .top)
                     
                     scroll = true
                     
@@ -207,12 +207,15 @@ struct ChatView: View {
             }
             .padding(.top)
             .padding(.horizontal)
+            
+            
+            
             MessageField( replyMode: $replyMode, replyWidget: $replyWidget).environmentObject(messageManager)
-              
+                .onTapGesture {
+                    scroll = true
+                }
         }
-        .onTapGesture {
-            scroll = true
-        }
+    
         
         .scrollIndicators(.hidden)
     }

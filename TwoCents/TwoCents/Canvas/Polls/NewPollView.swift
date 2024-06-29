@@ -53,7 +53,7 @@ struct NewPoll: View{
                                angularInset: 2
                            )
                            .foregroundStyle(colors[index])
-                           .cornerRadius(5)
+                           .cornerRadius(3)
                        }
                    }
             
@@ -91,8 +91,8 @@ struct NewPoll: View{
             
         }
 
-        .frame(width: 250, height: 250)
-        .background(.regularMaterial)
+        .frame(width: .infinity, height: .infinity)
+        .background(.ultraThickMaterial)
         .onTapGesture{showingView.toggle()}
         .fullScreenCover(isPresented: $showingView, content: {
             NavigationStack{

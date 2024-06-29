@@ -27,14 +27,14 @@ struct PollWidget: WidgetView {
         assert(widget.media == .poll)
         self.widget = widget
         self.spaceId = spaceId
-    
+        
         
     }
     
     func fetchPoll() {
         Task {
-//                        print("fetching")
-
+            //                        print("fetching")
+            
             db.collection("spaces")
                 .document(spaceId)
                 .collection("polls")
@@ -45,14 +45,14 @@ struct PollWidget: WidgetView {
                         return
                     }
                     
-            
+                    
                     do {
                         if let pollData = try snapshot?.data(as: Poll?.self) {
-//                                                        print(pollData)
+                            //                                                        print(pollData)
                             
                             self.poll = pollData
                             totalVotes = poll!.totalVotes()
-//                            print("YOUR POLL IS \(self.poll)")
+                            //                            print("YOUR POLL IS \(self.poll)")
                             
                             // Update your SwiftUI view with the retrieved poll data.
                         } else {
@@ -69,19 +69,19 @@ struct PollWidget: WidgetView {
     
     
     var body: some View {
-  
-      
+        ZStack {
             
-            if poll != nil {
+            
+            if let poll = poll {
                 
-             
-               
-                    //main content
-                   
-                        
-                  
-                           
-                let hasNoVotes =  poll!.options.allSatisfy { $0.count == 0 }
+                
+                
+                //main content
+                
+                
+                
+                
+                let hasNoVotes =  poll.options.allSatisfy { $0.count == 0 }
                 ZStack{
                     if hasNoVotes {
                         Chart {
@@ -105,7 +105,7 @@ struct PollWidget: WidgetView {
                         
                         
                     } else {
-                        Chart(poll!.options) {option in
+                        Chart(poll.options) {option in
                             SectorMark(
                                 //                                        angle: .value("Count", option.count),
                                 angle: .value("Count", option.count),
@@ -115,13 +115,13 @@ struct PollWidget: WidgetView {
                             .cornerRadius(3)
                             
                             
-                            .foregroundStyle(colorForIndex(index: poll!.options.firstIndex(of: option)!))
+                            .foregroundStyle(colorForIndex(index: poll.options.firstIndex(of: option)!))
                             
                             
                         }
                         .padding(5)
                         .chartLegend(.hidden)
-                      
+                        
                         
                     }
                     
@@ -137,25 +137,33 @@ struct PollWidget: WidgetView {
                             .fontWeight(.regular)
                         //                                        .fill(.ultraThickMaterial)
                             .foregroundStyle(Color.accentColor)
-//
-//                            .padding(.bottom)
+                        //
+                        //                            .padding(.bottom)
                     }
                     .frame(maxWidth: .infinity,maxHeight: .infinity,alignment: .center)
                     
                     
                     
                 }
-              
                 
-              
+                
+                
                 .background(.regularMaterial)
-//                .background(Color.accentColor)
+                //                .background(Color.accentColor)
                 
                 .frame(width: TILE_SIZE, height:TILE_SIZE)
             } else {
+                //                ProgressView()
+                //                    .foregroundStyle(Color(UIColor.label))
+                //                    .frame(width: TILE_SIZE,height: TILE_SIZE)
+                //
+                
                 ProgressView()
-                    .foregroundStyle(Color(UIColor.label))
-                    .frame(width: TILE_SIZE,height: TILE_SIZE)
+                    .progressViewStyle(CircularProgressViewStyle(tint: .primary))
+                    .frame(maxWidth:.infinity, maxHeight: .infinity)
+                    .aspectRatio(1, contentMode: .fit)
+                    .background(.thinMaterial)
+                    .cornerRadius(20)
                 
                     .onAppear {
                         
@@ -164,12 +172,10 @@ struct PollWidget: WidgetView {
                         
                     }
             }
-            
-            
-            
-       
-        
+        }
     }
+    
+  
 }
 
 
@@ -192,7 +198,7 @@ func pollWidget(widget: CanvasWidget, spaceId: String) -> some View {
 //    return colors[index % colors.count] // Ensure index doesn't exceed the color array length
 //}
 //
-// 
+//
 
 struct PollWidget_Previews: PreviewProvider {
     

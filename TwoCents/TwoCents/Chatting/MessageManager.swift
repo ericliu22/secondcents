@@ -101,9 +101,6 @@ class MessageManager: ObservableObject {
                 if let id = self.messages.last?.id{
                     self.lastMessageId = id
                 }
-                //Eric: is able to print out 20 which is in fact 10 more than the initla message count of 10
-                print("new fetch count:\(self.messages.count)")
-              
                
         }
     }
@@ -119,6 +116,7 @@ class MessageManager: ObservableObject {
                 do {
                     //if there is both text and widget, send widget first seperately, then the text.
                     if text != nil && widget != nil {
+                        messageNotification(spaceId: spaceId, userUID: self.userUID, message: (text == "" ? "Replied to a widget" : text)!)
                         sendMessages(text: nil, widget: widget)
                         sendMessages(text: text, widget: nil)
                         
@@ -129,7 +127,7 @@ class MessageManager: ObservableObject {
                         mainChatReference.setData(["lastSend": newMessage.sendBy], merge: true)
                         mainChatReference.setData(["lastTs": newMessage.ts], merge: true)
                         
-                        messageNotification(spaceId: spaceId, userUID: self.userUID, message: text!)
+                       
                     }
                     
                     

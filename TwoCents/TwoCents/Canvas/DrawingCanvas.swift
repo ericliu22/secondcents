@@ -25,21 +25,16 @@ struct DrawingCanvas: UIViewRepresentable {
         canvas.contentInset = UIEdgeInsets(top: 280, left: 400, bottom: 280, right: 400)
         canvas.contentMode = .center
         canvas.scrollsToTop = false
+        canvas.becomeFirstResponder()
         toolPicker.addObserver(canvas)
-        canvas.becomeFirstResponder()
-        
         return canvas
-    }
-    
-    
-    func showToolPicker() {
-        canvas.becomeFirstResponder()
     }
     
     func updateUIView(_ uiView: PKCanvasView, context: Context) {
         
         canvas.drawingGestureRecognizer.isEnabled = toolPickerActive
-        
+        toolPicker.setVisible(toolPickerActive, forFirstResponder: canvas)
+
     }
     
     func makeCoordinator() -> Coordinator {

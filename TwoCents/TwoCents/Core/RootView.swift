@@ -123,20 +123,7 @@ struct RootView: View {
         
         .onChange(of: activeSheet) { oldValue, newValue in
             switch newValue {
-            case .signInView:
-                Task{
-                    try? await viewModel.loadCurrentUser()
-                    
-                    if let myColor = viewModel.user?.userColor{
-                        tintLoaded = true
-                        
-                        userColor = myColor
-                        print("USERCOLOR: \(userColor)")
-                        loadedColor = viewModel.getUserColor(userColor: userColor)
-                    }
-                    
-                    
-                }
+     
             case .customizeProfileView:
                 Task{
                     try? await viewModel.loadCurrentUser()
@@ -174,7 +161,9 @@ struct RootView: View {
                 }
             }
             
-            if oldValue == .customizeProfileView {
+            switch oldValue  {
+                
+            case .customizeProfileView:
                 Task{
                     
                     try? await viewModel.loadCurrentUser()
@@ -189,7 +178,32 @@ struct RootView: View {
                     }
                     
                 }
+                
+                
+            case .signInView:
+                Task{
+                    try? await viewModel.loadCurrentUser()
+                    
+                    if let myColor = viewModel.user?.userColor{
+                        withAnimation{
+                        tintLoaded = true
+                        
+                        userColor = myColor
+                        print("USERCOLOR: \(userColor)")
+                        
+                   
+                            loadedColor = viewModel.getUserColor(userColor: userColor)
+                        }
+                    }
+                    
+                    
+                }
+                
+                
+            default:
+                break
             }
+            
             
             
             

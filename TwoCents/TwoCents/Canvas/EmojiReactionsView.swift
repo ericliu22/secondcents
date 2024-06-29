@@ -59,13 +59,13 @@ struct EmojiReactionsView: View {
         case "👍":
             return "liked"
         case "👎":
-            return "disliked"
+            return "hated"
         case "😭":
-            return "cried"
+            return "cried at"
         case "🫵":
-            return "pointed"
+            return "SHAMED"
         case "⁉️":
-            return "questioned"
+            return "AYO'd"
         default:
             return "reacted"
         }
@@ -128,7 +128,7 @@ struct EmojiReactionsView: View {
                         .animation(.easeOut(duration: 0.5), value: userPressed["❤️"])
                     
                    Text("❤️")
-                    
+                        .font(.title3)
                         .phaseAnimator([false, true], trigger: userPressed["❤️"]) { icon, scaleFromBottom in
                             icon
                             
@@ -192,6 +192,7 @@ struct EmojiReactionsView: View {
                         .scaleEffect(userPressed["👍"]! ? 1.25 : 0)
                         .animation(.easeOut(duration: 0.5), value: userPressed["👍"])
                     Text("👍")
+                        .font(.title3)
                         .phaseAnimator([false, true], trigger: userPressed["👍"]) { icon, scaleRotate in
                             icon
                                 .rotationEffect(.degrees(scaleRotate ? -5 : 0), anchor: .bottomLeading)
@@ -243,6 +244,7 @@ struct EmojiReactionsView: View {
                 
             } label: {
                 Text("👎")
+                    .font(.title3)
             }
             .phaseAnimator([false, true], trigger: userPressed["👎"]) { icon, dislike in
                 icon
@@ -281,6 +283,7 @@ struct EmojiReactionsView: View {
                 
             } label: {
                 Text("😭")
+                    .font(.title3)
             }
             .phaseAnimator([false, true], trigger: userPressed["😭"]) { icon, crying in
                 icon
@@ -318,6 +321,7 @@ struct EmojiReactionsView: View {
                 
             } label: {
                 Text("🫵")
+                    .font(.title3)
             }
             .phaseAnimator([false, true], trigger: userPressed["🫵"]) { icon, point in
                 icon
@@ -356,6 +360,7 @@ struct EmojiReactionsView: View {
                 
             } label: {
                 Text("⁉️")
+                    .font(.title3)
             }
             .phaseAnimator([false, true], trigger: userPressed["⁉️"]) { icon, question in
                 icon
