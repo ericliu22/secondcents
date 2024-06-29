@@ -63,7 +63,7 @@ final class CreateSpacesViewModel: ObservableObject{
             }
             
         }
-        let space = DBSpace(spaceId: spaceId, name: name.isEmpty ? "Untitled Space" : name, members: selectedMembersUserId)
+        let space = DBSpace(spaceId: spaceId, name: name.isEmpty ? "Untitled Space" : name.trimmingCharacters(in: .whitespacesAndNewlines), members: selectedMembersUserId)
           
 
           
