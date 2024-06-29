@@ -13,7 +13,6 @@
 		850958AB2AB8F82D00018A32 /* LuckiestGuy-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 850958A92AB8F82D00018A32 /* LuckiestGuy-Regular.ttf */; };
 		850958AC2AB8F82D00018A32 /* LuckiestGuy-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 850958A92AB8F82D00018A32 /* LuckiestGuy-Regular.ttf */; };
 		8534B8B92B8001660089AD5C /* NewPollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8534B8B82B8001660089AD5C /* NewPollView.swift */; };
-		853A641C2C0D380E00041CA1 /* textTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 853A641B2C0D380E00041CA1 /* textTest.swift */; };
 		855BDECF2C1E54C0002FC428 /* FirebaseDynamicLinks in Frameworks */ = {isa = PBXBuildFile; productRef = 855BDECE2C1E54C0002FC428 /* FirebaseDynamicLinks */; };
 		856E80B12B50E9D00078A2CE /* PencilKitPractice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 856E80B02B50E9CF0078A2CE /* PencilKitPractice.swift */; };
 		856E80B92B50EB260078A2CE /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 856E80B42B50EB260078A2CE /* CardView.swift */; };
@@ -33,7 +32,7 @@
 		85BB02F02B5D077E00B9A9EA /* ToolPickerPractice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85BB02EF2B5D077E00B9A9EA /* ToolPickerPractice.swift */; };
 		85C6759A2AB8EE5B00FACCB2 /* HotSeatManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20EBD082AB8A36100EFDDE8 /* HotSeatManager.swift */; };
 		85C6759B2AB8EE6100FACCB2 /* SuperlativeGame.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20EBD092AB8A36100EFDDE8 /* SuperlativeGame.swift */; };
-		85CA3B4D2C2746C400F4A889 /* EventWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85CA3B4C2C2746C400F4A889 /* EventWidget.swift */; };
+		85CA3B4D2C2746C400F4A889 /* CalendarWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85CA3B4C2C2746C400F4A889 /* CalendarWidget.swift */; };
 		A200F21B2C0026B400BC1005 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = A200F21A2C0026B400BC1005 /* FirebaseMessaging */; };
 		A21244E32C1E234B005E8C8B /* NewTextWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A21244E22C1E234B005E8C8B /* NewTextWidgetView.swift */; };
 		A22F84EE2C2912A20095A087 /* ZoomableScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A22F84ED2C2912A20095A087 /* ZoomableScrollView.swift */; };
@@ -157,7 +156,6 @@
 		850958A82AB8F81200018A32 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		850958A92AB8F82D00018A32 /* LuckiestGuy-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "LuckiestGuy-Regular.ttf"; sourceTree = "<group>"; };
 		8534B8B82B8001660089AD5C /* NewPollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewPollView.swift; sourceTree = "<group>"; };
-		853A641B2C0D380E00041CA1 /* textTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = textTest.swift; sourceTree = "<group>"; };
 		856E80B02B50E9CF0078A2CE /* PencilKitPractice.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PencilKitPractice.swift; sourceTree = "<group>"; };
 		856E80B42B50EB260078A2CE /* CardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 		856E80B52B50EB260078A2CE /* SabotageSelectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SabotageSelectionView.swift; sourceTree = "<group>"; };
@@ -174,7 +172,7 @@
 		85A6766A2AE9C19B003ECAAA /* MessageBubble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageBubble.swift; sourceTree = "<group>"; };
 		85A6766C2AE9C6BB003ECAAA /* MessageField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageField.swift; sourceTree = "<group>"; };
 		85BB02EF2B5D077E00B9A9EA /* ToolPickerPractice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolPickerPractice.swift; sourceTree = "<group>"; };
-		85CA3B4C2C2746C400F4A889 /* EventWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventWidget.swift; sourceTree = "<group>"; };
+		85CA3B4C2C2746C400F4A889 /* CalendarWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarWidget.swift; sourceTree = "<group>"; };
 		85DDD0CC2AB4E79A008A9C56 /* VoteGameReal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VoteGameReal.swift; sourceTree = "<group>"; };
 		A2003C942AABA08300B1E551 /* Line.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Line.swift; sourceTree = "<group>"; };
 		A20EBD062AB8A36100EFDDE8 /* HotSeat.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HotSeat.swift; sourceTree = "<group>"; };
@@ -483,13 +481,11 @@
 				ABB68DAF2C15268D00406948 /* TextWidgetViewModel.swift */,
 				A21244E22C1E234B005E8C8B /* NewTextWidgetView.swift */,
 				AB7F3AED2C164CF000690EF1 /* NewTextWidgetViewModel.swift */,
-				853A641B2C0D380E00041CA1 /* textTest.swift */,
-				A2AFFDDB2B154C7000B14C1E /* ChatWidget.swift */,
 				857753012C308B0E00B4A971 /* DateAlignment.swift */,
 				AB6778E52AB8F67D00C11AA7 /* VideoWidget.swift */,
 				A2E5F52A2B5A12D30019C6ED /* DrawingCanvas.swift */,
 				AB6778E32AB8F67800C11AA7 /* CanvasWidget.swift */,
-				85CA3B4C2C2746C400F4A889 /* EventWidget.swift */,
+				85CA3B4C2C2746C400F4A889 /* CalendarWidget.swift */,
 				A2F563182AB4E6240026D8C9 /* CanvasPage.swift */,
 				A22F84ED2C2912A20095A087 /* ZoomableScrollView.swift */,
 				AB6EA6092B879B7C00CC90FF /* CanvasPageViewModel.swift */,
@@ -940,7 +936,6 @@
 				AB6EA6102B87A27D00CC90FF /* SplashView.swift in Sources */,
 				AB69F03F2C1D189800B81E79 /* SignInPhoneNumberViewModel.swift in Sources */,
 				AB9EB95D2B1E805300F58EA5 /* ChatManager.swift in Sources */,
-				853A641C2C0D380E00041CA1 /* textTest.swift in Sources */,
 				AB6EE7782C25FE4400F6FDE2 /* NewMapView.swift in Sources */,
 				AB15AC0D2AF6F01B0055D5D0 /* SpaceProfilePicViewModel.swift in Sources */,
 				AB01CB5F2B855E83004BEB5B /* TextWidget.swift in Sources */,
@@ -948,7 +943,7 @@
 				856E80BA2B50EB260078A2CE /* SabotageSelectionView.swift in Sources */,
 				856E80B92B50EB260078A2CE /* CardView.swift in Sources */,
 				AB6778E22AB8F67300C11AA7 /* ImageWidget.swift in Sources */,
-				85CA3B4D2C2746C400F4A889 /* EventWidget.swift in Sources */,
+				85CA3B4D2C2746C400F4A889 /* CalendarWidget.swift in Sources */,
 				A257D7842A6D707600A4E7BD /* TwoCentsApp.swift in Sources */,
 				AB300FB02AC7407000C6719D /* FriendsView.swift in Sources */,
 				ABCA39D42A79FFAD009447C3 /* SignInEmailView.swift in Sources */,

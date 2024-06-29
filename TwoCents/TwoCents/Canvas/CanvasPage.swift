@@ -622,14 +622,14 @@ struct CanvasPage: View {
                 
                     .presentationBackground(Color(UIColor.systemBackground))
                 
-                    .presentationDetents([.height(50),.medium], selection: $selectedDetent)
+                    .presentationDetents([.height(50),.large], selection: $selectedDetent)
                 
                 
                     .presentationCornerRadius(20)
                 
                     .presentationBackgroundInteraction(.enabled)
                     .onChange(of: selectedDetent) { selectedDetent in
-                        if selectedDetent != .medium && replyMode {
+                        if selectedDetent != .large && replyMode {
                             
                             withAnimation {
                                 replyWidget = nil

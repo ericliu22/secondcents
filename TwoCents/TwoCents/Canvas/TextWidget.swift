@@ -37,6 +37,6 @@ struct TextWidget: WidgetView {
                 }
                 
             }
-            
+        
     }
 }

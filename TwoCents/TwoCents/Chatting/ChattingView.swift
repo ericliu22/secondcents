@@ -145,9 +145,7 @@ struct ChatView: View {
                 ScrollView{
                     VStack {
                         button(proxy: proxy)
-                        ChatStruct(spaceId: spaceId, messageManager: messageManager).onAppear(perform: {
-                            proxy.scrollTo(messageManager.lastMessageId, anchor: .bottom)
-                        })
+                        ChatStruct(spaceId: spaceId, messageManager: messageManager)
                         .scrollTargetLayout()
                         .blur(radius: replyMode ? 2 : 0)
                         
@@ -159,9 +157,15 @@ struct ChatView: View {
                             
                                 .frame(maxWidth: .infinity, alignment: .trailing)
                                 .id("replyWidget")
+                                .onAppear(perform: {
+                                    proxy.scrollTo(messageManager.lastMessageId, anchor: .bottom)
+                                })
                         }
                     }
                 }
+                .onAppear(perform: {
+                    proxy.scrollTo(messageManager.lastMessageId, anchor: .bottom)
+                })
                 .onTapGesture {
                     withAnimation {
                         replyMode = false
