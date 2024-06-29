@@ -11,7 +11,7 @@ import Foundation
 import SwiftUI
 import Firebase
 
-struct CalendarWidget: View {
+struct CalendarView: View {
     @State private var selectedDates: Set<DateComponents> = []
     @State private var savedDates: [Date] = []
 
@@ -62,5 +62,5 @@ struct CalendarWidget: View {
 }
 
 #Preview{
-    CalendarWidget()
+    CalendarView()
 }
