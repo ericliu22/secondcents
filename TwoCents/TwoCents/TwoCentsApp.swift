@@ -8,25 +8,19 @@ import SwiftUI
 import Firebase
 import UserNotifications
 import FirebaseMessaging
+import UIKit
+import FirebaseDynamicLinks
 
 @main
 struct TwoCentsApp: App {
-    
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     
     var body: some Scene {
         WindowGroup {
-           RootView()
+            RootView()
         }
     }
 }
-//
-//struct Previews_TwoCentsApp_Previews: PreviewProvider {
-//    static var previews: some View {
-//        /*@START_MENU_TOKEN@*/Text("Hello, World!")/*@END_MENU_TOKEN@*/
-//    }
-//}
-
 
 class AppDelegate: NSObject, UIApplicationDelegate {
     let gcmMessageIDKey = "gcm.message_id"
@@ -37,13 +31,12 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         Messaging.messaging().delegate = self
 
         if #available(iOS 10.0, *) {
-        // For iOS 10 display notification (sent via APNS)
-        UNUserNotificationCenter.current().delegate = self
+            UNUserNotificationCenter.current().delegate = self
 
-        let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
-        UNUserNotificationCenter.current().requestAuthorization(
-            options: authOptions,
-            completionHandler: {_, _ in })
+            let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
+            UNUserNotificationCenter.current().requestAuthorization(
+                options: authOptions,
+                completionHandler: {_, _ in })
         } else {
             let settings: UIUserNotificationSettings =
             UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
@@ -54,15 +47,48 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         return true
     }
 
+    func application(_ application: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
+        let handled = DynamicLinks.dynamicLinks().handleUniversalLink(url) { dynamicLink, error in
+            guard error == nil else {
+                print("Error handling dynamic link: \(error!.localizedDescription)")
+                return
+            }
+            if let dynamicLink = dynamicLink {
+                self.handleDynamicLink(dynamicLink)
+            }
+        }
+
+        return handled
+    }
+
+    func handleDynamicLink(_ dynamicLink: DynamicLink) {
+        guard let url = dynamicLink.url else {
+            print("Dynamic link has no URL")
+            return
+        }
+        print("Dynamic link URL: \(url.absoluteString)")
+        // Handle the dynamic link URL. For example, navigate to a specific screen in your app.
+    }
+
+    func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
+        return DynamicLinks.dynamicLinks().handleUniversalLink(userActivity.webpageURL!) { dynamicLink, error in
+            guard error == nil else {
+                print("Error handling dynamic link: \(error!.localizedDescription)")
+                return
+            }
+            if let dynamicLink = dynamicLink {
+                self.handleDynamicLink(dynamicLink)
+            }
+        }
+    }
+
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any],
                      fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
-
         if let messageID = userInfo[gcmMessageIDKey] {
             print("Message ID: \(messageID)")
         }
 
         print(userInfo)
-
         completionHandler(UIBackgroundFetchResult.newData)
     }
 }
@@ -70,7 +96,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 extension AppDelegate: MessagingDelegate {
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
         let deviceToken: [String: String] = ["token": fcmToken ?? ""]
-        print("Device token: ", deviceToken) // This token can be used for testing notifications on FCM
+        print("Device token: ", deviceToken)
         uploadTokenToServer(fcmToken ?? "")
     }
     
@@ -82,47 +108,36 @@ extension AppDelegate: MessagingDelegate {
             print("FAILED TO UPLOAD DEVICE TOKEN")
         }
     }
-    
 }
 
 @available(iOS 10, *)
 extension AppDelegate : UNUserNotificationCenterDelegate {
 
-  // Receive displayed notifications for iOS 10 devices.
-  func userNotificationCenter(_ center: UNUserNotificationCenter,
-                              willPresent notification: UNNotification,
-    withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-    let userInfo = notification.request.content.userInfo
+    func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                willPresent notification: UNNotification,
+        withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        let userInfo = notification.request.content.userInfo
 
-    if let messageID = userInfo[gcmMessageIDKey] {
-        print("Message ID: \(messageID)")
+        if let messageID = userInfo[gcmMessageIDKey] {
+            print("Message ID: \(messageID)")
+        }
+
+        print(userInfo)
+
+        completionHandler([[.banner, .badge, .sound]])
     }
 
-    print(userInfo)
+    func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                didReceive response: UNNotificationResponse,
+                                withCompletionHandler completionHandler: @escaping () -> Void) {
+        let userInfo = response.notification.request.content.userInfo
 
-    // Change this to your preferred presentation option
-    completionHandler([[.banner, .badge, .sound]])
-  }
+        if let messageID = userInfo[gcmMessageIDKey] {
+            print("Message ID from userNotificationCenter didReceive: \(messageID)")
+        }
 
-    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        print(userInfo)
 
+        completionHandler()
     }
-
-    func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
-
-    }
-
-  func userNotificationCenter(_ center: UNUserNotificationCenter,
-                              didReceive response: UNNotificationResponse,
-                              withCompletionHandler completionHandler: @escaping () -> Void) {
-    let userInfo = response.notification.request.content.userInfo
-
-    if let messageID = userInfo[gcmMessageIDKey] {
-      print("Message ID from userNotificationCenter didReceive: \(messageID)")
-    }
-
-    print(userInfo)
-
-    completionHandler()
-  }
 }

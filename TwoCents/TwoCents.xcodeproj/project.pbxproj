@@ -14,6 +14,7 @@
 		850958AC2AB8F82D00018A32 /* LuckiestGuy-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 850958A92AB8F82D00018A32 /* LuckiestGuy-Regular.ttf */; };
 		8534B8B92B8001660089AD5C /* NewPollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8534B8B82B8001660089AD5C /* NewPollView.swift */; };
 		853A641C2C0D380E00041CA1 /* textTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 853A641B2C0D380E00041CA1 /* textTest.swift */; };
+		855BDECF2C1E54C0002FC428 /* FirebaseDynamicLinks in Frameworks */ = {isa = PBXBuildFile; productRef = 855BDECE2C1E54C0002FC428 /* FirebaseDynamicLinks */; };
 		856E80B12B50E9D00078A2CE /* PencilKitPractice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 856E80B02B50E9CF0078A2CE /* PencilKitPractice.swift */; };
 		856E80B92B50EB260078A2CE /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 856E80B42B50EB260078A2CE /* CardView.swift */; };
 		856E80BA2B50EB260078A2CE /* SabotageSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 856E80B52B50EB260078A2CE /* SabotageSelectionView.swift */; };
@@ -26,6 +27,7 @@
 		85741EAA2AD03B2C0085423E /* SnapCarouselPractice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85741EA92AD03B2C0085423E /* SnapCarouselPractice.swift */; };
 		85741EAF2AD03D370085423E /* PostModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85741EAE2AD03D370085423E /* PostModel.swift */; };
 		8576048E2C1A56B9007F5B0E /* ContactsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8576048D2C1A56B9007F5B0E /* ContactsView.swift */; };
+		857753022C308B0E00B4A971 /* DateAlignment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857753012C308B0E00B4A971 /* DateAlignment.swift */; };
 		85A6766B2AE9C19B003ECAAA /* MessageBubble.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A6766A2AE9C19B003ECAAA /* MessageBubble.swift */; };
 		85A6766D2AE9C6BB003ECAAA /* MessageField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A6766C2AE9C6BB003ECAAA /* MessageField.swift */; };
 		85BB02F02B5D077E00B9A9EA /* ToolPickerPractice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85BB02EF2B5D077E00B9A9EA /* ToolPickerPractice.swift */; };
@@ -168,6 +170,7 @@
 		85741EA92AD03B2C0085423E /* SnapCarouselPractice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapCarouselPractice.swift; sourceTree = "<group>"; };
 		85741EAE2AD03D370085423E /* PostModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostModel.swift; sourceTree = "<group>"; };
 		8576048D2C1A56B9007F5B0E /* ContactsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsView.swift; sourceTree = "<group>"; };
+		857753012C308B0E00B4A971 /* DateAlignment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateAlignment.swift; sourceTree = "<group>"; };
 		85A6766A2AE9C19B003ECAAA /* MessageBubble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageBubble.swift; sourceTree = "<group>"; };
 		85A6766C2AE9C6BB003ECAAA /* MessageField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageField.swift; sourceTree = "<group>"; };
 		85BB02EF2B5D077E00B9A9EA /* ToolPickerPractice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolPickerPractice.swift; sourceTree = "<group>"; };
@@ -285,6 +288,7 @@
 				ABF56DF92A7C8B7A00F959DB /* FirebaseFirestoreSwift in Frameworks */,
 				ABCA39CC2A79F97D009447C3 /* FirebaseAnalyticsSwift in Frameworks */,
 				A200F21B2C0026B400BC1005 /* FirebaseMessaging in Frameworks */,
+				855BDECF2C1E54C0002FC428 /* FirebaseDynamicLinks in Frameworks */,
 				ABF56DF72A7C8B7A00F959DB /* FirebaseFirestore in Frameworks */,
 				ABCA39CF2A79FBB5009447C3 /* FirebaseAuth in Frameworks */,
 				ABCA39CA2A79F97D009447C3 /* FirebaseAnalytics in Frameworks */,
@@ -481,6 +485,7 @@
 				AB7F3AED2C164CF000690EF1 /* NewTextWidgetViewModel.swift */,
 				853A641B2C0D380E00041CA1 /* textTest.swift */,
 				A2AFFDDB2B154C7000B14C1E /* ChatWidget.swift */,
+				857753012C308B0E00B4A971 /* DateAlignment.swift */,
 				AB6778E52AB8F67D00C11AA7 /* VideoWidget.swift */,
 				A2E5F52A2B5A12D30019C6ED /* DrawingCanvas.swift */,
 				AB6778E32AB8F67800C11AA7 /* CanvasWidget.swift */,
@@ -738,6 +743,7 @@
 				ABF56DF82A7C8B7A00F959DB /* FirebaseFirestoreSwift */,
 				AB842C0A2A91E27E00E4A7CE /* FirebaseStorage */,
 				A200F21A2C0026B400BC1005 /* FirebaseMessaging */,
+				855BDECE2C1E54C0002FC428 /* FirebaseDynamicLinks */,
 			);
 			productName = TwoCents;
 			productReference = A257D7802A6D707600A4E7BD /* TwoCents.app */;
@@ -924,6 +930,7 @@
 				AB300FAE2AC7406500C6719D /* FriendsViewModel.swift in Sources */,
 				ABCA39D82A7A0671009447C3 /* RootView.swift in Sources */,
 				AB90EDB92B54EB78002AD855 /* CustomizeWidgetView.swift in Sources */,
+				857753022C308B0E00B4A971 /* DateAlignment.swift in Sources */,
 				AB69F03D2C1D188E00B81E79 /* SignInPhoneNumberView.swift in Sources */,
 				8573EC8B2AE6EF9C00CFB579 /* ParticleView.swift in Sources */,
 				ABA45E842A7C92B00015F000 /* UserManager.swift in Sources */,
@@ -1313,6 +1320,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		855BDECE2C1E54C0002FC428 /* FirebaseDynamicLinks */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = ABCA39C82A79F97D009447C3 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseDynamicLinks;
+		};
 		A200F21A2C0026B400BC1005 /* FirebaseMessaging */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = ABCA39C82A79F97D009447C3 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
