@@ -92,7 +92,7 @@ struct NewPoll: View{
         }
 
         .frame(width: .infinity, height: .infinity)
-        .background(.regularMaterial)
+        .background(.ultraThickMaterial)
         .onTapGesture{showingView.toggle()}
         .fullScreenCover(isPresented: $showingView, content: {
             NavigationStack{

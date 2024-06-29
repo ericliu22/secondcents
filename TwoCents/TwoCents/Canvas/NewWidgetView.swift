@@ -127,10 +127,10 @@ struct NewWidgetView: View {
         
         
         ZStack{
+           
             
             
-            
-            Text("Fruits can't even see so how my Apple Watch")
+            Text("Fruits can't even see so tell me how my Apple Watch")
                 .multilineTextAlignment(.leading)
                 .font(.custom("LuckiestGuy-Regular", size: 24, relativeTo: .headline))
                 .padding(5)
@@ -155,12 +155,7 @@ struct NewWidgetView: View {
                         })
                 })
                 
-                .task {
-                    try? await viewModel.loadCurrentUser()
- 
-                   
-                    
-                }
+             
             
             
         }
@@ -194,7 +189,10 @@ struct NewWidgetView: View {
         ZStack {
             NavigationView{
                 VStack{
+                  
                     ScrollView(.vertical, showsIndicators: false) {
+                        Spacer()
+                            .frame(height: 10)
                         LazyVGrid(columns: columns, spacing: nil) {
                             
                             
@@ -206,21 +204,24 @@ struct NewWidgetView: View {
                                     case .image:
                                         newImageView(index: index)
                                             .aspectRatio(1, contentMode: .fit)
-                                        
+                                            .shadow(color: Color.black.opacity(0.1), radius: 20, x: 8, y: 4)
+                                                                    
                                         
                                     case .poll:
                                         newPollView(index: index)
                                             .aspectRatio(1, contentMode: .fit)
-                                        
+                                            .shadow(color: Color.black.opacity(0.1), radius: 20, x: 8, y: 4)
+                                                                    
                                         //
                                     case .map:
                                         newMapView(index: index)
                                             .aspectRatio(1, contentMode: .fit)
-                                        
+                                            .shadow(color: Color.black.opacity(0.1), radius: 20, x: 8, y: 4)
                                     case .text:
                                         newTextView(index: index)
                                             .aspectRatio(1, contentMode: .fit)
-                                        
+                                            .shadow(color: Color.black.opacity(0.1), radius: 20, x: 8, y: 4)
+                                                                    
                                     default:
                                         ZStack{
                                             
@@ -259,14 +260,14 @@ struct NewWidgetView: View {
                                
                             }
                         }
-                        
+                        .padding(.horizontal)
                         
                     }
                         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
                        
                         
                     }
-                    .padding(.horizontal)
+                
                     .navigationTitle("Add a Widget 🙈")
 //                    .navigationBarTitleDisplayMode(.inline)
                 }
@@ -295,6 +296,13 @@ struct NewWidgetView: View {
             .task{
                 try? await viewModel.loadCurrentSpace(spaceId: spaceId)
                 print(viewModel.space?.name ?? "Space not available")
+                
+                
+                
+                try? await viewModel.loadCurrentUser()
+                
+                       
+               
             }
             .onAppear {
                 viewModel.loadLatestMedia()

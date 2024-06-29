@@ -23,21 +23,19 @@ struct NewTextWidgetView: View {
         NavigationStack{
             VStack {
                
-                    
-               
-                    
+                
                     
                     //preview block
                     Text(inputText)
                         .multilineTextAlignment(.leading)
-                        .font(.custom("LuckiestGuy-Regular", size: 40, relativeTo: .headline))
-                        .padding(25/3)
-                        .frame(width: 250, height: 250)
+                        .font(.custom("LuckiestGuy-Regular", size: 32, relativeTo: .headline))
+                        .padding(20/3)
+                        .frame(width: 200, height: 200)
                         .minimumScaleFactor(0.8)
                         .background(.ultraThickMaterial)
                         .background(Color.accentColor)
                         .foregroundColor(Color.accentColor)
-                        .cornerRadius(30)
+                        .cornerRadius(80/3)
                         .padding(.bottom)
                     
         

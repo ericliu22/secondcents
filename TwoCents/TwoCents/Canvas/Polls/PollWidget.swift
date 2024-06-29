@@ -160,11 +160,11 @@ struct PollWidget: WidgetView {
                 
                 ProgressView()
                     .progressViewStyle(CircularProgressViewStyle(tint: .primary))
-                
+                    .frame(maxWidth:.infinity, maxHeight: .infinity)
                     .aspectRatio(1, contentMode: .fit)
                     .background(.thinMaterial)
                     .cornerRadius(20)
-                    .frame(width: TILE_SIZE,height: TILE_SIZE)
+                
                     .onAppear {
                         
                         fetchPoll()

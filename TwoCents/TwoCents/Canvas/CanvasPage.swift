@@ -379,8 +379,9 @@ struct CanvasPage: View {
             .padding(.horizontal, 20)
             .padding(.vertical, 10) // Add vertical padding
             .background(Color(UIColor.systemBackground), in: Capsule())
-            .shadow(color: Color(UIColor.label).opacity(0.2), radius: 20, x: 0, y: 2)
+            .shadow(color: Color.black.opacity(0.2), radius: 20, x: 0, y: 4)
         }
+        
         .frame(maxHeight: .infinity, alignment: .bottom)
         : nil
     }
@@ -454,89 +455,7 @@ struct CanvasPage: View {
                     await onChange()
                 }
             //add new widget view and ChatSHEET
-                .sheet(item: $activeSheet, onDismiss: {
-                    //                showNewWidgetView = false
-                    //                            activeSheet = .chat
-                    
-                    replyMode = false
-                    replyWidget = nil
-                    
-                    activePollWidget = nil
-                    
-                    //get chat to show up at all times
-                    if !widgetDoubleTapped && !inSettingsView && activeSheet == nil{
-                        //                                showSheet = true
-                        inSettingsView = false
-                        activeSheet = .chat
-                        
-                    }
-                    
-                    
-                    if photoLinkedToProfile {
-                        photoLinkedToProfile = false
-                        widgetId = UUID().uuidString
-                    } else {
-                        Task{
-                            try await StorageManager.shared.deleteTempWidgetPic(spaceId:spaceId, widgetId: widgetId)
-                        }
-                    }
-                    
-                }, content: { item in
-                    
-                    switch item {
-                    case .newWidgetView:
-                        NewWidgetView(widgetId: widgetId,   spaceId: spaceId, photoLinkedToProfile: $photoLinkedToProfile)
-//                            .presentationBackground(Color(UIColor.systemBackground))
-                            .presentationBackground(.regularMaterial)
-                    case .chat:
-                        ChatView(spaceId: spaceId,replyMode: $replyMode, replyWidget: $replyWidget, selectedDetent: $selectedDetent)
-                        
-                        
-                        
-                        
-                            .presentationBackground(Color(UIColor.systemBackground))
-                        
-                            .presentationDetents([.height(50),.medium], selection: $selectedDetent)
-                        
-                        
-                            .presentationCornerRadius(20)
-                        
-                            .presentationBackgroundInteraction(.enabled)
-                            .onChange(of: selectedDetent) { selectedDetent in
-                                if selectedDetent != .medium && replyMode {
-                                    
-                                    withAnimation {
-                                        replyWidget = nil
-                                        replyMode = false
-                                    }
-                                    
-                                    
-                                    print("detent is 50")
-                                }
-                            }
-                        
-                        
-                    case .poll:
-                        
-                        
-                        
-                        if let widget = activePollWidget {
-                            PollWidgetSheetView(widget: widget, spaceId: spaceId)
-                        } else {
-                            ProgressView()
-                                .foregroundStyle(Color(UIColor.label))
-                                .presentationBackground(Color(UIColor.systemBackground))
-                            
-                        }
-                        
-                    case .newTextView:
-                        NewTextWidgetView(spaceId: spaceId)
-                            .presentationBackground(Color(UIColor.systemBackground))
-                    }
-                    
-                    
-                    
-                })
+               
                 .onAppear(perform: {
                     activeSheet = .chat
                 })
@@ -648,6 +567,90 @@ struct CanvasPage: View {
                 .navigationTitle(toolPickerActive ? "" : viewModel.space?.name ?? "" )
                 .background(  Color(UIColor.secondarySystemBackground))
         }
+        .ignoresSafeArea()
+        .sheet(item: $activeSheet, onDismiss: {
+            //                showNewWidgetView = false
+            //                            activeSheet = .chat
+            
+            replyMode = false
+            replyWidget = nil
+            
+            activePollWidget = nil
+            
+            //get chat to show up at all times
+            if !widgetDoubleTapped && !inSettingsView && activeSheet == nil{
+                //                                showSheet = true
+                inSettingsView = false
+                activeSheet = .chat
+                
+            }
+            
+            
+            if photoLinkedToProfile {
+                photoLinkedToProfile = false
+                widgetId = UUID().uuidString
+            } else {
+                Task{
+                    try await StorageManager.shared.deleteTempWidgetPic(spaceId:spaceId, widgetId: widgetId)
+                }
+            }
+            
+        }, content: { item in
+            
+            switch item {
+            case .newWidgetView:
+                NewWidgetView(widgetId: widgetId,   spaceId: spaceId, photoLinkedToProfile: $photoLinkedToProfile)
+//                            .presentationBackground(Color(UIColor.systemBackground))
+                    .presentationBackground(.thickMaterial)
+            case .chat:
+                ChatView(spaceId: spaceId,replyMode: $replyMode, replyWidget: $replyWidget, selectedDetent: $selectedDetent)
+                
+                
+                
+                
+                    .presentationBackground(Color(UIColor.systemBackground))
+                
+                    .presentationDetents([.height(50),.medium], selection: $selectedDetent)
+                
+                
+                    .presentationCornerRadius(20)
+                
+                    .presentationBackgroundInteraction(.enabled)
+                    .onChange(of: selectedDetent) { selectedDetent in
+                        if selectedDetent != .medium && replyMode {
+                            
+                            withAnimation {
+                                replyWidget = nil
+                                replyMode = false
+                            }
+                            
+                            
+                            print("detent is 50")
+                        }
+                    }
+                
+                
+            case .poll:
+                
+                
+                
+                if let widget = activePollWidget {
+                    PollWidgetSheetView(widget: widget, spaceId: spaceId)
+                } else {
+                    ProgressView()
+                        .foregroundStyle(Color(UIColor.label))
+                        .presentationBackground(Color(UIColor.systemBackground))
+                    
+                }
+                
+            case .newTextView:
+                NewTextWidgetView(spaceId: spaceId)
+                    .presentationBackground(Color(UIColor.systemBackground))
+            }
+            
+            
+            
+        })
         .onDisappear(perform: {
             activeSheet = nil
         })
