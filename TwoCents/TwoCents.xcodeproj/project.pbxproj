@@ -174,6 +174,7 @@
 		85BB02EF2B5D077E00B9A9EA /* ToolPickerPractice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolPickerPractice.swift; sourceTree = "<group>"; };
 		85CA3B4C2C2746C400F4A889 /* CalendarWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarWidget.swift; sourceTree = "<group>"; };
 		85DDD0CC2AB4E79A008A9C56 /* VoteGameReal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VoteGameReal.swift; sourceTree = "<group>"; };
+		85FDD15B2C308F430038944B /* EventView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventView.swift; sourceTree = "<group>"; };
 		A2003C942AABA08300B1E551 /* Line.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Line.swift; sourceTree = "<group>"; };
 		A20EBD062AB8A36100EFDDE8 /* HotSeat.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HotSeat.swift; sourceTree = "<group>"; };
 		A20EBD072AB8A36100EFDDE8 /* VoteGameReal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VoteGameReal.swift; sourceTree = "<group>"; };
@@ -419,6 +420,7 @@
 				ABF56DFA2A7C8BC700F959DB /* Core */,
 				ABCA39D02A79FBED009447C3 /* Authentication */,
 				A257D7832A6D707600A4E7BD /* TwoCentsApp.swift */,
+				85FDD15B2C308F430038944B /* EventView.swift */,
 				AB7365BA2A85060F00799D31 /* GoogleService-Info.plist */,
 				A257D7852A6D707600A4E7BD /* ContentView.swift */,
 				A257D7872A6D707800A4E7BD /* Assets.xcassets */,
@@ -934,6 +936,7 @@
 				AB842C0E2A91E2B500E4A7CE /* StorageManager.swift in Sources */,
 				AB15AC0B2AF6F00C0055D5D0 /* SpaceProfilePicView.swift in Sources */,
 				AB6EA6102B87A27D00CC90FF /* SplashView.swift in Sources */,
+				85FDD15C2C308F430038944B /* EventView.swift in Sources */,
 				AB69F03F2C1D189800B81E79 /* SignInPhoneNumberViewModel.swift in Sources */,
 				AB9EB95D2B1E805300F58EA5 /* ChatManager.swift in Sources */,
 				AB6EE7782C25FE4400F6FDE2 /* NewMapView.swift in Sources */,
