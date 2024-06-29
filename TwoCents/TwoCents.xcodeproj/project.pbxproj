@@ -55,6 +55,7 @@
 		A2F563232AB4E6700026D8C9 /* ChattingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F563212AB4E6700026D8C9 /* ChattingView.swift */; };
 		AB01CB5F2B855E83004BEB5B /* TextWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB01CB5E2B855E83004BEB5B /* TextWidget.swift */; };
 		AB0D07662AE6FB95003AC8A4 /* SpacesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB0D07652AE6FB95003AC8A4 /* SpacesView.swift */; };
+		AB140E492C3094AE008321F9 /* EventWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB140E482C3094AE008321F9 /* EventWidget.swift */; };
 		AB15AC0B2AF6F00C0055D5D0 /* SpaceProfilePicView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB15AC0A2AF6F00C0055D5D0 /* SpaceProfilePicView.swift */; };
 		AB15AC0D2AF6F01B0055D5D0 /* SpaceProfilePicViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB15AC0C2AF6F01B0055D5D0 /* SpaceProfilePicViewModel.swift */; };
 		AB2E56C62AE9B9210096A58C /* CreateSpacesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2E56C52AE9B9210096A58C /* CreateSpacesView.swift */; };
@@ -205,6 +206,7 @@
 		A2F563212AB4E6700026D8C9 /* ChattingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChattingView.swift; sourceTree = "<group>"; };
 		AB01CB5E2B855E83004BEB5B /* TextWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextWidget.swift; sourceTree = "<group>"; };
 		AB0D07652AE6FB95003AC8A4 /* SpacesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpacesView.swift; sourceTree = "<group>"; };
+		AB140E482C3094AE008321F9 /* EventWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventWidget.swift; sourceTree = "<group>"; };
 		AB15AC0A2AF6F00C0055D5D0 /* SpaceProfilePicView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpaceProfilePicView.swift; sourceTree = "<group>"; };
 		AB15AC0C2AF6F01B0055D5D0 /* SpaceProfilePicViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpaceProfilePicViewModel.swift; sourceTree = "<group>"; };
 		AB2E56C52AE9B9210096A58C /* CreateSpacesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateSpacesView.swift; sourceTree = "<group>"; };
@@ -480,6 +482,7 @@
 				A2DDB1BC2BB69D7100243E1B /* Polls */,
 				AB6778E12AB8F67300C11AA7 /* ImageWidget.swift */,
 				AB01CB5E2B855E83004BEB5B /* TextWidget.swift */,
+				AB140E482C3094AE008321F9 /* EventWidget.swift */,
 				ABB68DAF2C15268D00406948 /* TextWidgetViewModel.swift */,
 				A21244E22C1E234B005E8C8B /* NewTextWidgetView.swift */,
 				AB7F3AED2C164CF000690EF1 /* NewTextWidgetViewModel.swift */,
@@ -921,6 +924,7 @@
 				856E80B12B50E9D00078A2CE /* PencilKitPractice.swift in Sources */,
 				8507204B2B54692F0057B8BC /* widgetPopup.swift in Sources */,
 				AB77664A2C25266300F95E65 /* SetLocationWidgetView.swift in Sources */,
+				AB140E492C3094AE008321F9 /* EventWidget.swift in Sources */,
 				ABF556842A95046D00103880 /* ColorPickerWidgetViewModel.swift in Sources */,
 				85741EAF2AD03D370085423E /* PostModel.swift in Sources */,
 				AB69F0432C1D2C1D00B81E79 /* VerifyCodeViewModel.swift in Sources */,

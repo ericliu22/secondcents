@@ -1,11 +1,10 @@
 //
-//  eventWidget.swift
+//  CalendarWidget.swift
 //  TwoCents
 //
 //  Created by Joshua Shen on 6/22/24.
 //
 
-//updated
 
 import Foundation
 import SwiftUI

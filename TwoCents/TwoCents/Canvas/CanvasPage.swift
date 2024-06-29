@@ -203,7 +203,7 @@ struct CanvasPage: View {
                 //full name below widget
                     .overlay(content: {
                         Text(widgetDoubleTapped ? fullName : "" )
-                            .font(.caption2)
+                            .font(.caption)
                             .foregroundStyle(.secondary)
                             .offset(y:90)
                     })

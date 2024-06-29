@@ -27,6 +27,12 @@ struct FrontPageView: View {
                     Text("Spaces")
                 }
 
+            EventWidget(widget: CanvasWidget(width: .infinity, height:  .infinity, borderColor: .red, userId: "jisookim", media: .text, widgetName: "Text", widgetDescription: "A bar is a bar", textString: "Fruits can't even see so how my Apple Watch"))
+                .tabItem {
+                    Image(systemName: "magnifyingglass")
+                    Text("Event widget")
+                }
+            
             
             
             SearchUserView(activeSheet: $activeSheet, loadedColor: $loadedColor, targetUserId: "")
