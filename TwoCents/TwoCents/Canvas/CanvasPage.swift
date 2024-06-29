@@ -424,7 +424,7 @@ struct CanvasPage: View {
             
                 .onTapGesture {
                     //deselect
-                    if (selectedWidget == nil) { 
+                    if (viewModel.selectedWidget != nil) { 
                     viewModel.selectedWidget = nil
                     widgetDoubleTapped = false
                     activeSheet = .chat
