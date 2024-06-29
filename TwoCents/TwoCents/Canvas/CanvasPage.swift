@@ -424,9 +424,11 @@ struct CanvasPage: View {
             
                 .onTapGesture {
                     //deselect
+                    if (selectedWidget == nil) { 
                     viewModel.selectedWidget = nil
                     widgetDoubleTapped = false
                     activeSheet = .chat
+                    }
                 }
                 .overlay(
                     DrawingCanvas(canvas: $canvas, toolPickerActive: $toolPickerActive, toolPicker: $toolkit, spaceId: spaceId)
