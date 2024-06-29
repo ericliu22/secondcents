@@ -144,7 +144,6 @@ struct CanvasPage: View {
     func GridView() -> some View {
         let columns = Array(repeating: GridItem(.fixed(TILE_SIZE), spacing: 30, alignment: .center), count: 5)
         
-        print("\(canvasWidgets.count)")
         return LazyVGrid(columns: columns, alignment: .center, spacing: 30, content: {
             
             ForEach(canvasWidgets, id:\.id) { widget in
@@ -425,8 +424,6 @@ struct CanvasPage: View {
                     
                 )
       
-            //                .animation(.easeInOut)
-//                .background( Color(UIColor.secondarySystemBackground))
     }
     
     private func removeExpiredStrokes() {
