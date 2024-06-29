@@ -240,7 +240,7 @@ struct NewWidgetView: View {
                     }
                     .padding(.horizontal)
                     .navigationTitle("Add a Widget 🙈")
-                    .navigationBarTitleDisplayMode(.inline)
+//                    .navigationBarTitleDisplayMode(.inline)
                 }
                 
                 //cross to dismiss screen

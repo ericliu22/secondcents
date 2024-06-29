@@ -489,7 +489,8 @@ struct CanvasPage: View {
                     switch item {
                     case .newWidgetView:
                         NewWidgetView(widgetId: widgetId,   spaceId: spaceId, photoLinkedToProfile: $photoLinkedToProfile)
-                            .presentationBackground(Color(UIColor.systemBackground))
+//                            .presentationBackground(Color(UIColor.systemBackground))
+                            .presentationBackground(.regularMaterial)
                     case .chat:
                         ChatView(spaceId: spaceId,replyMode: $replyMode, replyWidget: $replyWidget, selectedDetent: $selectedDetent)
                         
