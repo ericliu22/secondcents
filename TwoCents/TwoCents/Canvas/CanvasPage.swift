@@ -35,7 +35,7 @@ struct CanvasPage: View {
     //var for widget onTap
     //@State var isShowingPopup = false
     
-    @State private var username: String = ""
+    @State private var fullName: String = ""
     @State var canvas: PKCanvasView = PKCanvasView()
     @State var toolPickerActive: Bool = false
     @State private var currentMode: canvasState = .normal
@@ -181,16 +181,28 @@ struct CanvasPage: View {
                                     activeSheet = .chat
                                 }
                                 Task {
-//                                    username = try? await UserManager.shared.getUser(userId: widget.userId).username
+                                    do {
+                                        let user = try await UserManager.shared.getUser(userId: widget.userId)
+                                        if let name = user.name {
+                                            fullName = name
+                                        } else {
+                                            // Handle the case where name is nil
+                                            print("User name is nil")
+                                            
+                                        }
+                                    } catch {
+                                        // Handle the error
+                                        print("Failed to get user: \(error.localizedDescription)")
+                                    }
                                 }
                             })
                     )
                 
 
                 
-                //username below widget
+                //full name below widget
                     .overlay(content: {
-                        Text(widgetDoubleTapped ? username : "" )
+                        Text(widgetDoubleTapped ? fullName : "" )
                             .font(.caption2)
                             .foregroundStyle(.secondary)
                             .offset(y:90)
