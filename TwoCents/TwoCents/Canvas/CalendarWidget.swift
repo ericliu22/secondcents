@@ -5,11 +5,13 @@
 //  Created by Joshua Shen on 6/22/24.
 //
 
+//updated
+
 import Foundation
 import SwiftUI
 import Firebase
 
-struct EventWidget: View {
+struct CalendarWidget: View {
     @State private var selectedDates: Set<DateComponents> = []
     @State private var savedDates: [Date] = []
 
@@ -60,5 +62,5 @@ struct EventWidget: View {
 }
 
 #Preview{
-    EventWidget()
+    CalendarWidget()
 }
