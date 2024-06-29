@@ -23,6 +23,8 @@ var videoViewTest = CanvasWidget(width: .infinity, height:  .infinity, borderCol
 var pollViewTest = CanvasWidget(width: .infinity, height:  .infinity, borderColor: .red, userId: "jisookim", media: .poll, mediaURL: URL(string: "https://www.pexels.com/video/10167684/download/")!, widgetName: "Poll", widgetDescription: "Gather consensus")
 var mapViewTest = CanvasWidget(width: .infinity, height:  .infinity, borderColor: .red, userId: "jisookim", media: .map, widgetName: "Map", widgetDescription: "Drop the addy")
 
+var textViewTest = CanvasWidget(width: .infinity, height:  .infinity, borderColor: .red, userId: "jisookim", media: .text, widgetName: "Text", widgetDescription: "A bar is a bar", textString: "Fruits can't even see so how my Apple Watch")
+
 
 
 struct NewWidgetView: View {
@@ -65,7 +67,8 @@ struct NewWidgetView: View {
                     .progressViewStyle(CircularProgressViewStyle(tint: .primary))
                     .frame(maxWidth:.infinity, maxHeight: .infinity)
                     .aspectRatio(1, contentMode: .fit)
-                    .background(.thickMaterial)
+                    .background(.thinMaterial)
+                    .cornerRadius(20)
                 
             } else {
                 PhotosPicker(selection: $selectedPhoto, matching: .any(of: [.images, .videos]), photoLibrary: .shared()) {
@@ -97,32 +100,13 @@ struct NewWidgetView: View {
     func newPollView(index: Int) -> some View {
         ZStack{
             
-            //main widget/photopicker
-            //let options: [Option] = [Option(name: "Option 1"), Option(name: "Option 2")]
+           
             NewPoll(spaceId: spaceId, closeNewWidgetview: $closeNewWidgetview)
-            //                .aspectRatio(1, contentMode: .fit)
-            
-            //                .shadow(radius: 20, y: 10)
+          
                 .cornerRadius(20)
-            //                .containerRelativeFrame(.horizontal, count: 1, spacing: 0)
-            
-            //loading circle
-            if viewModel.loading {
-                ProgressView()
-                    .progressViewStyle(
-                        CircularProgressViewStyle(tint:
-                                .primary)
-                    )
-                //                    .frame(width: viewModel.widgets[index].width, height: viewModel.widgets[index].height)
-                    .cornerRadius(20)
-                
-            }
+          
         }
-        .onChange(of: closeNewWidgetview) { oldValue, newValue in
-            if newValue {
-                dismissScreen()
-            }
-        }
+       
     }
     func newMapView(index: Int) -> some View {
         
@@ -130,19 +114,60 @@ struct NewWidgetView: View {
             
             NewMapView(spaceId: spaceId, closeNewWidgetview: $closeNewWidgetview)
                 .cornerRadius(20)
-            //loading circle
-            if viewModel.loading {
-                ProgressView()
-                    .progressViewStyle(
-                        CircularProgressViewStyle(tint:
-                                .primary)
-                    )
-                
-                    .cornerRadius(20)
-                
-            }
+          
         }
     }
+    
+    
+    @State private var showingView: Bool = false
+    
+    
+    func newTextView(index: Int) -> some View {
+        
+        
+        
+        ZStack{
+            
+            
+            
+            Text("Fruits can't even see so how my Apple Watch")
+                .multilineTextAlignment(.leading)
+                .font(.custom("LuckiestGuy-Regular", size: 24, relativeTo: .headline))
+                .padding(5)
+                .minimumScaleFactor(0.8)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(.ultraThickMaterial)
+                .background(Color.fromString(name: viewModel.user?.userColor ?? ""))
+                .foregroundColor(Color.fromString(name: viewModel.user?.userColor ?? ""))
+                .cornerRadius(20)
+          
+            
+                .onTapGesture {
+                    showingView.toggle()
+                    print("tapped")
+                }
+            
+                .fullScreenCover(isPresented: $showingView, content: {
+                    
+                    NewTextWidgetView(spaceId: spaceId)
+                        .onDisappear(perform: {
+                            closeNewWidgetview = true
+                        })
+                })
+                
+                .task {
+                    try? await viewModel.loadCurrentUser()
+ 
+                   
+                    
+                }
+            
+            
+        }
+        
+    }
+    
+    
     
     
     
@@ -192,6 +217,9 @@ struct NewWidgetView: View {
                                         newMapView(index: index)
                                             .aspectRatio(1, contentMode: .fit)
                                         
+                                    case .text:
+                                        newTextView(index: index)
+                                            .aspectRatio(1, contentMode: .fit)
                                         
                                     default:
                                         ZStack{
@@ -259,7 +287,11 @@ struct NewWidgetView: View {
                     })
                 }
             }
-        
+            .onChange(of: closeNewWidgetview) { oldValue, newValue in
+                if newValue {
+                    dismissScreen()
+                }
+            }
             .task{
                 try? await viewModel.loadCurrentSpace(spaceId: spaceId)
                 print(viewModel.space?.name ?? "Space not available")

@@ -15,7 +15,11 @@ import AVFoundation
 final class NewWidgetViewModel: ObservableObject{
     
     
-    
+    @Published private(set) var user:  DBUser? = nil
+    func loadCurrentUser() async throws {
+        let authDataResult = try AuthenticationManager.shared.getAuthenticatedUser()
+        self.user = try await UserManager.shared.getUser(userId: authDataResult.uid)
+    }
     
     
     
@@ -36,7 +40,7 @@ final class NewWidgetViewModel: ObservableObject{
     private var url = ""
     
     
-    @Published var widgets: [CanvasWidget] = [imageViewTest, /*videoViewTest,*/ mapViewTest, pollViewTest]
+    @Published var widgets: [CanvasWidget] = [textViewTest, imageViewTest, /*videoViewTest,*/ mapViewTest, pollViewTest]
     
     @Published var tempWidget: CanvasWidget?
     
