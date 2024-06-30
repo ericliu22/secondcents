@@ -68,6 +68,7 @@
 		AB300FAE2AC7406500C6719D /* FriendsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB300FAD2AC7406500C6719D /* FriendsViewModel.swift */; };
 		AB300FB02AC7407000C6719D /* FriendsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB300FAF2AC7407000C6719D /* FriendsView.swift */; };
 		AB4C1E4F2A8785BF00588160 /* ColorSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB4C1E4E2A8785BF00588160 /* ColorSelectionView.swift */; };
+		AB53655F2C31C807001C444B /* TodoWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB53655E2C31C807001C444B /* TodoWidget.swift */; };
 		AB58C1E22BDAED9A000B0AC1 /* SpaceSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB58C1E12BDAED9A000B0AC1 /* SpaceSettingsView.swift */; };
 		AB58C1E62BDAF54B000B0AC1 /* SpaceSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB58C1E52BDAF54B000B0AC1 /* SpaceSettingsViewModel.swift */; };
 		AB6778E22AB8F67300C11AA7 /* ImageWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB6778E12AB8F67300C11AA7 /* ImageWidget.swift */; };
@@ -219,6 +220,7 @@
 		AB300FAD2AC7406500C6719D /* FriendsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsViewModel.swift; sourceTree = "<group>"; };
 		AB300FAF2AC7407000C6719D /* FriendsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsView.swift; sourceTree = "<group>"; };
 		AB4C1E4E2A8785BF00588160 /* ColorSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorSelectionView.swift; sourceTree = "<group>"; };
+		AB53655E2C31C807001C444B /* TodoWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoWidget.swift; sourceTree = "<group>"; };
 		AB58C1E12BDAED9A000B0AC1 /* SpaceSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpaceSettingsView.swift; sourceTree = "<group>"; };
 		AB58C1E52BDAF54B000B0AC1 /* SpaceSettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpaceSettingsViewModel.swift; sourceTree = "<group>"; };
 		AB6778E12AB8F67300C11AA7 /* ImageWidget.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageWidget.swift; sourceTree = "<group>"; };
@@ -483,6 +485,7 @@
 				AB6778E12AB8F67300C11AA7 /* ImageWidget.swift */,
 				AB01CB5E2B855E83004BEB5B /* TextWidget.swift */,
 				AB140E482C3094AE008321F9 /* EventWidget.swift */,
+				AB53655E2C31C807001C444B /* TodoWidget.swift */,
 				ABB68DAF2C15268D00406948 /* TextWidgetViewModel.swift */,
 				A21244E22C1E234B005E8C8B /* NewTextWidgetView.swift */,
 				AB7F3AED2C164CF000690EF1 /* NewTextWidgetViewModel.swift */,
@@ -953,6 +956,7 @@
 				A257D7842A6D707600A4E7BD /* TwoCentsApp.swift in Sources */,
 				AB300FB02AC7407000C6719D /* FriendsView.swift in Sources */,
 				ABCA39D42A79FFAD009447C3 /* SignInEmailView.swift in Sources */,
+				AB53655F2C31C807001C444B /* TodoWidget.swift in Sources */,
 				8573EC892AE6EF4A00CFB579 /* HeartParticle.swift in Sources */,
 				A2E5F52B2B5A12D30019C6ED /* DrawingCanvas.swift in Sources */,
 				AB6EA60A2B879B7C00CC90FF /* CanvasPageViewModel.swift in Sources */,

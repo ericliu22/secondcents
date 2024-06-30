@@ -72,7 +72,7 @@ struct CanvasWidget: Hashable, Codable, Identifiable, Transferable, Equatable {
 }
 
 enum Media {
-    case video, image, chat, text, poll, map, event
+    case video, image, chat, text, poll, map, event, todo
 }
 
 extension Media: Codable {
@@ -107,6 +107,8 @@ extension Media: Codable {
             return "map"
         case .event:
             return "event"
+        case .todo:
+            return "todo"
         }
     }
     
