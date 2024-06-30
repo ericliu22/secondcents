@@ -26,18 +26,24 @@ struct ProfileView: View {
     
     @State private var isPressing = false
     @State private var pressStartTime: Date?
-
+    @State private var tickleString: String = "Tickle"
     
     private let feedbackGenerator = UIImpactFeedbackGenerator(style: .medium)
     
     
     private func startHapticFeedback() {
           feedbackGenerator.prepare()
-          Timer.scheduledTimer(withTimeInterval: 0.25, repeats: true) { timer in
+            var tickleCount = 0
+          Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { timer in
               if isPressing {
                   feedbackGenerator.impactOccurred()
+                  
+                  
+                  tickleCount += 1
+                  tickleString = String(tickleCount)
               } else {
                   timer.invalidate()
+                  tickleString = "Tickle"
               }
           }
       }
@@ -427,7 +433,7 @@ struct ProfileView: View {
                                            .onEnded { _ in
                                             
                                                
-                                               
+                                               feedbackGenerator.impactOccurred()
                                                
                                                let currentUserId = try!  AuthenticationManager.shared.getAuthenticatedUser().uid
                                                //
@@ -454,23 +460,27 @@ struct ProfileView: View {
                                                 
                                                 if let startTime = pressStartTime {
                                                     let duration = Date().timeIntervalSince(startTime)
-                                                    let tickleCount = Int(duration) * 4
+                                                    let tickleCount = Int(duration) * 10
                                                     
                                                     if tickleCount > 0 {
                                                         let currentUserId = try! AuthenticationManager.shared.getAuthenticatedUser().uid
-                                                        let targetUserId = "" // Replace with actual target user ID
+                                                       
                                                         
                                                         tickleNotification(userUID: currentUserId, targetUserUID: targetUserId.isEmpty ? currentUserId : targetUserId, message: "tickled you \(tickleCount) times.")
                                                     }
                                                 }
                                             }
+                                            
+                                            
                                         }
                                    )
                                
-                               Text("Tickle")
-                                   .font(.title2)
+                               Text(tickleString)
+                                    .font(tickleString == "Tickle" ? .title2 : .largeTitle)
                                    .fontWeight(.bold)
+                                   .fontDesign(tickleString == "Tickle" ? .default : .monospaced)
                                    .foregroundStyle(.secondary)
+                                   .frame(height:50)
                            }
                     
                     

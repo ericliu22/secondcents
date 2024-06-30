@@ -220,6 +220,8 @@ func tickleNotification(userUID: String, targetUserUID: String, message: String)
 
         
         if let userImage: String = user.profileImageUrl {
+            
+            
             let notification = Notification(title: "hehehe", body: "\(userName) \(message)", image: userImage);
             Task {
                 let token = await getToken(uid: targetUserUID)
