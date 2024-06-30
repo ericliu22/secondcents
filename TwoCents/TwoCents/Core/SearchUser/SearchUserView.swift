@@ -50,7 +50,7 @@ struct SearchUserView: View {
                     NavigationLink {
                         
 //                        ProfileView(showSignInView: $showSignInView, loadedColor: $loadedColor,targetUserColor: targetUserColor, showCreateProfileView: $showCreateProfileView, targetUserId: userTile.userId)
-                        ProfileView(activeSheet: $activeSheet, loadedColor: $loadedColor, targetUserId: userTile.userId)
+                        ProfileView(activeSheet: $activeSheet, loadedColor: $loadedColor, targetUserColor: targetUserColor, targetUserId: userTile.userId)
                     } label: {
                         HStack(spacing: 20){
                             

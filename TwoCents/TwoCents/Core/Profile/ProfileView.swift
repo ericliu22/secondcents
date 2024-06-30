@@ -18,12 +18,36 @@ struct ProfileView: View {
     @State var targetUserId: String
     
     
-    
-    
     private let columns = [
         GridItem(.flexible()),
         GridItem(.flexible())
     ]
+ 
+    
+    @State private var isPressing = false
+    @State private var pressStartTime: Date?
+
+    
+    private let feedbackGenerator = UIImpactFeedbackGenerator(style: .medium)
+    
+    
+    private func startHapticFeedback() {
+          feedbackGenerator.prepare()
+          Timer.scheduledTimer(withTimeInterval: 0.25, repeats: true) { timer in
+              if isPressing {
+                  feedbackGenerator.impactOccurred()
+              } else {
+                  timer.invalidate()
+              }
+          }
+      }
+
+      private func stopHapticFeedback() {
+          // Ensure the feedback generator can be used again if needed
+          feedbackGenerator.prepare()
+      }
+    
+    
     
     var body: some View {
         
@@ -394,19 +418,75 @@ struct ProfileView: View {
                     
                     
                     
+                    ZStack {
+                               RoundedRectangle(cornerRadius: 20)
+                                   .fill(.thinMaterial)
+                                   .aspectRatio(1, contentMode: .fit)
+                                   .gesture(
+                                       TapGesture()
+                                           .onEnded { _ in
+                                            
+                                               
+                                               
+                                               
+                                               let currentUserId = try!  AuthenticationManager.shared.getAuthenticatedUser().uid
+                                               //
+                                               //
+                                               tickleNotification(userUID: currentUserId, targetUserUID: targetUserId.isEmpty ? currentUserId : targetUserId, message: "tickled you.")
+                                               
+                                               
+                                               
+                                           }
+                                   )
+                                   .simultaneousGesture(
+                                    DragGesture(minimumDistance: 0) // Detects any drag or press
+                                        .onChanged { _ in
+                                            if !isPressing {
+                                                isPressing = true
+                                                pressStartTime = Date()
+                                                startHapticFeedback()
+                                            }
+                                        }
+                                        .onEnded { _ in
+                                            if isPressing {
+                                                isPressing = false
+                                                stopHapticFeedback()
+                                                
+                                                if let startTime = pressStartTime {
+                                                    let duration = Date().timeIntervalSince(startTime)
+                                                    let tickleCount = Int(duration) * 4
+                                                    
+                                                    if tickleCount > 0 {
+                                                        let currentUserId = try! AuthenticationManager.shared.getAuthenticatedUser().uid
+                                                        let targetUserId = "" // Replace with actual target user ID
+                                                        
+                                                        tickleNotification(userUID: currentUserId, targetUserUID: targetUserId.isEmpty ? currentUserId : targetUserId, message: "tickled you \(tickleCount) times.")
+                                                    }
+                                                }
+                                            }
+                                        }
+                                   )
+                               
+                               Text("Tickle")
+                                   .font(.title2)
+                                   .fontWeight(.bold)
+                                   .foregroundStyle(.secondary)
+                           }
                     
                     
-                   
-                
-//                
-//                    RoundedRectangle(cornerRadius: 20)
-//                        .fill(.thinMaterial)
-//                        .aspectRatio(1, contentMode: .fit)
-//                    
                     
-                    RoundedRectangle(cornerRadius: 20)
-                        .fill(.thinMaterial)
-                        .aspectRatio(1, contentMode: .fit)
+                    
+                    ZStack{
+                        RoundedRectangle(cornerRadius: 20)
+                            .fill(.thinMaterial)
+                            .aspectRatio(1, contentMode: .fit)
+                    
+                        Image(systemName: "plus")
+                            .font(.largeTitle)
+                            .fontWeight(.bold)
+                            .foregroundStyle(.secondary)
+                        
+                    }
                     
                     
                     
@@ -428,7 +508,9 @@ struct ProfileView: View {
         }
         
         .task{
-            
+            print(targetUserColor)
+            print(loadedColor)
+            print(targetUserId)
             targetUserId.isEmpty ?
             try? await viewModel.loadCurrentUser() :
             try? await viewModel.loadTargetUser(targetUserId: targetUserId)
@@ -456,6 +538,8 @@ struct ProfileView: View {
         }
     }
 }
+
+
 
 
 struct ProfileView_Previews: PreviewProvider {

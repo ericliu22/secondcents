@@ -212,6 +212,50 @@ func messageNotification(spaceId: String, userUID: String, message: String) {
     }
 }
 
+
+func tickleNotification(userUID: String, targetUserUID: String, message: String) {
+    Task {
+        let user = try await UserManager.shared.getUser(userId: userUID)
+        let userName = user.name!
+
+        
+        if let userImage: String = user.profileImageUrl {
+            let notification = Notification(title: "hehehe", body: "\(userName) \(message)", image: userImage);
+            Task {
+                let token = await getToken(uid: targetUserUID)
+                
+                sendSingleNotification(to: token, notification: notification) { completion in
+                    if (completion) {
+                        print("Succeded sending")
+                    }
+                }
+                
+            }
+            
+        } else {
+//            let notification = Notification(title: "\(spaceName)", body: "\(name!): \(message)");
+//            spaceNotification(spaceId: spaceId, userUID: userUID, notification: notification)
+            
+            let notification = Notification(title: "hehehe", body: "\(userName) \(message)");
+            Task {
+                let token = await getToken(uid: targetUserUID)
+                
+                sendSingleNotification(to: token, notification: notification) { completion in
+                    if (completion) {
+                        print("Succeded sending")
+                    }
+                }
+                
+            }
+            
+            
+            
+        }
+    }
+}
+
+
+
 func widgetNotification(spaceId: String, userUID: String, widget: CanvasWidget) {
     Task {
         let space = try await SpaceManager.shared.getSpace(spaceId: spaceId)
@@ -244,10 +288,10 @@ func reactionNotification(spaceId: String, userUID: String, message: String) {
         let spaceName: String = space.name!
         
         if let spaceImage: String = space.profileImageUrl {
-            let notification = Notification(title: "[\(spaceName)] \(name) reacted", body: "\(name) \(message) a widget", image: spaceImage);
+            let notification = Notification(title: "\(spaceName)", body: "\(name) \(message) a widget", image: spaceImage);
             spaceNotification(spaceId: spaceId, userUID: userUID, notification: notification)
         } else {
-            let notification = Notification(title: "[\(spaceName)] \(name) reacted", body: "\(name) \(message) a widget");
+            let notification = Notification(title: "\(spaceName)", body: "\(name) \(message) a widget");
             spaceNotification(spaceId: spaceId, userUID: userUID, notification: notification)
         }
     }
