@@ -73,6 +73,7 @@ struct StaticMapView: UIViewRepresentable {
     var latitude: Double
     var longitude: Double
     var radius: CLLocationDistance
+    var showAnnotation: Bool = true
     
     func makeUIView(context: Context) -> MKMapView {
         let mapView = MKMapView()
@@ -90,22 +91,35 @@ struct StaticMapView: UIViewRepresentable {
         
         // Remove any existing annotations
         uiView.removeAnnotations(uiView.annotations)
+        uiView.removeOverlays(uiView.overlays)
+        // Debugging prints after removal
+              print("Annotations after removal: \(uiView.annotations.count)")
+              print("Overlays after removal: \(uiView.overlays.count)")
+              
         
-        // Add the annotation
-        let annotation = MKPointAnnotation()
-        annotation.coordinate = coordinate
-        uiView.addAnnotation(annotation)
+        
+        if showAnnotation{
+            // Add the annotation
+            let annotation = MKPointAnnotation()
+            annotation.coordinate = coordinate
+            uiView.addAnnotation(annotation)
+            
+          
+        }
     }
+    
+    
 }
 
 struct DisplayLocationWidgetView: View {
     var latitude: String
     var longitude: String
     var radius: CLLocationDistance = 500
+    var showAnnotation: Bool = true
     
     var body: some View {
         if let lat = Double(latitude), let lon = Double(longitude) {
-            StaticMapView(latitude: lat, longitude: lon, radius: radius)
+            StaticMapView(latitude: lat, longitude: lon, radius: radius, showAnnotation: showAnnotation)
                 .disabled(true) // Disable user interactions
         } else {
             Text("Invalid coordinates")
