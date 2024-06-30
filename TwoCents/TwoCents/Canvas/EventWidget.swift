@@ -29,31 +29,30 @@ struct EventWidget: WidgetView {
             
             
             VStack(alignment: .leading, spacing:0){
-                
-     
+          
+                    
                     //Event Name
                     Text("Boys Night")
                         .font(.footnote)
                         .foregroundColor(Color.accentColor)
                         .fontWeight(.semibold)
-                      
-                    
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(.horizontal, 16)
-                        .padding(.top, 16)
                     
                     
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, 16)
+                .padding(.top, 16)
+            
                 
                 
                 //Date
-                Text("September 9")
-                    .font(.caption)
+                Text("Sep 9・4:30PM")
+                    .font(.caption2)
                     .foregroundColor(Color.secondary)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal, 16)
                 
                 Spacer()
-                    .frame(height: 6)
+                    .frame(height: 3)
                 
                 
                 //todo list
@@ -74,12 +73,28 @@ struct EventWidget: WidgetView {
                 }
                 .padding(.horizontal, 16)
            
+                
+                HStack(spacing: 3) {
+                    Color.secondary
+                        .frame(width: 3, height: 12)
+                        .cornerRadius(3)
+                    
+                    Text("+2 more")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                        .truncationMode(.tail)
+                        .lineLimit(1)
+
+                }
+                .padding(.horizontal, 16)
+                
+                
+                
                 Spacer()
                 
                 DisplayLocationWidgetView(latitude: "40.7791151", longitude: "-73.9626129", showAnnotation: false)
                 
-                    .frame(height: TILE_SIZE/3
-                    )
+                    .frame(height: 45)
                 
         
                 
