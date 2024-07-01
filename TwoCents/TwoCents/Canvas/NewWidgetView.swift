@@ -23,7 +23,7 @@ var videoViewTest = CanvasWidget(width: .infinity, height:  .infinity, borderCol
 var pollViewTest = CanvasWidget(width: .infinity, height:  .infinity, borderColor: .red, userId: "jisookim", media: .poll, mediaURL: URL(string: "https://www.pexels.com/video/10167684/download/")!, widgetName: "Poll", widgetDescription: "Gather consensus")
 var mapViewTest = CanvasWidget(width: .infinity, height:  .infinity, borderColor: .red, userId: "jisookim", media: .map, widgetName: "Map", widgetDescription: "Drop the addy")
 
-var textViewTest = CanvasWidget(width: .infinity, height:  .infinity, borderColor: .red, userId: "jisookim", media: .event, widgetName: "Text", widgetDescription: "A bar is a bar", textString: "Fruits can't even see so how my Apple Watch")
+var textViewTest = CanvasWidget(width: .infinity, height:  .infinity, borderColor: .red, userId: "jisookim", media: .text, widgetName: "Text", widgetDescription: "A bar is a bar", textString: "Fruits can't even see so how my Apple Watch")
 
 
 
@@ -149,10 +149,8 @@ struct NewWidgetView: View {
             
                 .fullScreenCover(isPresented: $showingView, content: {
                     
-                    NewTextWidgetView(spaceId: spaceId)
-                        .onDisappear(perform: {
-                            closeNewWidgetview = true
-                        })
+                    NewTextWidgetView(spaceId: spaceId, closeNewWidgetview: $closeNewWidgetview)
+                     
                 })
                 
              
@@ -224,9 +222,9 @@ struct NewWidgetView: View {
                                                                     
                                     default:
                                         ZStack{
-                                            
+                                            EmptyView()
                                             //default widgets
-                                            MediaView(widget: viewModel.widgets[index], spaceId: spaceId)
+//                                            MediaView(widget: viewModel.widgets[index], spaceId: spaceId)
                                                 .aspectRatio(1, contentMode: .fit)
                                             //                                                        .shadow(radius: 20, y: 10)
                                                 .cornerRadius(30)

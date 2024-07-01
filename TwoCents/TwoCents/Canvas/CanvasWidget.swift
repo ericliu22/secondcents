@@ -197,7 +197,8 @@ func MediaView(widget: CanvasWidget, spaceId: String) -> some View{
     case .map:
         MapWidget(widget: widget)
     default:
-        ImageWidget(widget: widget)
+//        ImageWidget(widget: widget)
+        EmptyView()
     }
     
 }

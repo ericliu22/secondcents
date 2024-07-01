@@ -19,6 +19,29 @@ struct NewTextWidgetView: View {
     
     @FocusState private var isTextFieldFocused: Bool
     @Environment(\.dismiss) var dismissScreen
+    
+    @Binding private var closeNewWidgetview: Bool
+    
+    init(spaceId: String, closeNewWidgetview: Binding<Bool>) {
+        self.spaceId = spaceId
+
+//        _pollModel = StateObject(wrappedValue:NewPollModel(spaceId: spaceId))
+        
+        self._closeNewWidgetview = closeNewWidgetview
+           
+    }
+    
+    init(spaceId: String) {
+        self.spaceId = spaceId
+
+//        _pollModel = StateObject(wrappedValue:NewPollModel(spaceId: spaceId))
+        
+        self._closeNewWidgetview = .constant(false)
+           
+    }
+    
+    
+    
     var body: some View {
         NavigationStack{
             VStack {
@@ -61,7 +84,7 @@ struct NewTextWidgetView: View {
                         
                         dismissScreen()
                         
-                        
+                        closeNewWidgetview = true
                         let newText = CanvasWidget(borderColor: Color.accentColor, userId: userId, media: .text, textString: inputText)
                         SpaceManager.shared.uploadWidget(spaceId: spaceId, widget: newText)
                         
@@ -70,7 +93,7 @@ struct NewTextWidgetView: View {
                         
                         inputText = ""
                         
-                     
+                        
                         
                         
                     }
