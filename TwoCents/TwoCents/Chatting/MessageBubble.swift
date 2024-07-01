@@ -25,14 +25,15 @@ struct universalMessageBubble: View{
         VStack(alignment: sentByMe ? .trailing : .leading, spacing: 3){
             
             
-            if isFirstMsg && !sentByMe {
+            if isFirstMsg  {
                 
              
                 Text(name)
                     .foregroundStyle(userColor)
                     .font(.caption)
 //                    .padding(.leading, 12)
-                    .padding(.leading, 6)
+                    .padding(sentByMe ? .trailing : .leading, 6)
+                    .padding(.top, 3)
 
                     
             }

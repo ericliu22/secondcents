@@ -30,7 +30,7 @@ var textViewTest = CanvasWidget(width: .infinity, height:  .infinity, borderColo
 struct NewWidgetView: View {
     
     @State var widgetId: String
-    
+    @State private var userColor: Color = .gray
     
     @StateObject private var viewModel = NewWidgetViewModel()
     
@@ -137,8 +137,8 @@ struct NewWidgetView: View {
                 .minimumScaleFactor(0.8)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .background(.ultraThickMaterial)
-                .background(Color.fromString(name: viewModel.user?.userColor ?? ""))
-                .foregroundColor(Color.fromString(name: viewModel.user?.userColor ?? ""))
+                .background(userColor)
+                .foregroundColor(userColor)
                 .cornerRadius(20)
           
             
@@ -299,7 +299,9 @@ struct NewWidgetView: View {
                 
                 try? await viewModel.loadCurrentUser()
                 
-                       
+                withAnimation {
+                    userColor = Color.fromString(name: viewModel.user?.userColor ?? "")
+                }
                
             }
             .onAppear {

@@ -119,6 +119,7 @@ struct ChatView: View {
                     callFetch(proxy: proxy)
             }) {
                 Text("Load More")
+                  
             }
             .buttonStyle(.bordered)
             .tint(userColor)
@@ -145,6 +146,7 @@ struct ChatView: View {
                 ScrollView{
                     VStack {
                         button(proxy: proxy)
+                            .padding(.bottom)
                         ChatStruct(spaceId: spaceId, messageManager: messageManager)
                         .scrollTargetLayout()
                         .blur(radius: replyMode ? 2 : 0)
@@ -160,6 +162,7 @@ struct ChatView: View {
                                 .onAppear(perform: {
                                     proxy.scrollTo(messageManager.lastMessageId, anchor: .bottom)
                                 })
+                                .padding(.top, 3)
                         }
                     }
                 }
