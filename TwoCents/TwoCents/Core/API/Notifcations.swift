@@ -212,52 +212,48 @@ func messageNotification(spaceId: String, userUID: String, message: String) {
     }
 }
 
-
-func tickleNotification(userUID: String, targetUserUID: String, count: Int? = 0, title: String? = "Tickle Monster") {
+func tickleNotification(userUID: String, targetUserUID: String, count: Int? = nil, title: String? = nil) {
     Task {
-        let user = try await UserManager.shared.getUser(userId: userUID)
-        let userName = user.name!
-        
-        let message = count == 0 ? "tickled you 🤗" : "tickled you \(count!) times 🤗"
+        do {
+            let user = try await UserManager.shared.getUser(userId: userUID)
+            let userName = user.name ?? "User"
 
-        
-        if let userImage: String = user.profileImageUrl {
-            
-            
-            let notification = Notification(title: title!, body: "\(userName) \(message)", image: userImage);
-            Task {
-                let token = await getToken(uid: targetUserUID)
-                
-                sendSingleNotification(to: token, notification: notification) { completion in
-                    if (completion) {
-                        print("Succeded sending")
-                    }
-                }
-                
+            var message: String
+            var notificationTitle: String
+
+            if let count = count, count > 0 {
+                message = "tickled you \(count) times 🤗"
+            } else {
+                message = "tickled you 🤗"
             }
-            
-        } else {
-//            let notification = Notification(title: "\(spaceName)", body: "\(name!): \(message)");
-//            spaceNotification(spaceId: spaceId, userUID: userUID, notification: notification)
-            
-            let notification = Notification(title: "hehehe", body: "\(userName) \(message)");
-            Task {
-                let token = await getToken(uid: targetUserUID)
-                
-                sendSingleNotification(to: token, notification: notification) { completion in
-                    if (completion) {
-                        print("Succeded sending")
-                    }
-                }
-                
+
+            if let title = title {
+                notificationTitle = title
+                message = "\(userName) \(message)"
+            } else {
+                notificationTitle = userName
             }
-            
-            
-            
+
+            let notification: Notification
+            if let userImage = user.profileImageUrl {
+                notification = Notification(title: notificationTitle, body: message, image: userImage)
+            } else {
+                notification = Notification(title: notificationTitle, body: message)
+            }
+
+            let token = await getToken(uid: targetUserUID)
+            sendSingleNotification(to: token, notification: notification) { completion in
+                if completion {
+                    print("Succeeded sending")
+                } else {
+                    print("Failed to send notification")
+                }
+            }
+        } catch {
+            print("Failed to get user or send notification: \(error)")
         }
     }
 }
-
 
 
 func widgetNotification(spaceId: String, userUID: String, widget: CanvasWidget) {

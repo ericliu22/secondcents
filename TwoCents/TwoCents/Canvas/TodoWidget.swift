@@ -38,19 +38,14 @@ struct TodoWidget: WidgetView {
                         .fontWeight(.semibold)
                     
                       
-                    Spacer()
-                    Text("6")
-                        .font(.title3)
-                        .fontWeight(.semibold)
-
                    
                        
                 }
         
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal, 16)
-                .padding(.top, 12)
-       
+                .padding(.top, 16)
+                .padding(.bottom, 3)
                 
                 
             
@@ -104,6 +99,20 @@ struct TodoWidget: WidgetView {
             .cornerRadius(CORNER_RADIUS)
             
 
+            
+            .overlay(
+            
+               
+                Text("6")
+                    .font(.title3)
+                    .fontWeight(.semibold)
+                    .padding(.top, 12)
+                    .padding(.trailing, 16)
+                 
+                    .frame(width: TILE_SIZE, height: TILE_SIZE, alignment: .topTrailing)
+               
+            
+            )
             
             
             

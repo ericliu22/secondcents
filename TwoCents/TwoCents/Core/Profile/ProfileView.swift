@@ -436,7 +436,7 @@ struct ProfileView: View {
                                             let tickleCount = Int(duration * 10)
                                             
                                             
-                                            if !isPressing && tickleCount < 1  {
+                                            if !isPressing && tickleCount <= 1  {
                                                 
                                                 feedbackGenerator.impactOccurred()
                                                 
@@ -468,7 +468,7 @@ struct ProfileView: View {
                                                 let duration = Date().timeIntervalSince(startTime)
                                                 let tickleCount = Int(duration * 10)
                                                 
-                                                if tickleCount > 0 {
+                                                if tickleCount > 1 {
                                                     let currentUserId = try! AuthenticationManager.shared.getAuthenticatedUser().uid
                                                     
                                                     
