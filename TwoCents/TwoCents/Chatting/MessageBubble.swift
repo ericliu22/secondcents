@@ -21,6 +21,8 @@ struct universalMessageBubble: View{
     @StateObject private var viewModel = ChattingViewModel()
     @State private var userColor: Color = .gray
     @State var spaceId: String
+    
+    @State private var loaded: Bool = false
     var body: some View{
         VStack(alignment: sentByMe ? .trailing : .leading, spacing: 3){
             
@@ -63,17 +65,17 @@ struct universalMessageBubble: View{
                 
                 //show widget message if text is nil
                
-                
-               
-                if viewModel.WidgetMessage != nil {
-                                      
-                    MediaView(widget: viewModel.WidgetMessage!, spaceId: spaceId)
+              
+                if let widget =  viewModel.WidgetMessage {
+                    
+                    MediaView(widget: widget, spaceId: spaceId)
                         .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
                         .cornerRadius(CORNER_RADIUS)
                     
-                        .frame(maxWidth: .infinity, alignment: sentByMe ?  .trailing : .leading)
+                        .frame(maxWidth: .infinity, minHeight: TILE_SIZE, alignment: sentByMe ?  .trailing : .leading)
                     
-                }
+                    
+                } 
 
                
             }
@@ -96,7 +98,7 @@ struct universalMessageBubble: View{
                 try? await viewModel.loadWidget(spaceId: spaceId , widgetId: message.widgetId!)
             }
    
-            //            print (userColor)
+         
             
         }
     }
