@@ -10,10 +10,10 @@ import SwiftUI
 struct ProfileView: View {
     @Binding var activeSheet: sheetTypes?
     @StateObject private var viewModel = ProfileViewModel()
-//    @Binding var showSignInView: Bool
+    //    @Binding var showSignInView: Bool
     @Binding var loadedColor: Color
     @State var targetUserColor: Color?
-//    @Binding var showCreateProfileView: Bool
+    //    @Binding var showCreateProfileView: Bool
     
     @State var targetUserId: String
     
@@ -22,7 +22,7 @@ struct ProfileView: View {
         GridItem(.flexible()),
         GridItem(.flexible())
     ]
- 
+    
     
     @State private var isPressing = false
     @State private var pressStartTime: Date?
@@ -32,26 +32,26 @@ struct ProfileView: View {
     
     
     private func startHapticFeedback() {
-          feedbackGenerator.prepare()
-            var tickleCount = 0
-          Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { timer in
-              if isPressing {
-                  feedbackGenerator.impactOccurred()
-                  
-                  
-                  tickleCount += 1
-                  tickleString = String(tickleCount)
-              } else {
-                  timer.invalidate()
-                  tickleString = "Tickle"
-              }
-          }
-      }
-
-      private func stopHapticFeedback() {
-          // Ensure the feedback generator can be used again if needed
-          feedbackGenerator.prepare()
-      }
+        feedbackGenerator.prepare()
+        var tickleCount = 0
+        Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { timer in
+            if isPressing {
+                feedbackGenerator.impactOccurred()
+                
+                
+                tickleCount += 1
+                tickleString = String(tickleCount)
+            } else {
+                timer.invalidate()
+                tickleString = "Tickle"
+            }
+        }
+    }
+    
+    private func stopHapticFeedback() {
+        // Ensure the feedback generator can be used again if needed
+        feedbackGenerator.prepare()
+    }
     
     
     
@@ -145,7 +145,7 @@ struct ProfileView: View {
                                     
                                     .offset(x:44, y:44)
                                     .onTapGesture{
-//                                        showCreateProfileView = true
+                                        //                                        showCreateProfileView = true
                                         activeSheet = .customizeProfileView
                                         
                                     }
@@ -183,7 +183,7 @@ struct ProfileView: View {
                             
                             if let username = user.username, username != ""  {
                                 Text("@\(username)" )
-//                                    .foregroundColor(Color(UIColor.secondaryLabel))
+                                //                                    .foregroundColor(Color(UIColor.secondaryLabel))
                                     .foregroundStyle(.secondary)
                                 
                                     .font(.headline)
@@ -247,17 +247,17 @@ struct ProfileView: View {
                             }
                         }
                     }
-
-
-           
-                
-                
-                .frame(maxWidth:.infinity, maxHeight: .infinity)
-                .aspectRatio(1, contentMode: .fit)
-                .background(.thickMaterial)
-             
-                
-                .cornerRadius(20)
+                    
+                    
+                    
+                    
+                    
+                    .frame(maxWidth:.infinity, maxHeight: .infinity)
+                    .aspectRatio(1, contentMode: .fit)
+                    .background(.thickMaterial)
+                    
+                    
+                    .cornerRadius(20)
                     
                     
                     
@@ -266,7 +266,7 @@ struct ProfileView: View {
                         
                         
                         NavigationLink {
-//                            FriendsView(showSignInView: $showSignInView, loadedColor: $loadedColor, showCreateProfileView: $showCreateProfileView, targetUserId: viewModel.user?.userId ?? "")
+                            //                            FriendsView(showSignInView: $showSignInView, loadedColor: $loadedColor, showCreateProfileView: $showCreateProfileView, targetUserId: viewModel.user?.userId ?? "")
                             FriendsView(activeSheet: $activeSheet, loadedColor: $loadedColor, targetUserId: viewModel.user?.userId ?? "")
                         } label: {
                             
@@ -296,7 +296,7 @@ struct ProfileView: View {
                         if targetUserId.isEmpty {
                             
                             NavigationLink {
-//                                FriendRequestsView(showSignInView: $showSignInView, loadedColor: $loadedColor, showCreateProfileView: $showCreateProfileView, targetUserId: viewModel.user?.userId ?? "")
+                                //                                FriendRequestsView(showSignInView: $showSignInView, loadedColor: $loadedColor, showCreateProfileView: $showCreateProfileView, targetUserId: viewModel.user?.userId ?? "")
                                 
                                 FriendRequestsView(activeSheet: $activeSheet, loadedColor: $loadedColor, targetUserId: viewModel.user?.userId ?? "")
                             } label: {
@@ -311,7 +311,7 @@ struct ProfileView: View {
                                                 
                                                 .font(.headline)
                                                 .fontWeight(.regular)
-//                                                .foregroundColor(Color(UIColor.secondaryLabel))
+                                                //                                                .foregroundColor(Color(UIColor.secondaryLabel))
                                                 .foregroundStyle(.secondary)
                                             } else {
                                                 
@@ -361,14 +361,14 @@ struct ProfileView: View {
                                     HStack{
                                         
                                         
-                              
+                                        
                                         
                                         if viewModel.isFriend!{
                                             
                                             Label("Friended", systemImage: "person.crop.circle.badge.checkmark")
                                             
                                         } else {
-//                                                    let authDataResultUserId = try AuthenticationManager.shared.getAuthenticatedUser().uid
+                                            //                                                    let authDataResultUserId = try AuthenticationManager.shared.getAuthenticatedUser().uid
                                             if viewModel.requestedMe! {
                                                 
                                                 
@@ -385,9 +385,9 @@ struct ProfileView: View {
                                                 
                                             }
                                         }
-                                
-                                
-                                
+                                        
+                                        
+                                        
                                         
                                         
                                         
@@ -404,7 +404,7 @@ struct ProfileView: View {
                                     
                                     .frame(maxWidth:.infinity, maxHeight: .infinity)
                                     .background(.thinMaterial)
-                                  
+                                    
                                     
                                     .cornerRadius(20)
                                     
@@ -425,63 +425,69 @@ struct ProfileView: View {
                     
                     
                     ZStack {
-                               RoundedRectangle(cornerRadius: 20)
-                                   .fill(.thinMaterial)
-                                   .aspectRatio(1, contentMode: .fit)
-                                   .gesture(
-                                       TapGesture()
-                                           .onEnded { _ in
+                        RoundedRectangle(cornerRadius: 20)
+                            .fill(.thinMaterial)
+                            .aspectRatio(1, contentMode: .fit)
+                            .gesture(
+                                TapGesture()
+                                    .onEnded { _ in
+                                        if let startTime = pressStartTime {
+                                            let duration = Date().timeIntervalSince(startTime)
+                                            let tickleCount = Int(duration * 10)
                                             
-                                               
-                                               feedbackGenerator.impactOccurred()
-                                               
-                                               let currentUserId = try!  AuthenticationManager.shared.getAuthenticatedUser().uid
-                                               //
-                                               //
-                                               tickleNotification(userUID: currentUserId, targetUserUID: targetUserId.isEmpty ? currentUserId : targetUserId, message: "tickled you.")
-                                               
-                                               
-                                               
-                                           }
-                                   )
-                                   .simultaneousGesture(
-                                    DragGesture(minimumDistance: 0) // Detects any drag or press
-                                        .onChanged { _ in
-                                            if !isPressing {
-                                                isPressing = true
-                                                pressStartTime = Date()
-                                                startHapticFeedback()
-                                            }
-                                        }
-                                        .onEnded { _ in
-                                            if isPressing {
-                                                isPressing = false
-                                                stopHapticFeedback()
+                                            
+                                            if !isPressing && tickleCount < 1  {
                                                 
-                                                if let startTime = pressStartTime {
-                                                    let duration = Date().timeIntervalSince(startTime)
-                                                    let tickleCount = Int(duration) * 10
+                                                feedbackGenerator.impactOccurred()
+                                                
+                                                let currentUserId = try!  AuthenticationManager.shared.getAuthenticatedUser().uid
+                                                //
+                                                //
+                                                tickleNotification(userUID: currentUserId, targetUserUID: targetUserId.isEmpty ? currentUserId : targetUserId, message: "tickled you.")
+                                            }
+                                            
+                                        }
+                                        
+                                    }
+                            )
+                            .simultaneousGesture(
+                                DragGesture(minimumDistance: 0) // Detects any drag or press
+                                    .onChanged { _ in
+                                        if !isPressing {
+                                            isPressing = true
+                                            pressStartTime = Date()
+                                            startHapticFeedback()
+                                        }
+                                    }
+                                    .onEnded { _ in
+                                        if isPressing {
+                                            isPressing = false
+                                            stopHapticFeedback()
+                                            
+                                            if let startTime = pressStartTime {
+                                                let duration = Date().timeIntervalSince(startTime)
+                                                let tickleCount = Int(duration * 10)
+                                                
+                                                if tickleCount > 0 {
+                                                    let currentUserId = try! AuthenticationManager.shared.getAuthenticatedUser().uid
                                                     
-                                                    if tickleCount > 0 {
-                                                        let currentUserId = try! AuthenticationManager.shared.getAuthenticatedUser().uid
-                                                       
-                                                        
-                                                        tickleNotification(userUID: currentUserId, targetUserUID: targetUserId.isEmpty ? currentUserId : targetUserId, message: "tickled you \(tickleCount) times.")
-                                                    }
+                                                    
+                                                    tickleNotification(userUID: currentUserId, targetUserUID: targetUserId.isEmpty ? currentUserId : targetUserId, message: "tickled you \(tickleCount) times.")
                                                 }
                                             }
-                                            
-                                            
                                         }
-                                   )
-                               
-                               Text(tickleString)
-                                    .font(tickleString == "Tickle" ? .title2 : .largeTitle)
-                                   .fontWeight(.bold)
-                                   .fontDesign(tickleString == "Tickle" ? .default : .monospaced)
-                                   .foregroundStyle(.secondary)
-                                   .frame(height:50)
-                           }
+                                        
+                                        
+                                    }
+                            )
+                        
+                        Text(tickleString)
+                            .font(tickleString == "Tickle" ? .title2 : .largeTitle)
+                            .fontWeight(.bold)
+                            .fontDesign(tickleString == "Tickle" ? .default : .monospaced)
+                            .foregroundStyle(.secondary)
+                            .frame(height:50)
+                    }
                     
                     
                     
@@ -490,7 +496,7 @@ struct ProfileView: View {
                         RoundedRectangle(cornerRadius: 20)
                             .fill(.thinMaterial)
                             .aspectRatio(1, contentMode: .fit)
-                    
+                        
                         Image(systemName: "plus")
                             .font(.largeTitle)
                             .fontWeight(.bold)
@@ -536,7 +542,7 @@ struct ProfileView: View {
             if (targetUserId.isEmpty) {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     NavigationLink{
-//                        SettingsView(showSignInView: $showSignInView)
+                        //                        SettingsView(showSignInView: $showSignInView)
                         
                         SettingsView(activeSheet: $activeSheet)
                     } label: {
@@ -555,7 +561,7 @@ struct ProfileView: View {
 struct ProfileView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack {
-//            ProfileView(showSignInView: .constant(false),loadedColor: .constant(.red),showCreateProfileView: .constant(false), targetUserId: "")
+            //            ProfileView(showSignInView: .constant(false),loadedColor: .constant(.red),showCreateProfileView: .constant(false), targetUserId: "")
             ProfileView(activeSheet: .constant(nil), loadedColor: .constant(.red), targetUserId: "")
         }
     }
