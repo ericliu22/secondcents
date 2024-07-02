@@ -213,16 +213,18 @@ func messageNotification(spaceId: String, userUID: String, message: String) {
 }
 
 
-func tickleNotification(userUID: String, targetUserUID: String, message: String) {
+func tickleNotification(userUID: String, targetUserUID: String, count: Int? = 0, title: String? = "Tickle Monster") {
     Task {
         let user = try await UserManager.shared.getUser(userId: userUID)
         let userName = user.name!
+        
+        let message = count == 0 ? "tickled you 🤗" : "tickled you \(count!) times 🤗"
 
         
         if let userImage: String = user.profileImageUrl {
             
             
-            let notification = Notification(title: "hehehe", body: "\(userName) \(message)", image: userImage);
+            let notification = Notification(title: title!, body: "\(userName) \(message)", image: userImage);
             Task {
                 let token = await getToken(uid: targetUserUID)
                 

@@ -213,13 +213,27 @@ struct SpaceSettingsView: View {
                                     
                                     Button {
                                         Task{
-                                            try? await viewModel.removeUser(userId: userTile.userId, spaceId: spaceId)
-                                            try? await viewModel.loadCurrentSpace(spaceId: spaceId)
-                                            //                                viewModel.declineFriendRequest(friendUserId: userTile.userId)
-                                            try? await viewModel.getMembersInfo()
+                                            
+                                            //kick user
+//                                            try? await viewModel.removeUser(userId: userTile.userId, spaceId: spaceId)
+//                                            try? await viewModel.loadCurrentSpace(spaceId: spaceId)
+//                                            try? await viewModel.getMembersInfo()
+                                            
+                                            
+                                            
+                                            let generator = UIImpactFeedbackGenerator(style: .medium)
+                                            generator.impactOccurred()
+                                      
+                                            
+                                            let currentUserId = try!  AuthenticationManager.shared.getAuthenticatedUser().uid
+                                            //
+                                            //
+                                            tickleNotification(userUID: currentUserId, targetUserUID: userTile.userId, title: viewModel.space?.name)
+                                            
+                                            
                                         }
                                     } label: {
-                                        Text("Kick")
+                                        Text("Tickle")
                                             .font(.caption)
                                         
                                         

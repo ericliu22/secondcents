@@ -443,7 +443,7 @@ struct ProfileView: View {
                                                 let currentUserId = try!  AuthenticationManager.shared.getAuthenticatedUser().uid
                                                 //
                                                 //
-                                                tickleNotification(userUID: currentUserId, targetUserUID: targetUserId.isEmpty ? currentUserId : targetUserId, message: "tickled you.")
+                                                tickleNotification(userUID: currentUserId, targetUserUID: targetUserId.isEmpty ? currentUserId : targetUserId)
                                             }
                                             
                                         }
@@ -472,7 +472,7 @@ struct ProfileView: View {
                                                     let currentUserId = try! AuthenticationManager.shared.getAuthenticatedUser().uid
                                                     
                                                     
-                                                    tickleNotification(userUID: currentUserId, targetUserUID: targetUserId.isEmpty ? currentUserId : targetUserId, message: "tickled you \(tickleCount) times.")
+                                                    tickleNotification(userUID: currentUserId, targetUserUID: targetUserId.isEmpty ? currentUserId : targetUserId, count: tickleCount)
                                                 }
                                             }
                                         }
