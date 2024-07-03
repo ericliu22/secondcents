@@ -31,12 +31,19 @@ struct NewChatView: View {
                 ChatBubbleViewBuilder(messageId: message.id, spaceId: spaceId)
                 
                 if message.id == viewModel.messages.last?.id {
-                    ProgressView()
+//                    ProgressView()
+                    
+                    Text("LAST: \(message.text)")
                         .onAppear {
                             viewModel.getMessages(spaceId: spaceId)
                             print("loaded more messages")
                         }
                 }
+                
+                
+                
+                
+                
             }
         }
         .onAppear {

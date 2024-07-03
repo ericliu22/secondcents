@@ -15,10 +15,11 @@ struct ChatBubbleView: View {
     let isFirstMsg: Bool
     
     let name: String
-
+    
+    let userColor: Color
     
     @StateObject private var viewModel = ChattingViewModel()
-    @State private var userColor: Color = .gray
+//    @State private var userColor: Color = .gray
 //    @State var spaceId: String
     
     @State private var loaded: Bool = false

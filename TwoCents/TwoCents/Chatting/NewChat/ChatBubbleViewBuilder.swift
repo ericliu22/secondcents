@@ -21,7 +21,7 @@ struct ChatBubbleViewBuilder: View {
     var body: some View {
         ZStack {
             if let message {
-                ChatBubbleView(message: message, sentByMe: message.sendBy == user?.userId, isFirstMsg: message.sendBy != message.parent, name: name)
+                ChatBubbleView(message: message, sentByMe: message.sendBy == user?.userId, isFirstMsg: message.sendBy != message.parent, name: name, userColor: userColor)
             }
         }
         .task {

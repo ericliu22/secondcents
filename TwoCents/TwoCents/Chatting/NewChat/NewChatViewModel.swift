@@ -55,15 +55,27 @@ final class NewChatViewModel: ObservableObject {
 //    
     func getMessages(spaceId: String) {
         Task {
-            let (newMessages, lastDocument) = try await NewMessageManager.shared.getAllMessages(spaceId: spaceId, count: 2, lastDocument: lastDocument)
-//            print(newMessages)
-            self.messages.append(contentsOf: newMessages)
-            if let lastDocument {
-                self.lastDocument = lastDocument
+            do {
+                let (newMessages, lastDocument) = try await NewMessageManager.shared.getAllMessages(spaceId: spaceId, count: 2, lastDocument: self.lastDocument)
+                
+                // Create a set of existing message IDs for faster lookup
+                let existingMessageIDs = Set(self.messages.map { $0.id })
+                
+                // Filter out new messages that are already present
+                let uniqueMessages = newMessages.filter { !existingMessageIDs.contains($0.id) }
+                
+                // Append unique messages to the messages array
+                self.messages.append(contentsOf: uniqueMessages)
+                
+                // Update lastDocument if not nil
+                if let lastDocument = lastDocument {
+                    self.lastDocument = lastDocument
+                }
+            } catch {
+                print("Failed to fetch messages: \(error)")
             }
         }
     }
-    
 //    func addUserFavoriteProduct(productId: Int) {
 //        Task {
 //            let authDataResult = try AuthenticationManager.shared.getAuthenticatedUser()
