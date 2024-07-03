@@ -17,11 +17,11 @@ struct ChatBubbleViewBuilder: View {
     @State private var name: String = ""
     @State private var user: DBUser?
     @State private var userColor: Color = .gray
-    
+    let currentUserId: String 
     var body: some View {
         ZStack {
             if let message {
-                ChatBubbleView(message: message, sentByMe: message.sendBy == user?.userId, isFirstMsg: message.sendBy != message.parent, name: name, userColor: userColor)
+                ChatBubbleView(message: message, sentByMe: message.sendBy == currentUserId, isFirstMsg: message.sendBy != message.parent, name: name, userColor: userColor)
             }
         }
         .task {
@@ -47,7 +47,6 @@ struct ChatBubbleViewBuilder: View {
                 self.name = "Unknown"
                 self.user = nil
             }
-            
             
             
             withAnimation{

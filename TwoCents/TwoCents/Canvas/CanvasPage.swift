@@ -617,9 +617,9 @@ struct CanvasPage: View {
 //                            .presentationBackground(Color(UIColor.systemBackground))
                     .presentationBackground(.thickMaterial)
             case .chat:
-                ChatView(spaceId: spaceId,replyMode: $replyMode, replyWidget: $replyWidget, selectedDetent: $selectedDetent)
+//                ChatView(spaceId: spaceId,replyMode: $replyMode, replyWidget: $replyWidget, selectedDetent: $selectedDetent)
                 
-//                NewChatView(spaceId: spaceId)
+                NewChatView(spaceId: spaceId)
                 
                 
                 

@@ -23,7 +23,8 @@ struct NewChatView: View {
     @State var spaceId: String
     
     @StateObject private var viewModel = NewChatViewModel()
-    let userUID: String = try! AuthenticationManager.shared.getAuthenticatedUser().uid
+    let userUID: String = (try? AuthenticationManager.shared.getAuthenticatedUser().uid) ?? ""
+
     var body: some View {
         ScrollViewReader { proxy in
             List {
@@ -38,23 +39,28 @@ struct NewChatView: View {
                                
                                     
                                 }
+                                .frame(maxWidth:.infinity)
                             
 
                         }
                     }
                     
-                    ChatBubbleViewBuilder(messageId: message.id, spaceId: spaceId)
+                    ChatBubbleViewBuilder(messageId: message.id, spaceId: spaceId, currentUserId: userUID)
                         .id(message.id)  // Ensure each message has a unique ID
                         .rotationEffect(.degrees(180))
                         .listRowSeparator(.hidden)
+                        .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
                 }
             }
-            
+            .animation(nil)
+            .padding(.horizontal)
+         
             .rotationEffect(.degrees(180))
             .listStyle(PlainListStyle())
             .onAppear {
                 viewModel.getMessages(spaceId: spaceId)
             }
+//            .ignoresSafeArea()
             .scrollIndicators(.hidden)
         }
     }
