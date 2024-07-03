@@ -62,7 +62,16 @@ struct NewChatView: View {
             }
 //            .ignoresSafeArea()
             .scrollIndicators(.hidden)
+            
+            
+            NewMessageField(replyMode: .constant(false), replyWidget: .constant(nil), spaceId: spaceId)
+            
+            
         }
+        
+ 
+        
+        
     }
 
 

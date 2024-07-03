@@ -1,0 +1,109 @@
+//
+//  SearchUserViewModel.swift
+//  TwoCents
+//
+//  Created by jonathan on 9/7/23.
+//
+
+import Foundation
+import FirebaseFirestore
+import SwiftUI
+
+
+
+
+@MainActor
+final class NewMessageFieldViewModel: ObservableObject {
+    
+    //this might cause errors bc several places are running and creating and overriding db user below... but for now its good
+    @Published private(set) var user:  DBUser? = nil
+    func loadCurrentUser() async throws {
+        let authDataResult = try AuthenticationManager.shared.getAuthenticatedUser()
+        self.user = try await UserManager.shared.getUser(userId: authDataResult.uid)
+    }
+    
+    func loadUser(userId: String) async throws {
+     
+        self.user = try await UserManager.shared.getUser(userId: userId)
+    }
+
+    
+    
+    @Published private(set) var space:  DBSpace? = nil
+    func loadCurrentSpace(spaceId: String) async throws {
+        
+        self.space = try await SpaceManager.shared.getSpace(spaceId: spaceId)
+        
+    }
+    
+    
+    
+    @Published private(set) var WidgetMessage: CanvasWidget? = nil
+    func loadWidget(spaceId: String, widgetId: String) async throws {
+        
+        self.WidgetMessage = try await SpaceManager.shared.getWidget(spaceId: spaceId, widgetId: widgetId)
+        
+    }
+    
+    
+    
+    
+    @Published private(set) var userColor:  Color? = nil
+    
+    func getUserColor(userColor: String) -> Color{
+        return Color.fromString(name: userColor)
+    }
+    
+    
+    
+  
+    
+    func sendMessages(text: String?, widget: CanvasWidget?, spaceId: String) {
+        let docRef = db.collection("spaces").document(spaceId).collection("chat").document("mainChat")
+
+        docRef.getDocument{ [self] (document, error) in
+            if let document = document {
+                let property = document.get("lastSend")
+                
+               
+                do {
+                    //if there is both text and widget, send widget first seperately, then the text.
+                    if text != nil && widget != nil {
+                        messageNotification(spaceId: spaceId, userUID: user?.userId ?? "", message: (text == "" ? "Replied to a widget" : text)!)
+                        sendMessages(text: nil, widget: widget, spaceId: spaceId)
+                        sendMessages(text: text, widget: nil, spaceId: spaceId)
+                        
+                    } else {
+                        let uuidString = UUID().uuidString
+                        let mainChatReference = db.collection("spaces").document(spaceId).collection("chat").document("mainChat")
+                        let newMessage = Message(id: uuidString, sendBy: user?.userId ?? "", text: text, ts: Date(), parent: (property as? String) ?? "", widgetId: widget?.id.uuidString)
+                        try mainChatReference.collection("chatlogs").document(uuidString).setData(from: newMessage)
+                        mainChatReference.setData(["lastSend": newMessage.sendBy], merge: true)
+                        mainChatReference.setData(["lastTs": newMessage.ts], merge: true)
+                        
+                       
+                    }
+                    
+                    
+                    
+                    
+                    } catch {
+                    print("Error adding message to Firestore: \(error)")
+                }
+                
+            } else {
+                print("Document does not exist in cache")
+            }
+        }
+        
+    }
+    
+    
+    
+    
+    
+    
+}
+
+
+

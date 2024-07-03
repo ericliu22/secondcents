@@ -73,6 +73,8 @@
 		AB370E112C34F31500C4431F /* ChatBubbleViewBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB370E102C34F31500C4431F /* ChatBubbleViewBuilder.swift */; };
 		AB370E132C34F36A00C4431F /* NewMessageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB370E122C34F36A00C4431F /* NewMessageManager.swift */; };
 		AB370E162C34FDF300C4431F /* QueryExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB370E152C34FDF300C4431F /* QueryExtension.swift */; };
+		AB370E182C35D0B800C4431F /* NewMessageField.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB370E172C35D0B800C4431F /* NewMessageField.swift */; };
+		AB370E1A2C35D14400C4431F /* NewMessageFieldViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB370E192C35D14400C4431F /* NewMessageFieldViewModel.swift */; };
 		AB4C1E4F2A8785BF00588160 /* ColorSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB4C1E4E2A8785BF00588160 /* ColorSelectionView.swift */; };
 		AB53655F2C31C807001C444B /* TodoWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB53655E2C31C807001C444B /* TodoWidget.swift */; };
 		AB58C1E22BDAED9A000B0AC1 /* SpaceSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB58C1E12BDAED9A000B0AC1 /* SpaceSettingsView.swift */; };
@@ -231,6 +233,8 @@
 		AB370E102C34F31500C4431F /* ChatBubbleViewBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatBubbleViewBuilder.swift; sourceTree = "<group>"; };
 		AB370E122C34F36A00C4431F /* NewMessageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewMessageManager.swift; sourceTree = "<group>"; };
 		AB370E152C34FDF300C4431F /* QueryExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueryExtension.swift; sourceTree = "<group>"; };
+		AB370E172C35D0B800C4431F /* NewMessageField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewMessageField.swift; sourceTree = "<group>"; };
+		AB370E192C35D14400C4431F /* NewMessageFieldViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewMessageFieldViewModel.swift; sourceTree = "<group>"; };
 		AB4C1E4E2A8785BF00588160 /* ColorSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorSelectionView.swift; sourceTree = "<group>"; };
 		AB53655E2C31C807001C444B /* TodoWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoWidget.swift; sourceTree = "<group>"; };
 		AB58C1E12BDAED9A000B0AC1 /* SpaceSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpaceSettingsView.swift; sourceTree = "<group>"; };
@@ -589,6 +593,8 @@
 				AB370E102C34F31500C4431F /* ChatBubbleViewBuilder.swift */,
 				AB370E0A2C34EDA500C4431F /* NewChatView.swift */,
 				AB370E0C2C34EDD400C4431F /* NewChatViewModel.swift */,
+				AB370E172C35D0B800C4431F /* NewMessageField.swift */,
+				AB370E192C35D14400C4431F /* NewMessageFieldViewModel.swift */,
 			);
 			path = NewChat;
 			sourceTree = "<group>";
@@ -937,6 +943,7 @@
 				AB2E56D32AE9C6F00096A58C /* VoteGameViewModel.swift in Sources */,
 				A2DDB1BB2BB693FD00243E1B /* NewPollViewModel.swift in Sources */,
 				AB9C7F682BD83B1E004FC549 /* EmojiCountView.swift in Sources */,
+				AB370E1A2C35D14400C4431F /* NewMessageFieldViewModel.swift in Sources */,
 				AB2E56CD2AE9C59D0096A58C /* VoteGameView.swift in Sources */,
 				A22F84EE2C2912A20095A087 /* ZoomableScrollView.swift in Sources */,
 				A2F5631E2AB4E6240026D8C9 /* CanvasPage.swift in Sources */,
@@ -977,6 +984,7 @@
 				AB9EB95D2B1E805300F58EA5 /* ChatManager.swift in Sources */,
 				AB370E112C34F31500C4431F /* ChatBubbleViewBuilder.swift in Sources */,
 				AB6EE7782C25FE4400F6FDE2 /* NewMapView.swift in Sources */,
+				AB370E182C35D0B800C4431F /* NewMessageField.swift in Sources */,
 				AB15AC0D2AF6F01B0055D5D0 /* SpaceProfilePicViewModel.swift in Sources */,
 				AB01CB5F2B855E83004BEB5B /* TextWidget.swift in Sources */,
 				AB370E0F2C34F2E300C4431F /* ChatBubbleView.swift in Sources */,

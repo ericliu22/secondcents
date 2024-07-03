@@ -1,30 +1,28 @@
 //
-//  textField.swift
+//  NewMessageField.swift
 //  TwoCents
 //
-//  Created by Joshua Shen on 9/22/23.
+//  Created by jonathan on 7/3/24.
 //
 
-import Foundation
 import SwiftUI
-import UIKit
 
-struct MessageField: View{
-    @EnvironmentObject var messagesManager: MessageManager
+struct NewMessageField: View {
+    
     @State private var message = ""
-    
-    
-    @State private var userColor: Color = .gray
-    
-    @StateObject private var viewModel = ChattingViewModel()
+    @FocusState private var isFocused: Bool
     
     @Binding  var replyMode: Bool
     @Binding  var replyWidget: CanvasWidget?
     
     
-    @FocusState private var isFocused: Bool
+    @State private var userColor: Color = .gray
     
-    var body: some View{
+    @StateObject private var viewModel = NewMessageFieldViewModel()
+    @State var spaceId: String
+    
+    
+    var body: some View {
         
         ZStack (alignment: .bottomTrailing){
             TextField("Message", text: $message, axis: .vertical)
@@ -41,7 +39,7 @@ struct MessageField: View{
                     
                 })
             Button{
-                messagesManager.sendMessages(text: message, widget: replyWidget)
+                viewModel.sendMessages(text: message, widget: replyWidget, spaceId: spaceId)
                 message = ""
                 replyWidget = nil
                 withAnimation{
@@ -75,4 +73,10 @@ struct MessageField: View{
         }
     }
     
+    
+    
 }
+
+//#Preview {
+//    NewMessageField()
+//}
