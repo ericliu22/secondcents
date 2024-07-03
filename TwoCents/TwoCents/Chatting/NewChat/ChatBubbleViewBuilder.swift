@@ -29,10 +29,24 @@ struct ChatBubbleViewBuilder: View {
             
             
             
-            self.name = try! await UserManager.shared.getUser(userId: message?.sendBy ?? "").name!
+            do {
+                if let userId = message?.sendBy, !userId.isEmpty {
+                    let user = try await UserManager.shared.getUser(userId: userId)
+                    self.name = user.name ?? ""
+                    self.user = user
+                } else {
+                    // Handle the case where userId is nil or empty
+                    print("Invalid userId")
+                }
+            } catch {
+                // Handle errors here
+                print("Failed to get user: \(error)")
+                // Optionally, set default values or take other actions
+                self.name = "Unknown"
+                self.user = nil
+            }
             
-        
-            user = try! await UserManager.shared.getUser(userId: message?.sendBy ?? "")
+            
             
             withAnimation{
                 self.userColor = Color.fromString(name: user?.userColor ?? "")
