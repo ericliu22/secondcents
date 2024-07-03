@@ -9,15 +9,15 @@ import Foundation
 import SwiftUI
 import UIKit
 
-struct Message: Identifiable, Codable {
-    var id: String
-    var sendBy: String
-    var text: String?
-    var ts: Date
-    var parent: String
-    var widgetId: String?
-}
-
+//struct Message: Identifiable, Codable {
+//    var id: String
+//    var sendBy: String
+//    var text: String?
+//    var ts: Date
+//    var parent: String
+//    var widgetId: String?
+//}
+//
 
 
 

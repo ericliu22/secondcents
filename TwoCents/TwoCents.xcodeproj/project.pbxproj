@@ -67,6 +67,12 @@
 		AB2E56D32AE9C6F00096A58C /* VoteGameViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2E56D22AE9C6F00096A58C /* VoteGameViewModel.swift */; };
 		AB300FAE2AC7406500C6719D /* FriendsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB300FAD2AC7406500C6719D /* FriendsViewModel.swift */; };
 		AB300FB02AC7407000C6719D /* FriendsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB300FAF2AC7407000C6719D /* FriendsView.swift */; };
+		AB370E0B2C34EDA500C4431F /* NewChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB370E0A2C34EDA500C4431F /* NewChatView.swift */; };
+		AB370E0D2C34EDD400C4431F /* NewChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB370E0C2C34EDD400C4431F /* NewChatViewModel.swift */; };
+		AB370E0F2C34F2E300C4431F /* ChatBubbleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB370E0E2C34F2E300C4431F /* ChatBubbleView.swift */; };
+		AB370E112C34F31500C4431F /* ChatBubbleViewBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB370E102C34F31500C4431F /* ChatBubbleViewBuilder.swift */; };
+		AB370E132C34F36A00C4431F /* NewMessageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB370E122C34F36A00C4431F /* NewMessageManager.swift */; };
+		AB370E162C34FDF300C4431F /* QueryExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB370E152C34FDF300C4431F /* QueryExtension.swift */; };
 		AB4C1E4F2A8785BF00588160 /* ColorSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB4C1E4E2A8785BF00588160 /* ColorSelectionView.swift */; };
 		AB53655F2C31C807001C444B /* TodoWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB53655E2C31C807001C444B /* TodoWidget.swift */; };
 		AB58C1E22BDAED9A000B0AC1 /* SpaceSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB58C1E12BDAED9A000B0AC1 /* SpaceSettingsView.swift */; };
@@ -219,6 +225,12 @@
 		AB2E56D22AE9C6F00096A58C /* VoteGameViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoteGameViewModel.swift; sourceTree = "<group>"; };
 		AB300FAD2AC7406500C6719D /* FriendsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsViewModel.swift; sourceTree = "<group>"; };
 		AB300FAF2AC7407000C6719D /* FriendsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsView.swift; sourceTree = "<group>"; };
+		AB370E0A2C34EDA500C4431F /* NewChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewChatView.swift; sourceTree = "<group>"; };
+		AB370E0C2C34EDD400C4431F /* NewChatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewChatViewModel.swift; sourceTree = "<group>"; };
+		AB370E0E2C34F2E300C4431F /* ChatBubbleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatBubbleView.swift; sourceTree = "<group>"; };
+		AB370E102C34F31500C4431F /* ChatBubbleViewBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatBubbleViewBuilder.swift; sourceTree = "<group>"; };
+		AB370E122C34F36A00C4431F /* NewMessageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewMessageManager.swift; sourceTree = "<group>"; };
+		AB370E152C34FDF300C4431F /* QueryExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueryExtension.swift; sourceTree = "<group>"; };
 		AB4C1E4E2A8785BF00588160 /* ColorSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorSelectionView.swift; sourceTree = "<group>"; };
 		AB53655E2C31C807001C444B /* TodoWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoWidget.swift; sourceTree = "<group>"; };
 		AB58C1E12BDAED9A000B0AC1 /* SpaceSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpaceSettingsView.swift; sourceTree = "<group>"; };
@@ -518,6 +530,7 @@
 				A2F563212AB4E6700026D8C9 /* ChattingView.swift */,
 				ABF172A42BFC47FC000B6F9B /* ChattingViewModel.swift */,
 				85A6766A2AE9C19B003ECAAA /* MessageBubble.swift */,
+				AB370E142C34F47200C4431F /* NewChat */,
 			);
 			name = Chatting;
 			path = TwoCents/Chatting;
@@ -565,6 +578,19 @@
 				AB300FAF2AC7407000C6719D /* FriendsView.swift */,
 			);
 			path = Friends;
+			sourceTree = "<group>";
+		};
+		AB370E142C34F47200C4431F /* NewChat */ = {
+			isa = PBXGroup;
+			children = (
+				AB370E152C34FDF300C4431F /* QueryExtension.swift */,
+				AB370E122C34F36A00C4431F /* NewMessageManager.swift */,
+				AB370E0E2C34F2E300C4431F /* ChatBubbleView.swift */,
+				AB370E102C34F31500C4431F /* ChatBubbleViewBuilder.swift */,
+				AB370E0A2C34EDA500C4431F /* NewChatView.swift */,
+				AB370E0C2C34EDD400C4431F /* NewChatViewModel.swift */,
+			);
+			path = NewChat;
 			sourceTree = "<group>";
 		};
 		AB6EE7742C25CDF400F6FDE2 /* Location */ = {
@@ -872,10 +898,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				AB58C1E62BDAF54B000B0AC1 /* SpaceSettingsViewModel.swift in Sources */,
+				AB370E0D2C34EDD400C4431F /* NewChatViewModel.swift in Sources */,
 				856E80BD2B50EB260078A2CE /* SabotageGameViewModel.swift in Sources */,
 				850958A72AB8F41D00018A32 /* HotSeat.swift in Sources */,
 				ABC461E52BE28ECF00AE47FF /* TestView.swift in Sources */,
 				85C6759B2AB8EE6100FACCB2 /* SuperlativeGame.swift in Sources */,
+				AB370E162C34FDF300C4431F /* QueryExtension.swift in Sources */,
 				85BB02F02B5D077E00B9A9EA /* ToolPickerPractice.swift in Sources */,
 				AB77664E2C25283A00F95E65 /* DisplayLocationWidgetView.swift in Sources */,
 				85C6759A2AB8EE5B00FACCB2 /* HotSeatManager.swift in Sources */,
@@ -939,15 +967,19 @@
 				857753022C308B0E00B4A971 /* DateAlignment.swift in Sources */,
 				AB69F03D2C1D188E00B81E79 /* SignInPhoneNumberView.swift in Sources */,
 				8573EC8B2AE6EF9C00CFB579 /* ParticleView.swift in Sources */,
+				AB370E0B2C34EDA500C4431F /* NewChatView.swift in Sources */,
 				ABA45E842A7C92B00015F000 /* UserManager.swift in Sources */,
 				AB842C0E2A91E2B500E4A7CE /* StorageManager.swift in Sources */,
+				AB370E132C34F36A00C4431F /* NewMessageManager.swift in Sources */,
 				AB15AC0B2AF6F00C0055D5D0 /* SpaceProfilePicView.swift in Sources */,
 				AB6EA6102B87A27D00CC90FF /* SplashView.swift in Sources */,
 				AB69F03F2C1D189800B81E79 /* SignInPhoneNumberViewModel.swift in Sources */,
 				AB9EB95D2B1E805300F58EA5 /* ChatManager.swift in Sources */,
+				AB370E112C34F31500C4431F /* ChatBubbleViewBuilder.swift in Sources */,
 				AB6EE7782C25FE4400F6FDE2 /* NewMapView.swift in Sources */,
 				AB15AC0D2AF6F01B0055D5D0 /* SpaceProfilePicViewModel.swift in Sources */,
 				AB01CB5F2B855E83004BEB5B /* TextWidget.swift in Sources */,
+				AB370E0F2C34F2E300C4431F /* ChatBubbleView.swift in Sources */,
 				ABF172A92BFC66AD000B6F9B /* AddMemberViewModel.swift in Sources */,
 				856E80BA2B50EB260078A2CE /* SabotageSelectionView.swift in Sources */,
 				856E80B92B50EB260078A2CE /* CardView.swift in Sources */,

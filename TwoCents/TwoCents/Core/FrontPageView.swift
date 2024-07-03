@@ -26,7 +26,13 @@ struct FrontPageView: View {
                     Image(systemName: "rectangle.3.group.fill")
                     Text("Spaces")
                 }
-
+            
+            NewChatView(spaceId: "CF5BDBDF-44C0-4382-AD32-D92EC05AA35E")
+                .tabItem {
+                    Image(systemName: "magnifyingglass")
+                    Text("Event widget")
+                }
+            
             EventWidget(widget: CanvasWidget(width: .infinity, height:  .infinity, borderColor: .red, userId: "jisookim", media: .event, widgetName: "Text", widgetDescription: "A bar is a bar", textString: "Fruits can't even see so how my Apple Watch"))
                 .tabItem {
                     Image(systemName: "magnifyingglass")
