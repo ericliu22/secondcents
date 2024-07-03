@@ -27,7 +27,7 @@ struct FrontPageView: View {
                     Text("Spaces")
                 }
             
-            NewChatView(spaceId: "CF5BDBDF-44C0-4382-AD32-D92EC05AA35E")
+            NewChatView(spaceId: "27580F0B-A56D-468D-8E4B-2810C22E8617")
                 .tabItem {
                     Image(systemName: "magnifyingglass")
                     Text("Event widget")

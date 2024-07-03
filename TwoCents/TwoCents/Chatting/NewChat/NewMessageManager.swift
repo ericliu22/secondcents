@@ -26,24 +26,27 @@ final class NewMessageManager {
     // Get the chat collection reference for a specific space
     private func messageCollection(spaceId: String) -> CollectionReference {
         spaceDocument(spaceId: spaceId).collection("chat")
+            .document("mainChat")
+            .collection("chatlogs")
     }
     
     // Get the document reference for a specific message
     private func messageDocument(messageId: String, spaceId: String) -> DocumentReference {
-        messageCollection(spaceId: spaceId).document(messageId)
+        messageCollection(spaceId: spaceId)
+//            .document("2m6QKW3n2Ezqafh3NvWP")
+            .document(messageId)
     }
     
     // Get a query for all messages in a specific space
     func getAllMessagesQuery(spaceId: String) -> Query {
         
         messageCollection(spaceId: spaceId)
-            .document("mainChat")
-            .collection("chatlogs")
+        
         
         
         
        
-            .order(by: "ts", descending: true)
+            .order(by: "ts", descending: false)
         
     }
     func getMessage(messageId: String, spaceId: String)  async throws -> Message {
