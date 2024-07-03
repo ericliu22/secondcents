@@ -38,10 +38,10 @@ final class NewMessageManager {
     }
     
     // Get a query for all messages in a specific space
-    func getAllMessagesQuery(spaceId: String) -> Query {
+    func getMessagesQuery(spaceId: String,count: Int) -> Query {
         
         messageCollection(spaceId: spaceId)
-        
+            .limit(to: count)
         
         
         
@@ -54,7 +54,7 @@ final class NewMessageManager {
        }
     
     func getAllMessages(spaceId: String, count: Int, lastDocument: DocumentSnapshot?) async throws -> (products: [Message], lastDocument: DocumentSnapshot?) {
-        var query: Query = getAllMessagesQuery(spaceId: spaceId)
+        var query: Query = getMessagesQuery(spaceId: spaceId, count: count)
 
         
         

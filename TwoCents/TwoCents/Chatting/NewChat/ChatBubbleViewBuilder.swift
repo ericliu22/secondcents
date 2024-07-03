@@ -26,9 +26,9 @@ struct ChatBubbleViewBuilder: View {
         }
         .task {
             self.message = try? await NewMessageManager.shared.getMessage(messageId: messageId, spaceId: spaceId)
-            print(messageId)
-            
-            print(message?.text)
+//            print(messageId)
+//            
+//            print(message?.text)
             
             
             do {

@@ -34,13 +34,14 @@ struct NewChatView: View {
                     ProgressView()
                         .onAppear {
                             viewModel.getMessages(spaceId: spaceId)
+                            print("loaded more messages")
                         }
                 }
             }
         }
         .onAppear {
             viewModel.getMessages(spaceId: spaceId)
-            print(viewModel.messages)
+//            print(viewModel.messages)
         }
     }
 }

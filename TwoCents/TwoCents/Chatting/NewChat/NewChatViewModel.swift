@@ -55,8 +55,8 @@ final class NewChatViewModel: ObservableObject {
 //    
     func getMessages(spaceId: String) {
         Task {
-            let (newMessages, lastDocument) = try await NewMessageManager.shared.getAllMessages(spaceId: spaceId, count: 10, lastDocument: lastDocument)
-            print(newMessages)
+            let (newMessages, lastDocument) = try await NewMessageManager.shared.getAllMessages(spaceId: spaceId, count: 2, lastDocument: lastDocument)
+//            print(newMessages)
             self.messages.append(contentsOf: newMessages)
             if let lastDocument {
                 self.lastDocument = lastDocument
