@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 import UIKit
 
-struct Message: Identifiable, Codable {
+struct Message: Identifiable, Codable,Equatable {
     var id: String
     var sendBy: String
     var text: String?
@@ -24,35 +24,44 @@ struct NewChatView: View {
     
     @StateObject private var viewModel = NewChatViewModel()
     let userUID: String = try! AuthenticationManager.shared.getAuthenticatedUser().uid
-    
     var body: some View {
-        List {
-            ForEach(viewModel.messages, id: \.id) { message in
-                ChatBubbleViewBuilder(messageId: message.id, spaceId: spaceId)
+        ScrollViewReader { proxy in
+            List {
+             
                 
-                if message.id == viewModel.messages.last?.id {
-                            if viewModel.hasMoreMessages {
-                                Text("LAST: \(message.text)")
-                                    .onAppear {
-                                        viewModel.getMessages(spaceId: spaceId)
-                                        print("loaded more messages")
-                                    }
-                            } else {
-                                Text("Loaded all messages")
-                            }
+                ForEach(viewModel.messages, id: \.id) { message in
+                    if message.id == viewModel.messages.last?.id {
+                        if viewModel.hasMoreMessages {
+                            ProgressView()
+                                .onAppear {
+                                    viewModel.getMessages(spaceId: spaceId)
+                               
+                                    
+                                }
+                            
+
                         }
-                
-                
-                
-                
-                
+                    }
+                    
+                    ChatBubbleViewBuilder(messageId: message.id, spaceId: spaceId)
+                        .id(message.id)  // Ensure each message has a unique ID
+                        .rotationEffect(.degrees(180))
+                        .listRowSeparator(.hidden)
+                }
             }
-        }
-        .onAppear {
-            viewModel.getMessages(spaceId: spaceId)
-//            print(viewModel.messages)
+            
+            .rotationEffect(.degrees(180))
+            .listStyle(PlainListStyle())
+            .onAppear {
+                viewModel.getMessages(spaceId: spaceId)
+            }
+            .scrollIndicators(.hidden)
         }
     }
+
+
+    
+    
 }
 
 
@@ -63,3 +72,5 @@ struct NewChatView_Previews: PreviewProvider {
         }
     }
 }
+
+

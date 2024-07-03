@@ -15,10 +15,10 @@ final class NewChatViewModel: ObservableObject {
     @Published var hasMoreMessages: Bool = true
     
     
-    func getMessages(spaceId: String) {
+    func getMessages(spaceId: String, completion: ((Bool, String?) -> Void)? = nil){
             Task {
                 do {
-                    let (newMessages, lastDocument) = try await NewMessageManager.shared.getAllMessages(spaceId: spaceId, count: 2, lastDocument: self.lastDocument)
+                    let (newMessages, lastDocument) = try await NewMessageManager.shared.getAllMessages(spaceId: spaceId, count: 20, lastDocument: self.lastDocument)
                     
                     if newMessages.isEmpty {
                         self.hasMoreMessages = false
@@ -31,6 +31,10 @@ final class NewChatViewModel: ObservableObject {
                             self.lastDocument = lastDocument
                         }
                     }
+                    
+                    completion?(false, nil)
+                    
+//                    print(newMessages)
                 } catch {
                     print("Failed to fetch messages: \(error)")
                 }

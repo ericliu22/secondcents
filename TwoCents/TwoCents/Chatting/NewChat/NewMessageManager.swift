@@ -46,7 +46,7 @@ final class NewMessageManager {
         
         
        
-            .order(by: "ts", descending: false)
+            .order(by: "ts", descending: true)
         
     }
     func getMessage(messageId: String, spaceId: String)  async throws -> Message {
