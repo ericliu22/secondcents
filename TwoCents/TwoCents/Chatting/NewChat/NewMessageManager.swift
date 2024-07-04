@@ -63,32 +63,4 @@ final class NewMessageManager {
             .getDocumentsWithSnapshot(as: Message.self)
     }
     
-//    func getProductsByRating(count: Int, lastRating: Double?) async throws -> [Product] {
-//        try await productsCollection
-//            .order(by: Product.CodingKeys.rating.rawValue, descending: true)
-//            .limit(to: count)
-//            .start(after: [lastRating ?? 9999999])
-//            .getDocuments(as: Product.self)
-//    }
-//    
-//    func getProductsByRating(count: Int, lastDocument: DocumentSnapshot?) async throws -> (products: [Product], lastDocument: DocumentSnapshot?) {
-//        if let lastDocument {
-//            return try await productsCollection
-//                .order(by: Product.CodingKeys.rating.rawValue, descending: true)
-//                .limit(to: count)
-//                .start(afterDocument: lastDocument)
-//                .getDocumentsWithSnapshot(as: Product.self)
-//        } else {
-//            return try await productsCollection
-//                .order(by: Product.CodingKeys.rating.rawValue, descending: true)
-//                .limit(to: count)
-//                .getDocumentsWithSnapshot(as: Product.self)
-//        }
-//    }
-//    
-//    func getAllProductsCount() async throws -> Int {
-//        try await productsCollection
-//            .aggregateCount()
-//    }
-//    
 }

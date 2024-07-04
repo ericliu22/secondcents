@@ -28,9 +28,28 @@ struct NewChatView: View {
     var body: some View {
         ScrollViewReader { proxy in
             List {
-             
+                ForEach(viewModel.messagesFromListener, id: \.id) { message in
+                   
+                    ChatBubbleViewBuilder(messageId: message.id, spaceId: spaceId, currentUserId: userUID)
+                        .id(message.id)  // Ensure each message has a unique ID
+                        .rotationEffect(.degrees(180))
+                        .listRowSeparator(.hidden)
+                        .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+                    
+                   
+                    
+                }
                 
                 ForEach(viewModel.messages, id: \.id) { message in
+                   
+                    ChatBubbleViewBuilder(messageId: message.id, spaceId: spaceId, currentUserId: userUID)
+                        .id(message.id)  // Ensure each message has a unique ID
+                        .rotationEffect(.degrees(180))
+                        .listRowSeparator(.hidden)
+                        .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+                    
+                    
+                    
                     if message.id == viewModel.messages.last?.id {
                         if viewModel.hasMoreMessages {
                             ProgressView()
@@ -40,17 +59,19 @@ struct NewChatView: View {
                                     
                                 }
                                 .frame(maxWidth:.infinity)
+                                .listRowSeparator(.hidden)
+                                .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
                             
 
                         }
                     }
                     
-                    ChatBubbleViewBuilder(messageId: message.id, spaceId: spaceId, currentUserId: userUID)
-                        .id(message.id)  // Ensure each message has a unique ID
-                        .rotationEffect(.degrees(180))
-                        .listRowSeparator(.hidden)
-                        .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
                 }
+                
+             
+                
+                
+                
             }
             .animation(nil)
             .padding(.horizontal)
@@ -59,9 +80,13 @@ struct NewChatView: View {
             .listStyle(PlainListStyle())
             .onAppear {
                 viewModel.getMessages(spaceId: spaceId)
+                viewModel.fetchMessages(spaceId: spaceId)
             }
 //            .ignoresSafeArea()
             .scrollIndicators(.hidden)
+            
+            
+            
             
             
             NewMessageField(replyMode: .constant(false), replyWidget: .constant(nil), spaceId: spaceId)
