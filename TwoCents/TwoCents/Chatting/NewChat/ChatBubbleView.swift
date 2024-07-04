@@ -18,6 +18,9 @@ struct ChatBubbleView: View {
     
     let userColor: Color
     
+    let widget: CanvasWidget?
+    let spaceId: String
+    
     @StateObject private var viewModel = ChattingViewModel()
 //    @State private var userColor: Color = .gray
 //    @State var spaceId: String
@@ -25,7 +28,7 @@ struct ChatBubbleView: View {
     @State private var loaded: Bool = false
     
     
-    
+  
     
     
     var body: some View {
@@ -45,7 +48,7 @@ struct ChatBubbleView: View {
                     
             }
             
-//            if message.text != "" &&  message.text != nil{
+            if message.text != "" &&  message.text != nil{
                 
                 
                 //show text message if text is not nill
@@ -67,27 +70,23 @@ struct ChatBubbleView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 20))
                 
                     .frame(maxWidth: 300, alignment: sentByMe ?  .trailing : .leading)
-                
-//            } else {
-//                
-//                //show widget message if text is nil
-//               
-//              
-//                if let widget =  viewModel.WidgetMessage {
-//                    
-//                    MediaView(widget: widget, spaceId: spaceId)
-//                        .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
-//                        .cornerRadius(CORNER_RADIUS)
-//                    
-//                        .frame(maxWidth: .infinity, minHeight: TILE_SIZE, alignment: sentByMe ?  .trailing : .leading)
-//                    
-//                    
-//                }
-//
-//               
-//            }
+            }
             
-
+           
+             if let widget {
+                 
+                 MediaView(widget: widget, spaceId: spaceId)
+                     .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
+                     .cornerRadius(CORNER_RADIUS)
+                 
+                     .frame(maxWidth: .infinity, minHeight: TILE_SIZE, alignment: sentByMe ?  .trailing : .leading)
+                 
+                 
+             }
+            
+            
+            
+            
         }
         .frame(maxWidth: .infinity, alignment: sentByMe ?  .trailing : .leading)
         

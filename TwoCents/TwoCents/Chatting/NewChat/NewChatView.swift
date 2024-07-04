@@ -24,10 +24,29 @@ struct NewChatView: View {
     
     @StateObject private var viewModel = NewChatViewModel()
     let userUID: String = (try? AuthenticationManager.shared.getAuthenticatedUser().uid) ?? ""
-
+    @Binding  var replyWidget: CanvasWidget?
+    
     var body: some View {
         ScrollViewReader { proxy in
             List {
+                
+                //reply widget
+                
+                
+                if replyWidget != nil  {
+                    
+                    MediaView(widget: replyWidget!, spaceId: spaceId)
+                        .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
+                        .cornerRadius(CORNER_RADIUS)
+                    
+                        .frame(maxWidth: .infinity, alignment: .trailing)
+                        .id("replyWidget")
+                        .listRowSeparator(.hidden)
+                        .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+                        .rotationEffect(.degrees(180))
+                }
+                
+                //live messages
                 ForEach(viewModel.messagesFromListener, id: \.id) { message in
                    
                     ChatBubbleViewBuilder(messageId: message.id, spaceId: spaceId, currentUserId: userUID)
@@ -40,6 +59,8 @@ struct NewChatView: View {
                     
                 }
                 
+                
+                //old messages
                 ForEach(viewModel.messages, id: \.id) { message in
                    
                     ChatBubbleViewBuilder(messageId: message.id, spaceId: spaceId, currentUserId: userUID)
@@ -58,6 +79,7 @@ struct NewChatView: View {
                                
                                     
                                 }
+                                .rotationEffect(.degrees(180))
                                 .frame(maxWidth:.infinity)
                                 .listRowSeparator(.hidden)
                                 .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
@@ -89,7 +111,7 @@ struct NewChatView: View {
             
             
             
-            NewMessageField(replyMode: .constant(false), replyWidget: .constant(nil), spaceId: spaceId)
+            NewMessageField(replyWidget:$replyWidget, spaceId: spaceId)
             
             
         }
@@ -108,7 +130,7 @@ struct NewChatView: View {
 struct NewChatView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack {
-            NewChatView(spaceId: "CF5BDBDF-44C0-4382-AD32-D92EC05AA35E")
+            NewChatView(spaceId: "CF5BDBDF-44C0-4382-AD32-D92EC05AA35E", replyWidget: .constant(nil))
         }
     }
 }

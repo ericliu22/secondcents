@@ -18,10 +18,13 @@ struct ChatBubbleViewBuilder: View {
     @State private var user: DBUser?
     @State private var userColor: Color = .gray
     let currentUserId: String 
+    
+    @State private var widget: CanvasWidget? = nil
+   
     var body: some View {
         ZStack {
             if let message {
-                ChatBubbleView(message: message, sentByMe: message.sendBy == currentUserId, isFirstMsg: message.sendBy != message.parent, name: name, userColor: userColor)
+                ChatBubbleView(message: message, sentByMe: message.sendBy == currentUserId, isFirstMsg: message.sendBy != message.parent, name: name, userColor: userColor, widget: widget ?? nil, spaceId: spaceId)
             }
         }
         .task {
@@ -54,12 +57,18 @@ struct ChatBubbleViewBuilder: View {
                 
             }
             
-//            if message.widgetId != nil {
-//                
-//                try? await viewModel.loadWidget(spaceId: spaceId , widgetId: message.widgetId!)
-//            }
-//   
             
+            
+            //widget
+            
+            if let myWidget = message?.widgetId {
+                
+                print("got here")
+                
+                self.widget = try? await SpaceManager.shared.getWidget(spaceId: spaceId, widgetId: myWidget)
+            
+                
+            }
             
             
             

@@ -65,15 +65,19 @@ final class NewMessageFieldViewModel: ObservableObject {
             if let document = document {
                 let property = document.get("lastSend")
                 
-               
+               print("HERE")
+                print(text)
+                print(widget)
                 do {
                     //if there is both text and widget, send widget first seperately, then the text.
                     if text != nil && widget != nil {
                         messageNotification(spaceId: spaceId, userUID: user?.userId ?? "", message: (text == "" ? "Replied to a widget" : text)!)
                         sendMessages(text: nil, widget: widget, spaceId: spaceId)
                         sendMessages(text: text, widget: nil, spaceId: spaceId)
-                        
+                        print("2")
                     } else {
+                        
+                       
                         let uuidString = UUID().uuidString
                         let mainChatReference = db.collection("spaces").document(spaceId).collection("chat").document("mainChat")
                         let newMessage = Message(id: uuidString, sendBy: user?.userId ?? "", text: text, ts: Date(), parent: (property as? String) ?? "", widgetId: widget?.id.uuidString)

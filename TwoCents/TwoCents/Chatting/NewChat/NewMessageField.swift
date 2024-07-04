@@ -12,7 +12,7 @@ struct NewMessageField: View {
     @State private var message = ""
     @FocusState private var isFocused: Bool
     
-    @Binding  var replyMode: Bool
+
     @Binding  var replyWidget: CanvasWidget?
     
     
@@ -35,29 +35,27 @@ struct NewMessageField: View {
                 .fontWeight(.regular)
                 .focused($isFocused)
                 .onAppear(perform: {
-                    isFocused = replyMode
+                    isFocused = replyWidget != nil
                     
                 })
             Button{
                 viewModel.sendMessages(text: message, widget: replyWidget, spaceId: spaceId)
                 message = ""
                 replyWidget = nil
-                withAnimation{
-                    replyMode = false
-                }
+                
             } label: {
                 Image(systemName: "arrow.up")
                     .font(.headline )
                     .frame(width: 30, height: 30, alignment: .center)
                 
-                    .foregroundColor(message.isEmpty && !replyMode  ? .clear : .white)
-                    .background(message.isEmpty && !replyMode ? .clear : userColor)
+                    .foregroundColor(message.isEmpty && replyWidget == nil  ? .clear : .white)
+                    .background(message.isEmpty && replyWidget == nil ? .clear : userColor)
                     .clipShape(Circle())
                     .padding(.bottom, 4)
             }
             .clipped()
             .buttonStyle(PlainButtonStyle())
-            .disabled(message.isEmpty && !replyMode)
+            .disabled(message.isEmpty && replyWidget == nil)
             .padding(.trailing, 5)
             
         }
