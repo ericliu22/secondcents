@@ -3,3 +3,4 @@ UserInterfaceState.xcuserstate
 target
 *.log
 *.pem
+*.env
