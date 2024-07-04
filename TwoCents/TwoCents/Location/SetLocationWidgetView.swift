@@ -103,7 +103,40 @@ struct SetLocationWidgetView: View {
                          
                         }
                     }) {
-                        Text(item.placemark.name ?? "Unknown location")
+                        VStack(alignment: .leading) {
+                            // Display the location name or a default text if name is nil
+                            Text(item.placemark.name ?? "Unknown location")
+                                .font(.headline)
+                            
+                            // Prepare the throughfares text
+                            let throughfares = [
+                                item.placemark.subThoroughfare,
+                                item.placemark.thoroughfare
+                            ].compactMap { $0 }.joined(separator: " ")
+                            
+                            // Prepare the additional address details text
+                            let additionalDetails = [
+                                item.placemark.locality,
+                                item.placemark.administrativeArea,
+                                item.placemark.postalCode
+                            ].compactMap { $0 }.joined(separator: ", ")
+                            
+                            // Combine throughfares and additionalDetails into one line, if available
+                            let combinedDetails = [throughfares, additionalDetails]
+                                .filter { !$0.isEmpty }
+                                .joined(separator: ", ")
+                            
+                            // Display the combined details or an empty Text view if no details are available
+                            if !combinedDetails.isEmpty {
+                                Text(combinedDetails)
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
+                                    .lineLimit(1)
+                                    .truncationMode(.tail)
+                            }
+                        }
+
+
                     }
                 }
                 .listStyle(PlainListStyle())

@@ -107,6 +107,7 @@ struct NewChatView: View {
                 
                 
             }
+            
             .environment(\.defaultMinListRowHeight, 0)
             
             //            .animation(nil)
@@ -131,6 +132,7 @@ struct NewChatView: View {
             }
             
         }
+     
         .padding(.horizontal)
         
         //dismiss reply mode

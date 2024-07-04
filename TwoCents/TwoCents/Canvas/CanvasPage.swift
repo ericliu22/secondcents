@@ -315,11 +315,17 @@ struct CanvasPage: View {
                 .frame(width: FRAME_SIZE, height: FRAME_SIZE)
 
     }
+    
+    
+    
     func doubleTapOverlay() -> some View {
         viewModel.selectedWidget != nil ? VStack {
             EmojiCountHeaderView(spaceId: spaceId, widget: viewModel.selectedWidget!)
             Spacer()
             HStack(spacing: 5) { // Increase spacing between buttons
+                
+                
+                
                 // Map button
                 if viewModel.selectedWidget!.media == .map {
                     Button(action: {
@@ -333,9 +339,12 @@ struct CanvasPage: View {
                             .foregroundColor(Color(UIColor.label))
                             .padding(.horizontal, 5)
                     })
-//                    .contentShape(Rectangle())
                 }
 
+                
+                
+                
+                
                 // Poll button
                 if viewModel.selectedWidget!.media == .poll {
                     Button(action: {
@@ -349,8 +358,11 @@ struct CanvasPage: View {
                             .font(.title3)
                             .padding(.horizontal, 5)
                     })
-//                    .contentShape(Rectangle())
                 }
+                
+                
+                
+                
 
                 // Reply button
                 Button(action: {
@@ -365,8 +377,9 @@ struct CanvasPage: View {
                         .font(.title3)
                         .padding(.horizontal, 5)
                 })
-//                .contentShape(Rectangle())
-
+                
+                
+                
                 // Delete button
                 Button(action: {
                     if let selectedWidget = viewModel.selectedWidget, let index = canvasWidgets.firstIndex(of: selectedWidget)  {
@@ -386,7 +399,11 @@ struct CanvasPage: View {
                         .padding(.horizontal, 5) // Increase padding
                      
                 })
-//                .contentShape(Rectangle())
+                
+                
+                
+                
+                
             }
             .padding(.horizontal, 20)
             .padding(.vertical, 10) // Add vertical padding
