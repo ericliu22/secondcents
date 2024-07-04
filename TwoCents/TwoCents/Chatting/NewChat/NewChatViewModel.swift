@@ -64,6 +64,8 @@ final class NewChatViewModel: ObservableObject {
                 }
                 
                 print(querySnapshot?.documents)
+                
+                
                 self.messagesFromListener = documents.compactMap { document -> Message? in
                     do {
                         return try document.data(as: Message.self)
