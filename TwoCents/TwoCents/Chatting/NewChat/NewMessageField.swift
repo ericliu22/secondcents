@@ -63,14 +63,16 @@ struct NewMessageField: View {
         .background(.regularMaterial)
         .cornerRadius(20)
         .padding(.horizontal)
-        .padding(.top, 5)
+        .padding(.top, 15)
+        .padding(.bottom, 5)
         .frame(minHeight:50, alignment: .center)
         .task{
             try? await viewModel.loadCurrentUser()
             self.userColor = viewModel.getUserColor(userColor:viewModel.user?.userColor ?? "")
         }
+        .background(.clear)
     }
-    
+
     
     
 }

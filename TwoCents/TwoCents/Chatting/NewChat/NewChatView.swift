@@ -30,9 +30,19 @@ struct NewChatView: View {
         ScrollViewReader { proxy in
             List {
                 
+                
+                //spacer so it doesnt start underneath the message field
+                
+                
+                   
+                   Spacer()
+                       .frame(minHeight:50, alignment: .center)
+                       .listRowSeparator(.hidden)
+                       .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+       
+                      
                 //reply widget
-                
-                
+            
                 if replyWidget != nil  {
                     
                     MediaView(widget: replyWidget!, spaceId: spaceId)
@@ -93,10 +103,9 @@ struct NewChatView: View {
              
                 
                 
-                
             }
             .animation(nil)
-            .padding(.horizontal)
+            
          
             .rotationEffect(.degrees(180))
             .listStyle(PlainListStyle())
@@ -106,18 +115,19 @@ struct NewChatView: View {
             }
 //            .ignoresSafeArea()
             .scrollIndicators(.hidden)
-            
-            
-            
-            
-            
-            NewMessageField(replyWidget:$replyWidget, spaceId: spaceId)
+            .padding(.bottom, 20)
             
             
         }
-        
+        .padding(.horizontal)
  
+        .overlay(
         
+     
+                NewMessageField(replyWidget:$replyWidget, spaceId: spaceId)
+                    
+                .frame(maxHeight: .infinity, alignment: .bottom)
+        )
         
     }
 
