@@ -26,6 +26,8 @@ struct NewChatView: View {
     let userUID: String = (try? AuthenticationManager.shared.getAuthenticatedUser().uid) ?? ""
     @Binding  var replyWidget: CanvasWidget?
     
+    @Binding var detent: PresentationDetent
+    
     var body: some View {
         ScrollViewReader { proxy in
             List {
@@ -35,11 +37,12 @@ struct NewChatView: View {
                 
                 
                    
-                   Spacer()
-                       .frame(minHeight:50, alignment: .center)
+                Spacer()
+                       .frame(height:25)
                        .listRowSeparator(.hidden)
                        .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-       
+                     
+                       .id("top")
                       
                 //reply widget
             
@@ -54,6 +57,7 @@ struct NewChatView: View {
                         .listRowSeparator(.hidden)
                         .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
                         .rotationEffect(.degrees(180))
+                        .padding(.bottom, 3)
                 }
                 
                 //live messages
@@ -64,7 +68,7 @@ struct NewChatView: View {
                         .rotationEffect(.degrees(180))
                         .listRowSeparator(.hidden)
                         .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-                    
+                        .padding(.bottom, 3)
                    
                     
                 }
@@ -78,7 +82,7 @@ struct NewChatView: View {
                         .rotationEffect(.degrees(180))
                         .listRowSeparator(.hidden)
                         .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-                    
+                        .padding(.bottom, 3)
                     
                     
                     if message.id == viewModel.messages.last?.id {
@@ -93,7 +97,7 @@ struct NewChatView: View {
                                 .frame(maxWidth:.infinity)
                                 .listRowSeparator(.hidden)
                                 .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-                            
+                                .padding(.bottom, 3)
 
                         }
                     }
@@ -104,6 +108,8 @@ struct NewChatView: View {
                 
                 
             }
+            .environment(\.defaultMinListRowHeight, 0)
+            
             .animation(nil)
             
          
@@ -118,9 +124,16 @@ struct NewChatView: View {
             .padding(.bottom, 20)
             
             
+            .onChange(of: detent) { _, newValue in
+                if newValue == .height(50) {
+                    proxy.scrollTo("top", anchor: .top)
+                    
+                }
+            }
+            
         }
         .padding(.horizontal)
- 
+
         .overlay(
         
      
@@ -140,7 +153,7 @@ struct NewChatView: View {
 struct NewChatView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack {
-            NewChatView(spaceId: "CF5BDBDF-44C0-4382-AD32-D92EC05AA35E", replyWidget: .constant(nil))
+            NewChatView(spaceId: "CF5BDBDF-44C0-4382-AD32-D92EC05AA35E", replyWidget: .constant(nil), detent: .constant(.large))
         }
     }
 }

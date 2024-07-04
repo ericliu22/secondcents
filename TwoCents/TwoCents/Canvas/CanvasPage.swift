@@ -619,13 +619,9 @@ struct CanvasPage: View {
             case .chat:
 //                ChatView(spaceId: spaceId,replyMode: $replyMode, replyWidget: $replyWidget, selectedDetent: $selectedDetent)
                 
-                NewChatView(spaceId: spaceId, replyWidget: $replyWidget)
-                
-                
-                
+                NewChatView(spaceId: spaceId, replyWidget: $replyWidget, detent: $selectedDetent)
                 
                     .presentationBackground(Color(UIColor.systemBackground))
-                
                     .presentationDetents([.height(50),.large], selection: $selectedDetent)
                 
                 
