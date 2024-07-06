@@ -93,7 +93,7 @@ struct SignUpEmailView: View {
             } label: {
                 Text("Sign Up")
                     .font(.headline)
-              
+                    .foregroundColor(Color(UIColor.systemBackground))
                     .frame(height: 55)
                     .frame(maxWidth: .infinity)
                 

@@ -66,7 +66,7 @@ struct VerifyCodeView: View {
             } label: {
                 Text("Sign In")
                     .font(.headline)
-//                    .foregroundColor(Color(UIColor.systemBackground))
+                    .foregroundColor(Color(UIColor.systemBackground))
                     .frame(height: 55)
                     .frame(maxWidth: .infinity)
 //                    .background(Color(UIColor.label))

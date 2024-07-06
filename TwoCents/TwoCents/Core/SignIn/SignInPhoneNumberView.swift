@@ -94,7 +94,7 @@ struct SignInPhoneNumberView: View {
             } label: {
                 Text("Let's go!")
                     .font(.headline)
-//                    .foregroundColor(Color(UIColor.systemBackground))
+                    .foregroundColor(Color(UIColor.systemBackground))
                     .frame(height: 55)
                     .frame(maxWidth: .infinity)
 //                    .background(Color(UIColor.label))
