@@ -131,6 +131,11 @@
 		ABCA39D62A7A0159009447C3 /* AuthenticationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCA39D52A7A0159009447C3 /* AuthenticationManager.swift */; };
 		ABCA39D82A7A0671009447C3 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCA39D72A7A0671009447C3 /* RootView.swift */; };
 		ABCA39DA2A7A0881009447C3 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCA39D92A7A0881009447C3 /* SettingsView.swift */; };
+		ABCDA06C2C39B009002C23E1 /* NewTodoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCDA06B2C39B009002C23E1 /* NewTodoView.swift */; };
+		ABCDA06E2C39B04A002C23E1 /* NewTodoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCDA06D2C39B04A002C23E1 /* NewTodoViewModel.swift */; };
+		ABD01A9A2C39C3CF00C9F288 /* TodoItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABD01A992C39C3CF00C9F288 /* TodoItem.swift */; };
+		ABD01A9D2C39CDEE00C9F288 /* MentionFriendview.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABD01A9C2C39CDED00C9F288 /* MentionFriendview.swift */; };
+		ABD01A9F2C39CE3900C9F288 /* MentionFriendsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABD01A9E2C39CE3900C9F288 /* MentionFriendsViewModel.swift */; };
 		ABD9F2392C1F34C30041F110 /* SignUpPhoneNumberView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABD9F2382C1F34C30041F110 /* SignUpPhoneNumberView.swift */; };
 		ABD9F23B2C1F34D30041F110 /* SignUpPhoneNumberViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABD9F23A2C1F34D30041F110 /* SignUpPhoneNumberViewModel.swift */; };
 		ABD9F23D2C1F3F910041F110 /* AddFriendFromContactsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABD9F23C2C1F3F910041F110 /* AddFriendFromContactsView.swift */; };
@@ -288,6 +293,11 @@
 		ABCA39D52A7A0159009447C3 /* AuthenticationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationManager.swift; sourceTree = "<group>"; };
 		ABCA39D72A7A0671009447C3 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		ABCA39D92A7A0881009447C3 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		ABCDA06B2C39B009002C23E1 /* NewTodoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewTodoView.swift; sourceTree = "<group>"; };
+		ABCDA06D2C39B04A002C23E1 /* NewTodoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewTodoViewModel.swift; sourceTree = "<group>"; };
+		ABD01A992C39C3CF00C9F288 /* TodoItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoItem.swift; sourceTree = "<group>"; };
+		ABD01A9C2C39CDED00C9F288 /* MentionFriendview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MentionFriendview.swift; sourceTree = "<group>"; };
+		ABD01A9E2C39CE3900C9F288 /* MentionFriendsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MentionFriendsViewModel.swift; sourceTree = "<group>"; };
 		ABD9F2382C1F34C30041F110 /* SignUpPhoneNumberView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpPhoneNumberView.swift; sourceTree = "<group>"; };
 		ABD9F23A2C1F34D30041F110 /* SignUpPhoneNumberViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpPhoneNumberViewModel.swift; sourceTree = "<group>"; };
 		ABD9F23C2C1F3F910041F110 /* AddFriendFromContactsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFriendFromContactsView.swift; sourceTree = "<group>"; };
@@ -497,11 +507,11 @@
 		A2F563122AB4E6240026D8C9 /* Canvas */ = {
 			isa = PBXGroup;
 			children = (
+				ABCDA0682C39AFD3002C23E1 /* Todo */,
 				A2DDB1BC2BB69D7100243E1B /* Polls */,
 				AB6778E12AB8F67300C11AA7 /* ImageWidget.swift */,
 				AB01CB5E2B855E83004BEB5B /* TextWidget.swift */,
 				AB140E482C3094AE008321F9 /* EventWidget.swift */,
-				AB53655E2C31C807001C444B /* TodoWidget.swift */,
 				ABB68DAF2C15268D00406948 /* TextWidgetViewModel.swift */,
 				A21244E22C1E234B005E8C8B /* NewTextWidgetView.swift */,
 				AB7F3AED2C164CF000690EF1 /* NewTextWidgetViewModel.swift */,
@@ -716,9 +726,30 @@
 			path = Authentication;
 			sourceTree = "<group>";
 		};
+		ABCDA0682C39AFD3002C23E1 /* Todo */ = {
+			isa = PBXGroup;
+			children = (
+				AB53655E2C31C807001C444B /* TodoWidget.swift */,
+				ABCDA06B2C39B009002C23E1 /* NewTodoView.swift */,
+				ABCDA06D2C39B04A002C23E1 /* NewTodoViewModel.swift */,
+				ABD01A992C39C3CF00C9F288 /* TodoItem.swift */,
+			);
+			path = Todo;
+			sourceTree = "<group>";
+		};
+		ABD01A9B2C39CDD400C9F288 /* Mention */ = {
+			isa = PBXGroup;
+			children = (
+				ABD01A9C2C39CDED00C9F288 /* MentionFriendview.swift */,
+				ABD01A9E2C39CE3900C9F288 /* MentionFriendsViewModel.swift */,
+			);
+			path = Mention;
+			sourceTree = "<group>";
+		};
 		ABF56DFA2A7C8BC700F959DB /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				ABD01A9B2C39CDD400C9F288 /* Mention */,
 				8576048A2C1A5531007F5B0E /* Contacts */,
 				A2DAF3492C07CB0300E778FA /* API */,
 				AB9909A52ABE3B78004B3021 /* FriendRequests */,
@@ -906,12 +937,14 @@
 				AB58C1E62BDAF54B000B0AC1 /* SpaceSettingsViewModel.swift in Sources */,
 				AB370E0D2C34EDD400C4431F /* NewChatViewModel.swift in Sources */,
 				856E80BD2B50EB260078A2CE /* SabotageGameViewModel.swift in Sources */,
+				ABCDA06E2C39B04A002C23E1 /* NewTodoViewModel.swift in Sources */,
 				850958A72AB8F41D00018A32 /* HotSeat.swift in Sources */,
 				ABC461E52BE28ECF00AE47FF /* TestView.swift in Sources */,
 				85C6759B2AB8EE6100FACCB2 /* SuperlativeGame.swift in Sources */,
 				AB370E162C34FDF300C4431F /* QueryExtension.swift in Sources */,
 				85BB02F02B5D077E00B9A9EA /* ToolPickerPractice.swift in Sources */,
 				AB77664E2C25283A00F95E65 /* DisplayLocationWidgetView.swift in Sources */,
+				ABD01A9A2C39C3CF00C9F288 /* TodoItem.swift in Sources */,
 				85C6759A2AB8EE5B00FACCB2 /* HotSeatManager.swift in Sources */,
 				A26809CA2AB8A77E003B30DE /* VoteGameReal.swift in Sources */,
 				ABD9F23B2C1F34D30041F110 /* SignUpPhoneNumberViewModel.swift in Sources */,
@@ -929,6 +962,7 @@
 				AB6778E62AB8F67D00C11AA7 /* VideoWidget.swift in Sources */,
 				856E80BC2B50EB260078A2CE /* SabotageCarouselView.swift in Sources */,
 				A257D7862A6D707600A4E7BD /* ContentView.swift in Sources */,
+				ABD01A9F2C39CE3900C9F288 /* MentionFriendsViewModel.swift in Sources */,
 				A21244E32C1E234B005E8C8B /* NewTextWidgetView.swift in Sources */,
 				AB7F3AEE2C164CF000690EF1 /* NewTextWidgetViewModel.swift in Sources */,
 				AB9909AD2ABE3C1B004B3021 /* FriendRequestsViewModel.swift in Sources */,
@@ -969,6 +1003,7 @@
 				ABCA39D62A7A0159009447C3 /* AuthenticationManager.swift in Sources */,
 				A2F563222AB4E6700026D8C9 /* MessageManager.swift in Sources */,
 				AB300FAE2AC7406500C6719D /* FriendsViewModel.swift in Sources */,
+				ABCDA06C2C39B009002C23E1 /* NewTodoView.swift in Sources */,
 				ABCA39D82A7A0671009447C3 /* RootView.swift in Sources */,
 				AB90EDB92B54EB78002AD855 /* CustomizeWidgetView.swift in Sources */,
 				857753022C308B0E00B4A971 /* DateAlignment.swift in Sources */,
@@ -1015,6 +1050,7 @@
 				ABA45E812A7C8DC50015F000 /* ProfileView.swift in Sources */,
 				ABC426B32A86438400873EE1 /* SignUpEmailViewModel.swift in Sources */,
 				ABD9F2392C1F34C30041F110 /* SignUpPhoneNumberView.swift in Sources */,
+				ABD01A9D2C39CDEE00C9F288 /* MentionFriendview.swift in Sources */,
 				ABC426B12A863D9F00873EE1 /* SignUpEmailView.swift in Sources */,
 				ABA45E7E2A7C8D8C0015F000 /* SignInEmailViewModel.swift in Sources */,
 				AB0D07662AE6FB95003AC8A4 /* SpacesView.swift in Sources */,

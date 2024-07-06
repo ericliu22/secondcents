@@ -26,6 +26,9 @@ var mapViewTest = CanvasWidget(width: .infinity, height:  .infinity, borderColor
 var textViewTest = CanvasWidget(width: .infinity, height:  .infinity, borderColor: .red, userId: "jisookim", media: .text, widgetName: "Text", widgetDescription: "A bar is a bar", textString: "Fruits can't even see so how my Apple Watch")
 
 
+var todoViewTest = CanvasWidget(width: .infinity, height:  .infinity, borderColor: .red, userId: "jisookim", media: .todo, widgetName: "List", widgetDescription: "Conquer the world", textString: "")
+
+
 
 struct NewWidgetView: View {
     
@@ -108,6 +111,23 @@ struct NewWidgetView: View {
         }
        
     }
+    
+    
+    
+    func newTodoView(index: Int) -> some View {
+        ZStack{
+            
+           
+            NewTodoView(spaceId: spaceId, closeNewWidgetview: $closeNewWidgetview)
+          
+                .cornerRadius(20)
+          
+        }
+       
+    }
+    
+    
+    
     func newMapView(index: Int) -> some View {
         
         ZStack{
@@ -220,6 +240,12 @@ struct NewWidgetView: View {
                                             .aspectRatio(1, contentMode: .fit)
                                             .shadow(color: Color.black.opacity(0.1), radius: 20, x: 8, y: 4)
                                                                     
+                                    case .todo:
+                                        newTodoView(index: index)
+                                            .aspectRatio(1, contentMode: .fit)
+                                            .shadow(color: Color.black.opacity(0.1), radius: 20, x: 8, y: 4)
+                                                                    
+                                        
                                     default:
                                         ZStack{
                                             EmptyView()
