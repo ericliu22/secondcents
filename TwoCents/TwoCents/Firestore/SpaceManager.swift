@@ -19,8 +19,8 @@ struct DBSpace: Identifiable, Codable{
     let profileImagePath: String?
     let profileImageUrl: String?
     let members: Array<String>?
-    var nextWidgetX: CGFloat
-    var nextWidgetY: CGFloat
+    var nextWidgetX: CGFloat?
+    var nextWidgetY: CGFloat?
  
     
     
@@ -89,6 +89,12 @@ final class SpaceManager{
     
     }
     
+    func moveDatabaseWidget(spaceId: String, widgetId: String, x: CGFloat, y: CGFloat) {
+        spaceDocument(spaceId: spaceId).collection("widgets").document(widgetId).updateData([
+            "x": x,
+            "y": y
+        ])
+    }
     
     func updateSpaceMembers(spaceId: String, members: [String]) async throws {
         

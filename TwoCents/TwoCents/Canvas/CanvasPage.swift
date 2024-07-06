@@ -211,56 +211,31 @@ struct CanvasPage: View {
                             
                         }
                     })
-                
                     .overlay(content: {
-                        
-                        
                         viewModel.selectedWidget == nil/* && draggingItem == nil */?
                         EmojiCountOverlayView(spaceId: spaceId, widget: widget)
                             .offset(y: TILE_SIZE/2)
                         : nil
-                        
-                        
                     })
-                
                     .draggable(widget) {
+                        MediaView(widget: widget, spaceId: spaceId)
+                            .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
                         
-                        VStack{
-                            MediaView(widget: widget, spaceId: spaceId)
-                                .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
-                            
-                            //a bad way of resizing the draggable items but oh well
-                                .frame(
-                                    width: TILE_SIZE,
-                                    height: TILE_SIZE
-                                )
-                                .onAppear{
-                                    draggingItem = widget
-                                    
-                                    
-                                }
-                            
-                            
-                            
-                        }
-                        
-                    }
-                    .dropDestination(for: CanvasWidget.self) { items, location in
-                        draggingItem = nil
-                        return false
-                    } isTargeted: { status in
-                        if let draggingItem, status, draggingItem != widget {}
-                        
-                        //added this line for emoji overlay... if it breaks delete this
-                        //                        draggingItem = nil
+                        //a bad way of resizing the draggable items but oh well
+                            .frame(
+                                width: TILE_SIZE,
+                                height: TILE_SIZE
+                            )
+                            .onAppear{
+                                draggingItem = widget
+                            }
                     }
                 
             }
             
                                  
     }
-    
-    func moveDatabaseWidget() {}
+
     
     func Background() -> some View {
                 GeometryReader { geometry in
@@ -421,20 +396,23 @@ struct CanvasPage: View {
                 
                                      
                 Color(UIColor.systemBackground)
-                
-                    .clipped()
-             
-                    .frame(width: FRAME_SIZE, height: FRAME_SIZE)
-                  
-             
-                
+                .clipped()
+                .frame(width: FRAME_SIZE, height: FRAME_SIZE)
+
                 Background()
                 GridView()
-                //                    .clipped() // Ensure the content does not overflow
-                //                    .animation(.spring()) // Optional: Add some animation
-                
+                    .frame(width: FRAME_SIZE, height: FRAME_SIZE)
             }
+            .dropDestination(for: CanvasWidget.self) { receivedWidgets, location in
+                //This is necessary keep these lines
+                let x = location.x - FRAME_SIZE/2
+                let y = location.y - FRAME_SIZE/2
                 
+                SpaceManager.shared.moveDatabaseWidget(spaceId: spaceId, widgetId: draggingItem!.id.uuidString, x: x, y: y)
+                draggingItem = nil
+                return true
+            }
+   
                 .onTapGesture(count: 2, perform: {
                     
                     activeSheet = .newTextView
@@ -696,6 +674,7 @@ struct CanvasPage: View {
             
             
         })
+
         .onDisappear(perform: {
             activeSheet = nil
         })
