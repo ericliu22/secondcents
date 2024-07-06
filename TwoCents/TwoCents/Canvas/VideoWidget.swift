@@ -18,16 +18,33 @@ class VideoPlayerModel: ObservableObject {
         let asset = AVAsset(url: url)
         self.playerItem = AVPlayerItem(asset: asset)
         self.videoPlayer = AVPlayer(playerItem: playerItem)
+        
+        addObservers()
+    }
+    
+    private func addObservers() {
+        NotificationCenter.default.addObserver(self, selector: #selector(playerDidFinishPlaying), name: .AVPlayerItemDidPlayToEndTime, object: playerItem)
+    }
+    
+    private func removeObservers() {
+        NotificationCenter.default.removeObserver(self)
     }
     
     deinit {
+        removeObservers()
         self.videoPlayer.pause()
+    }
+    
+    @objc private func playerDidFinishPlaying() {
+        DispatchQueue.main.async {
+            self.isPlaying = false
+        }
     }
 }
 
 
 struct VideoWidget: WidgetView{
-    @ObservedObject private var playerModel: VideoPlayerModel
+    @StateObject private var playerModel: VideoPlayerModel
 
     var widget: CanvasWidget;
     @State private var width: CGFloat;
@@ -39,12 +56,16 @@ struct VideoWidget: WidgetView{
             .frame(width: width, height: height, alignment: .center)
             .clipShape(RoundedRectangle(cornerRadius: CORNER_RADIUS))
             .draggable(widget)
+            .onDisappear {
+                playerModel.videoPlayer.pause()
+                playerModel.isPlaying = false
+            }
     }
     
     
     init(widget: CanvasWidget) {
         self.widget = widget
-        self.playerModel = VideoPlayerModel(url: widget.mediaURL!)
+        self._playerModel = StateObject(wrappedValue: VideoPlayerModel(url: widget.mediaURL!))
         self.width = widget.width
         self.height = widget.height
     }
