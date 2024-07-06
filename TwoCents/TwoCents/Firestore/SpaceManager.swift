@@ -19,6 +19,8 @@ struct DBSpace: Identifiable, Codable{
     let profileImagePath: String?
     let profileImageUrl: String?
     let members: Array<String>?
+    var nextWidgetX: CGFloat
+    var nextWidgetY: CGFloat
  
     
     
@@ -40,7 +42,8 @@ struct DBSpace: Identifiable, Codable{
         self.profileImagePath = profileImagePath
         self.profileImageUrl = profileImageUrl
         self.members = members
-       
+        self.nextWidgetX = 0
+        self.nextWidgetY = 0
     }
     
     
@@ -140,6 +143,17 @@ final class SpaceManager{
         } catch {
             print("Some shit fucked up")
         }
+    }
+    
+    //Update the nextspot
+    func setWidgetSpot(spaceId: String) async {
+        guard let space = try? await SpaceManager.shared.getSpace(spaceId: spaceId) else {
+            print("setWidgetSpot: Failed to get space")
+            return
+        }
+        
+        //spaceDocument(spaceId: spaceId).collection("widgets").whereField(<#T##field: String##String#>, arrayContains: <#T##Any#>)
+        
     }
 
     func removeWidget(spaceId: String, widget: CanvasWidget) {

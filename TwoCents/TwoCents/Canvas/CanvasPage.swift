@@ -125,11 +125,8 @@ struct CanvasPage: View {
             }
             self.canvasWidgets = []
             for document in query.documents {
-                
                 let newWidget = try! document.data(as: CanvasWidget.self)
                 self.canvasWidgets.append(newWidget)
-                
-                
             }
         }
     }
@@ -142,16 +139,11 @@ struct CanvasPage: View {
     }
     
     func GridView() -> some View {
-        let columns = Array(repeating: GridItem(.fixed(TILE_SIZE), spacing: 30, alignment: .center), count: 5)
-        
-        return LazyVGrid(columns: columns, alignment: .center, spacing: 30, content: {
-            
             ForEach(canvasWidgets, id:\.id) { widget in
                 //main widget
                 MediaView(widget: widget, spaceId: spaceId)
                     .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
                     .cornerRadius(CORNER_RADIUS)
-                 
                     .shadow(color: Color.black.opacity(0.05), radius: 4, x: 0, y: 4)
                   
                  
@@ -253,33 +245,11 @@ struct CanvasPage: View {
                         }
                         
                     }
-                
-                //where its dropped
                     .dropDestination(for: CanvasWidget.self) { items, location in
                         draggingItem = nil
                         return false
                     } isTargeted: { status in
-                        if let draggingItem, status, draggingItem != widget {
-                            if let sourceIndex = canvasWidgets.firstIndex(of: draggingItem),
-                               let destinationIndex = canvasWidgets.firstIndex(of: widget) {
-                                //                                withAnimation(.bouncy) {
-                                //move widget
-                                let sourceItem = canvasWidgets.remove(at: sourceIndex)
-                                canvasWidgets.insert(sourceItem, at: destinationIndex)
-                                
-                                
-                                
-                                //deselect
-                                viewModel.selectedWidget = nil
-                                widgetDoubleTapped = false
-                                
-                                //                                showSheet = true
-                                //                                showNewWidgetView = false
-                                activeSheet = .chat
-                                
-                                //                                }
-                            }
-                        }
+                        if let draggingItem, status, draggingItem != widget {}
                         
                         //added this line for emoji overlay... if it breaks delete this
                         //                        draggingItem = nil
@@ -287,10 +257,10 @@ struct CanvasPage: View {
                 
             }
             
-        }
                                  
-                                )
     }
+    
+    func moveDatabaseWidget() {}
     
     func Background() -> some View {
                 GeometryReader { geometry in

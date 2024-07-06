@@ -239,17 +239,14 @@ final class UserManager{
        
         snapshot = try await spaceCollection.whereField("members", arrayContains: userId).getDocuments()
         
-        
-        
         var spaces: [DBSpace] = []
         
-       
         for document in snapshot.documents{
-            
         
             let space = try document.data(as: DBSpace.self)
             
             spaces.append(space)
+            print(space)
         }
         
         return spaces
