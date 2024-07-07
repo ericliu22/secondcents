@@ -27,12 +27,12 @@ struct FrontPageView: View {
                     Text("Spaces")
                 }
             
-            NewTodoView(spaceId: "27580F0B-A56D-468D-8E4B-2810C22E8617", closeNewWidgetview: .constant(false))
-                .frame(width: 250, height: 250)
-                .tabItem {
-                    Image(systemName: "magnifyingglass")
-                    Text("Event widget")
-                }
+//            NewTodoView(spaceId: "27580F0B-A56D-468D-8E4B-2810C22E8617", closeNewWidgetview: .constant(false))
+//                .frame(width: 250, height: 250)
+//                .tabItem {
+//                    Image(systemName: "magnifyingglass")
+//                    Text("Event widget")
+//                }
             
             EventWidget(widget: CanvasWidget(width: .infinity, height:  .infinity, borderColor: .red, userId: "jisookim", media: .event, widgetName: "Text", widgetDescription: "A bar is a bar", textString: "Fruits can't even see so how my Apple Watch"))
                 .tabItem {

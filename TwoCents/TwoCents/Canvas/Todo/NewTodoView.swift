@@ -36,7 +36,12 @@ struct NewTodoView: View{
     
     @State var todoArray: [String] = [""]
     
-    @State private var mentionedUsers: [String] = [""]
+    @State private var mentionedUserIds: [String] = [""]
+    
+    
+    @State private var mentionedUserNames: [String] = [""]
+    
+    @State private var mentionedUserColors: [Color] = [.gray]
     
     var body: some View{
         ZStack{
@@ -287,27 +292,50 @@ struct NewTodoView: View{
 //                    .buttonStyle(.bordered)
 //                    
                     
-                    
-                    
+           
                     
                     NavigationLink {
-                        MentionFriendsView(mentionedUser: $mentionedUsers[index])
+                        MentionFriendsView(mentionedUser: $mentionedUserIds[index])
+                            .onDisappear(perform: {
+                                Task {
+                                    do {
+                                        // Fetch user name safely with error handling
+                                        let userName = try await viewModel.getUserName(userId: mentionedUserIds[index])
+                                        
+                                        let userColor = try await viewModel.getUserColor(userId: mentionedUserIds[index])
+                                        mentionedUserNames[index] = userName
+                                        mentionedUserColors[index] = userColor
+                                    } catch {
+                                        print("Failed to fetch user name: \(error)")
+                                        // Optionally handle the error, e.g., set a default value or show an alert
+                                        mentionedUserNames[index] = "Unknown User"
+                                    }
+                                }
+                                
+                            })
                     } label: {
                         
-                        if mentionedUsers[index] == "" {
+                        if mentionedUserIds[index] == ""  || mentionedUserNames[index] == "" {
                             Image(systemName: "at.badge.plus")
                                 .padding(.horizontal)
+                                .frame( height: 54)
+                                .background(Color(UIColor.secondarySystemBackground))
                             
                         } else {
-                            Text(mentionedUsers[index])
+                            Text(mentionedUserNames[index])
+               
+                                .padding(.horizontal)
+                                .frame( height: 54)
+                                .background(.regularMaterial)
+                                .background(mentionedUserColors[index])
+                                .foregroundColor(mentionedUserColors[index])
                         }
                       
                    
                         
                         
                     }
-                    .frame( height: 54)
-                    .background(Color(UIColor.secondarySystemBackground))
+               
                     .cornerRadius(10)
 
                 }
@@ -317,7 +345,9 @@ struct NewTodoView: View{
                 //                print(newValue)
                 if newValue != "" && todoArray.count <= 3{
                     todoArray.append("")
-                    mentionedUsers.append("")
+                    mentionedUserIds.append("")
+                    mentionedUserNames.append("")
+                    mentionedUserColors.append(.gray)
                 }
             }
             

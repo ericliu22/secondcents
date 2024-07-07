@@ -23,7 +23,6 @@ class NewTodoModel: ObservableObject {
     var isLoading = false
     
     private var spaceId: String
-
     
     init(spaceId: String) {
         self.spaceId = spaceId
@@ -80,13 +79,17 @@ class NewTodoModel: ObservableObject {
     
     
     
+    func getUserName(userId: String) async throws -> String {
+     
+        return try await UserManager.shared.getUser(userId: userId).name ?? ""
+    }
     
-    
-//    func addOption() {
-//        let newOption = Option(name: newOptionName.trimmingCharacters(in: .whitespacesAndNewlines))
-//        self.newPollOptions.append(newOption)
-//        self.newOptionName = ""
-//    }
+    func getUserColor(userId: String) async throws -> Color {
+     
+        let colorString = try await UserManager.shared.getUser(userId: userId).userColor ?? ""
+        
+        return Color.fromString(name: colorString)
+    }
     
     func addItem(todoArray: [String]) {
         for object in todoArray {
