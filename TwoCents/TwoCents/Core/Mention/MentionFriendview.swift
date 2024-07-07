@@ -10,7 +10,7 @@ import SwiftUI
 struct MentionFriendsView: View {
     
     @State private var searchTerm = ""
-    @Binding var mentionedUser: String
+    @Binding var mentionedUser: DBUser?
     
     
     @StateObject private var viewModel = MentionFriendsViewModel()
@@ -44,7 +44,7 @@ struct MentionFriendsView: View {
                     
                     
                     Button(action: {
-                        mentionedUser = userTile.userId
+                        mentionedUser = userTile
                         presentationMode.wrappedValue.dismiss()
                     }, label: {
                     
@@ -147,6 +147,6 @@ struct MentionFriendsView: View {
 
 struct MentionFriendsView_Previews: PreviewProvider {
     static var previews: some View {
-        MentionFriendsView(mentionedUser: .constant(""))
+        MentionFriendsView(mentionedUser: .constant(nil))
     }
 }
