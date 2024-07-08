@@ -37,7 +37,7 @@ struct NewTodoView: View{
     @State var todoArray: [String] = [""]
     
     @State private var mentionedUsers: [DBUser?] = [nil]
-
+    
     
     var body: some View{
         ZStack{
@@ -120,9 +120,9 @@ struct NewTodoView: View{
                 
             }
             
-//            .frame(width: 250, height: 250)
+            //            .frame(width: 250, height: 250)
             .background(Color(UIColor.systemBackground))
-//            .cornerRadius(30)
+            //            .cornerRadius(30)
             
             
             
@@ -260,9 +260,9 @@ struct NewTodoView: View{
                 
                 
                 
-                HStack{
+                HStack(spacing:0){
                     
-                 
+                    
                     TextField("Item \(index + 1)", text:
                                 $todoArray[index]
                               
@@ -270,63 +270,123 @@ struct NewTodoView: View{
                     .padding()
                     .background(Color(UIColor.secondarySystemBackground))
                     .cornerRadius(10)
-                   
-//                    
-//                    Button(action: {
-//                        
-//                        
-//                        
-//                    }, label: {
-//                        Image(systemName: "at.badge.plus")
-//                    
-//                            .frame(width: 54, height: 54)
-//                        
-//                          
-//                    })
-//                    .frame(width: 54, height: 54)
-//                    .cornerRadius(10)
-//                    .buttonStyle(.bordered)
-//                    
                     
-           
-                    
-                    NavigationLink {
-                        MentionFriendsView(mentionedUser: $mentionedUsers[index])
+                 
+                        NavigationLink {
+                            MentionFriendsView(mentionedUser: $mentionedUsers[index])
                             
-                    } label: {
-                        
-                        if mentionedUsers[index] == nil {
-                            Image(systemName: "at.badge.plus")
-                                .padding(.horizontal)
-                                .frame( height: 54)
+                        } label: {
+                            
+                            
+                            if mentionedUsers[index] == nil {
+                                //                        if mentionedUsers[index] == nil {
+                                Image(systemName: "at.badge.plus")
+                                    .padding(.horizontal)
+                                    .frame( height: 54)
+                                    .background(Color(UIColor.secondarySystemBackground))
+                                    .cornerRadius(10)
+                                    .padding(.leading, 8)
+                                
+                                
+                                //
+                            }   else {
+                                
+                                
+                                let targetUserColor: Color = Color.fromString(name: mentionedUsers[index]?.userColor ?? "")
+                                
+                                Group{
+                                    HStack{
+                                        Group{
+                                            //Circle or Profile Pic
+                                            if let urlString = mentionedUsers[index]?.profileImageUrl,
+                                               let url = URL(string: urlString) {
+                                                
+                                                
+                                                
+                                                //If there is URL for profile pic, show
+                                                //circle with stroke
+                                                AsyncImage(url: url) {image in
+                                                    image
+                                                        .resizable()
+                                                        .scaledToFill()
+                                                        .clipShape(Circle())
+                                                        .frame(width: 16, height: 16)
+                                                    
+                                                    
+                                                    
+                                                } placeholder: {
+                                                    //else show loading after user uploads but sending/downloading from database
+                                                    
+                                                    ProgressView()
+                                                        .progressViewStyle(CircularProgressViewStyle(tint: Color(UIColor.systemBackground)))
+                                                        .scaleEffect(0.5, anchor: .center)
+                                                        .frame(width: 16, height: 16)
+                                                        .background(
+                                                            Circle()
+                                                                .fill(targetUserColor)
+                                                                .frame(width: 16, height: 16)
+                                                        )
+                                                }
+                                                
+                                            } else {
+                                                
+                                                //if user has not uploaded profile pic, show circle
+                                                Circle()
+                                                
+                                                    .strokeBorder(targetUserColor, lineWidth:0)
+                                                    .background(Circle().fill(targetUserColor))
+                                                    .frame(width: 16, height: 16)
+                                                
+                                            }
+                                            
+                                            
+                                            
+                                            
+                                        }
+                                        Text(mentionedUsers[index]?.name ?? "Unavailable")
+                                            .font(.headline)
+                                            .foregroundStyle(Color(UIColor.label))
+                                            .lineLimit(1)
+                                            .truncationMode(.tail)
+                                    }
+                                }
+                                
+                                .padding(.horizontal,5)
+                                .padding(.vertical,2.5)
+                                .background(.thickMaterial, in: Capsule())
+                                .background(targetUserColor, in: Capsule())
+                                
+                    
+                          
+                                .frame(width: 100, height: 54, alignment:.trailing)
+                                .padding(.trailing)
                                 .background(Color(UIColor.secondarySystemBackground))
+                                
+                                
+                             
+                                
+                                
+                            }
                             
-                        } else {
-                            Text(mentionedUsers[index]?.name ?? "Unavailable")
-               
-                                .padding(.horizontal)
-                                .frame( height: 54)
-                                .background(.regularMaterial)
-                                .background(Color.fromString(name: mentionedUsers[index]?.userColor ?? ""))
-                                .foregroundColor(Color.fromString(name: mentionedUsers[index]?.userColor ?? ""))
                         }
-                      
-                   
-                        
-                        
-                    }
-               
-                    .cornerRadius(10)
-
+                       
+                 
                 }
+                
+                .background(mentionedUsers[index] == nil ? Color.clear : Color(UIColor.secondarySystemBackground))
+      
+
+                .cornerRadius(10)
+                
+                
                 
             }
             .onChange(of: todoArray.last) { oldValue, newValue in
-         
+                
                 if newValue != "" && todoArray.count <= 3{
                     todoArray.append("")
                     mentionedUsers.append(nil)
-                  
+                    
                 }
             }
             
