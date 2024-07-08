@@ -124,6 +124,10 @@ struct MentionUserView: View {
                 }
                 
                 
+              
+                  
+               
+              
                 
                 
                 
@@ -133,6 +137,32 @@ struct MentionUserView: View {
             .listStyle(PlainListStyle())
             .navigationTitle( "Mention 🤝" )
             .searchable(text: $searchTerm, placement: .navigationBarDrawer(displayMode: .always), prompt: "Search")
+            
+            .toolbar{
+                ToolbarItem(placement: .bottomBar) {
+                    
+                    if mentionedUser != nil {
+                        Button(action: {
+                            mentionedUser = nil
+                            presentationMode.wrappedValue.dismiss()
+                            
+                        }, label: {
+                            
+                            
+                            Text("Remove Mention")
+//                                .fontWeight(.semibold)
+                                .foregroundStyle(.red)
+                            //                            .frame(height: 48)
+                            //                            .frame(maxWidth: .infinity, alignment: .center)
+                            
+                        })
+                    }
+                }
+            }
+            
+          
+       
+            
             
         }
         .task {
