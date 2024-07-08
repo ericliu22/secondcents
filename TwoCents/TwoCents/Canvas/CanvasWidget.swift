@@ -196,6 +196,8 @@ func MediaView(widget: CanvasWidget, spaceId: String) -> some View{
         PollWidget(widget: widget, spaceId: spaceId)
     case .map:
         MapWidget(widget: widget)
+        
+    
     default:
 //        ImageWidget(widget: widget)
         EmptyView()

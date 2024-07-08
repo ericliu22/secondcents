@@ -284,8 +284,8 @@ struct NewTodoView: View{
                                     .padding(.horizontal)
                                     .frame( height: 54)
                                     .background(Color(UIColor.secondarySystemBackground))
-                                    .cornerRadius(10)
-                                    .padding(.leading, 8)
+//                                    .cornerRadius(10)
+//                                    .padding(.leading, 8)
                                 
                                 
                                 //
@@ -373,7 +373,7 @@ struct NewTodoView: View{
                  
                 }
                 
-                .background(mentionedUsers[index] == nil ? Color.clear : Color(UIColor.secondarySystemBackground))
+                .background(/*mentionedUsers[index] == nil ? Color.clear :*/ Color(UIColor.secondarySystemBackground))
       
 
                 .cornerRadius(10)
