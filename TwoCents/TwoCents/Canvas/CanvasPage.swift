@@ -385,9 +385,21 @@ struct CanvasPage: View {
                     if let selectedWidget = viewModel.selectedWidget, let index = canvasWidgets.firstIndex(of: selectedWidget)  {
                         canvasWidgets.remove(at: index)
                         SpaceManager.shared.removeWidget(spaceId: spaceId, widget: selectedWidget)
-                        if selectedWidget.media == .poll {
+                        
+                        //delete specific widget items (in their own folders)
+                        
+                        switch selectedWidget.media {
+                            
+                        case .poll:
                             deletePoll(spaceId: spaceId, pollId: selectedWidget.id.uuidString)
+                        case .todo:
+                            deleteTodoList(spaceId: spaceId, todoId: selectedWidget.id.uuidString)
+                            
+                        default: 
+                            break
+                            
                         }
+                   
                     }
                     viewModel.selectedWidget = nil
                     widgetDoubleTapped = false

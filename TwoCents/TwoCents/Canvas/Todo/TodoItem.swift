@@ -10,18 +10,19 @@ import FirebaseFirestore
 
 struct TodoItem: Codable, Identifiable, Hashable {
     var id = UUID().uuidString
-    var count: Int = 0
-    var name: String
+    var mentionedUserId: String
+    var task: String
     
-    init(name: String) {
-        self.name = name
+    init(task: String, mentionedUserId: String) {
+        self.task = task
+        self.mentionedUserId = mentionedUserId
     }
     
     func toDictionary() -> [String: Any] {
            return [
                "id": id,
-               "count": count,
-               "name": name
+               "mentionedUserId": mentionedUserId,
+               "task": task
            ]
        }
     
@@ -48,9 +49,7 @@ struct Todo: Codable, Identifiable {
      */
     
 
-    mutating func incrementOption(index: Int) {
-        todoList[index].count += 1
-    }
+
     
     
     
@@ -84,12 +83,7 @@ struct Todo: Codable, Identifiable {
         }
     }
     
- 
-    
-    
-    func totalVotes() -> Int {
-           return todoList.reduce(0) { $0 + $1.count }
-       }
+
     
     init(canvasWidget: CanvasWidget, todoList: [TodoItem]) {
         assert(canvasWidget.media == .todo)

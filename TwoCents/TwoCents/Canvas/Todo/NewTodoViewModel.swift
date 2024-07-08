@@ -91,13 +91,14 @@ class NewTodoModel: ObservableObject {
         return Color.fromString(name: colorString)
     }
     
-    func addItem(todoArray: [String]) {
-        for object in todoArray {
+    func addItem(todoArray: [String], userArray: [DBUser?]) {
+        for (index, object) in todoArray.enumerated() {
             if object.trimmingCharacters(in: .whitespacesAndNewlines) == "" { continue }
-            let newItem = TodoItem(name: object.trimmingCharacters(in: .whitespacesAndNewlines))
+            let newItem = TodoItem(task: object.trimmingCharacters(in: .whitespacesAndNewlines), mentionedUserId: userArray[index]?.userId ?? "")
             self.newTodoItem.append(newItem)
         }
     }
+
     
     
 }

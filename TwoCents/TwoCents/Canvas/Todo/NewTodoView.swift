@@ -43,9 +43,6 @@ struct NewTodoView: View{
         ZStack{
             
             
-            TodoWidget(widget: CanvasWidget(width: .infinity, height:  .infinity, borderColor: .red, userId: "jisookim", media: .todo, widgetName: "Text", widgetDescription: "A bar is a bar", textString: "Fruits can't even see so how my Apple Watch"))
-            
-            
             
             Color(UIColor.tertiarySystemFill)
                 .ignoresSafeArea()
@@ -186,7 +183,7 @@ struct NewTodoView: View{
                             Task{
                                 
                                 
-                                viewModel.addItem(todoArray: todoArray)
+                                viewModel.addItem(todoArray: todoArray, userArray: mentionedUsers)
                                 await viewModel.createNewTodo()
                                 showingView = false
                                 
