@@ -134,8 +134,8 @@
 		ABCDA06C2C39B009002C23E1 /* NewTodoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCDA06B2C39B009002C23E1 /* NewTodoView.swift */; };
 		ABCDA06E2C39B04A002C23E1 /* NewTodoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCDA06D2C39B04A002C23E1 /* NewTodoViewModel.swift */; };
 		ABD01A9A2C39C3CF00C9F288 /* TodoItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABD01A992C39C3CF00C9F288 /* TodoItem.swift */; };
-		ABD01A9D2C39CDEE00C9F288 /* MentionFriendview.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABD01A9C2C39CDED00C9F288 /* MentionFriendview.swift */; };
-		ABD01A9F2C39CE3900C9F288 /* MentionFriendsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABD01A9E2C39CE3900C9F288 /* MentionFriendsViewModel.swift */; };
+		ABD01A9D2C39CDEE00C9F288 /* MentionUserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABD01A9C2C39CDED00C9F288 /* MentionUserView.swift */; };
+		ABD01A9F2C39CE3900C9F288 /* MentionUserViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABD01A9E2C39CE3900C9F288 /* MentionUserViewModel.swift */; };
 		ABD9F2392C1F34C30041F110 /* SignUpPhoneNumberView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABD9F2382C1F34C30041F110 /* SignUpPhoneNumberView.swift */; };
 		ABD9F23B2C1F34D30041F110 /* SignUpPhoneNumberViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABD9F23A2C1F34D30041F110 /* SignUpPhoneNumberViewModel.swift */; };
 		ABD9F23D2C1F3F910041F110 /* AddFriendFromContactsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABD9F23C2C1F3F910041F110 /* AddFriendFromContactsView.swift */; };
@@ -296,8 +296,8 @@
 		ABCDA06B2C39B009002C23E1 /* NewTodoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewTodoView.swift; sourceTree = "<group>"; };
 		ABCDA06D2C39B04A002C23E1 /* NewTodoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewTodoViewModel.swift; sourceTree = "<group>"; };
 		ABD01A992C39C3CF00C9F288 /* TodoItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoItem.swift; sourceTree = "<group>"; };
-		ABD01A9C2C39CDED00C9F288 /* MentionFriendview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MentionFriendview.swift; sourceTree = "<group>"; };
-		ABD01A9E2C39CE3900C9F288 /* MentionFriendsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MentionFriendsViewModel.swift; sourceTree = "<group>"; };
+		ABD01A9C2C39CDED00C9F288 /* MentionUserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MentionUserView.swift; sourceTree = "<group>"; };
+		ABD01A9E2C39CE3900C9F288 /* MentionUserViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MentionUserViewModel.swift; sourceTree = "<group>"; };
 		ABD9F2382C1F34C30041F110 /* SignUpPhoneNumberView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpPhoneNumberView.swift; sourceTree = "<group>"; };
 		ABD9F23A2C1F34D30041F110 /* SignUpPhoneNumberViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpPhoneNumberViewModel.swift; sourceTree = "<group>"; };
 		ABD9F23C2C1F3F910041F110 /* AddFriendFromContactsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFriendFromContactsView.swift; sourceTree = "<group>"; };
@@ -740,8 +740,8 @@
 		ABD01A9B2C39CDD400C9F288 /* Mention */ = {
 			isa = PBXGroup;
 			children = (
-				ABD01A9C2C39CDED00C9F288 /* MentionFriendview.swift */,
-				ABD01A9E2C39CE3900C9F288 /* MentionFriendsViewModel.swift */,
+				ABD01A9C2C39CDED00C9F288 /* MentionUserView.swift */,
+				ABD01A9E2C39CE3900C9F288 /* MentionUserViewModel.swift */,
 			);
 			path = Mention;
 			sourceTree = "<group>";
@@ -962,7 +962,7 @@
 				AB6778E62AB8F67D00C11AA7 /* VideoWidget.swift in Sources */,
 				856E80BC2B50EB260078A2CE /* SabotageCarouselView.swift in Sources */,
 				A257D7862A6D707600A4E7BD /* ContentView.swift in Sources */,
-				ABD01A9F2C39CE3900C9F288 /* MentionFriendsViewModel.swift in Sources */,
+				ABD01A9F2C39CE3900C9F288 /* MentionUserViewModel.swift in Sources */,
 				A21244E32C1E234B005E8C8B /* NewTextWidgetView.swift in Sources */,
 				AB7F3AEE2C164CF000690EF1 /* NewTextWidgetViewModel.swift in Sources */,
 				AB9909AD2ABE3C1B004B3021 /* FriendRequestsViewModel.swift in Sources */,
@@ -1050,7 +1050,7 @@
 				ABA45E812A7C8DC50015F000 /* ProfileView.swift in Sources */,
 				ABC426B32A86438400873EE1 /* SignUpEmailViewModel.swift in Sources */,
 				ABD9F2392C1F34C30041F110 /* SignUpPhoneNumberView.swift in Sources */,
-				ABD01A9D2C39CDEE00C9F288 /* MentionFriendview.swift in Sources */,
+				ABD01A9D2C39CDEE00C9F288 /* MentionUserView.swift in Sources */,
 				ABC426B12A863D9F00873EE1 /* SignUpEmailView.swift in Sources */,
 				ABA45E7E2A7C8D8C0015F000 /* SignInEmailViewModel.swift in Sources */,
 				AB0D07662AE6FB95003AC8A4 /* SpacesView.swift in Sources */,

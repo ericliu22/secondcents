@@ -57,7 +57,7 @@ class NewTodoModel: ObservableObject {
         
         print(newTodoItem)
         let todo = Todo(canvasWidget: newCanvasWidget, todoList: newTodoItem)
-        todo.uploadPoll(spaceId: spaceId)
+        todo.uploadTodo(spaceId: spaceId)
         self.listName = ""
         self.newItemName = ""
         self.newTodoItem = []

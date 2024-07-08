@@ -7,23 +7,23 @@
 
 import SwiftUI
 
-struct MentionFriendsView: View {
+struct MentionUserView: View {
     
     @State private var searchTerm = ""
     @Binding var mentionedUser: DBUser?
     
     
-    @StateObject private var viewModel = MentionFriendsViewModel()
+    @StateObject private var viewModel = MentionUserViewModel()
     
     
     let userId: String = (try? AuthenticationManager.shared.getAuthenticatedUser().uid) ?? ""
     
     
-    
+    @State var spaceId: String
     
     var filteredSearch: [DBUser]{
-        guard !searchTerm.isEmpty else { return viewModel.allFriends}
-        return viewModel.allFriends.filter{$0.name!.localizedCaseInsensitiveContains(searchTerm) || $0.username!.localizedCaseInsensitiveContains(searchTerm)}
+        guard !searchTerm.isEmpty else { return viewModel.allUsers}
+        return viewModel.allUsers.filter{$0.name!.localizedCaseInsensitiveContains(searchTerm) || $0.username!.localizedCaseInsensitiveContains(searchTerm)}
     }
     
     
@@ -131,13 +131,13 @@ struct MentionFriendsView: View {
                 
             }
             .listStyle(PlainListStyle())
-            .navigationTitle( "Friends 💛" )
+            .navigationTitle( "Mention 🤝" )
             .searchable(text: $searchTerm, placement: .navigationBarDrawer(displayMode: .always), prompt: "Search")
             
         }
         .task {
             
-            try? await viewModel.getAllFriends(targetUserId: userId)
+            try? await viewModel.getAllUsers(targetUserId: userId, spaceId: spaceId)
             
         }
         
@@ -145,8 +145,8 @@ struct MentionFriendsView: View {
     }
 }
 
-struct MentionFriendsView_Previews: PreviewProvider {
+struct MentionUserView_Previews: PreviewProvider {
     static var previews: some View {
-        MentionFriendsView(mentionedUser: .constant(nil))
+        MentionUserView(mentionedUser: .constant(nil), spaceId: "CF5BDBDF-44C0-4382-AD32-D92EC05AA35E")
     }
 }

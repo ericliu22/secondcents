@@ -273,7 +273,7 @@ struct NewTodoView: View{
                     
                  
                         NavigationLink {
-                            MentionFriendsView(mentionedUser: $mentionedUsers[index])
+                            MentionUserView(mentionedUser: $mentionedUsers[index], spaceId: spaceId)
                             
                         } label: {
                             

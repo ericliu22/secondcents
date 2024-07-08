@@ -55,7 +55,7 @@ struct Todo: Codable, Identifiable {
     
     
     
-    func updatePoll(spaceId: String) {
+    func updateTodo(spaceId: String) {
         // Convert options to an array of dictionaries
         let optionsData = todoList.map { $0.toDictionary() }
         
@@ -65,18 +65,18 @@ struct Todo: Codable, Identifiable {
      
             try db.collection("spaces")
                 .document(spaceId)
-                .collection("polls")
+                .collection("todo")
                 .document(id.uuidString)
                 .updateData(data)
       
     }
 
     
-    func uploadPoll(spaceId: String) {
+    func uploadTodo(spaceId: String) {
         do {
             try db.collection("spaces")
                 .document(spaceId)
-                .collection("polls")
+                .collection("todo")
                 .document(id.uuidString)
                 .setData(from: self)
         } catch {
@@ -92,7 +92,7 @@ struct Todo: Codable, Identifiable {
        }
     
     init(canvasWidget: CanvasWidget, todoList: [TodoItem]) {
-        assert(canvasWidget.media == .poll)
+        assert(canvasWidget.media == .todo)
         self.id = canvasWidget.id
         self.todoList = todoList
         //Theoretically all polls will have names so we manly exclamation mark
@@ -105,7 +105,7 @@ func deleteTodoList(spaceId: String, todoId: String) {
     do {
         try db.collection("spaces")
             .document(spaceId)
-            .collection("polls")
+            .collection("todo")
             .document(todoId)
             .delete()
     } catch {
