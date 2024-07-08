@@ -55,12 +55,12 @@ struct TodoWidget: View {
                     .padding(.top, 16)
                     .padding(.bottom, 3)
                     
-                    ForEach(todo.todoList.prefix(4), id: \.self) { item in
+                    ForEach(todo.todoList.prefix(todo.todoList.count == 5 ? 5 : 4), id: \.self) { item in
                         TaskItemView(item: item)
                             .padding(.horizontal, 16)
                     }
                     
-                    if todo.todoList.count > 4 {
+                    if todo.todoList.count > 5 {
                         let additionalTaskCount = todo.todoList.count - 4
                         
                         HStack(spacing: 3) {

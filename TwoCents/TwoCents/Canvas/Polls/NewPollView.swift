@@ -32,7 +32,7 @@ struct NewPoll: View{
            
     }
     
-    @State var OptionsArray: [String] = [""]
+    @State var OptionsArray: [String] = ["", "", "", ""]
     
     var body: some View{
         ZStack{
@@ -96,25 +96,8 @@ struct NewPoll: View{
         .onTapGesture{showingView.toggle()}
         .fullScreenCover(isPresented: $showingView, content: {
             NavigationStack{
-                ZStack{
-                    
-                    
-//                    //cross to dismiss screen
-//                    ZStack (alignment: .topLeading) {
-//                        
-//                        Color.clear
-//                            .edgesIgnoringSafeArea(.all)
-//                        
-//                        Button(action: {
-//                            showingView = false
-//                        }, label: {
-//                            Image(systemName: "xmark")
-//                                .foregroundColor(Color(UIColor.label))
-//                                .font(.title2)
-//                                .padding()
-//                        })
-//                    }
-                    
+             
+                ScrollView{
                     
                     //main contents
                     VStack{
@@ -156,6 +139,7 @@ struct NewPoll: View{
                     .padding()
                 }
                 .navigationTitle("Create Poll 🤓")
+                .navigationBarTitleDisplayMode(.inline)
                 .toolbar{
                     
                     ToolbarItem(placement: .navigationBarLeading) {
@@ -216,12 +200,17 @@ struct NewPoll: View{
                     .background(Color(UIColor.secondarySystemBackground))
                     .cornerRadius(10)
             }
-            .onChange(of: OptionsArray.last) { oldValue, newValue in
-//                print(newValue)
-                if newValue != "" && OptionsArray.count <= 3{
-                    OptionsArray.append("")
-                }
-            }
+//            .onChange(of: OptionsArray.last) { oldValue, newValue in
+////                print(newValue)
+//                if newValue != "" && OptionsArray.count <= 3{
+//                    OptionsArray.append("")
+//                }
+//                
+//
+//                
+//                
+//                
+//            }
            
         }
     }

@@ -34,9 +34,9 @@ struct NewTodoView: View{
         
     }
     
-    @State var todoArray: [String] = [""]
+    @State var todoArray: [String] = ["", "", "", ""]
     
-    @State private var mentionedUsers: [DBUser?] = [nil]
+    @State private var mentionedUsers: [DBUser?] = [nil, nil, nil, nil]
     
     
     var body: some View{
@@ -171,47 +171,50 @@ struct NewTodoView: View{
         .onTapGesture{showingView.toggle()}
         .fullScreenCover(isPresented: $showingView, content: {
             NavigationStack{
-                ZStack{
-                    
-                    //main contents
-                    VStack{
+               
+                    ScrollView {
+                        //main contents
+                        VStack{
+                            
+                            newTodoSection
+                            addItemSection
+                            Button(action: {
+                                //@TODO: Replace with NewWidgetView temp widget behavior
+                                Task{
+                                    
+                                    
+                                    viewModel.addItem(todoArray: todoArray, userArray: mentionedUsers)
+                                    await viewModel.createNewTodo()
+                                    showingView = false
+                                    
+                                    closeNewWidgetview = true
+                                    
+                                }
+                            }, label: {
+                                Text("Submit")
+                                    .font(.headline)
+                                    .frame(height: 55)
+                                    .frame(maxWidth: .infinity)
+                                //                            .foregroundStyle(Color.accentColor)
+                            })
+                            .disabled(
+                                viewModel.listName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                                || todoArray .allSatisfy { $0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
+                            )
+                            //                                    .disabled(pollModel.isCreateNewPollButtonDisabled)
+                            .buttonStyle(.bordered)
+                            //                    .foregroundColor(Color.accentColor)
+                            .frame(height: 55)
+                            .cornerRadius(10)
+                            
+                        }
                         
-                        newTodoSection
-                        addItemSection
-                        Button(action: {
-                            //@TODO: Replace with NewWidgetView temp widget behavior
-                            Task{
-                                
-                                
-                                viewModel.addItem(todoArray: todoArray, userArray: mentionedUsers)
-                                await viewModel.createNewTodo()
-                                showingView = false
-                                
-                                closeNewWidgetview = true
-                                
-                            }
-                        }, label: {
-                            Text("Submit")
-                                .font(.headline)
-                                .frame(height: 55)
-                                .frame(maxWidth: .infinity)
-                            //                            .foregroundStyle(Color.accentColor)
-                        })
-                        .disabled(
-                            viewModel.listName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-                            || todoArray .allSatisfy { $0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
-                        )
-                        //                                    .disabled(pollModel.isCreateNewPollButtonDisabled)
-                        .buttonStyle(.bordered)
-                        //                    .foregroundColor(Color.accentColor)
-                        .frame(height: 55)
-                        .cornerRadius(10)
+                        .padding()
                         
                     }
-                    
-                    .padding()
-                }
+            
                 .navigationTitle("Create List 📋")
+                .navigationBarTitleDisplayMode(.inline)
                 .toolbar{
                     
                     ToolbarItem(placement: .navigationBarLeading) {
@@ -380,7 +383,7 @@ struct NewTodoView: View{
             }
             .onChange(of: todoArray.last) { oldValue, newValue in
                 
-                if newValue != "" && todoArray.count <= 3{
+                if newValue != "" /*&& todoArray.count <= 3*/{
                     todoArray.append("")
                     mentionedUsers.append(nil)
                     
