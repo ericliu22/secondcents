@@ -46,7 +46,7 @@ struct TodoWidget: View {
                 VStack(alignment: .leading, spacing: 0) {
                     HStack {
                         Text(todo.name)
-                            .font(.footnote)
+                            .font(.subheadline)
                             .foregroundColor(Color.accentColor)
                             .fontWeight(.semibold)
                     }
@@ -56,20 +56,9 @@ struct TodoWidget: View {
                     .padding(.bottom, 3)
                     
                     ForEach(todo.todoList.prefix(4), id: \.self) { item in
-                        HStack(spacing: 3) {
-                            Color.accentColor
-                                .frame(width: 3, height: 12)
-                                .cornerRadius(3)
-                            
-                            Text(item.task)
-                                .font(.caption)
-                                .foregroundColor(Color(UIColor.label))
-                                .truncationMode(.tail)
-                                .lineLimit(1)
-                        }
-                        .padding(.bottom, 3)
+                        TaskItemView(item: item)
+                            .padding(.horizontal, 16)
                     }
-                    .padding(.horizontal, 16)
                     
                     if todo.todoList.count > 4 {
                         let additionalTaskCount = todo.todoList.count - 4
@@ -91,16 +80,20 @@ struct TodoWidget: View {
                     Spacer()
                 }
                 .frame(width: TILE_SIZE, height: TILE_SIZE)
-                .background(.ultraThickMaterial)
-            
+//                .background(.ultraThickMaterial)
+                .background(Color(UIColor.systemBackground))
+              
                 .cornerRadius(CORNER_RADIUS)
                 .overlay(
-                    Text("6")
-                        .font(.title3)
-                        .fontWeight(.semibold)
-                        .padding(.top, 12)
-                        .padding(.trailing, 16)
-                        .frame(width: TILE_SIZE, height: TILE_SIZE, alignment: .topTrailing)
+                    
+                  
+                        Text("\(todo.todoList.count)")
+                            .font(.title3)
+                            .fontWeight(.semibold)
+                            .padding(.top, 12)
+                            .padding(.trailing, 16)
+                            .frame(width: TILE_SIZE, height: TILE_SIZE, alignment: .topTrailing)
+                    
                 )
             } else {
                 ProgressView()
@@ -117,6 +110,43 @@ struct TodoWidget: View {
         }
     }
 }
+
+
+struct TaskItemView: View {
+    let item: TodoItem
+    @State private var user: DBUser?
+    @State private var userColor: Color?
+
+    var body: some View {
+        HStack(spacing: 3) {
+            Color(userColor ?? .gray)
+                .frame(width: 3, height: 12)
+                .cornerRadius(3)
+            
+            Text(item.task)
+                .font(.caption)
+                .foregroundColor(Color(UIColor.label))
+                .truncationMode(.tail)
+                .lineLimit(1)
+        }
+        .task {
+            if item.mentionedUserId != "" {
+                do {
+                    user = try await UserManager.shared.getUser(userId: item.mentionedUserId)
+                    withAnimation {
+                        userColor = Color.fromString(name: user?.userColor ?? "")
+                    }
+                } catch {
+                    print("Failed to fetch user: \(error.localizedDescription)")
+                }
+            }
+        }
+        .padding(.bottom, 3)
+    }
+}
+
+
+
 
 struct TodoWidget_Previews: PreviewProvider {
     static var previews: some View {
