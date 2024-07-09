@@ -318,12 +318,26 @@ struct CanvasPage: View {
     
     func widgetButton(for media: Media) -> some View {
         switch media {
-        case .todo, .poll:
+        case .poll:
             return Button(action: {
                 activePollWidget = viewModel.selectedWidget
                 viewModel.selectedWidget = nil
                 widgetDoubleTapped = false
-                activeSheet = (media == .todo) ? .todo : .poll
+                activeSheet =  .poll
+            }, label: {
+                Image(systemName: "list.clipboard")
+                    .foregroundColor(Color(UIColor.label))
+                    .font(.title3)
+                    .padding(.horizontal, 5)
+            }).eraseToAnyView()
+            
+            
+        case .todo:
+            return Button(action: {
+                activePollWidget = viewModel.selectedWidget
+                viewModel.selectedWidget = nil
+                widgetDoubleTapped = false
+                activeSheet = .todo
             }, label: {
                 Image(systemName: "checklist")
                     .foregroundColor(Color(UIColor.label))
