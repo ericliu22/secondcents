@@ -25,11 +25,11 @@ struct NewTodoView: View{
     
     let todoListColor: [Color] = [.orange, .blue, .red, .green]
     
+
+    
     init(spaceId: String, closeNewWidgetview: Binding<Bool>) {
         self.spaceId = spaceId
-        //        self.pollModel = NewPollModel(spaceId: spaceId)
-        _viewModel = StateObject(wrappedValue:NewTodoModel(spaceId: spaceId))
-        
+        _viewModel = StateObject(wrappedValue: NewTodoModel(spaceId: spaceId))
         self._closeNewWidgetview = closeNewWidgetview
         
     }
@@ -37,6 +37,8 @@ struct NewTodoView: View{
     @State var todoArray: [String] = ["", "", "", ""]
     
     @State private var mentionedUsers: [DBUser?] = [nil, nil, nil, nil]
+    
+    
     
     
     var body: some View{
@@ -166,53 +168,53 @@ struct NewTodoView: View{
             
             
         }
-        
+       
         .frame(width: .infinity, height: .infinity)
         .onTapGesture{showingView.toggle()}
         .fullScreenCover(isPresented: $showingView, content: {
             NavigationStack{
-               
-                    ScrollView {
-                        //main contents
-                        VStack{
-                            
-                            newTodoSection
-                            addItemSection
-                            Button(action: {
-                                //@TODO: Replace with NewWidgetView temp widget behavior
-                                Task{
-                                    
-                                    
-                                    viewModel.addItem(todoArray: todoArray, userArray: mentionedUsers)
-                                    await viewModel.createNewTodo()
-                                    showingView = false
-                                    
-                                    closeNewWidgetview = true
-                                    
-                                }
-                            }, label: {
-                                Text("Submit")
-                                    .font(.headline)
-                                    .frame(height: 55)
-                                    .frame(maxWidth: .infinity)
-                                //                            .foregroundStyle(Color.accentColor)
-                            })
-                            .disabled(
-                                viewModel.listName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-                                || todoArray .allSatisfy { $0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
-                            )
-                            //                                    .disabled(pollModel.isCreateNewPollButtonDisabled)
-                            .buttonStyle(.bordered)
-                            //                    .foregroundColor(Color.accentColor)
-                            .frame(height: 55)
-                            .cornerRadius(10)
-                            
-                        }
+                
+                ScrollView {
+                    //main contents
+                    VStack{
                         
-                        .padding()
+                        newTodoSection
+                        addItemSection
+                        Button(action: {
+                            //@TODO: Replace with NewWidgetView temp widget behavior
+                            Task{
+                                
+                                
+                                viewModel.addItem(todoArray: todoArray, userArray: mentionedUsers)
+                                await viewModel.createNewTodo()
+                                showingView = false
+                                
+                                closeNewWidgetview = true
+                                
+                            }
+                        }, label: {
+                            Text("Submit")
+                                .font(.headline)
+                                .frame(height: 55)
+                                .frame(maxWidth: .infinity)
+                            //                            .foregroundStyle(Color.accentColor)
+                        })
+                        .disabled(
+                            viewModel.listName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                            || todoArray .allSatisfy { $0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
+                        )
+                        //                                    .disabled(pollModel.isCreateNewPollButtonDisabled)
+                        .buttonStyle(.bordered)
+                        //                    .foregroundColor(Color.accentColor)
+                        .frame(height: 55)
+                        .cornerRadius(10)
                         
                     }
-            
+                    
+                    .padding()
+                    
+                }
+                
                 .navigationTitle("Create List 📋")
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar{
@@ -270,112 +272,116 @@ struct NewTodoView: View{
                     .padding()
                     .background(Color(UIColor.secondarySystemBackground))
                     .cornerRadius(10)
+                   
+                    .submitLabel(.next)
                     
-                 
-                        NavigationLink {
-                            MentionUserView(mentionedUser: $mentionedUsers[index], spaceId: spaceId)
+                    
+                    
+                    
+                    NavigationLink {
+                        MentionUserView(mentionedUser: $mentionedUsers[index], spaceId: spaceId)
+                        
+                    } label: {
+                        
+                        
+                        if mentionedUsers[index] == nil {
+                            //                        if mentionedUsers[index] == nil {
+                            Image(systemName: "at.badge.plus")
+                                .padding(.horizontal)
+                                .frame( height: 54)
+                                .background(Color(UIColor.secondarySystemBackground))
+                            //                                    .cornerRadius(10)
+                            //                                    .padding(.leading, 8)
                             
-                        } label: {
+                            
+                            //
+                        }   else {
                             
                             
-                            if mentionedUsers[index] == nil {
-                                //                        if mentionedUsers[index] == nil {
-                                Image(systemName: "at.badge.plus")
-                                    .padding(.horizontal)
-                                    .frame( height: 54)
-                                    .background(Color(UIColor.secondarySystemBackground))
-//                                    .cornerRadius(10)
-//                                    .padding(.leading, 8)
-                                
-                                
-                                //
-                            }   else {
-                                
-                                
-                                let targetUserColor: Color = Color.fromString(name: mentionedUsers[index]?.userColor ?? "")
-                                
-                                Group{
-                                    HStack{
-                                        Group{
-                                            //Circle or Profile Pic
-                                            if let urlString = mentionedUsers[index]?.profileImageUrl,
-                                               let url = URL(string: urlString) {
-                                                
-                                                
-                                                
-                                                //If there is URL for profile pic, show
-                                                //circle with stroke
-                                                AsyncImage(url: url) {image in
-                                                    image
-                                                        .resizable()
-                                                        .scaledToFill()
-                                                        .clipShape(Circle())
-                                                        .frame(width: 16, height: 16)
-                                                    
-                                                    
-                                                    
-                                                } placeholder: {
-                                                    //else show loading after user uploads but sending/downloading from database
-                                                    
-                                                    ProgressView()
-                                                        .progressViewStyle(CircularProgressViewStyle(tint: Color(UIColor.systemBackground)))
-                                                        .scaleEffect(0.5, anchor: .center)
-                                                        .frame(width: 16, height: 16)
-                                                        .background(
-                                                            Circle()
-                                                                .fill(targetUserColor)
-                                                                .frame(width: 16, height: 16)
-                                                        )
-                                                }
-                                                
-                                            } else {
-                                                
-                                                //if user has not uploaded profile pic, show circle
-                                                Circle()
-                                                
-                                                    .strokeBorder(targetUserColor, lineWidth:0)
-                                                    .background(Circle().fill(targetUserColor))
+                            let targetUserColor: Color = Color.fromString(name: mentionedUsers[index]?.userColor ?? "")
+                            
+                            Group{
+                                HStack{
+                                    Group{
+                                        //Circle or Profile Pic
+                                        if let urlString = mentionedUsers[index]?.profileImageUrl,
+                                           let url = URL(string: urlString) {
+                                            
+                                            
+                                            
+                                            //If there is URL for profile pic, show
+                                            //circle with stroke
+                                            AsyncImage(url: url) {image in
+                                                image
+                                                    .resizable()
+                                                    .scaledToFill()
+                                                    .clipShape(Circle())
                                                     .frame(width: 16, height: 16)
                                                 
+                                                
+                                                
+                                            } placeholder: {
+                                                //else show loading after user uploads but sending/downloading from database
+                                                
+                                                ProgressView()
+                                                    .progressViewStyle(CircularProgressViewStyle(tint: Color(UIColor.systemBackground)))
+                                                    .scaleEffect(0.5, anchor: .center)
+                                                    .frame(width: 16, height: 16)
+                                                    .background(
+                                                        Circle()
+                                                            .fill(targetUserColor)
+                                                            .frame(width: 16, height: 16)
+                                                    )
                                             }
                                             
+                                        } else {
                                             
+                                            //if user has not uploaded profile pic, show circle
+                                            Circle()
                                             
+                                                .strokeBorder(targetUserColor, lineWidth:0)
+                                                .background(Circle().fill(targetUserColor))
+                                                .frame(width: 16, height: 16)
                                             
                                         }
-                                        Text(mentionedUsers[index]?.name ?? "Unavailable")
-                                            .font(.headline)
-                                            .foregroundStyle(Color(UIColor.label))
-                                            .lineLimit(1)
-                                            .truncationMode(.tail)
+                                        
+                                        
+                                        
+                                        
                                     }
+                                    Text(mentionedUsers[index]?.name ?? "Unavailable")
+                                        .font(.headline)
+                                        .foregroundStyle(Color(UIColor.label))
+                                        .lineLimit(1)
+                                        .truncationMode(.tail)
                                 }
-                                
-                                .padding(.horizontal,5)
-                                .padding(.vertical,2.5)
-                                .background(.thickMaterial, in: Capsule())
-                                .background(targetUserColor, in: Capsule())
-                                
-                    
-                          
-                                .frame(width: 100, height: 54, alignment:.trailing)
-                                .padding(.trailing)
-                                .background(Color(UIColor.secondarySystemBackground))
-                                
-                                
-                             
-                                
-                                
                             }
                             
+                            .padding(.horizontal,5)
+                            .padding(.vertical,2.5)
+                            .background(.thickMaterial, in: Capsule())
+                            .background(targetUserColor, in: Capsule())
+                            
+                            
+                            
+                            .frame(width: 100, height: 54, alignment:.trailing)
+                            .padding(.trailing)
+                            .background(Color(UIColor.secondarySystemBackground))
+                            
+                            
+                            
+                            
+                            
                         }
-                       
-                 
+                        
+                    }
+                    
+                    
                 }
                 
                 .background(/*mentionedUsers[index] == nil ? Color.clear :*/ Color(UIColor.secondarySystemBackground))
-      
-
+                
+                
                 .cornerRadius(10)
                 
                 

@@ -75,7 +75,7 @@ struct CanvasPage: View {
     
     
     enum sheetTypesCanvasPage: Identifiable  {
-        case newWidgetView, chat, poll, newTextView
+        case newWidgetView, chat, poll, newTextView, todo
         
         var id: Self {
             return self
@@ -316,6 +316,41 @@ struct CanvasPage: View {
 
     }
     
+    func widgetButton(for media: Media) -> some View {
+        switch media {
+        case .todo, .poll:
+            return Button(action: {
+                activePollWidget = viewModel.selectedWidget
+                viewModel.selectedWidget = nil
+                widgetDoubleTapped = false
+                activeSheet = (media == .todo) ? .todo : .poll
+            }, label: {
+                Image(systemName: "checklist")
+                    .foregroundColor(Color(UIColor.label))
+                    .font(.title3)
+                    .padding(.horizontal, 5)
+            }).eraseToAnyView()
+
+        case .map:
+            return Button(action: {
+                if let location = viewModel.selectedWidget?.location {
+                    viewModel.openMapsApp(location: location)
+                }
+                viewModel.selectedWidget = nil
+                widgetDoubleTapped = false
+            }, label: {
+                Image(systemName: "mappin.and.ellipse")
+                    .foregroundColor(Color(UIColor.label))
+                    .padding(.horizontal, 5)
+            }).eraseToAnyView()
+
+        default:
+            return EmptyView().eraseToAnyView()
+        }
+    }
+
+  
+    
     
     
     func doubleTapOverlay() -> some View {
@@ -325,44 +360,11 @@ struct CanvasPage: View {
             HStack(spacing: 5) { // Increase spacing between buttons
                 
                 
-                
-                // Map button
-                if viewModel.selectedWidget!.media == .map {
-                    Button(action: {
-                        if let location = viewModel.selectedWidget?.location {
-                            viewModel.openMapsApp(location: location)
-                        }
-                        viewModel.selectedWidget = nil
-                        widgetDoubleTapped = false
-                    }, label: {
-                        Image(systemName: "mappin.and.ellipse")
-                            .foregroundColor(Color(UIColor.label))
-                            .padding(.horizontal, 5)
-                    })
-                }
-
-                
-                
-                
-                
-                // Poll button
-                if viewModel.selectedWidget!.media == .poll {
-                    Button(action: {
-                        activePollWidget = viewModel.selectedWidget
-                        viewModel.selectedWidget = nil
-                        widgetDoubleTapped = false
-                        activeSheet = .poll
-                    }, label: {
-                        Image(systemName: "checklist")
-                            .foregroundColor(Color(UIColor.label))
-                            .font(.title3)
-                            .padding(.horizontal, 5)
-                    })
-                }
-                
-                
-                
-                
+                if let selectedWidget = viewModel.selectedWidget {
+                       widgetButton(for: selectedWidget.media)
+                   } else {
+                       EmptyView()
+                   }
 
                 // Reply button
                 Button(action: {
@@ -687,7 +689,22 @@ struct CanvasPage: View {
             case .newTextView:
                 NewTextWidgetView(spaceId: spaceId)
                     .presentationBackground(Color(UIColor.systemBackground))
+            case .todo:
+                
+                
+                if let widget = activePollWidget {
+                    TodoWidgetSheetView(widget: widget, spaceId: spaceId)
+                } else {
+                    ProgressView()
+                        .foregroundStyle(Color(UIColor.label))
+                        .presentationBackground(Color(UIColor.systemBackground))
+                    
+                }
+                
+                
             }
+            
+            
             
             
             
@@ -708,3 +725,9 @@ struct CanvasPage_Previews: PreviewProvider {
 }
 
 
+
+extension View {
+    func eraseToAnyView() -> AnyView {
+        AnyView(self)
+    }
+}

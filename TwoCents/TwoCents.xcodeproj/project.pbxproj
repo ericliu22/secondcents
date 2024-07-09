@@ -86,6 +86,7 @@
 		AB69F03F2C1D189800B81E79 /* SignInPhoneNumberViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB69F03E2C1D189800B81E79 /* SignInPhoneNumberViewModel.swift */; };
 		AB69F0412C1D2BC700B81E79 /* VerifyCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB69F0402C1D2BC700B81E79 /* VerifyCodeView.swift */; };
 		AB69F0432C1D2C1D00B81E79 /* VerifyCodeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB69F0422C1D2C1D00B81E79 /* VerifyCodeViewModel.swift */; };
+		AB6B3ACF2C3CF90D00009686 /* TodoWidgetSheetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB6B3ACE2C3CF90D00009686 /* TodoWidgetSheetViewModel.swift */; };
 		AB6EA60A2B879B7C00CC90FF /* CanvasPageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB6EA6092B879B7C00CC90FF /* CanvasPageViewModel.swift */; };
 		AB6EA60C2B87A1FE00CC90FF /* EmojiReactionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB6EA60B2B87A1FE00CC90FF /* EmojiReactionsView.swift */; };
 		AB6EA6102B87A27D00CC90FF /* SplashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB6EA60F2B87A27D00CC90FF /* SplashView.swift */; };
@@ -113,6 +114,7 @@
 		AB9909AB2ABE3BF2004B3021 /* FriendRequestsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB9909AA2ABE3BF2004B3021 /* FriendRequestsView.swift */; };
 		AB9909AD2ABE3C1B004B3021 /* FriendRequestsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB9909AC2ABE3C1B004B3021 /* FriendRequestsViewModel.swift */; };
 		AB9BF6D52C06ECDB00C72883 /* PollWidgetSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB9BF6D42C06ECDB00C72883 /* PollWidgetSheetView.swift */; };
+		AB9C053E2C3CD3B500C21DCE /* TodoWidgetSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB9C053D2C3CD3B500C21DCE /* TodoWidgetSheetView.swift */; };
 		AB9C7F682BD83B1E004FC549 /* EmojiCountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB9C7F672BD83B1E004FC549 /* EmojiCountView.swift */; };
 		AB9EB95D2B1E805300F58EA5 /* ChatManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB9EB95C2B1E805300F58EA5 /* ChatManager.swift */; };
 		ABA45E7E2A7C8D8C0015F000 /* SignInEmailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABA45E7D2A7C8D8C0015F000 /* SignInEmailViewModel.swift */; };
@@ -251,6 +253,7 @@
 		AB69F03E2C1D189800B81E79 /* SignInPhoneNumberViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInPhoneNumberViewModel.swift; sourceTree = "<group>"; };
 		AB69F0402C1D2BC700B81E79 /* VerifyCodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerifyCodeView.swift; sourceTree = "<group>"; };
 		AB69F0422C1D2C1D00B81E79 /* VerifyCodeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerifyCodeViewModel.swift; sourceTree = "<group>"; };
+		AB6B3ACE2C3CF90D00009686 /* TodoWidgetSheetViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoWidgetSheetViewModel.swift; sourceTree = "<group>"; };
 		AB6EA6092B879B7C00CC90FF /* CanvasPageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasPageViewModel.swift; sourceTree = "<group>"; };
 		AB6EA60B2B87A1FE00CC90FF /* EmojiReactionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiReactionsView.swift; sourceTree = "<group>"; };
 		AB6EA60F2B87A27D00CC90FF /* SplashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashView.swift; sourceTree = "<group>"; };
@@ -278,6 +281,7 @@
 		AB9909AA2ABE3BF2004B3021 /* FriendRequestsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendRequestsView.swift; sourceTree = "<group>"; };
 		AB9909AC2ABE3C1B004B3021 /* FriendRequestsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendRequestsViewModel.swift; sourceTree = "<group>"; };
 		AB9BF6D42C06ECDB00C72883 /* PollWidgetSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollWidgetSheetView.swift; sourceTree = "<group>"; };
+		AB9C053D2C3CD3B500C21DCE /* TodoWidgetSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoWidgetSheetView.swift; sourceTree = "<group>"; };
 		AB9C7F672BD83B1E004FC549 /* EmojiCountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiCountView.swift; sourceTree = "<group>"; };
 		AB9EB95C2B1E805300F58EA5 /* ChatManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatManager.swift; sourceTree = "<group>"; };
 		ABA45E7D2A7C8D8C0015F000 /* SignInEmailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInEmailViewModel.swift; sourceTree = "<group>"; };
@@ -733,6 +737,8 @@
 				ABCDA06B2C39B009002C23E1 /* NewTodoView.swift */,
 				ABCDA06D2C39B04A002C23E1 /* NewTodoViewModel.swift */,
 				ABD01A992C39C3CF00C9F288 /* TodoItem.swift */,
+				AB9C053D2C3CD3B500C21DCE /* TodoWidgetSheetView.swift */,
+				AB6B3ACE2C3CF90D00009686 /* TodoWidgetSheetViewModel.swift */,
 			);
 			path = Todo;
 			sourceTree = "<group>";
@@ -942,6 +948,7 @@
 				ABC461E52BE28ECF00AE47FF /* TestView.swift in Sources */,
 				85C6759B2AB8EE6100FACCB2 /* SuperlativeGame.swift in Sources */,
 				AB370E162C34FDF300C4431F /* QueryExtension.swift in Sources */,
+				AB9C053E2C3CD3B500C21DCE /* TodoWidgetSheetView.swift in Sources */,
 				85BB02F02B5D077E00B9A9EA /* ToolPickerPractice.swift in Sources */,
 				AB77664E2C25283A00F95E65 /* DisplayLocationWidgetView.swift in Sources */,
 				ABD01A9A2C39C3CF00C9F288 /* TodoItem.swift in Sources */,
@@ -1045,6 +1052,7 @@
 				AB7438432AAA34AD001B4988 /* SearchUserViewModel.swift in Sources */,
 				AB2E56CA2AE9BB410096A58C /* SpaceManager.swift in Sources */,
 				AB69F0412C1D2BC700B81E79 /* VerifyCodeView.swift in Sources */,
+				AB6B3ACF2C3CF90D00009686 /* TodoWidgetSheetViewModel.swift in Sources */,
 				AB90EDBD2B55BB59002AD855 /* NewWidgetViewModel.swift in Sources */,
 				ABF172A72BFC6686000B6F9B /* AddMemberView.swift in Sources */,
 				ABA45E812A7C8DC50015F000 /* ProfileView.swift in Sources */,

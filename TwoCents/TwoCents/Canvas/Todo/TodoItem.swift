@@ -12,17 +12,20 @@ struct TodoItem: Codable, Identifiable, Hashable {
     var id = UUID().uuidString
     var mentionedUserId: String
     var task: String
+    var completed: Bool
     
     init(task: String, mentionedUserId: String) {
         self.task = task
         self.mentionedUserId = mentionedUserId
+        self.completed = false
     }
     
     func toDictionary() -> [String: Any] {
            return [
                "id": id,
                "mentionedUserId": mentionedUserId,
-               "task": task
+               "task": task,
+               "completed": completed
            ]
        }
     
@@ -38,15 +41,6 @@ struct Todo: Codable, Identifiable {
     var id: UUID
     var name: String
     var todoList: [TodoItem] = []
-
-    /* Don't know if this is necessary maybe for sorting by lastUpdated -Eric
-     
-    var lastUpdatedOptionId: String?
-    var lastUpdatedOption: Option?{
-        guard let lastUpdatedOptionId else {return nil}
-        return options.first{ $0.id == lastUpdatedOptionId}
-    }
-     */
     
 
 
