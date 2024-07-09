@@ -10,21 +10,21 @@ import Foundation
 import FirebaseFirestore
 import FirebaseFirestoreSwift
 
-
 struct TodoWidgetSheetView: View {
-    
+
     let widget: CanvasWidget
     private var spaceId: String
-    
+
     @StateObject private var viewModel = TodoWidgetSheetViewModel()
+
     init(widget: CanvasWidget, spaceId: String) {
         assert(widget.media == .todo)
         self.widget = widget
         self.spaceId = spaceId
     }
-    
+
     @Environment(\.dismiss) var dismissScreen
-    
+
     var body: some View {
         if let todo = viewModel.todo {
             NavigationStack {
@@ -32,7 +32,7 @@ struct TodoWidgetSheetView: View {
                     VStack {
                         ForEach(todo.todoList.indices, id: \.self) { index in
                             let todoItem = todo.todoList[index]
-                            
+
                             HStack(spacing: 0) {
                                 Text(todoItem.task)
                                 Spacer()
@@ -40,8 +40,7 @@ struct TodoWidgetSheetView: View {
                                     MentionUserView(mentionedUser: $viewModel.mentionedUsers[index], spaceId: spaceId)
                                         .onDisappear(perform: {
                                             if let userId = viewModel.mentionedUsers[index]?.id {
-                                                let todoId = widget.id.uuidString
-                                                viewModel.updateMentionedUser(spaceId: spaceId, todoId: todoId, index: index, mentionedUserId: userId)
+                                                viewModel.modifiedMentionedUsers[index] = userId
                                             }
                                         })
                                 } label: {
@@ -64,6 +63,14 @@ struct TodoWidgetSheetView: View {
                                     .foregroundColor(Color(UIColor.label))
                             })
                         }
+                        ToolbarItem(placement: .navigationBarTrailing) {
+                            Button(action: {
+                                viewModel.saveMentionedUsersChanges(spaceId: spaceId, todoId: widget.id.uuidString)
+                                dismissScreen()
+                            }, label: {
+                                Text("Save")
+                            })
+                        }
                     }
                 }
             }
@@ -75,10 +82,10 @@ struct TodoWidgetSheetView: View {
                 }
         }
     }
-    
+
     struct UserChip: View {
         let user: DBUser?
-        
+
         var body: some View {
             if let user = user {
                 let targetUserColor: Color = Color.fromString(name: user.userColor ?? "")
