@@ -9,7 +9,6 @@ import SwiftUI
 import Foundation
 import FirebaseFirestore
 import FirebaseFirestoreSwift
-
 struct TodoWidgetSheetView: View {
 
     let widget: CanvasWidget
@@ -34,14 +33,23 @@ struct TodoWidgetSheetView: View {
                             let todoItem = todo.todoList[index]
 
                             HStack(spacing: 0) {
+                                Button(action: {
+                                    viewModel.toggleCompletionStatus(index: index)
+                                }) {
+                                    
+                                  
+                                    Image(systemName: viewModel.localTodoList[index].completed ? "circle.inset.filled" : "circle")
+                                        .foregroundColor(viewModel.localTodoList[index].completed ? Color.fromString(name: viewModel.mentionedUsers[index]?.userColor ?? "")  : .gray)
+                                        .font(.title3)
+                                }
+                                .padding(.trailing)
+                                
                                 Text(todoItem.task)
                                 Spacer()
                                 NavigationLink {
                                     MentionUserView(mentionedUser: $viewModel.mentionedUsers[index], spaceId: spaceId)
                                         .onDisappear(perform: {
-                                            if let userId = viewModel.mentionedUsers[index]?.id {
-                                                viewModel.modifiedMentionedUsers[index] = userId
-                                            }
+                                            viewModel.modifiedMentionedUsers[index] = viewModel.mentionedUsers[index]?.id ?? ""
                                         })
                                 } label: {
                                     UserChip(user: viewModel.mentionedUsers[index])
@@ -65,8 +73,8 @@ struct TodoWidgetSheetView: View {
                         }
                         ToolbarItem(placement: .navigationBarTrailing) {
                             Button(action: {
-                                viewModel.saveMentionedUsersChanges(spaceId: spaceId, todoId: widget.id.uuidString)
                                 dismissScreen()
+                                viewModel.saveChanges(spaceId: spaceId, todoId: widget.id.uuidString)
                             }, label: {
                                 Text("Save")
                             })
@@ -129,7 +137,6 @@ struct TodoWidgetSheetView: View {
                 .frame(width: 100)
             } else {
                 Image(systemName: "at.badge.plus")
-                    .padding(.horizontal)
                     .frame(height: 54, alignment: .trailing)
             }
         }

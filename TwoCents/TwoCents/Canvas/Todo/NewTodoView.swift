@@ -180,38 +180,10 @@ struct NewTodoView: View{
                         
                         newTodoSection
                         addItemSection
-                        Button(action: {
-                            //@TODO: Replace with NewWidgetView temp widget behavior
-                            Task{
-                                
-                                
-                                viewModel.addItem(todoArray: todoArray, userArray: mentionedUsers)
-                                await viewModel.createNewTodo()
-                                showingView = false
-                                
-                                closeNewWidgetview = true
-                                
-                            }
-                        }, label: {
-                            Text("Submit")
-                                .font(.headline)
-                                .frame(height: 55)
-                                .frame(maxWidth: .infinity)
-                            //                            .foregroundStyle(Color.accentColor)
-                        })
-                        .disabled(
-                            viewModel.listName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-                            || todoArray .allSatisfy { $0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
-                        )
-                        //                                    .disabled(pollModel.isCreateNewPollButtonDisabled)
-                        .buttonStyle(.bordered)
-                        //                    .foregroundColor(Color.accentColor)
-                        .frame(height: 55)
-                        .cornerRadius(10)
                         
                     }
                     
-                    .padding()
+//                    .padding()
                     
                 }
                 
@@ -230,6 +202,27 @@ struct NewTodoView: View{
                             
                         })
                     }
+                    
+               
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button(action: {
+                            
+                            viewModel.addItem(todoArray: todoArray, userArray: mentionedUsers)
+                            Task{
+                                await viewModel.createNewTodo()
+                            }
+                            showingView = false
+                            
+                            closeNewWidgetview = true
+                        }, label: {
+                            Text("Create")
+                        })
+                        .disabled(
+                            viewModel.listName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                            || todoArray .allSatisfy { $0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
+                        )
+                    }
+                    
                 }
             }
         })
@@ -245,6 +238,7 @@ struct NewTodoView: View{
                 .font(.largeTitle)
                 .fontWeight(.bold)
                 .foregroundStyle(userColor)
+                .padding(.horizontal)
         }
     }
     
@@ -269,9 +263,9 @@ struct NewTodoView: View{
                                 $todoArray[index]
                               
                     )
-                    .padding()
-                    .background(Color(UIColor.secondarySystemBackground))
-                    .cornerRadius(10)
+//                    .padding()
+//                    .background(Color(UIColor.secondarySystemBackground))
+//                    .cornerRadius(10)
                    
                     .submitLabel(.next)
                     
@@ -283,108 +277,22 @@ struct NewTodoView: View{
                         
                     } label: {
                         
-                        
-                        if mentionedUsers[index] == nil {
-                            //                        if mentionedUsers[index] == nil {
-                            Image(systemName: "at.badge.plus")
-                                .padding(.horizontal)
-                                .frame( height: 54)
-                                .background(Color(UIColor.secondarySystemBackground))
-                            //                                    .cornerRadius(10)
-                            //                                    .padding(.leading, 8)
-                            
-                            
-                            //
-                        }   else {
-                            
-                            
-                            let targetUserColor: Color = Color.fromString(name: mentionedUsers[index]?.userColor ?? "")
-                            
-                            Group{
-                                HStack{
-                                    Group{
-                                        //Circle or Profile Pic
-                                        if let urlString = mentionedUsers[index]?.profileImageUrl,
-                                           let url = URL(string: urlString) {
-                                            
-                                            
-                                            
-                                            //If there is URL for profile pic, show
-                                            //circle with stroke
-                                            AsyncImage(url: url) {image in
-                                                image
-                                                    .resizable()
-                                                    .scaledToFill()
-                                                    .clipShape(Circle())
-                                                    .frame(width: 16, height: 16)
-                                                
-                                                
-                                                
-                                            } placeholder: {
-                                                //else show loading after user uploads but sending/downloading from database
-                                                
-                                                ProgressView()
-                                                    .progressViewStyle(CircularProgressViewStyle(tint: Color(UIColor.systemBackground)))
-                                                    .scaleEffect(0.5, anchor: .center)
-                                                    .frame(width: 16, height: 16)
-                                                    .background(
-                                                        Circle()
-                                                            .fill(targetUserColor)
-                                                            .frame(width: 16, height: 16)
-                                                    )
-                                            }
-                                            
-                                        } else {
-                                            
-                                            //if user has not uploaded profile pic, show circle
-                                            Circle()
-                                            
-                                                .strokeBorder(targetUserColor, lineWidth:0)
-                                                .background(Circle().fill(targetUserColor))
-                                                .frame(width: 16, height: 16)
-                                            
-                                        }
-                                        
-                                        
-                                        
-                                        
-                                    }
-                                    Text(mentionedUsers[index]?.name ?? "Unavailable")
-                                        .font(.headline)
-                                        .foregroundStyle(Color(UIColor.label))
-                                        .lineLimit(1)
-                                        .truncationMode(.tail)
-                                }
-                            }
-                            
-                            .padding(.horizontal,5)
-                            .padding(.vertical,2.5)
-                            .background(.thickMaterial, in: Capsule())
-                            .background(targetUserColor, in: Capsule())
-                            
-                            
-                            
-                            .frame(width: 100, height: 54, alignment:.trailing)
-                            .padding(.trailing)
-                            .background(Color(UIColor.secondarySystemBackground))
-                            
-                            
-                            
-                            
-                            
-                        }
+                            UserChip(user: mentionedUsers[index])
+                            .frame(height: 48)
+                       
                         
                     }
                     
                     
                 }
+                .padding(.horizontal)
                 
-                .background(/*mentionedUsers[index] == nil ? Color.clear :*/ Color(UIColor.secondarySystemBackground))
-                
-                
-                .cornerRadius(10)
+//                .background(/*mentionedUsers[index] == nil ? Color.clear :*/ Color(UIColor.secondarySystemBackground))
                 
                 
+//                .cornerRadius(10)
+                
+                Divider()
                 
             }
             .onChange(of: todoArray.last) { oldValue, newValue in
@@ -411,3 +319,56 @@ struct NewTodoView: View{
     }
 }
 
+
+
+struct UserChip: View {
+    let user: DBUser?
+
+    var body: some View {
+        if let user = user {
+            let targetUserColor: Color = Color.fromString(name: user.userColor ?? "")
+            HStack {
+                Group {
+                    if let urlString = user.profileImageUrl, let url = URL(string: urlString) {
+                        AsyncImage(url: url) { image in
+                            image
+                                .resizable()
+                                .scaledToFill()
+                                .clipShape(Circle())
+                                .frame(width: 16, height: 16)
+                        } placeholder: {
+                            ProgressView()
+                                .progressViewStyle(CircularProgressViewStyle(tint: Color(UIColor.systemBackground)))
+                                .scaleEffect(0.5, anchor: .center)
+                                .frame(width: 16, height: 16)
+                                .background(
+                                    Circle()
+                                        .fill(targetUserColor)
+                                        .frame(width: 16, height: 16)
+                                )
+                        }
+                    } else {
+                        Circle()
+                            .strokeBorder(targetUserColor, lineWidth: 0)
+                            .background(Circle().fill(targetUserColor))
+                            .frame(width: 16, height: 16)
+                    }
+                }
+                Text(user.name ?? "Unavailable")
+                    .font(.headline)
+                    .foregroundStyle(Color(UIColor.label))
+                    .lineLimit(1)
+                    .truncationMode(.tail)
+            }
+            .padding(.horizontal, 5)
+            .padding(.vertical, 2.5)
+            .background(.thickMaterial, in: Capsule())
+            .background(targetUserColor, in: Capsule())
+            .frame(width: 100)
+        } else {
+            Image(systemName: "at.badge.plus")
+//                .padding(.horizontal)
+                .frame(height: 54, alignment: .trailing)
+        }
+    }
+}

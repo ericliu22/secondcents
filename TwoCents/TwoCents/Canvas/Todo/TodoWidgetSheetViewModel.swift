@@ -25,6 +25,7 @@ final class TodoWidgetSheetViewModel: ObservableObject {
     @Published private(set) var todo: Todo?
     @Published var mentionedUsers: [DBUser?] = []
     @Published var modifiedMentionedUsers: [Int: String] = [:]  // Store changes locally
+    @Published var localTodoList: [TodoItem] = []
 
     func fetchTodo(spaceId: String, widget: CanvasWidget) {
         let db = Firestore.firestore()
@@ -41,6 +42,7 @@ final class TodoWidgetSheetViewModel: ObservableObject {
                 do {
                     if let todoData = try snapshot?.data(as: Todo.self) {
                         self.todo = todoData
+                        self.localTodoList = todoData.todoList
                         self.mentionedUsers = Array(repeating: nil, count: todoData.todoList.count)
 
                         for (index, todoItem) in todoData.todoList.enumerated() {
@@ -69,7 +71,11 @@ final class TodoWidgetSheetViewModel: ObservableObject {
             }
     }
 
-    func saveMentionedUsersChanges(spaceId: String, todoId: String) {
+    func toggleCompletionStatus(index: Int) {
+        localTodoList[index].completed.toggle()
+    }
+
+    func saveChanges(spaceId: String, todoId: String) {
         let db = Firestore.firestore()
         let ref = db.collection("spaces").document(spaceId).collection("todo").document(todoId)
 
@@ -87,6 +93,12 @@ final class TodoWidgetSheetViewModel: ObservableObject {
             for (index, mentionedUserId) in self.modifiedMentionedUsers {
                 if index < todoList.count {
                     todoList[index]["mentionedUserId"] = mentionedUserId
+                }
+            }
+
+            for (index, todoItem) in self.localTodoList.enumerated() {
+                if index < todoList.count {
+                    todoList[index]["completed"] = todoItem.completed
                 }
             }
 
