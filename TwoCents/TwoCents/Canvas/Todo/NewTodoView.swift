@@ -34,21 +34,15 @@ struct NewTodoView: View{
         
     }
     
-    @State var todoArray: [String] = ["", "", "", ""]
+
     
-    @State private var mentionedUsers: [DBUser?] = [nil, nil, nil, nil]
+
     
     
     
     
     var body: some View{
         ZStack{
-            
-            
-            
-            Color(UIColor.tertiarySystemFill)
-                .ignoresSafeArea()
-            
             
             
             
@@ -121,7 +115,6 @@ struct NewTodoView: View{
             
             //            .frame(width: 250, height: 250)
             .background(Color(UIColor.systemBackground))
-            //            .cornerRadius(30)
             
             
             
@@ -207,7 +200,7 @@ struct NewTodoView: View{
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Button(action: {
                             
-                            viewModel.addItem(todoArray: todoArray, userArray: mentionedUsers)
+                            viewModel.addItem(todoArray: viewModel.todoArray, userArray: viewModel.mentionedUsers)
                             Task{
                                 await viewModel.createNewTodo()
                             }
@@ -219,11 +212,40 @@ struct NewTodoView: View{
                         })
                         .disabled(
                             viewModel.listName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-                            || todoArray .allSatisfy { $0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
+                            || viewModel.todoArray .allSatisfy { $0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
                         )
                     }
                     
+                    
+                    
+                    
+                    
+                    
+                    ToolbarItem(placement: .bottomBar) {
+                       
+                            Button(action: {
+                                
+                                Task{
+                                    try? await viewModel.getAllUsers(spaceId: spaceId)
+                                    viewModel.autoAssignTasks(spaceId: spaceId)
+                                }
+                                
+                                
+                            }, label: {
+                                
+                                
+                                Text("Auto Assign")
+    //
+    //                                .foregroundStyle(.red)
+                              
+                            })
+                      
+                    }
+                    
+                    
                 }
+                
+              
             }
         })
         .task {
@@ -252,7 +274,7 @@ struct NewTodoView: View{
     
     var addItemSection: some View{
         VStack {
-            ForEach(todoArray.indices, id: \.self) { index in
+            ForEach(viewModel.todoArray.indices, id: \.self) { index in
                 
                 
                 
@@ -260,7 +282,7 @@ struct NewTodoView: View{
                     
                     
                     TextField("Item \(index + 1)", text:
-                                $todoArray[index]
+                                $viewModel.todoArray[index]
                               
                     )
 //                    .padding()
@@ -273,11 +295,11 @@ struct NewTodoView: View{
                     
                     
                     NavigationLink {
-                        MentionUserView(mentionedUser: $mentionedUsers[index], spaceId: spaceId)
+                        MentionUserView(mentionedUser: $viewModel.mentionedUsers[index], spaceId: spaceId)
                         
                     } label: {
                         
-                            UserChip(user: mentionedUsers[index])
+                        UserChip(user: viewModel.mentionedUsers[index])
                             .frame(height: 48)
                        
                         
@@ -295,15 +317,17 @@ struct NewTodoView: View{
                 Divider()
                 
             }
-            .onChange(of: todoArray.last) { oldValue, newValue in
+            .onChange(of: viewModel.todoArray.last) { oldValue, newValue in
                 
                 if newValue != "" /*&& todoArray.count <= 3*/{
-                    todoArray.append("")
-                    mentionedUsers.append(nil)
+                    viewModel.todoArray.append("")
+                    viewModel.mentionedUsers.append(nil)
                     
                 }
             }
             
+            
+           
             
             
             
@@ -364,7 +388,7 @@ struct UserChip: View {
             .padding(.vertical, 2.5)
             .background(.thickMaterial, in: Capsule())
             .background(targetUserColor, in: Capsule())
-            .frame(width: 100)
+            .frame(width: 100, alignment: .trailing)
         } else {
             Image(systemName: "at.badge.plus")
 //                .padding(.horizontal)

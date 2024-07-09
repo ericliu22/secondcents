@@ -151,7 +151,8 @@ struct CanvasPage: View {
                 MediaView(widget: widget, spaceId: spaceId)
                     .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
                     .cornerRadius(CORNER_RADIUS)
-                
+                 
+                    .shadow(color: Color.black.opacity(0.05), radius: 4, x: 0, y: 4)
                   
                  
                 
@@ -447,14 +448,16 @@ struct CanvasPage: View {
 
     func canvasView() -> some View {
             ZStack {
-//                                        Color(UIColor.secondarySystemBackground)
+                
+                                     
                 Color(UIColor.systemBackground)
-                //                        .scaleEffect(scale)
-                //                            .scaleEffect(scale,
-                    .clipped() // Ensure the content does not overflow
-                //                        .animation(.spring()) // Optional: Add some animation
+                
+                    .clipped()
+             
                     .frame(width: FRAME_SIZE, height: FRAME_SIZE)
-
+                  
+             
+                
                 Background()
                 GridView()
                 //                    .clipped() // Ensure the content does not overflow

@@ -84,6 +84,7 @@ struct TodoWidget: View {
                 }
                 .frame(width: TILE_SIZE, height: TILE_SIZE)
 //                .background(.ultraThickMaterial)
+             
                 .background(Color(UIColor.systemBackground))
               
                 .cornerRadius(CORNER_RADIUS)

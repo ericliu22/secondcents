@@ -40,7 +40,7 @@ final class NewWidgetViewModel: ObservableObject{
     private var url = ""
     
     
-    @Published var widgets: [CanvasWidget] = [ imageViewTest, /*videoViewTest,*/ mapViewTest, textViewTest, pollViewTest, todoViewTest]
+    @Published var widgets: [CanvasWidget] = [ imageViewTest, /*videoViewTest,*/ mapViewTest, todoViewTest, pollViewTest, textViewTest]
     
     @Published var tempWidget: CanvasWidget?
     

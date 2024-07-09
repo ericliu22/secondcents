@@ -90,9 +90,9 @@ struct NewPoll: View{
             
             
         }
-
+        .background(Color(UIColor.systemBackground))
         .frame(width: .infinity, height: .infinity)
-        .background(.ultraThickMaterial)
+
         .onTapGesture{showingView.toggle()}
         .fullScreenCover(isPresented: $showingView, content: {
             NavigationStack{

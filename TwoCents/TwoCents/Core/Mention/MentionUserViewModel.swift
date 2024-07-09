@@ -28,7 +28,7 @@ final class MentionUserViewModel: ObservableObject {
     
     
     
-    func getAllUsers(targetUserId: String, spaceId: String) async throws {
+    func getAllUsers(spaceId: String) async throws {
       
         try await loadCurrentSpace(spaceId: spaceId)
         

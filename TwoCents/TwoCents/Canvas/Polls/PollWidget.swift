@@ -148,7 +148,7 @@ struct PollWidget: WidgetView {
                 
                 
                 
-                .background(.ultraThickMaterial)
+                .background(Color(UIColor.systemBackground))
                 //                .background(Color.accentColor)
                 
                 .frame(width: TILE_SIZE, height:TILE_SIZE)

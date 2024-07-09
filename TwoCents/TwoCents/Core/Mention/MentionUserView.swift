@@ -16,9 +16,6 @@ struct MentionUserView: View {
     @StateObject private var viewModel = MentionUserViewModel()
     
     
-    let userId: String = (try? AuthenticationManager.shared.getAuthenticatedUser().uid) ?? ""
-    
-    
     @State var spaceId: String
     
     var filteredSearch: [DBUser]{
@@ -167,7 +164,7 @@ struct MentionUserView: View {
         }
         .task {
             
-            try? await viewModel.getAllUsers(targetUserId: userId, spaceId: spaceId)
+            try? await viewModel.getAllUsers(spaceId: spaceId)
             
         }
         
