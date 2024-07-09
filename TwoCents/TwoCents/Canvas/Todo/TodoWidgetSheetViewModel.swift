@@ -101,6 +101,12 @@ final class TodoWidgetSheetViewModel: ObservableObject {
                     todoList[index]["completed"] = todoItem.completed
                 }
             }
+            
+            for (index, todoItem) in self.localTodoList.enumerated() {
+                if index < todoList.count {
+                    todoList[index]["task"] = todoItem.task
+                }
+            }
 
             ref.updateData(["todoList": todoList]) { error in
                 if let error = error {

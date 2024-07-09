@@ -34,11 +34,16 @@ struct TodoWidgetSheetView: View {
                 ScrollView {
                     VStack {
                         ForEach(Array(sortedTodoItems.enumerated()), id: \.element.id) { index, todoItem in
+                            
+                            let originalIndex = viewModel.localTodoList.firstIndex(where: { $0.id == todoItem.id }) ?? 0
+                            
+                            
                             HStack(spacing: 0) {
+                                
                                 Button(action: {
                                     withAnimation {
                                         // Find the index of the todoItem in the original list
-                                        let originalIndex = viewModel.localTodoList.firstIndex(where: { $0.id == todoItem.id }) ?? 0
+                                      
                                         viewModel.toggleCompletionStatus(index: originalIndex)
                                     }
                                 }) {
@@ -48,7 +53,10 @@ struct TodoWidgetSheetView: View {
                                 }
                                 .padding(.trailing)
 
-                                Text(todoItem.task)
+                                TextField("Item \(index)", text: $viewModel.localTodoList[originalIndex].task)
+                                    .textFieldStyle(PlainTextFieldStyle())
+                                
+                             
                                 Spacer()
                                 NavigationLink {
                                     MentionUserView(mentionedUser: $viewModel.mentionedUsers[viewModel.localTodoList.firstIndex(where: { $0.id == todoItem.id }) ?? 0], spaceId: spaceId)
