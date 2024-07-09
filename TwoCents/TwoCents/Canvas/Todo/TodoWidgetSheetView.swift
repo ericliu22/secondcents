@@ -1,4 +1,3 @@
-//
 //  TodoWidgetSheetView.swift
 //  TwoCents
 //
@@ -9,6 +8,7 @@ import SwiftUI
 import Foundation
 import FirebaseFirestore
 import FirebaseFirestoreSwift
+
 struct TodoWidgetSheetView: View {
 
     let widget: CanvasWidget
@@ -24,26 +24,26 @@ struct TodoWidgetSheetView: View {
 
     @Environment(\.dismiss) var dismissScreen
 
+    var sortedTodoItems: [TodoItem] {
+        viewModel.localTodoList.sorted { !$0.completed && $1.completed }
+    }
+
     var body: some View {
         if let todo = viewModel.todo {
             NavigationStack {
                 ScrollView {
                     VStack {
-                        ForEach(todo.todoList.indices, id: \.self) { index in
-                            let todoItem = todo.todoList[index]
-
+                        ForEach(Array(sortedTodoItems.enumerated()), id: \.element.id) { index, todoItem in
                             HStack(spacing: 0) {
                                 Button(action: {
-                                    viewModel.toggleCompletionStatus(index: index)
+                                    viewModel.toggleCompletionStatus(index: viewModel.localTodoList.firstIndex(where: { $0.id == todoItem.id }) ?? 0)
                                 }) {
-                                    
-                                  
-                                    Image(systemName: viewModel.localTodoList[index].completed ? "circle.inset.filled" : "circle")
-                                        .foregroundColor(viewModel.localTodoList[index].completed ? Color.fromString(name: viewModel.mentionedUsers[index]?.userColor ?? "")  : .gray)
+                                    Image(systemName: todoItem.completed ? "circle.inset.filled" : "circle")
+                                        .foregroundColor(todoItem.completed ? Color.fromString(name: viewModel.mentionedUsers[index]?.userColor ?? "") : .gray)
                                         .font(.title3)
                                 }
                                 .padding(.trailing)
-                                
+
                                 Text(todoItem.task)
                                 Spacer()
                                 NavigationLink {
