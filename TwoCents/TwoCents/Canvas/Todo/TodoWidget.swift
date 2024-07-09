@@ -55,6 +55,27 @@ struct TodoWidget: View {
                     .padding(.top, 16)
                     .padding(.bottom, 3)
                     
+                    
+                    
+                    if todo.todoList.filter { !$0.completed }.count == 0 {
+                        
+                       
+                        Spacer()
+                            .frame(height: 32)
+                        
+                        Text("All tasks are done!")
+                            .font(.caption)
+                            .foregroundColor(.primary)
+                            .frame(maxWidth: .infinity, alignment: .center)
+                        
+                        Text("Too easyyy")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                            .frame(maxWidth: .infinity, alignment: .center)
+                            
+                           
+                    }
+                    
                     ForEach(todo.todoList.filter { !$0.completed }.prefix(todo.todoList.filter { !$0.completed }.count == 5 ? 5 : 4), id: \.self) { item in
                         TaskItemView(item: item)
                             .padding(.horizontal, 16)

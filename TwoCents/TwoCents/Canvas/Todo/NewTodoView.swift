@@ -234,7 +234,7 @@ struct NewTodoView: View{
                             }, label: {
                                 
                                 
-                                Text("Auto Assign")
+                                Text("Auto Assign Tasks")
     //
     //                                .foregroundStyle(.red)
                               

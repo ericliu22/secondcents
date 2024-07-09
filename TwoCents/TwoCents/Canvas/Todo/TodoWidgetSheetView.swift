@@ -148,7 +148,7 @@ struct TodoWidgetSheetView: View {
                 .padding(.vertical, 2.5)
                 .background(.thickMaterial, in: Capsule())
                 .background(targetUserColor, in: Capsule())
-                .frame(width: 100)
+                .frame(width: 100, alignment: .trailing)
             } else {
                 Image(systemName: "at.badge.plus")
                     .frame(height: 54, alignment: .trailing)
