@@ -55,19 +55,21 @@ struct TodoWidget: View {
                     .padding(.top, 16)
                     .padding(.bottom, 3)
                     
-                    ForEach(todo.todoList.prefix(todo.todoList.count == 5 ? 5 : 4), id: \.self) { item in
+                    ForEach(todo.todoList.filter { !$0.completed }.prefix(todo.todoList.filter { !$0.completed }.count == 5 ? 5 : 4), id: \.self) { item in
                         TaskItemView(item: item)
                             .padding(.horizontal, 16)
                     }
-                    
-                    if todo.todoList.count > 5 {
-                        let additionalTaskCount = todo.todoList.count - 4
-                        
+
+                    let filteredList = todo.todoList.filter { !$0.completed }
+
+                    if filteredList.count > 5 {
+                        let additionalTaskCount = filteredList.count - 4
+
                         HStack(spacing: 3) {
                             Color.secondary
                                 .frame(width: 3, height: 12)
                                 .cornerRadius(3)
-                            
+
                             Text("+\(additionalTaskCount) more")
                                 .font(.caption)
                                 .foregroundColor(.secondary)
@@ -76,6 +78,7 @@ struct TodoWidget: View {
                         }
                         .padding(.horizontal, 16)
                     }
+
                     
                     Spacer()
                 }
@@ -87,7 +90,7 @@ struct TodoWidget: View {
                 .overlay(
                     
                   
-                        Text("\(todo.todoList.count)")
+                    Text("\(todo.todoList.filter { !$0.completed }.count)")
                             .font(.title3)
                             .fontWeight(.semibold)
                             .padding(.top, 12)
