@@ -36,10 +36,14 @@ struct TodoWidgetSheetView: View {
                         ForEach(Array(sortedTodoItems.enumerated()), id: \.element.id) { index, todoItem in
                             HStack(spacing: 0) {
                                 Button(action: {
-                                    viewModel.toggleCompletionStatus(index: viewModel.localTodoList.firstIndex(where: { $0.id == todoItem.id }) ?? 0)
+                                    withAnimation {
+                                        // Find the index of the todoItem in the original list
+                                        let originalIndex = viewModel.localTodoList.firstIndex(where: { $0.id == todoItem.id }) ?? 0
+                                        viewModel.toggleCompletionStatus(index: originalIndex)
+                                    }
                                 }) {
                                     Image(systemName: todoItem.completed ? "circle.inset.filled" : "circle")
-                                        .foregroundColor(todoItem.completed ? Color.fromString(name: viewModel.mentionedUsers[index]?.userColor ?? "") : .gray)
+                                        .foregroundColor(todoItem.completed ? Color.fromString(name: viewModel.mentionedUsers[viewModel.localTodoList.firstIndex(where: { $0.id == todoItem.id }) ?? 0]?.userColor ?? "") : .gray)
                                         .font(.title3)
                                 }
                                 .padding(.trailing)
@@ -47,12 +51,12 @@ struct TodoWidgetSheetView: View {
                                 Text(todoItem.task)
                                 Spacer()
                                 NavigationLink {
-                                    MentionUserView(mentionedUser: $viewModel.mentionedUsers[index], spaceId: spaceId)
+                                    MentionUserView(mentionedUser: $viewModel.mentionedUsers[viewModel.localTodoList.firstIndex(where: { $0.id == todoItem.id }) ?? 0], spaceId: spaceId)
                                         .onDisappear(perform: {
-                                            viewModel.modifiedMentionedUsers[index] = viewModel.mentionedUsers[index]?.id ?? ""
+                                            viewModel.modifiedMentionedUsers[viewModel.localTodoList.firstIndex(where: { $0.id == todoItem.id }) ?? 0] = viewModel.mentionedUsers[viewModel.localTodoList.firstIndex(where: { $0.id == todoItem.id }) ?? 0]?.id ?? ""
                                         })
                                 } label: {
-                                    UserChip(user: viewModel.mentionedUsers[index])
+                                    UserChip(user: viewModel.mentionedUsers[viewModel.localTodoList.firstIndex(where: { $0.id == todoItem.id }) ?? 0])
                                 }
                             }
                             .frame(height: 48)
@@ -74,7 +78,9 @@ struct TodoWidgetSheetView: View {
                         ToolbarItem(placement: .navigationBarTrailing) {
                             Button(action: {
                                 dismissScreen()
-                                viewModel.saveChanges(spaceId: spaceId, todoId: widget.id.uuidString)
+                                withAnimation {
+                                    viewModel.saveChanges(spaceId: spaceId, todoId: widget.id.uuidString)
+                                }
                             }, label: {
                                 Text("Save")
                             })
