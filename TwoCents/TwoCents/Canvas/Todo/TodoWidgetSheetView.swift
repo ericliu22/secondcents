@@ -59,7 +59,7 @@ struct TodoWidgetSheetView: View {
                              
                                 Spacer()
                                 NavigationLink {
-                                    MentionUserView(mentionedUser: $viewModel.mentionedUsers[viewModel.localTodoList.firstIndex(where: { $0.id == todoItem.id }) ?? 0], spaceId: spaceId)
+                                    MentionUserView(mentionedUser: $viewModel.mentionedUsers[viewModel.localTodoList.firstIndex(where: { $0.id == todoItem.id }) ?? 0], allUsers: viewModel.allUsers)
                                         .onDisappear(perform: {
                                             viewModel.modifiedMentionedUsers[viewModel.localTodoList.firstIndex(where: { $0.id == todoItem.id }) ?? 0] = viewModel.mentionedUsers[viewModel.localTodoList.firstIndex(where: { $0.id == todoItem.id }) ?? 0]?.id ?? ""
                                         })
@@ -96,10 +96,15 @@ struct TodoWidgetSheetView: View {
                     }
                 }
             }
+            .task{
+                try? await viewModel.getAllUsers(spaceId: spaceId)
+            }
+            
         } else {
             ProgressView()
                 .backgroundStyle(Color(UIColor.systemBackground))
                 .onAppear {
+                   
                     viewModel.fetchTodo(spaceId: spaceId, widget: widget)
                 }
         }

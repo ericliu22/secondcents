@@ -17,7 +17,7 @@ final class MentionUserViewModel: ObservableObject {
    
     
     @Published private(set) var space:  DBSpace? = nil
-    @Published private(set) var allUsers: [DBUser] = []
+//    @Published private(set) var allUsers: [DBUser] = []
     
     func loadCurrentSpace(spaceId: String) async throws {
         
@@ -26,21 +26,21 @@ final class MentionUserViewModel: ObservableObject {
     }
     
     
-    
-    
-    func getAllUsers(spaceId: String) async throws {
-      
-        try await loadCurrentSpace(spaceId: spaceId)
-        
-        guard let space else {return }
-       
-        self.allUsers = try await UserManager.shared.getMembersInfo(members: (space.members)!)
-        
-        
-        
-        
-    }
-    
+//    
+//    
+//    func getAllUsers(spaceId: String) async throws {
+//      
+//        try await loadCurrentSpace(spaceId: spaceId)
+//        
+//        guard let space else {return }
+//       
+//        self.allUsers = try await UserManager.shared.getMembersInfo(members: (space.members)!)
+//        
+//        
+//        
+//        
+//    }
+//    
   
    
     

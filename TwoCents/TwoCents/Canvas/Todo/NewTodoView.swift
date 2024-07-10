@@ -225,10 +225,9 @@ struct NewTodoView: View{
                        
                             Button(action: {
                                 
-                                Task{
-                                    try? await viewModel.getAllUsers(spaceId: spaceId)
+                                   
                                     viewModel.autoAssignTasks(spaceId: spaceId)
-                                }
+                                
                                 
                                 
                             }, label: {
@@ -249,6 +248,7 @@ struct NewTodoView: View{
             }
         })
         .task {
+            try? await viewModel.getAllUsers(spaceId: spaceId)
             userColor = try! await Color.fromString(name: UserManager.shared.getUser(userId: AuthenticationManager.shared.getAuthenticatedUser().uid).userColor ?? "")
         }
     }
@@ -295,7 +295,7 @@ struct NewTodoView: View{
                     
                     
                     NavigationLink {
-                        MentionUserView(mentionedUser: $viewModel.mentionedUsers[index], spaceId: spaceId)
+                        MentionUserView(mentionedUser: $viewModel.mentionedUsers[index], allUsers: viewModel.allUsers)
                         
                     } label: {
                         

@@ -27,6 +27,10 @@ final class TodoWidgetSheetViewModel: ObservableObject {
     @Published var modifiedMentionedUsers: [Int: String] = [:]  // Store changes locally
     @Published var localTodoList: [TodoItem] = []
 
+    
+    @Published var allUsers: [DBUser] = []
+    @Published private(set) var space:  DBSpace? = nil
+    
     func fetchTodo(spaceId: String, widget: CanvasWidget) {
         let db = Firestore.firestore()
         db.collection("spaces")
@@ -118,4 +122,24 @@ final class TodoWidgetSheetViewModel: ObservableObject {
             }
         }
     }
+    
+    
+    
+    func getAllUsers(spaceId: String) async throws {
+        try await loadCurrentSpace(spaceId: spaceId)
+        guard let space = space else { return }
+        self.allUsers = try await UserManager.shared.getMembersInfo(members: (space.members)!)
+    }
+
+   
+
+  
+   
+   func loadCurrentSpace(spaceId: String) async throws {
+       
+       self.space = try await SpaceManager.shared.getSpace(spaceId: spaceId)
+       
+   }
+    
+    
 }

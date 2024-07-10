@@ -16,11 +16,16 @@ struct MentionUserView: View {
     @StateObject private var viewModel = MentionUserViewModel()
     
     
-    @State var spaceId: String
+//    @State var spaceId: String
+    
+    
+    @State var allUsers: [DBUser]
+    
+    
     
     var filteredSearch: [DBUser]{
-        guard !searchTerm.isEmpty else { return viewModel.allUsers}
-        return viewModel.allUsers.filter{$0.name!.localizedCaseInsensitiveContains(searchTerm) || $0.username!.localizedCaseInsensitiveContains(searchTerm)}
+        guard !searchTerm.isEmpty else { return allUsers}
+        return allUsers.filter{$0.name!.localizedCaseInsensitiveContains(searchTerm) || $0.username!.localizedCaseInsensitiveContains(searchTerm)}
     }
     
     
@@ -162,18 +167,18 @@ struct MentionUserView: View {
             
             
         }
-        .task {
-            
-            try? await viewModel.getAllUsers(spaceId: spaceId)
-            
-        }
+//        .task {
+//            
+//            try? await viewModel.getAllUsers(spaceId: spaceId)
+//            
+//        }
         
         
     }
 }
 
-struct MentionUserView_Previews: PreviewProvider {
-    static var previews: some View {
-        MentionUserView(mentionedUser: .constant(nil), spaceId: "CF5BDBDF-44C0-4382-AD32-D92EC05AA35E")
-    }
-}
+//struct MentionUserView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        MentionUserView(mentionedUser: .constant(nil), spaceId: "CF5BDBDF-44C0-4382-AD32-D92EC05AA35E")
+//    }
+//}
