@@ -49,6 +49,8 @@ struct DBSpace: Identifiable, Codable{
     
 }
 
+let WIDGET_SPACING: CGFloat = TILE_SIZE + TILE_SPACING
+
 final class SpaceManager{
     
     static let shared = SpaceManager()
@@ -89,7 +91,7 @@ final class SpaceManager{
     
     }
     
-    func moveDatabaseWidget(spaceId: String, widgetId: String, x: CGFloat, y: CGFloat) {
+    func moveWidget(spaceId: String, widgetId: String, x: CGFloat, y: CGFloat) {
         spaceDocument(spaceId: spaceId).collection("widgets").document(widgetId).updateData([
             "x": x,
             "y": y
@@ -139,7 +141,6 @@ final class SpaceManager{
         try await spaceDocument(spaceId: spaceId).updateData(data)
     }
     
-    //Takes the CanvasWidget class as a parameter, encodes it, then uploads to database
     func uploadWidget(spaceId: String, widget: CanvasWidget) {
         do {
             try spaceDocument(spaceId: spaceId)
@@ -149,17 +150,57 @@ final class SpaceManager{
         } catch {
             print("Some shit fucked up")
         }
+        
+        Task {
+            guard let space: DBSpace = try? await SpaceManager.shared.getSpace(spaceId: spaceId) else {
+                return
+            }
+            //Race condition: widgets can overlap if user tries to move a widget while user creates a widget
+            //Tbh who cares skill issue
+            moveWidget(spaceId: spaceId, widgetId: widget.id.uuidString, x: space.nextWidgetX ?? FRAME_SIZE/2, y: space.nextWidgetY ?? FRAME_SIZE/2)
+            await setNextWidgetSpot(spaceId: spaceId, startingX: space.nextWidgetX ?? FRAME_SIZE/2, startingY: space.nextWidgetY ?? FRAME_SIZE/2)
+        }
     }
     
-    //Update the nextspot
-    func setWidgetSpot(spaceId: String) async {
-        guard let space = try? await SpaceManager.shared.getSpace(spaceId: spaceId) else {
-            print("setWidgetSpot: Failed to get space")
+    func setNextWidgetSpot(spaceId: String, startingX: CGFloat, startingY: CGFloat) async {
+        guard let (newX, newY) = try? await findNextSpot(spaceId: spaceId, startingX: startingX, startingY: startingY) else {
+            print("Failed to find next spot")
             return
         }
         
-        //spaceDocument(spaceId: spaceId).collection("widgets").whereField(<#T##field: String##String#>, arrayContains: <#T##Any#>)
+        //If the function gets here anyways it should work
+        //Unless someone deletes the space as this happens; Rare but we don't care
+        try! await spaceDocument(spaceId: spaceId).updateData([
+            "nextWidgetX": newX,
+            "nextWidgetY": newY
+        ])
+    }
+    
+    enum FuckedLoop: Error {
+        case runtimeError(String)
+    }
         
+    private func findNextSpot(spaceId: String, startingX: CGFloat, startingY: CGFloat) async throws -> (CGFloat, CGFloat){
+        var currentX: CGFloat = startingX
+        var currentY: CGFloat = startingY
+        
+        var count: Int = 0
+        //Highly Questionable; We set a hard coded limit of 1k in case things go to shit
+        while (true || count != 1000) {
+            let spotEmpty = try await spaceDocument(spaceId: spaceId).collection("widgets")
+                .whereField("x", isEqualTo: currentX)
+                .whereField("y", isEqualTo: currentY)
+                .limit(to: 1)
+                .getDocuments()
+                .isEmpty
+            if spotEmpty { break }
+            
+            currentX += WIDGET_SPACING
+            currentY += WIDGET_SPACING
+            count+=1
+        }
+        if count == 1000 { throw FuckedLoop.runtimeError("Loop reached 1000") }
+        return (currentX, currentY)
     }
 
     func removeWidget(spaceId: String, widget: CanvasWidget) {

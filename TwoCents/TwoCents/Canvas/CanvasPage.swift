@@ -17,11 +17,16 @@ let db = Firestore.firestore()
 
 
 let TILE_SIZE: CGFloat = 150
+let TILE_SPACING: CGFloat = 30
 let MAX_ZOOM: CGFloat = 3.0
 let MIN_ZOOM: CGFloat = 0.6
 let CORNER_RADIUS: CGFloat = 15
 let FRAME_SIZE: CGFloat = 1000
 
+func roundToTile(number : CGFloat) -> CGFloat {
+    let tile = TILE_SIZE + TILE_SPACING
+    return tile * CGFloat(Int(round(number / (tile))))
+}
 
 func getUID() async throws -> String? {
     let authDataResult = try AuthenticationManager.shared.getAuthenticatedUser()
@@ -145,16 +150,17 @@ struct CanvasPage: View {
                     .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
                     .cornerRadius(CORNER_RADIUS)
                     .shadow(color: Color.black.opacity(0.05), radius: 4, x: 0, y: 4)
-                  
-                 
-                
+                    .frame(
+                        width: TILE_SIZE,
+                        height: TILE_SIZE
+                    )
+                    .position(x: widget.x ??  FRAME_SIZE/2, y: widget.y ?? FRAME_SIZE/2)
                 //clickable area/outline when clicked
                     .overlay(
                         RoundedRectangle(cornerRadius: CORNER_RADIUS)
                             .strokeBorder(viewModel.selectedWidget == widget ? Color.secondary : .clear, lineWidth: 3)
                             .contentShape(RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
                             .cornerRadius(CORNER_RADIUS)
-                        
                             .onTapGesture(count: 2, perform: {
                                 if viewModel.selectedWidget != widget || !widgetDoubleTapped {
                                     //select
@@ -190,7 +196,6 @@ struct CanvasPage: View {
                                 }
                             })
                     )
-                
 
                 
                 //full name below widget
@@ -222,10 +227,10 @@ struct CanvasPage: View {
                             .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
                         
                         //a bad way of resizing the draggable items but oh well
-                            .frame(
-                                width: TILE_SIZE,
-                                height: TILE_SIZE
-                            )
+//                            .frame(
+//                                width: TILE_SIZE,
+//                                height: TILE_SIZE
+//                            )
                             .onAppear{
                                 draggingItem = widget
                             }
@@ -401,14 +406,13 @@ struct CanvasPage: View {
 
                 Background()
                 GridView()
-                    .frame(width: FRAME_SIZE, height: FRAME_SIZE)
             }
             .dropDestination(for: CanvasWidget.self) { receivedWidgets, location in
                 //This is necessary keep these lines
-                let x = location.x - FRAME_SIZE/2
-                let y = location.y - FRAME_SIZE/2
+                let x = roundToTile(number: location.x)
+                let y = roundToTile(number: location.y)
                 
-                SpaceManager.shared.moveDatabaseWidget(spaceId: spaceId, widgetId: draggingItem!.id.uuidString, x: x, y: y)
+                SpaceManager.shared.moveWidget(spaceId: spaceId, widgetId: draggingItem!.id.uuidString, x: x, y: y)
                 draggingItem = nil
                 return true
             }
