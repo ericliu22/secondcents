@@ -68,7 +68,7 @@ final class NewWidgetViewModel: ObservableObject{
             self.url = url.absoluteString
             let uid = try! AuthenticationManager.shared.getAuthenticatedUser().uid
 
-            tempWidget = CanvasWidget(width: 250, height: 250, borderColor: .black, userId: uid, media: .video, mediaURL: URL(string: self.url)!, widgetName: "Video Widget", widgetDescription: "Add a video")
+            tempWidget = CanvasWidget(width: 250, height: 250, x: 0, y: 0, borderColor: .black, userId: uid, media: .video, mediaURL: URL(string: self.url)!, widgetName: "Video Widget", widgetDescription: "Add a video")
             loading = false
             completion(true)
         }
@@ -97,7 +97,7 @@ final class NewWidgetViewModel: ObservableObject{
                 self.url = url.absoluteString
                 let uid = try! AuthenticationManager.shared.getAuthenticatedUser().uid
                 
-                tempWidget = CanvasWidget(width: 250, height:  250, borderColor: .black, userId: uid, media: .image, mediaURL: URL(string: self.url)!, widgetName: "Photo Widget", widgetDescription: "Add a photo to spice the convo")
+                tempWidget = CanvasWidget(width: 250, height:  250, x: 0, y: 0, borderColor: .black, userId: uid, media: .image, mediaURL: URL(string: self.url)!, widgetName: "Photo Widget", widgetDescription: "Add a photo to spice the convo")
                 
                 
                 loading = false

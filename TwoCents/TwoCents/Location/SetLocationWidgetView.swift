@@ -289,6 +289,8 @@ struct SetLocationWidgetView: View {
         }
 
         let newCanvasWidget: CanvasWidget = CanvasWidget(
+            x: 0,
+            y: 0,
             borderColor: Color.fromString(name: user.userColor!),
             userId: uid,
             media: .map,

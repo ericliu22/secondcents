@@ -34,7 +34,7 @@ struct FrontPageView: View {
 //                    Text("Event widget")
 //                }
             
-            EventWidget(widget: CanvasWidget(width: .infinity, height:  .infinity, borderColor: .red, userId: "jisookim", media: .event, widgetName: "Text", widgetDescription: "A bar is a bar", textString: "Fruits can't even see so how my Apple Watch"))
+            EventWidget(widget: CanvasWidget(width: .infinity, height:  .infinity, x:0, y: 0, borderColor: .red, userId: "jisookim", media: .event, widgetName: "Text", widgetDescription: "A bar is a bar", textString: "Fruits can't even see so how my Apple Watch"))
                 .tabItem {
                     Image(systemName: "magnifyingglass")
                     Text("Event widget")
