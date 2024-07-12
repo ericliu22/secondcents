@@ -226,11 +226,6 @@ final class UserManager{
     
     
     
-//    func getUser(spaceId: String) async throws -> DBSpace {
-////        try await userDocument(userId: userId).getDocument(as: DBUser.self, decoder: decoder)
-//        try await spaceDocument(spaceId: spaceId).getDocument(as: DBSpace.self)
-//        
-//    }
     
     func getAllSpaces(userId: String) async throws -> [DBSpace]{
         print("USERID: \(userId)")
@@ -239,13 +234,9 @@ final class UserManager{
        
         snapshot = try await spaceCollection.whereField("members", arrayContains: userId).getDocuments()
         
-        
-        
         var spaces: [DBSpace] = []
         
-       
         for document in snapshot.documents{
-            
         
             let space = try document.data(as: DBSpace.self)
             

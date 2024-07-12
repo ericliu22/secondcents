@@ -37,6 +37,8 @@ struct CanvasWidget: Hashable, Codable, Identifiable, Transferable, Equatable {
     var id: UUID = UUID()
     var width: CGFloat = TILE_SIZE
     var height: CGFloat = TILE_SIZE
+    var x: CGFloat?
+    var y: CGFloat?
     var borderColor: Color
     var userId: String
     var media: Media
@@ -86,6 +88,8 @@ extension Media: Codable {
             self = .image
         case "poll":
             self = .poll
+        case "map":
+            self = .map
         default:
             self = .image
         }
@@ -133,7 +137,8 @@ extension CanvasWidget {
         case location
         case emojis
         case emojiPressed
-        
+        case x
+        case y
     }
     
     init(from decoder: Decoder) throws {
@@ -151,6 +156,8 @@ extension CanvasWidget {
         self.textString = try container.decodeIfPresent(String.self, forKey: .textString)
         self.location = try container.decodeIfPresent(String.self, forKey: .location)
         self.emojiPressed = try container.decode([String: [String]].self, forKey: .emojiPressed)
+        self.x = try container.decodeIfPresent(CGFloat.self, forKey: .x)
+        self.y = try container.decodeIfPresent(CGFloat.self, forKey: .y)
     }
     
     func encode(to encoder: Encoder) throws {
@@ -168,8 +175,9 @@ extension CanvasWidget {
         try container.encodeIfPresent(location, forKey: .location)
         try container.encode(emojis, forKey: .emojis)
         try container.encode(emojiPressed, forKey: .emojiPressed)
+        try container.encodeIfPresent(x, forKey: .x)
+        try container.encodeIfPresent(y, forKey: .y)
     }
-
     
 }
 

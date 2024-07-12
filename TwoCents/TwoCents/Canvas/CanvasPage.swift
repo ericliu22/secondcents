@@ -17,11 +17,17 @@ let db = Firestore.firestore()
 
 
 let TILE_SIZE: CGFloat = 150
+let TILE_SPACING: CGFloat = 30
 let MAX_ZOOM: CGFloat = 3.0
 let MIN_ZOOM: CGFloat = 0.6
 let CORNER_RADIUS: CGFloat = 15
 let FRAME_SIZE: CGFloat = 1000
+let WIDGET_SPACING: CGFloat = TILE_SIZE + TILE_SPACING
 
+func roundToTile(number : CGFloat) -> CGFloat {
+    let tile = WIDGET_SPACING
+    return tile * CGFloat(Int(round(number / (tile))))
+}
 
 func getUID() async throws -> String? {
     let authDataResult = try AuthenticationManager.shared.getAuthenticatedUser()
@@ -125,11 +131,8 @@ struct CanvasPage: View {
             }
             self.canvasWidgets = []
             for document in query.documents {
-                
                 let newWidget = try! document.data(as: CanvasWidget.self)
                 self.canvasWidgets.append(newWidget)
-                
-                
             }
         }
     }
@@ -141,69 +144,69 @@ struct CanvasPage: View {
         pullDocuments()
     }
     
-    func GridView() -> some View {
-        let columns = Array(repeating: GridItem(.fixed(TILE_SIZE), spacing: 30, alignment: .center), count: 5)
-        
-        return LazyVGrid(columns: columns, alignment: .center, spacing: 30, content: {
+    func widgetDoubleTap(widget: CanvasWidget) {
+        if viewModel.selectedWidget != widget || !widgetDoubleTapped {
+            //select
             
+            viewModel.selectedWidget = widget
+            widgetDoubleTapped = true
+            //                                    showSheet = false
+            //                                    showNewWidgetView = false
+            activeSheet = nil
+            
+        } else {
+            //deselect
+            viewModel.selectedWidget = nil
+            widgetDoubleTapped = false
+            //                                    showSheet = true
+            //                                    showNewWidgetView = false
+            activeSheet = .chat
+        }
+        Task {
+            do {
+                let user = try await UserManager.shared.getUser(userId: widget.userId)
+                if let name = user.name {
+                    fullName = name
+                } else {
+                    // Handle the case where name is nil
+                    print("User name is nil")
+                    
+                }
+            } catch {
+                // Handle the error
+                print("Failed to get user: \(error.localizedDescription)")
+            }
+        }
+    }
+    
+    func GridView() -> some View {
             ForEach(canvasWidgets, id:\.id) { widget in
                 //main widget
                 MediaView(widget: widget, spaceId: spaceId)
                     .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
                     .cornerRadius(CORNER_RADIUS)
-                 
                     .shadow(color: Color.black.opacity(0.05), radius: 4, x: 0, y: 4)
-                  
-                 
-                
+                    .frame(
+                        width: TILE_SIZE,
+                        height: TILE_SIZE
+                    )
+                    .position(x: widget.x ??  FRAME_SIZE/2, y: widget.y ?? FRAME_SIZE/2)
                 //clickable area/outline when clicked
                     .overlay(
                         RoundedRectangle(cornerRadius: CORNER_RADIUS)
                             .strokeBorder(viewModel.selectedWidget == widget ? Color.secondary : .clear, lineWidth: 3)
                             .contentShape(RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
+                            .frame(width: TILE_SIZE, height: TILE_SIZE)
+                            .position(x: widget.x ??  FRAME_SIZE/2, y: widget.y ?? FRAME_SIZE/2)
                             .cornerRadius(CORNER_RADIUS)
-                        
-                            .onTapGesture(count: 2, perform: {
-                                if viewModel.selectedWidget != widget || !widgetDoubleTapped {
-                                    //select
-                                    
-                                    viewModel.selectedWidget = widget
-                                    widgetDoubleTapped = true
-                                    //                                    showSheet = false
-                                    //                                    showNewWidgetView = false
-                                    activeSheet = nil
-                                    
-                                } else {
-                                    //deselect
-                                    viewModel.selectedWidget = nil
-                                    widgetDoubleTapped = false
-                                    //                                    showSheet = true
-                                    //                                    showNewWidgetView = false
-                                    activeSheet = .chat
-                                }
-                                Task {
-                                    do {
-                                        let user = try await UserManager.shared.getUser(userId: widget.userId)
-                                        if let name = user.name {
-                                            fullName = name
-                                        } else {
-                                            // Handle the case where name is nil
-                                            print("User name is nil")
-                                            
-                                        }
-                                    } catch {
-                                        // Handle the error
-                                        print("Failed to get user: \(error.localizedDescription)")
-                                    }
-                                }
-                            })
+                            .onTapGesture(count: 2, perform: {widgetDoubleTap(widget: widget)})
                     )
-                
 
                 
                 //full name below widget
                     .overlay(content: {
                         Text(widgetDoubleTapped ? fullName : "" )
+                            .position(x: widget.x ??  FRAME_SIZE/2, y: widget.y ?? FRAME_SIZE/2)
                             .font(.caption)
                             .foregroundStyle(.secondary)
                             .offset(y:90)
@@ -216,81 +219,35 @@ struct CanvasPage: View {
                         if widgetDoubleTapped && viewModel.selectedWidget == widget {
                             EmojiReactionsView(spaceId: spaceId, widget: widget)
                                 .offset(y:-60)
-                            
+                                .position(x: widget.x ??  FRAME_SIZE/2, y: widget.y ?? FRAME_SIZE/2)
+
                         }
                     })
-                
                     .overlay(content: {
-                        
-                        
                         viewModel.selectedWidget == nil/* && draggingItem == nil */?
                         EmojiCountOverlayView(spaceId: spaceId, widget: widget)
                             .offset(y: TILE_SIZE/2)
+                            .position(x: widget.x ??  FRAME_SIZE/2, y: widget.y ?? FRAME_SIZE/2)
+
                         : nil
-                        
-                        
                     })
-                
                     .draggable(widget) {
-                        
-                        VStack{
-                            MediaView(widget: widget, spaceId: spaceId)
-                                .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
-                            
-                            //a bad way of resizing the draggable items but oh well
-                                .frame(
-                                    width: TILE_SIZE,
-                                    height: TILE_SIZE
-                                )
-                                .onAppear{
-                                    draggingItem = widget
-                                    
-                                    
-                                }
-                            
-                            
-                            
-                        }
-                        
-                    }
-                
-                //where its dropped
-                    .dropDestination(for: CanvasWidget.self) { items, location in
-                        draggingItem = nil
-                        return false
-                    } isTargeted: { status in
-                        if let draggingItem, status, draggingItem != widget {
-                            if let sourceIndex = canvasWidgets.firstIndex(of: draggingItem),
-                               let destinationIndex = canvasWidgets.firstIndex(of: widget) {
-                                //                                withAnimation(.bouncy) {
-                                //move widget
-                                let sourceItem = canvasWidgets.remove(at: sourceIndex)
-                                canvasWidgets.insert(sourceItem, at: destinationIndex)
-                                
-                                
-                                
-                                //deselect
-                                viewModel.selectedWidget = nil
-                                widgetDoubleTapped = false
-                                
-                                //                                showSheet = true
-                                //                                showNewWidgetView = false
-                                activeSheet = .chat
-                                
-                                //                                }
+                        MediaView(widget: widget, spaceId: spaceId)
+                            .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
+                            .frame(
+                                width: TILE_SIZE,
+                                height: TILE_SIZE
+                            )
+                            .onAppear{
+                                draggingItem = widget
                             }
-                        }
-                        
-                        //added this line for emoji overlay... if it breaks delete this
-                        //                        draggingItem = nil
                     }
                 
             }
             
-        }
                                  
-                                )
     }
+
     
     func Background() -> some View {
                 GeometryReader { geometry in
@@ -451,20 +408,27 @@ struct CanvasPage: View {
                 
                                      
                 Color(UIColor.systemBackground)
-                
-                    .clipped()
-             
-                    .frame(width: FRAME_SIZE, height: FRAME_SIZE)
-                  
-             
-                
+                .clipped()
+                .frame(width: FRAME_SIZE, height: FRAME_SIZE)
+
                 Background()
                 GridView()
-                //                    .clipped() // Ensure the content does not overflow
-                //                    .animation(.spring()) // Optional: Add some animation
-                
             }
+            .dropDestination(for: CanvasWidget.self) { receivedWidgets, location in
+                //This is necessary keep these lines
                 
+                if draggingItem != nil {
+                    let x = roundToTile(number: location.x)
+                    let y = roundToTile(number: location.y)
+
+                    SpaceManager.shared.moveWidget(spaceId: spaceId, widgetId: draggingItem!.id.uuidString, x: x, y: y)
+                    draggingItem = nil
+                    return true
+                } else {
+                    return false
+                }
+            }
+   
                 .onTapGesture(count: 2, perform: {
                     
                     activeSheet = .newTextView
@@ -726,6 +690,7 @@ struct CanvasPage: View {
             
             
         })
+
         .onDisappear(perform: {
             activeSheet = nil
         })

@@ -298,7 +298,6 @@ func reactionNotification(spaceId: String, userUID: String, message: String) {
 }
 
 func friendRequestNotification(userUID: String, friendUID: String) async {
-    let user: DBUser
     guard let user = try? await UserManager.shared.getUser(userId: userUID) else {
         print("friendRequestNotification: Failed to obtain user")
         return
