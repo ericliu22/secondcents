@@ -49,7 +49,6 @@ struct DBSpace: Identifiable, Codable{
     
 }
 
-let WIDGET_SPACING: CGFloat = TILE_SIZE + TILE_SPACING
 
 final class SpaceManager{
     
@@ -86,8 +85,6 @@ final class SpaceManager{
           
         ]
         try await spaceDocument(spaceId: spaceId).updateData(newArray)
-        
-        
     
     }
     
@@ -157,9 +154,29 @@ final class SpaceManager{
             }
             //Race condition: widgets can overlap if user tries to move a widget while user creates a widget
             //Tbh who cares skill issue
-            moveWidget(spaceId: spaceId, widgetId: widget.id.uuidString, x: space.nextWidgetX ?? FRAME_SIZE/2, y: space.nextWidgetY ?? FRAME_SIZE/2)
-            await setNextWidgetSpot(spaceId: spaceId, startingX: space.nextWidgetX ?? FRAME_SIZE/2, startingY: space.nextWidgetY ?? FRAME_SIZE/2)
+            await moveToEmptySpace(space: space, widgetId: widget.id.uuidString)
         }
+    }
+    
+    func moveToEmptySpace(space: DBSpace, widgetId: String) async {
+        guard (space.nextWidgetX != nil || space.nextWidgetY != nil) else {
+            moveWidget(spaceId: space.spaceId, widgetId: widgetId, x: roundToTile(number: FRAME_SIZE/2), y: roundToTile(number: FRAME_SIZE/2))
+            await setNextWidgetSpot(spaceId: space.spaceId, startingX: roundToTile(number: FRAME_SIZE/2), startingY: roundToTile(number: FRAME_SIZE/2))
+            return
+        }
+        
+        //We already checked for null you cunt stop making me exclamation mark
+        
+        guard let empty = try? await spotEmpty(spaceId: space.spaceId, x: space.nextWidgetX!, y: space.nextWidgetY!) else {
+            return
+        }
+        
+        if !empty {
+            await setNextWidgetSpot(spaceId: space.spaceId, startingX: space.nextWidgetX!, startingY: space.nextWidgetY!)
+        }
+        
+        moveWidget(spaceId: space.spaceId, widgetId: widgetId, x: space.nextWidgetX!, y: space.nextWidgetY!)
+        await setNextWidgetSpot(spaceId: space.spaceId, startingX: space.nextWidgetX!, startingY: space.nextWidgetY!)
     }
     
     func setNextWidgetSpot(spaceId: String, startingX: CGFloat, startingY: CGFloat) async {
@@ -181,26 +198,44 @@ final class SpaceManager{
     }
         
     private func findNextSpot(spaceId: String, startingX: CGFloat, startingY: CGFloat) async throws -> (CGFloat, CGFloat){
+        let LIMIT = 100
         var currentX: CGFloat = startingX
         var currentY: CGFloat = startingY
         
         var count: Int = 0
-        //Highly Questionable; We set a hard coded limit of 1k in case things go to shit
-        while (true || count != 1000) {
-            let spotEmpty = try await spaceDocument(spaceId: spaceId).collection("widgets")
-                .whereField("x", isEqualTo: currentX)
-                .whereField("y", isEqualTo: currentY)
+        //@TODO: Replace Hardcoded values with constants:
+        //1. Last available X and Y on canvas respectively
+        //2. First available X and Y on canvas respectively
+        //3. Maximum number of widgets allowed on canvas
+        while (true || count != LIMIT ) {
+            if try await spotEmpty(spaceId: spaceId, x: currentX, y: currentY) { break }
+            
+            if currentX + WIDGET_SPACING > 1180 {
+                currentX = 360
+                currentY += WIDGET_SPACING
+            } else if currentY + WIDGET_SPACING > 1180 {
+                currentX = 360
+                currentY = 360
+            } else {
+                currentX += WIDGET_SPACING
+            }
+            //Optional if we wanna be really safe
+            //currentX = roundToTile(number: currentX)
+            //currentY = roundToTile(number: currentY)
+            count+=1
+        }
+        //Highly Questionable while(true); We set a hard coded limit in case things go to shit
+        if count == LIMIT { throw FuckedLoop.runtimeError("Loop reached 1000") }
+        return (currentX, currentY)
+    }
+    
+    private func spotEmpty(spaceId: String, x: CGFloat, y: CGFloat) async throws -> Bool {
+        return try await spaceDocument(spaceId: spaceId).collection("widgets")
+                .whereField("x", isEqualTo: x)
+                .whereField("y", isEqualTo: y)
                 .limit(to: 1)
                 .getDocuments()
                 .isEmpty
-            if spotEmpty { break }
-            
-            currentX += WIDGET_SPACING
-            currentY += WIDGET_SPACING
-            count+=1
-        }
-        if count == 1000 { throw FuckedLoop.runtimeError("Loop reached 1000") }
-        return (currentX, currentY)
     }
 
     func removeWidget(spaceId: String, widget: CanvasWidget) {

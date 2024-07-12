@@ -22,9 +22,10 @@ let MAX_ZOOM: CGFloat = 3.0
 let MIN_ZOOM: CGFloat = 0.6
 let CORNER_RADIUS: CGFloat = 15
 let FRAME_SIZE: CGFloat = 1000
+let WIDGET_SPACING: CGFloat = TILE_SIZE + TILE_SPACING
 
 func roundToTile(number : CGFloat) -> CGFloat {
-    let tile = TILE_SIZE + TILE_SPACING
+    let tile = WIDGET_SPACING
     return tile * CGFloat(Int(round(number / (tile))))
 }
 
@@ -143,6 +144,41 @@ struct CanvasPage: View {
         pullDocuments()
     }
     
+    func widgetDoubleTap(widget: CanvasWidget) {
+        if viewModel.selectedWidget != widget || !widgetDoubleTapped {
+            //select
+            
+            viewModel.selectedWidget = widget
+            widgetDoubleTapped = true
+            //                                    showSheet = false
+            //                                    showNewWidgetView = false
+            activeSheet = nil
+            
+        } else {
+            //deselect
+            viewModel.selectedWidget = nil
+            widgetDoubleTapped = false
+            //                                    showSheet = true
+            //                                    showNewWidgetView = false
+            activeSheet = .chat
+        }
+        Task {
+            do {
+                let user = try await UserManager.shared.getUser(userId: widget.userId)
+                if let name = user.name {
+                    fullName = name
+                } else {
+                    // Handle the case where name is nil
+                    print("User name is nil")
+                    
+                }
+            } catch {
+                // Handle the error
+                print("Failed to get user: \(error.localizedDescription)")
+            }
+        }
+    }
+    
     func GridView() -> some View {
             ForEach(canvasWidgets, id:\.id) { widget in
                 //main widget
@@ -160,47 +196,17 @@ struct CanvasPage: View {
                         RoundedRectangle(cornerRadius: CORNER_RADIUS)
                             .strokeBorder(viewModel.selectedWidget == widget ? Color.secondary : .clear, lineWidth: 3)
                             .contentShape(RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
+                            .frame(width: TILE_SIZE, height: TILE_SIZE)
+                            .position(x: widget.x ??  FRAME_SIZE/2, y: widget.y ?? FRAME_SIZE/2)
                             .cornerRadius(CORNER_RADIUS)
-                            .onTapGesture(count: 2, perform: {
-                                if viewModel.selectedWidget != widget || !widgetDoubleTapped {
-                                    //select
-                                    
-                                    viewModel.selectedWidget = widget
-                                    widgetDoubleTapped = true
-                                    //                                    showSheet = false
-                                    //                                    showNewWidgetView = false
-                                    activeSheet = nil
-                                    
-                                } else {
-                                    //deselect
-                                    viewModel.selectedWidget = nil
-                                    widgetDoubleTapped = false
-                                    //                                    showSheet = true
-                                    //                                    showNewWidgetView = false
-                                    activeSheet = .chat
-                                }
-                                Task {
-                                    do {
-                                        let user = try await UserManager.shared.getUser(userId: widget.userId)
-                                        if let name = user.name {
-                                            fullName = name
-                                        } else {
-                                            // Handle the case where name is nil
-                                            print("User name is nil")
-                                            
-                                        }
-                                    } catch {
-                                        // Handle the error
-                                        print("Failed to get user: \(error.localizedDescription)")
-                                    }
-                                }
-                            })
+                            .onTapGesture(count: 2, perform: {widgetDoubleTap(widget: widget)})
                     )
 
                 
                 //full name below widget
                     .overlay(content: {
                         Text(widgetDoubleTapped ? fullName : "" )
+                            .position(x: widget.x ??  FRAME_SIZE/2, y: widget.y ?? FRAME_SIZE/2)
                             .font(.caption)
                             .foregroundStyle(.secondary)
                             .offset(y:90)
@@ -213,24 +219,25 @@ struct CanvasPage: View {
                         if widgetDoubleTapped && viewModel.selectedWidget == widget {
                             EmojiReactionsView(spaceId: spaceId, widget: widget)
                                 .offset(y:-60)
-                            
+                                .position(x: widget.x ??  FRAME_SIZE/2, y: widget.y ?? FRAME_SIZE/2)
+
                         }
                     })
                     .overlay(content: {
                         viewModel.selectedWidget == nil/* && draggingItem == nil */?
                         EmojiCountOverlayView(spaceId: spaceId, widget: widget)
                             .offset(y: TILE_SIZE/2)
+                            .position(x: widget.x ??  FRAME_SIZE/2, y: widget.y ?? FRAME_SIZE/2)
+
                         : nil
                     })
                     .draggable(widget) {
                         MediaView(widget: widget, spaceId: spaceId)
                             .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
-                        
-                        //a bad way of resizing the draggable items but oh well
-//                            .frame(
-//                                width: TILE_SIZE,
-//                                height: TILE_SIZE
-//                            )
+                            .frame(
+                                width: TILE_SIZE,
+                                height: TILE_SIZE
+                            )
                             .onAppear{
                                 draggingItem = widget
                             }
@@ -409,12 +416,17 @@ struct CanvasPage: View {
             }
             .dropDestination(for: CanvasWidget.self) { receivedWidgets, location in
                 //This is necessary keep these lines
-                let x = roundToTile(number: location.x)
-                let y = roundToTile(number: location.y)
                 
-                SpaceManager.shared.moveWidget(spaceId: spaceId, widgetId: draggingItem!.id.uuidString, x: x, y: y)
-                draggingItem = nil
-                return true
+                if draggingItem != nil {
+                    let x = roundToTile(number: location.x)
+                    let y = roundToTile(number: location.y)
+
+                    SpaceManager.shared.moveWidget(spaceId: spaceId, widgetId: draggingItem!.id.uuidString, x: x, y: y)
+                    draggingItem = nil
+                    return true
+                } else {
+                    return false
+                }
             }
    
                 .onTapGesture(count: 2, perform: {
