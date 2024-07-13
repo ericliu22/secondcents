@@ -74,11 +74,9 @@ struct CanvasWidget: Hashable, Codable, Identifiable, Transferable, Equatable {
 }
 
 enum Media {
-<<<<<<< Updated upstream
-    case video, image, chat, text, poll, map, event, todo
-=======
-    case video, image, chat, text, poll, map, event, calendar
->>>>>>> Stashed changes
+
+    case video, image, chat, text, poll, map, event, todo, calendar
+
 }
 
 extension Media: Codable {
@@ -115,13 +113,13 @@ extension Media: Codable {
             return "map"
         case .event:
             return "event"
-<<<<<<< Updated upstream
+
         case .todo:
             return "todo"
-=======
+
         case .calendar:
             return "calendar"
->>>>>>> Stashed changes
+
         }
     }
     

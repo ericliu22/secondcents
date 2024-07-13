@@ -186,6 +186,12 @@ struct CanvasPage: View {
     
     func GridView() -> some View {
             ForEach(canvasWidgets, id:\.id) { widget in
+                
+                
+                
+                
+                
+                
                 //main widget
                 MediaView(widget: widget, spaceId: spaceId)
                     .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
@@ -221,6 +227,8 @@ struct CanvasPage: View {
                     })
                     .blur(radius: widgetDoubleTapped && viewModel.selectedWidget != widget ? 20 : 0)
                     .scaleEffect(widgetDoubleTapped && viewModel.selectedWidget == widget ? 1.05 : 1)
+                
+               
                     .animation(.spring)
                     //emoji react MENU
                     .overlay( alignment: .top, content: {
@@ -250,6 +258,10 @@ struct CanvasPage: View {
                                 draggingItem = widget
                             }
                     }
+                
+                
+                
+                
                 
             }
             
