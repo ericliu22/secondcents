@@ -32,8 +32,8 @@ struct Notification: Codable {
     }
 }
 
-let NOTIFICATION_URL: URL = URL(string: "https://guoliangliu.com/api/notification")!
-let NOTIFICATION_TOPIC_URL: URL = URL(string: "https://guoliangliu.com/api/notification-topic")!
+let NOTIFICATION_URL: URL = URL(string: "https://twocentspp.com/api/notification")!
+let NOTIFICATION_TOPIC_URL: URL = URL(string: "https://twocentsapp.com/api/notification-topic")!
 
 func sendSingleNotification(to: String, notification: Notification, completion: @escaping (Bool) -> Void) {
     var request = URLRequest(url: NOTIFICATION_URL)
