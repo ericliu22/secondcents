@@ -1,17 +1,14 @@
-//
-//  CalendarViewTest.swift
-//  TwoCents
-//
-//  Created by Joshua Shen on 7/13/24.
-//
-
-import Foundation
 import SwiftUI
 
 struct CalendarViewTest: View {
     @State private var month: String = ""
-    @State private var day: String = ""
     @State private var year: String = ""
+    @State private var days: [String] = []
+    @State private var currentDate = Date()
+    
+    
+    let daysOfWeek = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"]
+    
     
     private let fixedColumns = [
         GridItem(.flexible()),
@@ -25,36 +22,108 @@ struct CalendarViewTest: View {
 
     var body: some View {
         VStack {
-            Text("\(month) \(year)")
-            HStack{
-                Text("SUN")
-                Text("MON")
-                Text("TUE")
-                Text("WED")
-                Text("THU")
-                Text("FRI")
-                Text("SAT")
+            HStack {
+                Button(action: previousMonth) {
+                    Image(systemName: "chevron.left")
+                        .padding()
+                }
+                Spacer()
+                Text("\(month) \(year)")
+                    .font(.largeTitle)
+                Spacer()
+                Button(action: nextMonth) {
+                    Image(systemName: "chevron.right")
+                        .padding()
+                }
             }
-            LazyVGrid(columns: fixedColumns, content: {
-            })
+            .padding()
+            
+            
+            //DAYS OF WEEK LABEL
+            HStack {
+                ForEach(daysOfWeek, id: \.self) { day in
+                    Text(day)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 10)
+                   
+                }
+            }
+            .frame(maxWidth: .infinity)
+            
+            
+            
+            //DATE
+            LazyVGrid(columns: fixedColumns, spacing: 10) {
+                ForEach(days, id: \.self) { day in
+                    
+                    
+                    Button {
+                        print("HI")
+                    } label: {
+                        Text(day)
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            .padding(10)
+                            .buttonStyle(.bordered)
+                        
+//                            .background(.thinMaterial, in: Circle())
+                    }
+
+                    
+                      
+                      
+                }
+            }
         }
         .onAppear {
-            getCurrentDate()
+            updateCalendar()
         }
     }
-    
-    func getCurrentDate() {
-        let date = Date()
+
+    func updateCalendar() {
+        let calendar = Calendar.current
         let dateFormatter = DateFormatter()
-        
-        dateFormatter.dateFormat = "MMMM" // For full month name, use "MM" for numerical month
-        self.month = dateFormatter.string(from: date)
-        
-        dateFormatter.dateFormat = "dd"
-        self.day = dateFormatter.string(from: date)
-        
+        dateFormatter.dateFormat = "MMMM"
+        self.month = dateFormatter.string(from: currentDate)
         dateFormatter.dateFormat = "yyyy"
-        self.year = dateFormatter.string(from: date)
+        self.year = dateFormatter.string(from: currentDate)
+
+        // Get the day of the week for the first day of the current month
+        let firstDayOfMonth = calendar.date(from: calendar.dateComponents([.year, .month], from: currentDate))!
+        dateFormatter.dateFormat = "EEEE"  // For full day of the week name
+        let firstDayOfWeek = dateFormatter.string(from: firstDayOfMonth)
+
+        // Determine the starting index based on the first day of the week
+        let weekDays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+        let startingIndex = weekDays.firstIndex(of: firstDayOfWeek)!
+
+        // Get the range of days in the current month
+        let daysInMonth = calendar.range(of: .day, in: .month, for: currentDate)!.count
+        
+        // Create an array with empty strings for days before the start of the month
+        var daysArray = Array(repeating: "", count: startingIndex)
+        daysArray.append(contentsOf: (1...daysInMonth).map { "\($0)" })
+        
+        // Add empty strings to fill the last row
+        let extraSpaces = 7 - (daysArray.count % 7)
+        if extraSpaces < 7 {
+            daysArray.append(contentsOf: Array(repeating: "", count: extraSpaces))
+        }
+
+        self.days = daysArray
+    }
+
+    func previousMonth() {
+        if let newDate = Calendar.current.date(byAdding: .month, value: -1, to: currentDate) {
+            currentDate = newDate
+            updateCalendar()
+        }
+    }
+
+    func nextMonth() {
+        if let newDate = Calendar.current.date(byAdding: .month, value: 1, to: currentDate) {
+            currentDate = newDate
+            updateCalendar()
+        }
     }
 }
 
