@@ -179,7 +179,22 @@ struct CanvasPage: View {
         }
     }
     
-  
+    func widgetSingleTap(widget: CanvasWidget) {
+        switch widget.media {
+        case .poll:
+            activeWidget = widget
+            activeSheet =  .poll
+        case .todo:
+            activeWidget = widget
+            activeSheet = .todo
+        case .map:
+            if let location = widget.location {
+                viewModel.openMapsApp(location: location)
+            }
+        default:
+            break
+        }
+    }
     
     
     
@@ -211,7 +226,7 @@ struct CanvasPage: View {
                             .position(x: widget.x ??  FRAME_SIZE/2, y: widget.y ?? FRAME_SIZE/2)
                             .cornerRadius(CORNER_RADIUS)
                             .onTapGesture(count: 2, perform: {widgetDoubleTap(widget: widget)})
-                           
+                            .onTapGesture(count: 1, perform: {widgetSingleTap(widget: widget)})
                     )
 
                 
@@ -272,7 +287,7 @@ struct CanvasPage: View {
     func Background() -> some View {
                 GeometryReader { geometry in
                     Path { path in
-                        let spacing: CGFloat = 30 // Adjust this value for the spacing between dots
+                        let spacing: CGFloat = TILE_SPACING // Adjust this value for the spacing between dots
                         let width = geometry.size.width
                         let height = geometry.size.height
                         
@@ -451,7 +466,6 @@ struct CanvasPage: View {
             }
    
                 .onTapGesture(count: 2, perform: {
-                    
                     activeSheet = .newTextView
                 })
             
@@ -480,6 +494,7 @@ struct CanvasPage: View {
             if (stroke.isExpired()) {
                 changed = true
             }
+            //include only if not expired
             return !stroke.isExpired()
         }
         if changed {
@@ -621,7 +636,7 @@ struct CanvasPage: View {
             
             replyMode = false
             replyWidget = nil
-            
+            print("DISMISSING")
             activeWidget = nil
             
             //get chat to show up at all times
@@ -677,32 +692,15 @@ struct CanvasPage: View {
                 
             case .poll:
                 
-                
-                
-                if let widget = activeWidget {
-                    PollWidgetSheetView(widget: widget, spaceId: spaceId)
-                } else {
-                    ProgressView()
-                        .foregroundStyle(Color(UIColor.label))
-                        .presentationBackground(Color(UIColor.systemBackground))
-                    
-                }
+                //Waits until activeWidget is not nil
+                PollWidgetSheetView(widget: waitForVariable{activeWidget}, spaceId: spaceId)
                 
             case .newTextView:
                 NewTextWidgetView(spaceId: spaceId)
                     .presentationBackground(Color(UIColor.systemBackground))
             case .todo:
-                
-                
-                if let widget = activeWidget {
-                    TodoWidgetSheetView(widget: widget, spaceId: spaceId)
-                } else {
-                    ProgressView()
-                        .foregroundStyle(Color(UIColor.label))
-                        .presentationBackground(Color(UIColor.systemBackground))
-                    
-                }
-                
+                    //Waits until activeWidget is not nil
+                    TodoWidgetSheetView(widget: waitForVariable{activeWidget}, spaceId: spaceId)
                 
             }
             
@@ -733,4 +731,25 @@ extension View {
     func eraseToAnyView() -> AnyView {
         AnyView(self)
     }
+}
+
+//This resolves single tap issue
+//Forces things to wait until variable is not nil
+func waitForVariable<T>(_ variable: @escaping () -> T?) -> T {
+    let semaphore = DispatchSemaphore(value: 0)
+    var result: T?
+
+    DispatchQueue.global().async {
+        while result == nil {
+            if let value = variable() {
+                result = value
+                semaphore.signal()
+            } else {
+                usleep(100_000) // sleep for 100ms to prevent busy waiting
+            }
+        }
+    }
+
+    semaphore.wait()
+    return result!
 }
