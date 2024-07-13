@@ -9,6 +9,7 @@ import SwiftUI
 
 struct FrontPageView: View {
     
+    let CalendarTestWidget = CanvasWidget(width: .infinity, height:  .infinity, borderColor: .red, userId: "jisookim", media: .text, widgetName: "Text", widgetDescription: "A bar is a bar", textString: "Fruits can't even see so how my Apple Watch")
    
     
 //    @Binding var showSignInView: Bool
@@ -35,6 +36,21 @@ struct FrontPageView: View {
 //                }
             
             EventWidget(widget: CanvasWidget(width: .infinity, height:  .infinity, x:0, y: 0, borderColor: .red, userId: "jisookim", media: .event, widgetName: "Text", widgetDescription: "A bar is a bar", textString: "Fruits can't even see so how my Apple Watch"))
+                .tabItem {
+                    Image(systemName: "magnifyingglass")
+                    Text("Event widget")
+                }
+
+            CalendarWidget(widget: CanvasWidget(width: .infinity, height:  .infinity, borderColor: .red, userId: "jisookim", media: .calendar, widgetName: "Text", widgetDescription: "A bar is a bar", textString: "Fruits can't even see so how my Apple Watch"))
+                .tabItem {
+                    Image(systemName: "magnifyingglass")
+                    Text("Event widget")
+                }
+            
+            
+            CalendarView(spaceId: "2FF491A4-CEC6-419F-A199-204810864FCF"
+                         , widget: CanvasWidget(id: UUID(uuidString: "E2C85940-3266-44F7-B6D2-4D21F507B25C")!, width: .infinity, height:  .infinity, borderColor: .red, userId: "jisookim", media: .text, widgetName: "Text", widgetDescription: "A bar is a bar", textString: "Fruits can't even see so how my Apple Watch"))
+              
                 .tabItem {
                     Image(systemName: "magnifyingglass")
                     Text("Event widget")
@@ -66,6 +82,7 @@ struct FrontPageView: View {
                 
                 
             }
+            
             
         }
         

@@ -31,8 +31,6 @@ struct PollWidgetSheetView: View {
         assert(widget.media == .poll)
         self.widget = widget
         self.spaceId = spaceId
-        
-        
     }
     
     func fetchPoll() {

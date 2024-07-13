@@ -12,6 +12,7 @@
 		850958AA2AB8F82D00018A32 /* LuckiestGuy-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 850958A92AB8F82D00018A32 /* LuckiestGuy-Regular.ttf */; };
 		850958AB2AB8F82D00018A32 /* LuckiestGuy-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 850958A92AB8F82D00018A32 /* LuckiestGuy-Regular.ttf */; };
 		850958AC2AB8F82D00018A32 /* LuckiestGuy-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 850958A92AB8F82D00018A32 /* LuckiestGuy-Regular.ttf */; };
+		850E12AA2C30A14C000E07C8 /* CalendarWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 850E12A92C30A14C000E07C8 /* CalendarWidget.swift */; };
 		8534B8B92B8001660089AD5C /* NewPollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8534B8B82B8001660089AD5C /* NewPollView.swift */; };
 		855BDECF2C1E54C0002FC428 /* FirebaseDynamicLinks in Frameworks */ = {isa = PBXBuildFile; productRef = 855BDECE2C1E54C0002FC428 /* FirebaseDynamicLinks */; };
 		856E80B12B50E9D00078A2CE /* PencilKitPractice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 856E80B02B50E9CF0078A2CE /* PencilKitPractice.swift */; };
@@ -29,6 +30,7 @@
 		857753022C308B0E00B4A971 /* DateAlignment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857753012C308B0E00B4A971 /* DateAlignment.swift */; };
 		85A6766B2AE9C19B003ECAAA /* MessageBubble.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A6766A2AE9C19B003ECAAA /* MessageBubble.swift */; };
 		85A6766D2AE9C6BB003ECAAA /* MessageField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A6766C2AE9C6BB003ECAAA /* MessageField.swift */; };
+		85A8835A2C42F2B20030AE3A /* CustomCalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A883592C42F2B20030AE3A /* CustomCalendarView.swift */; };
 		85BB02F02B5D077E00B9A9EA /* ToolPickerPractice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85BB02EF2B5D077E00B9A9EA /* ToolPickerPractice.swift */; };
 		85C6759A2AB8EE5B00FACCB2 /* HotSeatManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20EBD082AB8A36100EFDDE8 /* HotSeatManager.swift */; };
 		85C6759B2AB8EE6100FACCB2 /* SuperlativeGame.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20EBD092AB8A36100EFDDE8 /* SuperlativeGame.swift */; };
@@ -172,6 +174,7 @@
 		8507204A2B54692F0057B8BC /* widgetPopup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = widgetPopup.swift; sourceTree = "<group>"; };
 		850958A82AB8F81200018A32 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		850958A92AB8F82D00018A32 /* LuckiestGuy-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "LuckiestGuy-Regular.ttf"; sourceTree = "<group>"; };
+		850E12A92C30A14C000E07C8 /* CalendarWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarWidget.swift; sourceTree = "<group>"; };
 		8534B8B82B8001660089AD5C /* NewPollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewPollView.swift; sourceTree = "<group>"; };
 		856E80B02B50E9CF0078A2CE /* PencilKitPractice.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PencilKitPractice.swift; sourceTree = "<group>"; };
 		856E80B42B50EB260078A2CE /* CardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
@@ -188,6 +191,7 @@
 		857753012C308B0E00B4A971 /* DateAlignment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateAlignment.swift; sourceTree = "<group>"; };
 		85A6766A2AE9C19B003ECAAA /* MessageBubble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageBubble.swift; sourceTree = "<group>"; };
 		85A6766C2AE9C6BB003ECAAA /* MessageField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageField.swift; sourceTree = "<group>"; };
+		85A883592C42F2B20030AE3A /* CustomCalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomCalendarView.swift; sourceTree = "<group>"; };
 		85BB02EF2B5D077E00B9A9EA /* ToolPickerPractice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolPickerPractice.swift; sourceTree = "<group>"; };
 		85CA3B4C2C2746C400F4A889 /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
 		85DDD0CC2AB4E79A008A9C56 /* VoteGameReal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VoteGameReal.swift; sourceTree = "<group>"; };
@@ -524,6 +528,8 @@
 				A2E5F52A2B5A12D30019C6ED /* DrawingCanvas.swift */,
 				AB6778E32AB8F67800C11AA7 /* CanvasWidget.swift */,
 				85CA3B4C2C2746C400F4A889 /* CalendarView.swift */,
+				85A883592C42F2B20030AE3A /* CustomCalendarView.swift */,
+				850E12A92C30A14C000E07C8 /* CalendarWidget.swift */,
 				A2F563182AB4E6240026D8C9 /* CanvasPage.swift */,
 				A22F84ED2C2912A20095A087 /* ZoomableScrollView.swift */,
 				AB6EA6092B879B7C00CC90FF /* CanvasPageViewModel.swift */,
@@ -1022,6 +1028,7 @@
 				AB370E132C34F36A00C4431F /* NewMessageManager.swift in Sources */,
 				AB15AC0B2AF6F00C0055D5D0 /* SpaceProfilePicView.swift in Sources */,
 				AB6EA6102B87A27D00CC90FF /* SplashView.swift in Sources */,
+				85A8835A2C42F2B20030AE3A /* CustomCalendarView.swift in Sources */,
 				AB69F03F2C1D189800B81E79 /* SignInPhoneNumberViewModel.swift in Sources */,
 				AB9EB95D2B1E805300F58EA5 /* ChatManager.swift in Sources */,
 				AB370E112C34F31500C4431F /* ChatBubbleViewBuilder.swift in Sources */,
@@ -1044,6 +1051,7 @@
 				AB6EA60A2B879B7C00CC90FF /* CanvasPageViewModel.swift in Sources */,
 				AB2E56CF2AE9C5E60096A58C /* ResultView.swift in Sources */,
 				ABB84C342A8CBA03009C7550 /* FrontPageView.swift in Sources */,
+				850E12AA2C30A14C000E07C8 /* CalendarWidget.swift in Sources */,
 				ABB68DB02C15268D00406948 /* TextWidgetViewModel.swift in Sources */,
 				AB6778E42AB8F67800C11AA7 /* CanvasWidget.swift in Sources */,
 				ABF56DFF2A7C8C5200F959DB /* SettingsViewModel.swift in Sources */,
