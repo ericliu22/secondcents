@@ -55,7 +55,7 @@ struct CanvasPage: View {
     @State private var timer: Timer?
     @State private var replyMode: Bool = false
     @State private var activeSheet: sheetTypesCanvasPage?
-    @State private var activePollWidget: CanvasWidget?
+    @State private var activeWidget: CanvasWidget?
     @State private var replyWidget: CanvasWidget?
     @State private var selectedDetent: PresentationDetent = .height(50)
     
@@ -179,6 +179,11 @@ struct CanvasPage: View {
         }
     }
     
+  
+    
+    
+    
+    
     func GridView() -> some View {
             ForEach(canvasWidgets, id:\.id) { widget in
                 //main widget
@@ -200,8 +205,11 @@ struct CanvasPage: View {
                             .position(x: widget.x ??  FRAME_SIZE/2, y: widget.y ?? FRAME_SIZE/2)
                             .cornerRadius(CORNER_RADIUS)
                             .onTapGesture(count: 2, perform: {widgetDoubleTap(widget: widget)})
+                           
                     )
 
+                
+                
                 
                 //full name below widget
                     .overlay(content: {
@@ -278,7 +286,7 @@ struct CanvasPage: View {
         switch media {
         case .poll:
             return Button(action: {
-                activePollWidget = viewModel.selectedWidget
+                activeWidget = viewModel.selectedWidget
                 viewModel.selectedWidget = nil
                 widgetDoubleTapped = false
                 activeSheet =  .poll
@@ -292,7 +300,7 @@ struct CanvasPage: View {
             
         case .todo:
             return Button(action: {
-                activePollWidget = viewModel.selectedWidget
+                activeWidget = viewModel.selectedWidget
                 viewModel.selectedWidget = nil
                 widgetDoubleTapped = false
                 activeSheet = .todo
@@ -321,7 +329,8 @@ struct CanvasPage: View {
         }
     }
 
-  
+    
+    
     
     
     
@@ -601,7 +610,7 @@ struct CanvasPage: View {
             replyMode = false
             replyWidget = nil
             
-            activePollWidget = nil
+            activeWidget = nil
             
             //get chat to show up at all times
             if !widgetDoubleTapped && !inSettingsView && activeSheet == nil{
@@ -658,7 +667,7 @@ struct CanvasPage: View {
                 
                 
                 
-                if let widget = activePollWidget {
+                if let widget = activeWidget {
                     PollWidgetSheetView(widget: widget, spaceId: spaceId)
                 } else {
                     ProgressView()
@@ -673,7 +682,7 @@ struct CanvasPage: View {
             case .todo:
                 
                 
-                if let widget = activePollWidget {
+                if let widget = activeWidget {
                     TodoWidgetSheetView(widget: widget, spaceId: spaceId)
                 } else {
                     ProgressView()
