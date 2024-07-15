@@ -67,17 +67,17 @@ struct CalendarView: View {
                     .document(widget.id.uuidString)
                     .getDocument { document, error in
                         if let document = document {
-//                            var existingDates = document.data()?[uid] as? [String] ?? []
-//                            // Update existing dates with the new selection
-//                            existingDates = dateStrings
-//                            let dateMap = [uid: existingDates]
-//                            print(dateMap)
-//                            db.collection("spaces")
-//                                .document(spaceId)
-//                                .collection("dates")
-//                                .document(widget.id.uuidString)
-//                                .setData(dateMap)
-//                        } else {
+                            var existingDates = document.data()?[uid] as? [String] ?? []
+                            // Update existing dates with the new selection
+                            existingDates = dateStrings
+                            let dateMap = [uid: existingDates]
+                            print(dateMap)
+                            db.collection("spaces")
+                                .document(spaceId)
+                                .collection("dates")
+                                .document(widget.id.uuidString)
+                                .updateData(dateMap)
+                        } else {
                             // Save new dates if the document does not exist
                             let dateMap = [uid: dateStrings]
                             print(dateMap)
@@ -107,7 +107,7 @@ struct CalendarView: View {
                         dateFormatter.dateStyle = .medium
                         self.savedDates = dateStrings.compactMap { dateFormatter.date(from: $0) }.sorted()
                         let calendar = Calendar.current
-                        self.selectedDates = Set(self.savedDates.map { calendar.dateComponents([.year, .month, .day], from: $0) })
+                        self.selectedDates = Set(self.savedDates.map { calendar.dateComponents([.calendar, .era, .year, .month, .day], from: $0) })
                         for component in selectedDates {
                             print(component.isValidDate)
                         }

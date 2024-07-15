@@ -1,14 +1,17 @@
 import SwiftUI
+import Foundation
+import Firebase
 
-struct CalendarViewTest: View {
+struct CustomCalendarView: View {
     @State private var month: String = ""
     @State private var year: String = ""
     @State private var days: [String] = []
     @State private var currentDate = Date()
-    
+    @State private var selectedDates: [String] = []
+    var spaceId: String
+    var widget: CanvasWidget
     
     let daysOfWeek = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"]
-    
     
     private let fixedColumns = [
         GridItem(.flexible()),
@@ -38,39 +41,37 @@ struct CalendarViewTest: View {
             }
             .padding()
             
-            
-            //DAYS OF WEEK LABEL
+            // DAYS OF WEEK LABEL
             HStack {
                 ForEach(daysOfWeek, id: \.self) { day in
                     Text(day)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 10)
-                   
                 }
             }
             .frame(maxWidth: .infinity)
             
-            
-            
-            //DATE
+            // DATE
             LazyVGrid(columns: fixedColumns, spacing: 10) {
                 ForEach(days, id: \.self) { day in
-                    
-                    
                     Button {
-                        print("HI")
+                        if !day.isEmpty {
+                            if let index = selectedDates.firstIndex(of: day) {
+                                selectedDates.remove(at: index)
+                                print("Removed date: \(day). Selected dates: \(selectedDates)")
+                            } else {
+                                selectedDates.append(day)
+                                print("Added date: \(day). Selected dates: \(selectedDates)")
+                            }
+                        }
                     } label: {
                         Text(day)
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
                             .padding(10)
+                            .background(selectedDates.contains(day) ? Color.blue.opacity(0.5) : Color.clear)
+                            .cornerRadius(8)
                             .buttonStyle(.bordered)
-                        
-//                            .background(.thinMaterial, in: Circle())
                     }
-
-                    
-                      
-                      
                 }
             }
         }
@@ -127,8 +128,8 @@ struct CalendarViewTest: View {
     }
 }
 
-struct CalendarViewTest_Previews: PreviewProvider {
-    static var previews: some View {
-        CalendarViewTest()
-    }
-}
+//struct CalendarViewTest_Previews: PreviewProvider {
+//    static var previews: some View {
+//        CustomCalendarView()
+//    }
+//}
