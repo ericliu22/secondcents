@@ -180,19 +180,22 @@ struct CanvasPage: View {
     }
     
     func widgetSingleTap(widget: CanvasWidget) {
-        switch widget.media {
-        case .poll:
-            activeWidget = widget
-            activeSheet =  .poll
-        case .todo:
-            activeWidget = widget
-            activeSheet = .todo
-        case .map:
-            if let location = widget.location {
-                viewModel.openMapsApp(location: location)
+        
+        if !widgetDoubleTapped{
+            switch widget.media {
+            case .poll:
+                activeWidget = widget
+                activeSheet =  .poll
+            case .todo:
+                activeWidget = widget
+                activeSheet = .todo
+            case .map:
+                if let location = widget.location {
+                    viewModel.openMapsApp(location: location)
+                }
+            default:
+                break
             }
-        default:
-            break
         }
     }
     
@@ -225,7 +228,10 @@ struct CanvasPage: View {
                             .frame(width: TILE_SIZE, height: TILE_SIZE)
                             .position(x: widget.x ??  FRAME_SIZE/2, y: widget.y ?? FRAME_SIZE/2)
                             .cornerRadius(CORNER_RADIUS)
+                        //on double tap
                             .onTapGesture(count: 2, perform: {widgetDoubleTap(widget: widget)})
+                        
+                        //on single tap
                             .onTapGesture(count: 1, perform: {widgetSingleTap(widget: widget)})
                     )
 
@@ -241,15 +247,15 @@ struct CanvasPage: View {
                             .offset(y:90)
                     })
                     .blur(radius: widgetDoubleTapped && viewModel.selectedWidget != widget ? 20 : 0)
-                    .scaleEffect(widgetDoubleTapped && viewModel.selectedWidget == widget ? 1.05 : 1)
-                
+//                    .scaleEffect(widgetDoubleTapped && viewModel.selectedWidget == widget ? 1.05 : 1)
+//                
                
                     .animation(.spring)
                     //emoji react MENU
                     .overlay( alignment: .top, content: {
                         if widgetDoubleTapped && viewModel.selectedWidget == widget {
                             EmojiReactionsView(spaceId: spaceId, widget: widget)
-                                .offset(y:-60)
+                                .offset(y:-110)
                                 .position(x: widget.x ??  FRAME_SIZE/2, y: widget.y ?? FRAME_SIZE/2)
 
                         }
