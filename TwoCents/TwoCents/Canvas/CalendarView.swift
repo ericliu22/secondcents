@@ -66,7 +66,8 @@ struct CalendarView: View {
                     .collection("dates")
                     .document(widget.id.uuidString)
                     .getDocument { document, error in
-                        if let document = document {
+                        if let document = document, document.exists {
+                            print("exists", document.exists)
                             var existingDates = document.data()?[uid] as? [String] ?? []
                             // Update existing dates with the new selection
                             existingDates = dateStrings
@@ -78,6 +79,7 @@ struct CalendarView: View {
                                 .document(widget.id.uuidString)
                                 .updateData(dateMap)
                         } else {
+                            print("doesn't exist:", document?.exists)
                             // Save new dates if the document does not exist
                             let dateMap = [uid: dateStrings]
                             print(dateMap)
