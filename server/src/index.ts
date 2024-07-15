@@ -12,22 +12,22 @@ admin.initializeApp({
 	credential: admin.credential.applicationDefault()
 });
 
-app.post('/api/notification', ({ body }) => {
+app.post('/v1/notification', ({ body }) => {
 	sendNotification(body)
 	return "Sent notification";
 })
 
-app.post('/api/notification-topic', ({ body }) => {
+app.post('/v1/notification-topic', ({ body }) => {
 	sendNotificationTopic(body)
 	return "Sent notification";
 })
 
-app.get('/api', ({ redirect }) => {
+app.get('/v1', ({ redirect }) => {
 	return redirect('https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstley')
 })
 
 app.get('/', () => {
-	return "Guoliang Eric Liu's website";
+	return "TwoCents API Website";
 })
 
 app.listen(process.env.PORT ?? 8080, () => {
