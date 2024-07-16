@@ -31,6 +31,7 @@ function sendNotification(httpBody: any) {
 	};
 
 	console.log(message.token);
+	console.log(message.notification);
 
 	getMessaging().send(message)
 	.then((response) => {

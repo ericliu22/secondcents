@@ -9,7 +9,7 @@ config();
 const app = new Elysia()
 
 admin.initializeApp({
-	credential: admin.credential.applicationDefault()
+	credential: admin.credential.cert(process.env.FIREBASE_ADMIN_CREDENTIAL_PATH)
 });
 
 app.post('/v1/notification', ({ body }) => {

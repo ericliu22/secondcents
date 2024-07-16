@@ -16,7 +16,7 @@ services:
     image: twocents-server-image
     build: ./server
     volumes:
-      - "./server/src/${FIREBASE_ADMIN_CREDENTIAL_PATH}:/src/${FIREBASE_ADMIN_CREDENTIAL_PATH}"
+      - "./server/second-cents-firebase-adminsdk-wrv03-0e915b1aca.json:/home/bun/app/second-cents-firebase-adminsdk-wrv03-0e915b1aca.json"
     env_file:
       - server.env
     expose:
