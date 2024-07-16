@@ -65,9 +65,6 @@ final class NewMessageFieldViewModel: ObservableObject {
             if let document = document {
                 let property = document.get("lastSend")
                 
-               print("HERE")
-                print(text)
-                print(widget)
                 do {
                     //if there is both text and widget, send widget first seperately, then the text.
                     if text != nil && widget != nil {
@@ -84,8 +81,8 @@ final class NewMessageFieldViewModel: ObservableObject {
                         try mainChatReference.collection("chatlogs").document(uuidString).setData(from: newMessage)
                         mainChatReference.setData(["lastSend": newMessage.sendBy], merge: true)
                         mainChatReference.setData(["lastTs": newMessage.ts], merge: true)
-                        
-                       
+                        messageNotification(spaceId: spaceId, userUID: user?.userId ?? "", message: text!)
+
                     }
                     
                     
