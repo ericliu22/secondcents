@@ -87,7 +87,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         if let messageID = userInfo[gcmMessageIDKey] {
             print("Message ID: \(messageID)")
         }
-
+        print("OPENED FROM NOTIFICATION")
         print(userInfo)
         completionHandler(UIBackgroundFetchResult.newData)
     }

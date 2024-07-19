@@ -140,10 +140,12 @@ final class SpaceManager{
     
     func uploadWidget(spaceId: String, widget: CanvasWidget) {
         do {
+            let uid = try AuthenticationManager.shared.getAuthenticatedUser().uid
             try spaceDocument(spaceId: spaceId)
                 .collection("widgets")
                 .document(widget.id.uuidString)
                 .setData(from: widget)
+            widgetNotification(spaceId: spaceId, userUID: uid, widget: widget)
         } catch {
             print("Some shit fucked up")
         }

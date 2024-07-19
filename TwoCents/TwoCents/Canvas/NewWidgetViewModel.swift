@@ -120,7 +120,6 @@ final class NewWidgetViewModel: ObservableObject{
         //space call should never fail so we manly exclamation mark
         
         let uid = try! AuthenticationManager.shared.getAuthenticatedUser().uid
-        widgetNotification(spaceId: space!.spaceId, userUID: uid, widget: uploadWidget)
         SpaceManager.shared.uploadWidget(spaceId: space!.spaceId, widget: uploadWidget)
     }
     

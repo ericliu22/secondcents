@@ -35,7 +35,7 @@ struct Notification: Codable {
 let NOTIFICATION_URL: URL = URL(string: "https://api.twocentsapp.com/v1/notification")!
 let NOTIFICATION_TOPIC_URL: URL = URL(string: "https://api.twocentsapp.com/v1/notification-topic")!
 
-func sendSingleNotification(to: String, notification: Notification, completion: @escaping (Bool) -> Void) {
+func sendSingleNotification(to: String, notification: Notification, data: [String:String] = [:], completion: @escaping (Bool) -> Void) {
     var request = URLRequest(url: NOTIFICATION_URL)
     request.httpMethod = "POST"
     request.setValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -46,7 +46,7 @@ func sendSingleNotification(to: String, notification: Notification, completion: 
         return
     }
 
-    let parameters: [String: Any] = ["to": to, "notification": notificationDict]
+    let parameters: [String: Any] = ["to": to, "notification": notificationDict, "data": data]
 
     do {
         let jsonData = try JSONSerialization.data(withJSONObject: parameters, options: [])
@@ -184,7 +184,7 @@ func spaceNotification(spaceId: String, userUID: String, notification: Notificat
                 
             }
             for token in tokens {
-                sendSingleNotification(to: token, notification: notification) { completion in
+                sendSingleNotification(to: token, notification: notification, data: ["spaceId": spaceId]) { completion in
                     if (completion) {
                         print("Succeded sending")
                     }
@@ -202,8 +202,9 @@ func messageNotification(spaceId: String, userUID: String, message: String) {
         let name = try await UserManager.shared.getUser(userId: userUID).name
         
         if let spaceImage: String = space.profileImageUrl {
+            
             let notification = Notification(title: "\(spaceName)", body: "\(name!): \(message)", image: spaceImage);
-            print(notification.title)
+            print("IMAGE: \(spaceImage)")
             spaceNotification(spaceId: spaceId, userUID: userUID, notification: notification)
         } else {
             let notification = Notification(title: "\(spaceName)", body: "\(name!): \(message)");
@@ -310,6 +311,7 @@ func friendRequestNotification(userUID: String, friendUID: String) async {
     }
     
     if let profileImage = user.profileImageUrl {
+        print("IMAGE: \(profileImage)")
         let notification = Notification(title: "\(name) sent you a friend request", body: "\(name) wants to be your friend!", image: profileImage)
         sendSingleNotification(to: token, notification: notification) { completion in
             if (completion) {
