@@ -178,7 +178,14 @@ struct CanvasPage: View {
     
     func widgetSingleTap(widget: CanvasWidget) {
         
-        if !widgetDoubleTapped{
+        if widgetDoubleTapped{
+            //deselect
+            viewModel.selectedWidget = nil
+            widgetDoubleTapped = false
+            //                                    showSheet = true
+            //                                    showNewWidgetView = false
+            activeSheet = .chat
+        } else {
             switch widget.media {
             case .poll:
                 activeWidget = widget
