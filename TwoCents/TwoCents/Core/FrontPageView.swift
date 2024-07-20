@@ -16,13 +16,14 @@ struct FrontPageView: View {
     @Binding var loadedColor: Color
 //    @Binding var showCreateProfileView: Bool
     @Binding var activeSheet: sheetTypes?
+    @Binding var spaceId: String?
     
     var body: some View {
         TabView{
 //            UploadExample()
             
 //            SpacesView(showSignInView: $showSignInView, loadedColor: $loadedColor, showCreateProfileView: $showCreateProfileView)
-            SpacesView(activeSheet: $activeSheet, loadedColor: $loadedColor)
+            SpacesView(activeSheet: $activeSheet, loadedColor: $loadedColor, spaceId: $spaceId)
                 .tabItem {
                     Image(systemName: "rectangle.3.group.fill")
                     Text("Spaces")
@@ -105,6 +106,7 @@ struct FrontPageView: View {
     }
 }
 
+/*
 struct FrontPageView_Previews: PreviewProvider {
     
     static var previews: some View {
@@ -112,3 +114,5 @@ struct FrontPageView_Previews: PreviewProvider {
         FrontPageView(loadedColor: .constant(.red), activeSheet: .constant(nil))
     }
 }
+
+*/

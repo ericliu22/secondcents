@@ -32,6 +32,8 @@ struct RootView: View {
     @State private var tintLoaded: Bool = false
     @State private var userColor: String = ""
     @State private var loadedColor: Color = .gray
+    @State private var spaceId: String? // New State for spaceId
+    @State private var shouldNavigateToCanvas: Bool = false // New state for navigation
     
     @State private var activeSheet: sheetTypes?
     
@@ -42,7 +44,7 @@ struct RootView: View {
     var body: some View {
         
         ZStack {
-                        FrontPageView(loadedColor: $loadedColor, activeSheet: $activeSheet)
+            FrontPageView(loadedColor: $loadedColor, activeSheet: $activeSheet, spaceId: $spaceId)
                 .task{
                     
                     
@@ -69,10 +71,17 @@ struct RootView: View {
             
                 .tint(tintLoaded ? loadedColor : .gray)
                 .animation(.easeIn, value: tintLoaded)
-            
-            
-            
-            
+                .background(
+                    Group {
+                        if let spaceId = spaceId {
+                            NavigationLink(
+                                destination: CanvasPage(spaceId: waitForVariable{spaceId}),
+                                isActive: $shouldNavigateToCanvas,
+                                label: { EmptyView() }
+                            )
+                        }
+                    }
+                )
         }
         
         .onAppear{
@@ -81,6 +90,13 @@ struct RootView: View {
             
             if authUser == nil {
                 activeSheet = .signInView
+            } else {
+                if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
+                   self.spaceId = appDelegate.spaceId
+                   if spaceId != nil {
+                       shouldNavigateToCanvas = true // Trigger navigation if spaceId is present
+                   }
+               }
             }
         }
         
@@ -212,6 +228,10 @@ struct RootView: View {
         
         
     }
+}
+
+@ViewBuilder func navigation() -> some View {
+    
 }
 
 struct RootView_Previews: PreviewProvider {
