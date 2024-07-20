@@ -12,7 +12,7 @@ struct SpacesView: View {
 //    @Binding var showSignInView: Bool
     @Binding var loadedColor: Color
 //    @Binding var showCreateProfileView: Bool
-    
+    @Binding var spaceId: String?
 
     
     @State private var searchTerm = ""
@@ -291,9 +291,12 @@ struct SpacesView: View {
     }
 }
 
+/*
 struct SpacesView_Previews: PreviewProvider {
     static var previews: some View {
 //        SpacesView(showSignInView: .constant(false),loadedColor: .constant(.red),showCreateProfileView: .constant(false))
         SpacesView(activeSheet: .constant(nil), loadedColor: .constant(.red))
     }
 }
+
+*/

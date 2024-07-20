@@ -110,9 +110,6 @@ struct CalendarView: View {
                         self.savedDates = dateStrings.compactMap { dateFormatter.date(from: $0) }.sorted()
                         let calendar = Calendar.current
                         self.selectedDates = Set(self.savedDates.map { calendar.dateComponents([.calendar, .era, .year, .month, .day], from: $0) })
-                        for component in selectedDates {
-                            print(component.isValidDate)
-                        }
                     }
                 } else {
                     print("Document does not exist")

@@ -24,6 +24,7 @@ struct TwoCentsApp: App {
 
 class AppDelegate: NSObject, UIApplicationDelegate {
     let gcmMessageIDKey = "gcm.message_id"
+    var spaceId: String?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         FirebaseApp.configure()
@@ -87,7 +88,6 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         if let messageID = userInfo[gcmMessageIDKey] {
             print("Message ID: \(messageID)")
         }
-        print("OPENED FROM NOTIFICATION")
         print(userInfo)
         completionHandler(UIBackgroundFetchResult.newData)
     }
@@ -135,8 +135,15 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
         if let messageID = userInfo[gcmMessageIDKey] {
             print("Message ID from userNotificationCenter didReceive: \(messageID)")
         }
-
+        
         print(userInfo)
+        if let notificationSpaceId = userInfo["spaceId"] {
+            guard let spaceId: String = notificationSpaceId as? String else {
+                return
+            }
+            self.spaceId = spaceId
+            print("SPACEID: \(notificationSpaceId)")
+        }
 
         completionHandler()
     }

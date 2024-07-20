@@ -16,13 +16,14 @@ struct FrontPageView: View {
     @Binding var loadedColor: Color
 //    @Binding var showCreateProfileView: Bool
     @Binding var activeSheet: sheetTypes?
+    @Binding var spaceId: String?
     
     var body: some View {
         TabView{
 //            UploadExample()
             
 //            SpacesView(showSignInView: $showSignInView, loadedColor: $loadedColor, showCreateProfileView: $showCreateProfileView)
-            SpacesView(activeSheet: $activeSheet, loadedColor: $loadedColor)
+            SpacesView(activeSheet: $activeSheet, loadedColor: $loadedColor, spaceId: $spaceId)
                 .tabItem {
                     Image(systemName: "rectangle.3.group.fill")
                     Text("Spaces")
@@ -41,10 +42,12 @@ struct FrontPageView: View {
                     Text("Event widget")
                 }
 
-            CalendarWidget(widget: CanvasWidget(width: .infinity, height:  .infinity, borderColor: .red, userId: "jisookim", media: .calendar, widgetName: "Text", widgetDescription: "A bar is a bar", textString: "Fruits can't even see so how my Apple Watch"))
+            CalendarWidget(widget: CanvasWidget(id: UUID(uuidString: "E2C85940-3266-44F7-B6D2-4D21F507B25C")!, width: .infinity, height:  .infinity, borderColor: .red, userId: "jisookim", media: .text, widgetName: "Text", widgetDescription: "A bar is a bar", textString: "Fruits can't even see so how my Apple Watch"), spaceId: "2FF491A4-CEC6-419F-A199-204810864FCF"
+                            )
+              
                 .tabItem {
                     Image(systemName: "magnifyingglass")
-                    Text("CalendarWidget")
+                    Text("Calendar")
                 }
             
             
@@ -103,6 +106,7 @@ struct FrontPageView: View {
     }
 }
 
+/*
 struct FrontPageView_Previews: PreviewProvider {
     
     static var previews: some View {
@@ -110,3 +114,5 @@ struct FrontPageView_Previews: PreviewProvider {
         FrontPageView(loadedColor: .constant(.red), activeSheet: .constant(nil))
     }
 }
+
+*/

@@ -1240,7 +1240,10 @@
 				INFOPLIST_FILE = TwoCents/Info.plist;
 				INFOPLIST_KEY_NSCameraUsageDescription = "Allow TwoCents to access the Camera";
 				INFOPLIST_KEY_NSContactsUsageDescription = "Allow TwoCents to access your contacts";
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "We need your location to show it on the map.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We need your location to show it on the map.";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Allow TwoCents to access the Microphone";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "We need access to your photo library to display your latest photo.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -1274,7 +1277,10 @@
 				INFOPLIST_FILE = TwoCents/Info.plist;
 				INFOPLIST_KEY_NSCameraUsageDescription = "Allow TwoCents to access the Camera";
 				INFOPLIST_KEY_NSContactsUsageDescription = "Allow TwoCents to access your contacts";
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "We need your location to show it on the map.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We need your location to show it on the map.";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Allow TwoCents to access the Microphone";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "We need access to your photo library to display your latest photo.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
