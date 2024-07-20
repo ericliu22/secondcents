@@ -22,6 +22,8 @@ struct NewMessageField: View {
     @State var spaceId: String
     
     
+    @Binding var threadId: String
+    
     var body: some View {
         
         ZStack (alignment: .bottomTrailing){
@@ -39,9 +41,13 @@ struct NewMessageField: View {
                     
                 })
             Button{
-                viewModel.sendMessages(text: message, widget: replyWidget, spaceId: spaceId)
+                print("HERE")
+                print(threadId)
+                viewModel.sendMessages(text: message, widget: replyWidget, spaceId: spaceId, threadId: threadId)
                 message = ""
                 replyWidget = nil
+                
+                threadId = ""
                 
             } label: {
                 Image(systemName: "arrow.up")
@@ -71,6 +77,19 @@ struct NewMessageField: View {
             self.userColor = viewModel.getUserColor(userColor:viewModel.user?.userColor ?? "")
         }
         .background(.clear)
+        .onChange(of: threadId) { _ , newValue in
+            if newValue != "" {
+                isFocused = true
+                
+                
+                print("threadId")
+                
+                
+          
+            }
+            
+            print("changed")
+        }
     }
 
     

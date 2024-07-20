@@ -20,11 +20,15 @@ struct ChatBubbleViewBuilder: View {
     let currentUserId: String 
     
     @State private var widget: CanvasWidget? = nil
+    
+    
+    @Binding var threadId: String
+    
    
     var body: some View {
         ZStack {
             if let message {
-                ChatBubbleView(message: message, sentByMe: message.sendBy == currentUserId, isFirstMsg: message.sendBy != message.parent, name: name, userColor: userColor, widget: widget ?? nil, spaceId: spaceId)
+                ChatBubbleView(message: message, sentByMe: message.sendBy == currentUserId, isFirstMsg: message.sendBy != message.parent, name: name, userColor: userColor, widget: widget ?? nil, spaceId: spaceId, threadId: $threadId)
             }
         }
         .task {

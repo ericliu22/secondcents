@@ -16,6 +16,7 @@ struct Message: Identifiable, Codable,Equatable {
     var ts: Date
     var parent: String
     var widgetId: String?
+    var threadId: String?
 }
 
 struct NewChatView: View {
@@ -27,6 +28,16 @@ struct NewChatView: View {
     @Binding  var replyWidget: CanvasWidget?
     
     @Binding var detent: PresentationDetent
+    
+    
+    
+    @State var threadId: String = ""
+    
+    
+    
+
+    
+    
     
     var body: some View {
         ScrollViewReader { proxy in
@@ -62,7 +73,7 @@ struct NewChatView: View {
                 //live messages
                 ForEach(viewModel.messagesFromListener, id: \.id) { message in
                    
-                    ChatBubbleViewBuilder(messageId: message.id, spaceId: spaceId, currentUserId: userUID)
+                    ChatBubbleViewBuilder(messageId: message.id, spaceId: spaceId, currentUserId: userUID, threadId: $threadId)
                         .id(message.id)  // Ensure each message has a unique ID
                         .rotationEffect(.degrees(180))
                         .listRowSeparator(.hidden)
@@ -70,19 +81,24 @@ struct NewChatView: View {
                         .padding(.bottom, 3)
                         .blur(radius: replyWidget == nil ? 0 : 2)
                     
+                    
+                    
+                    
                 }
                 
                 
                 //old messages
                 ForEach(viewModel.messages, id: \.id) { message in
                    
-                    ChatBubbleViewBuilder(messageId: message.id, spaceId: spaceId, currentUserId: userUID)
+                    ChatBubbleViewBuilder(messageId: message.id, spaceId: spaceId, currentUserId: userUID, threadId: $threadId)
                         .id(message.id)  // Ensure each message has a unique ID
                         .rotationEffect(.degrees(180))
                         .listRowSeparator(.hidden)
                         .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
                         .padding(.bottom, 3)
                         .blur(radius: replyWidget == nil ? 0 : 2)
+                    
+                    
                     
                     if message.id == viewModel.messages.last?.id {
                         if viewModel.hasMoreMessages {
@@ -107,6 +123,7 @@ struct NewChatView: View {
                 
                 
             }
+            .simultaneousGesture(DragGesture().onChanged { _ in })
             
             .environment(\.defaultMinListRowHeight, 0)
             
@@ -131,9 +148,16 @@ struct NewChatView: View {
                 }
             }
             
+           
+            
+            //swipe down to dismiss sheet
+            
+            
         }
      
         .padding(.horizontal)
+        
+        
         
         //dismiss reply mode
         .onTapGesture {
@@ -145,7 +169,7 @@ struct NewChatView: View {
         .overlay(
         
      
-                NewMessageField(replyWidget:$replyWidget, spaceId: spaceId)
+            NewMessageField(replyWidget:$replyWidget, spaceId: spaceId, threadId: $threadId)
                     
                 .frame(maxHeight: .infinity, alignment: .bottom)
         )

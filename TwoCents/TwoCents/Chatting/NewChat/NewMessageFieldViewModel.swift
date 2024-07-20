@@ -58,7 +58,7 @@ final class NewMessageFieldViewModel: ObservableObject {
     
   
     
-    func sendMessages(text: String?, widget: CanvasWidget?, spaceId: String) {
+    func sendMessages(text: String?, widget: CanvasWidget?, spaceId: String, threadId: String) {
         let docRef = db.collection("spaces").document(spaceId).collection("chat").document("mainChat")
 
         docRef.getDocument{ [self] (document, error) in
@@ -69,15 +69,16 @@ final class NewMessageFieldViewModel: ObservableObject {
                     //if there is both text and widget, send widget first seperately, then the text.
                     if text != nil && widget != nil {
                         messageNotification(spaceId: spaceId, userUID: user?.userId ?? "", message: (text == "" ? "Replied to a widget" : text)!)
-                        sendMessages(text: nil, widget: widget, spaceId: spaceId)
-                        sendMessages(text: text, widget: nil, spaceId: spaceId)
+                        sendMessages(text: nil, widget: widget, spaceId: spaceId, threadId: threadId)
+                        sendMessages(text: text, widget: nil, spaceId: spaceId, threadId: threadId)
                         print("2")
                     } else {
                         
+                        print("thread id is this \(threadId)")
                        
                         let uuidString = UUID().uuidString
                         let mainChatReference = db.collection("spaces").document(spaceId).collection("chat").document("mainChat")
-                        let newMessage = Message(id: uuidString, sendBy: user?.userId ?? "", text: text, ts: Date(), parent: (property as? String) ?? "", widgetId: widget?.id.uuidString)
+                        let newMessage = Message(id: uuidString, sendBy: user?.userId ?? "", text: text, ts: Date(), parent: (property as? String) ?? "", widgetId: widget?.id.uuidString, threadId: threadId)
                         try mainChatReference.collection("chatlogs").document(uuidString).setData(from: newMessage)
                         mainChatReference.setData(["lastSend": newMessage.sendBy], merge: true)
                         mainChatReference.setData(["lastTs": newMessage.ts], merge: true)
