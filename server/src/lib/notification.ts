@@ -15,7 +15,7 @@ function newNotificationRequest() {
 */
 
 function sendNotification(httpBody: any) {
-	const { to, notification } = httpBody
+	const { to, notification, data } = httpBody
 
 	var tokens;
 	if(typeof to === 'string') {
@@ -27,11 +27,13 @@ function sendNotification(httpBody: any) {
 	}
 	const message = {
 		notification: notification,
-		token: to
+		token: to,
+		data: data
 	};
 
 	console.log(message.token);
 	console.log(message.notification);
+	console.log(message.data);
 
 	getMessaging().send(message)
 	.then((response) => {
@@ -44,12 +46,13 @@ function sendNotification(httpBody: any) {
 }
 
 function sendNotificationTopic(httpBody: any) {
-	const { topic, notification } = httpBody
+	const { topic, notification, data } = httpBody
 
 	const message = {
 		notification: notification,
-		topic: topic
-	}
+		topic: topic,
+		data: data
+	};
 
 	getMessaging().send(message)
 	.then((response) => {
