@@ -32,14 +32,19 @@ struct RootView: View {
     @State private var tintLoaded: Bool = false
     @State private var userColor: String = ""
     @State private var loadedColor: Color = .gray
-    @State private var spaceId: String? = "0C13C736-E92D-4243-BB2E-E53E0E1FA8D8"// New State for spaceId
-    @State private var shouldNavigateToCanvas: Bool = true // New state for navigation
+    @State private var spaceId: String?
+    @State private var shouldNavigateToCanvas: Bool = false // New state for navigation
     
     @State private var activeSheet: sheetTypes?
     
     @State private var userPhoneNumber: String?
     
-    
+    init(spaceId: String?) {
+        self.spaceId = spaceId
+        if self.spaceId != nil {
+            self.shouldNavigateToCanvas = true
+        }
+    }
     
     var body: some View {
         
@@ -234,8 +239,11 @@ struct RootView: View {
     
 }
 
+/*
 struct RootView_Previews: PreviewProvider {
     static var previews: some View {
         RootView()
     }
 }
+
+*/

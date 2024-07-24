@@ -17,7 +17,7 @@ struct TwoCentsApp: App {
     
     var body: some Scene {
         WindowGroup {
-            RootView()
+            RootView(spaceId: delegate.spaceId)
         }
     }
 }
