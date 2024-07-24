@@ -183,21 +183,6 @@ struct SpacesView: View {
                                 
                         } label: {linkLabel(spaceTile: spaceTile)}
             
-                        
-                        .navigationDestination(for: DBSpace.self) { space in
-                            CanvasPage(spaceId: space.spaceId)
-                                .onDisappear {
-                                    //refresh spaces list to check if user left a space
-                                    Task {
-                                 
-                                        try? await viewModel.loadCurrentUser()
-                                        if let user = viewModel.user {
-                                            
-                                            try? await viewModel.getAllSpaces(userId: user.userId)
-                                        }
-                                    }
-                                }
-                        }
                     }
                     
                 }
@@ -211,6 +196,18 @@ struct SpacesView: View {
             .onChange(of: presentedPath, { oldValue, newValue in
                 print("PRESENTED PATH \(newValue)")
             })
+            .navigationDestination(for: DBSpace.self) { space in
+                CanvasPage(spaceId: space.spaceId)
+                .onDisappear {
+                //refresh spaces list to check if user left a space
+                    Task {
+                    try? await viewModel.loadCurrentUser()
+                        if let user = viewModel.user {
+                            try? await viewModel.getAllSpaces(userId: user.userId)
+                        }
+                    }
+                }
+            }
             .onChange(of: isShowingCreateSpaces, { oldValue, newValue in
                 if !isShowingCreateSpaces {
                     print("YO")
