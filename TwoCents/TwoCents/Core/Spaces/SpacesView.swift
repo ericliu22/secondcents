@@ -25,7 +25,7 @@ struct SpacesView: View {
     @State private var showDetail = false
     @State var isShowingCreateSpaces: Bool = false
     
-    
+    @State private var presentedPath: [DBSpace] = []
     @State private var newSpaceUUID = UUID().uuidString
     
     var filteredSearch: [DBSpace]{
@@ -40,33 +40,7 @@ struct SpacesView: View {
     ]
     
     
-    var body: some View {
-        
-        
-        NavigationStack{
-            ScrollView(.vertical) {
-                LazyVGrid(columns: columns, spacing: nil){
-                    
-                    ForEach(filteredSearch) { spaceTile    in
-                        
-                        NavigationLink {
-                            CanvasPage(spaceId: spaceTile.spaceId)
-                                .tint(loadedColor)
-                          
-                                .onDisappear {
-                                    //refresh spaces list to check if user left a space
-                                    Task {
-                                 
-                                        try? await viewModel.loadCurrentUser()
-                                        if let user = viewModel.user {
-                                            
-                                            try? await viewModel.getAllSpaces(userId: user.userId)
-                                        }
-                                    }
-                                }
-                                
-                            
-                        } label: {
+    func linkLabel(spaceTile: DBSpace) -> some View {
                             ZStack{
                                 Group{
                                     //Circle or Profile Pic
@@ -97,39 +71,16 @@ struct SpacesView: View {
                                                 
                                             )
                                             .clipped()
-//                                            .overlay(.regularMaterial)
-                                        
-                                        
-                                        
-                                        
-                                        
-                                        
-                                        
-                                        
-                                        
                                     } else {
                                         //if space does not have profile pic, show circle
                                         Rectangle()
                                             .fill(Color.accentColor)
-//                                            .overlay(.thickMaterial)
                                     }
-                                    
-                                    
                                 }
-//                                .frame(maxWidth:.infinity)
-//                                .aspectRatio(1, contentMode: .fit)
-                     
-                              
-                               
-                                
-                                
-                                
                                 VStack(alignment:.leading){
                                     
                                     Group{
                                         //Circle or Profile Pic
-                                        
-                                        
                                         if let urlString = spaceTile.profileImageUrl,
                                            let url = URL(string: urlString) {
                                             
@@ -189,12 +140,6 @@ struct SpacesView: View {
                                             
                                         
                                     }
-                                    
-                                    
-                                    
-                                    
-                                    
-                                
                                 }
                                 .padding()
                                 .frame(maxWidth:.infinity, maxHeight: .infinity, alignment: .topLeading)
@@ -205,49 +150,78 @@ struct SpacesView: View {
                                 
                                 
                             }
-                            
-                            
-//
                             .cornerRadius(20)
-                            
-                            
-                            
-                            
+          
+                        
+        
+    }
+    
+    var body: some View {
+        
+        
+        NavigationStack(path: $presentedPath) {
+            ScrollView(.vertical) {
+                LazyVGrid(columns: columns, spacing: nil){
+                    
+                    ForEach(filteredSearch) { spaceTile    in
+                        
+                        NavigationLink {
+                            CanvasPage(spaceId: spaceTile.spaceId)
+                                .tint(loadedColor)
+                          
+                                .onDisappear {
+                                    //refresh spaces list to check if user left a space
+                                    Task {
+                                 
+                                        try? await viewModel.loadCurrentUser()
+                                        if let user = viewModel.user {
+                                            
+                                            try? await viewModel.getAllSpaces(userId: user.userId)
+                                        }
+                                    }
+                                }
+                                
+                        } label: {linkLabel(spaceTile: spaceTile)}
+            
+                        
+                        .navigationDestination(for: DBSpace.self) { space in
+                            CanvasPage(spaceId: space.spaceId)
+                                .onDisappear {
+                                    //refresh spaces list to check if user left a space
+                                    Task {
+                                 
+                                        try? await viewModel.loadCurrentUser()
+                                        if let user = viewModel.user {
+                                            
+                                            try? await viewModel.getAllSpaces(userId: user.userId)
+                                        }
+                                    }
+                                }
                         }
-                        
-                        
-                        
                     }
                     
                 }
                 .padding(.horizontal)
-                
-                
             }
-//            .fullScreenCover(isPresented: $isShowingCreateSpaces, content: {
-//                CreateSpacesView(spaceId: UUID().uuidString)
-//
-//            }
             .fullScreenCover(isPresented: $isShowingCreateSpaces, content: {
                 NavigationView{
                     CreateSpacesView(spaceId: newSpaceUUID, isShowingCreateSpaces: $isShowingCreateSpaces)
                 }
+            })
+            .onChange(of: presentedPath, { oldValue, newValue in
+                print("PRESENTED PATH \(newValue)")
             })
             .onChange(of: isShowingCreateSpaces, { oldValue, newValue in
                 if !isShowingCreateSpaces {
                     print("YO")
                     
                     Task{
-                        
-                    
-                        
-                        
-                    try? await viewModel.loadCurrentUser()
-                       
-                    if let user = viewModel.user {
-                        try? await viewModel.getAllSpaces(userId: user.userId)
-                        newSpaceUUID = UUID().uuidString
-                    }
+                        try? await viewModel.loadCurrentUser()
+                           
+                        if let user = viewModel.user {
+                            try? await viewModel.getAllSpaces(userId: user.userId)
+                            newSpaceUUID = UUID().uuidString
+                        }
                     }
                 }
             })
@@ -274,7 +248,6 @@ struct SpacesView: View {
             
             
         }
-       
         .task {
      
             try? await viewModel.loadCurrentUser()
@@ -283,6 +256,14 @@ struct SpacesView: View {
                 try? await viewModel.getAllSpaces(userId: user.userId)
                 
                 
+            }
+            //use self for clarity
+            if let spaceId = self.spaceId {
+                guard let space: DBSpace = try? await SpaceManager.shared.getSpace(spaceId: spaceId) else {
+                    print("Failed to get DBSpace from deeplink")
+                    return
+                }
+                presentedPath.append(space)
             }
         }
         

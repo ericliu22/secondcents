@@ -10,7 +10,7 @@ import FirebaseFirestore
 import FirebaseFirestoreSwift
 import SwiftUI
 
-struct DBSpace: Identifiable, Codable{
+struct DBSpace: Identifiable, Codable, Hashable {
     var id: String { spaceId }
     let spaceId: String
     let dateCreated: Date

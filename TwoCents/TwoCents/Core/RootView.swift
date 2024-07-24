@@ -32,8 +32,8 @@ struct RootView: View {
     @State private var tintLoaded: Bool = false
     @State private var userColor: String = ""
     @State private var loadedColor: Color = .gray
-    @State private var spaceId: String? // New State for spaceId
-    @State private var shouldNavigateToCanvas: Bool = false // New state for navigation
+    @State private var spaceId: String? = "0C13C736-E92D-4243-BB2E-E53E0E1FA8D8"// New State for spaceId
+    @State private var shouldNavigateToCanvas: Bool = true // New state for navigation
     
     @State private var activeSheet: sheetTypes?
     
@@ -73,7 +73,7 @@ struct RootView: View {
                 .animation(.easeIn, value: tintLoaded)
                 .background(
                     Group {
-                        if let spaceId = spaceId {
+                        if shouldNavigateToCanvas {
                             NavigationLink(
                                 destination: CanvasPage(spaceId: waitForVariable{spaceId}),
                                 isActive: $shouldNavigateToCanvas,
