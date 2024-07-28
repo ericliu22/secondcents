@@ -10,6 +10,7 @@ services:
       - ./reverseproxy/ssl:/etc/nginx/ssl
       - ./reverseproxy/html:/usr/share/nginx/html
       - ./reverseproxy/logs:/var/log/nginx
+      - ./reverseproxy/apple-app-site-association:/.well-known/apple-app-site-association
     depends_on:
       - server
   server:

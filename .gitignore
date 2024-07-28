@@ -4,3 +4,4 @@ target
 *.log
 *.pem
 *.env
+apple-app-site-association

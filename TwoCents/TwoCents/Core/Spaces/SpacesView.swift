@@ -201,7 +201,7 @@ struct SpacesView: View {
                 .onDisappear {
                 //refresh spaces list to check if user left a space
                     Task {
-                    try? await viewModel.loadCurrentUser()
+                        try? await viewModel.loadCurrentUser()
                         if let user = viewModel.user {
                             try? await viewModel.getAllSpaces(userId: user.userId)
                         }
