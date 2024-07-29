@@ -93,9 +93,14 @@ struct RootView: View {
                                     guard let uid = try? AuthenticationManager.shared.getAuthenticatedUser().uid else {
                                         return
                                     }
-                                    try await Firestore.firestore().collection("spaces").document(spaceId).updateData([
-                                        "members": FieldValue.arrayUnion([uid])
-                                    ])
+                                    guard let members = try? await SpaceManager.shared.getSpace(spaceId: spaceId).members else {
+                                        return
+                                    }
+                                    if (members.contains(where: { $0 == uid })) {
+                                        try await Firestore.firestore().collection("spaces").document(spaceId).updateData([
+                                            "members": FieldValue.arrayUnion([uid])
+                                        ])
+                                    }
                                 }
                             })
                         }
