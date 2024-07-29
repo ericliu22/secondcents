@@ -55,13 +55,15 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     func handleUniversalLink(_ universalLink: URL) {
         print("Universal link URL: \(universalLink.absoluteString)")
         let components = universalLink.pathComponents
+        //We want to crash the app if this fucks up because it means there is a security leak
+        //Should never happen though :)
+        assert(components[0] == "app")
         
-        guard let action = components[safe: 0] else {
+        guard let action = components[safe: 1] else {
             print("Universal link has no action (e.g. space, friend, invite) ")
             return
         }
-        
-        guard let subject = components[safe: 1] else {
+        guard let subject = components[safe: 2] else {
             print("Universal link has no subject (e.g. spaceId, friendUid, inviteId) ")
             return
         }
