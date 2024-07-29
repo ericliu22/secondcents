@@ -52,6 +52,11 @@ struct DBSpace: Identifiable, Codable, Hashable {
 
 final class SpaceManager{
     
+    let FIRST_X: CGFloat = 360
+    let FIRST_Y: CGFloat = 360
+    let LAST_X: CGFloat = 1180
+    let LAST_Y: CGFloat = 1180
+
     static let shared = SpaceManager()
     private init() { }
     
@@ -200,34 +205,33 @@ final class SpaceManager{
     }
         
     private func findNextSpot(spaceId: String, startingX: CGFloat, startingY: CGFloat) async throws -> (CGFloat, CGFloat){
-        let LIMIT = 100
+        //@TODO: Stop execution if we reach maximum number of widgets on canvas?? (Design choice here)
+        //This is abitrary number didn't actually calculate how many widgets are possible on the canvas
+        let LOOP_LIMIT: Int = 100
         var currentX: CGFloat = startingX
         var currentY: CGFloat = startingY
         
         var count: Int = 0
-        //@TODO: Replace Hardcoded values with constants:
-        //1. Last available X and Y on canvas respectively
-        //2. First available X and Y on canvas respectively
-        //3. Maximum number of widgets allowed on canvas
-        while (true || count != LIMIT ) {
+        while (true || count != LOOP_LIMIT ) {
             if try await spotEmpty(spaceId: spaceId, x: currentX, y: currentY) { break }
             
-            if currentX + WIDGET_SPACING > 1180 {
-                currentX = 360
+            
+            if currentX + WIDGET_SPACING > LAST_X {
+                currentX = FIRST_X
                 currentY += WIDGET_SPACING
-            } else if currentY + WIDGET_SPACING > 1180 {
-                currentX = 360
-                currentY = 360
+            } else if currentY + WIDGET_SPACING > LAST_Y {
+                currentX = FIRST_X
+                currentY = FIRST_Y
             } else {
                 currentX += WIDGET_SPACING
             }
             //Optional if we wanna be really safe
-            //currentX = roundToTile(number: currentX)
-            //currentY = roundToTile(number: currentY)
+            currentX = roundToTile(number: currentX)
+            currentY = roundToTile(number: currentY)
             count+=1
         }
         //Highly Questionable while(true); We set a hard coded limit in case things go to shit
-        if count == LIMIT { throw FuckedLoop.runtimeError("Loop reached 1000") }
+        if count == LOOP_LIMIT { throw FuckedLoop.runtimeError("findNextSpot: Loop reached limit") }
         return (currentX, currentY)
     }
     

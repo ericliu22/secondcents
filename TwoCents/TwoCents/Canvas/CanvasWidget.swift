@@ -37,6 +37,7 @@ struct CanvasWidget: Hashable, Codable, Identifiable, Transferable, Equatable {
     var id: UUID = UUID()
     var width: CGFloat = TILE_SIZE
     var height: CGFloat = TILE_SIZE
+    //@TODO: Change this so that it's required
     var x: CGFloat?
     var y: CGFloat?
     var borderColor: Color
@@ -163,6 +164,7 @@ extension CanvasWidget {
         self.textString = try container.decodeIfPresent(String.self, forKey: .textString)
         self.location = try container.decodeIfPresent(String.self, forKey: .location)
         self.emojiPressed = try container.decode([String: [String]].self, forKey: .emojiPressed)
+        //@TODO: Change this so that it's required
         self.x = try container.decodeIfPresent(CGFloat.self, forKey: .x)
         self.y = try container.decodeIfPresent(CGFloat.self, forKey: .y)
     }
@@ -182,6 +184,7 @@ extension CanvasWidget {
         try container.encodeIfPresent(location, forKey: .location)
         try container.encode(emojis, forKey: .emojis)
         try container.encode(emojiPressed, forKey: .emojiPressed)
+        //@TODO: Change this so that it's required
         try container.encodeIfPresent(x, forKey: .x)
         try container.encodeIfPresent(y, forKey: .y)
     }

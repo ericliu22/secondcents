@@ -632,7 +632,6 @@ struct CanvasPage: View {
             
             replyMode = false
             replyWidget = nil
-            print("DISMISSING")
             activeWidget = nil
             
             //get chat to show up at all times
