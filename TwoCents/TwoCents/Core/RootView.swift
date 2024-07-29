@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Firebase
 
 
 enum sheetTypes: Identifiable  {
@@ -84,6 +85,19 @@ struct RootView: View {
                                 isActive: $shouldNavigateToCanvas,
                                 label: { EmptyView() }
                             )
+                            .onAppear(perform: {
+                                Task {
+                                    guard let spaceId = self.spaceId else {
+                                        return
+                                    }
+                                    guard let uid = try? AuthenticationManager.shared.getAuthenticatedUser().uid else {
+                                        return
+                                    }
+                                    try await Firestore.firestore().collection("spaces").document(spaceId).updateData([
+                                        "members": FieldValue.arrayUnion([uid])
+                                    ])
+                                }
+                            })
                         }
                     }
                 )

@@ -8,7 +8,6 @@
 import SwiftUI
 import FirebaseCore
 import FirebaseFirestore
-import UIKit
 
 struct SpaceSettingsView: View {
     @Environment(\.presentationMode) var presentationMode
@@ -126,7 +125,6 @@ struct SpaceSettingsView: View {
                         } label: {
                             HStack {
                                 Text(linkMessage)
-                                    .foregroundColor(viewModel.getUserColor(userColor: viewModel.user?.userColor ?? "gray"))
                                 Image(systemName: "doc.on.doc")
                                     .frame(width: 30, height: 30)
                                 /*

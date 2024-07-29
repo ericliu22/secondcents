@@ -95,7 +95,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
                     return
                 }
 
-                if let snapshot = snapshot {
+                if (snapshot != nil) {
                     completion(true)
                     //This is just for safety I don't know if necessary
                     return
