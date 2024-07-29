@@ -502,6 +502,70 @@ struct CanvasPage: View {
         }
     }
     
+    @ToolbarContentBuilder
+    func toolbar() -> some ToolbarContent {
+        if toolPickerActive{
+            //undo
+            ToolbarItem(placement: .topBarTrailing) {
+                Button(action: {
+                    undoManager?.undo()
+                }, label: {
+                    Image(systemName: "arrow.uturn.backward.circle")
+                })
+            }
+            //redo
+            ToolbarItem(placement: .topBarTrailing) {
+                Button(action: {
+                    undoManager?.redo()
+                }, label: {
+                    Image(systemName: "arrow.uturn.forward.circle")
+                })
+            }
+        }
+        //pencilkit
+        ToolbarItem(placement: .topBarTrailing) {
+            Button(action: {
+                self.toolPickerActive.toggle()
+            }, label: {
+                toolPickerActive
+                ? Image(systemName: "pencil.tip.crop.circle.fill")
+                : Image(systemName: "pencil.tip.crop.circle")
+            })
+        }
+        //add widget
+        ToolbarItem(placement: .topBarTrailing) {
+            Button(action: {
+                
+                
+                //                        showSheet = true
+                //                        showNewWidgetView = true
+                activeSheet = .newWidgetView
+                
+            }, label: {
+                Image(systemName: "plus.circle")
+            })
+        }
+        
+        //SPACE SETTINGS
+        ToolbarItem(placement: .topBarTrailing) {
+            
+            NavigationLink {
+                
+                SpaceSettingsView(spaceId: spaceId)
+                    .onAppear {
+                        activeSheet = nil
+                        inSettingsView = true
+                    }
+                    .onDisappear {
+                        activeSheet = .chat
+                        inSettingsView = false
+                    }
+            } label: {
+                Image(systemName: "ellipsis")
+                
+            }
+        }
+    }
     
     @Environment(\.undoManager) private var undoManager
     var body: some View {
@@ -523,80 +587,7 @@ struct CanvasPage: View {
                 }
             //toolbar
                 .toolbar(.hidden, for: .tabBar)
-                .toolbar {
-                    if toolPickerActive{
-                        //undo
-                        ToolbarItem(placement: .topBarTrailing) {
-                            Button(action: {
-                                undoManager?.undo()
-                            }, label: {
-                                Image(systemName: "arrow.uturn.backward.circle")
-                            })
-                        }
-                        //redo
-                        ToolbarItem(placement: .topBarTrailing) {
-                            Button(action: {
-                                undoManager?.redo()
-                            }, label: {
-                                Image(systemName: "arrow.uturn.forward.circle")
-                            })
-                        }
-                    }
-                    //pencilkit
-                    ToolbarItem(placement: .topBarTrailing) {
-                        Button(action: {
-                            self.toolPickerActive.toggle()
-                        }, label: {
-                            toolPickerActive
-                            ? Image(systemName: "pencil.tip.crop.circle.fill")
-                            : Image(systemName: "pencil.tip.crop.circle")
-                        })
-                    }
-                    //add widget
-                    ToolbarItem(placement: .topBarTrailing) {
-                        Button(action: {
-                            
-                            
-                            //                        showSheet = true
-                            //                        showNewWidgetView = true
-                            activeSheet = .newWidgetView
-                            
-                        }, label: {
-                            Image(systemName: "plus.circle")
-                        })
-                    }
-                    
-                    
-                    
-                    //SPACE SETTINGS
-                    ToolbarItem(placement: .topBarTrailing) {
-                        
-                        NavigationLink {
-                            
-                            SpaceSettingsView(spaceId: spaceId)
-                                .onAppear {
-                                    activeSheet = nil
-                                    inSettingsView = true
-                                }
-                                .onDisappear {
-                                    activeSheet = .chat
-                                    inSettingsView = false
-                                }
-                        } label: {
-                            Image(systemName: "ellipsis")
-                            
-                        }
-                        
-                        
-                        
-                    }
-                    
-                    
-                    
-                    
-                    
-                    
-                }
+                .toolbar {toolbar()}
                 .navigationBarTitleDisplayMode(.inline)
             //            .toolbarBackground(.ultraThinMaterial, for: .navigationBar)
             //SHOW BACKGROUND BY CHANGING BELOW TO VISIBLE

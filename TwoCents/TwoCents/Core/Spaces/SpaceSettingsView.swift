@@ -8,20 +8,24 @@
 import SwiftUI
 import FirebaseCore
 import FirebaseFirestore
+import UIKit
 
 struct SpaceSettingsView: View {
     @Environment(\.presentationMode) var presentationMode
     @StateObject private var viewModel = SpaceSettingsViewModel()
     @State var isShowingAddMember: Bool = false
+    @State private var linkMessage: String = "Invite Link"
     
     
+    private var spaceLink: String
     private var spaceId: String
     private var chatroomDocument: DocumentReference
     
     init(spaceId: String) {
         self.spaceId = spaceId
         self.chatroomDocument = db.collection("spaces").document(spaceId)
-        
+        self.spaceLink = SpaceManager.shared.generateSpaceLink(spaceId: self.spaceId)
+
         //        viewModel = SpaceSettingsViewModel()
     }
     
@@ -112,6 +116,34 @@ struct SpaceSettingsView: View {
                         
                         
                         
+                    }
+                    
+                    HStack {
+                        Button {
+                            let pasteboard = UIPasteboard.general
+                            pasteboard.string = spaceLink
+                            linkMessage = "Copied to clipboard!"
+                        } label: {
+                            HStack {
+                                Text(linkMessage)
+                                    .foregroundColor(viewModel.getUserColor(userColor: viewModel.user?.userColor ?? "gray"))
+                                Image(systemName: "doc.on.doc")
+                                    .frame(width: 30, height: 30)
+                                /*
+                                 .background(Color(UIColor.lightGray))
+                                 .foregroundColor(.gray)
+                                 .border(.gray, width: 2.0)
+                                 .cornerRadius(4)
+                                 */
+                            }
+                        }
+                        
+                        if let url = URL(string: spaceLink) {
+                            ShareLink(item: url) {
+                                Image(systemName: "square.and.arrow.up")
+                                    .frame(width: 30, height: 30)
+                            }
+                        }
                     }
                 }
                 .padding()
@@ -333,7 +365,6 @@ struct SpaceSettingsView: View {
             try? await viewModel.loadCurrentUser()
             try? await viewModel.loadCurrentSpace(spaceId: spaceId)
             try? await viewModel.getMembersInfo()
-            
         }
         
         

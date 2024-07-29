@@ -186,6 +186,10 @@ final class SpaceManager{
         await setNextWidgetSpot(spaceId: space.spaceId, startingX: space.nextWidgetX!, startingY: space.nextWidgetY!)
     }
     
+    func generateSpaceLink(spaceId: String ) -> String {
+        return "https://api.twocentsapp.com/app/space/\(spaceId)"
+    }
+    
     func setNextWidgetSpot(spaceId: String, startingX: CGFloat, startingY: CGFloat) async {
         guard let (newX, newY) = try? await findNextSpot(spaceId: spaceId, startingX: startingX, startingY: startingY) else {
             print("Failed to find next spot")
