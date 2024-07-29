@@ -9,7 +9,6 @@ import Firebase
 import UserNotifications
 import FirebaseMessaging
 import UIKit
-import FirebaseDynamicLinks
 
 @main
 struct TwoCentsApp: App {
@@ -49,38 +48,69 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     }
 
     func application(_ application: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
-        let handled = DynamicLinks.dynamicLinks().handleUniversalLink(url) { dynamicLink, error in
-            guard error == nil else {
-                print("Error handling dynamic link: \(error!.localizedDescription)")
-                return
-            }
-            if let dynamicLink = dynamicLink {
-                self.handleDynamicLink(dynamicLink)
-            }
-        }
-
-        return handled
+        handleUniversalLink(url)
+        return true
     }
 
-    func handleDynamicLink(_ dynamicLink: DynamicLink) {
-        guard let url = dynamicLink.url else {
-            print("Dynamic link has no URL")
+    func handleUniversalLink(_ universalLink: URL) {
+        print("Universal link URL: \(universalLink.absoluteString)")
+        let components = universalLink.pathComponents
+        
+        guard let action = components[safe: 0] else {
+            print("Universal link has no action (e.g. space, friend, invite) ")
             return
         }
-        print("Dynamic link URL: \(url.absoluteString)")
-        // Handle the dynamic link URL. For example, navigate to a specific screen in your app.
+        
+        guard let subject = components[safe: 1] else {
+            print("Universal link has no subject (e.g. spaceId, friendUid, inviteId) ")
+            return
+        }
+
+        //Tenatively we'll use these link actions, can change if we want it to
+        switch action {
+        case "space":
+            print("space link")
+            isValidSpaceId(spaceId: subject, completion: { valid in
+                if valid { self.spaceId = subject }
+                else { print("Invalid spaceId: resuming normal execution") }
+            })
+        case "friend":
+            print("friend link")
+        case "invite":
+            print("invite link")
+        default:
+            //Should never return if it does continue normal execution
+            print("Must set switch statement of subject")
+            return
+        }
+    }
+    
+    func isValidSpaceId(spaceId: String, completion: @escaping (Bool) -> Void) {
+        Firestore.firestore().collection("spaces").document(spaceId).getDocument(completion: { snapshot, error in
+                if let error = error {
+                    print("Error fetching documents: \(error)")
+                    completion(false)
+                    return
+                }
+
+                if let snapshot = snapshot {
+                    completion(true)
+                    //This is just for safety I don't know if necessary
+                    return
+                }
+                completion(false)
+        })
     }
 
     func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
-        return DynamicLinks.dynamicLinks().handleUniversalLink(userActivity.webpageURL!) { dynamicLink, error in
-            guard error == nil else {
-                print("Error handling dynamic link: \(error!.localizedDescription)")
-                return
-            }
-            if let dynamicLink = dynamicLink {
-                self.handleDynamicLink(dynamicLink)
-            }
+        guard userActivity.activityType == NSUserActivityTypeBrowsingWeb,
+              let incomingURL = userActivity.webpageURL
+              else {
+            return false
         }
+        
+        handleUniversalLink(incomingURL)
+        return true
     }
 
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any],
@@ -146,5 +176,12 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
         }
 
         completionHandler()
+    }
+}
+
+extension Collection {
+    /// Returns the element at the specified index if it is within bounds, otherwise nil.
+    subscript (safe index: Index) -> Element? {
+        return indices.contains(index) ? self[index] : nil
     }
 }

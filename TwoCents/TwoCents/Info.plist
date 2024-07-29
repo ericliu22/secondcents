@@ -12,6 +12,14 @@
 				<string>com.googleusercontent.apps.175809466913-g5f0tbqalie4gqdkanr2nofhf1tqsb3h</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.twocentsapp.api</string>
+			</array>
+		</dict>
 	</array>
 	<key>NSAppTransportSecurity</key>
 	<dict/>
@@ -41,17 +49,5 @@
 			<dict/>
 		</dict>
 	</array>
-	<key>NSContactsUsageDescription</key>
-	<string>Allow TwoCents to access your contacts</string>
-	<key>NSCameraUsageDescription</key>
-	<string>Allow TwoCents to access the Camera</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>Allow TwoCents to access the Microphone</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>We need your location to show it on the map.</string>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>We need your location to show it on the map.</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>We need access to your photo library to display your latest photo.</string>
 </dict>
 </plist>
