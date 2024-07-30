@@ -123,7 +123,7 @@ struct NewChatView: View {
                 
                 
             }
-            .simultaneousGesture(DragGesture().onChanged { _ in })
+//            .simultaneousGesture(DragGesture().onChanged { _ in })
             
             .environment(\.defaultMinListRowHeight, 0)
             

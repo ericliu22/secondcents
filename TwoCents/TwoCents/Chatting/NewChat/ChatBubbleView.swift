@@ -61,7 +61,7 @@ struct ChatBubbleView: View {
 //        .background(Color.clear)
 //        .contentShape(Rectangle())
         .gesture(
-            DragGesture()
+            DragGesture(minimumDistance: 30, coordinateSpace: .scrollView)
                 .onChanged { value in
                     let horizontalThreshold: CGFloat = 10
                     let isHorizontalDrag = abs(value.translation.width) > horizontalThreshold && abs(value.translation.height) < horizontalThreshold
