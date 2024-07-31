@@ -49,6 +49,21 @@ final class NewMessageManager {
             .order(by: "ts", descending: true)
         
     }
+    
+    
+    
+    func getThreadQuery(spaceId: String, count: Int, threadId: String) -> Query {
+    
+        messageCollection(spaceId: spaceId)
+        
+            .whereField("threadId", isEqualTo: threadId)
+//            .limit(to: count)
+//            .order(by: "ts", descending: true)
+        
+    }
+    
+    
+    
     func getMessage(messageId: String, spaceId: String)  async throws -> Message {
            try await messageDocument(messageId: messageId, spaceId: spaceId).getDocument(as: Message.self)
        }
@@ -62,5 +77,21 @@ final class NewMessageManager {
             .startOptionally(afterDocument: lastDocument)
             .getDocumentsWithSnapshot(as: Message.self)
     }
+    
+    func getThreadMessages(spaceId: String, count: Int, lastDocument: DocumentSnapshot?, threadId: String) async throws -> (products: [Message], lastDocument: DocumentSnapshot?) {
+        var query: Query = getThreadQuery(spaceId: spaceId, count: count, threadId: threadId)
+
+//        
+//        print(threadId)
+//        print("_____")
+//        
+        
+        
+        return try await query
+            .startOptionally(afterDocument: lastDocument)
+            .getDocumentsWithSnapshot(as: Message.self)
+    }
+    
+    
     
 }
