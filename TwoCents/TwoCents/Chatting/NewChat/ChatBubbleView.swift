@@ -80,7 +80,21 @@ struct ChatBubbleView: View {
                     let isHorizontalDrag = abs(value.translation.width) > horizontalThreshold && abs(value.translation.height) < horizontalThreshold
 
                     if isHorizontalDrag && abs(value.translation.width) > 100 {
-                        threadId = message.threadId ?? UUID().uuidString
+                        
+                        if let messageThreadId = message.threadId {
+                            
+                            if !messageThreadId.isEmpty{
+                                //if the msg ur replying to has a thread id, use the same one
+                                threadId = messageThreadId
+                            }  else {
+                                //if msg ur replying to doesnt have thread id, use it (the root)'s id
+                                
+                                threadId = message.id
+                            }
+                        }
+                        
+                        
+                       
                     }
                     dragOffset = .zero
                 }
