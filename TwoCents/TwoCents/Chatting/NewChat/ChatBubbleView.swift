@@ -82,8 +82,10 @@ struct ChatBubbleView: View {
                     if isHorizontalDrag && abs(value.translation.width) > 100 {
                         
                         if let messageThreadId = message.threadId {
+                            print("the msg u swiped on's id is\(messageThreadId)")
                             
                             if !messageThreadId.isEmpty{
+                              
                                 //if the msg ur replying to has a thread id, use the same one
                                 threadId = messageThreadId
                             }  else {

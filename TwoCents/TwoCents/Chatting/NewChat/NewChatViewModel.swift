@@ -4,7 +4,7 @@ import FirebaseFirestore
 @MainActor
 final class NewChatViewModel: ObservableObject {
     @Published private(set) var messages: [Message] = []
-    @Published private(set) var threadMessages: [Message] = []
+
   
     @Published private(set) var messagesFromListener: [Message] = []
     private var lastDocument: DocumentSnapshot? = nil
@@ -14,6 +14,8 @@ final class NewChatViewModel: ObservableObject {
         Task {
             do {
                 let (newMessages, lastDocument) = try await NewMessageManager.shared.getAllMessages(spaceId: spaceId, count: 20, lastDocument: self.lastDocument)
+                
+                print(newMessages)
                 
                 if newMessages.isEmpty {
                     self.hasMoreMessages = false
@@ -34,34 +36,7 @@ final class NewChatViewModel: ObservableObject {
         }
     }
     
-    func getThreadMessages(spaceId: String, threadId: String, completion: ((Bool, String?) -> Void)? = nil) {
-        Task {
-            do {
-                let (newMessages, lastDocument) = try await NewMessageManager.shared.getThreadMessages(spaceId: spaceId, count: 20, lastDocument: self.lastDocument, threadId: threadId)
-                
-                
-                print(newMessages)
-                if newMessages.isEmpty {
-                    self.hasMoreMessages = false
-                } else {
-                    self.hasMoreMessages = true
-                    let existingMessageIDs = Set(self.threadMessages.map { $0.id })
-                    let uniqueMessages = newMessages.filter { !existingMessageIDs.contains($0.id) }
-                    self.threadMessages.append(contentsOf: uniqueMessages)
-                    if let lastDocument = lastDocument {
-                        self.lastDocument = lastDocument
-                    }
-                }
-                
-                
-//                print("got thread msgs")
-//                print(threadMessages)
-                completion?(false, nil)
-            } catch {
-                print("Failed to fetch thread messages: \(error)")
-            }
-        }
-    }
+    
     
     func fetchNewMessages(spaceId: String) {
         let currentTime = Date()
@@ -89,4 +64,17 @@ final class NewChatViewModel: ObservableObject {
                 }
             }
     }
+    
+    
+    
+    func removeMessages() {
+        
+        self.messages.removeAll()
+        self.messagesFromListener.removeAll()
+        self.lastDocument = nil
+    }
+    
+    
+    
+    
 }

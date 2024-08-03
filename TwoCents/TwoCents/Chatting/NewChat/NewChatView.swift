@@ -27,7 +27,7 @@ struct NewChatView: View {
     @Binding var replyWidget: CanvasWidget?
     @Binding var detent: PresentationDetent
     @State var threadId: String = ""
-
+    
     var body: some View {
         ScrollViewReader { proxy in
             List {
@@ -36,7 +36,7 @@ struct NewChatView: View {
                     .listRowSeparator(.hidden)
                     .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
                     .id("top")
-
+                
                 if let widget = replyWidget {
                     MediaView(widget: widget, spaceId: spaceId)
                         .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
@@ -51,16 +51,30 @@ struct NewChatView: View {
                 
                 
                 
-                //thread messages
-                ForEach(viewModel.threadMessages) { message in
+                
+                // Display new messages
+                ForEach(viewModel.messagesFromListener) { message in
                     ChatBubbleViewBuilder(messageId: message.id, spaceId: spaceId, currentUserId: userUID, threadId: $threadId)
                         .id(message.id)
                         .rotationEffect(.degrees(180))
                         .listRowSeparator(.hidden)
                         .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
                         .padding(.bottom, 3)
-                        .blur(radius: replyWidget == nil ? 0 : 2)
-
+                        .blur(radius: replyWidget == nil && threadId == "" ? 0 : 2)
+                }
+                
+                
+                
+                // Display old messages
+                ForEach(viewModel.messages) { message in
+                    ChatBubbleViewBuilder(messageId: message.id, spaceId: spaceId, currentUserId: userUID, threadId: $threadId)
+                        .id(message.id)
+                        .rotationEffect(.degrees(180))
+                        .listRowSeparator(.hidden)
+                        .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+                        .padding(.bottom, 3)
+                        .blur(radius: replyWidget == nil && threadId == "" ? 0 : 2)
+                    
                     if message.id == viewModel.messages.last?.id {
                         if viewModel.hasMoreMessages {
                             ProgressView()
@@ -76,48 +90,19 @@ struct NewChatView: View {
                     }
                 }
                 
-                
-                
-                // Check if threadId is empty
-                if threadId == "" {
-                    // Display new messages
-                    ForEach(viewModel.messagesFromListener) { message in
-                        ChatBubbleViewBuilder(messageId: message.id, spaceId: spaceId, currentUserId: userUID, threadId: $threadId)
-                            .id(message.id)
-                            .rotationEffect(.degrees(180))
-                            .listRowSeparator(.hidden)
-                            .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-                            .padding(.bottom, 3)
-                            .blur(radius: replyWidget == nil && threadId != "" ? 0 : 2)
-                    }
-                    
-                    // Display old messages
-                    ForEach(viewModel.messages) { message in
-                        ChatBubbleViewBuilder(messageId: message.id, spaceId: spaceId, currentUserId: userUID, threadId: $threadId)
-                            .id(message.id)
-                            .rotationEffect(.degrees(180))
-                            .listRowSeparator(.hidden)
-                            .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-                            .padding(.bottom, 3)
-                            .blur(radius: replyWidget == nil && threadId == "" ? 0 : 2)
-
-                        if message.id == viewModel.messages.last?.id {
-                            if viewModel.hasMoreMessages {
-                                ProgressView()
-                                    .onAppear {
-                                        viewModel.getOldMessages(spaceId: spaceId)
-                                    }
-                                    .rotationEffect(.degrees(180))
-                                    .frame(maxWidth: .infinity)
-                                    .listRowSeparator(.hidden)
-                                    .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-                                    .padding(.bottom, 3)
-                            }
-                        }
-                    }
-                }
-
             }
+ 
+            .onChange(of: threadId, { _, newValue in
+                
+      
+                if !newValue.isEmpty{
+                    viewModel.removeMessages()
+
+                }
+            })
+//            
+            
+            
             .environment(\.defaultMinListRowHeight, 0)
             .rotationEffect(.degrees(180))
             .listStyle(PlainListStyle())
@@ -133,20 +118,16 @@ struct NewChatView: View {
                 }
             }
             
-            
-            .onChange(of: threadId) { newValue in
-                if !newValue.isEmpty {
-                    viewModel.getThreadMessages(spaceId: spaceId, threadId: newValue)
-                }
-            }
-            
-            
-            
         }
         .padding(.horizontal)
         .onTapGesture {
             withAnimation {
                 replyWidget = nil
+                
+                print("tapped")
+                viewModel.getOldMessages(spaceId: spaceId)
+                viewModel.fetchNewMessages(spaceId: spaceId)
+                threadId = ""
             }
         }
         .overlay(

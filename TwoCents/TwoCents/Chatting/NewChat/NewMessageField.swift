@@ -47,7 +47,7 @@ struct NewMessageField: View {
                 message = ""
                 replyWidget = nil
                 
-//                threadId = ""
+                
                 
             } label: {
                 Image(systemName: "arrow.up")
