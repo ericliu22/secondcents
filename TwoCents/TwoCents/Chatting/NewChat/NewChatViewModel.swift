@@ -47,7 +47,7 @@ final class NewChatViewModel: ObservableObject {
                     self.hasMoreMessages = true
                     let existingMessageIDs = Set(self.threadMessages.map { $0.id })
                     let uniqueMessages = newMessages.filter { !existingMessageIDs.contains($0.id) }
-                    self.threadMessages = uniqueMessages
+                    self.threadMessages.append(contentsOf: uniqueMessages)
                     if let lastDocument = lastDocument {
                         self.lastDocument = lastDocument
                     }

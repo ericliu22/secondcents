@@ -78,43 +78,45 @@ struct NewChatView: View {
                 
                 
                 
-                
-                //new messages
-                ForEach(viewModel.messagesFromListener) { message in
-                    ChatBubbleViewBuilder(messageId: message.id, spaceId: spaceId, currentUserId: userUID, threadId: $threadId)
-                        .id(message.id)
-                        .rotationEffect(.degrees(180))
-                        .listRowSeparator(.hidden)
-                        .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-                        .padding(.bottom, 3)
-                        .blur(radius: replyWidget == nil && threadId != "" ? 0 : 2)
-                }
+                // Check if threadId is empty
+                if threadId == "" {
+                    // Display new messages
+                    ForEach(viewModel.messagesFromListener) { message in
+                        ChatBubbleViewBuilder(messageId: message.id, spaceId: spaceId, currentUserId: userUID, threadId: $threadId)
+                            .id(message.id)
+                            .rotationEffect(.degrees(180))
+                            .listRowSeparator(.hidden)
+                            .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+                            .padding(.bottom, 3)
+                            .blur(radius: replyWidget == nil && threadId != "" ? 0 : 2)
+                    }
+                    
+                    // Display old messages
+                    ForEach(viewModel.messages) { message in
+                        ChatBubbleViewBuilder(messageId: message.id, spaceId: spaceId, currentUserId: userUID, threadId: $threadId)
+                            .id(message.id)
+                            .rotationEffect(.degrees(180))
+                            .listRowSeparator(.hidden)
+                            .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+                            .padding(.bottom, 3)
+                            .blur(radius: replyWidget == nil && threadId == "" ? 0 : 2)
 
-                
-                //old messages
-                ForEach(viewModel.messages) { message in
-                    ChatBubbleViewBuilder(messageId: message.id, spaceId: spaceId, currentUserId: userUID, threadId: $threadId)
-                        .id(message.id)
-                        .rotationEffect(.degrees(180))
-                        .listRowSeparator(.hidden)
-                        .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-                        .padding(.bottom, 3)
-                        .blur(radius: replyWidget == nil && threadId == ""  ? 0 : 2)
-
-                    if message.id == viewModel.messages.last?.id {
-                        if viewModel.hasMoreMessages {
-                            ProgressView()
-                                .onAppear {
-                                    viewModel.getOldMessages(spaceId: spaceId)
-                                }
-                                .rotationEffect(.degrees(180))
-                                .frame(maxWidth: .infinity)
-                                .listRowSeparator(.hidden)
-                                .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-                                .padding(.bottom, 3)
+                        if message.id == viewModel.messages.last?.id {
+                            if viewModel.hasMoreMessages {
+                                ProgressView()
+                                    .onAppear {
+                                        viewModel.getOldMessages(spaceId: spaceId)
+                                    }
+                                    .rotationEffect(.degrees(180))
+                                    .frame(maxWidth: .infinity)
+                                    .listRowSeparator(.hidden)
+                                    .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+                                    .padding(.bottom, 3)
+                            }
                         }
                     }
                 }
+
             }
             .environment(\.defaultMinListRowHeight, 0)
             .rotationEffect(.degrees(180))

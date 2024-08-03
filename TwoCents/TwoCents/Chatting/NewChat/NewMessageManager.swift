@@ -57,8 +57,8 @@ final class NewMessageManager {
         messageCollection(spaceId: spaceId)
         
             .whereField("threadId", isEqualTo: threadId)
-//            .limit(to: count)
-//            .order(by: "ts", descending: true)
+            .limit(to: count)
+            .order(by: "ts", descending: true)
         
     }
     
