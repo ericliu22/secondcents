@@ -52,10 +52,10 @@ struct DBSpace: Identifiable, Codable, Hashable {
 
 final class SpaceManager{
     
-    let FIRST_X: CGFloat = 360
-    let FIRST_Y: CGFloat = 360
-    let LAST_X: CGFloat = 1180
-    let LAST_Y: CGFloat = 1180
+    let FIRST_X: CGFloat = 720
+    let FIRST_Y: CGFloat = 720
+    let LAST_X: CGFloat = 2340
+    let LAST_Y: CGFloat = 2340
 
     static let shared = SpaceManager()
     private init() { }

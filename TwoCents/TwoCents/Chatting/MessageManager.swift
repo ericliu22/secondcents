@@ -42,7 +42,10 @@ class MessageManager: ObservableObject {
             .collection("chatlogs")
             .order(by: "ts", descending: true)
             .limit(to: MESSAGE_LIMIT)
-            .addSnapshotListener { querySnapshot, error in
+            .addSnapshotListener { [weak self] querySnapshot, error in
+                guard let self = self else {
+                    return
+                }
                 guard let documents = querySnapshot?.documents else {
                     print("message not retrieved")
                     return
@@ -76,7 +79,11 @@ class MessageManager: ObservableObject {
             .order(by: "ts", descending: true)
             .start(after: [messages.first?.ts as Any])
             .limit(to: MESSAGE_LIMIT)
-            .addSnapshotListener { querySnapshot, error in
+            .addSnapshotListener { [weak self] querySnapshot, error in
+                guard let self = self else {
+                    print("Reference to self is gone")
+                    return
+                }
                 guard let documents = querySnapshot?.documents else {
                     print("message not retrieved")
                     return

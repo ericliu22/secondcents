@@ -14,6 +14,7 @@ import UIKit
 struct TwoCentsApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     
+    
     var body: some Scene {
         WindowGroup {
             RootView(spaceId: delegate.spaceId)
@@ -72,7 +73,10 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         switch action {
         case "space":
             print("space link")
-            isValidSpaceId(spaceId: subject, completion: { valid in
+            isValidSpaceId(spaceId: subject, completion: { [weak self] valid in
+                guard let self = self else {
+                    return
+                }
                 if valid { self.spaceId = subject }
                 else { print("Invalid spaceId: resuming normal execution") }
             })
@@ -105,6 +109,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     }
 
     func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
+        print("asdkjfhdfbkjdheglk")
         guard userActivity.activityType == NSUserActivityTypeBrowsingWeb,
               let incomingURL = userActivity.webpageURL
               else {
@@ -113,6 +118,13 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         
         handleUniversalLink(incomingURL)
         return true
+    }
+    
+    func application(
+        _ application: UIApplication,
+        didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data
+    ) {
+        print(deviceToken)
     }
 
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any],
@@ -127,6 +139,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 
 extension AppDelegate: MessagingDelegate {
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
+        print("GAY")
         let deviceToken: [String: String] = ["token": fcmToken ?? ""]
         print("Device token: ", deviceToken)
         uploadTokenToServer(fcmToken ?? "")
@@ -175,6 +188,7 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
             }
             self.spaceId = spaceId
             print("SPACEID: \(notificationSpaceId)")
+            print("APPDELEGATE SPACEID: \(self.spaceId ?? "nothing")")
         }
 
         completionHandler()
