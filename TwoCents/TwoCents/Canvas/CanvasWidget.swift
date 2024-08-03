@@ -76,7 +76,7 @@ struct CanvasWidget: Hashable, Codable, Identifiable, Transferable, Equatable {
 
 enum Media {
 
-    case video, image, chat, text, poll, map, event, todo, calendar
+    case video, image, chat, text, poll, map, event, todo, calendar, link
 
 }
 
@@ -93,6 +93,8 @@ extension Media: Codable {
             self = .poll
         case "map":
             self = .map
+        case "link":
+            self = .link
         default:
             self = .image
         }
@@ -192,9 +194,10 @@ func MediaView(widget: CanvasWidget, spaceId: String) -> some View{
         PollWidget(widget: widget, spaceId: spaceId)
     case .map:
         MapWidget(widget: widget)
-        
     case .todo:
         TodoWidget(widget: widget, spaceId: spaceId)
+    case .link:
+        LinkWidget(widget: widget)
         
     
     default:

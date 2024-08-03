@@ -47,6 +47,7 @@
 		A257D79F2A6D707800A4E7BD /* TwoCentsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A257D79E2A6D707800A4E7BD /* TwoCentsUITests.swift */; };
 		A257D7A12A6D707800A4E7BD /* TwoCentsUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A257D7A02A6D707800A4E7BD /* TwoCentsUITestsLaunchTests.swift */; };
 		A26809CA2AB8A77E003B30DE /* VoteGameReal.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20EBD072AB8A36100EFDDE8 /* VoteGameReal.swift */; };
+		A2C6FE962C5EB94F0074C475 /* LinkWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2C6FE952C5EB94F0074C475 /* LinkWidget.swift */; };
 		A2DAF34B2C07CB1C00E778FA /* Notifcations.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2DAF34A2C07CB1C00E778FA /* Notifcations.swift */; };
 		A2DDB1B92BB6806C00243E1B /* PollWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2DDB1B82BB6806C00243E1B /* PollWidget.swift */; };
 		A2DDB1BB2BB693FD00243E1B /* NewPollViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2DDB1BA2BB693FD00243E1B /* NewPollViewModel.swift */; };
@@ -216,6 +217,7 @@
 		A257D79A2A6D707800A4E7BD /* TwoCentsUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TwoCentsUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A257D79E2A6D707800A4E7BD /* TwoCentsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwoCentsUITests.swift; sourceTree = "<group>"; };
 		A257D7A02A6D707800A4E7BD /* TwoCentsUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwoCentsUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		A2C6FE952C5EB94F0074C475 /* LinkWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkWidget.swift; sourceTree = "<group>"; };
 		A2DAF34A2C07CB1C00E778FA /* Notifcations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notifcations.swift; sourceTree = "<group>"; };
 		A2DDB1B82BB6806C00243E1B /* PollWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollWidget.swift; sourceTree = "<group>"; };
 		A2DDB1BA2BB693FD00243E1B /* NewPollViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewPollViewModel.swift; sourceTree = "<group>"; };
@@ -518,6 +520,7 @@
 				ABCDA0682C39AFD3002C23E1 /* Todo */,
 				A2DDB1BC2BB69D7100243E1B /* Polls */,
 				AB6778E12AB8F67300C11AA7 /* ImageWidget.swift */,
+				A2C6FE952C5EB94F0074C475 /* LinkWidget.swift */,
 				AB01CB5E2B855E83004BEB5B /* TextWidget.swift */,
 				AB140E482C3094AE008321F9 /* EventWidget.swift */,
 				ABB68DAF2C15268D00406948 /* TextWidgetViewModel.swift */,
@@ -1029,6 +1032,7 @@
 				AB15AC0B2AF6F00C0055D5D0 /* SpaceProfilePicView.swift in Sources */,
 				AB6EA6102B87A27D00CC90FF /* SplashView.swift in Sources */,
 				85A8835A2C42F2B20030AE3A /* CustomCalendarView.swift in Sources */,
+				A2C6FE962C5EB94F0074C475 /* LinkWidget.swift in Sources */,
 				AB69F03F2C1D189800B81E79 /* SignInPhoneNumberViewModel.swift in Sources */,
 				AB9EB95D2B1E805300F58EA5 /* ChatManager.swift in Sources */,
 				AB370E112C34F31500C4431F /* ChatBubbleViewBuilder.swift in Sources */,
