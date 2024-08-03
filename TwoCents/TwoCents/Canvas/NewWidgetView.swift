@@ -21,8 +21,9 @@ var mapViewTest = CanvasWidget(width: .infinity, height:  .infinity, x: 0, y: 0,
 
 var textViewTest = CanvasWidget(width: .infinity, height:  .infinity, x: 0, y:0, borderColor: .red, userId: "jisookim", media: .text, widgetName: "Text", widgetDescription: "A bar is a bar", textString: "Fruits can't even see so how my Apple Watch")
 
-
 var todoViewTest = CanvasWidget(width: .infinity, height:  .infinity, borderColor: .red, userId: "jisookim", media: .todo, widgetName: "List", widgetDescription: "Conquer the world", textString: "")
+
+var linkViewTest = CanvasWidget(width: .infinity, height:  .infinity, borderColor: .red, userId: "jisookim", media: .link, widgetName: "Link", widgetDescription: "Share a link", textString: "")
 
 
 
@@ -134,6 +135,10 @@ struct NewWidgetView: View {
         }
     }
     
+    func newLinkView(index: Int) -> some View {
+        NewLinkView(spaceId: spaceId, closeNewWidgetview: $closeNewWidgetview)
+    }
+    
     
     @State private var showingView: Bool = false
     
@@ -240,8 +245,11 @@ struct NewWidgetView: View {
                                         newTodoView(index: index)
                                             .aspectRatio(1, contentMode: .fit)
                                             .shadow(color: Color.black.opacity(0.1), radius: 20, x: 8, y: 4)
-                                                                    
-                                        
+                                    case .link:
+                                        newLinkView(index: index)
+                                            .aspectRatio(1, contentMode: .fit)
+                                            .shadow(color: Color.black.opacity(0.1), radius: 20, x: 8, y: 4)
+
                                     default:
                                         ZStack{
                                             EmptyView()

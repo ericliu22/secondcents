@@ -197,6 +197,10 @@ struct CanvasPage: View {
                 if let location = widget.location {
                     viewModel.openMapsApp(location: location)
                 }
+            case .link:
+                if let url = widget.mediaURL {
+                    viewModel.openLink(url: url)
+                }
             default:
                 break
             }
@@ -346,7 +350,19 @@ struct CanvasPage: View {
                     .foregroundColor(Color(UIColor.label))
                     .padding(.horizontal, 5)
             }).eraseToAnyView()
-
+        case .link:
+            return Button(action:{
+                if let url = viewModel.selectedWidget?.mediaURL {
+                    viewModel.openLink(url: url)
+                }
+                
+                viewModel.selectedWidget = nil
+                widgetDoubleTapped = false
+            }, label: {
+                Image(systemName: "link")
+                    .foregroundColor(Color(UIColor.label))
+                    .padding(.horizontal, 5)
+            }).eraseToAnyView()
         default:
             return EmptyView().eraseToAnyView()
         }

@@ -23,7 +23,6 @@ struct LinkWidget: WidgetView {
         VStack {
             LinkView(url: widget.mediaURL!)
                 .frame(width: TILE_SIZE, height: TILE_SIZE)
-                .padding()
         }
     }
 }
@@ -47,8 +46,9 @@ struct LinkView: UIViewRepresentable {
                 return
             }
             DispatchQueue.main.async {
-               view.metadata = metadata
-           }
+                metadata.title = ""
+                view.metadata = metadata
+            }
         }
         return view
     }
@@ -60,6 +60,16 @@ struct LinkView: UIViewRepresentable {
             uiView.heightAnchor.constraint(equalToConstant: height)
         ])
         uiView.invalidateIntrinsicContentSize()
+    }
+    
+    private func hideTextSubviews(in view: UIView) {
+            for subview in view.subviews {
+                if let label = subview as? UILabel {
+                    label.isHidden = true // Hide the label
+                } else {
+                    hideTextSubviews(in: subview) // Recursively hide labels in subviews
+                }
+            }
     }
 }
 

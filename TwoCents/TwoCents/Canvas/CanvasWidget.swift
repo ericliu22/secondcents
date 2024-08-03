@@ -199,26 +199,19 @@ func MediaView(widget: CanvasWidget, spaceId: String) -> some View{
     case .link:
         LinkWidget(widget: widget)
         
-    
     default:
-//        ImageWidget(widget: widget)
         EmptyView()
     }
     
 }
-
-/*
- 
- DO NOT DELETE THIS COMMENT
+ /*
 struct MediaView<WidgetView>: View where WidgetView: View {
     let widget: CanvasWidget
     let spaceId: String
-    let newWidget: Bool
     
-    init(widget: CanvasWidget, spaceId: String, newWidget: Bool = false) {
+    init(widget: CanvasWidget, spaceId: String) {
         self.widget = widget
         self.spaceId = spaceId
-        self.newWidget = newWidget
     }
     
     var body: some View {
@@ -226,14 +219,19 @@ struct MediaView<WidgetView>: View where WidgetView: View {
         case .text:
             TextWidget(widget: widget)
         case .video:
-            VideoWidget(widget: widget, newWidget: newWidget)
+            VideoWidget(widget: widget)
         case .image:
             ImageWidget(widget: widget)
         case .poll:
             PollWidget(widget: widget, spaceId: spaceId)
+        case .map:
+            MapWidget(widget: widget)
+        case .todo:
+            TodoWidget(widget: widget, spaceId: spaceId)
+        case .link:
+            LinkWidget(widget: widget)
         default:
-            ImageWidget(widget: widget)
-        }
+            EmptyView()
     }
 }
 */

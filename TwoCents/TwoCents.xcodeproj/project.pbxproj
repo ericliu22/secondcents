@@ -48,6 +48,8 @@
 		A257D7A12A6D707800A4E7BD /* TwoCentsUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A257D7A02A6D707800A4E7BD /* TwoCentsUITestsLaunchTests.swift */; };
 		A26809CA2AB8A77E003B30DE /* VoteGameReal.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20EBD072AB8A36100EFDDE8 /* VoteGameReal.swift */; };
 		A2C6FE962C5EB94F0074C475 /* LinkWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2C6FE952C5EB94F0074C475 /* LinkWidget.swift */; };
+		A2C6FE982C5ECAD40074C475 /* NewLinkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2C6FE972C5ECAD40074C475 /* NewLinkView.swift */; };
+		A2C6FE9A2C5ECC170074C475 /* NewLinkViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2C6FE992C5ECC170074C475 /* NewLinkViewModel.swift */; };
 		A2DAF34B2C07CB1C00E778FA /* Notifcations.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2DAF34A2C07CB1C00E778FA /* Notifcations.swift */; };
 		A2DDB1B92BB6806C00243E1B /* PollWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2DDB1B82BB6806C00243E1B /* PollWidget.swift */; };
 		A2DDB1BB2BB693FD00243E1B /* NewPollViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2DDB1BA2BB693FD00243E1B /* NewPollViewModel.swift */; };
@@ -218,6 +220,8 @@
 		A257D79E2A6D707800A4E7BD /* TwoCentsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwoCentsUITests.swift; sourceTree = "<group>"; };
 		A257D7A02A6D707800A4E7BD /* TwoCentsUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwoCentsUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		A2C6FE952C5EB94F0074C475 /* LinkWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkWidget.swift; sourceTree = "<group>"; };
+		A2C6FE972C5ECAD40074C475 /* NewLinkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewLinkView.swift; sourceTree = "<group>"; };
+		A2C6FE992C5ECC170074C475 /* NewLinkViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewLinkViewModel.swift; sourceTree = "<group>"; };
 		A2DAF34A2C07CB1C00E778FA /* Notifcations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notifcations.swift; sourceTree = "<group>"; };
 		A2DDB1B82BB6806C00243E1B /* PollWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollWidget.swift; sourceTree = "<group>"; };
 		A2DDB1BA2BB693FD00243E1B /* NewPollViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewPollViewModel.swift; sourceTree = "<group>"; };
@@ -521,6 +525,8 @@
 				A2DDB1BC2BB69D7100243E1B /* Polls */,
 				AB6778E12AB8F67300C11AA7 /* ImageWidget.swift */,
 				A2C6FE952C5EB94F0074C475 /* LinkWidget.swift */,
+				A2C6FE972C5ECAD40074C475 /* NewLinkView.swift */,
+				A2C6FE992C5ECC170074C475 /* NewLinkViewModel.swift */,
 				AB01CB5E2B855E83004BEB5B /* TextWidget.swift */,
 				AB140E482C3094AE008321F9 /* EventWidget.swift */,
 				ABB68DAF2C15268D00406948 /* TextWidgetViewModel.swift */,
@@ -990,6 +996,7 @@
 				856E80BB2B50EB260078A2CE /* SabotageGameView.swift in Sources */,
 				85741EA82AD03A0C0085423E /* CarouselPractice.swift in Sources */,
 				AB77664C2C2526BE00F95E65 /* LocationManager.swift in Sources */,
+				A2C6FE9A2C5ECC170074C475 /* NewLinkViewModel.swift in Sources */,
 				AB2E56D32AE9C6F00096A58C /* VoteGameViewModel.swift in Sources */,
 				A2DDB1BB2BB693FD00243E1B /* NewPollViewModel.swift in Sources */,
 				AB9C7F682BD83B1E004FC549 /* EmojiCountView.swift in Sources */,
@@ -1021,6 +1028,7 @@
 				AB300FAE2AC7406500C6719D /* FriendsViewModel.swift in Sources */,
 				ABCDA06C2C39B009002C23E1 /* NewTodoView.swift in Sources */,
 				ABCA39D82A7A0671009447C3 /* RootView.swift in Sources */,
+				A2C6FE982C5ECAD40074C475 /* NewLinkView.swift in Sources */,
 				AB90EDB92B54EB78002AD855 /* CustomizeWidgetView.swift in Sources */,
 				857753022C308B0E00B4A971 /* DateAlignment.swift in Sources */,
 				AB69F03D2C1D188E00B81E79 /* SignInPhoneNumberView.swift in Sources */,
