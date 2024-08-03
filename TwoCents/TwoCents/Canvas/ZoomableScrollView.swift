@@ -21,12 +21,13 @@ struct ZoomableScrollView<Content: View>: UIViewRepresentable {
         let scrollView = UIScrollView()
         scrollView.delegate = context.coordinator
         scrollView.maximumZoomScale = 2.5
-        scrollView.minimumZoomScale = 0.5
+        scrollView.minimumZoomScale = 0.15
         scrollView.bouncesZoom = true
         scrollView.bounces = true
         scrollView.showsVerticalScrollIndicator = false
         scrollView.showsHorizontalScrollIndicator = false
         scrollView.isScrollEnabled = !toolPickerActive
+        scrollView.contentInsetAdjustmentBehavior = .never
 
         let hostedView = context.coordinator.hostingController.view!
         hostedView.translatesAutoresizingMaskIntoConstraints = false
@@ -51,12 +52,11 @@ struct ZoomableScrollView<Content: View>: UIViewRepresentable {
             uiView.contentOffset = CGPoint(x: initialOffsetX, y: initialOffsetY)
         }
     }
-
+    
     private func updateContentSize(for scrollView: UIScrollView) {
         guard let view = scrollView.subviews.first else { return }
         let zoomScale = scrollView.zoomScale
         let contentSize = CGSize(width: view.intrinsicContentSize.width * zoomScale, height: view.intrinsicContentSize.height * zoomScale)
-               scrollView.contentSize = contentSize
         scrollView.contentSize = contentSize
     }
 
