@@ -14,9 +14,7 @@ final class NewChatViewModel: ObservableObject {
         Task {
             do {
                 let (newMessages, lastDocument) = try await NewMessageManager.shared.getAllMessages(spaceId: spaceId, count: 20, lastDocument: self.lastDocument)
-                
-                print(newMessages)
-                
+           
                 if newMessages.isEmpty {
                     self.hasMoreMessages = false
                 } else {
@@ -72,6 +70,37 @@ final class NewChatViewModel: ObservableObject {
         self.messages.removeAll()
         self.messagesFromListener.removeAll()
         self.lastDocument = nil
+    }
+    
+    func getThreadMessages(spaceId: String, threadId: String, completion: ((Bool, String?) -> Void)? = nil) {
+        Task {
+            do {
+                let (newMessages, lastDocument) = try await NewMessageManager.shared.getThreadMessages(spaceId: spaceId, count: 20, lastDocument: self.lastDocument, threadId: threadId)
+                
+                for message in newMessages {
+                    if let threadId = message.threadId {
+                        print(threadId)
+                    }
+                }
+
+                
+                if newMessages.isEmpty {
+                    self.hasMoreMessages = false
+                } else {
+                    self.hasMoreMessages = true
+                    let existingMessageIDs = Set(self.messages.map { $0.id })
+                    let uniqueMessages = newMessages.filter { !existingMessageIDs.contains($0.id) }
+                    self.messages.append(contentsOf: uniqueMessages)
+                    if let lastDocument = lastDocument {
+                        self.lastDocument = lastDocument
+                    }
+                }
+                
+                completion?(false, nil)
+            } catch {
+                print("Failed to fetch old messages: \(error)")
+            }
+        }
     }
     
     

@@ -28,6 +28,7 @@ struct ChatBubbleView: View {
     
     var body: some View {
         VStack(alignment: sentByMe ? .trailing : .leading, spacing: 3) {
+            
             if isFirstMsg {
                 Text(name)
                     .foregroundStyle(userColor)
@@ -58,8 +59,6 @@ struct ChatBubbleView: View {
         }
         .offset(x: dragOffset.width, y: 0)
         .frame(maxWidth: .infinity, alignment: sentByMe ? .trailing : .leading)
-//        .background(Color.clear)
-//        .contentShape(Rectangle())
         .gesture(
             DragGesture(minimumDistance: 30, coordinateSpace: .scrollView)
                 .onChanged { value in
@@ -82,7 +81,7 @@ struct ChatBubbleView: View {
                     if isHorizontalDrag && abs(value.translation.width) > 100 {
                         
                         if let messageThreadId = message.threadId {
-                            print("the msg u swiped on's id is\(messageThreadId)")
+                            print("the msg u swiped on's id is \(messageThreadId)")
                             
                             if !messageThreadId.isEmpty{
                               

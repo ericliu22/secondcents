@@ -61,8 +61,10 @@ struct NewChatView: View {
                         .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
                         .padding(.bottom, 3)
                         .blur(radius: replyWidget == nil && threadId == "" ? 0 : 2)
+                        .background(.red)
+                        
                 }
-                
+     
                 
                 
                 // Display old messages
@@ -79,7 +81,13 @@ struct NewChatView: View {
                         if viewModel.hasMoreMessages {
                             ProgressView()
                                 .onAppear {
+                                    if threadId == "" {
+                                        
+                                   
                                     viewModel.getOldMessages(spaceId: spaceId)
+                                    } else {
+                                        viewModel.getThreadMessages(spaceId: spaceId, threadId: threadId)
+                                    }
                                 }
                                 .rotationEffect(.degrees(180))
                                 .frame(maxWidth: .infinity)
@@ -97,7 +105,12 @@ struct NewChatView: View {
       
                 if !newValue.isEmpty{
                     viewModel.removeMessages()
-
+//                    viewModel.getOldMessages(spaceId: spaceId)
+                    
+                    print("BEFORE")
+                    viewModel.getThreadMessages(spaceId: spaceId, threadId: newValue)
+                    print("AFTER")
+//                    print(viewModel.messages)
                 }
             })
 //            
@@ -122,12 +135,17 @@ struct NewChatView: View {
         .padding(.horizontal)
         .onTapGesture {
             withAnimation {
+               
                 replyWidget = nil
                 
-                print("tapped")
-                viewModel.getOldMessages(spaceId: spaceId)
-                viewModel.fetchNewMessages(spaceId: spaceId)
-                threadId = ""
+                
+                if threadId != "" {
+                    threadId = ""
+                    viewModel.removeMessages()
+                    viewModel.getOldMessages(spaceId: spaceId)
+                    viewModel.fetchNewMessages(spaceId: spaceId)
+                }
+              
             }
         }
         .overlay(
