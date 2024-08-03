@@ -52,6 +52,8 @@ final class NewChatViewModel: ObservableObject {
                     return
                 }
                 
+               
+                
                 self.messagesFromListener = documents.compactMap { document -> Message? in
                     do {
                         return try document.data(as: Message.self)

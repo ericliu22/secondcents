@@ -28,6 +28,7 @@ struct NewChatView: View {
     @Binding var detent: PresentationDetent
     @State var threadId: String = ""
     
+    
     var body: some View {
         ScrollViewReader { proxy in
             List {
@@ -50,22 +51,22 @@ struct NewChatView: View {
                 }
                 
                 
-                
-                
-                // Display new messages
-                ForEach(viewModel.messagesFromListener) { message in
-                    ChatBubbleViewBuilder(messageId: message.id, spaceId: spaceId, currentUserId: userUID, threadId: $threadId)
-                        .id(message.id)
-                        .rotationEffect(.degrees(180))
-                        .listRowSeparator(.hidden)
-                        .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-                        .padding(.bottom, 3)
-                        .blur(radius: replyWidget == nil && threadId == "" ? 0 : 2)
-                        .background(.red)
+                if threadId == "" {
+                    
+                    // Display new messages
+                    ForEach(viewModel.messagesFromListener) { message in
+                        ChatBubbleViewBuilder(messageId: message.id, spaceId: spaceId, currentUserId: userUID, threadId: $threadId)
+                            .id(message.id)
+                            .rotationEffect(.degrees(180))
+                            .listRowSeparator(.hidden)
+                            .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+                            .padding(.bottom, 3)
+                            .blur(radius: replyWidget == nil && threadId == "" ? 0 : 2)
+                            .background(.red)
                         
+                    }
+                    
                 }
-     
-                
                 
                 // Display old messages
                 ForEach(viewModel.messages) { message in
@@ -109,11 +110,15 @@ struct NewChatView: View {
                     
                     print("BEFORE")
                     viewModel.getThreadMessages(spaceId: spaceId, threadId: newValue)
+                    
                     print("AFTER")
 //                    print(viewModel.messages)
                 }
             })
-//            
+            
+            
+            
+//
             
             
             .environment(\.defaultMinListRowHeight, 0)
@@ -151,6 +156,7 @@ struct NewChatView: View {
         .overlay(
             NewMessageField(replyWidget: $replyWidget, spaceId: spaceId, threadId: $threadId)
                 .frame(maxHeight: .infinity, alignment: .bottom)
+                
         )
     }
 }
