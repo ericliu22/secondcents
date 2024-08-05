@@ -21,7 +21,7 @@ let TILE_SPACING: CGFloat = 30
 let MAX_ZOOM: CGFloat = 3.0
 let MIN_ZOOM: CGFloat = 0.6
 let CORNER_RADIUS: CGFloat = 15
-let FRAME_SIZE: CGFloat = 1000
+let FRAME_SIZE: CGFloat = 2000
 let WIDGET_SPACING: CGFloat = TILE_SIZE + TILE_SPACING
 
 func roundToTile(number : CGFloat) -> CGFloat {
@@ -197,6 +197,10 @@ struct CanvasPage: View {
                 if let location = widget.location {
                     viewModel.openMapsApp(location: location)
                 }
+            case .link:
+                if let url = widget.mediaURL {
+                    viewModel.openLink(url: url)
+                }
             default:
                 break
             }
@@ -226,9 +230,9 @@ struct CanvasPage: View {
                             .frame(width: TILE_SIZE, height: TILE_SIZE)
                             .position(x: widget.x ??  FRAME_SIZE/2, y: widget.y ?? FRAME_SIZE/2)
                             .cornerRadius(CORNER_RADIUS)
-                        //on double tap
+                            //on double tap
                             .onTapGesture(count: 2, perform: {widgetDoubleTap(widget: widget)})
-                        //on single tap
+                            //on single tap
                             .onTapGesture(count: 1, perform: {widgetSingleTap(widget: widget)})
                     )
 
@@ -346,7 +350,19 @@ struct CanvasPage: View {
                     .foregroundColor(Color(UIColor.label))
                     .padding(.horizontal, 5)
             }).eraseToAnyView()
-
+        case .link:
+            return Button(action:{
+                if let url = viewModel.selectedWidget?.mediaURL {
+                    viewModel.openLink(url: url)
+                }
+                
+                viewModel.selectedWidget = nil
+                widgetDoubleTapped = false
+            }, label: {
+                Image(systemName: "link")
+                    .foregroundColor(Color(UIColor.label))
+                    .padding(.horizontal, 5)
+            }).eraseToAnyView()
         default:
             return EmptyView().eraseToAnyView()
         }

@@ -53,6 +53,14 @@ final class CanvasPageViewModel: ObservableObject {
             print("Cannot open Maps app")
         }
     }
+    
+    func openLink(url: URL) {
+        if UIApplication.shared.canOpenURL(url) {
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        } else {
+            print("Cannot open link")
+        }
+    }
 
     
     func getUserColor(userColor: String) -> Color{
