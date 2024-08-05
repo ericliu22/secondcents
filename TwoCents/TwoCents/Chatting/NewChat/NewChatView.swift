@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 import UIKit
 
-struct Message: Identifiable, Codable,Equatable {
+struct Message: Identifiable, Codable, Equatable {
     var id: String
     var sendBy: String
     var text: String?
@@ -18,7 +18,6 @@ struct Message: Identifiable, Codable,Equatable {
     var widgetId: String?
     var threadId: String?
 }
-import SwiftUI
 
 struct NewChatView: View {
     @State var spaceId: String
@@ -27,7 +26,7 @@ struct NewChatView: View {
     @Binding var replyWidget: CanvasWidget?
     @Binding var detent: PresentationDetent
     @State var threadId: String = ""
-    
+    @State private var threadIdChangedTime: Date = Date()
     
     var body: some View {
         ScrollViewReader { proxy in
@@ -50,22 +49,18 @@ struct NewChatView: View {
                         .padding(.bottom, 3)
                 }
                 
-                
-//                if threadId == "" {
-                    
-                    // Display new messages
-                    ForEach(viewModel.messagesFromListener) { message in
-                        ChatBubbleViewBuilder(messageId: message.id, spaceId: spaceId, currentUserId: userUID, threadId: $threadId)
-                            .id(message.id)
-                            .rotationEffect(.degrees(180))
-                            .listRowSeparator(.hidden)
-                            .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-                            .padding(.bottom, 3)
-                            .blur(radius: replyWidget == nil && threadId == "" ? 0 : 2)
-                            .background(.red)
-                        
-//                    }
-                    
+                // Display new messages
+                ForEach(viewModel.messagesFromListener.filter { message in
+                    (threadId.isEmpty || message.threadId == threadId) && message.ts > threadIdChangedTime
+                }) { message in
+                    ChatBubbleViewBuilder(messageId: message.id, spaceId: spaceId, currentUserId: userUID, threadId: $threadId)
+                        .id(message.id)
+                        .rotationEffect(.degrees(180))
+                        .listRowSeparator(.hidden)
+                        .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+                        .padding(.bottom, 3)
+                        .blur(radius: replyWidget == nil && threadId == "" ? 0 : 2)
+                        .background(.red)
                 }
                 
                 // Display old messages
@@ -83,9 +78,7 @@ struct NewChatView: View {
                             ProgressView()
                                 .onAppear {
                                     if threadId == "" {
-                                        
-                                   
-                                    viewModel.getOldMessages(spaceId: spaceId)
+                                        viewModel.getOldMessages(spaceId: spaceId)
                                     } else {
                                         viewModel.getThreadMessages(spaceId: spaceId, threadId: threadId)
                                     }
@@ -98,30 +91,15 @@ struct NewChatView: View {
                         }
                     }
                 }
-                
             }
- 
-            .onChange(of: threadId, { _, newValue in
+            .onChange(of: threadId) { _, newValue in
+                threadIdChangedTime = Date()
                 
-      
-                if !newValue.isEmpty{
+                if !newValue.isEmpty {
                     viewModel.removeMessages()
-//                    viewModel.getOldMessages(spaceId: spaceId)
-                    
-                    print("BEFORE")
                     viewModel.getThreadMessages(spaceId: spaceId, threadId: newValue)
-                 
-
-                    print("AFTER")
-//                    print(viewModel.messages)
                 }
-            })
-            
-            
-            
-//
-            
-            
+            }
             .environment(\.defaultMinListRowHeight, 0)
             .rotationEffect(.degrees(180))
             .listStyle(PlainListStyle())
@@ -136,14 +114,11 @@ struct NewChatView: View {
                     proxy.scrollTo("top", anchor: .top)
                 }
             }
-            
         }
         .padding(.horizontal)
         .onTapGesture {
             withAnimation {
-               
                 replyWidget = nil
-                
                 
                 if threadId != "" {
                     threadId = ""
@@ -151,13 +126,11 @@ struct NewChatView: View {
                     viewModel.getOldMessages(spaceId: spaceId)
                     viewModel.fetchNewMessages(spaceId: spaceId)
                 }
-              
             }
         }
         .overlay(
             NewMessageField(replyWidget: $replyWidget, spaceId: spaceId, threadId: $threadId)
                 .frame(maxHeight: .infinity, alignment: .bottom)
-                
         )
     }
 }
