@@ -51,7 +51,7 @@ struct NewChatView: View {
                 }
                 
                 
-                if threadId == "" {
+//                if threadId == "" {
                     
                     // Display new messages
                     ForEach(viewModel.messagesFromListener) { message in
@@ -64,7 +64,7 @@ struct NewChatView: View {
                             .blur(radius: replyWidget == nil && threadId == "" ? 0 : 2)
                             .background(.red)
                         
-                    }
+//                    }
                     
                 }
                 
@@ -110,7 +110,8 @@ struct NewChatView: View {
                     
                     print("BEFORE")
                     viewModel.getThreadMessages(spaceId: spaceId, threadId: newValue)
-                    
+                 
+
                     print("AFTER")
 //                    print(viewModel.messages)
                 }
