@@ -137,6 +137,7 @@ struct NewWidgetView: View {
     
     func newLinkView(index: Int) -> some View {
         NewLinkView(spaceId: spaceId, closeNewWidgetview: $closeNewWidgetview)
+            .cornerRadius(20)
     }
     
     

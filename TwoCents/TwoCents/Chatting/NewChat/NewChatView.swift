@@ -59,7 +59,7 @@ struct NewChatView: View {
                         .listRowSeparator(.hidden)
                         .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
                         .padding(.bottom, 3)
-                        .blur(radius: replyWidget == nil && threadId == "" ? 0 : 2)
+                        .blur(radius: replyWidget == nil ? 0 : 2)
                         .background(.red)
                 }
                 
@@ -71,7 +71,7 @@ struct NewChatView: View {
                         .listRowSeparator(.hidden)
                         .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
                         .padding(.bottom, 3)
-                        .blur(radius: replyWidget == nil && threadId == "" ? 0 : 2)
+                        .blur(radius: replyWidget == nil ? 0 : 2)
                     
                     if message.id == viewModel.messages.last?.id {
                         if viewModel.hasMoreMessages {
