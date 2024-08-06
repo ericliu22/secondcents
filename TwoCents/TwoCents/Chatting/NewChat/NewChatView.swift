@@ -60,7 +60,7 @@ struct NewChatView: View {
                         .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
                         .padding(.bottom, 3)
                         .blur(radius: replyWidget == nil ? 0 : 2)
-                        .background(.red)
+//                        .background(.red)
                 }
                 
                 // Display old messages
@@ -115,6 +115,7 @@ struct NewChatView: View {
                 }
             }
         }
+   
         .padding(.horizontal)
         .onTapGesture {
             withAnimation {
@@ -132,7 +133,9 @@ struct NewChatView: View {
             NewMessageField(replyWidget: $replyWidget, spaceId: spaceId, threadId: $threadId)
                 .frame(maxHeight: .infinity, alignment: .bottom)
         )
+ 
     }
+   
 }
 
 struct NewChatView_Previews: PreviewProvider {
