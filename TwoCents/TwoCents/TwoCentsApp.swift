@@ -13,32 +13,18 @@ import UIKit
 @main
 struct TwoCentsApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
-    var appModel: AppModel = AppModel()
     
     var body: some Scene {
         WindowGroup {
             RootView()
-                .environment(appModel)
-                .task {
-                    if let spaceId = delegate.spaceId {
-                        appModel.spaceId = spaceId
-                        appModel.shouldNavigateToSpace = true
-                    }
-                }
-                .onChange(of: delegate.spaceId, {
-                    print("ROOTVIEW SPACEID CHANGED")
-                    if let spaceId = delegate.spaceId {
-                        appModel.spaceId = spaceId
-                        appModel.shouldNavigateToSpace = true
-                    }
-                })
+                .environment(delegate.appModel)
         }
     }
 }
 
 class AppDelegate: NSObject, UIApplicationDelegate {
     let gcmMessageIDKey = "gcm.message_id"
-    var spaceId: String?
+    var appModel: AppModel = AppModel()
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         FirebaseApp.configure()
@@ -91,7 +77,10 @@ class AppDelegate: NSObject, UIApplicationDelegate {
                 guard let self = self else {
                     return
                 }
-                if valid { self.spaceId = subject }
+                if valid {
+                    self.appModel.spaceId = subject
+                    self.appModel.shouldNavigateToSpace = true
+                }
                 else { print("Invalid spaceId: resuming normal execution") }
             })
         case "friend":
@@ -141,6 +130,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         print(deviceToken)
     }
 
+    //Runs when app is not open and user clicks on notification
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any],
                      fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
         if let messageID = userInfo[gcmMessageIDKey] {
@@ -151,9 +141,10 @@ class AppDelegate: NSObject, UIApplicationDelegate {
             guard let spaceId: String = notificationSpaceId as? String else {
                 return
             }
-            self.spaceId = spaceId
+            self.appModel.spaceId = spaceId
+            self.appModel.shouldNavigateToSpace = true
             print("SPACEID: \(notificationSpaceId)")
-            print("didReceiveRemoteNotification SPACEID: \(self.spaceId ?? "nothing")")
+            print("didReceiveRemoteNotification SPACEID: \(self.appModel.spaceId ?? "nothing")")
         }
 
         completionHandler(UIBackgroundFetchResult.newData)
@@ -181,6 +172,7 @@ extension AppDelegate: MessagingDelegate {
 @available(iOS 10, *)
 extension AppDelegate : UNUserNotificationCenterDelegate {
 
+    //Runs when app is open and user gets notification
     func userNotificationCenter(_ center: UNUserNotificationCenter,
                                 willPresent notification: UNNotification,
         withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
@@ -190,11 +182,10 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
             print("Message ID: \(messageID)")
         }
 
-        print(userInfo)
-
         completionHandler([[.banner, .badge, .sound]])
     }
 
+    //Runs when app is open and user click notifications
     func userNotificationCenter(_ center: UNUserNotificationCenter,
                                 didReceive response: UNNotificationResponse,
                                 withCompletionHandler completionHandler: @escaping () -> Void) {
@@ -209,9 +200,10 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
             guard let spaceId: String = notificationSpaceId as? String else {
                 return
             }
-            self.spaceId = spaceId
+            self.appModel.spaceId = spaceId
+            self.appModel.shouldNavigateToSpace = true
             print("SPACEID: \(notificationSpaceId)")
-            print("didReceive SPACEID: \(self.spaceId ?? "nothing")")
+            print("didReceive SPACEID: \(self.appModel.spaceId ?? "nothing")")
         }
 
         completionHandler()

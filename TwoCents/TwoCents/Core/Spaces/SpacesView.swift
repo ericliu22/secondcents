@@ -231,11 +231,13 @@ struct SpacesView: View {
                 
             }
             //use self for clarity
-            if let spaceId = appModel.spaceId {
+            if appModel.shouldNavigateToSpace {
+                guard let spaceId = appModel.spaceId else { return }
                 guard let space: DBSpace = try? await SpaceManager.shared.getSpace(spaceId: spaceId) else {
                     print("Failed to get DBSpace from deeplink")
                     return
                 }
+                appModel.shouldNavigateToSpace = false
                 presentedPath.append(space)
                 guard let user = viewModel.user else {
                     return
@@ -256,18 +258,20 @@ struct SpacesView: View {
         func body(content: Content) -> some View {
             content
             .onChange(of: appModel.spaceId, {
-                print("CHANGED")
+                print("I finger my bum")
                 if appModel.shouldNavigateToSpace {
                     guard let spaceId = appModel.spaceId else {
+                        print("not spaceId")
                         return
                     }
+                    appModel.shouldNavigateToSpace = false
+                    print("APPENDING TO PRESENTED PATH")
                     Task {
                         guard let space: DBSpace = try? await SpaceManager.shared.getSpace(spaceId: spaceId) else {
                             print("Failed to get DBSpace from deeplink")
                             return
                         }
                         presentedPath.append(space)
-                        appModel.shouldNavigateToSpace = false
                         guard let user = viewModel.user else {
                             return
                         }

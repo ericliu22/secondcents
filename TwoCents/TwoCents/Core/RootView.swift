@@ -37,7 +37,6 @@ struct RootView: View {
     @State private var activeSheet: sheetTypes?
     
     @State private var userPhoneNumber: String?
-    @Environment(AppModel.self) var appModel
     
     var body: some View {
         
