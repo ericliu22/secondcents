@@ -12,18 +12,15 @@ struct FrontPageView: View {
     let CalendarTestWidget = CanvasWidget(width: .infinity, height:  .infinity, borderColor: .red, userId: "jisookim", media: .text, widgetName: "Text", widgetDescription: "A bar is a bar", textString: "Fruits can't even see so how my Apple Watch")
    
     
-//    @Binding var showSignInView: Bool
     @Binding var loadedColor: Color
-//    @Binding var showCreateProfileView: Bool
     @Binding var activeSheet: sheetTypes?
-    @Binding var spaceId: String?
+    @State var selectedTab: Int = 0
+    @Environment(AppModel.self) var appModel
     
     var body: some View {
-        TabView{
-//            UploadExample()
-            
-//            SpacesView(showSignInView: $showSignInView, loadedColor: $loadedColor, showCreateProfileView: $showCreateProfileView)
-            SpacesView(activeSheet: $activeSheet, loadedColor: $loadedColor, spaceId: $spaceId)
+        //Make sure TabView always navigates to SpacesView
+        TabView(selection: $selectedTab, content: {
+            SpacesView(activeSheet: $activeSheet, loadedColor: $loadedColor)
                 .tabItem {
                     Image(systemName: "rectangle.3.group.fill")
                     Text("Spaces")
@@ -95,7 +92,15 @@ struct FrontPageView: View {
             }
             
             
-        }
+        })
+        .onChange(of: appModel.spaceId, {
+            guard (appModel.spaceId != nil) else {
+                return
+            }
+            if appModel.shouldNavigateToSpace {
+                selectedTab = 0
+            }
+        })
         
 
         

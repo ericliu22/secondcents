@@ -28,31 +28,22 @@ struct RootView: View {
     //
     //    @State private var showCreateProfileView: Bool = false
     
-    @StateObject private var viewModel = RootViewModel()
+    var viewModel = RootViewModel()
     
     @State private var tintLoaded: Bool = false
     @State private var userColor: String = ""
     @State private var loadedColor: Color = .gray
-    @State private var spaceId: String?
-    @State private var shouldNavigateToCanvas: Bool = false // New state for navigation
     
     @State private var activeSheet: sheetTypes?
     
     @State private var userPhoneNumber: String?
-    
-    init(spaceId: String?) {
-        self.spaceId = spaceId
-        if self.spaceId != nil {
-            self.shouldNavigateToCanvas = true
-        }
-    }
+    @Environment(AppModel.self) var appModel
     
     var body: some View {
         
         ZStack {
-            FrontPageView(loadedColor: $loadedColor, activeSheet: $activeSheet, spaceId: $spaceId)
+            FrontPageView(loadedColor: $loadedColor, activeSheet: $activeSheet)
                 .task{
-                    
                     
                     try? await viewModel.loadCurrentUser()
                     
@@ -63,65 +54,11 @@ struct RootView: View {
                         loadedColor = viewModel.getUserColor(userColor: userColor)
                     }
                     
-                    
-                    
-                    
-                    
-                    
-                    
-                    
                 }
-            
-            
             //                .tint(viewModel.getUserColor(userColor: viewModel.user?.userColor ?? ""))
             
                 .tint(tintLoaded ? loadedColor : .gray)
                 .animation(.easeIn, value: tintLoaded)
-                .background(
-                    Group {
-                        if shouldNavigateToCanvas {
-                            NavigationLink(
-                                destination: CanvasPage(spaceId: waitForVariable{spaceId}),
-                                isActive: $shouldNavigateToCanvas,
-                                label: { EmptyView() }
-                            )
-                            .onAppear(perform: {
-                                Task {
-                                    guard let spaceId = self.spaceId else {
-                                        return
-                                    }
-                                    guard let uid = try? AuthenticationManager.shared.getAuthenticatedUser().uid else {
-                                        return
-                                    }
-                                    guard let members = try? await SpaceManager.shared.getSpace(spaceId: spaceId).members else {
-                                        return
-                                    }
-                                    if (members.contains(where: { $0 == uid })) {
-                                        try await Firestore.firestore().collection("spaces").document(spaceId).updateData([
-                                            "members": FieldValue.arrayUnion([uid])
-                                        ])
-                                    }
-                                }
-                            })
-                        }
-                    }
-                )
-        }
-        
-        .onAppear{
-            let authUser = try? AuthenticationManager.shared.getAuthenticatedUser()
-            //            self.showSignInView = authUser == nil
-            
-            if authUser == nil {
-                activeSheet = .signInView
-            } else {
-                if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
-                   self.spaceId = appDelegate.spaceId
-                   if spaceId != nil {
-                       shouldNavigateToCanvas = true // Trigger navigation if spaceId is present
-                   }
-               }
-            }
         }
         
         .fullScreenCover(item: $activeSheet) { item in

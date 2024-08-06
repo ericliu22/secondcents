@@ -13,11 +13,25 @@ import UIKit
 @main
 struct TwoCentsApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
-    
+    var appModel: AppModel = AppModel()
     
     var body: some Scene {
         WindowGroup {
-            RootView(spaceId: delegate.spaceId)
+            RootView()
+                .environment(appModel)
+                .task {
+                    if let spaceId = delegate.spaceId {
+                        appModel.spaceId = spaceId
+                        appModel.shouldNavigateToSpace = true
+                    }
+                }
+                .onChange(of: delegate.spaceId, {
+                    print("ROOTVIEW SPACEID CHANGED")
+                    if let spaceId = delegate.spaceId {
+                        appModel.spaceId = spaceId
+                        appModel.shouldNavigateToSpace = true
+                    }
+                })
         }
     }
 }
@@ -133,6 +147,15 @@ class AppDelegate: NSObject, UIApplicationDelegate {
             print("Message ID: \(messageID)")
         }
         print(userInfo)
+        if let notificationSpaceId = userInfo["spaceId"] {
+            guard let spaceId: String = notificationSpaceId as? String else {
+                return
+            }
+            self.spaceId = spaceId
+            print("SPACEID: \(notificationSpaceId)")
+            print("didReceiveRemoteNotification SPACEID: \(self.spaceId ?? "nothing")")
+        }
+
         completionHandler(UIBackgroundFetchResult.newData)
     }
 }
@@ -188,7 +211,7 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
             }
             self.spaceId = spaceId
             print("SPACEID: \(notificationSpaceId)")
-            print("APPDELEGATE SPACEID: \(self.spaceId ?? "nothing")")
+            print("didReceive SPACEID: \(self.spaceId ?? "nothing")")
         }
 
         completionHandler()

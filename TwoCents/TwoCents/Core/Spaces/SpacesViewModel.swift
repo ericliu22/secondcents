@@ -15,16 +15,13 @@ import SwiftUI
 @MainActor
 final class SpacesViewModel: ObservableObject {
     
-    @Published private(set) var user:  DBUser? = nil
+    @Published var user:  DBUser? = nil
+    @Published var allSpaces: [DBSpace] = []
+    
     func loadCurrentUser() async throws {
         let authDataResult = try AuthenticationManager.shared.getAuthenticatedUser()
         self.user = try await UserManager.shared.getUser(userId: authDataResult.uid)
     }
-    
-    
-    
-    @Published private(set) var allSpaces: [DBSpace] = []
-    
     
     func getAllSpaces(userId: String) async throws {
         try? await loadCurrentUser()
@@ -32,15 +29,6 @@ final class SpacesViewModel: ObservableObject {
         self.allSpaces = try await UserManager.shared.getAllSpaces(userId: userId)
 
     }
-    
-    
-    
-    
-    
-
-    
-    
-    
     
     func getUserColor(userColor: String) -> Color{
 

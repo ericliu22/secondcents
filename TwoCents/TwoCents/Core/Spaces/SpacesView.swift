@@ -12,14 +12,9 @@ struct SpacesView: View {
 //    @Binding var showSignInView: Bool
     @Binding var loadedColor: Color
 //    @Binding var showCreateProfileView: Bool
-    @Binding var spaceId: String?
 
-    
     @State private var searchTerm = ""
-    
-    
-    
-    @StateObject private var viewModel = SpacesViewModel()
+    @StateObject var viewModel = SpacesViewModel()
     
     
     @State private var showDetail = false
@@ -27,6 +22,8 @@ struct SpacesView: View {
     
     @State private var presentedPath: [DBSpace] = []
     @State private var newSpaceUUID = UUID().uuidString
+    
+    @Environment(AppModel.self) var appModel
     
     var filteredSearch: [DBSpace]{
         guard !searchTerm.isEmpty else { return viewModel.allSpaces}
@@ -44,8 +41,6 @@ struct SpacesView: View {
                             ZStack{
                                 Group{
                                     //Circle or Profile Pic
-                                    
-                                    
                                     if let urlString = spaceTile.profileImageUrl,
                                        let url = URL(string: urlString) {
                                         
@@ -222,51 +217,86 @@ struct SpacesView: View {
                     }
                 }
             })
-            .toolbar{
-                
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    
-                    
-                    Button{
-                      isShowingCreateSpaces = true
-                        
-                    } label: {
-                        Image (systemName: "square.and.pencil")
-                            .font(.headline)
-                    }
-                    
-                }
-                
-            }
+            .toolbar{toolbar()}
             .navigationTitle( "Spaces 💬" )
-         
-         
             .searchable(text: $searchTerm, placement: .navigationBarDrawer(displayMode: .always), prompt: "Search")
-            
-            
         }
         .task {
      
             try? await viewModel.loadCurrentUser()
             if let user = viewModel.user {
+                print("got here")
                 
                 try? await viewModel.getAllSpaces(userId: user.userId)
                 
-                
             }
             //use self for clarity
-            if let spaceId = self.spaceId {
+            if let spaceId = appModel.spaceId {
                 guard let space: DBSpace = try? await SpaceManager.shared.getSpace(spaceId: spaceId) else {
                     print("Failed to get DBSpace from deeplink")
                     return
                 }
                 presentedPath.append(space)
+                guard let user = viewModel.user else {
+                    return
+                }
+                appModel.addToSpace(userId: user.userId)
             }
         }
-        
-        
-        
+        .modifier(modelNavigation(presentedPath: $presentedPath))
+        .environmentObject(viewModel)
+
     }
+    
+    struct modelNavigation: ViewModifier {
+        @Environment(AppModel.self) var appModel
+        @EnvironmentObject var viewModel: SpacesViewModel
+        @Binding var presentedPath: [DBSpace]
+        
+        func body(content: Content) -> some View {
+            content
+            .onChange(of: appModel.spaceId, {
+                print("CHANGED")
+                if appModel.shouldNavigateToSpace {
+                    guard let spaceId = appModel.spaceId else {
+                        return
+                    }
+                    Task {
+                        guard let space: DBSpace = try? await SpaceManager.shared.getSpace(spaceId: spaceId) else {
+                            print("Failed to get DBSpace from deeplink")
+                            return
+                        }
+                        presentedPath.append(space)
+                        appModel.shouldNavigateToSpace = false
+                        guard let user = viewModel.user else {
+                            return
+                        }
+                        appModel.addToSpace(userId: user.userId)
+                    }
+                }
+            })
+            .onAppear {
+                print("askdjfhaskfhsakghdsgjheglhsdfoigv")
+            }
+    
+        }
+    }
+    
+    
+    @ToolbarContentBuilder
+    func toolbar() -> some ToolbarContent {
+        ToolbarItem(placement: .navigationBarTrailing) {
+            Button{
+              isShowingCreateSpaces = true
+                
+            } label: {
+                Image (systemName: "square.and.pencil")
+                    .font(.headline)
+            }
+            
+        }
+    }
+    
 }
 
 /*

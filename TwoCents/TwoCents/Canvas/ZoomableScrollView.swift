@@ -11,6 +11,7 @@ import SwiftUI
 struct ZoomableScrollView<Content: View>: UIViewRepresentable {
     private var content: Content
     @Binding var toolPickerActive: Bool
+    @Environment(AppModel.self) var appModel
 
     init(toolPickerActive: Binding<Bool>, @ViewBuilder content: () -> Content) {
         self._toolPickerActive = toolPickerActive
@@ -46,6 +47,12 @@ struct ZoomableScrollView<Content: View>: UIViewRepresentable {
         uiView.setNeedsLayout()
         uiView.layoutIfNeeded()
         updateContentSize(for: uiView)
+        if !(appModel.shouldNavigateToSpace) {
+            centerContent(uiView)
+        }
+    }
+    
+    func centerContent(_ uiView: UIScrollView) {
         if uiView.contentOffset == .zero {
             let initialOffsetX = (uiView.contentSize.width - uiView.bounds.width) / 2
             let initialOffsetY = (uiView.contentSize.height - uiView.bounds.height) / 2
