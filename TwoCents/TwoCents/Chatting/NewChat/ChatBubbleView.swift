@@ -92,6 +92,11 @@ struct ChatBubbleView: View {
                                 
                                 threadId = message.id
                             }
+                            
+                            
+                            //haptic!
+                            let generator = UIImpactFeedbackGenerator(style: .medium)
+                            generator.impactOccurred()
                         }
                         
                         

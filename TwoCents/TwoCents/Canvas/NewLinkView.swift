@@ -48,12 +48,14 @@ struct NewLinkView: View {
             .onTapGesture {
                 showingView.toggle()
             }
+        
             .fullScreenCover(isPresented: $showingView, content: {
                 NavigationStack {
                     VStack {
                         // Preview block
                         LinkPreview(link: $rawURLString)
                             .frame(width: 200, height: 200)
+                            .cornerRadius(20)
                         // Text field for input
                         TextField("Enter text", text: $rawURLString)
                             .focused($isTextFieldFocused)

@@ -151,6 +151,9 @@ struct CanvasPage: View {
             //                                    showNewWidgetView = false
             activeSheet = nil
             
+            //haptic
+            let generator = UIImpactFeedbackGenerator(style: .medium)
+            generator.impactOccurred()
         } else {
             //deselect
             viewModel.selectedWidget = nil
@@ -186,6 +189,13 @@ struct CanvasPage: View {
             //                                    showNewWidgetView = false
             activeSheet = .chat
         } else {
+            
+            //haptic
+            
+            let generator = UIImpactFeedbackGenerator(style: .medium)
+            generator.impactOccurred()
+            
+            
             switch widget.media {
             case .poll:
                 activeWidget = widget
