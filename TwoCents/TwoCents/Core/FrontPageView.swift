@@ -12,22 +12,20 @@ struct FrontPageView: View {
     let CalendarTestWidget = CanvasWidget(width: .infinity, height:  .infinity, borderColor: .red, userId: "jisookim", media: .text, widgetName: "Text", widgetDescription: "A bar is a bar", textString: "Fruits can't even see so how my Apple Watch")
    
     
-//    @Binding var showSignInView: Bool
     @Binding var loadedColor: Color
-//    @Binding var showCreateProfileView: Bool
     @Binding var activeSheet: sheetTypes?
-    @Binding var spaceId: String?
+    @State var selectedTab: Int = 0
+    @Environment(AppModel.self) var appModel
     
     var body: some View {
-        TabView{
-//            UploadExample()
-            
-//            SpacesView(showSignInView: $showSignInView, loadedColor: $loadedColor, showCreateProfileView: $showCreateProfileView)
-            SpacesView(activeSheet: $activeSheet, loadedColor: $loadedColor, spaceId: $spaceId)
+        //Make sure TabView always navigates to SpacesView
+        TabView(selection: $selectedTab, content: {
+            SpacesView(activeSheet: $activeSheet, loadedColor: $loadedColor)
                 .tabItem {
                     Image(systemName: "rectangle.3.group.fill")
                     Text("Spaces")
                 }
+                .tag(0)
             
 //            NewTodoView(spaceId: "27580F0B-A56D-468D-8E4B-2810C22E8617", closeNewWidgetview: .constant(false))
 //                .frame(width: 250, height: 250)
@@ -41,6 +39,7 @@ struct FrontPageView: View {
                     Image(systemName: "magnifyingglass")
                     Text("Event widget")
                 }
+                .tag(1)
 
             CalendarWidget(widget: CanvasWidget(id: UUID(uuidString: "E2C85940-3266-44F7-B6D2-4D21F507B25C")!, width: .infinity, height:  .infinity, borderColor: .red, userId: "jisookim", media: .text, widgetName: "Text", widgetDescription: "A bar is a bar", textString: "Fruits can't even see so how my Apple Watch"), spaceId: "2FF491A4-CEC6-419F-A199-204810864FCF"
                             )
@@ -49,6 +48,7 @@ struct FrontPageView: View {
                     Image(systemName: "magnifyingglass")
                     Text("Calendar")
                 }
+                .tag(2)
             
             
 //            CustomCalendarView(spaceId: "2FF491A4-CEC6-419F-A199-204810864FCF"
@@ -66,6 +66,7 @@ struct FrontPageView: View {
                     Image(systemName: "magnifyingglass")
                     Text("Calendar")
                 }
+                .tag(3)
             
             
 //            TodoWidget(widget: CanvasWidget(width: .infinity, height:  .infinity, borderColor: .red, userId: "jisookim", media: .todo, widgetName: "Text", widgetDescription: "A bar is a bar", textString: "Fruits can't even see so how my Apple Watch"))
@@ -81,6 +82,7 @@ struct FrontPageView: View {
                     Image(systemName: "magnifyingglass")
                     Text("Search")
                 }
+                .tag(4)
 
             
             NavigationStack {
@@ -90,12 +92,11 @@ struct FrontPageView: View {
             .tabItem {
                 Image(systemName: "person")
                 Text("Profile")
-                
-                
             }
+            .tag(5)
             
             
-        }
+        })
         
 
         
