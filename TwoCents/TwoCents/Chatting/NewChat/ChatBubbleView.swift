@@ -71,15 +71,21 @@ struct ChatBubbleView: View {
         .offset(x: dragOffset.width, y: 0)
         
         .background(
-            Image(systemName: "arrowshape.turn.up.left.fill")
-                .foregroundStyle(userColor)
-                .symbolEffect(.bounce.up.byLayer, value: abs(dragOffset.width) > 35)
-                .font(.headline)
-               
-                .opacity(dragOffset.width == 0 ? 0 : 1)
-                .animation(.easeInOut, value: dragOffset.width)
-                .frame(maxWidth: .infinity, alignment: sentByMe ? .trailing : .leading)	
-                .padding(.horizontal, 5)
+            
+         
+                
+                Image(systemName: "arrowshape.turn.up.left.fill")
+                    .foregroundStyle(userColor)
+                    .symbolEffect(.bounce.up.byLayer, value: abs(dragOffset.width) > 35)
+                    .font(.headline)
+                
+                    .opacity(dragOffset.width == 0 ? 0 : 1)
+                    .animation(.easeInOut, value: dragOffset.width)
+                    .frame(maxWidth: .infinity, alignment: sentByMe ? .trailing : .leading)
+                    .padding(.horizontal, 5)
+                
+                    .offset(y: isFirstMsg ?  10 : 0)
+          
 
         )
         
