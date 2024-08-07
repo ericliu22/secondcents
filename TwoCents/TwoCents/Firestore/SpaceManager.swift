@@ -167,13 +167,22 @@ final class SpaceManager{
     
     func moveToEmptySpace(space: DBSpace, widgetId: String) async {
         guard (space.nextWidgetX != nil || space.nextWidgetY != nil) else {
-            moveWidget(spaceId: space.spaceId, widgetId: widgetId, x: roundToTile(number: FRAME_SIZE/2), y: roundToTile(number: FRAME_SIZE/2))
-            await setNextWidgetSpot(spaceId: space.spaceId, startingX: roundToTile(number: FRAME_SIZE/2), startingY: roundToTile(number: FRAME_SIZE/2))
+            let newX = roundToTile(number: FRAME_SIZE/2)
+            let newY = roundToTile(number: FRAME_SIZE/2)
+            moveWidget(spaceId: space.spaceId, widgetId: widgetId, x: newX, y: newY)
+            await setNextWidgetSpot(spaceId: space.spaceId, startingX: newX, startingY: newY)
+            return
+        }
+        
+        if (!withinBounds(x: space.nextWidgetX!, y: space.nextWidgetY!)) {
+            let newX = roundToTile(number: FRAME_SIZE/2)
+            let newY = roundToTile(number: FRAME_SIZE/2)
+            moveWidget(spaceId: space.spaceId, widgetId: widgetId, x: newX, y: newY)
+            await setNextWidgetSpot(spaceId: space.spaceId, startingX: newX, startingY: newY)
             return
         }
         
         //We already checked for null you cunt stop making me exclamation mark
-        
         guard let empty = try? await spotEmpty(spaceId: space.spaceId, x: space.nextWidgetX!, y: space.nextWidgetY!) else {
             return
         }
@@ -217,9 +226,8 @@ final class SpaceManager{
 
         var count: Int = 0
         while (count < LOOP_LIMIT ) {
-            let withinBounds: Bool = FIRST_X < currentX && currentX < LAST_X && FIRST_Y < currentY && currentY < LAST_Y
             let spaceAvailable: Bool = try await spotEmpty(spaceId: spaceId, x: currentX, y: currentY)
-            if (spaceAvailable && withinBounds) { break }
+            if (spaceAvailable && withinBounds(x: currentX, y: currentY)) { break }
             
             
             if currentX + WIDGET_SPACING > LAST_X {
@@ -248,6 +256,10 @@ final class SpaceManager{
                 .limit(to: 1)
                 .getDocuments()
                 .isEmpty
+    }
+    
+    private func withinBounds(x: CGFloat, y: CGFloat) -> Bool {
+        return FIRST_X < x && x < LAST_X && FIRST_Y < y && y < LAST_Y
     }
 
     func removeWidget(spaceId: String, widget: CanvasWidget) {
