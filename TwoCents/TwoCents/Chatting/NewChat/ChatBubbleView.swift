@@ -27,60 +27,95 @@ struct ChatBubbleView: View {
     @Binding var threadId: String
     
     var body: some View {
-        VStack(alignment: sentByMe ? .trailing : .leading, spacing: 3) {
+        
             
-            if isFirstMsg {
-                Text(name)
-                    .foregroundStyle(userColor)
-                    .font(.caption)
-                    .padding(sentByMe ? .trailing : .leading, 6)
-                    .padding(.top, 3)
+            
+            VStack(alignment: sentByMe ? .trailing : .leading, spacing: 3) {
+                
+                if isFirstMsg {
+                    Text(name)
+                        .foregroundStyle(userColor)
+                        .font(.caption)
+                        .padding(sentByMe ? .trailing : .leading, 6)
+                        .padding(.top, 3)
+                }
+                
+                
+                if let text = message.text, !text.isEmpty {
+                    Text(text)
+                        .font(.headline)
+                        .fontWeight(.regular)
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 8)
+                        .foregroundStyle(userColor)
+                        .background(.ultraThickMaterial)
+                        .background(userColor)
+                        .clipShape(RoundedRectangle(cornerRadius: 20))
+                        .frame(maxWidth: 300, alignment: sentByMe ? .trailing : .leading)
+                }
+                
+                
+                
+                
+                if let widget = widget {
+                    MediaView(widget: widget, spaceId: spaceId)
+                        .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
+                        .cornerRadius(CORNER_RADIUS)
+                        .frame(maxWidth: .infinity, minHeight: TILE_SIZE, alignment: sentByMe ? .trailing : .leading)
+                }
             }
             
-            if let text = message.text, !text.isEmpty {
-                Text(text)
-                    .font(.headline)
-                    .fontWeight(.regular)
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 8)
-                    .foregroundStyle(userColor)
-                    .background(.ultraThickMaterial)
-                    .background(userColor)
-                    .clipShape(RoundedRectangle(cornerRadius: 20))
-                    .frame(maxWidth: 300, alignment: sentByMe ? .trailing : .leading)
-            }
+      
             
-            if let widget = widget {
-                MediaView(widget: widget, spaceId: spaceId)
-                    .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
-                    .cornerRadius(CORNER_RADIUS)
-                    .frame(maxWidth: .infinity, minHeight: TILE_SIZE, alignment: sentByMe ? .trailing : .leading)
-            }
-        }
+    
         .offset(x: dragOffset.width, y: 0)
+        
+        .background(
+            Image(systemName: "arrowshape.turn.up.left.fill")
+                .foregroundStyle(userColor)
+                .symbolEffect(.bounce.up.byLayer, value: abs(dragOffset.width) > 25)
+                .font(.headline)
+               
+                .opacity(dragOffset.width == 0 ? 0 : 1)
+                .animation(.easeInOut, value: dragOffset.width)
+                .frame(maxWidth: .infinity, alignment: sentByMe ? .trailing : .leading)	
+                .padding(.horizontal, 5)
+
+        )
+        
+
+    
         .frame(maxWidth: .infinity, alignment: sentByMe ? .trailing : .leading)
         .gesture(
             DragGesture(minimumDistance: 10, coordinateSpace: .scrollView)
                 .onChanged { value in
-                    let horizontalThreshold: CGFloat = 10
-                    let isHorizontalDrag = abs(value.translation.width) > horizontalThreshold && abs(value.translation.height) < horizontalThreshold
+//                    let horizontalThreshold: CGFloat = 10
+//                    let isHorizontalDrag = abs(value.translation.width) > horizontalThreshold && abs(value.translation.height) < horizontalThreshold
 
-                    if isHorizontalDrag {
+                    if /*isHorizontalDrag &&*/ threadId == ""{
                         let isDraggingLeft = sentByMe && value.translation.width < 0 && value.translation.width > -50
                         let isDraggingRight = !sentByMe && value.translation.width > 0 && value.translation.width < 50
 
                         if isDraggingLeft || isDraggingRight {
                             dragOffset = value.translation
+                            
+                            if abs(value.translation.width) > 25 {
+                                //haptic!
+                                let generator = UIImpactFeedbackGenerator(style: .medium)
+                                generator.impactOccurred()
+                            }
                         }
+                        
+                        
                     }
                 }
                 .onEnded { value in
-                    let horizontalThreshold: CGFloat = 10
-                    let isHorizontalDrag = abs(value.translation.width) > horizontalThreshold && abs(value.translation.height) < horizontalThreshold
+//                    let horizontalThreshold: CGFloat = 10
+//                    let isHorizontalDrag = abs(value.translation.width) > horizontalThreshold && abs(value.translation.height) < horizontalThreshold
 
-                    if isHorizontalDrag && abs(value.translation.width) > 25 {
+                    if /*isHorizontalDrag && */abs(value.translation.width) > 25 {
                         
-                        if let messageThreadId = message.threadId {
+                        if let messageThreadId = message.threadId, threadId == ""{
                             print("the msg u swiped on's id is \(messageThreadId)")
                             
                             if !messageThreadId.isEmpty{
@@ -94,9 +129,7 @@ struct ChatBubbleView: View {
                             }
                             
                             
-                            //haptic!
-                            let generator = UIImpactFeedbackGenerator(style: .medium)
-                            generator.impactOccurred()
+                     
                         }
                         
                         
