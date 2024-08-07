@@ -10,9 +10,9 @@ import SwiftUI
 
 struct ChatBubbleViewBuilder: View {
     
-    let messageId: String
+//    let messageId: String
     let spaceId: String
-    @State private var message: Message? = nil
+    @State  var message: Message
     
     @State private var name: String = ""
     @State private var user: DBUser?
@@ -27,20 +27,20 @@ struct ChatBubbleViewBuilder: View {
    
     var body: some View {
         ZStack {
-            if let message {
+//            if let message {
                 ChatBubbleView(message: message, sentByMe: message.sendBy == currentUserId, isFirstMsg: message.sendBy != message.parent, name: name, userColor: userColor, widget: widget ?? nil, spaceId: spaceId, threadId: $threadId)
-            }
+//            }
         }
         .task {
-            self.message = try? await NewMessageManager.shared.getMessage(messageId: messageId, spaceId: spaceId)
+//            self.message = try? await NewMessageManager.shared.getMessage(messageId: messageId, spaceId: spaceId)
 //            print(messageId)
 //            
 //            print(message?.text)
             
             
             do {
-                if let userId = message?.sendBy, !userId.isEmpty {
-                    let user = try await UserManager.shared.getUser(userId: userId)
+                if !message.sendBy.isEmpty {
+                    let user = try await UserManager.shared.getUser(userId: message.sendBy)
                     self.name = user.name ?? ""
                     self.user = user
                 } else {
@@ -65,7 +65,7 @@ struct ChatBubbleViewBuilder: View {
             
             //widget
             
-            if let myWidget = message?.widgetId {
+            if let myWidget = message.widgetId {
                 
                 print("got here")
                 

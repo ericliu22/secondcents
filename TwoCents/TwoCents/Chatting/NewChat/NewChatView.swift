@@ -53,7 +53,8 @@ struct NewChatView: View {
                 ForEach(viewModel.messagesFromListener.filter { message in
                     (threadId.isEmpty || message.threadId == threadId) && message.ts > threadIdChangedTime
                 }) { message in
-                    ChatBubbleViewBuilder(messageId: message.id, spaceId: spaceId, currentUserId: userUID, threadId: $threadId)
+              
+                    ChatBubbleViewBuilder(spaceId: spaceId, message: message, currentUserId: userUID, threadId: $threadId)
                         .id(message.id)
                         .rotationEffect(.degrees(180))
                         .listRowSeparator(.hidden)
@@ -65,7 +66,7 @@ struct NewChatView: View {
                 
                 // Display old messages
                 ForEach(viewModel.messages) { message in
-                    ChatBubbleViewBuilder(messageId: message.id, spaceId: spaceId, currentUserId: userUID, threadId: $threadId)
+                    ChatBubbleViewBuilder(spaceId: spaceId, message: message, currentUserId: userUID, threadId: $threadId)
                         .id(message.id)
                         .rotationEffect(.degrees(180))
                         .listRowSeparator(.hidden)
@@ -95,7 +96,7 @@ struct NewChatView: View {
                 }
                 
             }
-        
+            
             .onChange(of: threadId) { _, newValue in
                 threadIdChangedTime = Date()
                 
@@ -120,6 +121,9 @@ struct NewChatView: View {
             }
         }
    
+  
+        
+        
         .padding(.horizontal)
         .onTapGesture {
             withAnimation {
@@ -137,6 +141,19 @@ struct NewChatView: View {
             NewMessageField(replyWidget: $replyWidget, spaceId: spaceId, threadId: $threadId)
                 .frame(maxHeight: .infinity, alignment: .bottom)
         )
+        
+//        .overlay(
+//            ChatBubbleViewBuilder(messageId: message.id, spaceId: spaceId, currentUserId: userUID, threadId: $threadId)
+//                .id(message.id)
+//                .rotationEffect(.degrees(180))
+//                .listRowSeparator(.hidden)
+//                .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+//                .padding(.bottom, 3)
+//                .blur(radius: replyWidget == nil ? 0 : 2)
+//                .frame(maxHeight: .infinity, alignment: .top)
+//        )
+        
+        
  
     }
    
