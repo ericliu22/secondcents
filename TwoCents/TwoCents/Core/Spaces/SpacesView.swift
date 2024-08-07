@@ -279,9 +279,6 @@ struct SpacesView: View {
                     }
                 }
             })
-            .onAppear {
-                print("askdjfhaskfhsakghdsgjheglhsdfoigv")
-            }
     
         }
     }

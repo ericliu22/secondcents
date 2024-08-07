@@ -458,7 +458,6 @@
 				850958A82AB8F81200018A32 /* Info.plist */,
 				A2F5631F2AB4E6700026D8C9 /* Chatting */,
 				A2F563122AB4E6240026D8C9 /* Canvas */,
-				AB6EE7742C25CDF400F6FDE2 /* Location */,
 				AB90021B2A8B85C600F970B8 /* Example */,
 				AB4C1E4E2A8785BF00588160 /* ColorSelectionView.swift */,
 				AB842C0C2A91E2A600E4A7CE /* Storage */,
@@ -501,6 +500,16 @@
 			path = TwoCentsUITests;
 			sourceTree = "<group>";
 		};
+		A267CB712C6339A90002E5BD /* Links */ = {
+			isa = PBXGroup;
+			children = (
+				A2C6FE952C5EB94F0074C475 /* LinkWidget.swift */,
+				A2C6FE972C5ECAD40074C475 /* NewLinkView.swift */,
+				A2C6FE992C5ECC170074C475 /* NewLinkViewModel.swift */,
+			);
+			path = Links;
+			sourceTree = "<group>";
+		};
 		A2DAF3492C07CB0300E778FA /* API */ = {
 			isa = PBXGroup;
 			children = (
@@ -527,9 +536,7 @@
 				ABCDA0682C39AFD3002C23E1 /* Todo */,
 				A2DDB1BC2BB69D7100243E1B /* Polls */,
 				AB6778E12AB8F67300C11AA7 /* ImageWidget.swift */,
-				A2C6FE952C5EB94F0074C475 /* LinkWidget.swift */,
-				A2C6FE972C5ECAD40074C475 /* NewLinkView.swift */,
-				A2C6FE992C5ECC170074C475 /* NewLinkViewModel.swift */,
+				A267CB712C6339A90002E5BD /* Links */,
 				AB01CB5E2B855E83004BEB5B /* TextWidget.swift */,
 				AB140E482C3094AE008321F9 /* EventWidget.swift */,
 				ABB68DAF2C15268D00406948 /* TextWidgetViewModel.swift */,
@@ -554,6 +561,7 @@
 				AB90EDBC2B55BB59002AD855 /* NewWidgetViewModel.swift */,
 				A246A42D2B43A1B700F0F6E6 /* NewWidgetView.swift */,
 				8507204A2B54692F0057B8BC /* widgetPopup.swift */,
+				AB6EE7742C25CDF400F6FDE2 /* Location */,
 			);
 			path = Canvas;
 			sourceTree = "<group>";
