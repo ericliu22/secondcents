@@ -22,137 +22,177 @@ struct Message: Identifiable, Codable, Equatable {
 struct NewChatView: View {
     @State var spaceId: String
     @StateObject private var viewModel = NewChatViewModel()
-    let userUID: String = (try? AuthenticationManager.shared.getAuthenticatedUser().uid) ?? ""
+   
     @Binding var replyWidget: CanvasWidget?
     @Binding var detent: PresentationDetent
     @State var threadId: String = ""
     @State private var threadIdChangedTime: Date = Date()
     
+    @State private var removeFocus: Bool = false
+    
     var body: some View {
-        ScrollViewReader { proxy in
-            List {
-                Spacer()
-                    .frame(height: 30)
-                    .listRowSeparator(.hidden)
-                    .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-                    .id("top")
-                
-                if let widget = replyWidget {
-                    MediaView(widget: widget, spaceId: spaceId)
-                        .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
-                        .cornerRadius(CORNER_RADIUS)
-                        .frame(maxWidth: .infinity, alignment: .trailing)
-                        .id("replyWidget")
+    
+           
+            
+            ScrollViewReader { proxy in
+                List {
+                    Spacer()
+                        .frame(height: 30)
                         .listRowSeparator(.hidden)
                         .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-                        .rotationEffect(.degrees(180))
-                        .padding(.bottom, 3)
-                }
-                
-                // Display new messages
-                ForEach(viewModel.messagesFromListener.filter { message in
-                    (threadId.isEmpty || message.threadId == threadId) && message.ts > threadIdChangedTime
-                }) { message in
-              
-                    ChatBubbleViewBuilder(spaceId: spaceId, message: message, currentUserId: userUID, threadId: $threadId)
-                        .id(message.id)
-                        .rotationEffect(.degrees(180))
-                        .listRowSeparator(.hidden)
-                        .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-                        .padding(.bottom, 3)
-                        .blur(radius: replyWidget == nil ? 0 : 2)
-//                        .background(.red)
-                }
-                
-                // Display old messages
-                ForEach(viewModel.messages) { message in
-                    ChatBubbleViewBuilder(spaceId: spaceId, message: message, currentUserId: userUID, threadId: $threadId)
-                        .id(message.id)
-                        .rotationEffect(.degrees(180))
-                        .listRowSeparator(.hidden)
-                        .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-                        .padding(.bottom, 3)
-                        .blur(radius: replyWidget == nil ? 0 : 2)
-             
+                        .id("top")
+                        .listRowBackground(Color.clear)
                     
-                    if message.id == viewModel.messages.last?.id {
-                        if viewModel.hasMoreMessages {
-                            ProgressView()
-                                .onAppear {
-                                    if threadId == "" {
-                                        viewModel.getOldMessages(spaceId: spaceId)
-                                    } else {
-                                        viewModel.getThreadMessages(spaceId: spaceId, threadId: threadId)
+                    if let widget = replyWidget {
+                        MediaView(widget: widget, spaceId: spaceId)
+                            .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
+                            .cornerRadius(CORNER_RADIUS)
+                            .frame(maxWidth: .infinity, alignment: .trailing)
+                            .id("replyWidget")
+                            .listRowSeparator(.hidden)
+                            .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+                            .rotationEffect(.degrees(180))
+                            .padding(.bottom, 3)
+                            .listRowBackground(Color.clear)
+                    }
+                    
+                    // Display new messages
+                    ForEach(viewModel.messagesFromListener.filter { message in
+                        (threadId.isEmpty || message.threadId == threadId) && message.ts > threadIdChangedTime
+                    }) { message in
+                        
+                        ChatBubbleViewBuilder(spaceId: spaceId, message: message, currentUserId: viewModel.user?.id ?? "", threadId: $threadId)
+                            .id(message.id)
+                            .rotationEffect(.degrees(180))
+                            .listRowSeparator(.hidden)
+                            .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+                            .padding(.bottom, 3)
+                            .blur(radius: replyWidget == nil ? 0 : 2)
+                            .listRowBackground(Color.clear)
+                        //                        .background(.red)
+                    }
+                    
+                    // Display old messages
+                    ForEach(viewModel.messages) { message in
+                        ChatBubbleViewBuilder(spaceId: spaceId, message: message, currentUserId: viewModel.user?.id ?? "", threadId: $threadId)
+                            .id(message.id)
+                            .rotationEffect(.degrees(180))
+                            .listRowSeparator(.hidden)
+                            .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+                            .padding(.bottom, 3)
+                            .blur(radius: replyWidget == nil ? 0 : 2)
+                            .listRowBackground(Color.clear)
+                        
+                        if message.id == viewModel.messages.last?.id {
+                            if viewModel.hasMoreMessages {
+                                ProgressView()
+                                    .onAppear {
+                                        if threadId == "" {
+                                            viewModel.getOldMessages(spaceId: spaceId)
+                                        } else {
+                                            viewModel.getThreadMessages(spaceId: spaceId, threadId: threadId)
+                                        }
                                     }
-                                }
-                                .rotationEffect(.degrees(180))
-                                .frame(maxWidth: .infinity)
-                                .listRowSeparator(.hidden)
-                                .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-                                .padding(.bottom, 3)
+                                    .rotationEffect(.degrees(180))
+                                    .frame(maxWidth: .infinity)
+                                    .listRowSeparator(.hidden)
+                                    .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+                                    .padding(.bottom, 3)
+                                    .listRowBackground(Color.clear)
+                            }
                         }
+                        
                     }
                     
                 }
                 
-            }
-            
-            .onChange(of: threadId) { _, newValue in
-                threadIdChangedTime = Date()
-                
-                if !newValue.isEmpty {
-                    viewModel.removeMessages()
-                    viewModel.getThreadMessages(spaceId: spaceId, threadId: newValue)
+                .onChange(of: threadId) { _, newValue in
+                    threadIdChangedTime = Date()
+                    
+                    if !newValue.isEmpty {
+                        viewModel.removeMessages()
+                        viewModel.getThreadMessages(spaceId: spaceId, threadId: newValue)
+                    }
                 }
-            }
-            .environment(\.defaultMinListRowHeight, 0)
-            .rotationEffect(.degrees(180))
-            .listStyle(PlainListStyle())
-            .onAppear {
-                viewModel.getOldMessages(spaceId: spaceId)
-                viewModel.fetchNewMessages(spaceId: spaceId)
-            }
-            .scrollIndicators(.hidden)
-            .padding(.bottom, 20)
-            .onChange(of: detent) { _, newValue in
-                if newValue == .height(50) {
-                    proxy.scrollTo("top", anchor: .top)
-                }
-            }
-        }
-   
-  
-        
-        
-        .padding(.horizontal)
-        .onTapGesture {
-            withAnimation {
-                replyWidget = nil
-                
-                if threadId != "" {
-                    threadId = ""
-                    viewModel.removeMessages()
+                .environment(\.defaultMinListRowHeight, 0)
+                .rotationEffect(.degrees(180))
+                .listStyle(PlainListStyle())
+                .onAppear {
                     viewModel.getOldMessages(spaceId: spaceId)
                     viewModel.fetchNewMessages(spaceId: spaceId)
                 }
+                .scrollIndicators(.hidden)
+                .padding(.bottom, 20)
+                .onChange(of: detent) { _, newValue in
+                    if newValue == .height(50) {
+                        proxy.scrollTo("top", anchor: .top)
+                    }
+                }
             }
-        }
-        .overlay(
-            NewMessageField(replyWidget: $replyWidget, spaceId: spaceId, threadId: $threadId)
-                .frame(maxHeight: .infinity, alignment: .bottom)
-        )
-        
-//        .overlay(
-//            ChatBubbleViewBuilder(messageId: message.id, spaceId: spaceId, currentUserId: userUID, threadId: $threadId)
-//                .id(message.id)
-//                .rotationEffect(.degrees(180))
-//                .listRowSeparator(.hidden)
-//                .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-//                .padding(.bottom, 3)
-//                .blur(radius: replyWidget == nil ? 0 : 2)
-//                .frame(maxHeight: .infinity, alignment: .top)
-//        )
-        
+            //        .background(.ultraThickMaterial)
+            .padding(.horizontal)
+            .background(
+                Group {
+                    if threadId == "" {
+                        Color.clear
+                    } else {
+                        Color.fromString(name: viewModel.user?.userColor ?? "")
+                            .brightness(0.6)
+                            .opacity(0.15)
+//                            .padding(.horizontal)
+//                            .blur(radius: 30)
+                    }
+                }
+            )
+            
+            
+            
+          
+            .onTapGesture {
+               
+       
+             
+                
+                removeFocus = true
+                withAnimation {
+                    replyWidget = nil
+                  
+                    
+                    if threadId != "" {
+                        threadId = ""
+                        viewModel.removeMessages()
+                        viewModel.getOldMessages(spaceId: spaceId)
+                        viewModel.fetchNewMessages(spaceId: spaceId)
+                    }
+                }
+            }
+            
+            
+            
+            .overlay(
+                NewMessageField(replyWidget: $replyWidget, spaceId: spaceId, threadId: $threadId, removeFocus: $removeFocus)
+                    .disabled(detent == .height(50))
+                    .frame(maxHeight: .infinity, alignment: .bottom)
+                    .onTapGesture {
+                        if detent == .height(50){
+                            detent = .large
+                        }
+                        }
+            )
+            
+            
+            
+            
+            .task {
+                try? await viewModel.loadCurrentUser()
+                
+            }
+            
+            
+            
+            
+            
+       
         
  
     }

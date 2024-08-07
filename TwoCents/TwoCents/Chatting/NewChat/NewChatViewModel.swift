@@ -9,6 +9,13 @@ final class NewChatViewModel: ObservableObject {
     @Published private(set) var messagesFromListener: [Message] = []
     private var lastDocument: DocumentSnapshot? = nil
     @Published var hasMoreMessages: Bool = true
+    
+    @Published private(set) var user:  DBUser? = nil
+    func loadCurrentUser() async throws {
+        let authDataResult = try AuthenticationManager.shared.getAuthenticatedUser()
+        self.user = try await UserManager.shared.getUser(userId: authDataResult.uid)
+    }
+    
 
     func getOldMessages(spaceId: String, completion: ((Bool, String?) -> Void)? = nil) {
         Task {

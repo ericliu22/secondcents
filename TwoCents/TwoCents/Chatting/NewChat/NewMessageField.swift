@@ -24,10 +24,13 @@ struct NewMessageField: View {
     
     @Binding var threadId: String
     
+    
+    @Binding  var removeFocus: Bool 
+    
     var body: some View {
         
         ZStack (alignment: .bottomTrailing){
-            TextField("Message", text: $message, axis: .vertical)
+            TextField(threadId == "" ? "Message" : "Reply", text: $message, axis: .vertical)
                 .lineLimit(0...5)
                 .padding(.horizontal, 12)
                 .padding(.vertical, 8)
@@ -89,6 +92,17 @@ struct NewMessageField: View {
             }
             
             print("changed")
+        }
+        
+        .onChange(of: removeFocus) { _ , newValue in
+            if newValue  {
+                isFocused = false
+                removeFocus = false
+                
+          
+            }
+            
+          
         }
     }
 
