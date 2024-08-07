@@ -53,7 +53,7 @@ struct CanvasPage: View {
     @State private var toolkit: PKToolPicker = PKToolPicker()
     @State private var pendingWrites: Bool = false
     @State private var timer: Timer?
-    @State private var replyMode: Bool = false
+
     @State private var activeSheet: sheetTypesCanvasPage?
     @State private var activeWidget: CanvasWidget?
     @State private var replyWidget: CanvasWidget?
@@ -398,7 +398,7 @@ struct CanvasPage: View {
 
                 // Reply button
                 Button(action: {
-                    replyMode = true
+                    
                     replyWidget = viewModel.selectedWidget
                     viewModel.selectedWidget = nil
                     widgetDoubleTapped = false
@@ -647,7 +647,7 @@ struct CanvasPage: View {
             //                showNewWidgetView = false
             //                            activeSheet = .chat
             
-            replyMode = false
+          
             replyWidget = nil
             activeWidget = nil
             
@@ -689,11 +689,11 @@ struct CanvasPage: View {
                 
                     .presentationBackgroundInteraction(.enabled)
                     .onChange(of: selectedDetent) { selectedDetent in
-                        if selectedDetent != .large && replyMode {
+                        if selectedDetent != .large {
                             
                             withAnimation {
                                 replyWidget = nil
-                                replyMode = false
+                               
                             }
                             
                             

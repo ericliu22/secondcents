@@ -54,6 +54,11 @@ struct NewChatView: View {
                             .rotationEffect(.degrees(180))
                             .padding(.bottom, 3)
                             .listRowBackground(Color.clear)
+//                        
+//                            .onAppear {
+//                                threadId = widget.id.uuidString
+//                            }
+                        
                     }
                     
                     // Display new messages
@@ -114,6 +119,7 @@ struct NewChatView: View {
                         viewModel.getThreadMessages(spaceId: spaceId, threadId: newValue)
                     }
                 }
+         
                 .environment(\.defaultMinListRowHeight, 0)
                 .rotationEffect(.degrees(180))
                 .listStyle(PlainListStyle())
@@ -139,15 +145,11 @@ struct NewChatView: View {
                         Color.fromString(name: viewModel.user?.userColor ?? "")
                             .brightness(0.6)
                             .opacity(0.15)
-//                            .padding(.horizontal)
-//                            .blur(radius: 30)
                     }
                 }
             )
             
-            
-            
-          
+         
             .onTapGesture {
                
        
@@ -171,7 +173,7 @@ struct NewChatView: View {
             
             .overlay(
                 NewMessageField(replyWidget: $replyWidget, spaceId: spaceId, threadId: $threadId, removeFocus: $removeFocus)
-                    .disabled(detent == .height(50))
+                    .disabled(detent == .height(50) && replyWidget == nil)
                     .frame(maxHeight: .infinity, alignment: .bottom)
                     .onTapGesture {
                         if detent == .height(50){
