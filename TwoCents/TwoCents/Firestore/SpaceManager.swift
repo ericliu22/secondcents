@@ -214,10 +214,12 @@ final class SpaceManager{
         let LOOP_LIMIT: Int = 100
         var currentX: CGFloat = startingX
         var currentY: CGFloat = startingY
-        
+
         var count: Int = 0
-        while (true || count != LOOP_LIMIT ) {
-            if try await spotEmpty(spaceId: spaceId, x: currentX, y: currentY) { break }
+        while (count < LOOP_LIMIT ) {
+            let withinBounds: Bool = FIRST_X < currentX && currentX < LAST_X && FIRST_Y < currentY && currentY < LAST_Y
+            let spaceAvailable: Bool = try await spotEmpty(spaceId: spaceId, x: currentX, y: currentY)
+            if (spaceAvailable && withinBounds) { break }
             
             
             if currentX + WIDGET_SPACING > LAST_X {
