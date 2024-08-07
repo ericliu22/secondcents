@@ -73,7 +73,7 @@ struct ChatBubbleView: View {
         .background(
             Image(systemName: "arrowshape.turn.up.left.fill")
                 .foregroundStyle(userColor)
-                .symbolEffect(.bounce.up.byLayer, value: abs(dragOffset.width) > 25)
+                .symbolEffect(.bounce.up.byLayer, value: abs(dragOffset.width) > 35)
                 .font(.headline)
                
                 .opacity(dragOffset.width == 0 ? 0 : 1)
@@ -87,7 +87,7 @@ struct ChatBubbleView: View {
     
         .frame(maxWidth: .infinity, alignment: sentByMe ? .trailing : .leading)
         .gesture(
-            DragGesture(minimumDistance: 10, coordinateSpace: .scrollView)
+            DragGesture(minimumDistance: 25, coordinateSpace: .scrollView)
                 .onChanged { value in
 //                    let horizontalThreshold: CGFloat = 10
 //                    let isHorizontalDrag = abs(value.translation.width) > horizontalThreshold && abs(value.translation.height) < horizontalThreshold
@@ -99,7 +99,7 @@ struct ChatBubbleView: View {
                         if isDraggingLeft || isDraggingRight {
                             dragOffset = value.translation
                             
-                            if abs(value.translation.width) > 25 {
+                            if abs(value.translation.width) > 35 {
                                 //haptic!
                                 let generator = UIImpactFeedbackGenerator(style: .medium)
                                 generator.impactOccurred()
@@ -113,7 +113,7 @@ struct ChatBubbleView: View {
 //                    let horizontalThreshold: CGFloat = 10
 //                    let isHorizontalDrag = abs(value.translation.width) > horizontalThreshold && abs(value.translation.height) < horizontalThreshold
 
-                    if /*isHorizontalDrag && */abs(value.translation.width) > 25 {
+                    if /*isHorizontalDrag && */abs(value.translation.width) > 35 {
                         
                         if let messageThreadId = message.threadId, threadId == ""{
                             print("the msg u swiped on's id is \(messageThreadId)")
