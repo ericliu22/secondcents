@@ -43,7 +43,7 @@ struct TodoWidgetSheetView: View {
                                 Button(action: {
                                     withAnimation {
                                         // Find the index of the todoItem in the original list
-                                      
+                                        
                                         viewModel.toggleCompletionStatus(index: originalIndex)
                                     }
                                 }) {
@@ -52,11 +52,11 @@ struct TodoWidgetSheetView: View {
                                         .font(.title3)
                                 }
                                 .padding(.trailing)
-
+                                
                                 TextField("Item \(index)", text: $viewModel.localTodoList[originalIndex].task)
                                     .textFieldStyle(PlainTextFieldStyle())
                                 
-                             
+                                
                                 Spacer()
                                 NavigationLink {
                                     MentionUserView(mentionedUser: $viewModel.mentionedUsers[viewModel.localTodoList.firstIndex(where: { $0.id == todoItem.id }) ?? 0], allUsers: viewModel.allUsers)
@@ -92,6 +92,14 @@ struct TodoWidgetSheetView: View {
                             }, label: {
                                 Text("Save")
                             })
+                        }
+                        ToolbarItem(placement: .navigationBarTrailing)  {
+                            
+                            NavigationLink {
+                            } label: {
+                                
+                            }
+                            
                         }
                     }
                 }

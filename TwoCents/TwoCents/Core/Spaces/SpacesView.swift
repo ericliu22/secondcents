@@ -257,27 +257,32 @@ struct SpacesView: View {
         
         func body(content: Content) -> some View {
             content
-            .onChange(of: appModel.spaceId, {
-                print("I finger my bum")
-                if appModel.shouldNavigateToSpace {
-                    guard let spaceId = appModel.spaceId else {
-                        print("not spaceId")
-                        return
-                    }
-                    appModel.shouldNavigateToSpace = false
-                    print("APPENDING TO PRESENTED PATH")
-                    Task {
-                        guard let space: DBSpace = try? await SpaceManager.shared.getSpace(spaceId: spaceId) else {
-                            print("Failed to get DBSpace from deeplink")
-                            return
+                .onChange(of: appModel.shouldNavigateToSpace, {
+                    
+                    if appModel.shouldNavigateToSpace{
+                        
+                        print("Got past wait condition")
+                        if appModel.shouldNavigateToSpace {
+                            guard let spaceId = appModel.spaceId else {
+                                print("not spaceId")
+                                return
+                            }
+                            appModel.shouldNavigateToSpace = false
+                            appModel.correctTab = false
+                            print("APPENDING TO PRESENTED PATH")
+                            Task {
+                                guard let space: DBSpace = try? await SpaceManager.shared.getSpace(spaceId: spaceId) else {
+                                    print("Failed to get DBSpace from deeplink")
+                                    return
+                                }
+                                presentedPath.append(space)
+                                guard let user = viewModel.user else {
+                                    return
+                                }
+                                appModel.addToSpace(userId: user.userId)
+                            }
                         }
-                        presentedPath.append(space)
-                        guard let user = viewModel.user else {
-                            return
-                        }
-                        appModel.addToSpace(userId: user.userId)
                     }
-                }
             })
     
         }

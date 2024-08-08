@@ -327,3 +327,26 @@ func friendRequestNotification(userUID: String, friendUID: String) async {
         }
     }
 }
+
+func todoNotification(spaceId: String, userUID: String, message: String) {
+    Task {
+        guard let space = try? await SpaceManager.shared.getSpace(spaceId: spaceId) else {
+            print("reactionNotification: Failed to obtain space")
+            return
+        }
+        guard let name = try? await UserManager.shared.getUser(userId: userUID).name else {
+            print("reactionNotification: Failed to obtain name")
+            return
+        }
+        
+        let spaceName: String = space.name!
+        
+        if let spaceImage: String = space.profileImageUrl {
+            let notification = Notification(title: "\(spaceName)", body: "\(name) added📝 a todo item to \(message)", image: spaceImage);
+            spaceNotification(spaceId: spaceId, userUID: userUID, notification: notification)
+        } else {
+            let notification = Notification(title: "\(spaceName)", body: "\(name) added📝 a todo item to \(message)");
+            spaceNotification(spaceId: spaceId, userUID: userUID, notification: notification)
+        }
+    }
+}

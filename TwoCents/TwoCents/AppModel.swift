@@ -13,6 +13,8 @@ final class AppModel {
     
     var spaceId: String?
     var shouldNavigateToSpace: Bool = false
+    var correctTab: Bool = false
+    var inSpace: Bool = false
     
     func addToSpace(userId: String) {
         guard let spaceId = spaceId else { return }

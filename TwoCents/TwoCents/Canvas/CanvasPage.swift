@@ -61,7 +61,7 @@ struct CanvasPage: View {
     
     
     @StateObject private var viewModel = CanvasPageViewModel()
-    
+    @Environment(AppModel.self) var appModel
     
     private var spaceId: String
     
@@ -624,6 +624,8 @@ struct CanvasPage: View {
                     do {
                         try await viewModel.loadCurrentSpace(spaceId: spaceId)
                         print("Done with loadCurrentSpace")
+                        appModel.inSpace = true
+                        
                     } catch {
                         //EXIT IF SPACE DOES NOT EXIST
                         self.presentationMode.wrappedValue.dismiss()
@@ -642,6 +644,14 @@ struct CanvasPage: View {
                 .navigationTitle(toolPickerActive ? "" : viewModel.space?.name ?? "" )
                 .background(  Color(UIColor.secondarySystemBackground))
         }
+        .onChange(of: appModel.shouldNavigateToSpace, {
+            if appModel.shouldNavigateToSpace {
+                if (appModel.spaceId != self.spaceId) {
+                    self.presentationMode.wrappedValue.dismiss()
+                    appModel.inSpace = false
+                }
+            }
+        })
         .ignoresSafeArea()
         .sheet(item: $activeSheet, onDismiss: {
             //                showNewWidgetView = false
