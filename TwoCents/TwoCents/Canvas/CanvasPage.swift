@@ -624,9 +624,9 @@ struct CanvasPage: View {
                     do {
                         try await viewModel.loadCurrentSpace(spaceId: spaceId)
                         print("Done with loadCurrentSpace")
-                        appModel.inSpace = true
                         appModel.currentSpaceId = spaceId
-                        
+                        appModel.inSpace = true
+
                     } catch {
                         //EXIT IF SPACE DOES NOT EXIST
                         self.presentationMode.wrappedValue.dismiss()
@@ -659,8 +659,13 @@ struct CanvasPage: View {
                     print("signaled")
                 }
             }
-            print("ended canvasPage on change")
         })
+        .onDisappear {
+            appModel.inSpace = false
+            appModel.currentSpaceId = nil
+            print("CANVASPAGE DISAPPEARED")
+            print("CANVASPAGE: appModel.inSpace \(appModel.inSpace)")
+        }
         .ignoresSafeArea()
         .sheet(item: $activeSheet, onDismiss: {
             //                showNewWidgetView = false

@@ -100,17 +100,21 @@ struct FrontPageView: View {
         .onChange(of: appModel.shouldNavigateToSpace, {
             DispatchQueue.global().async {
                 appModel.mutex.lock()
+                print("FRONTPAGEVIEW ACQUIRED MUTEX")
                 if appModel.shouldNavigateToSpace {
-                    while (!appModel.inSpace || appModel.navigationSpaceId == appModel.currentSpaceId) {
+                    while (appModel.inSpace && appModel.navigationSpaceId != appModel.currentSpaceId) {
                             print("FRONTPAGEVIEW WAITING")
                             appModel.mutex.wait()
                     }
-                    appModel.mutex.broadcast()
+                    print("currentSpaceId \(appModel.currentSpaceId ?? "nil")")
                     if appModel.navigationSpaceId == appModel.currentSpaceId {
+                        appModel.mutex.unlock()
                         return
                     }
-                    appModel.correctTab = true
                     selectedTab = 0
+                    appModel.correctTab = true
+                    appModel.mutex.broadcast()
+                    print("FRONTPAGEVIEW NOT WAITING")
                 }
                 appModel.mutex.unlock()
             }

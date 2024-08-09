@@ -225,7 +225,6 @@ struct SpacesView: View {
      
             try? await viewModel.loadCurrentUser()
             if let user = viewModel.user {
-                print("got here")
                 
                 try? await viewModel.getAllSpaces(userId: user.userId)
                 
@@ -260,20 +259,35 @@ struct SpacesView: View {
                 .onChange(of: appModel.shouldNavigateToSpace, {
                     DispatchQueue.global().async {
                         appModel.mutex.lock()
+                        print("SPACESVIEW ACQUIRED MUTEX")
                         if appModel.shouldNavigateToSpace{
-                            while (!appModel.inSpace || appModel.navigationSpaceId == appModel.currentSpaceId) {
-                                    print("SPACESVIEW WAITING")
+                            print("appModel.inSpace \(appModel.inSpace)")
+                            print("appModel.currentSpaceId \(appModel.currentSpaceId ?? "nil")")
+                            while (appModel.inSpace && appModel.navigationSpaceId != appModel.currentSpaceId) {
+                                    print("SPACESVIEW WAITING FOR SPACE")
                                     appModel.mutex.wait() // Block the thread until the condition is true
                             }
                             appModel.mutex.broadcast()
+                            var succeded: Bool = false
+                            while (!appModel.correctTab) {
+                                print("SPACESVIEW WAITING FOR TAB")
+                                succeded = appModel.mutex.wait(until: .now+100)
+                            }
+                            if !succeded {
+                                print("TIMEDOUT")
+                                appModel.mutex.unlock()
+                                return
+                            }
                             print("SPACESVIEW DONE WAITING")
                             if appModel.navigationSpaceId == appModel.currentSpaceId {
+                                appModel.mutex.unlock()
                                 return
                             }
                             //Just wait lmao
                             DispatchQueue.main.asyncAfter(deadline: .now()+0.5) {
                                 guard let spaceId = appModel.navigationSpaceId else {
                                     print("not spaceId")
+                                    appModel.mutex.unlock()
                                     return
                                 }
                                 appModel.shouldNavigateToSpace = false
