@@ -98,21 +98,26 @@ struct FrontPageView: View {
             
         })
         .onChange(of: appModel.shouldNavigateToSpace, {
-            if appModel.shouldNavigateToSpace {
-                while true {
-                    if !appModel.inSpace || appModel.navigationSpaceId == appModel.currentSpaceId{
-                        break
-                    } else {
-                        print("frontpageview waiting")
-                        appModel.mutex.wait()
+            DispatchQueue.global().async {
+                appModel.mutex.lock()
+                if appModel.shouldNavigateToSpace {
+                    while true {
+                        if !appModel.inSpace || appModel.navigationSpaceId == appModel.currentSpaceId{
+                            break
+                        } else {
+                            print("frontpageview waiting")
+                            appModel.mutex.wait()
+                        }
                     }
+                    appModel.mutex.broadcast()
+                    print("FRONTPAGEVIEW DONE WAITING")
+                    if appModel.navigationSpaceId == appModel.currentSpaceId {
+                        return
+                    }
+                    appModel.correctTab = true
+                    selectedTab = 0
                 }
-                appModel.mutex.signal()
-                if appModel.navigationSpaceId == appModel.currentSpaceId {
-                    return
-                }
-                appModel.correctTab = true
-                selectedTab = 0
+                appModel.mutex.unlock()
             }
         })
     }

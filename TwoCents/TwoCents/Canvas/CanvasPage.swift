@@ -651,11 +651,11 @@ struct CanvasPage: View {
                     print("askdfjaslkfjsaldkfj")
                     presentationMode.wrappedValue.dismiss()
                     appModel.inSpace = false
-                    appModel.mutex.signal()
+                    appModel.mutex.broadcast()
                     print("signaled")
                 } else {
                     DispatchQueue.main.asyncAfter(deadline: .now()+0.1) {
-                        appModel.mutex.signal()
+                        appModel.mutex.broadcast()
                     }
                 }
             }

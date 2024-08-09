@@ -17,7 +17,7 @@ final class AppModel {
     var correctTab: Bool = false
     var inSpace: Bool = false
     var currentSpaceId: String?
-    var mutex: DispatchSemaphore = DispatchSemaphore(value: 0)
+    var mutex: NSCondition = NSCondition()
     
     func addToSpace(userId: String) {
         guard let spaceId = navigationSpaceId else { return }
