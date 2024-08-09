@@ -625,6 +625,7 @@ struct CanvasPage: View {
                         try await viewModel.loadCurrentSpace(spaceId: spaceId)
                         print("Done with loadCurrentSpace")
                         appModel.inSpace = true
+                        appModel.currentSpaceId = spaceId
                         
                     } catch {
                         //EXIT IF SPACE DOES NOT EXIST
@@ -646,11 +647,19 @@ struct CanvasPage: View {
         }
         .onChange(of: appModel.shouldNavigateToSpace, {
             if appModel.shouldNavigateToSpace {
-                if (appModel.spaceId != self.spaceId) {
-                    self.presentationMode.wrappedValue.dismiss()
+                if (appModel.navigationSpaceId != spaceId) {
+                    print("askdfjaslkfjsaldkfj")
+                    presentationMode.wrappedValue.dismiss()
                     appModel.inSpace = false
+                    appModel.mutex.signal()
+                    print("signaled")
+                } else {
+                    DispatchQueue.main.asyncAfter(deadline: .now()+0.1) {
+                        appModel.mutex.signal()
+                    }
                 }
             }
+            print("ended canvasPage on change")
         })
         .ignoresSafeArea()
         .sheet(item: $activeSheet, onDismiss: {

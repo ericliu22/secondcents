@@ -78,7 +78,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
                     return
                 }
                 if valid {
-                    self.appModel.spaceId = subject
+                    self.appModel.navigationSpaceId = subject
                     self.appModel.shouldNavigateToSpace = true
                 }
                 else { print("Invalid spaceId: resuming normal execution") }
@@ -140,10 +140,10 @@ class AppDelegate: NSObject, UIApplicationDelegate {
             guard let spaceId: String = notificationSpaceId as? String else {
                 return
             }
-            self.appModel.spaceId = spaceId
+            self.appModel.navigationSpaceId = spaceId
             self.appModel.shouldNavigateToSpace = true
             print("SPACEID: \(notificationSpaceId)")
-            print("didReceiveRemoteNotification SPACEID: \(self.appModel.spaceId ?? "nothing")")
+            print("didReceiveRemoteNotification SPACEID: \(self.appModel.navigationSpaceId ?? "nothing")")
         }
 
         completionHandler(UIBackgroundFetchResult.newData)
@@ -199,10 +199,10 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
             guard let spaceId: String = notificationSpaceId as? String else {
                 return
             }
-            self.appModel.spaceId = spaceId
+            self.appModel.navigationSpaceId = spaceId
             self.appModel.shouldNavigateToSpace = true
             print("SPACEID: \(notificationSpaceId)")
-            print("didReceive SPACEID: \(self.appModel.spaceId ?? "nothing")")
+            print("didReceive SPACEID: \(self.appModel.navigationSpaceId ?? "nothing")")
         }
 
         completionHandler()

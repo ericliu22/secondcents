@@ -99,10 +99,20 @@ struct FrontPageView: View {
         })
         .onChange(of: appModel.shouldNavigateToSpace, {
             if appModel.shouldNavigateToSpace {
-                
-                selectedTab = 0
+                while true {
+                    if !appModel.inSpace || appModel.navigationSpaceId == appModel.currentSpaceId{
+                        break
+                    } else {
+                        print("frontpageview waiting")
+                        appModel.mutex.wait()
+                    }
+                }
+                appModel.mutex.signal()
+                if appModel.navigationSpaceId == appModel.currentSpaceId {
+                    return
+                }
                 appModel.correctTab = true
-                
+                selectedTab = 0
             }
         })
     }

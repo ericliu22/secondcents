@@ -232,7 +232,7 @@ struct SpacesView: View {
             }
             //use self for clarity
             if appModel.shouldNavigateToSpace {
-                guard let spaceId = appModel.spaceId else { return }
+                guard let spaceId = appModel.navigationSpaceId else { return }
                 guard let space: DBSpace = try? await SpaceManager.shared.getSpace(spaceId: spaceId) else {
                     print("Failed to get DBSpace from deeplink")
                     return
@@ -258,12 +258,22 @@ struct SpacesView: View {
         func body(content: Content) -> some View {
             content
                 .onChange(of: appModel.shouldNavigateToSpace, {
-                    
                     if appModel.shouldNavigateToSpace{
-                        
-                        print("Got past wait condition")
-                        if appModel.shouldNavigateToSpace {
-                            guard let spaceId = appModel.spaceId else {
+                        while true {
+                            if !appModel.inSpace || appModel.navigationSpaceId == appModel.currentSpaceId {
+                                break
+                            } else {
+                                print("spacesview waiting")
+                                appModel.mutex.wait() // Block the thread until the condition is true
+                            }
+                        }
+                        appModel.mutex.signal()
+                        if appModel.navigationSpaceId == appModel.currentSpaceId {
+                            return
+                        }
+                //Just wait lmao
+                        DispatchQueue.main.asyncAfter(deadline: .now()+0.5) {
+                            guard let spaceId = appModel.navigationSpaceId else {
                                 print("not spaceId")
                                 return
                             }
@@ -275,7 +285,9 @@ struct SpacesView: View {
                                     print("Failed to get DBSpace from deeplink")
                                     return
                                 }
-                                presentedPath.append(space)
+                                if !presentedPath.contains(where: {$0.spaceId == space.spaceId}) {
+                                    presentedPath.append(space)
+                                }
                                 guard let user = viewModel.user else {
                                     return
                                 }
@@ -283,7 +295,8 @@ struct SpacesView: View {
                             }
                         }
                     }
-            })
+    
+                })
     
         }
     }
