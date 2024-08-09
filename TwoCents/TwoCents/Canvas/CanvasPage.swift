@@ -648,15 +648,15 @@ struct CanvasPage: View {
         .onChange(of: appModel.shouldNavigateToSpace, {
             if appModel.shouldNavigateToSpace {
                 if (appModel.navigationSpaceId != spaceId) {
-                    print("askdfjaslkfjsaldkfj")
+                    print("CANVASPAGE DISMISSING")
                     presentationMode.wrappedValue.dismiss()
                     appModel.inSpace = false
+                }
+                //Wait is necessary because sometimes this shit happens too fast and threads aren't waiting yet
+                //There is a rare bug where the other threads happen way too slow this guy already ends
+                DispatchQueue.main.asyncAfter(deadline: .now()+0.1) {
                     appModel.mutex.broadcast()
                     print("signaled")
-                } else {
-                    DispatchQueue.main.asyncAfter(deadline: .now()+0.1) {
-                        appModel.mutex.broadcast()
-                    }
                 }
             }
             print("ended canvasPage on change")

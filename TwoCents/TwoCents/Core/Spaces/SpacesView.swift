@@ -261,12 +261,9 @@ struct SpacesView: View {
                     DispatchQueue.global().async {
                         appModel.mutex.lock()
                         if appModel.shouldNavigateToSpace{
-                            while true {
-                                if !appModel.inSpace || appModel.navigationSpaceId == appModel.currentSpaceId {
-                                    break
-                                } else {
+                            while (!appModel.inSpace || appModel.navigationSpaceId == appModel.currentSpaceId) {
+                                    print("SPACESVIEW WAITING")
                                     appModel.mutex.wait() // Block the thread until the condition is true
-                                }
                             }
                             appModel.mutex.broadcast()
                             print("SPACESVIEW DONE WAITING")

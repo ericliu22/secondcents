@@ -101,16 +101,11 @@ struct FrontPageView: View {
             DispatchQueue.global().async {
                 appModel.mutex.lock()
                 if appModel.shouldNavigateToSpace {
-                    while true {
-                        if !appModel.inSpace || appModel.navigationSpaceId == appModel.currentSpaceId{
-                            break
-                        } else {
-                            print("frontpageview waiting")
+                    while (!appModel.inSpace || appModel.navigationSpaceId == appModel.currentSpaceId) {
+                            print("FRONTPAGEVIEW WAITING")
                             appModel.mutex.wait()
-                        }
                     }
                     appModel.mutex.broadcast()
-                    print("FRONTPAGEVIEW DONE WAITING")
                     if appModel.navigationSpaceId == appModel.currentSpaceId {
                         return
                     }
