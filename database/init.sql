@@ -1,14 +1,16 @@
 -- Enable UUID extension
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
+CREATE DATABASE twocents WITH TEMPLATE twocents OWNER admin;
+
 -- Table for spaces
-CREATE TABLE spaces (
+CREATE TABLE IF NOT EXISTS spaces (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     name VARCHAR(255) NOT NULL
 );
 
 -- Table for users
-CREATE TABLE users (
+CREATE TABLE IF NOT EXISTS users (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     name VARCHAR(255) NOT NULL,
     email VARCHAR(255) UNIQUE,
@@ -21,7 +23,7 @@ CREATE TABLE users (
 CREATE TYPE media AS ENUM ('Video', 'Image', 'Poll', 'Todo', 'Map', 'Text');
 
 -- Table for widgets
-CREATE TABLE widgets (
+CREATE TABLE IF NOT EXISTS widgets (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     space_id UUID NOT NULL,
     user_id UUID NOT NULL,
@@ -31,26 +33,43 @@ CREATE TABLE widgets (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
+CREATE TYPE IF NOT EXISTS POLL_OPTION AS (
+    user_ids UUID[],
+    vote_count INTEGER,
+    description TEXT
+);
+
 -- Table for Poll media type
-CREATE TABLE polls (
-    id UUID PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS polls (
+    id UUID PRIMARY KEY NOT NULL,
     question TEXT NOT NULL,
-    options TEXT[] NOT NULL,
+    options POLL_OPTION[] NOT NULL,
     FOREIGN KEY (id) REFERENCES widgets(id) ON DELETE CASCADE
+);
+
+
+CREATE TYPE TASK AS (
+    user_id UUID NOT NULL,
+    description TEXT NOT NULL,
+    completed BOOLEAN
 );
 
 -- Table for Todo media type
-CREATE TABLE todos (
+CREATE TABLE IF NOT EXISTS todos (
     id UUID PRIMARY KEY,
-    task TEXT NOT NULL,
-    is_completed BOOLEAN NOT NULL DEFAULT FALSE,
+    tasks TASK[],
     FOREIGN KEY (id) REFERENCES widgets(id) ON DELETE CASCADE
 );
 
+CREATE TYPE LOCATION AS (
+  longitude FLOAT,
+  latitude FLOAT,
+);
+
 -- Table for Map media type
-CREATE TABLE maps (
-    id UUID PRIMARY KEY,
-    location TEXT NOT NULL,
+CREATE TABLE IF NOT EXISTS maps (
+    id UUID PRIMARY KEY NOT NULL,
+    location LOCATION NOT NULL,
     description TEXT,
     FOREIGN KEY (id) REFERENCES widgets(id) ON DELETE CASCADE
 );
@@ -63,4 +82,3 @@ CREATE TABLE space_members (
     FOREIGN KEY (space_id) REFERENCES spaces(id) ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
-
