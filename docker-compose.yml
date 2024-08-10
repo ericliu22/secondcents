@@ -24,7 +24,6 @@ services:
       - "8080"
     ports:
       - "8080:8080"
-<<<<<<< HEAD
   database:
     image: twocents-database-image
     build: ./database
@@ -32,7 +31,6 @@ services:
       - database.env
     ports:
       - "5432:5432"
-=======
   analytics:
     image: twocents-analytics-image
     build: ./analytics
@@ -56,4 +54,3 @@ services:
       - analytics_events.env
     ports:
       - "7502:7502"
->>>>>>> 0ecdeb6 (Added plausible analytics to docker compose)
