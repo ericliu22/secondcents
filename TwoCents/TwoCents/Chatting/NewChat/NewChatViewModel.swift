@@ -10,6 +10,9 @@ final class NewChatViewModel: ObservableObject {
     private var lastDocument: DocumentSnapshot? = nil
     @Published var hasMoreMessages: Bool = true
     
+    
+    
+    
     @Published private(set) var user:  DBUser? = nil
     func loadCurrentUser() async throws {
         let authDataResult = try AuthenticationManager.shared.getAuthenticatedUser()
