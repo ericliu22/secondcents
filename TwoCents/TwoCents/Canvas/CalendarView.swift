@@ -61,7 +61,7 @@ struct CalendarView: View {
         }
     }
 
-    func generateTimeSlots(for selectedDate: Date) -> [TimeSlot] {
+    func generateTimeSlots(for selectedDate: Date, chosenSlots: [String] = []) -> [TimeSlot] {
         var timeSlots: [TimeSlot] = []
         let calendar = Calendar.current
 
@@ -73,7 +73,8 @@ struct CalendarView: View {
         if let selectedTime = calendar.date(from: dateComponents), let startTime = calendar.date(byAdding: .hour, value: -2, to: selectedTime) {
             for i in 0...8 {
                 if let newTime = calendar.date(byAdding: .minute, value: i * 30, to: startTime) {
-                    timeSlots.append(TimeSlot(time: newTime))
+                    let isChosen = chosenSlots.contains(dateFormatterWithTime.string(from: newTime)) || chosenSlots.isEmpty
+                    timeSlots.append(TimeSlot(time: newTime, chosen: isChosen))
                 }
             }
         }
@@ -219,6 +220,35 @@ struct CalendarView: View {
             }
     }
 
+    func loadTimeSlots(for date: Date) {
+        let db = Firestore.firestore()
+        let uid = try! AuthenticationManager.shared.getAuthenticatedUser().uid
+        let calendar = Calendar.current
+        let startOfDay = calendar.startOfDay(for: date)
+        let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
+
+        db.collection("spaces")
+            .document(spaceId)
+            .collection("dates")
+            .document(widget.id.uuidString)
+            .getDocument { document, error in
+                var chosenSlots: [String] = []
+                if let document = document, document.exists {
+                    if let userDates = document.data()?[uid] as? [String] {
+                        chosenSlots = userDates.filter { dateString in
+                            if let slotDate = dateFormatterWithTime.date(from: dateString) {
+                                return slotDate >= startOfDay && slotDate < endOfDay
+                            }
+                            return false
+                        }
+                    }
+                }
+
+                // Generate time slots with the chosen statuses based on the database
+                timeSlots = generateTimeSlots(for: date, chosenSlots: chosenSlots)
+            }
+    }
+
     private let dateFormatterWithTime: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd h:mm a"
@@ -250,7 +280,7 @@ struct CalendarView: View {
                         // Automatically reload time slots for the first saved date
                         if let firstDate = self.savedDates.first {
                             self.currentSelectedDate = firstDate
-                            self.timeSlots = generateTimeSlots(for: firstDate)
+                            self.loadTimeSlots(for: firstDate)
                         }
                     }
                 } else {
