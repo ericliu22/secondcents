@@ -1,290 +1,163 @@
 import SwiftUI
 import Firebase
 
-struct TimeSlot: Identifiable {
-    var id = UUID()
-    var time: Date
-    var chosen: Bool = true
-}
-
 struct CalendarView: View {
-    @State private var selectedDates: Set<DateComponents> = []
-    @State private var savedDates: [Date] = []
-    @State private var currentSelectedDate: Date? = nil
-    @State private var timeSlots: [TimeSlot] = []
     var spaceId: String
     var widget: CanvasWidget
-
+    
+    @State private var selectedDates: Set<DateComponents> = []
+    @State private var localChosenDates: [Date: Set<Date>] = [:]
+    @State private var currentlySelectedDate: Date? = nil
+    
+    let dateFormatterWithTime: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd h:mm a"
+        return formatter
+    }()
+    
+    let dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        return formatter
+    }()
+    
+    let timeFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "h:mm a"
+        return formatter
+    }()
+    
     var body: some View {
         VStack {
-            MultiDatePicker("Select dates", selection: $selectedDates)
+            MultiDatePicker("Select Dates", selection: $selectedDates)
                 .padding()
-                .onChange(of: selectedDates) { oldValue, newValue in
-                    handleDateSelectionChange(oldValue: oldValue, newValue: newValue)
+                .onChange(of: selectedDates) { newSelection in
+                    updateCurrentlySelectedDate()
                 }
-            Text("Selected Date: \(currentSelectedDate?.description ?? "None")")
-            List(timeSlots) { timeSlot in
-                HStack {
-                    Text(formattedTime(timeSlot.time))
-                    Spacer()
-                    Text(timeSlot.chosen ? "Chosen" : "Not Chosen")
-                        .foregroundColor(timeSlot.chosen ? .green : .red)
+            
+            Text("Selected Date: \(currentlySelectedDate.map { dateFormatter.string(from: $0) } ?? "None")")
+            
+            if let selectedDate = currentlySelectedDate {
+                List(timeSlots(for: selectedDate), id: \.self) { timeSlot in
+                    HStack {
+                        Text(formatTime(timeSlot))
+                        Spacer()
+                        Text(localChosenDates[selectedDate]?.contains(timeSlot) == true ? "Chosen" : "Not Chosen")
+                            .foregroundColor(localChosenDates[selectedDate]?.contains(timeSlot) == true ? .green : .red)
+                    }
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        toggleTimeSelection(timeSlot, for: selectedDate)
+                    }
                 }
-                .contentShape(Rectangle())
-                .onTapGesture {
-                    toggleTimeSlotChosen(timeSlot: timeSlot)
-                }
+                .animation(.default, value: currentlySelectedDate) // Ensure the list updates smoothly
             }
         }
         .onAppear {
             loadSavedDates()
         }
-    }
-
-    private let dateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .medium
-        return formatter
-    }()
-
-    func handleDateSelectionChange(oldValue: Set<DateComponents>, newValue: Set<DateComponents>) {
-        let calendar = Calendar.current
-        if let newDateComponents = newValue.first(where: { !oldValue.contains($0) }),
-           let newDate = calendar.date(from: newDateComponents) {
-            currentSelectedDate = newDate
-            timeSlots = generateTimeSlots(for: newDate)
-            saveAllTimeSlots(for: newDate)
-        } else if let removedDateComponents = oldValue.first(where: { !newValue.contains($0) }),
-                  let removedDate = calendar.date(from: removedDateComponents) {
-            currentSelectedDate = nil
-            removeDate(from: removedDate)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button("Save") {
+                    saveDates()
+                }
+            }
         }
     }
-
-    func generateTimeSlots(for selectedDate: Date, chosenSlots: [String] = []) -> [TimeSlot] {
-        var timeSlots: [TimeSlot] = []
+    
+    private func updateCurrentlySelectedDate() {
+        currentlySelectedDate = selectedDates.first.flatMap { dateComponents in
+            Calendar.current.date(from: dateComponents)
+        }
+        // Optionally, you can trigger additional updates here if needed
+    }
+    
+    private func timeSlots(for date: Date) -> [Date] {
+        var timeSlots: [Date] = []
         let calendar = Calendar.current
-
-        // Set the base time to 2 PM
-        var dateComponents = calendar.dateComponents([.year, .month, .day], from: selectedDate)
-        dateComponents.hour = 14 // 2 PM
-        dateComponents.minute = 0
-
-        if let selectedTime = calendar.date(from: dateComponents), let startTime = calendar.date(byAdding: .hour, value: -2, to: selectedTime) {
-            for i in 0...8 {
-                if let newTime = calendar.date(byAdding: .minute, value: i * 30, to: startTime) {
-                    let isChosen = chosenSlots.contains(dateFormatterWithTime.string(from: newTime)) || chosenSlots.isEmpty
-                    timeSlots.append(TimeSlot(time: newTime, chosen: isChosen))
-                }
+        let dateComponents = calendar.dateComponents([.year, .month, .day], from: date)
+        
+        for hour in 12...18 {
+            let components = DateComponents(year: dateComponents.year, month: dateComponents.month, day: dateComponents.day, hour: hour)
+            if let timeSlot = calendar.date(from: components) {
+                timeSlots.append(timeSlot)
             }
         }
         return timeSlots
     }
-
-    func toggleTimeSlotChosen(timeSlot: TimeSlot) {
-        if let index = timeSlots.firstIndex(where: { $0.id == timeSlot.id }) {
-            timeSlots[index].chosen.toggle()
-            if timeSlots[index].chosen {
-                saveDates(for: currentSelectedDate)
-            } else {
-                removeTimeSlot(timeSlot, from: currentSelectedDate)
+    
+    private func formatTime(_ date: Date) -> String {
+        return timeFormatter.string(from: date)
+    }
+    
+    private func toggleTimeSelection(_ timeSlot: Date, for date: Date) {
+        if localChosenDates[date] == nil {
+            localChosenDates[date] = []
+        }
+        
+        if localChosenDates[date]!.contains(timeSlot) {
+            localChosenDates[date]!.remove(timeSlot)
+            if localChosenDates[date]!.isEmpty {
+                localChosenDates.removeValue(forKey: date)
+                selectedDates.remove(Calendar.current.dateComponents([.year, .month, .day], from: date))
             }
+        } else {
+            localChosenDates[date]!.insert(timeSlot)
         }
     }
-
-    func saveAllTimeSlots(for date: Date) {
+    
+    private func saveDates() {
         let db = Firestore.firestore()
-        let uid = try! AuthenticationManager.shared.getAuthenticatedUser().uid
-
-        let chosenSlots = timeSlots.map { dateFormatterWithTime.string(from: $0.time) }
-
+        let userId = try! AuthenticationManager.shared.getAuthenticatedUser().uid
+        
+        var saveData: [String: [String]] = [:]
+        
+        for (date, times) in localChosenDates {
+            let dateKey = dateFormatter.string(from: date)
+            let timeStrings = times.map { formatTime($0) }
+            saveData[dateKey] = timeStrings
+        }
+        
         db.collection("spaces")
             .document(spaceId)
             .collection("dates")
             .document(widget.id.uuidString)
-            .getDocument { document, error in
-                var existingData = document?.data() as? [String: [String]] ?? [:]
-
-                if !chosenSlots.isEmpty {
-                    if var userDates = existingData[uid] {
-                        // Append the new dates, ensuring there are no duplicates
-                        userDates.append(contentsOf: chosenSlots)
-                        existingData[uid] = Array(Set(userDates)) // Remove duplicates, if any
-                    } else {
-                        existingData[uid] = chosenSlots
-                    }
-                }
-
-                db.collection("spaces")
-                    .document(spaceId)
-                    .collection("dates")
-                    .document(widget.id.uuidString)
-                    .setData(existingData)
-            }
-    }
-
-    func saveDates(for date: Date?) {
-        guard let date = date else { return }
-
-        let db = Firestore.firestore()
-        let uid = try! AuthenticationManager.shared.getAuthenticatedUser().uid
-
-        let chosenSlots = timeSlots.filter { $0.chosen }.map { dateFormatterWithTime.string(from: $0.time) }
-
-        db.collection("spaces")
-            .document(spaceId)
-            .collection("dates")
-            .document(widget.id.uuidString)
-            .getDocument { document, error in
-                var existingData = document?.data() as? [String: [String]] ?? [:]
-
-                if !chosenSlots.isEmpty {
-                    if var userDates = existingData[uid] {
-                        // Append the new dates, ensuring there are no duplicates
-                        userDates.append(contentsOf: chosenSlots)
-                        existingData[uid] = Array(Set(userDates)) // Remove duplicates, if any
-                    } else {
-                        existingData[uid] = chosenSlots
-                    }
-                }
-
-                db.collection("spaces")
-                    .document(spaceId)
-                    .collection("dates")
-                    .document(widget.id.uuidString)
-                    .setData(existingData)
-            }
-    }
-
-    func removeTimeSlot(_ timeSlot: TimeSlot, from date: Date?) {
-        guard let date = date else { return }
-        let db = Firestore.firestore()
-        let uid = try! AuthenticationManager.shared.getAuthenticatedUser().uid
-        let timeSlotString = dateFormatterWithTime.string(from: timeSlot.time)
-
-        db.collection("spaces")
-            .document(spaceId)
-            .collection("dates")
-            .document(widget.id.uuidString)
-            .getDocument { document, error in
-                var existingData = document?.data() as? [String: [String]] ?? [:]
-                if var userDates = existingData[uid] {
-                    userDates.removeAll { $0 == timeSlotString }
-                    if userDates.isEmpty {
-                        existingData.removeValue(forKey: uid)
-                    } else {
-                        existingData[uid] = userDates
-                    }
-                }
-
-                db.collection("spaces")
-                    .document(spaceId)
-                    .collection("dates")
-                    .document(widget.id.uuidString)
-                    .setData(existingData)
-            }
-    }
-
-    func removeDate(from date: Date) {
-        let db = Firestore.firestore()
-        let uid = try! AuthenticationManager.shared.getAuthenticatedUser().uid
-        let calendar = Calendar.current
-        let startOfDay = calendar.startOfDay(for: date)
-        let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
-
-        db.collection("spaces")
-            .document(spaceId)
-            .collection("dates")
-            .document(widget.id.uuidString)
-            .getDocument { document, error in
-                var existingData = document?.data() as? [String: [String]] ?? [:]
-                if var userDates = existingData[uid] {
-                    userDates.removeAll { dateString in
-                        if let date = dateFormatterWithTime.date(from: dateString) {
-                            return date >= startOfDay && date < endOfDay
-                        }
-                        return false
-                    }
-                    if userDates.isEmpty {
-                        existingData.removeValue(forKey: uid)
-                    } else {
-                        existingData[uid] = userDates
-                    }
-                }
-
-                db.collection("spaces")
-                    .document(spaceId)
-                    .collection("dates")
-                    .document(widget.id.uuidString)
-                    .setData(existingData)
-            }
-    }
-
-    func loadTimeSlots(for date: Date) {
-        let db = Firestore.firestore()
-        let uid = try! AuthenticationManager.shared.getAuthenticatedUser().uid
-        let calendar = Calendar.current
-        let startOfDay = calendar.startOfDay(for: date)
-        let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
-
-        db.collection("spaces")
-            .document(spaceId)
-            .collection("dates")
-            .document(widget.id.uuidString)
-            .getDocument { document, error in
-                var chosenSlots: [String] = []
-                if let document = document, document.exists {
-                    if let userDates = document.data()?[uid] as? [String] {
-                        chosenSlots = userDates.filter { dateString in
-                            if let slotDate = dateFormatterWithTime.date(from: dateString) {
-                                return slotDate >= startOfDay && slotDate < endOfDay
-                            }
-                            return false
-                        }
-                    }
-                }
-
-                // Generate time slots with the chosen statuses based on the database
-                timeSlots = generateTimeSlots(for: date, chosenSlots: chosenSlots)
-            }
-    }
-
-    private let dateFormatterWithTime: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd h:mm a"
-        return formatter
-    }()
-
-    func formattedTime(_ date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "h:mm a"
-        return formatter.string(from: date)
-    }
-
-    func loadSavedDates() {
-        let db = Firestore.firestore()
-        let uid = try! AuthenticationManager.shared.getAuthenticatedUser().uid
-
-        db.collection("spaces")
-            .document(spaceId)
-            .collection("dates")
-            .document(widget.id.uuidString)
-            .getDocument { document, error in
-                if let document = document, document.exists {
-                    // Load only the data associated with the current user ID
-                    if let userDates = document.data()?[uid] as? [String] {
-                        self.savedDates = userDates.compactMap { dateFormatterWithTime.date(from: $0) }.sorted()
-                        let calendar = Calendar.current
-                        self.selectedDates = Set(self.savedDates.map { calendar.dateComponents([.calendar, .era, .year, .month, .day], from: $0) })
-
-                        // Automatically reload time slots for the first saved date
-                        if let firstDate = self.savedDates.first {
-                            self.currentSelectedDate = firstDate
-                            self.loadTimeSlots(for: firstDate)
-                        }
-                    }
+            .setData([userId: saveData]) { error in
+                if let error = error {
+                    print("Error saving data: \(error)")
                 } else {
+                    print("Data saved successfully")
+                }
+            }
+    }
+    
+    private func loadSavedDates() {
+        let db = Firestore.firestore()
+        let userId = try! AuthenticationManager.shared.getAuthenticatedUser().uid
+        
+        db.collection("spaces")
+            .document(spaceId)
+            .collection("dates")
+            .document(widget.id.uuidString)
+            .getDocument { document, error in
+                guard let document = document, document.exists else {
                     print("Document does not exist or failed to retrieve data")
+                    return
+                }
+                
+                if let userDates = document.data()?[userId] as? [String: [String]] {
+                    var groupedDates: [Date: Set<Date>] = [:]
+                    
+                    for (dateString, timeStrings) in userDates {
+                        if let date = dateFormatter.date(from: dateString) {
+                            let times = timeStrings.compactMap { timeFormatter.date(from: $0).flatMap { Calendar.current.date(bySettingHour: Calendar.current.component(.hour, from: $0), minute: Calendar.current.component(.minute, from: $0), second: 0, of: date) } }
+                            groupedDates[date] = Set(times)
+                        }
+                    }
+                    
+                    self.localChosenDates = groupedDates
+                    self.selectedDates = Set(groupedDates.keys.map { Calendar.current.dateComponents([.year, .month, .day], from: $0) })
+                    updateCurrentlySelectedDate()
                 }
             }
     }
