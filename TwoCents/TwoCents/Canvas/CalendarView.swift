@@ -10,7 +10,6 @@ struct TimeSlot: Identifiable {
 struct CalendarView: View {
     @State private var selectedDates: Set<DateComponents> = []
     @State private var savedDates: [Date] = []
-    @State private var selectedTime: String = ""
     @State private var currentSelectedDate: Date? = nil
     @State private var timeSlots: [TimeSlot] = []
     var spaceId: String
@@ -18,7 +17,6 @@ struct CalendarView: View {
 
     var body: some View {
         VStack {
-            Text("Preferred Time: " + selectedTime)
             MultiDatePicker("Select dates", selection: $selectedDates)
                 .padding()
                 .onChange(of: selectedDates) { oldValue, newValue in
@@ -54,7 +52,7 @@ struct CalendarView: View {
         if let newDateComponents = newValue.first(where: { !oldValue.contains($0) }),
            let newDate = calendar.date(from: newDateComponents) {
             currentSelectedDate = newDate
-            timeSlots = generateTimeSlots(from: selectedTime, for: newDate)
+            timeSlots = generateTimeSlots(for: newDate)
             saveDates(for: newDate)
         } else if let removedDateComponents = oldValue.first(where: { !newValue.contains($0) }),
                   let removedDate = calendar.date(from: removedDateComponents) {
@@ -63,18 +61,18 @@ struct CalendarView: View {
         }
     }
 
-    func generateTimeSlots(from selectedTimeString: String, for selectedDate: Date) -> [TimeSlot] {
+    func generateTimeSlots(for selectedDate: Date) -> [TimeSlot] {
         var timeSlots: [TimeSlot] = []
         let calendar = Calendar.current
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd h:mma"
 
-        guard let selectedTime = dateFormatter.date(from: "\(dateFormatter.string(from: selectedDate)) \(selectedTimeString)") else {
-            print("Invalid time string")
-            return timeSlots
-        }
+        // Set the base time to 2 PM
+             var dateComponents = calendar.dateComponents([.year, .month, .day], from: selectedDate)
+             dateComponents.hour = 14 // 2 PM
+             dateComponents.minute = 0
+        
+        
 
-        if let startTime = calendar.date(byAdding: .hour, value: -2, to: selectedTime) {
+        if let selectedTime = calendar.date(from: dateComponents), let startTime = calendar.date(byAdding: .hour, value: -2, to: selectedTime) {
             for i in 0...8 {
                 if let newTime = calendar.date(byAdding: .minute, value: i * 30, to: startTime) {
                     timeSlots.append(TimeSlot(time: newTime))
@@ -95,7 +93,6 @@ struct CalendarView: View {
         guard let date = date else { return }
 
         let db = Firestore.firestore()
-        let calendar = Calendar.current
         let uid = try! AuthenticationManager.shared.getAuthenticatedUser().uid
 
         let dateString = dateFormatter.string(from: date)
@@ -162,15 +159,16 @@ struct CalendarView: View {
             .document(widget.id.uuidString)
             .getDocument { document, error in
                 if let document = document {
-                    if let dateMap = document.data()?[uid] as? [String: [String]] {
-                        self.savedDates = dateMap.keys.compactMap { dateFormatter.date(from: $0) }.sorted()
+                    // Load only the data associated with the current user ID
+                    if let userDateMap = document.data()?[uid] as? [String: [String]] {
+                        self.savedDates = userDateMap.keys.compactMap { dateFormatter.date(from: $0) }.sorted()
                         let calendar = Calendar.current
                         self.selectedDates = Set(self.savedDates.map { calendar.dateComponents([.calendar, .era, .year, .month, .day], from: $0) })
 
                         // Automatically reload time slots for the first saved date
                         if let firstDate = self.savedDates.first {
                             self.currentSelectedDate = firstDate
-                            self.timeSlots = generateTimeSlots(from: self.selectedTime, for: firstDate)
+                            self.timeSlots = generateTimeSlots(for: firstDate)
                         }
                     }
                 } else {
