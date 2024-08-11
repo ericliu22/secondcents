@@ -187,7 +187,9 @@ struct CalendarView: View {
     func removeDate(from date: Date) {
         let db = Firestore.firestore()
         let uid = try! AuthenticationManager.shared.getAuthenticatedUser().uid
-        let dateString = dateFormatterWithTime.string(from: date)
+        let calendar = Calendar.current
+        let startOfDay = calendar.startOfDay(for: date)
+        let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
 
         db.collection("spaces")
             .document(spaceId)
@@ -196,7 +198,12 @@ struct CalendarView: View {
             .getDocument { document, error in
                 var existingData = document?.data() as? [String: [String]] ?? [:]
                 if var userDates = existingData[uid] {
-                    userDates.removeAll { $0 == dateString }
+                    userDates.removeAll { dateString in
+                        if let date = dateFormatterWithTime.date(from: dateString) {
+                            return date >= startOfDay && date < endOfDay
+                        }
+                        return false
+                    }
                     if userDates.isEmpty {
                         existingData.removeValue(forKey: uid)
                     } else {
