@@ -58,19 +58,19 @@ struct RootView: View {
             
                 .tint(tintLoaded ? loadedColor : .gray)
                 .animation(.easeIn, value: tintLoaded)
-                .background(
-                    Group {
-                        if shouldNavigateToCanvas {
-                            NavigationLink(
-                                destination: CanvasPage(spaceId: waitForVariable{spaceId}),
-                                isActive: $shouldNavigateToCanvas,
-                                label: { EmptyView() }
-                            )
-                        }
-                    }
-                )
+//                .background(
+//                    Group {
+//                        if shouldNavigateToCanvas {
+//                            NavigationLink(
+//                                destination: CanvasPage(spaceId: waitForVariable{spaceId}),
+//                                isActive: $shouldNavigateToCanvas,
+//                                label: { EmptyView() }
+//                            )
+//                        }
+//                    }
+//                )
         }
-        
+//        
         .onAppear{
             let authUser = try? AuthenticationManager.shared.getAuthenticatedUser()
             //            self.showSignInView = authUser == nil
@@ -79,10 +79,10 @@ struct RootView: View {
                 activeSheet = .signInView
             } else {
                 if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
-                   self.spaceId = appDelegate.spaceId
-                   if spaceId != nil {
-                       shouldNavigateToCanvas = true // Trigger navigation if spaceId is present
-                   }
+//                   self.spaceId = appDelegate.spaceId
+//                   if spaceId != nil {
+//                       shouldNavigateToCanvas = true // Trigger navigation if spaceId is present
+//                   }
                }
             }
         }
