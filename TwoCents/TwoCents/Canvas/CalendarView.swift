@@ -7,7 +7,9 @@ struct CalendarView: View {
     
     @State private var selectedDates: Set<DateComponents> = []
     @State private var localChosenDates: [Date: Set<Date>] = [:]
+    @State private var previousSelectedDates: Set<DateComponents> = []
     @State private var currentlySelectedDate: Date? = nil
+    @State var PreferredTime: String
     
     let dateFormatterWithTime: DateFormatter = {
         let formatter = DateFormatter()
@@ -32,7 +34,45 @@ struct CalendarView: View {
             MultiDatePicker("Select Dates", selection: $selectedDates)
                 .padding()
                 .onChange(of: selectedDates) { newSelection in
-                    updateCurrentlySelectedDate()
+                    let addedDates = newSelection.subtracting(previousSelectedDates)
+                    let removedDates = previousSelectedDates.subtracting(newSelection)
+                    
+                    if let addedDateComponents = addedDates.first {
+                        print("added")
+                        print(addedDates.first)
+                        let calendar = Calendar.current
+                        if let selectedDate = calendar.date(from: addedDateComponents) {
+                            currentlySelectedDate = selectedDate
+                            if localChosenDates[selectedDate] == nil {
+                                loadTimesForDate(selectedDate) { savedTimes in
+                                    if let savedTimes = savedTimes, !savedTimes.isEmpty {
+                                        localChosenDates[selectedDate] = Set(savedTimes)
+                                    } else {
+                                        localChosenDates[selectedDate] = Set(timeSlots(for: selectedDate))
+                                    }
+                                }
+                            }
+                        } else {
+                            print("Failed to convert DateComponents to Date.")
+                        }
+                    }
+                    
+                    if let removedDateComponents = removedDates.first {
+                        print("removed")
+                        print(removedDates.first)
+                        // Handle the deselected date here
+                        let calendar = Calendar.current
+                        if let selectedDate = calendar.date(from: removedDateComponents) {
+                            localChosenDates.removeValue(forKey: selectedDate)
+                            selectedDates.remove(Calendar.current.dateComponents([.calendar, .era, .year, .month, .day], from: selectedDate))
+                            currentlySelectedDate = nil
+                        }
+                    }
+                    
+                    // Update previousSelectedDates to the current selection
+                    previousSelectedDates = newSelection
+                    //updateCurrentlySelectedDate()
+                   // saveDates()
                 }
             
             Text("Selected Date: \(currentlySelectedDate.map { dateFormatter.string(from: $0) } ?? "None")")
@@ -68,7 +108,8 @@ struct CalendarView: View {
     private func updateCurrentlySelectedDate() {
         if let selectedDate = selectedDates.first.flatMap({ Calendar.current.date(from: $0) }) {
             currentlySelectedDate = selectedDate
-            
+            print("current selection: ")
+            print(currentlySelectedDate)
             if localChosenDates[selectedDate] == nil {
                 loadTimesForDate(selectedDate) { savedTimes in
                     if let savedTimes = savedTimes, !savedTimes.isEmpty {
@@ -81,9 +122,11 @@ struct CalendarView: View {
         } else {
             if let date = currentlySelectedDate {
                 localChosenDates.removeValue(forKey: date)
-                selectedDates.remove(Calendar.current.dateComponents([.year, .month, .day], from: date))
+                selectedDates.remove(Calendar.current.dateComponents([.calendar, .era, .year, .month, .day], from: date))
             }
             currentlySelectedDate = nil
+            print("removed?")
+            print(localChosenDates)
         }
     }
     
@@ -115,14 +158,14 @@ struct CalendarView: View {
             localChosenDates[date]!.remove(timeSlot)
             if localChosenDates[date]!.isEmpty {
                 localChosenDates.removeValue(forKey: date)
-                selectedDates.remove(Calendar.current.dateComponents([.year, .month, .day], from: date))
+                selectedDates.remove(Calendar.current.dateComponents([.calendar, .era, .year, .month, .day], from: date))
             }
         } else {
             localChosenDates[date]!.insert(timeSlot)
         }
     }
     
-    private func saveDates() {
+    func saveDates() {
         let db = Firestore.firestore()
         let userId = try! AuthenticationManager.shared.getAuthenticatedUser().uid
         
@@ -138,11 +181,22 @@ struct CalendarView: View {
             .document(spaceId)
             .collection("dates")
             .document(widget.id.uuidString)
-            .setData([userId: saveData]) { error in
+            .updateData([userId: saveData]) { error in
                 if let error = error {
-                    print("Error saving data: \(error)")
+                    // If the document does not exist, fall back to setting the data
+                    db.collection("spaces")
+                        .document(spaceId)
+                        .collection("dates")
+                        .document(widget.id.uuidString)
+                        .setData([userId: saveData]) { setError in
+                            if let setError = setError {
+                                print("Error saving data: \(setError)")
+                            } else {
+                                print("Data saved successfully")
+                            }
+                        }
                 } else {
-                    print("Data saved successfully")
+                    print("Data updated successfully")
                 }
             }
     }
@@ -160,7 +214,8 @@ struct CalendarView: View {
                     print("Document does not exist or failed to retrieve data")
                     return
                 }
-                
+                self.PreferredTime = PreferredTime
+                print("PreferredTime: "+PreferredTime)
                 if let userDates = document.data()?[userId] as? [String: [String]] {
                     var groupedDates: [Date: Set<Date>] = [:]
                     
@@ -172,7 +227,7 @@ struct CalendarView: View {
                     }
                     
                     self.localChosenDates = groupedDates
-                    self.selectedDates = Set(groupedDates.keys.map { Calendar.current.dateComponents([.year, .month, .day], from: $0) })
+                    self.selectedDates = Set(groupedDates.keys.map { Calendar.current.dateComponents([.calendar, .era, .year, .month, .day], from: $0) })
                     updateCurrentlySelectedDate()
                 }
             }
