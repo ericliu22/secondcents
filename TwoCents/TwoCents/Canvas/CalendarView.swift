@@ -50,7 +50,7 @@ struct CalendarView: View {
                         toggleTimeSelection(timeSlot, for: selectedDate)
                     }
                 }
-                .animation(.default, value: currentlySelectedDate) // Ensure the list updates smoothly
+                .animation(.default, value: currentlySelectedDate)
             }
         }
         .onAppear {
@@ -66,10 +66,25 @@ struct CalendarView: View {
     }
     
     private func updateCurrentlySelectedDate() {
-        currentlySelectedDate = selectedDates.first.flatMap { dateComponents in
-            Calendar.current.date(from: dateComponents)
+        if let selectedDate = selectedDates.first.flatMap({ Calendar.current.date(from: $0) }) {
+            currentlySelectedDate = selectedDate
+            
+            if localChosenDates[selectedDate] == nil {
+                loadTimesForDate(selectedDate) { savedTimes in
+                    if let savedTimes = savedTimes, !savedTimes.isEmpty {
+                        localChosenDates[selectedDate] = Set(savedTimes)
+                    } else {
+                        localChosenDates[selectedDate] = Set(timeSlots(for: selectedDate))
+                    }
+                }
+            }
+        } else {
+            if let date = currentlySelectedDate {
+                localChosenDates.removeValue(forKey: date)
+                selectedDates.remove(Calendar.current.dateComponents([.year, .month, .day], from: date))
+            }
+            currentlySelectedDate = nil
         }
-        // Optionally, you can trigger additional updates here if needed
     }
     
     private func timeSlots(for date: Date) -> [Date] {
@@ -78,7 +93,8 @@ struct CalendarView: View {
         let dateComponents = calendar.dateComponents([.year, .month, .day], from: date)
         
         for hour in 12...18 {
-            let components = DateComponents(year: dateComponents.year, month: dateComponents.month, day: dateComponents.day, hour: hour)
+            var components = DateComponents(year: dateComponents.year, month: dateComponents.month, day: dateComponents.day, hour: hour)
+            components.minute = 0
             if let timeSlot = calendar.date(from: components) {
                 timeSlots.append(timeSlot)
             }
@@ -150,7 +166,7 @@ struct CalendarView: View {
                     
                     for (dateString, timeStrings) in userDates {
                         if let date = dateFormatter.date(from: dateString) {
-                            let times = timeStrings.compactMap { timeFormatter.date(from: $0).flatMap { Calendar.current.date(bySettingHour: Calendar.current.component(.hour, from: $0), minute: Calendar.current.component(.minute, from: $0), second: 0, of: date) } }
+                            let times = timeStrings.compactMap { self.parseTime($0, on: date) }
                             groupedDates[date] = Set(times)
                         }
                     }
@@ -160,5 +176,43 @@ struct CalendarView: View {
                     updateCurrentlySelectedDate()
                 }
             }
+    }
+    
+    private func loadTimesForDate(_ date: Date, completion: @escaping ([Date]?) -> Void) {
+        let db = Firestore.firestore()
+        let userId = try! AuthenticationManager.shared.getAuthenticatedUser().uid
+        let dateKey = dateFormatter.string(from: date)
+        
+        db.collection("spaces")
+            .document(spaceId)
+            .collection("dates")
+            .document(widget.id.uuidString)
+            .getDocument { document, error in
+                guard let document = document, document.exists else {
+                    print("Document does not exist or failed to retrieve data")
+                    completion(nil)
+                    return
+                }
+                
+                if let userDates = document.data()?[userId] as? [String: [String]],
+                   let timeStrings = userDates[dateKey] {
+                    let times = timeStrings.compactMap { self.parseTime($0, on: date) }
+                    completion(times)
+                } else {
+                    completion(nil)
+                }
+            }
+    }
+    
+    private func parseTime(_ timeString: String, on date: Date) -> Date? {
+        if let time = timeFormatter.date(from: timeString) {
+            let calendar = Calendar.current
+            var components = calendar.dateComponents([.hour, .minute], from: time)
+            components.year = calendar.component(.year, from: date)
+            components.month = calendar.component(.month, from: date)
+            components.day = calendar.component(.day, from: date)
+            return calendar.date(from: components)
+        }
+        return nil
     }
 }
