@@ -53,7 +53,7 @@ struct CalendarView: View {
            let newDate = calendar.date(from: newDateComponents) {
             currentSelectedDate = newDate
             timeSlots = generateTimeSlots(for: newDate)
-            saveDates(for: newDate)
+            saveAllTimeSlots(for: newDate)
         } else if let removedDateComponents = oldValue.first(where: { !newValue.contains($0) }),
                   let removedDate = calendar.date(from: removedDateComponents) {
             currentSelectedDate = nil
@@ -66,11 +66,9 @@ struct CalendarView: View {
         let calendar = Calendar.current
 
         // Set the base time to 2 PM
-             var dateComponents = calendar.dateComponents([.year, .month, .day], from: selectedDate)
-             dateComponents.hour = 14 // 2 PM
-             dateComponents.minute = 0
-        
-        
+        var dateComponents = calendar.dateComponents([.year, .month, .day], from: selectedDate)
+        dateComponents.hour = 14 // 2 PM
+        dateComponents.minute = 0
 
         if let selectedTime = calendar.date(from: dateComponents), let startTime = calendar.date(byAdding: .hour, value: -2, to: selectedTime) {
             for i in 0...8 {
@@ -85,8 +83,43 @@ struct CalendarView: View {
     func toggleTimeSlotChosen(timeSlot: TimeSlot) {
         if let index = timeSlots.firstIndex(where: { $0.id == timeSlot.id }) {
             timeSlots[index].chosen.toggle()
-            saveDates(for: currentSelectedDate)
+            if timeSlots[index].chosen {
+                saveDates(for: currentSelectedDate)
+            } else {
+                removeTimeSlot(timeSlot, from: currentSelectedDate)
+            }
         }
+    }
+
+    func saveAllTimeSlots(for date: Date) {
+        let db = Firestore.firestore()
+        let uid = try! AuthenticationManager.shared.getAuthenticatedUser().uid
+
+        let chosenSlots = timeSlots.map { dateFormatterWithTime.string(from: $0.time) }
+
+        db.collection("spaces")
+            .document(spaceId)
+            .collection("dates")
+            .document(widget.id.uuidString)
+            .getDocument { document, error in
+                var existingData = document?.data() as? [String: [String]] ?? [:]
+
+                if !chosenSlots.isEmpty {
+                    if var userDates = existingData[uid] {
+                        // Append the new dates, ensuring there are no duplicates
+                        userDates.append(contentsOf: chosenSlots)
+                        existingData[uid] = Array(Set(userDates)) // Remove duplicates, if any
+                    } else {
+                        existingData[uid] = chosenSlots
+                    }
+                }
+
+                db.collection("spaces")
+                    .document(spaceId)
+                    .collection("dates")
+                    .document(widget.id.uuidString)
+                    .setData(existingData)
+            }
     }
 
     func saveDates(for date: Date?) {
@@ -121,6 +154,36 @@ struct CalendarView: View {
                     .setData(existingData)
             }
     }
+
+    func removeTimeSlot(_ timeSlot: TimeSlot, from date: Date?) {
+        guard let date = date else { return }
+        let db = Firestore.firestore()
+        let uid = try! AuthenticationManager.shared.getAuthenticatedUser().uid
+        let timeSlotString = dateFormatterWithTime.string(from: timeSlot.time)
+
+        db.collection("spaces")
+            .document(spaceId)
+            .collection("dates")
+            .document(widget.id.uuidString)
+            .getDocument { document, error in
+                var existingData = document?.data() as? [String: [String]] ?? [:]
+                if var userDates = existingData[uid] {
+                    userDates.removeAll { $0 == timeSlotString }
+                    if userDates.isEmpty {
+                        existingData.removeValue(forKey: uid)
+                    } else {
+                        existingData[uid] = userDates
+                    }
+                }
+
+                db.collection("spaces")
+                    .document(spaceId)
+                    .collection("dates")
+                    .document(widget.id.uuidString)
+                    .setData(existingData)
+            }
+    }
+
     func removeDate(from date: Date) {
         let db = Firestore.firestore()
         let uid = try! AuthenticationManager.shared.getAuthenticatedUser().uid
@@ -149,14 +212,12 @@ struct CalendarView: View {
             }
     }
 
-
     private let dateFormatterWithTime: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd h:mm a"
         return formatter
     }()
 
-    
     func formattedTime(_ date: Date) -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = "h:mm a"
@@ -190,5 +251,4 @@ struct CalendarView: View {
                 }
             }
     }
-
 }
