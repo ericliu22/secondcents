@@ -95,23 +95,50 @@ struct CalendarView: View {
         let db = Firestore.firestore()
         let uid = try! AuthenticationManager.shared.getAuthenticatedUser().uid
 
-        let dateString = dateFormatter.string(from: date)
-        let chosenSlots = timeSlots.filter { $0.chosen }.map { formattedTime($0.time) }
+        let chosenSlots = timeSlots.filter { $0.chosen }.map { dateFormatterWithTime.string(from: $0.time) }
 
         db.collection("spaces")
             .document(spaceId)
             .collection("dates")
             .document(widget.id.uuidString)
             .getDocument { document, error in
-                var existingData = document?.data() as? [String: [String: [String]]] ?? [:]
+                var existingData = document?.data() as? [String: [String]] ?? [:]
 
                 if !chosenSlots.isEmpty {
-                    if existingData[uid] == nil {
-                        existingData[uid] = [:]
+                    if var userDates = existingData[uid] {
+                        // Append the new dates, ensuring there are no duplicates
+                        userDates.append(contentsOf: chosenSlots)
+                        existingData[uid] = Array(Set(userDates)) // Remove duplicates, if any
+                    } else {
+                        existingData[uid] = chosenSlots
                     }
-                    existingData[uid]?[dateString] = chosenSlots
-                } else {
-                    existingData[uid]?.removeValue(forKey: dateString)
+                }
+
+                db.collection("spaces")
+                    .document(spaceId)
+                    .collection("dates")
+                    .document(widget.id.uuidString)
+                    .setData(existingData)
+            }
+    }
+    func removeDate(from date: Date) {
+        let db = Firestore.firestore()
+        let uid = try! AuthenticationManager.shared.getAuthenticatedUser().uid
+        let dateString = dateFormatterWithTime.string(from: date)
+
+        db.collection("spaces")
+            .document(spaceId)
+            .collection("dates")
+            .document(widget.id.uuidString)
+            .getDocument { document, error in
+                var existingData = document?.data() as? [String: [String]] ?? [:]
+                if var userDates = existingData[uid] {
+                    userDates.removeAll { $0 == dateString }
+                    if userDates.isEmpty {
+                        existingData.removeValue(forKey: uid)
+                    } else {
+                        existingData[uid] = userDates
+                    }
                 }
 
                 db.collection("spaces")
@@ -122,27 +149,14 @@ struct CalendarView: View {
             }
     }
 
-    func removeDate(from date: Date) {
-        let db = Firestore.firestore()
-        let uid = try! AuthenticationManager.shared.getAuthenticatedUser().uid
-        let dateString = dateFormatter.string(from: date)
 
-        db.collection("spaces")
-            .document(spaceId)
-            .collection("dates")
-            .document(widget.id.uuidString)
-            .getDocument { document, error in
-                var existingData = document?.data() as? [String: [String: [String]]] ?? [:]
-                existingData[uid]?.removeValue(forKey: dateString)
+    private let dateFormatterWithTime: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd h:mm a"
+        return formatter
+    }()
 
-                db.collection("spaces")
-                    .document(spaceId)
-                    .collection("dates")
-                    .document(widget.id.uuidString)
-                    .setData(existingData)
-            }
-    }
-
+    
     func formattedTime(_ date: Date) -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = "h:mm a"
@@ -158,10 +172,10 @@ struct CalendarView: View {
             .collection("dates")
             .document(widget.id.uuidString)
             .getDocument { document, error in
-                if let document = document {
+                if let document = document, document.exists {
                     // Load only the data associated with the current user ID
-                    if let userDateMap = document.data()?[uid] as? [String: [String]] {
-                        self.savedDates = userDateMap.keys.compactMap { dateFormatter.date(from: $0) }.sorted()
+                    if let userDates = document.data()?[uid] as? [String] {
+                        self.savedDates = userDates.compactMap { dateFormatterWithTime.date(from: $0) }.sorted()
                         let calendar = Calendar.current
                         self.selectedDates = Set(self.savedDates.map { calendar.dateComponents([.calendar, .era, .year, .month, .day], from: $0) })
 
@@ -172,8 +186,9 @@ struct CalendarView: View {
                         }
                     }
                 } else {
-                    print("Document does not exist")
+                    print("Document does not exist or failed to retrieve data")
                 }
             }
     }
+
 }
