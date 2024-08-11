@@ -660,12 +660,6 @@ struct CanvasPage: View {
                 }
             }
         })
-        .onDisappear {
-            appModel.inSpace = false
-            appModel.currentSpaceId = nil
-            print("CANVASPAGE DISAPPEARED")
-            print("CANVASPAGE: appModel.inSpace \(appModel.inSpace)")
-        }
         .ignoresSafeArea()
         .sheet(item: $activeSheet, onDismiss: {
             //                showNewWidgetView = false
@@ -747,7 +741,12 @@ struct CanvasPage: View {
         })
 
         .onDisappear(perform: {
-            activeSheet = nil
+            activeSheet = nil            
+            appModel.inSpace = false
+            appModel.currentSpaceId = nil
+            print("CANVASPAGE DISAPPEARED")
+            print("CANVASPAGE: appModel.inSpace \(appModel.inSpace)")
+
         })
         .background(  Color(UIColor.secondarySystemBackground))
         .overlay(doubleTapOverlay())

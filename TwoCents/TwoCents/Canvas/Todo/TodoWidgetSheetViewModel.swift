@@ -83,7 +83,10 @@ final class TodoWidgetSheetViewModel: ObservableObject {
         let db = Firestore.firestore()
         let ref = db.collection("spaces").document(spaceId).collection("todo").document(todoId)
 
-        ref.getDocument { document, error in
+        ref.getDocument { [weak self] document, error in
+            guard let self = self else {
+                return
+            }
             if let error = error {
                 print("Error fetching document: \(error)")
                 return
