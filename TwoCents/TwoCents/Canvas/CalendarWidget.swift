@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import Firebase
+import EventKit
 
 struct CalendarWidget: WidgetView {
     
@@ -15,6 +16,8 @@ struct CalendarWidget: WidgetView {
     let widget: CanvasWidget // Assuming CanvasWidget is a defined type
 //    @StateObject private var viewModel = TextWidgetViewModel()
     @State var EarliestFoundDate: String = ""
+    
+    @State var idsWithoutDate: [String] = []
     
     @State private var userColor: Color = .gray
     var spaceId: String
@@ -27,9 +30,11 @@ struct CalendarWidget: WidgetView {
             
             
             VStack{
-               
                 Color.red
                 Text(EarliestFoundDate)
+                List(idsWithoutDate, id: \.self) { id in
+                    Text(id)
+                }
             }
             .background(Color.white)
             .frame(width: TILE_SIZE, height: TILE_SIZE)
@@ -77,6 +82,7 @@ struct CalendarWidget: WidgetView {
                             dateFormatter.dateStyle = .medium
                             self.EarliestFoundDate = dateFormatter.string(from: mostCommonDate)
                             print("Most Common Date: \(self.EarliestFoundDate)")
+                            self.findIdsWithoutDate()
                         }
                     }
                 }
@@ -99,4 +105,34 @@ struct CalendarWidget: WidgetView {
                 }
             }?.key
     }
+    
+    func findIdsWithoutDate() {
+            let db = Firestore.firestore()
+            db.collection("spaces")
+                .document(spaceId)
+                .collection("dates")
+                .document(widget.id.uuidString)
+                .addSnapshotListener { documentSnapshot, error in
+                    guard let document = documentSnapshot, document.exists else {
+                        print("Document does not exist")
+                        return
+                    }
+
+                    if let data = document.data() {
+                        var newIdsWithoutDate = [String]()
+
+                        for key in data.keys {
+                            if let dateStrings = data[key] as? [String] {
+                                if !dateStrings.contains(EarliestFoundDate) {
+                                    newIdsWithoutDate.append(key)
+                                }
+                            }
+                        }
+
+                        DispatchQueue.main.async {
+                            self.idsWithoutDate = newIdsWithoutDate
+                        }
+                    }
+                }
+        }
 }

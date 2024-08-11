@@ -58,6 +58,33 @@ struct RootView: View {
             
                 .tint(tintLoaded ? loadedColor : .gray)
                 .animation(.easeIn, value: tintLoaded)
+                .background(
+                    Group {
+                        if shouldNavigateToCanvas {
+                            NavigationLink(
+                                destination: CanvasPage(spaceId: waitForVariable{spaceId}),
+                                isActive: $shouldNavigateToCanvas,
+                                label: { EmptyView() }
+                            )
+                        }
+                    }
+                )
+        }
+        
+        .onAppear{
+            let authUser = try? AuthenticationManager.shared.getAuthenticatedUser()
+            //            self.showSignInView = authUser == nil
+            
+            if authUser == nil {
+                activeSheet = .signInView
+            } else {
+                if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
+                   self.spaceId = appDelegate.spaceId
+                   if spaceId != nil {
+                       shouldNavigateToCanvas = true // Trigger navigation if spaceId is present
+                   }
+               }
+            }
         }
         
         .fullScreenCover(item: $activeSheet) { item in
