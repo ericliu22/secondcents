@@ -37,6 +37,7 @@ struct CalendarView: View {
                 .onChange(of: selectedDates) { newSelection in
                     handleDateSelectionChange(newSelection)
                 }
+                .fixedSize(horizontal: false, vertical: true)
             
             Text("Selected Date: \(currentlySelectedDate.map { dateFormatter.string(from: $0) } ?? "None")")
             
@@ -44,6 +45,9 @@ struct CalendarView: View {
                 List(timeSlots(for: selectedDate), id: \.self) { timeSlot in
                     HStack {
                         Text(formatTime(timeSlot))
+                            .fontDesign(.monospaced)
+                            .foregroundColor( areTimesEqual(timeSlot: timeSlot, preferredTime: preferredTime ?? Date.now) ? Color(UIColor.label) : Color(UIColor.secondaryLabel))
+                          
                         Spacer()
                         if isLoading {
                             ProgressView()
@@ -57,8 +61,11 @@ struct CalendarView: View {
                         toggleTimeSelection(timeSlot, for: selectedDate)
                     }
                 }
+                .listStyle(.plain)
                 .animation(.default, value: currentlySelectedDate)
                 
+            } else {
+                Spacer()
             }
         }
         .onAppear {
@@ -293,4 +300,15 @@ struct CalendarView: View {
         }
         return nil
     }
+    
+    func areTimesEqual(timeSlot: Date, preferredTime: Date) -> Bool {
+            let calendar = Calendar.current
+            
+            // Extract hour, minute, and second components from each date
+            let timeSlotComponents = calendar.dateComponents([.hour, .minute, .second], from: timeSlot)
+            let preferredTimeComponents = calendar.dateComponents([.hour, .minute, .second], from: preferredTime)
+            
+            // Compare the components
+            return timeSlotComponents == preferredTimeComponents
+        }
 }
