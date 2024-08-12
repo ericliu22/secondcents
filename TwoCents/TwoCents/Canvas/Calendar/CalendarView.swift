@@ -12,9 +12,10 @@ struct CalendarView: View {
     @State private var preferredTime: Date? = nil
     @State private var isLoading: Bool = false
     
-    let dateFormatterWithTime: DateFormatter = {
+    
+    let dateFormatterMonthDay: DateFormatter = {
         let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd h:mm a"
+        formatter.dateFormat = "MMMM d"
         return formatter
     }()
     
@@ -30,54 +31,72 @@ struct CalendarView: View {
         return formatter
     }()
     
+    // Compute the current date and the bounds
+    private var today: Date {
+        Calendar.current.startOfDay(for: Date())
+    }
+    
+    private var bounds: Range<Date> {
+        let endDate = Calendar.current.date(byAdding: .year, value: 1, to: today)!
+        return today..<endDate
+    }
+
+
+    
     var body: some View {
-        VStack {
-            MultiDatePicker("Select Dates", selection: $selectedDates)
-                .padding()
-                .onChange(of: selectedDates) { newSelection in
-                    handleDateSelectionChange(newSelection)
-                }
-                .fixedSize(horizontal: false, vertical: true)
-            
-            Text("Selected Date: \(currentlySelectedDate.map { dateFormatter.string(from: $0) } ?? "None")")
-            
-            if let selectedDate = currentlySelectedDate {
-                List(timeSlots(for: selectedDate), id: \.self) { timeSlot in
-                    HStack {
-                        Text(formatTime(timeSlot))
-                            .fontDesign(.monospaced)
-                            .foregroundColor( areTimesEqual(timeSlot: timeSlot, preferredTime: preferredTime ?? Date.now) ? Color(UIColor.label) : Color(UIColor.secondaryLabel))
-                          
-                        Spacer()
-                        if isLoading {
-                            ProgressView()
-                        } else {
-                            Text(localChosenDates[selectedDate]?.contains(timeSlot) == true ? "Chosen" : "Not Chosen")
-                                .foregroundColor(localChosenDates[selectedDate]?.contains(timeSlot) == true ? .green : .red)
+        
+        ScrollView {
+            VStack {
+                MultiDatePicker("Select Dates", selection: $selectedDates, in: bounds)
+                    .padding()
+                    .onChange(of: selectedDates) { newSelection in
+                        handleDateSelectionChange(newSelection)
+                    }
+                    .fixedSize(horizontal: false, vertical: true)
+
+                if let selectedDate = currentlySelectedDate {
+                    VStack {
+                        ForEach(timeSlots(for: selectedDate), id: \.self) { timeSlot in
+                            HStack {
+                                Text(formatTime(timeSlot))
+                                    .fontWeight(.semibold)
+                                    .foregroundColor(isLoading ? .gray : (localChosenDates[selectedDate]?.contains(timeSlot) == true ? Color.green : Color.red))
+                                    .frame(maxWidth: .infinity)
+                            }
+                            .contentShape(Rectangle())
+                            .listRowSeparator(.hidden)
+                            .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+                            .frame(height: 64)
+                            .background(.regularMaterial)
+                            .background(isLoading ? .gray : (localChosenDates[selectedDate]?.contains(timeSlot) == true ? Color.green : Color.red))
+                            .cornerRadius(10)
+                            .padding(.bottom)
+                            .padding(.horizontal)
+                            .onTapGesture {
+                                toggleTimeSelection(timeSlot, for: selectedDate)
+                            }
                         }
                     }
-                    .contentShape(Rectangle())
-                    .onTapGesture {
-                        toggleTimeSelection(timeSlot, for: selectedDate)
+                    .animation(.default, value: currentlySelectedDate)
+                } else {
+                    Spacer()
+                }
+            }
+            .onAppear {
+                loadSavedDates()
+            }
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Save") {
+                        saveDates()
                     }
                 }
-                .listStyle(.plain)
-                .animation(.default, value: currentlySelectedDate)
-                
-            } else {
-                Spacer()
             }
         }
-        .onAppear {
-            loadSavedDates()
-        }
-        .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button("Save") {
-                    saveDates()
-                }
-            }
-        }
+
+//        .navigationTitle("\(currentlySelectedDate.map { "\(dateFormatterMonthDay.string(from: $0)) Availability" } ?? "")")
+
+//        .navigationBarTitleDisplayMode(.inline)
     }
     
     private func handleDateSelectionChange(_ newSelection: Set<DateComponents>) {
@@ -89,17 +108,17 @@ struct CalendarView: View {
             if let selectedDate = calendar.date(from: addedDateComponents) {
                 currentlySelectedDate = selectedDate
                 if localChosenDates[selectedDate] == nil {
-                    isLoading = true
-                    loadTimesForDate(selectedDate) { savedTimes in
-                        DispatchQueue.main.async {
-                            if let savedTimes = savedTimes, !savedTimes.isEmpty {
-                                localChosenDates[selectedDate] = Set(savedTimes)
-                            } else {
+//                    isLoading = true
+//                    loadTimesForDate(selectedDate) { savedTimes in
+//                        DispatchQueue.main.async {
+//                            if let savedTimes = savedTimes, !savedTimes.isEmpty {
+//                                localChosenDates[selectedDate] = Set(savedTimes)
+//                            } else {
                                 localChosenDates[selectedDate] = Set(timeSlots(for: selectedDate))
-                            }
-                            isLoading = false
-                        }
-                    }
+//                            }
+//                            isLoading = false
+//                        }
+//                    }
                 }
             }
         }
@@ -126,10 +145,11 @@ struct CalendarView: View {
         let preferredHour = (preferredTime != nil) ? Calendar.current.component(.hour, from: preferredTime!) : defaultPreferredHour
         
         for hour in (preferredHour - 2)...(preferredHour + 2) {
-            var components = DateComponents(year: dateComponents.year, month: dateComponents.month, day: dateComponents.day, hour: hour)
-            components.minute = 0
-            if let timeSlot = calendar.date(from: components) {
-                timeSlots.append(timeSlot)
+            for minute in [0, 30] { // Adding half-hour increments
+                var components = DateComponents(year: dateComponents.year, month: dateComponents.month, day: dateComponents.day, hour: hour, minute: minute)
+                if let timeSlot = calendar.date(from: components) {
+                    timeSlots.append(timeSlot)
+                }
             }
         }
         return timeSlots
@@ -203,7 +223,11 @@ struct CalendarView: View {
     
     private func loadSavedDates() {
         let db = Firestore.firestore()
-        let userId = try! AuthenticationManager.shared.getAuthenticatedUser().uid
+
+        guard let userId: String = try? AuthenticationManager.shared.getAuthenticatedUser().uid else {
+            return
+        }
+        
         
         db.collection("spaces")
             .document(spaceId)
