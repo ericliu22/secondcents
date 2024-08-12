@@ -1,21 +1,20 @@
 import Foundation
 import SwiftUI
 import Firebase
-import EventKit
 
-struct CalendarWidget: WidgetView {
+struct CalendarWidget: View {
     let widget: CanvasWidget
-    @State var EarliestFoundDate: String = ""
-    @State var idsWithoutDate: [String] = []
+    @State private var earliestFoundDate: String = ""
+    @State private var idsWithoutDate: [String] = []
     @State private var userColor: Color = .gray
     var spaceId: String
+    private let preferredTime: String = "6:00 PM" // Set your preferred time here
     
     var body: some View {
         ZStack {
             Color(UIColor.tertiarySystemFill)
             VStack {
-                Color.red
-                Text(EarliestFoundDate)
+                Text(earliestFoundDate)
                 List(idsWithoutDate, id: \.self) { id in
                     Text(id)
                 }
@@ -24,109 +23,78 @@ struct CalendarWidget: WidgetView {
             .frame(width: TILE_SIZE, height: TILE_SIZE)
             .cornerRadius(CORNER_RADIUS)
         }
-        .onAppear(perform: FindCommonDate)
+        .task{
+            findCommonDate()
+        }
     }
     
-    private let dateFormatterWithTime: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd h:mm a"
-        return formatter
-    }()
-    
-    func FindCommonDate() {
+    private func findCommonDate() {
         let db = Firestore.firestore()
         let uid = try! AuthenticationManager.shared.getAuthenticatedUser().uid
-        print("User ID: \(uid)")
-        print(widget.id.uuidString)
-
-        db.collection("spaces")
-            .document(spaceId)
-            .collection("dates")
-            .document(widget.id.uuidString)
-            .addSnapshotListener { documentSnapshot, error in
-                guard let document = documentSnapshot, document.exists else {
-                    print("Document does not exist")
-                    return
-                }
-                
-                if let data = document.data() {
-                    print("Document data: \(data)") // Debugging output
-                    
-                    var allDates: [Date] = []
-                    for (_, dateStrings) in data {
-                        if let dateStringsArray = dateStrings as? [String] {
-                            for dateString in dateStringsArray {
-                                if let date = dateFormatterWithTime.date(from: dateString) {
-                                    allDates.append(date)
-                                } else {
-                                    print("Failed to parse date string: \(dateString)") // Debugging output
-                                }
-                            }
-                        } else {
-                            print("Failed to cast user data: \(dateStrings)") // Debugging output
-                        }
-                    }
-                    
-                    print("All parsed dates: \(allDates)") // Debugging output
-                    
-                    if let mostCommonDate = self.findMostCommonDate(dates: allDates) {
-                        self.EarliestFoundDate = dateFormatterWithTime.string(from: mostCommonDate)
-                        print("Most Common Date: \(self.EarliestFoundDate)")
-                        self.findIdsWithoutDate(mostCommonDate: mostCommonDate)
-                    } else {
-                        print("No common date found") // Debugging output
-                    }
-                } else {
-                    print("Failed to retrieve document data: \(error?.localizedDescription ?? "Unknown error")") // Debugging output
-                }
-            }
-    }
-    
-    func findMostCommonDate(dates: [Date]) -> Date? {
-        var dateCounts: [Date: Int] = [:]
-        for date in dates {
-            dateCounts[date, default: 0] += 1
-        }
-        let sortedDates = dateCounts.sorted { a, b in
-            if a.value == b.value {
-                return a.key < b.key // Ensures the earliest date is chosen in the event of a tie
-            } else {
-                return a.value > b.value
-            }
-        }
-        print("Sorted date counts: \(sortedDates)") // Debugging output
-        return sortedDates.first?.key
-    }
-    
-    func findIdsWithoutDate(mostCommonDate: Date) {
-        let db = Firestore.firestore()
-        let mostCommonDateString = dateFormatterWithTime.string(from: mostCommonDate)
         
         db.collection("spaces")
             .document(spaceId)
             .collection("dates")
             .document(widget.id.uuidString)
-            .getDocument { documentSnapshot, error in
-                guard let document = documentSnapshot, document.exists else {
+            .getDocument { document, error in
+                guard let document = document, document.exists else {
                     print("Document does not exist")
                     return
                 }
-
-                if let data = document.data() {
-                    var newIdsWithoutDate = [String]()
+                
+                let data = document.data() ?? [:]
+                
+                var dateFrequencies: [String: Int] = [:]
+                var timeFrequencies: [String: [String: Int]] = [:]
+                
+                // Iterate through the document data
+                for (userId, userDates) in data {
+                    guard let userDatesDict = userDates as? [String: [String]] else { continue }
                     
-                    for (uid, dateStrings) in data {
-                        if let userDates = dateStrings as? [String] {
-                            if !userDates.contains(mostCommonDateString) {
-                                newIdsWithoutDate.append(uid)
-                            }
+                    for (date, times) in userDatesDict {
+                        dateFrequencies[date, default: 0] += 1
+                        
+                        if timeFrequencies[date] == nil {
+                            timeFrequencies[date] = [:]
+                        }
+                        
+                        for time in times {
+                            timeFrequencies[date]?[time, default: 0] += 1
                         }
                     }
-                    
-                    DispatchQueue.main.async {
-                        self.idsWithoutDate = newIdsWithoutDate
-                    }
                 }
+                
+                // Find the most common date
+                let mostCommonDate = dateFrequencies.max(by: { $0.value < $1.value })?.key ?? ""
+                
+                // Find the most common time for that date
+                guard let dateTimes = timeFrequencies[mostCommonDate] else {
+                    self.earliestFoundDate = "No times available"
+                    return
+                }
+                
+                let mostCommonTimes = dateTimes.filter { $0.value == dateTimes.values.max() }
+                
+                // If there's a tie, find the closest time to the preferred time
+                let closestTime = findClosestTime(to: preferredTime, from: Array(mostCommonTimes.keys))
+                
+                self.earliestFoundDate = "Date: \(mostCommonDate), Closest Time: \(closestTime)"
             }
+    }
+    
+    private func findClosestTime(to preferredTime: String, from times: [String]) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "h:mm a"
+        
+        guard let preferredDate = formatter.date(from: preferredTime) else {
+            return ""
+        }
+        
+        let timeDifferences = times.compactMap { time -> (String, TimeInterval)? in
+            guard let date = formatter.date(from: time) else { return nil }
+            return (time, abs(date.timeIntervalSince(preferredDate)))
+        }
+        
+        return timeDifferences.min(by: { $0.1 < $1.1 })?.0 ?? ""
     }
 }
