@@ -10,6 +10,7 @@ struct CalendarView: View {
     @State private var previousSelectedDates: Set<DateComponents> = []
     @State private var currentlySelectedDate: Date? = nil
     @State private var preferredTime: Date? = nil
+    @State private var isLoading: Bool = false
     
     let dateFormatterWithTime: DateFormatter = {
         let formatter = DateFormatter()
@@ -34,39 +35,7 @@ struct CalendarView: View {
             MultiDatePicker("Select Dates", selection: $selectedDates)
                 .padding()
                 .onChange(of: selectedDates) { newSelection in
-                    let addedDates = newSelection.subtracting(previousSelectedDates)
-                    let removedDates = previousSelectedDates.subtracting(newSelection)
-                    
-                    if let addedDateComponents = addedDates.first {
-                        print("Added date components: \(addedDateComponents)")
-                        let calendar = Calendar.current
-                        if let selectedDate = calendar.date(from: addedDateComponents) {
-                            currentlySelectedDate = selectedDate
-                            if localChosenDates[selectedDate] == nil {
-                                loadTimesForDate(selectedDate) { savedTimes in
-                                    if let savedTimes = savedTimes, !savedTimes.isEmpty {
-                                        localChosenDates[selectedDate] = Set(savedTimes)
-                                    } else {
-                                        localChosenDates[selectedDate] = Set(timeSlots(for: selectedDate))
-                                    }
-                                }
-                            }
-                        } else {
-                            print("Failed to convert DateComponents to Date.")
-                        }
-                    }
-                    
-                    if let removedDateComponents = removedDates.first {
-                        print("Removed date components: \(removedDateComponents)")
-                        let calendar = Calendar.current
-                        if let selectedDate = calendar.date(from: removedDateComponents) {
-                            localChosenDates.removeValue(forKey: selectedDate)
-                            selectedDates.remove(Calendar.current.dateComponents([.calendar, .era, .year, .month, .day], from: selectedDate))
-                            currentlySelectedDate = nil
-                        }
-                    }
-                    
-                    previousSelectedDates = newSelection
+                    handleDateSelectionChange(newSelection)
                 }
             
             Text("Selected Date: \(currentlySelectedDate.map { dateFormatter.string(from: $0) } ?? "None")")
@@ -76,8 +45,12 @@ struct CalendarView: View {
                     HStack {
                         Text(formatTime(timeSlot))
                         Spacer()
-                        Text(localChosenDates[selectedDate]?.contains(timeSlot) == true ? "Chosen" : "Not Chosen")
-                            .foregroundColor(localChosenDates[selectedDate]?.contains(timeSlot) == true ? .green : .red)
+                        if isLoading {
+                            ProgressView()
+                        } else {
+                            Text(localChosenDates[selectedDate]?.contains(timeSlot) == true ? "Chosen" : "Not Chosen")
+                                .foregroundColor(localChosenDates[selectedDate]?.contains(timeSlot) == true ? .green : .red)
+                        }
                     }
                     .contentShape(Rectangle())
                     .onTapGesture {
@@ -85,6 +58,7 @@ struct CalendarView: View {
                     }
                 }
                 .animation(.default, value: currentlySelectedDate)
+                
             }
         }
         .onAppear {
@@ -99,28 +73,40 @@ struct CalendarView: View {
         }
     }
     
-    private func updateCurrentlySelectedDate() {
-        if let selectedDate = selectedDates.first.flatMap({ Calendar.current.date(from: $0) }) {
-            currentlySelectedDate = selectedDate
-            print("Current selection date: \(selectedDate)")
-            if localChosenDates[selectedDate] == nil {
-                loadTimesForDate(selectedDate) { savedTimes in
-                    if let savedTimes = savedTimes, !savedTimes.isEmpty {
-                        localChosenDates[selectedDate] = Set(savedTimes)
-                    } else {
-                        localChosenDates[selectedDate] = Set(timeSlots(for: selectedDate))
+    private func handleDateSelectionChange(_ newSelection: Set<DateComponents>) {
+        let addedDates = newSelection.subtracting(previousSelectedDates)
+        let removedDates = previousSelectedDates.subtracting(newSelection)
+        
+        if let addedDateComponents = addedDates.first {
+            let calendar = Calendar.current
+            if let selectedDate = calendar.date(from: addedDateComponents) {
+                currentlySelectedDate = selectedDate
+                if localChosenDates[selectedDate] == nil {
+                    isLoading = true
+                    loadTimesForDate(selectedDate) { savedTimes in
+                        DispatchQueue.main.async {
+                            if let savedTimes = savedTimes, !savedTimes.isEmpty {
+                                localChosenDates[selectedDate] = Set(savedTimes)
+                            } else {
+                                localChosenDates[selectedDate] = Set(timeSlots(for: selectedDate))
+                            }
+                            isLoading = false
+                        }
                     }
                 }
             }
-        } else {
-            if let date = currentlySelectedDate {
-                localChosenDates.removeValue(forKey: date)
-                selectedDates.remove(Calendar.current.dateComponents([.calendar, .era, .year, .month, .day], from: date))
-            }
-            currentlySelectedDate = nil
-            print("Removed date from selection")
-            print(localChosenDates)
         }
+        
+        if let removedDateComponents = removedDates.first {
+            let calendar = Calendar.current
+            if let selectedDate = calendar.date(from: removedDateComponents) {
+                localChosenDates.removeValue(forKey: selectedDate)
+                selectedDates.remove(Calendar.current.dateComponents([.calendar, .era, .year, .month, .day], from: selectedDate))
+                currentlySelectedDate = nil
+            }
+        }
+        
+        previousSelectedDates = newSelection
     }
     
     private func timeSlots(for date: Date) -> [Date] {
@@ -137,7 +123,6 @@ struct CalendarView: View {
             components.minute = 0
             if let timeSlot = calendar.date(from: components) {
                 timeSlots.append(timeSlot)
-     
             }
         }
         return timeSlots
@@ -148,18 +133,19 @@ struct CalendarView: View {
     }
     
     private func toggleTimeSelection(_ timeSlot: Date, for date: Date) {
-        if localChosenDates[date] == nil {
-            localChosenDates[date] = []
-        }
+        var updatedTimes = localChosenDates[date] ?? Set<Date>()
         
-        if localChosenDates[date]!.contains(timeSlot) {
-            localChosenDates[date]!.remove(timeSlot)
-            if localChosenDates[date]!.isEmpty {
+        if updatedTimes.contains(timeSlot) {
+            updatedTimes.remove(timeSlot)
+            if updatedTimes.isEmpty {
                 localChosenDates.removeValue(forKey: date)
                 selectedDates.remove(Calendar.current.dateComponents([.calendar, .era, .year, .month, .day], from: date))
+            } else {
+                localChosenDates[date] = updatedTimes
             }
         } else {
-            localChosenDates[date]!.insert(timeSlot)
+            updatedTimes.insert(timeSlot)
+            localChosenDates[date] = updatedTimes
         }
     }
     
@@ -176,8 +162,6 @@ struct CalendarView: View {
         }
         
         let preferredTimeString = preferredTime != nil ? timeFormatter.string(from: preferredTime!) : ""
-        
-        print("Saving data to Firestore: \(saveData)")
         
         db.collection("spaces")
             .document(spaceId)
@@ -230,7 +214,6 @@ struct CalendarView: View {
                     }
                     
                     if let userDates = data[userId] as? [String: [String]] {
-                        print("Loaded dates from Firestore: \(userDates)")
                         var groupedDates: [Date: Set<Date>] = [:]
                         
                         for (dateString, timeStrings) in userDates {
@@ -246,6 +229,31 @@ struct CalendarView: View {
                     }
                 }
             }
+    }
+    
+    private func updateCurrentlySelectedDate() {
+        if let selectedDate = selectedDates.first.flatMap({ Calendar.current.date(from: $0) }) {
+            currentlySelectedDate = selectedDate
+            if localChosenDates[selectedDate] == nil {
+                isLoading = true
+                loadTimesForDate(selectedDate) { savedTimes in
+                    DispatchQueue.main.async {
+                        if let savedTimes = savedTimes, !savedTimes.isEmpty {
+                            localChosenDates[selectedDate] = Set(savedTimes)
+                        } else {
+                            localChosenDates[selectedDate] = Set(timeSlots(for: selectedDate))
+                        }
+                        isLoading = false
+                    }
+                }
+            }
+        } else {
+            if let date = currentlySelectedDate {
+                localChosenDates.removeValue(forKey: date)
+                selectedDates.remove(Calendar.current.dateComponents([.calendar, .era, .year, .month, .day], from: date))
+            }
+            currentlySelectedDate = nil
+        }
     }
     
     private func loadTimesForDate(_ date: Date, completion: @escaping ([Date]?) -> Void) {
