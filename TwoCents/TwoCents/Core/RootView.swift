@@ -58,6 +58,16 @@ struct RootView: View {
             
                 .tint(tintLoaded ? loadedColor : .gray)
                 .animation(.easeIn, value: tintLoaded)
+
+        }
+//        
+        .onAppear{
+            let authUser = try? AuthenticationManager.shared.getAuthenticatedUser()
+            //            self.showSignInView = authUser == nil
+            
+            if authUser == nil {
+                activeSheet = .signInView
+            }
         }
         
         .fullScreenCover(item: $activeSheet) { item in

@@ -59,14 +59,19 @@ struct FrontPageView: View {
 //                    Text("CustomCalendar")
 //                }
             
-            CalendarView(spaceId: "2FF491A4-CEC6-419F-A199-204810864FCF"
-                         , widget: CanvasWidget(id: UUID(uuidString: "E2C85940-3266-44F7-B6D2-4D21F507B25C")!, width: .infinity, height:  .infinity, borderColor: .red, userId: "jisookim", media: .text, widgetName: "Text", widgetDescription: "A bar is a bar", textString: "Fruits can't even see so how my Apple Watch"))
-              
-                .tabItem {
-                    Image(systemName: "magnifyingglass")
-                    Text("Calendar")
-                }
-                .tag(3)
+            NavigationStack{
+                
+                CalendarView(spaceId: "2FF491A4-CEC6-419F-A199-204810864FCF"
+                             , widget: CanvasWidget(id: UUID(uuidString: "E2C85940-3266-44F7-B6D2-4D21F507B25C")!, width: .infinity, height:  .infinity, borderColor: .red, userId: "jisookim", media: .text, widgetName: "Text", widgetDescription: "A bar is a bar", textString: "Fruits can't even see so how my Apple Watch"))
+          
+            }
+            
+            .tabItem {
+                Image(systemName: "magnifyingglass")
+                Text("Calendar")
+            }
+            .tag(3)
+            
             
             
 //            TodoWidget(widget: CanvasWidget(width: .infinity, height:  .infinity, borderColor: .red, userId: "jisookim", media: .todo, widgetName: "Text", widgetDescription: "A bar is a bar", textString: "Fruits can't even see so how my Apple Watch"))

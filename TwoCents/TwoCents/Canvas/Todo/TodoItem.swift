@@ -43,11 +43,6 @@ struct Todo: Codable, Identifiable {
     var todoList: [TodoItem] = []
     
 
-
-    
-    
-    
-    
     func updateTodo(spaceId: String) {
         // Convert options to an array of dictionaries
         let optionsData = todoList.map { $0.toDictionary() }

@@ -27,6 +27,37 @@ struct TodoWidgetSheetView: View {
     var sortedTodoItems: [TodoItem] {
         viewModel.localTodoList.sorted { !$0.completed && $1.completed }
     }
+    
+    @ToolbarContentBuilder
+    func toolbar() -> some ToolbarContent {
+        ToolbarItem(placement: .navigationBarLeading) {
+            Button(action: {
+                dismissScreen()
+            }, label: {
+                Image(systemName: "xmark")
+                    .foregroundColor(Color(UIColor.label))
+            })
+        }
+        ToolbarItem(placement: .navigationBarTrailing) {
+            Button(action: {
+                dismissScreen()
+                withAnimation {
+                    viewModel.saveChanges(spaceId: spaceId, todoId: widget.id.uuidString)
+                }
+            }, label: {
+                Text("Save")
+            })
+        }
+        ToolbarItem(placement: .navigationBarTrailing)  {
+            
+            Button {
+                print("Add todo task")
+            } label: {
+                Image("plus.circle")
+            }
+            
+        }
+    }
 
     var body: some View {
         if let todo = viewModel.todo {
@@ -74,34 +105,7 @@ struct TodoWidgetSheetView: View {
                         Spacer()
                     }
                     .navigationTitle(todo.name)
-                    .toolbar {
-                        ToolbarItem(placement: .navigationBarLeading) {
-                            Button(action: {
-                                dismissScreen()
-                            }, label: {
-                                Image(systemName: "xmark")
-                                    .foregroundColor(Color(UIColor.label))
-                            })
-                        }
-                        ToolbarItem(placement: .navigationBarTrailing) {
-                            Button(action: {
-                                dismissScreen()
-                                withAnimation {
-                                    viewModel.saveChanges(spaceId: spaceId, todoId: widget.id.uuidString)
-                                }
-                            }, label: {
-                                Text("Save")
-                            })
-                        }
-                        ToolbarItem(placement: .navigationBarTrailing)  {
-                            
-                            NavigationLink {
-                            } label: {
-                                
-                            }
-                            
-                        }
-                    }
+                    .toolbar {toolbar()}
                 }
             }
             .task{

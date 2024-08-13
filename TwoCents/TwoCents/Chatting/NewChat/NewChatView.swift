@@ -27,9 +27,8 @@ struct NewChatView: View {
     @Binding var detent: PresentationDetent
     @State var threadId: String = ""
     @State private var threadIdChangedTime: Date = Date()
-    
-    @State private var removeFocus: Bool = false
-    
+    @Environment(\.dismiss) var dismissScreen
+
     var body: some View {
     
            
@@ -120,6 +119,18 @@ struct NewChatView: View {
                     }
                 }
          
+                
+                .onChange(of: detent) { _, newValue in
+                    if newValue == .height(50) {
+                        threadId = ""
+                        viewModel.removeMessages()
+                        viewModel.getOldMessages(spaceId: spaceId)
+                        viewModel.fetchNewMessages(spaceId: spaceId)
+                    }
+                }
+         
+                
+                
                 .environment(\.defaultMinListRowHeight, 0)
                 .rotationEffect(.degrees(180))
                 .listStyle(PlainListStyle())
@@ -135,8 +146,9 @@ struct NewChatView: View {
                     }
                 }
             }
-            //        .background(.ultraThickMaterial)
+        
             .padding(.horizontal)
+//            .background(threadId == "" ? Color.clear : Color(UIColor.secondarySystemBackground))
             .background(
                 Group {
                     if threadId == "" {
@@ -144,36 +156,40 @@ struct NewChatView: View {
                     } else {
                         Color.fromString(name: viewModel.user?.userColor ?? "")
                             .brightness(0.6)
-                            .opacity(0.15)
+                            .opacity(0.3)
                     }
                 }
             )
-            
+//            
+           
          
             .onTapGesture {
-               
+                
+                
+           
        
              
-                
-                removeFocus = true
                 withAnimation {
                     replyWidget = nil
                   
                     
                     if threadId != "" {
+                        
                         threadId = ""
                         viewModel.removeMessages()
                         viewModel.getOldMessages(spaceId: spaceId)
                         viewModel.fetchNewMessages(spaceId: spaceId)
+                    } else {
+                        
+                        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
                     }
                 }
             }
             
-            
-            
+       
             .overlay(
-                NewMessageField(replyWidget: $replyWidget, spaceId: spaceId, threadId: $threadId, removeFocus: $removeFocus)
-                    .disabled(detent == .height(50) && replyWidget == nil)
+                NewMessageField(replyWidget: $replyWidget, spaceId: spaceId, threadId: $threadId)
+//                    .disabled(detent == .height(50) && replyWidget == nil)
                     .frame(maxHeight: .infinity, alignment: .bottom)
                     .onTapGesture {
                         if detent == .height(50){
@@ -198,7 +214,13 @@ struct NewChatView: View {
         
  
     }
-   
+    func randomColor() -> Color {
+           return Color(
+               red: Double.random(in: 0...1),
+               green: Double.random(in: 0...1),
+               blue: Double.random(in: 0...1)
+           )
+       }
 }
 
 struct NewChatView_Previews: PreviewProvider {

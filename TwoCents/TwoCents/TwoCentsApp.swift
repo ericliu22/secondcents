@@ -9,6 +9,7 @@ import Firebase
 import UserNotifications
 import FirebaseMessaging
 import UIKit
+import Darwin
 
 @main
 struct TwoCentsApp: App {
@@ -18,6 +19,9 @@ struct TwoCentsApp: App {
         WindowGroup {
             RootView()
                 .environment(delegate.appModel)
+                .onAppear {
+                    signalListener()
+                }
         }
     }
 }
@@ -209,9 +213,3 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
     }
 }
 
-extension Collection {
-    /// Returns the element at the specified index if it is within bounds, otherwise nil.
-    subscript (safe index: Index) -> Element? {
-        return indices.contains(index) ? self[index] : nil
-    }
-}
