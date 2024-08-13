@@ -10,7 +10,7 @@ struct CalendarView: View {
     @State private var previousSelectedDates: Set<DateComponents> = []
     @State private var currentlySelectedDate: Date? = nil
     @State private var preferredTime: Date? = nil
-
+    @State private var isDatePickerEnabled: Bool = false // Control the enabled/disabled state of the date picker
     
     let dateFormatterMonthDay: DateFormatter = {
         let formatter = DateFormatter()
@@ -43,8 +43,6 @@ struct CalendarView: View {
 
     private let columns = [
         GridItem(.flexible()),
-//        GridItem(.flexible()),
-//        GridItem(.flexible()),
         GridItem(.flexible())
     ]
     
@@ -54,7 +52,7 @@ struct CalendarView: View {
         ScrollView {
             VStack {
                 MultiDatePicker("Select Dates", selection: $selectedDates, in: bounds)
-//                    .padding()
+                    .disabled(!isDatePickerEnabled) // Disable the date picker if not enabled
                     .onChange(of: selectedDates) { newSelection in
                         handleDateSelectionChange(newSelection)
                     }
@@ -64,54 +62,51 @@ struct CalendarView: View {
                     VStack {
                         
                         LazyVGrid(columns: columns, spacing: nil) {
+                            
+                            
                             ForEach(timeSlots(for: selectedDate), id: \.self) { timeSlot in
-                           
-                                    VStack{
-                                        
-                               
-                                        
-                                        Text( formatTime(timeSlot))
-                                            .fontWeight(.semibold)
-                                            .foregroundColor( (localChosenDates[selectedDate]?.contains(timeSlot) == true ? Color.green : Color.red))
-                                            .frame(maxWidth: .infinity)
-                                        
-                                        if areTimesEqual(timeSlot: timeSlot, preferredTime: preferredTime ?? Date.now) {
-                                            Text("Proposed Time")
-                                            
+                                VStack{
+                                    Text(formatTime(timeSlot))
+                                        .fontWeight(.semibold)
+                                        .foregroundColor((localChosenDates[selectedDate]?.contains(timeSlot) == true ? Color.green : Color.red))
+                                        .frame(maxWidth: .infinity)
+                                    
+                                    if areTimesEqual(timeSlot: timeSlot, preferredTime: preferredTime ?? Date.now) {
+                                        Text("Proposed Time")
                                             .font(.caption)
-                                            .foregroundColor( (localChosenDates[selectedDate]?.contains(timeSlot) == true ? Color.green : Color.red))
+                                            .foregroundColor((localChosenDates[selectedDate]?.contains(timeSlot) == true ? Color.green : Color.red))
                                             .frame(maxWidth: .infinity)
-                                        }
-                                        
-                                        
-                                        
-                                        
-                                        
-                                        
                                     }
-                                
+                                }
                                 .contentShape(Rectangle())
                                 .frame(height: 100)
-                                .background( .regularMaterial)
+                                .background(.regularMaterial)
                                 .background((localChosenDates[selectedDate]?.contains(timeSlot) == true ? Color.green : Color.red))
                                 .cornerRadius(10)
-                          
                                 .onTapGesture {
                                     toggleTimeSelection(timeSlot, for: selectedDate)
                                 }
                             }
-//                            .animation(.default, value: currentlySelectedDate)
                         }
-                      
                         .padding(.horizontal)
-                       
                     }
-                   
                 } else {
-                    Spacer()
+                    
+                    if isDatePickerEnabled {
+                     
+                        Text("Select Availablity for Start Time")
+                            .font(.caption)
+                            .foregroundColor(Color.secondary)
+                            .frame(height: 300)
+                        
+                        
+                        Spacer()
+                    } else {
+                        ProgressView()
+                        
+                    }
                 }
             }
-          
             .onAppear {
                 loadSavedDates()
             }
@@ -123,9 +118,7 @@ struct CalendarView: View {
                 }
             }
         }
-
         .navigationTitle("\(currentlySelectedDate.map { "\(dateFormatterMonthDay.string(from: $0))" } ?? "Select Availability")")
-
         .navigationBarTitleDisplayMode(.inline)
     }
     
@@ -138,17 +131,7 @@ struct CalendarView: View {
             if let selectedDate = calendar.date(from: addedDateComponents) {
                 currentlySelectedDate = selectedDate
                 if localChosenDates[selectedDate] == nil {
-//                    isLoading = true
-//                    loadTimesForDate(selectedDate) { savedTimes in
-//                        DispatchQueue.main.async {
-//                            if let savedTimes = savedTimes, !savedTimes.isEmpty {
-//                                localChosenDates[selectedDate] = Set(savedTimes)
-//                            } else {
-                                localChosenDates[selectedDate] = Set(timeSlots(for: selectedDate))
-//                            }
-//                            isLoading = false
-//                        }
-//                    }
+                    localChosenDates[selectedDate] = Set(timeSlots(for: selectedDate))
                 }
             }
         }
@@ -170,12 +153,11 @@ struct CalendarView: View {
         let calendar = Calendar.current
         let dateComponents = calendar.dateComponents([.year, .month, .day], from: date)
         
-        // Default preferred time if not set
         let defaultPreferredHour = 12
         let preferredHour = (preferredTime != nil) ? Calendar.current.component(.hour, from: preferredTime!) : defaultPreferredHour
         
         for hour in (preferredHour - 2)...(preferredHour + 2) {
-            for minute in [0, 30] { // Adding half-hour increments
+            for minute in [0, 30] {
                 var components = DateComponents(year: dateComponents.year, month: dateComponents.month, day: dateComponents.day, hour: hour, minute: minute)
                 if let timeSlot = calendar.date(from: components) {
                     timeSlots.append(timeSlot)
@@ -184,8 +166,6 @@ struct CalendarView: View {
         }
         return timeSlots
     }
-    
-    
     
     private func formatTime(_ date: Date) -> String {
         return timeFormatter.string(from: date)
@@ -232,7 +212,6 @@ struct CalendarView: View {
             ]) { error in
                 if let error = error {
                     print("Error updating data: \(error)")
-                    // Fallback to setting data
                     db.collection("spaces")
                         .document(spaceId)
                         .collection("dates")
@@ -260,7 +239,6 @@ struct CalendarView: View {
             return
         }
         
-        
         db.collection("spaces")
             .document(spaceId)
             .collection("dates")
@@ -271,7 +249,6 @@ struct CalendarView: View {
                     return
                 }
                 if let data = document.data() {
-                    // Extract preferred time if it exists
                     if let preferredTimeString = data["preferredTime"] as? String {
                         self.preferredTime = self.timeFormatter.date(from: preferredTimeString)
                     }
@@ -291,6 +268,7 @@ struct CalendarView: View {
                         updateCurrentlySelectedDate()
                     }
                 }
+                isDatePickerEnabled = true // Enable the date picker after loading data
             }
     }
     
@@ -298,7 +276,6 @@ struct CalendarView: View {
         if let selectedDate = selectedDates.first.flatMap({ Calendar.current.date(from: $0) }) {
             currentlySelectedDate = selectedDate
             if localChosenDates[selectedDate] == nil {
-           
                 loadTimesForDate(selectedDate) { savedTimes in
                     DispatchQueue.main.async {
                         if let savedTimes = savedTimes, !savedTimes.isEmpty {
@@ -306,7 +283,6 @@ struct CalendarView: View {
                         } else {
                             localChosenDates[selectedDate] = Set(timeSlots(for: selectedDate))
                         }
-                    
                     }
                 }
             }
@@ -358,13 +334,11 @@ struct CalendarView: View {
     }
     
     func areTimesEqual(timeSlot: Date, preferredTime: Date) -> Bool {
-            let calendar = Calendar.current
-            
-            // Extract hour, minute, and second components from each date
-            let timeSlotComponents = calendar.dateComponents([.hour, .minute, .second], from: timeSlot)
-            let preferredTimeComponents = calendar.dateComponents([.hour, .minute, .second], from: preferredTime)
-            
-            // Compare the components
-            return timeSlotComponents == preferredTimeComponents
-        }
+        let calendar = Calendar.current
+        
+        let timeSlotComponents = calendar.dateComponents([.hour, .minute, .second], from: timeSlot)
+        let preferredTimeComponents = calendar.dateComponents([.hour, .minute, .second], from: preferredTime)
+        
+        return timeSlotComponents == preferredTimeComponents
+    }
 }
