@@ -87,10 +87,12 @@ struct CalendarWidget: View {
                     return
                 }
 
-                let mostCommonTimes = dateTimes.filter { $0.value == dateTimes.values.max() }
-                print("Most Common Times: \(mostCommonTimes)")
-
-                let closestTime = findClosestTime(to: preferredTime, from: Array(mostCommonTimes.keys))
+                // Find the time with the highest frequency for the most common date
+                let maxTimeFrequency = dateTimes.values.max() ?? 0
+                let mostCommonTimes = dateTimes.filter { $0.value == maxTimeFrequency }.keys
+                
+                // Find the closest time to the preferred time
+                let closestTime = findClosestTime(to: preferredTime, from: Array(mostCommonTimes))
                 self.earliestFoundDate = "Date: \(mostCommonDate), Closest Time: \(closestTime)"
             }
     }
@@ -105,6 +107,7 @@ struct CalendarWidget: View {
             return ""
         }
         
+        // Convert all times to Date objects and calculate differences
         let timeDifferences = times.compactMap { time -> (String, TimeInterval)? in
             guard let date = formatter.date(from: time) else {
                 print("Invalid time format: \(time)")
@@ -114,7 +117,16 @@ struct CalendarWidget: View {
             return (time, difference)
         }
         
-        let closestTime = timeDifferences.sorted { $0.1 < $1.1 }.first?.0 ?? ""
+        // Sort by time difference first, then by time itself for ties
+        let closestTime = timeDifferences.sorted {
+            if $0.1 == $1.1 {
+                // If the time difference is the same, pick the earlier time
+                return formatter.date(from: $0.0)! < formatter.date(from: $1.0)!
+            } else {
+                return $0.1 < $1.1
+            }
+        }.first?.0 ?? ""
+        
         print("Closest Time: \(closestTime)")
         return closestTime
     }
