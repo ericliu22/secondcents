@@ -2,21 +2,113 @@ import Foundation
 import SwiftUI
 import Firebase
 
+struct OptimalDate {
+    var month: String?
+    var day: String?
+    var dayOfWeek: String?
+    
+    init(from dateString: String) {
+        guard !dateString.isEmpty else {
+            self.month = nil
+            self.day = nil
+            self.dayOfWeek = nil
+            return
+        }
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        
+        if let date = dateFormatter.date(from: dateString) {
+            // Extracting the month in words
+            dateFormatter.dateFormat = "MMM"
+            self.month = dateFormatter.string(from: date)
+            
+            // Extracting the day in numbers
+            dateFormatter.dateFormat = "dd"
+            self.day = dateFormatter.string(from: date)
+            
+            // Extracting the day of the week in words
+            dateFormatter.dateFormat = "EEE"
+            self.dayOfWeek = dateFormatter.string(from: date)
+        } else {
+            self.month = nil
+            self.day = nil
+            self.dayOfWeek = nil
+        }
+    }
+}
+
+
 struct CalendarWidget: View {
     let widget: CanvasWidget
-    @State private var earliestFoundDate: String = ""
+
+    @State private var closestTime: String = ""
     @State private var idsWithoutDate: [String] = []
     @State private var userColor: Color = .gray
     var spaceId: String
     private let preferredTime: String = "7:00 PM" // Set your preferred time here
     
+    @State private var bounce = false
+    @State private var optimalDate = OptimalDate(from: "")
+    
     var body: some View {
         ZStack {
             Color(UIColor.tertiarySystemFill)
             VStack {
-                Text(earliestFoundDate)
-                List(idsWithoutDate, id: \.self) { id in
-                    Text(id)
+                if optimalDate.day == nil {
+                    EmptyEventView()
+                } else {
+                    
+                    
+                    VStack(alignment: .center, spacing: 0) {
+                  
+//                        
+                        
+                        Text("Grind Sesh")
+                            .font(.title2)
+                            .foregroundColor(Color.accentColor)
+                            .fontWeight(.bold)
+                            .lineLimit(1)
+                        
+                        
+                        
+                        
+                        
+                        Text("@ \(closestTime)")
+                            .font(.caption)
+                            .fontWeight(.semibold)
+                            .foregroundColor(.secondary)
+                        
+                        
+                        
+                        
+                        HStack (spacing: 6){
+                            Text(optimalDate.dayOfWeek!)
+                                .font(.title2)
+                                .fontWeight(.bold)
+                                .foregroundColor(Color.accentColor)
+                             
+                            
+                            Text(optimalDate.month!)
+                                .font(.title2)
+                                .fontWeight(.bold)
+                                .foregroundColor(.secondary)
+                    
+                        }
+      
+//                        .background(.red)
+                        Text(optimalDate.day!)
+                            .font(.system(size: 72))
+                            .fontWeight(.bold)
+                            .foregroundColor(.primary)
+                            .padding(.vertical, -15)
+//                            .background(.red)
+                        
+        
+                        
+                    }
+                    .padding(16)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
             }
             .background(Color.white)
@@ -43,6 +135,9 @@ struct CalendarWidget: View {
                 
                 guard let document = documentSnapshot, document.exists else {
                     print("Document does not exist")
+                    DispatchQueue.main.async {
+                        self.optimalDate = OptimalDate(from: "")
+                    }
                     return
                 }
 
@@ -74,6 +169,13 @@ struct CalendarWidget: View {
                 print("Date Frequencies: \(dateFrequencies)")
                 print("Time Frequencies: \(timeFrequencies)")
 
+                if dateFrequencies.isEmpty {
+                    DispatchQueue.main.async {
+                        self.optimalDate = OptimalDate(from: "")
+                    }
+                    return
+                }
+
                 // Find the date(s) with the highest frequency
                 let maxFrequency = dateFrequencies.values.max() ?? 0
                 let mostCommonDates = dateFrequencies.filter { $0.value == maxFrequency }.keys.sorted()
@@ -83,7 +185,9 @@ struct CalendarWidget: View {
                 print("Most Common Date: \(mostCommonDate)")
 
                 guard let dateTimes = timeFrequencies[mostCommonDate] else {
-                    self.earliestFoundDate = "No times available"
+                    DispatchQueue.main.async {
+                        self.optimalDate = OptimalDate(from: "")
+                    }
                     return
                 }
 
@@ -92,8 +196,11 @@ struct CalendarWidget: View {
                 let mostCommonTimes = dateTimes.filter { $0.value == maxTimeFrequency }.keys
                 
                 // Find the closest time to the preferred time
-                let closestTime = findClosestTime(to: preferredTime, from: Array(mostCommonTimes))
-                self.earliestFoundDate = "Date: \(mostCommonDate), Closest Time: \(closestTime)"
+                self.closestTime = findClosestTime(to: preferredTime, from: Array(mostCommonTimes))
+        
+                DispatchQueue.main.async {
+                    self.optimalDate = OptimalDate(from: mostCommonDate)
+                }
             }
     }
 
@@ -129,5 +236,58 @@ struct CalendarWidget: View {
         
         print("Closest Time: \(closestTime)")
         return closestTime
+    }
+}
+
+struct EmptyEventView: View {
+    @State private var bounce: Bool = false
+    var earliestFoundDate: String = ""
+
+    var body: some View {
+        VStack(alignment: .center, spacing: 0) {
+            Text("Grind Sesh")
+                .font(.headline)
+                .foregroundColor(Color.accentColor)
+                .fontWeight(.semibold)
+                .lineLimit(1)
+            
+            Spacer()
+            
+            Text("😔")
+                .font(.system(size: 44))
+                .foregroundColor(.primary)
+                .overlay {
+                    Text("🤘")
+                        .font(.system(size: 32))
+                        .foregroundColor(.primary)
+                        .offset(x: -28, y: -4)
+                        .offset(y: bounce ? 3 : 0)
+                       
+                        .animation(
+                            Animation.easeInOut(duration: 1)
+                                .repeatForever(autoreverses: true)
+                        )
+                        .onAppear {
+                            bounce.toggle()
+                           
+                        }
+                        .shadow(color: Color.accentColor.opacity(0.3), radius: 2, x: 2, y: 0)
+                        .rotationEffect(.degrees(-10))
+                      
+                }
+            
+            Spacer()
+            
+            Button(action: {
+                // Add button action here
+            }, label: {
+                Text("Party Together!")
+                    .font(.caption2)
+            })
+            .buttonStyle(.bordered)
+            .foregroundColor(Color.accentColor)
+        }
+        .padding(16)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }

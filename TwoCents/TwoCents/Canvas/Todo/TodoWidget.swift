@@ -49,6 +49,7 @@ struct TodoWidget: View {
                             .font(.subheadline)
                             .foregroundColor(Color.accentColor)
                             .fontWeight(.semibold)
+                            .lineLimit(1)
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal, 16)
