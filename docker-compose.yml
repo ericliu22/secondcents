@@ -11,6 +11,8 @@ services:
       - ./reverseproxy/html:/usr/share/nginx/html
       - ./reverseproxy/logs:/var/log/nginx
       - ./reverseproxy/apple-app-site-association:/.well-known/apple-app-site-association
+    env_file:
+      - reverseproxy.env
     depends_on:
       - server
   server:
