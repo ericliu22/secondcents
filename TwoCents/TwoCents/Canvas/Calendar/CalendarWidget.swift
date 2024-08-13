@@ -111,18 +111,18 @@ struct CalendarWidget: View {
             return ""
         }
         
+        // Convert all times to Date objects and calculate differences
         let timeDifferences = times.compactMap { time -> (String, TimeInterval)? in
             guard let date = formatter.date(from: time) else {
                 print("Invalid time format: \(time)")
                 return nil
             }
             let difference = abs(date.timeIntervalSince(preferredDate))
-            print("Time: \(time), Difference: \(difference)")
             return (time, difference)
         }
         
-        // Determine the closest time, handling ties by picking the first closest one
-        let closestTime = timeDifferences.min(by: { $0.1 < $1.1 })?.0 ?? ""
+        // Determine the closest time, handling ties by sorting and picking the earliest one
+        let closestTime = timeDifferences.sorted { $0.1 < $1.1 }.first?.0 ?? ""
         print("Closest Time: \(closestTime)")
         return closestTime
     }
