@@ -15,6 +15,7 @@ services:
       - reverseproxy.env
     depends_on:
       - server
+    command: /bin/bash -c "envsubst < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
   server:
     image: twocents-server-image
     build: ./server
