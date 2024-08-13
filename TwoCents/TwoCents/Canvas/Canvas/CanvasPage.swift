@@ -24,15 +24,7 @@ let CORNER_RADIUS: CGFloat = 15
 let FRAME_SIZE: CGFloat = 2000
 let WIDGET_SPACING: CGFloat = TILE_SIZE + TILE_SPACING
 
-func roundToTile(number : CGFloat) -> CGFloat {
-    let tile = WIDGET_SPACING
-    return tile * CGFloat(Int(round(number / (tile))))
-}
 
-func getUID() async throws -> String? {
-    let authDataResult = try AuthenticationManager.shared.getAuthenticatedUser()
-    return authDataResult.uid
-}
 
 
 
@@ -160,7 +152,6 @@ struct CanvasPage: View {
                     .allowsHitTesting(toolPickerActive)
                 }
                 .drawingGroup()
-                //                    .frame(width: FRAME_SIZE, height: FRAME_SIZE)
                 .blur(radius: widgetDoubleTapped ? 3 : 0)
                 .clipped() // Ensure the content does not overflow
                 //                    .animation(.spring()) // Optional: Add some animation
@@ -701,7 +692,7 @@ struct CanvasPage: View {
                     .presentationCornerRadius(20)
                 
                     .presentationBackgroundInteraction(.enabled)
-                    .onChange(of: selectedDetent) { selectedDetent in
+                    .onChange(of: selectedDetent) {
                         if selectedDetent != .large {
                             
                             withAnimation {

@@ -71,3 +71,13 @@ extension Color {
         
     }
 }
+
+func roundToTile(number : CGFloat) -> CGFloat {
+    let tile = WIDGET_SPACING
+    return tile * CGFloat(Int(round(number / (tile))))
+}
+
+func getUID() async throws -> String? {
+    let authDataResult = try AuthenticationManager.shared.getAuthenticatedUser()
+    return authDataResult.uid
+}

@@ -9,6 +9,7 @@ import Firebase
 import UserNotifications
 import FirebaseMessaging
 import UIKit
+import Darwin
 
 @main
 struct TwoCentsApp: App {
@@ -18,6 +19,9 @@ struct TwoCentsApp: App {
         WindowGroup {
             RootView()
                 .environment(delegate.appModel)
+                .onAppear {
+                    signalListener()
+                }
         }
     }
 }

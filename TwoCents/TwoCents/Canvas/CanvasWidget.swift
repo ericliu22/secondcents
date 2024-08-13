@@ -11,21 +11,18 @@ import UniformTypeIdentifiers
 
 /**
  The default class for all widgets on the Canvas.
- It's not actually a view so you have to use the ```getMediaView(widget: CanvasWidget)```
+ It's not actually a view so you have to use the `MediaView(widget: CanvasWidget)`
  function to get the view
  
- > Warning: Decoder and Encoder has untested behavior might not work.
- There are no safety measures for this.
- 
  -  Parameters:
- - id: UUID of the widget which will also be the UUID on firestore (i.e. interchangable). Don't change this when doing copy-remove behavior in arrays
- - width: Length of the widget
- - height: Height of the widget
- - borderColor: Color of the user
- - uid: The user owner of the widget's id
- - media: An enumerator that describes what function to call to get the view (e.g. .video or .image)
- - mediaURL: URL type that is a link to the media attached to widget
- - widgetName: Name of the widget
+     - id: UUID of the widget which will also be the UUID on firestore (i.e. interchangable). Don't change this when doing copy-remove behavior in arrays
+     - width: Length of the widget
+     - height: Height of the widget
+     - borderColor: Color of the user
+     - uid: The user owner of the widget's id
+     - media: An enumerator that describes what function to call to get the view (e.g. .video or .image)
+     - mediaURL: URL type that is a link to the media attached to widget
+     - widgetName: Name of the widget
  */
 struct CanvasWidget: Hashable, Codable, Identifiable, Transferable, Equatable {
     
