@@ -47,7 +47,6 @@ struct OptimalDate {
 }
 
 
-
 struct CalendarWidget: View {
     let widget: CanvasWidget
 
@@ -64,15 +63,14 @@ struct CalendarWidget: View {
         ZStack {
             Color(UIColor.tertiarySystemFill)
             VStack {
-                if optimalDate.date == nil {
-                    EmptyEventView()
-                } else if isDateWithin24Hours(optimalDate.date!) {
-                    
-                    EventTimeView(optimalDate: optimalDate, closestTime: closestTime)
-                
-                  
+                if let date = optimalDate.date {
+                    if isDateWithin24Hours(date) {
+                        EventTimeView(optimalDate: $optimalDate, closestTime: $closestTime)
+                    } else {
+                        EventDateView(optimalDate: $optimalDate, closestTime: $closestTime)
+                    }
                 } else {
-                    EventDateView(optimalDate: optimalDate, closestTime: closestTime)
+                    EmptyEventView()
                 }
             }
             .background(Color(UIColor.systemBackground))
@@ -96,76 +94,79 @@ struct CalendarWidget: View {
                     print("Error fetching document: \(error)")
                     return
                 }
-                
+
                 guard let document = documentSnapshot, document.exists else {
                     print("Document does not exist")
                     DispatchQueue.main.async {
                         self.optimalDate = OptimalDate(from: "")
+                        self.closestTime = "" // Clear the closestTime when there's no date
                     }
                     return
                 }
 
                 let data = document.data() ?? [:]
                 print("Fetched data: \(data)")
-                
+
                 let preferredTime = data["preferredTime"] as? String ?? self.preferredTime
                 print("Preferred Time: \(preferredTime)")
 
-                var dateFrequencies: [String: Int] = [:]
-                var timeFrequencies: [String: [String: Int]] = [:]
+                let (mostCommonDate, closestTime) = findOptimalDateAndTime(from: data, preferredTime: preferredTime)
 
-                for (userId, userDates) in data where userId != "preferredTime" {
-                    guard let userDatesDict = userDates as? [String: [String]] else { continue }
-
-                    for (date, times) in userDatesDict {
-                        dateFrequencies[date, default: 0] += 1
-
-                        if timeFrequencies[date] == nil {
-                            timeFrequencies[date] = [:]
-                        }
-
-                        for time in times {
-                            timeFrequencies[date]?[time, default: 0] += 1
-                        }
-                    }
-                }
-
-                print("Date Frequencies: \(dateFrequencies)")
-                print("Time Frequencies: \(timeFrequencies)")
-
-                if dateFrequencies.isEmpty {
-                    DispatchQueue.main.async {
-                        self.optimalDate = OptimalDate(from: "")
-                    }
-                    return
-                }
-
-                // Find the date(s) with the highest frequency
-                let maxFrequency = dateFrequencies.values.max() ?? 0
-                let mostCommonDates = dateFrequencies.filter { $0.value == maxFrequency }.keys.sorted()
-
-                // Select the earliest date among the tied ones
-                let mostCommonDate = mostCommonDates.min() ?? ""
-                print("Most Common Date: \(mostCommonDate)")
-
-                guard let dateTimes = timeFrequencies[mostCommonDate] else {
-                    DispatchQueue.main.async {
-                        self.optimalDate = OptimalDate(from: "")
-                    }
-                    return
-                }
-
-                // Find the time with the highest frequency for the most common date
-                let maxTimeFrequency = dateTimes.values.max() ?? 0
-                let mostCommonTimes = dateTimes.filter { $0.value == maxTimeFrequency }.keys
-                
-                // Find the closest time to the preferred time
-                self.closestTime = findClosestTime(to: preferredTime, from: Array(mostCommonTimes))
-        
+                // Ensure UI updates happen on the main thread
                 DispatchQueue.main.async {
                     self.optimalDate = OptimalDate(from: mostCommonDate)
+                    self.closestTime = closestTime
                 }
             }
+    }
+
+    private func findOptimalDateAndTime(from data: [String: Any], preferredTime: String) -> (String, String) {
+        var dateFrequencies: [String: Int] = [:]
+        var timeFrequencies: [String: [String: Int]] = [:]
+
+        for (userId, userDates) in data where userId != "preferredTime" {
+            guard let userDatesDict = userDates as? [String: [String]] else { continue }
+
+            for (date, times) in userDatesDict {
+                dateFrequencies[date, default: 0] += 1
+
+                if timeFrequencies[date] == nil {
+                    timeFrequencies[date] = [:]
+                }
+
+                for time in times {
+                    timeFrequencies[date]?[time, default: 0] += 1
+                }
+            }
+        }
+
+        print("Date Frequencies: \(dateFrequencies)")
+        print("Time Frequencies: \(timeFrequencies)")
+
+        if dateFrequencies.isEmpty {
+            return ("", "")
+        }
+
+        // Find the date(s) with the highest frequency
+        let maxFrequency = dateFrequencies.values.max() ?? 0
+        let mostCommonDates = dateFrequencies.filter { $0.value == maxFrequency }.keys.sorted()
+
+        // Select the earliest date among the tied ones
+        let mostCommonDate = mostCommonDates.min() ?? ""
+        print("Most Common Date: \(mostCommonDate)")
+
+        guard let dateTimes = timeFrequencies[mostCommonDate] else {
+            return ("", "")
+        }
+
+        // Find the time with the highest frequency for the most common date
+        let maxTimeFrequency = dateTimes.values.max() ?? 0
+        let mostCommonTimes = dateTimes.filter { $0.value == maxTimeFrequency }.keys
+
+        // Find the closest time to the preferred time
+        let closestTime = findClosestTime(to: preferredTime, from: Array(mostCommonTimes))
+    
+        return (mostCommonDate, closestTime)
     }
 
     private func findClosestTime(to preferredTime: String, from times: [String]) -> String {
@@ -207,16 +208,11 @@ struct CalendarWidget: View {
         let calendar = Calendar.current
 
         // Calculate the difference between the current date and the given date in hours
-        let hoursDifference = calendar.dateComponents([.hour], from: date, to: currentDate).hour ?? 0
+        let hoursDifference = calendar.dateComponents([.hour], from: currentDate, to: date).hour ?? 0
 
         // Check if the difference is within 24 hours
         return hoursDifference <= 24 && hoursDifference >= 0
     }
-    
-  
-
-    
-    
 }
 
 
@@ -287,8 +283,8 @@ struct EventDateView: View {
     @State private var bounce: Bool = false
  
     
-    @State private(set) var optimalDate: OptimalDate
-    @State private(set) var closestTime: String
+    @Binding private(set) var optimalDate: OptimalDate
+    @Binding private(set) var closestTime: String
 
     var body: some View {
         VStack(alignment: .center, spacing: 0) {
@@ -374,8 +370,8 @@ struct EventTimeView: View {
     @State private var bounce: Bool = false
  
     
-    @State private(set) var optimalDate: OptimalDate
-    @State private(set) var closestTime: String
+    @Binding private(set) var optimalDate: OptimalDate
+    @Binding private(set) var closestTime: String
 
     var body: some View {
         VStack(alignment: .center, spacing: 0) {
