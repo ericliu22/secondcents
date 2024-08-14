@@ -2,23 +2,30 @@ import Foundation
 import SwiftUI
 import Firebase
 
+
 struct OptimalDate {
     var month: String?
     var day: String?
     var dayOfWeek: String?
+    var date: Date?
     
     init(from dateString: String) {
         guard !dateString.isEmpty else {
             self.month = nil
             self.day = nil
             self.dayOfWeek = nil
+            self.date = nil
             return
         }
         
+        // Create a date formatter for the initial date parsing
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
         
+        // Try to parse the date string into a Date object
         if let date = dateFormatter.date(from: dateString) {
+            self.date = date
+            
             // Extracting the month in words
             dateFormatter.dateFormat = "MMM"
             self.month = dateFormatter.string(from: date)
@@ -34,9 +41,11 @@ struct OptimalDate {
             self.month = nil
             self.day = nil
             self.dayOfWeek = nil
+            self.date = nil
         }
     }
 }
+
 
 
 struct CalendarWidget: View {
@@ -55,63 +64,18 @@ struct CalendarWidget: View {
         ZStack {
             Color(UIColor.tertiarySystemFill)
             VStack {
-                if optimalDate.day == nil {
+                if optimalDate.date == nil {
                     EmptyEventView()
-                } else {
+                } else if isDateWithin24Hours(optimalDate.date!) {
                     
-                    
-                    VStack(alignment: .center, spacing: 0) {
+                    EventTimeView(optimalDate: optimalDate, closestTime: closestTime)
+                
                   
-//                        
-                        
-                        Text("Grind Sesh")
-                            .font(.title2)
-                            .foregroundColor(Color.accentColor)
-                            .fontWeight(.bold)
-                            .lineLimit(1)
-                        
-                        
-                        
-                        
-                        
-                        Text("@ \(closestTime)")
-                            .font(.caption)
-                            .fontWeight(.semibold)
-                            .foregroundColor(.secondary)
-                        
-                        
-                        
-                        
-                        HStack (spacing: 6){
-                            Text(optimalDate.dayOfWeek!)
-                                .font(.title2)
-                                .fontWeight(.bold)
-                                .foregroundColor(Color.accentColor)
-                             
-                            
-                            Text(optimalDate.month!)
-                                .font(.title2)
-                                .fontWeight(.bold)
-                                .foregroundColor(.secondary)
-                    
-                        }
-      
-//                        .background(.red)
-                        Text(optimalDate.day!)
-                            .font(.system(size: 72))
-                            .fontWeight(.bold)
-                            .foregroundColor(.primary)
-                            .padding(.vertical, -15)
-//                            .background(.red)
-                        
-        
-                        
-                    }
-                    .padding(16)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                } else {
+                    EventDateView(optimalDate: optimalDate, closestTime: closestTime)
                 }
             }
-            .background(Color.white)
+            .background(Color(UIColor.systemBackground))
             .frame(width: TILE_SIZE, height: TILE_SIZE)
             .cornerRadius(CORNER_RADIUS)
         }
@@ -237,11 +201,32 @@ struct CalendarWidget: View {
         print("Closest Time: \(closestTime)")
         return closestTime
     }
+    
+    private func isDateWithin24Hours(_ date: Date) -> Bool {
+        let currentDate = Date()
+        let calendar = Calendar.current
+
+        // Calculate the difference between the current date and the given date in hours
+        let hoursDifference = calendar.dateComponents([.hour], from: date, to: currentDate).hour ?? 0
+
+        // Check if the difference is within 24 hours
+        return hoursDifference <= 24 && hoursDifference >= 0
+    }
+    
+  
+
+    
+    
 }
+
+
+
+
+// VIEW FOR WHEN THERE IS NO OPTIMAL DATE
 
 struct EmptyEventView: View {
     @State private var bounce: Bool = false
-    var earliestFoundDate: String = ""
+ 
 
     var body: some View {
         VStack(alignment: .center, spacing: 0) {
@@ -291,3 +276,168 @@ struct EmptyEventView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
+
+
+
+
+
+
+// VIEW FOR WHEN DATE IS MORE THAN 24 HOURS AWAY
+struct EventDateView: View {
+    @State private var bounce: Bool = false
+ 
+    
+    @State private(set) var optimalDate: OptimalDate
+    @State private(set) var closestTime: String
+
+    var body: some View {
+        VStack(alignment: .center, spacing: 0) {
+      
+//
+            
+          
+            
+            
+            Text("Grind Sesh")
+                .font(.subheadline)
+                .foregroundColor(Color.accentColor)
+                .fontWeight(.semibold)
+                .lineLimit(1)
+                .truncationMode(.tail)
+            
+                .frame(maxWidth: .infinity, alignment: .leading)
+            
+            
+            
+            Text("@ " + closestTime)
+                .font(.caption2)
+                .foregroundColor(Color.secondary)
+                .fontWeight(.semibold)
+            
+            
+                .frame(maxWidth: .infinity, alignment: .leading)
+            
+            
+            Spacer()
+            
+            
+            Divider()
+            
+         
+         
+            
+            Spacer()
+            
+            HStack (spacing: 3){
+                Text(optimalDate.dayOfWeek!)
+                    .font(.title2)
+                    .fontWeight(.bold)
+                    .foregroundColor(Color.accentColor)
+                 
+                
+                Text(optimalDate.month!)
+                    .font(.title2)
+                    .fontWeight(.bold)
+                    .foregroundColor(.secondary)
+        
+            }
+            .padding(.top, -5)
+        
+            
+            
+            Text(optimalDate.day!)
+                .font(.system(size: 72))
+                .fontWeight(.bold)
+                .foregroundColor(.primary)
+                .padding(.vertical, -15)
+//
+//                        Text(closestTime)
+//                            .font(.caption)
+//                            .fontWeight(.semibold)
+//                            .foregroundColor(Color.secondary)
+//
+            
+//                        Spacer()
+            
+        }
+        .padding(16)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+}
+
+
+
+
+
+// VIEW FOR WHEN DATE IS LESS THAN 24 HOURS AWAY
+struct EventTimeView: View {
+    @State private var bounce: Bool = false
+ 
+    
+    @State private(set) var optimalDate: OptimalDate
+    @State private(set) var closestTime: String
+
+    var body: some View {
+        VStack(alignment: .center, spacing: 0) {
+      
+//
+            
+          
+            
+            
+            Text("Grind Sesh")
+                .font(.subheadline)
+                .foregroundColor(Color.accentColor)
+                .fontWeight(.semibold)
+                .lineLimit(1)
+                .truncationMode(.tail)
+            
+                .frame(maxWidth: .infinity, alignment: .leading)
+            
+            
+            
+            Text("@ " + closestTime)
+                .font(.caption2)
+                .foregroundColor(Color.secondary)
+                .fontWeight(.semibold)
+            
+            
+                .frame(maxWidth: .infinity, alignment: .leading)
+            
+            
+            Spacer()
+            
+            
+            Divider()
+            
+         
+         
+            
+            Spacer()
+            
+            
+            
+            Text(Calendar.current.isDateInToday(optimalDate.date!) ? "Today" : "Tomorrow")
+                .font(.title2)
+                .fontWeight(.bold)
+                .foregroundColor(Color.accentColor)
+            
+         
+            
+            
+            Text(closestTime)
+                .font(.title)
+                .fontWeight(.bold)
+                .foregroundColor(.primary)
+                
+            
+//                        Spacer()
+            
+        }
+        .padding(16)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+}
+
+
+
