@@ -4,14 +4,16 @@ import Firebase
 
 
 struct OptimalDate {
-    var month: String?
+    var shortMonth: String?
+    var longMonth: String?
     var day: String?
     var dayOfWeek: String?
     var date: Date?
     
     init(from dateString: String) {
         guard !dateString.isEmpty else {
-            self.month = nil
+            self.shortMonth = nil
+            self.longMonth = nil
             self.day = nil
             self.dayOfWeek = nil
             self.date = nil
@@ -28,7 +30,11 @@ struct OptimalDate {
             
             // Extracting the month in words
             dateFormatter.dateFormat = "MMM"
-            self.month = dateFormatter.string(from: date)
+            self.shortMonth = dateFormatter.string(from: date)
+            
+            // Extracting the month in words
+            dateFormatter.dateFormat = "MMMM"
+            self.longMonth = dateFormatter.string(from: date)
             
             // Extracting the day in numbers
             dateFormatter.dateFormat = "dd"
@@ -38,7 +44,8 @@ struct OptimalDate {
             dateFormatter.dateFormat = "EEE"
             self.dayOfWeek = dateFormatter.string(from: date)
         } else {
-            self.month = nil
+            self.shortMonth = nil
+            self.longMonth = nil
             self.day = nil
             self.dayOfWeek = nil
             self.date = nil
@@ -63,10 +70,16 @@ struct CalendarWidget: View {
         ZStack {
             Color(UIColor.tertiarySystemFill)
             VStack {
+                
+                
                 if let date = optimalDate.date {
-                    if isDateWithin24Hours(date) {
+                    
+                    if hasDatePassed(date){
+                        EventPassedView(optimalDate: $optimalDate, closestTime: $closestTime)
+                        
+                    } else if isDateWithin24Hours(date) {
                         EventTimeView(optimalDate: $optimalDate, closestTime: $closestTime)
-                    } else {
+                    } else{
                         EventDateView(optimalDate: $optimalDate, closestTime: $closestTime)
                     }
                 } else {
@@ -213,6 +226,13 @@ struct CalendarWidget: View {
         // Check if the difference is within 24 hours
         return hoursDifference <= 24 && hoursDifference >= 0
     }
+    
+    private func hasDatePassed(_ date: Date) -> Bool {
+        let currentDate = Date()
+        
+        // Check if the given date is earlier than the current date
+        return date < currentDate
+    }
 }
 
 
@@ -282,86 +302,63 @@ struct EmptyEventView: View {
 struct EventDateView: View {
     @State private var bounce: Bool = false
  
-    
     @Binding private(set) var optimalDate: OptimalDate
     @Binding private(set) var closestTime: String
 
     var body: some View {
         VStack(alignment: .center, spacing: 0) {
-      
-//
-            
-          
-            
-            
             Text("Grind Sesh")
                 .font(.subheadline)
                 .foregroundColor(Color.accentColor)
                 .fontWeight(.semibold)
                 .lineLimit(1)
                 .truncationMode(.tail)
-            
-                .frame(maxWidth: .infinity, alignment: .leading)
-            
-            
-            
-            Text("@ " + closestTime)
-                .font(.caption2)
-                .foregroundColor(Color.secondary)
-                .fontWeight(.semibold)
-            
-            
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.bottom, 3)
-            
-         
-            
-            
-            Divider()
-            
-         
-         
-            
-            Spacer()
-            
-            HStack (spacing: 3){
-                Text(optimalDate.dayOfWeek!)
-                    .font(.title2)
-                    .fontWeight(.bold)
-                    .foregroundColor(Color.accentColor)
-                 
+//                .frame(maxWidth: .infinity, alignment: .leading)
+
+            if let date = optimalDate.date {
+                let daysDifference = Calendar.current.dateComponents([.day], from: Date(), to: date).day ?? 0
                 
-                Text(optimalDate.month!)
-                    .font(.title2)
-                    .fontWeight(.bold)
-                    .foregroundColor(.secondary)
-        
+                Text("\(closestTime)・In \(daysDifference) day\(daysDifference != 1 ? "s" : "")")
+                    .font(.caption2)
+                    .foregroundColor(Color.secondary)
+                    .fontWeight(.semibold)
+                //                .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.bottom, 3)
+            }
+            
+
+            Divider()
+            Spacer()
+
+            HStack (spacing: 3) {
+                if let dayOfWeek = optimalDate.dayOfWeek {
+                    Text(dayOfWeek)
+                        .font(.title2)
+                        .fontWeight(.bold)
+                        .foregroundColor(Color.accentColor)
+                }
+                
+                if let shortMonth = optimalDate.shortMonth {
+                    Text(shortMonth)
+                        .font(.title2)
+                        .fontWeight(.bold)
+                        .foregroundColor(.secondary)
+                }
             }
             .padding(.top, -8)
-        
             
-            
-            Text(optimalDate.day!)
-                .font(.system(size: 72))
-                .fontWeight(.bold)
-                .foregroundColor(.primary)
-                .padding(.vertical, -15)
-//
-//                        Text(closestTime)
-//                            .font(.caption)
-//                            .fontWeight(.semibold)
-//                            .foregroundColor(Color.secondary)
-//
-            
-//                        Spacer()
-            
+            if let day = optimalDate.day {
+                Text(day)
+                    .font(.system(size: 72))
+                    .fontWeight(.bold)
+                    .foregroundColor(.primary)
+                    .padding(.vertical, -15)
+            }
         }
-        
         .padding(16)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
-
 
 
 
@@ -370,71 +367,120 @@ struct EventDateView: View {
 struct EventTimeView: View {
     @State private var bounce: Bool = false
  
-    
     @Binding private(set) var optimalDate: OptimalDate
     @Binding private(set) var closestTime: String
 
     var body: some View {
         VStack(alignment: .center, spacing: 0) {
-      
-//
-            
-          
-            
-            
             Text("Grind Sesh")
                 .font(.subheadline)
                 .foregroundColor(Color.accentColor)
                 .fontWeight(.semibold)
                 .lineLimit(1)
                 .truncationMode(.tail)
-            
-                .frame(maxWidth: .infinity, alignment: .leading)
-            
-            
-            
-            Text("@ " + closestTime)
-                .font(.caption2)
-                .foregroundColor(Color.secondary)
-                .fontWeight(.semibold)
-            
-            
-                .frame(maxWidth: .infinity, alignment: .leading)
-            
-                .padding(.bottom, 3)
-            
-         
-            
+
+            if let longMonth = optimalDate.longMonth, let day = optimalDate.day {
+                Text("\(longMonth) \(day)")
+                    .font(.caption2)
+                    .foregroundColor(Color.secondary)
+                    .fontWeight(.semibold)
+//                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.bottom, 3)
+            }
             
             Divider()
-            
-         
-         
-            
             Spacer()
             
-            
-            
-            Text(Calendar.current.isDateInToday(optimalDate.date!) ? "Today" : "Tomorrow")
-                .font(.title2)
-                .fontWeight(.bold)
-                .foregroundColor(Color.accentColor)
-            
-         
-            
+            if let date = optimalDate.date {
+                Text(Calendar.current.isDateInToday(date) ? "Today" : "Tomorrow")
+                    .font(.title2)
+                    .fontWeight(.bold)
+                    .foregroundColor(Color.accentColor)
+                    .padding(.bottom, -5)
+            }
             
             Text(closestTime)
                 .font(.title)
                 .fontWeight(.bold)
                 .foregroundColor(.primary)
-                
             
-            
+            Spacer()
         }
         .padding(16)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
 
+
+
+
+struct EventPassedView: View {
+    @State private var bounce: Bool = false
+    
+    @Binding private(set) var optimalDate: OptimalDate
+    @Binding private(set) var closestTime: String
+
+    var body: some View {
+        VStack(alignment: .center, spacing: 0) {
+            Text("Grind Sesh")
+                .font(.headline)
+                .foregroundColor(Color.accentColor)
+                .fontWeight(.semibold)
+                .lineLimit(1)
+            
+        
+            
+            if let longMonth = optimalDate.longMonth, let day = optimalDate.day {
+                Text("\(longMonth) \(day)")
+                    .font(.caption2)
+                    .foregroundColor(Color.secondary)
+                    .fontWeight(.semibold)
+                    .padding(.bottom, 5)
+            }
+            
+            
+            Text(bounce ? "🥳" : "☺️")
+                .font(.system(size: 44))
+                .foregroundColor(.primary)
+                .onAppear {
+                                startAnimation()
+                            }
+            
+      
+            
+            Spacer()
+            
+            Text("Til next time!")
+                .font(.caption2)
+                .foregroundColor(Color.secondary)
+                .fontWeight(.semibold)
+            
+            
+            Spacer()
+            
+            
+            
+            
+        }
+        .padding(16)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+    
+    private func startAnimation() {
+        // Reset the state to ensure consistent behavior
+        bounce = false
+        
+        // Add a slight delay to allow the view to fully appear before starting the animation
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            let animation = Animation.easeInOut(duration: 1)
+                .delay(2.0)
+                .repeatForever(autoreverses: true)
+
+            withAnimation(animation) {
+                bounce.toggle()
+            }
+        }
+    }
+}
 
 
