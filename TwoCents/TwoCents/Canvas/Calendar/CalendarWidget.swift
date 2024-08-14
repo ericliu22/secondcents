@@ -312,9 +312,9 @@ struct EventDateView: View {
             
             
                 .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.bottom, 3)
             
-            
-            Spacer()
+         
             
             
             Divider()
@@ -337,7 +337,7 @@ struct EventDateView: View {
                     .foregroundColor(.secondary)
         
             }
-            .padding(.top, -5)
+            .padding(.top, -8)
         
             
             
@@ -356,6 +356,7 @@ struct EventDateView: View {
 //                        Spacer()
             
         }
+        
         .padding(16)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
@@ -400,8 +401,9 @@ struct EventTimeView: View {
             
                 .frame(maxWidth: .infinity, alignment: .leading)
             
+                .padding(.bottom, 3)
             
-            Spacer()
+         
             
             
             Divider()
@@ -427,7 +429,6 @@ struct EventTimeView: View {
                 .foregroundColor(.primary)
                 
             
-//                        Spacer()
             
         }
         .padding(16)
