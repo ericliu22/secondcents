@@ -655,12 +655,14 @@ struct CanvasPage: View {
             replyWidget = nil
             activeWidget = nil
             
+        
+            
             //get chat to show up at all times
             if !widgetDoubleTapped && !inSettingsView && activeSheet == nil{
                 //                                showSheet = true
                 inSettingsView = false
                 activeSheet = .chat
-                
+                selectedDetent = .height(50)
             }
             
             
