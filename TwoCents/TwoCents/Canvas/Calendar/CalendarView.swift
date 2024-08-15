@@ -242,12 +242,21 @@ struct CalendarView: View {
         var saveData: [String: [String]] = [:]
         
         let currentDate = Date()
+        let calendar = Calendar.current
         
         for (date, times) in localChosenDates {
-            // Only save the dates that are in the future
-            if date >= currentDate {
+            // Filter out past time slots for today's date
+            let filteredTimes: Set<Date>
+            if calendar.isDateInToday(date) {
+                filteredTimes = times.filter { $0 > currentDate }
+            } else {
+                filteredTimes = times
+            }
+            
+            // Only save the dates that are in the future and have available time slots
+            if !filteredTimes.isEmpty {
                 let dateKey = dateFormatter.string(from: date)
-                let timeStrings = times.map { formatTime($0) }
+                let timeStrings = filteredTimes.map { formatTime($0) }
                 saveData[dateKey] = timeStrings
             }
         }
@@ -283,6 +292,7 @@ struct CalendarView: View {
                 }
             }
     }
+
 
     
     private func loadSavedDates() {

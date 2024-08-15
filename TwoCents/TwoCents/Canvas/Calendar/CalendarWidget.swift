@@ -51,7 +51,6 @@ struct OptimalDate {
         }
     }
 }
-
 struct CalendarWidget: View {
     let widget: CanvasWidget
 
@@ -69,11 +68,14 @@ struct CalendarWidget: View {
             Color(UIColor.tertiarySystemFill)
             VStack {
                 if let date = optimalDate.date {
-                    if hasDatePassed(date){
-                        EventPassedView(optimalDate: $optimalDate, closestTime: $closestTime)
-                    } else if isDateWithin24Hours(date) {
+                    if isTodayOrTomorrow(date: date) && !hasDatePassed(date: date, time: closestTime) {
+                        // Event is today or tomorrow and hasn't passed yet
                         EventTimeView(optimalDate: $optimalDate, closestTime: $closestTime)
+                    } else if hasDatePassed(date: date, time: closestTime) {
+                        // Event has passed
+                        EventPassedView(optimalDate: $optimalDate, closestTime: $closestTime)
                     } else {
+                        // Event is in the future (beyond tomorrow)
                         EventDateView(optimalDate: $optimalDate, closestTime: $closestTime)
                     }
                 } else {
@@ -88,6 +90,9 @@ struct CalendarWidget: View {
             await setupSnapshotListener()
         }
     }
+
+
+
     
     private func setupSnapshotListener() async {
         let db = Firestore.firestore()
@@ -126,11 +131,12 @@ struct CalendarWidget: View {
                 }
             }
     }
-
+    
     private func findOptimalDateAndTime(from data: [String: Any], preferredTime: String) -> (String, String) {
         var dateFrequencies: [String: Int] = [:]
         var timeFrequencies: [String: [String: Int]] = [:]
         let currentDate = Date()
+        let calendar = Calendar.current
 
         for (userId, userDates) in data where userId != "preferredTime" {
             guard let userDatesDict = userDates as? [String: [String]] else { continue }
@@ -139,24 +145,27 @@ struct CalendarWidget: View {
                 // Parse the date string to a Date object
                 let dateFormatter = DateFormatter()
                 dateFormatter.dateFormat = "yyyy-MM-dd"
-                guard let date = dateFormatter.date(from: dateString), date >= currentDate else {
-                    continue // Skip past dates
+                guard let date = dateFormatter.date(from: dateString) else {
+                    continue // Skip invalid dates
                 }
 
-                // Process times only if they are in the future for the current date
+                // Process times only if they are in the future or today but not yet passed
                 let validTimes = times.filter { time in
-                    let formatter = DateFormatter()
-                    formatter.dateFormat = "h:mm a"
-                    formatter.timeZone = TimeZone.current
-                    guard let dateTime = formatter.date(from: time) else {
+                    let timeFormatter = DateFormatter()
+                    timeFormatter.dateFormat = "h:mm a"
+                    timeFormatter.timeZone = TimeZone.current
+                    guard let timeDate = timeFormatter.date(from: time) else {
                         return false
                     }
-                    let calendar = Calendar.current
-                    let fullDate = calendar.date(bySettingHour: calendar.component(.hour, from: dateTime),
-                                                 minute: calendar.component(.minute, from: dateTime),
-                                                 second: 0,
-                                                 of: date)
-                    return fullDate ?? currentDate >= currentDate
+                    
+                    // Combine the date with the time to create a full Date object
+                    let combinedDate = calendar.date(bySettingHour: calendar.component(.hour, from: timeDate),
+                                                     minute: calendar.component(.minute, from: timeDate),
+                                                     second: 0,
+                                                     of: date)
+                    
+                    // Only include times that are in the future or today but not yet passed
+                    return combinedDate ?? currentDate > currentDate || Calendar.current.isDateInToday(date) && combinedDate! >= currentDate
                 }
 
                 if validTimes.isEmpty {
@@ -204,6 +213,7 @@ struct CalendarWidget: View {
         return (mostCommonDate, closestTime)
     }
 
+
     private func findClosestTime(to preferredTime: String, from times: [String]) -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = "h:mm a"
@@ -237,25 +247,45 @@ struct CalendarWidget: View {
         print("Closest Time: \(closestTime)")
         return closestTime
     }
-    
-    private func isDateWithin24Hours(_ date: Date) -> Bool {
-        let currentDate = Date()
+    private func isTodayOrTomorrow(date: Date) -> Bool {
         let calendar = Calendar.current
-
-        // Calculate the difference between the current date and the given date in hours
-        let hoursDifference = calendar.dateComponents([.hour], from: currentDate, to: date).hour ?? 0
-
-        // Check if the difference is within 24 hours
-        return hoursDifference <= 24 && hoursDifference >= 0
-    }
-    
-    private func hasDatePassed(_ date: Date) -> Bool {
-        let currentDate = Date()
         
-        // Check if the given date is earlier than the current date
-        return date < currentDate
+        // Check if the event is today
+        if calendar.isDateInToday(date) {
+            return true
+        }
+        
+        // Check if the event is tomorrow
+        if let tomorrow = calendar.date(byAdding: .day, value: 1, to: Date()), calendar.isDate(date, inSameDayAs: tomorrow) {
+            return true
+        }
+        
+        return false
     }
+
+    
+    private func hasDatePassed(date: Date, time: String) -> Bool {
+        let calendar = Calendar.current
+        let timeFormatter = DateFormatter()
+        timeFormatter.dateFormat = "h:mm a"
+        timeFormatter.timeZone = TimeZone.current
+        
+        guard let timeDate = timeFormatter.date(from: time) else {
+            return true // Treat as passed if time parsing fails
+        }
+        
+        // Combine the date with the time to create a full Date object
+        let combinedDate = calendar.date(bySettingHour: calendar.component(.hour, from: timeDate),
+                                         minute: calendar.component(.minute, from: timeDate),
+                                         second: 0,
+                                         of: date) ?? date
+        
+        // Check if the given date and time combination is earlier than the current date and time
+        return combinedDate < Date()
+    }
+
 }
+
 
 // VIEW FOR WHEN THERE IS NO OPTIMAL DATE
 struct EmptyEventView: View {
