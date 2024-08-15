@@ -444,6 +444,7 @@ struct ProfileView: View {
                                                 //
                                                 //
                                                 tickleNotification(userUID: currentUserId, targetUserUID: targetUserId.isEmpty ? currentUserId : targetUserId)
+                                                AnalyticsManager.shared.tickle(count: tickleCount)
                                             }
                                             
                                         }
@@ -471,8 +472,8 @@ struct ProfileView: View {
                                                 if tickleCount > 1 {
                                                     let currentUserId = try! AuthenticationManager.shared.getAuthenticatedUser().uid
                                                     
-                                                    
                                                     tickleNotification(userUID: currentUserId, targetUserUID: targetUserId.isEmpty ? currentUserId : targetUserId, count: tickleCount)
+                                                    AnalyticsManager.shared.tickle(count: tickleCount)
                                                 }
                                             }
                                         }

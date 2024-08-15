@@ -94,9 +94,8 @@ final class NewMessageFieldViewModel: ObservableObject {
 
                     }
                     
-                    
-                    
-                    
+                    AnalyticsManager.shared.messageSend()
+
                     } catch {
                     print("Error adding message to Firestore: \(error)")
                 }
