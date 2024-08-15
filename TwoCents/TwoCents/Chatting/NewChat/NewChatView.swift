@@ -149,19 +149,17 @@ struct NewChatView: View {
         
             .padding(.horizontal)
 //            .background(threadId == "" ? Color.clear : Color(UIColor.secondarySystemBackground))
-            .background(
-                Group {
-                    if threadId == "" {
-                        Color.clear
-                    } else {
-                        Color.fromString(name: viewModel.user?.userColor ?? "")
-                            .brightness(0.6)
-                            .opacity(0.3)
-                    }
-                }
-            )
-//            
-           
+//            .background(
+//                Group {
+//                    if threadId == "" {
+//                        Color.clear
+//                    } else {
+//                        Color.fromString(name: viewModel.user?.userColor ?? "")
+//                            .brightness(0.6)
+//                            .opacity(0.3)
+//                    }
+//                }
+//            )
          
             .onTapGesture {
                 
@@ -188,6 +186,8 @@ struct NewChatView: View {
             
        
             .overlay(
+            
+                
                 NewMessageField(replyWidget: $replyWidget, spaceId: spaceId, threadId: $threadId)
 //                    .disabled(detent == .height(50) && replyWidget == nil)
                     .frame(maxHeight: .infinity, alignment: .bottom)
@@ -214,13 +214,7 @@ struct NewChatView: View {
         
  
     }
-    func randomColor() -> Color {
-           return Color(
-               red: Double.random(in: 0...1),
-               green: Double.random(in: 0...1),
-               blue: Double.random(in: 0...1)
-           )
-       }
+  
 }
 
 struct NewChatView_Previews: PreviewProvider {
