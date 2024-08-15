@@ -66,6 +66,13 @@ final class AnalyticsManager {
         sendPlausible(name: "Message Send")
     }
     
+    func widgetCreated(widget: CanvasWidget) {
+        let props: [String: Any] = [
+            "Widget Type": widget.media.name()
+        ]
+        sendPlausible(name: "Widget Created")
+    }
+    
     func tickle(count: Int = 1) {
         let props: [String: Any] = [
             "Tickle Count": count
