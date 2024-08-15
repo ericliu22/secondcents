@@ -31,36 +31,35 @@ struct CalendarView: View {
     }()
     
     // Compute the current date and the bounds
-     private var startDate: Date {
-         let now = Date()
-         let calendar = Calendar.current
-         
-         if let preferredTime = preferredTime {
-             let preferredTimeToday = calendar.date(bySettingHour: calendar.component(.hour, from: preferredTime),
-                                                    minute: calendar.component(.minute, from: preferredTime),
-                                                    second: 0,
-                                                    of: now)!
-             
-             let cutoffTime = calendar.date(byAdding: .hour, value: 2, to: preferredTimeToday)!
-             
-             if now > cutoffTime {
-                 return calendar.startOfDay(for: calendar.date(byAdding: .day, value: 1, to: now)!)
-             }
-         }
-         
-         return calendar.startOfDay(for: now)
-     }
-     
-     private var bounds: Range<Date> {
-         let endDate = Calendar.current.date(byAdding: .year, value: 1, to: startDate)!
-         return startDate..<endDate
-     }
+    private var startDate: Date {
+        let now = Date()
+        let calendar = Calendar.current
+        
+        if let preferredTime = preferredTime {
+            let preferredTimeToday = calendar.date(bySettingHour: calendar.component(.hour, from: preferredTime),
+                                                   minute: calendar.component(.minute, from: preferredTime),
+                                                   second: 0,
+                                                   of: now)!
+            
+            let cutoffTime = calendar.date(byAdding: .hour, value: 2, to: preferredTimeToday)!
+            
+            if now > cutoffTime {
+                return calendar.startOfDay(for: calendar.date(byAdding: .day, value: 1, to: now)!)
+            }
+        }
+        
+        return calendar.startOfDay(for: now)
+    }
+    
+    private var bounds: Range<Date> {
+        let endDate = Calendar.current.date(byAdding: .year, value: 1, to: startDate)!
+        return startDate..<endDate
+    }
 
     private let columns = [
         GridItem(.flexible()),
         GridItem(.flexible())
     ]
-    
     
     var body: some View {
         
@@ -75,24 +74,22 @@ struct CalendarView: View {
 
                 if let selectedDate = currentlySelectedDate {
                     VStack {
-                        
                         LazyVGrid(columns: columns, spacing: nil) {
-                            
-                            
                             ForEach(timeSlots(for: selectedDate), id: \.self) { timeSlot in
-                                
-                                let buttonColor: Color = isTimeSlotInPast(timeSlot) ? Color.gray : (localChosenDates[selectedDate]?.contains(timeSlot) == true ? Color.green : Color.red)
+                                let isPast = isTimeSlotInPast(timeSlot)
+                                let isChosen = localChosenDates[selectedDate]?.contains(timeSlot) == true
+                                let buttonColor: Color = isPast ? .gray : (isChosen ? .green : .red)
                                 
                                 Button {
                                     toggleTimeSelection(timeSlot, for: selectedDate)
                                 } label: {
-                                    VStack{
+                                    VStack {
                                         Text(formatTime(timeSlot))
                                             .fontWeight(.semibold)
                                             .foregroundColor(buttonColor)
                                             .frame(maxWidth: .infinity)
                                         
-                                        if areTimesEqual(timeSlot: timeSlot, preferredTime: preferredTime ?? Date.now) {
+                                        if areTimesEqual(timeSlot: timeSlot, preferredTime: preferredTime ?? Date()) {
                                             Text("Proposed Time")
                                                 .font(.caption)
                                                 .foregroundColor(buttonColor)
@@ -102,56 +99,22 @@ struct CalendarView: View {
                                     .frame(height: 100)
                                 }
                                 .buttonStyle(.bordered)
-//                                .contentShape(Rectangle())
-                               
-//                                .background(.regularMaterial)
-//                                .background(buttonColor)
-                               
-//                                .cornerRadius(10)
-                                .disabled(isTimeSlotInPast(timeSlot)) // Disable the VStack if the time slot is in the past
+                                .disabled(isPast) // Disable the button if the time slot is in the past
                                 .tint(buttonColor)
-//
-//                                VStack {
-//                                    Text(formatTime(timeSlot))
-//                                        .fontWeight(.semibold)
-//                                        .foregroundColor(buttonColor)
-//                                        .frame(maxWidth: .infinity)
-//
-//                                    if areTimesEqual(timeSlot: timeSlot, preferredTime: preferredTime ?? Date.now) {
-//                                        Text("Proposed Time")
-//                                            .font(.caption)
-//                                            .foregroundColor(buttonColor)
-//                                            .frame(maxWidth: .infinity)
-//                                    }
-//                                }
-//                                .contentShape(Rectangle())
-//                                .frame(height: 100)
-//                                .background(.regularMaterial)
-//                                .background(buttonColor)
-//                                .cornerRadius(10)
-//                                .onTapGesture {
-//                                    toggleTimeSelection(timeSlot, for: selectedDate)
-//                                }
-//                                .disabled(isTimeSlotInPast(timeSlot)) // Disable the VStack if the time slot is in the past
-
                             }
                         }
                         .padding(.horizontal)
                     }
                 } else {
-                    
                     if isDatePickerEnabled {
-                     
-                        Text("Select Availablity for Start Time")
+                        Text("Select Availability for Start Time")
                             .font(.caption)
-                            .foregroundColor(Color.secondary)
+                            .foregroundColor(.secondary)
                             .frame(height: 300)
-                        
                         
                         Spacer()
                     } else {
                         ProgressView()
-                        
                     }
                 }
             }
@@ -166,34 +129,37 @@ struct CalendarView: View {
                 }
             }
         }
-        .navigationTitle("\(currentlySelectedDate.map { "\(dateFormatterMonthDay.string(from: $0))" } ?? "Select Availability")")
+        .navigationTitle(currentlySelectedDate.map { dateFormatterMonthDay.string(from: $0) } ?? "Select Availability")
         .navigationBarTitleDisplayMode(.inline)
     }
     
     private func handleDateSelectionChange(_ newSelection: Set<DateComponents>) {
-        let addedDates = newSelection.subtracting(previousSelectedDates)
-        let removedDates = previousSelectedDates.subtracting(newSelection)
-        
-        if let addedDateComponents = addedDates.first {
+        // Using async to safely update state and avoid collection view conflicts
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            let addedDates = newSelection.subtracting(previousSelectedDates)
+            let removedDates = previousSelectedDates.subtracting(newSelection)
+            
             let calendar = Calendar.current
-            if let selectedDate = calendar.date(from: addedDateComponents) {
+            
+            if let addedDateComponents = addedDates.first,
+               let selectedDate = calendar.date(from: addedDateComponents) {
                 currentlySelectedDate = selectedDate
                 if localChosenDates[selectedDate] == nil {
                     localChosenDates[selectedDate] = Set(timeSlots(for: selectedDate))
                 }
             }
-        }
-        
-        if let removedDateComponents = removedDates.first {
-            let calendar = Calendar.current
-            if let selectedDate = calendar.date(from: removedDateComponents) {
+            
+            if let removedDateComponents = removedDates.first,
+               let selectedDate = calendar.date(from: removedDateComponents) {
                 localChosenDates.removeValue(forKey: selectedDate)
-                selectedDates.remove(Calendar.current.dateComponents([.calendar, .era, .year, .month, .day], from: selectedDate))
-                currentlySelectedDate = nil
+                selectedDates.remove(calendar.dateComponents([.calendar, .era, .year, .month, .day], from: selectedDate))
+                if currentlySelectedDate == selectedDate {
+                    currentlySelectedDate = nil
+                }
             }
+            
+            previousSelectedDates = newSelection
         }
-        
-        previousSelectedDates = newSelection
     }
     
     private func timeSlots(for date: Date) -> [Date] {
@@ -201,8 +167,7 @@ struct CalendarView: View {
         let calendar = Calendar.current
         let dateComponents = calendar.dateComponents([.year, .month, .day], from: date)
         
-        let defaultPreferredHour = 12
-        let preferredHour = (preferredTime != nil) ? Calendar.current.component(.hour, from: preferredTime!) : defaultPreferredHour
+        let preferredHour = preferredTime != nil ? calendar.component(.hour, from: preferredTime!) : 12
         
         for hour in (preferredHour - 2)...(preferredHour + 2) {
             for minute in [0, 30] {
@@ -220,21 +185,24 @@ struct CalendarView: View {
     }
     
     private func toggleTimeSelection(_ timeSlot: Date, for date: Date) {
-        var updatedTimes = localChosenDates[date] ?? Set<Date>()
-        
-        if updatedTimes.contains(timeSlot) {
-            updatedTimes.remove(timeSlot)
-            if updatedTimes.isEmpty {
-                localChosenDates.removeValue(forKey: date)
-                selectedDates.remove(Calendar.current.dateComponents([.calendar, .era, .year, .month, .day], from: date))
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            var updatedTimes = localChosenDates[date] ?? Set<Date>()
+            
+            if updatedTimes.contains(timeSlot) {
+                updatedTimes.remove(timeSlot)
+                if updatedTimes.isEmpty {
+                    localChosenDates.removeValue(forKey: date)
+                    selectedDates.remove(Calendar.current.dateComponents([.calendar, .era, .year, .month, .day], from: date))
+                } else {
+                    localChosenDates[date] = updatedTimes
+                }
             } else {
+                updatedTimes.insert(timeSlot)
                 localChosenDates[date] = updatedTimes
             }
-        } else {
-            updatedTimes.insert(timeSlot)
-            localChosenDates[date] = updatedTimes
         }
     }
+
     func saveDates() {
         let db = Firestore.firestore()
         let userId = try! AuthenticationManager.shared.getAuthenticatedUser().uid
@@ -245,7 +213,6 @@ struct CalendarView: View {
         let calendar = Calendar.current
         
         for (date, times) in localChosenDates {
-            // Filter out past time slots for today's date
             let filteredTimes: Set<Date>
             if calendar.isDateInToday(date) {
                 filteredTimes = times.filter { $0 > currentDate }
@@ -253,7 +220,6 @@ struct CalendarView: View {
                 filteredTimes = times
             }
             
-            // Only save the dates that are in the future and have available time slots
             if !filteredTimes.isEmpty {
                 let dateKey = dateFormatter.string(from: date)
                 let timeStrings = filteredTimes.map { formatTime($0) }
@@ -293,11 +259,9 @@ struct CalendarView: View {
             }
     }
 
-
-    
     private func loadSavedDates() {
         let db = Firestore.firestore()
-
+        
         guard let userId: String = try? AuthenticationManager.shared.getAuthenticatedUser().uid else {
             return
         }
@@ -311,6 +275,7 @@ struct CalendarView: View {
                     print("Document does not exist or failed to retrieve data")
                     return
                 }
+                
                 if let data = document.data() {
                     if let preferredTimeString = data["preferredTime"] as? String {
                         self.preferredTime = self.timeFormatter.date(from: preferredTimeString)
@@ -409,12 +374,10 @@ struct CalendarView: View {
         let currentDate = Date()
         let calendar = Calendar.current
         
-        // If the timeSlot is today, check if it has passed
         if calendar.isDateInToday(timeSlot) {
             return timeSlot <= currentDate
         }
         
         return false
     }
-
 }
