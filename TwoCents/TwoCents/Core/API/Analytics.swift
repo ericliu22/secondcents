@@ -15,7 +15,6 @@ final class AnalyticsManager {
     
     static let shared = AnalyticsManager()
     
-    
     private func sendPlausible(name: String, url: String = ANALYTICS_URL, props: [String: Any]? = nil) {
         let url = URL(string: "\(ANALYTICS_URL)/api/event")!
         var request = URLRequest(url: url)
@@ -37,9 +36,9 @@ final class AnalyticsManager {
         
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
             if let error = error {
-                print("Failed to send crash data: \(error)")
+                print("Failed to send analytics: \(error)")
             } else {
-                print("Crash data sent successfully.")
+                print("Analytics sent successfully.")
             }
         }
         task.resume()
@@ -50,7 +49,7 @@ final class AnalyticsManager {
         let exception_reason: String = exception.reason ?? "unknown_reason"
         let appVersion: String = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "unknown"
         
-        var props: [String: Any] = [
+        let props: [String: Any] = [
             "os": "iOS",
             "exception_name": exception_name,
             "exception_reason": exception_reason,
@@ -66,7 +65,15 @@ final class AnalyticsManager {
     }
     
     func messageSend() {
+        print("ANALYTICS MESSAGE SEND")
         sendPlausible(name: "message_send")
     }
     
+    func tickle(count: Int = 1) {
+        print("ASDFSAKDFJSAKDFL")
+        let props: [String: Any] = [
+            "tickle_count": count
+        ]
+        sendPlausible(name: "tickle", props: props)
+    }
 }
