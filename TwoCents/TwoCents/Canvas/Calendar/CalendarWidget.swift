@@ -42,6 +42,7 @@ struct CalendarWidget: View {
 
     @State private var closestTime: String = ""
     @State private var optimalDate = OptimalDate(from: "")
+    @State private var eventName: String = "Eventful Event"
     
     var body: some View {
         ZStack {
@@ -49,14 +50,14 @@ struct CalendarWidget: View {
             VStack {
                 if let date = optimalDate.date {
                     if isTodayOrTomorrow(date: date) && !hasDatePassed(date: date, time: closestTime) {
-                        EventTimeView(optimalDate: $optimalDate, closestTime: $closestTime)
+                        EventTimeView(optimalDate: $optimalDate, closestTime: $closestTime, eventName: eventName)
                     } else if hasDatePassed(date: date, time: closestTime) {
-                        EventPassedView(optimalDate: $optimalDate, closestTime: $closestTime)
+                        EventPassedView(optimalDate: $optimalDate, closestTime: $closestTime, eventName: eventName)
                     } else {
-                        EventDateView(optimalDate: $optimalDate, closestTime: $closestTime)
+                        EventDateView(optimalDate: $optimalDate, closestTime: $closestTime, eventName: eventName)
                     }
                 } else {
-                    EmptyEventView()
+                    EmptyEventView(eventName: eventName)
                 }
             }
             .background(Color(UIColor.systemBackground))
@@ -85,17 +86,20 @@ struct CalendarWidget: View {
                     DispatchQueue.main.async {
                         self.optimalDate = OptimalDate(from: "")
                         self.closestTime = ""
+                        self.eventName = "Eventful Event" // Fallback name
                     }
                     return
                 }
 
                 let data = document.data() ?? [:]
                 let preferredTime = data["preferredTime"] as? String ?? self.preferredTime
+                let eventName = data["name"] as? String ?? "Eventful Event" // Fetch the event name
                 let (mostCommonDate, closestTime) = findOptimalDateAndTime(from: data, preferredTime: preferredTime)
 
                 DispatchQueue.main.async {
                     self.optimalDate = OptimalDate(from: mostCommonDate)
                     self.closestTime = closestTime
+                    self.eventName = eventName // Set the event name
                 }
             }
     }
@@ -222,10 +226,11 @@ struct CalendarWidget: View {
 // View for when there is no optimal date
 struct EmptyEventView: View {
     @State private var bounce: Bool = false
+    var eventName: String
 
     var body: some View {
         VStack(alignment: .center, spacing: 0) {
-            Text("Grind Sesh")
+            Text(eventName)
                 .font(.headline)
                 .foregroundColor(Color.accentColor)
                 .fontWeight(.semibold)
@@ -275,10 +280,11 @@ struct EventDateView: View {
  
     @Binding private(set) var optimalDate: OptimalDate
     @Binding private(set) var closestTime: String
+    var eventName: String
 
     var body: some View {
         VStack(alignment: .center, spacing: 0) {
-            Text("Grind Sesh")
+            Text(eventName)
                 .font(.subheadline)
                 .foregroundColor(Color.accentColor)
                 .fontWeight(.semibold)
@@ -334,10 +340,11 @@ struct EventTimeView: View {
  
     @Binding private(set) var optimalDate: OptimalDate
     @Binding private(set) var closestTime: String
+    var eventName: String
 
     var body: some View {
         VStack(alignment: .center, spacing: 0) {
-            Text("Grind Sesh")
+            Text(eventName)
                 .font(.subheadline)
                 .foregroundColor(Color.accentColor)
                 .fontWeight(.semibold)
@@ -381,10 +388,11 @@ struct EventPassedView: View {
     
     @Binding private(set) var optimalDate: OptimalDate
     @Binding private(set) var closestTime: String
+    var eventName: String
 
     var body: some View {
         VStack(alignment: .center, spacing: 0) {
-            Text("Grind Sesh")
+            Text(eventName)
                 .font(.headline)
                 .foregroundColor(Color.accentColor)
                 .fontWeight(.semibold)
