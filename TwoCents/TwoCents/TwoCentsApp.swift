@@ -19,9 +19,6 @@ struct TwoCentsApp: App {
         WindowGroup {
             RootView()
                 .environment(delegate.appModel)
-                .onAppear {
-                    signalListener()
-                }
         }
     }
 }
@@ -29,6 +26,14 @@ struct TwoCentsApp: App {
 class AppDelegate: NSObject, UIApplicationDelegate {
     let gcmMessageIDKey = "gcm.message_id"
     var appModel: AppModel = AppModel()
+    
+    //If this fucks up everyone is fucked
+    override init() {
+        super.init()
+        NSSetUncaughtExceptionHandler({ exception in
+            AnalyticsManager.shared.crashEvent(exception: exception)
+        })
+    }
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         FirebaseApp.configure()
