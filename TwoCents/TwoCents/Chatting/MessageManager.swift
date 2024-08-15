@@ -135,11 +135,9 @@ class MessageManager: ObservableObject {
                         mainChatReference.setData(["lastSend": newMessage.sendBy], merge: true)
                         mainChatReference.setData(["lastTs": newMessage.ts], merge: true)
                         
-                       
                     }
                     
-                    
-                    
+                    AnalyticsManager.shared.messageSend()
                     
                     } catch {
                     print("Error adding message to Firestore: \(error)")

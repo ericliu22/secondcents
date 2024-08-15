@@ -7,58 +7,66 @@
 
 import Foundation
 import Darwin
+import UIKit
 
 let ANALYTICS_URL = "https://analytics.twocentsapp.com"
 
-func signalListener() {
-    //For crash analytics
-    signal(SIGABRT, handleSignal)
-    signal(SIGSEGV, handleSignal)
-    signal(SIGILL, handleSignal)
-    signal(SIGFPE, handleSignal)
-    signal(SIGBUS, handleSignal)
-}
-
-func handleSignal(signal: Int32) {
-    // Capture the signal and send the crash data
-    sendCrashDataToPlausible(signal: signal)
-}
-
-func sendCrashDataToPlausible(exception: NSException? = nil, signal: Int32? = nil) {
-    let url = URL(string: "\(ANALYTICS_URL)/api/event")!
-    var request = URLRequest(url: url)
-    request.httpMethod = "POST"
+final class AnalyticsManager {
     
-    // Construct the payload with the relevant crash details
-    var payload: [String: Any] = [
-        "event_name": "app_crash",
-        "properties": [
-            "os": "iOS",
-            "app_version": Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") ?? "unknown",
-            "platform": "Swift"
+    static let shared = AnalyticsManager()
+    
+    
+    private func sendPlausible(name: String, url: String = ANALYTICS_URL, props: [String: Any]? = nil) {
+        let url = URL(string: "\(ANALYTICS_URL)/api/event")!
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        
+        
+        var payload: [String: Any] = [
+            "name": name,
+            "url": ANALYTICS_URL,
+            "domain": "api.twocentsapp.com",
         ]
-    ]
-    
-    if let exception = exception {
-        payload["exception_name"] = exception.name.rawValue
-        payload["exception_reason"] = exception.reason ?? "unknown"
-    }
-    
-    if let signal = signal {
-        payload["signal"] = signal
-    }
-    
-    // Convert the payload to JSON
-    request.httpBody = try? JSONSerialization.data(withJSONObject: payload)
-    request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-    
-    // Send the request
-    let task = URLSession.shared.dataTask(with: request) { data, response, error in
-        if let error = error {
-            print("Failed to send crash data: \(error)")
-        } else {
-            print("Crash data sent successfully.")
+        
+        if let props {
+            payload["props"] = props
         }
+        
+        request.httpBody = try? JSONSerialization.data(withJSONObject: payload)
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            if let error = error {
+                print("Failed to send crash data: \(error)")
+            } else {
+                print("Crash data sent successfully.")
+            }
+        }
+        task.resume()
     }
-    task.resume()
+    
+    func crashEvent(exception: NSException) {
+        let exception_name: String = exception.name.rawValue
+        let exception_reason: String = exception.reason ?? "unknown_reason"
+        let appVersion: String = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "unknown"
+        
+        var props: [String: Any] = [
+            "os": "iOS",
+            "exception_name": exception_name,
+            "exception_reason": exception_reason,
+            "signal": signal,
+            "app_version": appVersion
+        ]
+        
+        sendPlausible(name: "crash_event", props: props)
+    }
+    
+    func pageView(url: String, props: [String: Any]) {
+        sendPlausible(name: "pageview", url: url, props: props)
+    }
+    
+    func messageSend() {
+        sendPlausible(name: "message_send")
+    }
+    
 }
