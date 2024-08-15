@@ -43,10 +43,10 @@ server {
 
     server_name api.twocentsapp.com;
 
-    ssl_certificate /etc/nginx/ssl/fullchain.pem;
-    ssl_certificate_key /etc/nginx/ssl/privkey.pem;
-    include /etc/nginx/ssl/options-ssl-nginx.conf;
-    ssl_dhparam /etc/nginx/ssl/ssl-dhparams.pem;
+    ssl_certificate /etc/nginx/ssl/api.twocentsapp.com/fullchain.pem;
+    ssl_certificate_key /etc/nginx/ssl/api.twocentsapp.com/privkey.pem;
+    include /etc/nginx/ssl/api.twocentsapp.com/options-ssl-nginx.conf;
+    ssl_dhparam /etc/nginx/ssl/api.twocentsappc.com/ssl-dhparams.pem;
 
     location / {
         proxy_pass http://server:8080;
@@ -68,6 +68,11 @@ server {
     # listen [::]:80 ipv6only=off;
 
     server_name analytics.twocentsapp.com;
+
+    ssl_certificate /etc/nginx/ssl/analytics.twocentsapp.com/fullchain.pem;
+    ssl_certificate_key /etc/nginx/ssl/analytics.twocentsapp.com/privkey.pem;
+    include /etc/nginx/ssl/analytics.twocentsapp.com/options-ssl-nginx.conf;
+    ssl_dhparam /etc/nginx/ssl/analytics.twocentsappc.com/ssl-dhparams.pem;
 
     location / {
         proxy_pass http://plausible:8000;

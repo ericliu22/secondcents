@@ -36,7 +36,12 @@ services:
       - db-data:/var/lib/postgresql/data
     environment:
       - POSTGRES_PASSWORD=postgres
-
+  certbot:
+      image: certbot/certbot
+      volumes:
+        - ./reverseproxy/ssl:/etc/letsencrypt
+        - ./reverseproxy/html:/usr/share/nginx/html
+      entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew --webroot -w /usr/share/nginx/html --deploy-hook \"nginx -s reload\"; sleep 12h & wait $${!}; done;'"
   plausible_events_db:
     image: clickhouse/clickhouse-server:24.3.3.102-alpine
     restart: always
