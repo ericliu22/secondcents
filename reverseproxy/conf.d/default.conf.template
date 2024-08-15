@@ -46,7 +46,7 @@ server {
     ssl_certificate /etc/nginx/ssl/api.twocentsapp.com/fullchain.pem;
     ssl_certificate_key /etc/nginx/ssl/api.twocentsapp.com/privkey.pem;
     include /etc/nginx/ssl/api.twocentsapp.com/options-ssl-nginx.conf;
-    ssl_dhparam /etc/nginx/ssl/api.twocentsappc.com/ssl-dhparams.pem;
+    ssl_dhparam /etc/nginx/ssl/api.twocentsapp.com/ssl-dhparams.pem;
 
     location / {
         proxy_pass http://server:8080;
