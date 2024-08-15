@@ -187,17 +187,21 @@ struct CalendarView: View {
             localChosenDates[date] = updatedTimes
         }
     }
-    
     func saveDates() {
         let db = Firestore.firestore()
         let userId = try! AuthenticationManager.shared.getAuthenticatedUser().uid
         
         var saveData: [String: [String]] = [:]
         
+        let currentDate = Date()
+        
         for (date, times) in localChosenDates {
-            let dateKey = dateFormatter.string(from: date)
-            let timeStrings = times.map { formatTime($0) }
-            saveData[dateKey] = timeStrings
+            // Only save the dates that are in the future
+            if date >= currentDate {
+                let dateKey = dateFormatter.string(from: date)
+                let timeStrings = times.map { formatTime($0) }
+                saveData[dateKey] = timeStrings
+            }
         }
         
         let preferredTimeString = preferredTime != nil ? timeFormatter.string(from: preferredTime!) : ""
@@ -231,6 +235,7 @@ struct CalendarView: View {
                 }
             }
     }
+
     
     private func loadSavedDates() {
         let db = Firestore.firestore()

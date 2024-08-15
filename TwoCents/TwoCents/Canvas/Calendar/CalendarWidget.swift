@@ -2,7 +2,6 @@ import Foundation
 import SwiftUI
 import Firebase
 
-
 struct OptimalDate {
     var shortMonth: String?
     var longMonth: String?
@@ -53,7 +52,6 @@ struct OptimalDate {
     }
 }
 
-
 struct CalendarWidget: View {
     let widget: CanvasWidget
 
@@ -70,16 +68,12 @@ struct CalendarWidget: View {
         ZStack {
             Color(UIColor.tertiarySystemFill)
             VStack {
-                
-                
                 if let date = optimalDate.date {
-                    
                     if hasDatePassed(date){
                         EventPassedView(optimalDate: $optimalDate, closestTime: $closestTime)
-                        
                     } else if isDateWithin24Hours(date) {
                         EventTimeView(optimalDate: $optimalDate, closestTime: $closestTime)
-                    } else{
+                    } else {
                         EventDateView(optimalDate: $optimalDate, closestTime: $closestTime)
                     }
                 } else {
@@ -136,19 +130,47 @@ struct CalendarWidget: View {
     private func findOptimalDateAndTime(from data: [String: Any], preferredTime: String) -> (String, String) {
         var dateFrequencies: [String: Int] = [:]
         var timeFrequencies: [String: [String: Int]] = [:]
+        let currentDate = Date()
 
         for (userId, userDates) in data where userId != "preferredTime" {
             guard let userDatesDict = userDates as? [String: [String]] else { continue }
 
-            for (date, times) in userDatesDict {
-                dateFrequencies[date, default: 0] += 1
-
-                if timeFrequencies[date] == nil {
-                    timeFrequencies[date] = [:]
+            for (dateString, times) in userDatesDict {
+                // Parse the date string to a Date object
+                let dateFormatter = DateFormatter()
+                dateFormatter.dateFormat = "yyyy-MM-dd"
+                guard let date = dateFormatter.date(from: dateString), date >= currentDate else {
+                    continue // Skip past dates
                 }
 
-                for time in times {
-                    timeFrequencies[date]?[time, default: 0] += 1
+                // Process times only if they are in the future for the current date
+                let validTimes = times.filter { time in
+                    let formatter = DateFormatter()
+                    formatter.dateFormat = "h:mm a"
+                    formatter.timeZone = TimeZone.current
+                    guard let dateTime = formatter.date(from: time) else {
+                        return false
+                    }
+                    let calendar = Calendar.current
+                    let fullDate = calendar.date(bySettingHour: calendar.component(.hour, from: dateTime),
+                                                 minute: calendar.component(.minute, from: dateTime),
+                                                 second: 0,
+                                                 of: date)
+                    return fullDate ?? currentDate >= currentDate
+                }
+
+                if validTimes.isEmpty {
+                    continue // Skip this date if all times are in the past
+                }
+
+                dateFrequencies[dateString, default: 0] += 1
+
+                if timeFrequencies[dateString] == nil {
+                    timeFrequencies[dateString] = [:]
+                }
+
+                for time in validTimes {
+                    timeFrequencies[dateString]?[time, default: 0] += 1
                 }
             }
         }
@@ -178,7 +200,7 @@ struct CalendarWidget: View {
 
         // Find the closest time to the preferred time
         let closestTime = findClosestTime(to: preferredTime, from: Array(mostCommonTimes))
-    
+
         return (mostCommonDate, closestTime)
     }
 
@@ -235,14 +257,9 @@ struct CalendarWidget: View {
     }
 }
 
-
-
-
 // VIEW FOR WHEN THERE IS NO OPTIMAL DATE
-
 struct EmptyEventView: View {
     @State private var bounce: Bool = false
- 
 
     var body: some View {
         VStack(alignment: .center, spacing: 0) {
@@ -263,18 +280,15 @@ struct EmptyEventView: View {
                         .foregroundColor(.primary)
                         .offset(x: -28, y: -4)
                         .offset(y: bounce ? 3 : 0)
-                       
                         .animation(
                             Animation.easeInOut(duration: 1)
                                 .repeatForever(autoreverses: true)
                         )
                         .onAppear {
                             bounce.toggle()
-                           
                         }
                         .shadow(color: Color.accentColor.opacity(0.3), radius: 2, x: 2, y: 0)
                         .rotationEffect(.degrees(-10))
-                      
                 }
             
             Spacer()
@@ -293,11 +307,6 @@ struct EmptyEventView: View {
     }
 }
 
-
-
-
-
-
 // VIEW FOR WHEN DATE IS MORE THAN 24 HOURS AWAY
 struct EventDateView: View {
     @State private var bounce: Bool = false
@@ -313,7 +322,6 @@ struct EventDateView: View {
                 .fontWeight(.semibold)
                 .lineLimit(1)
                 .truncationMode(.tail)
-//                .frame(maxWidth: .infinity, alignment: .leading)
 
             if let date = optimalDate.date {
                 let daysDifference = Calendar.current.dateComponents([.day], from: Date(), to: date).day ?? 0
@@ -322,11 +330,9 @@ struct EventDateView: View {
                     .font(.caption2)
                     .foregroundColor(Color.secondary)
                     .fontWeight(.semibold)
-                //                .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.bottom, 3)
             }
             
-
             Divider()
             Spacer()
 
@@ -360,9 +366,6 @@ struct EventDateView: View {
     }
 }
 
-
-
-
 // VIEW FOR WHEN DATE IS LESS THAN 24 HOURS AWAY
 struct EventTimeView: View {
     @State private var bounce: Bool = false
@@ -384,7 +387,6 @@ struct EventTimeView: View {
                     .font(.caption2)
                     .foregroundColor(Color.secondary)
                     .fontWeight(.semibold)
-//                    .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.bottom, 3)
             }
             
@@ -411,9 +413,7 @@ struct EventTimeView: View {
     }
 }
 
-
-
-
+// VIEW FOR WHEN EVENT HAS PASSED
 struct EventPassedView: View {
     @State private var bounce: Bool = false
     
@@ -428,8 +428,6 @@ struct EventPassedView: View {
                 .fontWeight(.semibold)
                 .lineLimit(1)
             
-        
-            
             if let longMonth = optimalDate.longMonth, let day = optimalDate.day {
                 Text("\(longMonth) \(day)")
                     .font(.caption2)
@@ -438,15 +436,12 @@ struct EventPassedView: View {
                     .padding(.bottom, 5)
             }
             
-            
             Text(bounce ? "🥳" : "☺️")
                 .font(.system(size: 44))
                 .foregroundColor(.primary)
                 .onAppear {
-                                startAnimation()
-                            }
-            
-      
+                    startAnimation()
+                }
             
             Spacer()
             
@@ -455,12 +450,7 @@ struct EventPassedView: View {
                 .foregroundColor(Color.secondary)
                 .fontWeight(.semibold)
             
-            
             Spacer()
-            
-            
-            
-            
         }
         .padding(16)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -482,5 +472,3 @@ struct EventPassedView: View {
         }
     }
 }
-
-
