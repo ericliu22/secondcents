@@ -648,10 +648,7 @@ struct CanvasPage: View {
         })
         .ignoresSafeArea()
         .sheet(item: $activeSheet, onDismiss: {
-            //                showNewWidgetView = false
-            //                            activeSheet = .chat
             
-          
             replyWidget = nil
             activeWidget = nil
             
@@ -702,7 +699,6 @@ struct CanvasPage: View {
                                
                             }
                             
-                            
                             print("detent is 50")
                         }
                     }
@@ -745,12 +741,8 @@ struct CanvasPage_Previews: PreviewProvider {
 }
 
 
-
 extension View {
     func eraseToAnyView() -> AnyView {
         AnyView(self)
     }
 }
-
-//This resolves single tap issue
-//Forces things to wait until variable is not nil
