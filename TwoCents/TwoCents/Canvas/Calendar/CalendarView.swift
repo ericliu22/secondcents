@@ -31,15 +31,30 @@ struct CalendarView: View {
     }()
     
     // Compute the current date and the bounds
-    private var today: Date {
-        Calendar.current.startOfDay(for: Date())
-    }
-    
-    private var bounds: Range<Date> {
-        let endDate = Calendar.current.date(byAdding: .year, value: 1, to: today)!
-        return today..<endDate
-    }
-
+     private var startDate: Date {
+         let now = Date()
+         let calendar = Calendar.current
+         
+         if let preferredTime = preferredTime {
+             let preferredTimeToday = calendar.date(bySettingHour: calendar.component(.hour, from: preferredTime),
+                                                    minute: calendar.component(.minute, from: preferredTime),
+                                                    second: 0,
+                                                    of: now)!
+             
+             let cutoffTime = calendar.date(byAdding: .hour, value: 2, to: preferredTimeToday)!
+             
+             if now > cutoffTime {
+                 return calendar.startOfDay(for: calendar.date(byAdding: .day, value: 1, to: now)!)
+             }
+         }
+         
+         return calendar.startOfDay(for: now)
+     }
+     
+     private var bounds: Range<Date> {
+         let endDate = Calendar.current.date(byAdding: .year, value: 1, to: startDate)!
+         return startDate..<endDate
+     }
 
     private let columns = [
         GridItem(.flexible()),
@@ -65,27 +80,60 @@ struct CalendarView: View {
                             
                             
                             ForEach(timeSlots(for: selectedDate), id: \.self) { timeSlot in
-                                VStack{
-                                    Text(formatTime(timeSlot))
-                                        .fontWeight(.semibold)
-                                        .foregroundColor((localChosenDates[selectedDate]?.contains(timeSlot) == true ? Color.green : Color.red))
-                                        .frame(maxWidth: .infinity)
-                                    
-                                    if areTimesEqual(timeSlot: timeSlot, preferredTime: preferredTime ?? Date.now) {
-                                        Text("Proposed Time")
-                                            .font(.caption)
-                                            .foregroundColor((localChosenDates[selectedDate]?.contains(timeSlot) == true ? Color.green : Color.red))
-                                            .frame(maxWidth: .infinity)
-                                    }
-                                }
-                                .contentShape(Rectangle())
-                                .frame(height: 100)
-                                .background(.regularMaterial)
-                                .background((localChosenDates[selectedDate]?.contains(timeSlot) == true ? Color.green : Color.red))
-                                .cornerRadius(10)
-                                .onTapGesture {
+                                
+                                let buttonColor: Color = isTimeSlotInPast(timeSlot) ? Color.gray : (localChosenDates[selectedDate]?.contains(timeSlot) == true ? Color.green : Color.red)
+                                
+                                Button {
                                     toggleTimeSelection(timeSlot, for: selectedDate)
+                                } label: {
+                                    VStack{
+                                        Text(formatTime(timeSlot))
+                                            .fontWeight(.semibold)
+                                            .foregroundColor(buttonColor)
+                                            .frame(maxWidth: .infinity)
+                                        
+                                        if areTimesEqual(timeSlot: timeSlot, preferredTime: preferredTime ?? Date.now) {
+                                            Text("Proposed Time")
+                                                .font(.caption)
+                                                .foregroundColor(buttonColor)
+                                                .frame(maxWidth: .infinity)
+                                        }
+                                    }
+                                    .frame(height: 100)
                                 }
+                                .buttonStyle(.bordered)
+//                                .contentShape(Rectangle())
+                               
+//                                .background(.regularMaterial)
+//                                .background(buttonColor)
+                               
+//                                .cornerRadius(10)
+                                .disabled(isTimeSlotInPast(timeSlot)) // Disable the VStack if the time slot is in the past
+                                .tint(buttonColor)
+//
+//                                VStack {
+//                                    Text(formatTime(timeSlot))
+//                                        .fontWeight(.semibold)
+//                                        .foregroundColor(buttonColor)
+//                                        .frame(maxWidth: .infinity)
+//
+//                                    if areTimesEqual(timeSlot: timeSlot, preferredTime: preferredTime ?? Date.now) {
+//                                        Text("Proposed Time")
+//                                            .font(.caption)
+//                                            .foregroundColor(buttonColor)
+//                                            .frame(maxWidth: .infinity)
+//                                    }
+//                                }
+//                                .contentShape(Rectangle())
+//                                .frame(height: 100)
+//                                .background(.regularMaterial)
+//                                .background(buttonColor)
+//                                .cornerRadius(10)
+//                                .onTapGesture {
+//                                    toggleTimeSelection(timeSlot, for: selectedDate)
+//                                }
+//                                .disabled(isTimeSlotInPast(timeSlot)) // Disable the VStack if the time slot is in the past
+
                             }
                         }
                         .padding(.horizontal)
@@ -346,4 +394,17 @@ struct CalendarView: View {
         
         return timeSlotComponents == preferredTimeComponents
     }
+    
+    private func isTimeSlotInPast(_ timeSlot: Date) -> Bool {
+        let currentDate = Date()
+        let calendar = Calendar.current
+        
+        // If the timeSlot is today, check if it has passed
+        if calendar.isDateInToday(timeSlot) {
+            return timeSlot <= currentDate
+        }
+        
+        return false
+    }
+
 }
