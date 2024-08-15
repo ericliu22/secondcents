@@ -72,7 +72,7 @@ server {
     ssl_certificate /etc/nginx/ssl/analytics.twocentsapp.com/fullchain.pem;
     ssl_certificate_key /etc/nginx/ssl/analytics.twocentsapp.com/privkey.pem;
     include /etc/nginx/ssl/analytics.twocentsapp.com/options-ssl-nginx.conf;
-    ssl_dhparam /etc/nginx/ssl/analytics.twocentsappc.com/ssl-dhparams.pem;
+    ssl_dhparam /etc/nginx/ssl/analytics.twocentsapp.com/ssl-dhparams.pem;
 
     location / {
         proxy_pass http://plausible:8000;
