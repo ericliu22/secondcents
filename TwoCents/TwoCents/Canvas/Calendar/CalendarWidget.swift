@@ -2,6 +2,7 @@ import Foundation
 import SwiftUI
 import Firebase
 
+// Model to handle date formatting
 struct OptimalDate {
     var shortMonth: String?
     var longMonth: String?
@@ -10,57 +11,36 @@ struct OptimalDate {
     var date: Date?
     
     init(from dateString: String) {
-        guard !dateString.isEmpty else {
-            self.shortMonth = nil
-            self.longMonth = nil
-            self.day = nil
-            self.dayOfWeek = nil
-            self.date = nil
-            return
-        }
+        guard !dateString.isEmpty else { return }
         
-        // Create a date formatter for the initial date parsing
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
         
-        // Try to parse the date string into a Date object
         if let date = dateFormatter.date(from: dateString) {
             self.date = date
             
-            // Extracting the month in words
             dateFormatter.dateFormat = "MMM"
             self.shortMonth = dateFormatter.string(from: date)
             
-            // Extracting the month in words
             dateFormatter.dateFormat = "MMMM"
             self.longMonth = dateFormatter.string(from: date)
             
-            // Extracting the day in numbers
             dateFormatter.dateFormat = "dd"
             self.day = dateFormatter.string(from: date)
             
-            // Extracting the day of the week in words
             dateFormatter.dateFormat = "EEE"
             self.dayOfWeek = dateFormatter.string(from: date)
-        } else {
-            self.shortMonth = nil
-            self.longMonth = nil
-            self.day = nil
-            self.dayOfWeek = nil
-            self.date = nil
         }
     }
 }
+
+// Main view for displaying the calendar widget
 struct CalendarWidget: View {
     let widget: CanvasWidget
+    var spaceId: String
+    private let preferredTime: String = "7:00 PM"
 
     @State private var closestTime: String = ""
-    @State private var idsWithoutDate: [String] = []
-    @State private var userColor: Color = .gray
-    var spaceId: String
-    private let preferredTime: String = "7:00 PM" // Set your preferred time here
-    
-    @State private var bounce = false
     @State private var optimalDate = OptimalDate(from: "")
     
     var body: some View {
@@ -69,13 +49,10 @@ struct CalendarWidget: View {
             VStack {
                 if let date = optimalDate.date {
                     if isTodayOrTomorrow(date: date) && !hasDatePassed(date: date, time: closestTime) {
-                        // Event is today or tomorrow and hasn't passed yet
                         EventTimeView(optimalDate: $optimalDate, closestTime: $closestTime)
                     } else if hasDatePassed(date: date, time: closestTime) {
-                        // Event has passed
                         EventPassedView(optimalDate: $optimalDate, closestTime: $closestTime)
                     } else {
-                        // Event is in the future (beyond tomorrow)
                         EventDateView(optimalDate: $optimalDate, closestTime: $closestTime)
                     }
                 } else {
@@ -91,9 +68,6 @@ struct CalendarWidget: View {
         }
     }
 
-
-
-    
     private func setupSnapshotListener() async {
         let db = Firestore.firestore()
 
@@ -108,23 +82,17 @@ struct CalendarWidget: View {
                 }
 
                 guard let document = documentSnapshot, document.exists else {
-                    print("Document does not exist")
                     DispatchQueue.main.async {
                         self.optimalDate = OptimalDate(from: "")
-                        self.closestTime = "" // Clear the closestTime when there's no date
+                        self.closestTime = ""
                     }
                     return
                 }
 
                 let data = document.data() ?? [:]
-                print("Fetched data: \(data)")
-
                 let preferredTime = data["preferredTime"] as? String ?? self.preferredTime
-                print("Preferred Time: \(preferredTime)")
-
                 let (mostCommonDate, closestTime) = findOptimalDateAndTime(from: data, preferredTime: preferredTime)
 
-                // Ensure UI updates happen on the main thread
                 DispatchQueue.main.async {
                     self.optimalDate = OptimalDate(from: mostCommonDate)
                     self.closestTime = closestTime
@@ -138,39 +106,29 @@ struct CalendarWidget: View {
         let currentDate = Date()
         let calendar = Calendar.current
 
-        for (userId, userDates) in data where userId != "preferredTime" {
+        for (_, userDates) in data where userDates is [String: [String]] {
             guard let userDatesDict = userDates as? [String: [String]] else { continue }
 
             for (dateString, times) in userDatesDict {
-                // Parse the date string to a Date object
                 let dateFormatter = DateFormatter()
                 dateFormatter.dateFormat = "yyyy-MM-dd"
-                guard let date = dateFormatter.date(from: dateString) else {
-                    continue // Skip invalid dates
-                }
+                guard let date = dateFormatter.date(from: dateString) else { continue }
 
-                // Process times only if they are in the future or today but not yet passed
                 let validTimes = times.filter { time in
                     let timeFormatter = DateFormatter()
                     timeFormatter.dateFormat = "h:mm a"
                     timeFormatter.timeZone = TimeZone.current
-                    guard let timeDate = timeFormatter.date(from: time) else {
-                        return false
-                    }
-                    
-                    // Combine the date with the time to create a full Date object
+                    guard let timeDate = timeFormatter.date(from: time) else { return false }
+
                     let combinedDate = calendar.date(bySettingHour: calendar.component(.hour, from: timeDate),
                                                      minute: calendar.component(.minute, from: timeDate),
                                                      second: 0,
                                                      of: date)
                     
-                    // Only include times that are in the future or today but not yet passed
                     return combinedDate ?? currentDate > currentDate || Calendar.current.isDateInToday(date) && combinedDate! >= currentDate
                 }
 
-                if validTimes.isEmpty {
-                    continue // Skip this date if all times are in the past
-                }
+                if validTimes.isEmpty { continue }
 
                 dateFrequencies[dateString, default: 0] += 1
 
@@ -184,35 +142,21 @@ struct CalendarWidget: View {
             }
         }
 
-        print("Date Frequencies: \(dateFrequencies)")
-        print("Time Frequencies: \(timeFrequencies)")
+        if dateFrequencies.isEmpty { return ("", "") }
 
-        if dateFrequencies.isEmpty {
-            return ("", "")
-        }
-
-        // Find the date(s) with the highest frequency
         let maxFrequency = dateFrequencies.values.max() ?? 0
         let mostCommonDates = dateFrequencies.filter { $0.value == maxFrequency }.keys.sorted()
-
-        // Select the earliest date among the tied ones
         let mostCommonDate = mostCommonDates.min() ?? ""
-        print("Most Common Date: \(mostCommonDate)")
 
-        guard let dateTimes = timeFrequencies[mostCommonDate] else {
-            return ("", "")
-        }
+        guard let dateTimes = timeFrequencies[mostCommonDate] else { return ("", "") }
 
-        // Find the time with the highest frequency for the most common date
         let maxTimeFrequency = dateTimes.values.max() ?? 0
         let mostCommonTimes = dateTimes.filter { $0.value == maxTimeFrequency }.keys
 
-        // Find the closest time to the preferred time
         let closestTime = findClosestTime(to: preferredTime, from: Array(mostCommonTimes))
 
         return (mostCommonDate, closestTime)
     }
-
 
     private func findClosestTime(to preferredTime: String, from times: [String]) -> String {
         let formatter = DateFormatter()
@@ -224,7 +168,6 @@ struct CalendarWidget: View {
             return ""
         }
         
-        // Convert all times to Date objects and calculate differences
         let timeDifferences = times.compactMap { time -> (String, TimeInterval)? in
             guard let date = formatter.date(from: time) else {
                 print("Invalid time format: \(time)")
@@ -234,28 +177,24 @@ struct CalendarWidget: View {
             return (time, difference)
         }
         
-        // Sort by time difference first, then by time itself for ties
         let closestTime = timeDifferences.sorted {
             if $0.1 == $1.1 {
-                // If the time difference is the same, pick the earlier time
                 return formatter.date(from: $0.0)! < formatter.date(from: $1.0)!
             } else {
                 return $0.1 < $1.1
             }
         }.first?.0 ?? ""
         
-        print("Closest Time: \(closestTime)")
         return closestTime
     }
+
     private func isTodayOrTomorrow(date: Date) -> Bool {
         let calendar = Calendar.current
         
-        // Check if the event is today
         if calendar.isDateInToday(date) {
             return true
         }
         
-        // Check if the event is tomorrow
         if let tomorrow = calendar.date(byAdding: .day, value: 1, to: Date()), calendar.isDate(date, inSameDayAs: tomorrow) {
             return true
         }
@@ -263,31 +202,24 @@ struct CalendarWidget: View {
         return false
     }
 
-    
     private func hasDatePassed(date: Date, time: String) -> Bool {
         let calendar = Calendar.current
         let timeFormatter = DateFormatter()
         timeFormatter.dateFormat = "h:mm a"
         timeFormatter.timeZone = TimeZone.current
         
-        guard let timeDate = timeFormatter.date(from: time) else {
-            return true // Treat as passed if time parsing fails
-        }
+        guard let timeDate = timeFormatter.date(from: time) else { return true }
         
-        // Combine the date with the time to create a full Date object
         let combinedDate = calendar.date(bySettingHour: calendar.component(.hour, from: timeDate),
                                          minute: calendar.component(.minute, from: timeDate),
                                          second: 0,
                                          of: date) ?? date
         
-        // Check if the given date and time combination is earlier than the current date and time
         return combinedDate < Date()
     }
-
 }
 
-
-// VIEW FOR WHEN THERE IS NO OPTIMAL DATE
+// View for when there is no optimal date
 struct EmptyEventView: View {
     @State private var bounce: Bool = false
 
@@ -337,7 +269,7 @@ struct EmptyEventView: View {
     }
 }
 
-// VIEW FOR WHEN DATE IS MORE THAN 24 HOURS AWAY
+// View for when the date is more than 24 hours away
 struct EventDateView: View {
     @State private var bounce: Bool = false
  
@@ -366,7 +298,7 @@ struct EventDateView: View {
             Divider()
             Spacer()
 
-            HStack (spacing: 3) {
+            HStack(spacing: 3) {
                 if let dayOfWeek = optimalDate.dayOfWeek {
                     Text(dayOfWeek)
                         .font(.title2)
@@ -396,7 +328,7 @@ struct EventDateView: View {
     }
 }
 
-// VIEW FOR WHEN DATE IS LESS THAN 24 HOURS AWAY
+// View for when the date is less than 24 hours away
 struct EventTimeView: View {
     @State private var bounce: Bool = false
  
@@ -443,7 +375,7 @@ struct EventTimeView: View {
     }
 }
 
-// VIEW FOR WHEN EVENT HAS PASSED
+// View for when the event has passed
 struct EventPassedView: View {
     @State private var bounce: Bool = false
     
@@ -487,10 +419,8 @@ struct EventPassedView: View {
     }
     
     private func startAnimation() {
-        // Reset the state to ensure consistent behavior
         bounce = false
         
-        // Add a slight delay to allow the view to fully appear before starting the animation
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             let animation = Animation.easeInOut(duration: 1)
                 .delay(2.0)
