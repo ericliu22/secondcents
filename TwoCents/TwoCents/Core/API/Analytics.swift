@@ -50,14 +50,12 @@ final class AnalyticsManager {
         let appVersion: String = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "unknown"
         
         let props: [String: Any] = [
-            "os": "iOS",
-            "exception_name": exception_name,
-            "exception_reason": exception_reason,
-            "signal": signal,
-            "app_version": appVersion
+            "Exception Name": exception_name,
+            "Exception Reason": exception_reason,
+            "App Version": appVersion
         ]
         
-        sendPlausible(name: "crash_event", props: props)
+        sendPlausible(name: "Crash", props: props)
     }
     
     func pageView(url: String, props: [String: Any]) {
@@ -65,15 +63,13 @@ final class AnalyticsManager {
     }
     
     func messageSend() {
-        print("ANALYTICS MESSAGE SEND")
-        sendPlausible(name: "message_send")
+        sendPlausible(name: "Message Send")
     }
     
     func tickle(count: Int = 1) {
-        print("ASDFSAKDFJSAKDFL")
         let props: [String: Any] = [
-            "tickle_count": count
+            "Tickle Count": count
         ]
-        sendPlausible(name: "tickle", props: props)
+        sendPlausible(name: "Tickle", props: props)
     }
 }
