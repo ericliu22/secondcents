@@ -95,10 +95,8 @@ struct ChatBubbleView: View {
         .gesture(
             DragGesture(minimumDistance: 25, coordinateSpace: .scrollView)
                 .onChanged { value in
-//                    let horizontalThreshold: CGFloat = 10
-//                    let isHorizontalDrag = abs(value.translation.width) > horizontalThreshold && abs(value.translation.height) < horizontalThreshold
 
-                    if /*isHorizontalDrag &&*/ threadId == ""{
+                    if threadId == ""{
                         let isDraggingLeft = sentByMe && value.translation.width < 0 && value.translation.width > -50
                         let isDraggingRight = !sentByMe && value.translation.width > 0 && value.translation.width < 50
 
@@ -116,10 +114,11 @@ struct ChatBubbleView: View {
                     }
                 }
                 .onEnded { value in
-//                    let horizontalThreshold: CGFloat = 10
-//                    let isHorizontalDrag = abs(value.translation.width) > horizontalThreshold && abs(value.translation.height) < horizontalThreshold
+                    let isDraggingLeft = sentByMe && value.translation.width < 0
+                    let isDraggingRight = !sentByMe && value.translation.width > 0 
 
-                    if /*isHorizontalDrag && */abs(value.translation.width) > 35 {
+
+                    if (isDraggingLeft || isDraggingRight) && abs(value.translation.width) > 35 {
                         
                         if let messageThreadId = message.threadId, threadId == ""{
                             print("the msg u swiped on's id is \(messageThreadId)")
