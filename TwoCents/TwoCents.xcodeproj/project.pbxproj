@@ -103,6 +103,7 @@
 		AB6EE7782C25FE4400F6FDE2 /* NewMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB6EE7772C25FE4400F6FDE2 /* NewMapView.swift */; };
 		AB7365BB2A85060F00799D31 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = AB7365BA2A85060F00799D31 /* GoogleService-Info.plist */; };
 		AB73A2872C6EEEC3008C7190 /* ImageWidgetSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB73A2862C6EEEC3008C7190 /* ImageWidgetSheetView.swift */; };
+		AB73A28A2C6F3BA2008C7190 /* VideoWidgetSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB73A2892C6F3BA2008C7190 /* VideoWidgetSheetView.swift */; };
 		AB7438412AAA349C001B4988 /* SearchUserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB7438402AAA349C001B4988 /* SearchUserView.swift */; };
 		AB7438432AAA34AD001B4988 /* SearchUserViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB7438422AAA34AD001B4988 /* SearchUserViewModel.swift */; };
 		AB77664A2C25266300F95E65 /* SetLocationWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB7766492C25266300F95E65 /* SetLocationWidgetView.swift */; };
@@ -280,6 +281,7 @@
 		AB6EE7772C25FE4400F6FDE2 /* NewMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewMapView.swift; sourceTree = "<group>"; };
 		AB7365BA2A85060F00799D31 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		AB73A2862C6EEEC3008C7190 /* ImageWidgetSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageWidgetSheetView.swift; sourceTree = "<group>"; };
+		AB73A2892C6F3BA2008C7190 /* VideoWidgetSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoWidgetSheetView.swift; sourceTree = "<group>"; };
 		AB7438402AAA349C001B4988 /* SearchUserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchUserView.swift; sourceTree = "<group>"; };
 		AB7438422AAA34AD001B4988 /* SearchUserViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchUserViewModel.swift; sourceTree = "<group>"; };
 		AB7766492C25266300F95E65 /* SetLocationWidgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetLocationWidgetView.swift; sourceTree = "<group>"; };
@@ -588,7 +590,7 @@
 				AB73A2852C6EEEAE008C7190 /* Image */,
 				AB140E482C3094AE008321F9 /* EventWidget.swift */,
 				857753012C308B0E00B4A971 /* DateAlignment.swift */,
-				AB6778E52AB8F67D00C11AA7 /* VideoWidget.swift */,
+				AB73A2882C6F3B8E008C7190 /* Video */,
 				AB6778E32AB8F67800C11AA7 /* CanvasWidget.swift */,
 				ABC461E42BE28ECE00AE47FF /* TestView.swift */,
 				AB6EA60F2B87A27D00CC90FF /* SplashView.swift */,
@@ -693,6 +695,15 @@
 				AB73A2862C6EEEC3008C7190 /* ImageWidgetSheetView.swift */,
 			);
 			path = Image;
+			sourceTree = "<group>";
+		};
+		AB73A2882C6F3B8E008C7190 /* Video */ = {
+			isa = PBXGroup;
+			children = (
+				AB6778E52AB8F67D00C11AA7 /* VideoWidget.swift */,
+				AB73A2892C6F3BA2008C7190 /* VideoWidgetSheetView.swift */,
+			);
+			path = Video;
 			sourceTree = "<group>";
 		};
 		AB74383F2AAA339A001B4988 /* SearchUser */ = {
@@ -1089,6 +1100,7 @@
 				857753022C308B0E00B4A971 /* DateAlignment.swift in Sources */,
 				A240F67B2C6965F100618903 /* Utilities.swift in Sources */,
 				AB69F03D2C1D188E00B81E79 /* SignInPhoneNumberView.swift in Sources */,
+				AB73A28A2C6F3BA2008C7190 /* VideoWidgetSheetView.swift in Sources */,
 				8573EC8B2AE6EF9C00CFB579 /* ParticleView.swift in Sources */,
 				AB370E0B2C34EDA500C4431F /* NewChatView.swift in Sources */,
 				ABA45E842A7C92B00015F000 /* UserManager.swift in Sources */,

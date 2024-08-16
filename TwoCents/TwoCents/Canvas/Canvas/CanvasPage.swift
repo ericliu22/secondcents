@@ -70,7 +70,8 @@ struct CanvasPage: View {
     
     
     enum sheetTypesCanvasPage: Identifiable  {
-        case newWidgetView, chat, poll, newTextView, todo, image
+        case newWidgetView, chat, poll, newTextView, todo, image, video
+        
         
         var id: Self {
             return self
@@ -501,6 +502,40 @@ struct CanvasPage: View {
                     .foregroundColor(Color(UIColor.label))
                     .padding(.horizontal, 5)
             }).eraseToAnyView()
+            
+            
+        case .image:
+            return Button(action: {
+                activeWidget = viewModel.selectedWidget
+                viewModel.selectedWidget = nil
+                widgetDoubleTapped = false
+                activeSheet = .image
+            }, label: {
+                Image(systemName: "arrow.up.left.and.arrow.down.right")
+                    .foregroundColor(Color(UIColor.label))
+                    .font(.title3)
+                    .padding(.horizontal, 5)
+            }).eraseToAnyView()
+
+            
+            
+            
+        case .video:
+            return Button(action: {
+                activeWidget = viewModel.selectedWidget
+                viewModel.selectedWidget = nil
+                widgetDoubleTapped = false
+                activeSheet = .video
+            }, label: {
+                Image(systemName: "arrow.up.left.and.arrow.down.right")
+                    .foregroundColor(Color(UIColor.label))
+                    .font(.title3)
+                    .padding(.horizontal, 5)
+            }).eraseToAnyView()
+
+            
+            
+            
         default:
             return EmptyView().eraseToAnyView()
         }
@@ -724,6 +759,9 @@ struct CanvasPage: View {
               
                 
                   
+            case .video:
+                VideoWidgetSheetView(widget: waitForVariable{activeWidget}, spaceId: spaceId)
+                .presentationBackground(.thickMaterial)
             }
             
         })
