@@ -610,7 +610,8 @@ struct CanvasPage: View {
             .padding(.horizontal, 20)
             .padding(.vertical, 10) // Add vertical padding
             .background(Color(UIColor.systemBackground), in: Capsule())
-            .shadow(color: Color.black.opacity(0.2), radius: 20, x: 0, y: 4)
+            .shadow(color: Color.accentColor.opacity(0.3), radius: 8, x: 0, y: 0)
+            
         }
         
         .frame(maxHeight: .infinity, alignment: .bottom)
