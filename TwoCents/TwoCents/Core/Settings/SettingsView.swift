@@ -36,12 +36,20 @@ struct SettingsView: View {
                     
                 }
                 
-                
-                
-                NavigationLink(destination: ContactsView()) {
-                    Text("Contacts")
-                        .foregroundColor(Color.accentColor)
+                Button("Contacts"){
+                    Task {
+                        do{
+                          
+                            
+                            activeSheet  = .addFriendFromContactsView
+                        }  catch {
+                            print(error)
+                        }
+                    }
+                    
+                    
                 }
+                
                 
             } header: {
                 Text("Personal Details")

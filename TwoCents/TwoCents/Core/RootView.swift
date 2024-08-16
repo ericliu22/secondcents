@@ -86,7 +86,10 @@ struct RootView: View {
                 case .signUpPhoneNumberView:
                     SignUpPhoneNumberView(activeSheet: $activeSheet, userPhoneNumber: $userPhoneNumber)
                 case .addFriendFromContactsView:
-                    AddFriendFromContactsView(activeSheet:$activeSheet)
+                    
+                    NavigationView{
+                        AddFriendFromContactsView(activeSheet:$activeSheet)
+                    }
                     
                 }
             }

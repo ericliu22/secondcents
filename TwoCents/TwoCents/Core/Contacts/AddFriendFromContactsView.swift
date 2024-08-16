@@ -27,7 +27,7 @@ struct AddFriendFromContactsView: View {
     
     
     var body: some View {
-        NavigationView {
+//        NavigationView {
             ScrollView {
                 LazyVStack(alignment: .leading) {
                     ForEach(filteredSearch, id: \.self) { contact in
@@ -261,7 +261,7 @@ struct AddFriendFromContactsView: View {
                     }
                 }
             }
-        }
+//        }
         .searchable(text: $searchTerm, prompt: "Search")
     }
 }

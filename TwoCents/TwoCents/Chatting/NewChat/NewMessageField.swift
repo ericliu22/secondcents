@@ -30,7 +30,7 @@ struct NewMessageField: View {
                 viewModel.sendMessages(text: message, widget: replyWidget, spaceId: spaceId, threadId: threadId)
                 message = ""
                 replyWidget = nil
-                isFocused = false // Dismiss keyboard after sending message
+//                isFocused = false // Dismiss keyboard after sending message
             } label: {
                 Image(systemName: "arrow.up")
                     .font(.headline)
