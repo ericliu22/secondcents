@@ -184,6 +184,14 @@ struct NewChatView: View {
                 }
             }
             
+            .overlay(
+            
+                    Color("customClear")
+                        .frame(height: 300)
+                        .frame(maxHeight: .infinity, alignment: .top)
+             
+                
+            )
        
             .overlay(
             
