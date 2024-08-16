@@ -34,6 +34,7 @@ struct NewChatView: View {
            
             
             ScrollViewReader { proxy in
+                
                 List {
                     Spacer()
                         .frame(height: 30)

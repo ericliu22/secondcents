@@ -81,14 +81,16 @@ struct FrontPageView: View {
 //                }
 //            
             
-            
-            SearchUserView(activeSheet: $activeSheet, loadedColor: $loadedColor, targetUserId: "")
-                .tabItem {
-                    Image(systemName: "magnifyingglass")
-                    Text("Search")
-                }
-                .tag(4)
-
+            NavigationStack{
+                SearchUserView(activeSheet: $activeSheet, loadedColor: $loadedColor, targetUserId: "")
+                   
+            }
+            .tabItem {
+                Image(systemName: "magnifyingglass")
+                Text("Search")
+            }
+            .tag(4)
+        
             
             NavigationStack {
 

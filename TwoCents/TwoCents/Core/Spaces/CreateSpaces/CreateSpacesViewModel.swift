@@ -103,10 +103,16 @@ final class CreateSpacesViewModel: ObservableObject{
     
     @Published private(set) var allFriends: [DBUser] = []
     
+    @Published private(set) var hasNoFriends: Bool = false
+    
     
     func getAllFriends() async throws {
         let authDataResult = try AuthenticationManager.shared.getAuthenticatedUser()
         self.allFriends = try await UserManager.shared.getAllFriends(userId: authDataResult.uid)
+        
+        if self.allFriends.isEmpty {
+            self.hasNoFriends = true
+        }
     }
     
     
