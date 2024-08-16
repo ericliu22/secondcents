@@ -212,17 +212,17 @@ struct CalendarView: View {
             }
         }
     }
-
     func saveDates() {
         let db = Firestore.firestore()
         let userId = try! AuthenticationManager.shared.getAuthenticatedUser().uid
-        
+
         var saveData: [String: [String]] = [:]
-        var timeSlotCounts: [String: [String: Int]] = [:]
-        
+        var updatedTimeSlotCounts: [String: [String: Int]] = [:]
+
         let currentDate = Date()
         let calendar = Calendar.current
-        
+
+        // Compare current localChosenDates with previously saved dates
         for (date, times) in localChosenDates {
             let filteredTimes: Set<Date>
             if calendar.isDateInToday(date) {
@@ -230,55 +230,121 @@ struct CalendarView: View {
             } else {
                 filteredTimes = times
             }
-            
+
             if !filteredTimes.isEmpty {
                 let dateKey = dateFormatter.string(from: date)
                 let timeStrings = filteredTimes.map { formatTime($0) }
                 saveData[dateKey] = timeStrings
-                
-                // Update timeSlotCounts
-                var dateSlotCounts: [String: Int] = timeSlotCounts[dateKey] ?? [:]
-                for timeSlot in filteredTimes {
-                    let timeString = formatTime(timeSlot)
-                    dateSlotCounts[timeString, default: 0] += 1
-                }
-                timeSlotCounts[dateKey] = dateSlotCounts
             }
         }
-        
+
         let preferredTimeString = preferredTime != nil ? timeFormatter.string(from: preferredTime!) : ""
-        
-        db.collection("spaces")
+
+        let documentRef = db.collection("spaces")
             .document(spaceId)
             .collection("dates")
             .document(widget.id.uuidString)
-            .updateData([
+
+        documentRef.getDocument { document, error in
+            if let error = error {
+                print("Error retrieving data: \(error)")
+                return
+            }
+
+            var mergedTimeSlotCounts: [String: [String: Int]] = [:]
+            var previousTimeSlotSelections: [String: Set<String>] = [:]
+
+            if let document = document, document.exists, let data = document.data(),
+               let existingTimeSlotCounts = data["timeSlotCounts"] as? [String: [String: Int]],
+               let previousUserDates = data[userId] as? [String: [String]] {
+
+                // Convert previousUserDates to a Set structure for easy comparison
+                previousTimeSlotSelections = previousUserDates.mapValues { Set($0) }
+
+                mergedTimeSlotCounts = existingTimeSlotCounts
+
+                // Update counts based on changes between previous and current selections
+                for (dateKey, newTimes) in saveData {
+                    let newTimeSet = Set(newTimes)
+                    let previousTimeSet = previousTimeSlotSelections[dateKey] ?? Set<String>()
+
+                    // Determine added and removed times
+                    let addedTimes = newTimeSet.subtracting(previousTimeSet)
+                    let removedTimes = previousTimeSet.subtracting(newTimeSet)
+
+                    // Update timeSlotCounts
+                    var updatedCounts = mergedTimeSlotCounts[dateKey] ?? [:]
+                    for timeString in addedTimes {
+                        updatedCounts[timeString, default: 0] += 1
+                    }
+                    for timeString in removedTimes {
+                        updatedCounts[timeString, default: 0] -= 1
+                        if updatedCounts[timeString]! <= 0 {
+                            updatedCounts[timeString] = nil
+                        }
+                    }
+                    if !updatedCounts.isEmpty {
+                        mergedTimeSlotCounts[dateKey] = updatedCounts
+                    } else {
+                        mergedTimeSlotCounts.removeValue(forKey: dateKey)
+                    }
+                }
+
+                // Handle dates that were fully removed (not present in current selections)
+                let removedDates = Set(previousTimeSlotSelections.keys).subtracting(saveData.keys)
+                for removedDateKey in removedDates {
+                    if let removedTimes = previousTimeSlotSelections[removedDateKey] {
+                        var updatedCounts = mergedTimeSlotCounts[removedDateKey] ?? [:]
+                        for timeString in removedTimes {
+                            updatedCounts[timeString, default: 0] -= 1
+                            if updatedCounts[timeString]! <= 0 {
+                                updatedCounts[timeString] = nil
+                            }
+                        }
+                        if !updatedCounts.isEmpty {
+                            mergedTimeSlotCounts[removedDateKey] = updatedCounts
+                        } else {
+                            mergedTimeSlotCounts.removeValue(forKey: removedDateKey)
+                        }
+                    }
+                }
+
+            } else {
+                // If there's no previous data, simply save the new data
+                for (dateKey, timeStrings) in saveData {
+                    for timeString in timeStrings {
+                        updatedTimeSlotCounts[dateKey, default: [:]][timeString, default: 0] += 1
+                    }
+                }
+                mergedTimeSlotCounts = updatedTimeSlotCounts
+            }
+
+            // Update Firestore with merged data
+            documentRef.updateData([
                 userId: saveData,
                 "preferredTime": preferredTimeString,
-                "timeSlotCounts": timeSlotCounts
+                "timeSlotCounts": mergedTimeSlotCounts
             ]) { error in
                 if let error = error {
                     print("Error updating data: \(error)")
-                    db.collection("spaces")
-                        .document(spaceId)
-                        .collection("dates")
-                        .document(widget.id.uuidString)
-                        .setData([
-                            userId: saveData,
-                            "preferredTime": preferredTimeString,
-                            "timeSlotCounts": timeSlotCounts
-                        ]) { setError in
-                            if let setError = setError {
-                                print("Error setting data: \(setError)")
-                            } else {
-                                print("Data saved successfully")
-                            }
+                    documentRef.setData([
+                        userId: saveData,
+                        "preferredTime": preferredTimeString,
+                        "timeSlotCounts": mergedTimeSlotCounts
+                    ]) { setError in
+                        if let setError = setError {
+                            print("Error setting data: \(setError)")
+                        } else {
+                            print("Data saved successfully")
                         }
+                    }
                 } else {
                     print("Data updated successfully")
                 }
             }
+        }
     }
+
 
     private func loadSavedDates() {
         let db = Firestore.firestore()
