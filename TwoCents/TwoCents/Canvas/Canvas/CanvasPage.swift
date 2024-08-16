@@ -669,7 +669,7 @@ struct CanvasPage: View {
                 }
                 .navigationTitle(toolPickerActive ? "" : viewModel.space?.name ?? "" )
 //                .background(  Color(UIColor.secondarySystemBackground))
-                .background(Color("bgColor"))
+                .background(Color(UIColor.secondarySystemBackground))
         }
         .onChange(of: appModel.shouldNavigateToSpace, {
             if appModel.shouldNavigateToSpace {
@@ -777,9 +777,9 @@ struct CanvasPage: View {
 
         })
 //        .background(.ultraThickMaterial)
-//        .background(  Color(UIColor.systemBackground))
+        .background(  Color(UIColor.secondarySystemBackground))
         
-        .background(Color("bgColor"))
+//        .background(Color("bgColor"))
 //        .background(.ultraThickMaterial)
         .overlay(doubleTapOverlay())
     }
