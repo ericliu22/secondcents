@@ -70,7 +70,7 @@ struct CanvasPage: View {
     
     
     enum sheetTypesCanvasPage: Identifiable  {
-        case newWidgetView, chat, poll, newTextView, todo
+        case newWidgetView, chat, poll, newTextView, todo, image
         
         var id: Self {
             return self
@@ -436,6 +436,9 @@ struct CanvasPage: View {
                 if let url = widget.mediaURL {
                     viewModel.openLink(url: url)
                 }
+            case .image:
+                activeWidget = widget
+                activeSheet = .image
             default:
                 break
             }
@@ -715,7 +718,12 @@ struct CanvasPage: View {
             case .todo:
                     //Waits until activeWidget is not nil
                     TodoWidgetSheetView(widget: waitForVariable{activeWidget}, spaceId: spaceId)
+            case .image:
+                    ImageWidgetSheetView(widget: waitForVariable{activeWidget}, spaceId: spaceId)
+                    .presentationBackground(.thickMaterial)
+              
                 
+                  
             }
             
         })

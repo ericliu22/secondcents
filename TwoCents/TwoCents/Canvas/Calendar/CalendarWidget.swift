@@ -9,8 +9,11 @@ struct OptimalDate {
     var day: String?
     var dayOfWeek: String?
     var date: Date?
+    var maxTimeFrequency: Int
     
-    init(from dateString: String) {
+    init(from dateString: String, maxTimeFrequency: Int) {
+        self.maxTimeFrequency = maxTimeFrequency
+        
         guard !dateString.isEmpty else { return }
         
         let dateFormatter = DateFormatter()
@@ -31,6 +34,8 @@ struct OptimalDate {
             dateFormatter.dateFormat = "EEE"
             self.dayOfWeek = dateFormatter.string(from: date)
         }
+        
+
     }
 }
 
@@ -41,7 +46,7 @@ struct CalendarWidget: View {
     private let preferredTime: String = "7:00 PM"
 
     @State private var closestTime: String = ""
-    @State private var optimalDate = OptimalDate(from: "")
+    @State private var optimalDate = OptimalDate(from: "", maxTimeFrequency: 0)
     @State private var eventName: String = "Eventful Event"
     
     var body: some View {
@@ -84,7 +89,7 @@ struct CalendarWidget: View {
 
                 guard let document = documentSnapshot, document.exists else {
                     DispatchQueue.main.async {
-                        self.optimalDate = OptimalDate(from: "")
+                        self.optimalDate = OptimalDate(from: "", maxTimeFrequency: 0)
                         self.closestTime = ""
                         self.eventName = "Eventful Event" // Fallback name
                     }
@@ -94,17 +99,17 @@ struct CalendarWidget: View {
                 let data = document.data() ?? [:]
                 let preferredTime = data["preferredTime"] as? String ?? self.preferredTime
                 let eventName = data["name"] as? String ?? "Eventful Event" // Fetch the event name
-                let (mostCommonDate, closestTime) = findOptimalDateAndTime(from: data, preferredTime: preferredTime)
+                let (mostCommonDate, closestTime, maxTimeFrequency) = findOptimalDateAndTime(from: data, preferredTime: preferredTime)
 
                 DispatchQueue.main.async {
-                    self.optimalDate = OptimalDate(from: mostCommonDate)
+                    self.optimalDate = OptimalDate(from: mostCommonDate, maxTimeFrequency: maxTimeFrequency)
                     self.closestTime = closestTime
                     self.eventName = eventName // Set the event name
                 }
             }
     }
     
-    private func findOptimalDateAndTime(from data: [String: Any], preferredTime: String) -> (String, String) {
+    private func findOptimalDateAndTime(from data: [String: Any], preferredTime: String) -> (String, String, Int) {
         var dateFrequencies: [String: Int] = [:]
         var timeFrequencies: [String: [String: Int]] = [:]
         let currentDate = Date()
@@ -146,20 +151,20 @@ struct CalendarWidget: View {
             }
         }
 
-        if dateFrequencies.isEmpty { return ("", "") }
+        if dateFrequencies.isEmpty { return ("", "", 0) }
 
         let maxFrequency = dateFrequencies.values.max() ?? 0
         let mostCommonDates = dateFrequencies.filter { $0.value == maxFrequency }.keys.sorted()
         let mostCommonDate = mostCommonDates.min() ?? ""
 
-        guard let dateTimes = timeFrequencies[mostCommonDate] else { return ("", "") }
+        guard let dateTimes = timeFrequencies[mostCommonDate] else { return ("", "", 0) }
 
         let maxTimeFrequency = dateTimes.values.max() ?? 0
         let mostCommonTimes = dateTimes.filter { $0.value == maxTimeFrequency }.keys
 
         let closestTime = findClosestTime(to: preferredTime, from: Array(mostCommonTimes))
 
-        return (mostCommonDate, closestTime)
+        return (mostCommonDate, closestTime, maxTimeFrequency)
     }
 
     private func findClosestTime(to preferredTime: String, from times: [String]) -> String {
@@ -371,9 +376,26 @@ struct EventTimeView: View {
             }
             
             Text(closestTime)
-                .font(.title)
+                .font(.title2)
                 .fontWeight(.bold)
                 .foregroundColor(.primary)
+            
+            
+            
+           
+            
+            Text("\(optimalDate.maxTimeFrequency) " + (optimalDate.maxTimeFrequency == 1 ? "Attendee" : "Attendees"))
+
+                .font(.caption2)
+                .fontWeight(.light)
+                .foregroundColor(.secondary)
+                .padding(.top, 3)
+            
+            
+        
+        
+            
+            
             
             Spacer()
         }
