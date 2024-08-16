@@ -167,9 +167,9 @@ struct CanvasPage: View {
             ZStack {
                 
 //                                     
-//                Color(UIColor.systemBackground)
-//                .clipped()
-//                .frame(width: FRAME_SIZE, height: FRAME_SIZE)
+                Color("bgColor")
+                .clipped()
+                .frame(width: FRAME_SIZE, height: FRAME_SIZE)
 
                 Background()
                 GridView()
@@ -302,7 +302,7 @@ struct CanvasPage: View {
                 MediaView(widget: widget, spaceId: spaceId)
                     .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
                     .cornerRadius(CORNER_RADIUS)
-                    .shadow(color: Color.black.opacity(0.05), radius: 4, x: 0, y: 4)
+//                    .shadow(color: Color.black.opacity(0.05), radius: 4, x: 0, y: 4)
                     .frame(
                         width: TILE_SIZE,
                         height: TILE_SIZE
@@ -610,7 +610,7 @@ struct CanvasPage: View {
             .padding(.horizontal, 20)
             .padding(.vertical, 10) // Add vertical padding
             .background(Color(UIColor.systemBackground), in: Capsule())
-            .shadow(color: Color.accentColor.opacity(0.3), radius: 8, x: 0, y: 0)
+            .shadow(color: Color.black.opacity(0.2), radius: 20, x: 0, y: 4)
             
         }
         
@@ -669,7 +669,7 @@ struct CanvasPage: View {
                 }
                 .navigationTitle(toolPickerActive ? "" : viewModel.space?.name ?? "" )
 //                .background(  Color(UIColor.secondarySystemBackground))
-                .background(  .ultraThickMaterial)
+                .background(Color("bgColor"))
         }
         .onChange(of: appModel.shouldNavigateToSpace, {
             if appModel.shouldNavigateToSpace {
@@ -776,8 +776,10 @@ struct CanvasPage: View {
             print("CANVASPAGE: appModel.inSpace \(appModel.inSpace)")
 
         })
-        .background(.ultraThickMaterial)
-        .background(  Color(UIColor.systemBackground))
+//        .background(.ultraThickMaterial)
+//        .background(  Color(UIColor.systemBackground))
+        
+        .background(Color("bgColor"))
 //        .background(.ultraThickMaterial)
         .overlay(doubleTapOverlay())
     }
