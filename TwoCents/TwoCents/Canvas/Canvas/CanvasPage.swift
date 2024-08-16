@@ -166,10 +166,10 @@ struct CanvasPage: View {
     func canvasView() -> some View {
             ZStack {
                 
-                                     
-                Color(UIColor.systemBackground)
-                .clipped()
-                .frame(width: FRAME_SIZE, height: FRAME_SIZE)
+//                                     
+//                Color(UIColor.systemBackground)
+//                .clipped()
+//                .frame(width: FRAME_SIZE, height: FRAME_SIZE)
 
                 Background()
                 GridView()
@@ -668,7 +668,8 @@ struct CanvasPage: View {
                     }
                 }
                 .navigationTitle(toolPickerActive ? "" : viewModel.space?.name ?? "" )
-                .background(  Color(UIColor.secondarySystemBackground))
+//                .background(  Color(UIColor.secondarySystemBackground))
+                .background(  .ultraThickMaterial)
         }
         .onChange(of: appModel.shouldNavigateToSpace, {
             if appModel.shouldNavigateToSpace {
@@ -775,7 +776,9 @@ struct CanvasPage: View {
             print("CANVASPAGE: appModel.inSpace \(appModel.inSpace)")
 
         })
-        .background(  Color(UIColor.secondarySystemBackground))
+        .background(.ultraThickMaterial)
+        .background(  Color(UIColor.systemBackground))
+//        .background(.ultraThickMaterial)
         .overlay(doubleTapOverlay())
     }
 }
