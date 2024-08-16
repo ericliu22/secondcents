@@ -560,6 +560,8 @@ struct ProfileView: View {
             
             
         })
+        
+        
         .navigationTitle("Profile 🤠")
         .toolbar{
             if (targetUserId.isEmpty) {
