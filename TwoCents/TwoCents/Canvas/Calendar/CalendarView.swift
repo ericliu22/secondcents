@@ -85,6 +85,13 @@ struct CalendarView: View {
 
                                 Button {
                                     toggleTimeSelection(timeSlot, for: selectedDate)
+                                    
+                                    //haptic
+                                    
+                                    let generator = UIImpactFeedbackGenerator(style: .light)
+                                    generator.impactOccurred()
+                                    
+                                    
                                 } label: {
                                     VStack {
                                         Text(formatTime(timeSlot))
