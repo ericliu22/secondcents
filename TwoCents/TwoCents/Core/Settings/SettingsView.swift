@@ -15,8 +15,39 @@ struct SettingsView: View {
         List{
             
             
-            emailSection
+//            emailSection
 
+            
+            
+            Section {
+                
+               
+                Button("Customize Profile"){
+                    Task {
+                        do{
+                          
+                            
+                            activeSheet  = .customizeProfileView
+                        }  catch {
+                            print(error)
+                        }
+                    }
+                    
+                    
+                }
+                
+                
+                
+                NavigationLink(destination: ContactsView()) {
+                    Text("Contacts")
+                        .foregroundColor(Color.accentColor)
+                }
+                
+            } header: {
+                Text("Personal Details")
+            }
+            
+            
             
             Button("Log Out"){
                 Task {
