@@ -102,8 +102,13 @@ struct CalendarWidget: View {
                 let (mostCommonDate, closestTime, maxTimeFrequency) = findOptimalDateAndTime(from: data, preferredTime: preferredTime)
 
                 DispatchQueue.main.async {
-                    self.optimalDate = OptimalDate(from: mostCommonDate, maxTimeFrequency: maxTimeFrequency)
-                    self.closestTime = closestTime
+                    if maxTimeFrequency > 1 {
+                        self.optimalDate = OptimalDate(from: mostCommonDate, maxTimeFrequency: maxTimeFrequency)
+                        self.closestTime = closestTime
+                    } else {
+                        self.optimalDate = OptimalDate(from: "", maxTimeFrequency: 0)
+                        self.closestTime = ""
+                    }
                     self.eventName = eventName // Set the event name
                 }
             }

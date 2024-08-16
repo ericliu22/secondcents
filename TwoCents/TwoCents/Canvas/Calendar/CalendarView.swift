@@ -11,6 +11,8 @@ struct CalendarView: View {
     @State private var currentlySelectedDate: Date? = nil
     @State private var preferredTime: Date? = nil
     @State private var isDatePickerEnabled: Bool = false // Control the enabled/disabled state of the date picker
+    @State private var timeSlotUserCounts: [Date: Int] = [:]
+
     
     let dateFormatterMonthDay: DateFormatter = {
         let formatter = DateFormatter()
@@ -79,7 +81,8 @@ struct CalendarView: View {
                                 let isPast = isTimeSlotInPast(timeSlot)
                                 let isChosen = localChosenDates[selectedDate]?.contains(timeSlot) == true
                                 let buttonColor: Color = isPast ? .gray : (isChosen ? .green : .red)
-                                
+                                let userCount = timeSlotUserCounts[timeSlot, default: 0]  // Get the user count
+
                                 Button {
                                     toggleTimeSelection(timeSlot, for: selectedDate)
                                 } label: {
@@ -92,9 +95,15 @@ struct CalendarView: View {
                                         if areTimesEqual(timeSlot: timeSlot, preferredTime: preferredTime ?? Date()) {
                                             Text("Proposed Time")
                                                 .font(.caption)
+                                            
                                                 .foregroundColor(buttonColor)
                                                 .frame(maxWidth: .infinity)
                                         }
+                                        
+                                        Text("\(userCount) Selected")  // Display the user count
+                                            .font(.caption)
+                                            .foregroundColor(.secondary)
+                                            .frame(maxWidth: .infinity)
                                     }
                                     .frame(height: 100)
                                 }
@@ -103,6 +112,7 @@ struct CalendarView: View {
                                 .tint(buttonColor)
                             }
                         }
+
                         .padding(.horizontal)
                     }
                 } else {
@@ -208,6 +218,7 @@ struct CalendarView: View {
         let userId = try! AuthenticationManager.shared.getAuthenticatedUser().uid
         
         var saveData: [String: [String]] = [:]
+        var timeSlotCounts: [String: [String: Int]] = [:]
         
         let currentDate = Date()
         let calendar = Calendar.current
@@ -224,6 +235,14 @@ struct CalendarView: View {
                 let dateKey = dateFormatter.string(from: date)
                 let timeStrings = filteredTimes.map { formatTime($0) }
                 saveData[dateKey] = timeStrings
+                
+                // Update timeSlotCounts
+                var dateSlotCounts: [String: Int] = timeSlotCounts[dateKey] ?? [:]
+                for timeSlot in filteredTimes {
+                    let timeString = formatTime(timeSlot)
+                    dateSlotCounts[timeString, default: 0] += 1
+                }
+                timeSlotCounts[dateKey] = dateSlotCounts
             }
         }
         
@@ -235,7 +254,8 @@ struct CalendarView: View {
             .document(widget.id.uuidString)
             .updateData([
                 userId: saveData,
-                "preferredTime": preferredTimeString
+                "preferredTime": preferredTimeString,
+                "timeSlotCounts": timeSlotCounts
             ]) { error in
                 if let error = error {
                     print("Error updating data: \(error)")
@@ -245,7 +265,8 @@ struct CalendarView: View {
                         .document(widget.id.uuidString)
                         .setData([
                             userId: saveData,
-                            "preferredTime": preferredTimeString
+                            "preferredTime": preferredTimeString,
+                            "timeSlotCounts": timeSlotCounts
                         ]) { setError in
                             if let setError = setError {
                                 print("Error setting data: \(setError)")
@@ -295,10 +316,29 @@ struct CalendarView: View {
                         self.selectedDates = Set(groupedDates.keys.map { Calendar.current.dateComponents([.calendar, .era, .year, .month, .day], from: $0) })
                         updateCurrentlySelectedDate()
                     }
+                    
+                    if let timeSlotCounts = data["timeSlotCounts"] as? [String: [String: Int]] {
+                        self.timeSlotUserCounts = timeSlotCounts.flatMap { dateKey, timeCounts in
+                            timeCounts.map { timeString, count in
+                                let date = self.dateFormatter.date(from: dateKey)!
+                                let timeSlot = self.timeFormatter.date(from: timeString)!
+                                return (self.mergeDateAndTime(date: date, time: timeSlot), count)
+                            }
+                        }.reduce(into: [Date: Int]()) { $0[$1.0] = $1.1 }
+                    }
+                    
+                    isDatePickerEnabled = true // Enable the date picker after loading data
                 }
-                isDatePickerEnabled = true // Enable the date picker after loading data
             }
     }
+
+    private func mergeDateAndTime(date: Date, time: Date) -> Date {
+        let calendar = Calendar.current
+        let dateComponents = calendar.dateComponents([.year, .month, .day], from: date)
+        let timeComponents = calendar.dateComponents([.hour, .minute], from: time)
+        return calendar.date(bySettingHour: timeComponents.hour!, minute: timeComponents.minute!, second: 0, of: date)!
+    }
+
     
     private func updateCurrentlySelectedDate() {
         if let selectedDate = selectedDates.first.flatMap({ Calendar.current.date(from: $0) }) {
