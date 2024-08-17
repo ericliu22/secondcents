@@ -156,36 +156,61 @@ struct SpacesView: View {
         
         NavigationStack(path: $presentedPath) {
             ScrollView(.vertical) {
-                LazyVGrid(columns: columns, spacing: nil){
+                
+                if filteredSearch.isEmpty {
                     
-                    ForEach(filteredSearch) { spaceTile    in
+                    
+               
+                    
+               
+                        ContentUnavailableView(
+                            "No Spaces",
+                            systemImage: "rectangle.3.group.fill",
+                            description: Text("But hey, maybe personal space is all you need.")
+                        )
+                        .onTapGesture {
+                            isShowingCreateSpaces = true
+                        }
+                        .padding(.top, 200)
+                    
+                } else {
+                    
+                    LazyVGrid(columns: columns, spacing: nil){
                         
-                        NavigationLink {
-                            CanvasPage(spaceId: spaceTile.spaceId)
-                                .tint(loadedColor)
-                          
-                                .onDisappear {
-                                    //refresh spaces list to check if user left a space
-                                    Task {
-                                 
-                                        try? await viewModel.loadCurrentUser()
-                                        if let user = viewModel.user {
+                        ForEach(filteredSearch) { spaceTile    in
+                            
+                            NavigationLink {
+                                CanvasPage(spaceId: spaceTile.spaceId)
+                                    .tint(loadedColor)
+                                
+                                    .onDisappear {
+                                        //refresh spaces list to check if user left a space
+                                        Task {
                                             
-                                            try? await viewModel.getAllSpaces(userId: user.userId)
+                                            try? await viewModel.loadCurrentUser()
+                                            if let user = viewModel.user {
+                                                
+                                                try? await viewModel.getAllSpaces(userId: user.userId)
+                                            }
                                         }
                                     }
-                                }
                                 
-                        } label: {linkLabel(spaceTile: spaceTile)}
-            
+                            } label: {linkLabel(spaceTile: spaceTile)}
+                            
+                        }
+                        
                     }
-                    
+                    .padding(.horizontal)
                 }
-                .padding(.horizontal)
             }
+            
+            
+            
             .fullScreenCover(isPresented: $isShowingCreateSpaces, content: {
                 NavigationView{
-                    CreateSpacesView(spaceId: newSpaceUUID, isShowingCreateSpaces: $isShowingCreateSpaces)
+                    CreateSpacesView(spaceId: newSpaceUUID, loadedColor: $loadedColor, activeSheet: $activeSheet, isShowingCreateSpaces: $isShowingCreateSpaces )
+                    
+                    
                 }
             })
             .onChange(of: presentedPath, { oldValue, newValue in

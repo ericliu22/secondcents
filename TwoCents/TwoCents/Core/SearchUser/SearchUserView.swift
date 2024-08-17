@@ -35,7 +35,7 @@ struct SearchUserView: View {
         //            }
         //        }.onAppear { viewModel.fetchData() }
         
-        NavigationStack{
+      
             List{
                 
                 ForEach(filteredSearch) { userTile    in
@@ -136,7 +136,6 @@ struct SearchUserView: View {
             .navigationTitle( "Search 👀")
             .searchable(text: $searchTerm, prompt: "Search")
             
-        }
         .task {
          try? await viewModel.getAllUsers()
         }

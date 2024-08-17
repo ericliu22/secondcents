@@ -70,7 +70,8 @@ struct CanvasPage: View {
     
     
     enum sheetTypesCanvasPage: Identifiable  {
-        case newWidgetView, chat, poll, newTextView, todo
+        case newWidgetView, chat, poll, newTextView, todo, image, video
+        
         
         var id: Self {
             return self
@@ -165,8 +166,8 @@ struct CanvasPage: View {
     func canvasView() -> some View {
             ZStack {
                 
-                                     
-                Color(UIColor.systemBackground)
+//                                     
+                Color("bgColor")
                 .clipped()
                 .frame(width: FRAME_SIZE, height: FRAME_SIZE)
 
@@ -301,7 +302,7 @@ struct CanvasPage: View {
                 MediaView(widget: widget, spaceId: spaceId)
                     .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
                     .cornerRadius(CORNER_RADIUS)
-                    .shadow(color: Color.black.opacity(0.05), radius: 4, x: 0, y: 4)
+//                    .shadow(color: Color.black.opacity(0.05), radius: 4, x: 0, y: 4)
                     .frame(
                         width: TILE_SIZE,
                         height: TILE_SIZE
@@ -436,6 +437,9 @@ struct CanvasPage: View {
                 if let url = widget.mediaURL {
                     viewModel.openLink(url: url)
                 }
+            case .image:
+                activeWidget = widget
+                activeSheet = .image
             default:
                 break
             }
@@ -498,6 +502,40 @@ struct CanvasPage: View {
                     .foregroundColor(Color(UIColor.label))
                     .padding(.horizontal, 5)
             }).eraseToAnyView()
+            
+            
+        case .image:
+            return Button(action: {
+                activeWidget = viewModel.selectedWidget
+                viewModel.selectedWidget = nil
+                widgetDoubleTapped = false
+                activeSheet = .image
+            }, label: {
+                Image(systemName: "arrow.up.left.and.arrow.down.right")
+                    .foregroundColor(Color(UIColor.label))
+                    .font(.title3)
+                    .padding(.horizontal, 5)
+            }).eraseToAnyView()
+
+            
+            
+            
+        case .video:
+            return Button(action: {
+                activeWidget = viewModel.selectedWidget
+                viewModel.selectedWidget = nil
+                widgetDoubleTapped = false
+                activeSheet = .video
+            }, label: {
+                Image(systemName: "arrow.up.left.and.arrow.down.right")
+                    .foregroundColor(Color(UIColor.label))
+                    .font(.title3)
+                    .padding(.horizontal, 5)
+            }).eraseToAnyView()
+
+            
+            
+            
         default:
             return EmptyView().eraseToAnyView()
         }
@@ -573,6 +611,7 @@ struct CanvasPage: View {
             .padding(.vertical, 10) // Add vertical padding
             .background(Color(UIColor.systemBackground), in: Capsule())
             .shadow(color: Color.black.opacity(0.2), radius: 20, x: 0, y: 4)
+            
         }
         
         .frame(maxHeight: .infinity, alignment: .bottom)
@@ -629,7 +668,8 @@ struct CanvasPage: View {
                     }
                 }
                 .navigationTitle(toolPickerActive ? "" : viewModel.space?.name ?? "" )
-                .background(  Color(UIColor.secondarySystemBackground))
+//                .background(  Color(UIColor.secondarySystemBackground))
+                .background(Color(UIColor.secondarySystemBackground))
         }
         .onChange(of: appModel.shouldNavigateToSpace, {
             if appModel.shouldNavigateToSpace {
@@ -648,10 +688,7 @@ struct CanvasPage: View {
         })
         .ignoresSafeArea()
         .sheet(item: $activeSheet, onDismiss: {
-            //                showNewWidgetView = false
-            //                            activeSheet = .chat
             
-          
             replyWidget = nil
             activeWidget = nil
             
@@ -702,7 +739,6 @@ struct CanvasPage: View {
                                
                             }
                             
-                            
                             print("detent is 50")
                         }
                     }
@@ -719,7 +755,15 @@ struct CanvasPage: View {
             case .todo:
                     //Waits until activeWidget is not nil
                     TodoWidgetSheetView(widget: waitForVariable{activeWidget}, spaceId: spaceId)
+            case .image:
+                    ImageWidgetSheetView(widget: waitForVariable{activeWidget}, spaceId: spaceId)
+                    .presentationBackground(.thickMaterial)
+              
                 
+                  
+            case .video:
+                VideoWidgetSheetView(widget: waitForVariable{activeWidget}, spaceId: spaceId)
+                .presentationBackground(.thickMaterial)
             }
             
         })
@@ -732,7 +776,11 @@ struct CanvasPage: View {
             print("CANVASPAGE: appModel.inSpace \(appModel.inSpace)")
 
         })
+//        .background(.ultraThickMaterial)
         .background(  Color(UIColor.secondarySystemBackground))
+        
+//        .background(Color("bgColor"))
+//        .background(.ultraThickMaterial)
         .overlay(doubleTapOverlay())
     }
 }
@@ -745,12 +793,8 @@ struct CanvasPage_Previews: PreviewProvider {
 }
 
 
-
 extension View {
     func eraseToAnyView() -> AnyView {
         AnyView(self)
     }
 }
-
-//This resolves single tap issue
-//Forces things to wait until variable is not nil

@@ -482,6 +482,7 @@ struct ProfileView: View {
                                     }
                             )
                         
+                        
                         Text(tickleString)
                             .font(tickleString == "Tickle" ? .title2 : .largeTitle)
                             .fontWeight(.bold)
@@ -538,6 +539,29 @@ struct ProfileView: View {
             
             
         }
+        
+        .onDisappear(perform: {
+            if isPressing {
+                isPressing = false
+                stopHapticFeedback()
+                
+                if let startTime = pressStartTime {
+                    let duration = Date().timeIntervalSince(startTime)
+                    let tickleCount = Int(duration * 10)
+                    
+                    if tickleCount > 1 {
+                        let currentUserId = try! AuthenticationManager.shared.getAuthenticatedUser().uid
+                        
+                        tickleNotification(userUID: currentUserId, targetUserUID: targetUserId.isEmpty ? currentUserId : targetUserId, count: tickleCount)
+                        AnalyticsManager.shared.tickle(count: tickleCount)
+                    }
+                }
+            }
+            
+            
+        })
+        
+        
         .navigationTitle("Profile 🤠")
         .toolbar{
             if (targetUserId.isEmpty) {

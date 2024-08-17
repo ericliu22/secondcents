@@ -11,6 +11,8 @@ struct CalendarView: View {
     @State private var currentlySelectedDate: Date? = nil
     @State private var preferredTime: Date? = nil
     @State private var isDatePickerEnabled: Bool = false // Control the enabled/disabled state of the date picker
+    @State private var timeSlotUserCounts: [Date: Int] = [:]
+
     
     let dateFormatterMonthDay: DateFormatter = {
         let formatter = DateFormatter()
@@ -31,36 +33,35 @@ struct CalendarView: View {
     }()
     
     // Compute the current date and the bounds
-     private var startDate: Date {
-         let now = Date()
-         let calendar = Calendar.current
-         
-         if let preferredTime = preferredTime {
-             let preferredTimeToday = calendar.date(bySettingHour: calendar.component(.hour, from: preferredTime),
-                                                    minute: calendar.component(.minute, from: preferredTime),
-                                                    second: 0,
-                                                    of: now)!
-             
-             let cutoffTime = calendar.date(byAdding: .hour, value: 2, to: preferredTimeToday)!
-             
-             if now > cutoffTime {
-                 return calendar.startOfDay(for: calendar.date(byAdding: .day, value: 1, to: now)!)
-             }
-         }
-         
-         return calendar.startOfDay(for: now)
-     }
-     
-     private var bounds: Range<Date> {
-         let endDate = Calendar.current.date(byAdding: .year, value: 1, to: startDate)!
-         return startDate..<endDate
-     }
+    private var startDate: Date {
+        let now = Date()
+        let calendar = Calendar.current
+        
+        if let preferredTime = preferredTime {
+            let preferredTimeToday = calendar.date(bySettingHour: calendar.component(.hour, from: preferredTime),
+                                                   minute: calendar.component(.minute, from: preferredTime),
+                                                   second: 0,
+                                                   of: now)!
+            
+            let cutoffTime = calendar.date(byAdding: .hour, value: 2, to: preferredTimeToday)!
+            
+            if now > cutoffTime {
+                return calendar.startOfDay(for: calendar.date(byAdding: .day, value: 1, to: now)!)
+            }
+        }
+        
+        return calendar.startOfDay(for: now)
+    }
+    
+    private var bounds: Range<Date> {
+        let endDate = Calendar.current.date(byAdding: .year, value: 1, to: startDate)!
+        return startDate..<endDate
+    }
 
     private let columns = [
         GridItem(.flexible()),
         GridItem(.flexible())
     ]
-    
     
     var body: some View {
         
@@ -75,83 +76,62 @@ struct CalendarView: View {
 
                 if let selectedDate = currentlySelectedDate {
                     VStack {
-                        
                         LazyVGrid(columns: columns, spacing: nil) {
-                            
-                            
                             ForEach(timeSlots(for: selectedDate), id: \.self) { timeSlot in
-                                
-                                let buttonColor: Color = isTimeSlotInPast(timeSlot) ? Color.gray : (localChosenDates[selectedDate]?.contains(timeSlot) == true ? Color.green : Color.red)
-                                
+                                let isPast = isTimeSlotInPast(timeSlot)
+                                let isChosen = localChosenDates[selectedDate]?.contains(timeSlot) == true
+                                let buttonColor: Color = isPast ? .gray : (isChosen ? .green : .red)
+                                let userCount = timeSlotUserCounts[timeSlot, default: 0]  // Get the user count
+
                                 Button {
                                     toggleTimeSelection(timeSlot, for: selectedDate)
+                                    
+                                    //haptic
+                                    
+                                    let generator = UIImpactFeedbackGenerator(style: .light)
+                                    generator.impactOccurred()
+                                    
+                                    
                                 } label: {
-                                    VStack{
+                                    VStack {
                                         Text(formatTime(timeSlot))
                                             .fontWeight(.semibold)
                                             .foregroundColor(buttonColor)
                                             .frame(maxWidth: .infinity)
                                         
-                                        if areTimesEqual(timeSlot: timeSlot, preferredTime: preferredTime ?? Date.now) {
+                                        if areTimesEqual(timeSlot: timeSlot, preferredTime: preferredTime ?? Date()) {
                                             Text("Proposed Time")
                                                 .font(.caption)
+                                            
                                                 .foregroundColor(buttonColor)
                                                 .frame(maxWidth: .infinity)
                                         }
+                                        
+                                        Text("\(userCount) Selected")  // Display the user count
+                                            .font(.caption)
+                                            .foregroundColor(.secondary)
+                                            .frame(maxWidth: .infinity)
                                     }
                                     .frame(height: 100)
                                 }
                                 .buttonStyle(.bordered)
-//                                .contentShape(Rectangle())
-                               
-//                                .background(.regularMaterial)
-//                                .background(buttonColor)
-                               
-//                                .cornerRadius(10)
-                                .disabled(isTimeSlotInPast(timeSlot)) // Disable the VStack if the time slot is in the past
+                                .disabled(isPast) // Disable the button if the time slot is in the past
                                 .tint(buttonColor)
-//
-//                                VStack {
-//                                    Text(formatTime(timeSlot))
-//                                        .fontWeight(.semibold)
-//                                        .foregroundColor(buttonColor)
-//                                        .frame(maxWidth: .infinity)
-//
-//                                    if areTimesEqual(timeSlot: timeSlot, preferredTime: preferredTime ?? Date.now) {
-//                                        Text("Proposed Time")
-//                                            .font(.caption)
-//                                            .foregroundColor(buttonColor)
-//                                            .frame(maxWidth: .infinity)
-//                                    }
-//                                }
-//                                .contentShape(Rectangle())
-//                                .frame(height: 100)
-//                                .background(.regularMaterial)
-//                                .background(buttonColor)
-//                                .cornerRadius(10)
-//                                .onTapGesture {
-//                                    toggleTimeSelection(timeSlot, for: selectedDate)
-//                                }
-//                                .disabled(isTimeSlotInPast(timeSlot)) // Disable the VStack if the time slot is in the past
-
                             }
                         }
+
                         .padding(.horizontal)
                     }
                 } else {
-                    
                     if isDatePickerEnabled {
-                     
-                        Text("Select Availablity for Start Time")
+                        Text("Select Availability for Start Time")
                             .font(.caption)
-                            .foregroundColor(Color.secondary)
+                            .foregroundColor(.secondary)
                             .frame(height: 300)
-                        
                         
                         Spacer()
                     } else {
                         ProgressView()
-                        
                     }
                 }
             }
@@ -166,34 +146,37 @@ struct CalendarView: View {
                 }
             }
         }
-        .navigationTitle("\(currentlySelectedDate.map { "\(dateFormatterMonthDay.string(from: $0))" } ?? "Select Availability")")
+        .navigationTitle(currentlySelectedDate.map { dateFormatterMonthDay.string(from: $0) } ?? "Select Availability")
         .navigationBarTitleDisplayMode(.inline)
     }
     
     private func handleDateSelectionChange(_ newSelection: Set<DateComponents>) {
-        let addedDates = newSelection.subtracting(previousSelectedDates)
-        let removedDates = previousSelectedDates.subtracting(newSelection)
-        
-        if let addedDateComponents = addedDates.first {
+        // Using async to safely update state and avoid collection view conflicts
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            let addedDates = newSelection.subtracting(previousSelectedDates)
+            let removedDates = previousSelectedDates.subtracting(newSelection)
+            
             let calendar = Calendar.current
-            if let selectedDate = calendar.date(from: addedDateComponents) {
+            
+            if let addedDateComponents = addedDates.first,
+               let selectedDate = calendar.date(from: addedDateComponents) {
                 currentlySelectedDate = selectedDate
                 if localChosenDates[selectedDate] == nil {
                     localChosenDates[selectedDate] = Set(timeSlots(for: selectedDate))
                 }
             }
-        }
-        
-        if let removedDateComponents = removedDates.first {
-            let calendar = Calendar.current
-            if let selectedDate = calendar.date(from: removedDateComponents) {
+            
+            if let removedDateComponents = removedDates.first,
+               let selectedDate = calendar.date(from: removedDateComponents) {
                 localChosenDates.removeValue(forKey: selectedDate)
-                selectedDates.remove(Calendar.current.dateComponents([.calendar, .era, .year, .month, .day], from: selectedDate))
-                currentlySelectedDate = nil
+                selectedDates.remove(calendar.dateComponents([.calendar, .era, .year, .month, .day], from: selectedDate))
+                if currentlySelectedDate == selectedDate {
+                    currentlySelectedDate = nil
+                }
             }
+            
+            previousSelectedDates = newSelection
         }
-        
-        previousSelectedDates = newSelection
     }
     
     private func timeSlots(for date: Date) -> [Date] {
@@ -201,8 +184,7 @@ struct CalendarView: View {
         let calendar = Calendar.current
         let dateComponents = calendar.dateComponents([.year, .month, .day], from: date)
         
-        let defaultPreferredHour = 12
-        let preferredHour = (preferredTime != nil) ? Calendar.current.component(.hour, from: preferredTime!) : defaultPreferredHour
+        let preferredHour = preferredTime != nil ? calendar.component(.hour, from: preferredTime!) : 12
         
         for hour in (preferredHour - 2)...(preferredHour + 2) {
             for minute in [0, 30] {
@@ -220,84 +202,160 @@ struct CalendarView: View {
     }
     
     private func toggleTimeSelection(_ timeSlot: Date, for date: Date) {
-        var updatedTimes = localChosenDates[date] ?? Set<Date>()
-        
-        if updatedTimes.contains(timeSlot) {
-            updatedTimes.remove(timeSlot)
-            if updatedTimes.isEmpty {
-                localChosenDates.removeValue(forKey: date)
-                selectedDates.remove(Calendar.current.dateComponents([.calendar, .era, .year, .month, .day], from: date))
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            var updatedTimes = localChosenDates[date] ?? Set<Date>()
+            
+            if updatedTimes.contains(timeSlot) {
+                updatedTimes.remove(timeSlot)
+                if updatedTimes.isEmpty {
+                    localChosenDates.removeValue(forKey: date)
+                    selectedDates.remove(Calendar.current.dateComponents([.calendar, .era, .year, .month, .day], from: date))
+                } else {
+                    localChosenDates[date] = updatedTimes
+                }
             } else {
+                updatedTimes.insert(timeSlot)
                 localChosenDates[date] = updatedTimes
             }
-        } else {
-            updatedTimes.insert(timeSlot)
-            localChosenDates[date] = updatedTimes
         }
     }
     func saveDates() {
         let db = Firestore.firestore()
         let userId = try! AuthenticationManager.shared.getAuthenticatedUser().uid
-        
+
         var saveData: [String: [String]] = [:]
-        
+        var updatedTimeSlotCounts: [String: [String: Int]] = [:]
+
         let currentDate = Date()
         let calendar = Calendar.current
-        
+
+        // Compare current localChosenDates with previously saved dates
         for (date, times) in localChosenDates {
-            // Filter out past time slots for today's date
             let filteredTimes: Set<Date>
             if calendar.isDateInToday(date) {
                 filteredTimes = times.filter { $0 > currentDate }
             } else {
                 filteredTimes = times
             }
-            
-            // Only save the dates that are in the future and have available time slots
+
             if !filteredTimes.isEmpty {
                 let dateKey = dateFormatter.string(from: date)
                 let timeStrings = filteredTimes.map { formatTime($0) }
                 saveData[dateKey] = timeStrings
             }
         }
-        
+
         let preferredTimeString = preferredTime != nil ? timeFormatter.string(from: preferredTime!) : ""
-        
-        db.collection("spaces")
+
+        let documentRef = db.collection("spaces")
             .document(spaceId)
             .collection("dates")
             .document(widget.id.uuidString)
-            .updateData([
+
+        documentRef.getDocument { document, error in
+            if let error = error {
+                print("Error retrieving data: \(error)")
+                return
+            }
+
+            var mergedTimeSlotCounts: [String: [String: Int]] = [:]
+            var previousTimeSlotSelections: [String: Set<String>] = [:]
+
+            if let document = document, document.exists, let data = document.data(),
+               let existingTimeSlotCounts = data["timeSlotCounts"] as? [String: [String: Int]],
+               let previousUserDates = data[userId] as? [String: [String]] {
+
+                // Convert previousUserDates to a Set structure for easy comparison
+                previousTimeSlotSelections = previousUserDates.mapValues { Set($0) }
+
+                mergedTimeSlotCounts = existingTimeSlotCounts
+
+                // Update counts based on changes between previous and current selections
+                for (dateKey, newTimes) in saveData {
+                    let newTimeSet = Set(newTimes)
+                    let previousTimeSet = previousTimeSlotSelections[dateKey] ?? Set<String>()
+
+                    // Determine added and removed times
+                    let addedTimes = newTimeSet.subtracting(previousTimeSet)
+                    let removedTimes = previousTimeSet.subtracting(newTimeSet)
+
+                    // Update timeSlotCounts
+                    var updatedCounts = mergedTimeSlotCounts[dateKey] ?? [:]
+                    for timeString in addedTimes {
+                        updatedCounts[timeString, default: 0] += 1
+                    }
+                    for timeString in removedTimes {
+                        updatedCounts[timeString, default: 0] -= 1
+                        if updatedCounts[timeString]! <= 0 {
+                            updatedCounts[timeString] = nil
+                        }
+                    }
+                    if !updatedCounts.isEmpty {
+                        mergedTimeSlotCounts[dateKey] = updatedCounts
+                    } else {
+                        mergedTimeSlotCounts.removeValue(forKey: dateKey)
+                    }
+                }
+
+                // Handle dates that were fully removed (not present in current selections)
+                let removedDates = Set(previousTimeSlotSelections.keys).subtracting(saveData.keys)
+                for removedDateKey in removedDates {
+                    if let removedTimes = previousTimeSlotSelections[removedDateKey] {
+                        var updatedCounts = mergedTimeSlotCounts[removedDateKey] ?? [:]
+                        for timeString in removedTimes {
+                            updatedCounts[timeString, default: 0] -= 1
+                            if updatedCounts[timeString]! <= 0 {
+                                updatedCounts[timeString] = nil
+                            }
+                        }
+                        if !updatedCounts.isEmpty {
+                            mergedTimeSlotCounts[removedDateKey] = updatedCounts
+                        } else {
+                            mergedTimeSlotCounts.removeValue(forKey: removedDateKey)
+                        }
+                    }
+                }
+
+            } else {
+                // If there's no previous data, simply save the new data
+                for (dateKey, timeStrings) in saveData {
+                    for timeString in timeStrings {
+                        updatedTimeSlotCounts[dateKey, default: [:]][timeString, default: 0] += 1
+                    }
+                }
+                mergedTimeSlotCounts = updatedTimeSlotCounts
+            }
+
+            // Update Firestore with merged data
+            documentRef.updateData([
                 userId: saveData,
-                "preferredTime": preferredTimeString
+                "preferredTime": preferredTimeString,
+                "timeSlotCounts": mergedTimeSlotCounts
             ]) { error in
                 if let error = error {
                     print("Error updating data: \(error)")
-                    db.collection("spaces")
-                        .document(spaceId)
-                        .collection("dates")
-                        .document(widget.id.uuidString)
-                        .setData([
-                            userId: saveData,
-                            "preferredTime": preferredTimeString
-                        ]) { setError in
-                            if let setError = setError {
-                                print("Error setting data: \(setError)")
-                            } else {
-                                print("Data saved successfully")
-                            }
+                    documentRef.setData([
+                        userId: saveData,
+                        "preferredTime": preferredTimeString,
+                        "timeSlotCounts": mergedTimeSlotCounts
+                    ]) { setError in
+                        if let setError = setError {
+                            print("Error setting data: \(setError)")
+                        } else {
+                            print("Data saved successfully")
                         }
+                    }
                 } else {
                     print("Data updated successfully")
                 }
             }
+        }
     }
 
 
-    
     private func loadSavedDates() {
         let db = Firestore.firestore()
-
+        
         guard let userId: String = try? AuthenticationManager.shared.getAuthenticatedUser().uid else {
             return
         }
@@ -311,6 +369,7 @@ struct CalendarView: View {
                     print("Document does not exist or failed to retrieve data")
                     return
                 }
+                
                 if let data = document.data() {
                     if let preferredTimeString = data["preferredTime"] as? String {
                         self.preferredTime = self.timeFormatter.date(from: preferredTimeString)
@@ -330,10 +389,29 @@ struct CalendarView: View {
                         self.selectedDates = Set(groupedDates.keys.map { Calendar.current.dateComponents([.calendar, .era, .year, .month, .day], from: $0) })
                         updateCurrentlySelectedDate()
                     }
+                    
+                    if let timeSlotCounts = data["timeSlotCounts"] as? [String: [String: Int]] {
+                        self.timeSlotUserCounts = timeSlotCounts.flatMap { dateKey, timeCounts in
+                            timeCounts.map { timeString, count in
+                                let date = self.dateFormatter.date(from: dateKey)!
+                                let timeSlot = self.timeFormatter.date(from: timeString)!
+                                return (self.mergeDateAndTime(date: date, time: timeSlot), count)
+                            }
+                        }.reduce(into: [Date: Int]()) { $0[$1.0] = $1.1 }
+                    }
+                    
+                    isDatePickerEnabled = true // Enable the date picker after loading data
                 }
-                isDatePickerEnabled = true // Enable the date picker after loading data
             }
     }
+
+    private func mergeDateAndTime(date: Date, time: Date) -> Date {
+        let calendar = Calendar.current
+        let dateComponents = calendar.dateComponents([.year, .month, .day], from: date)
+        let timeComponents = calendar.dateComponents([.hour, .minute], from: time)
+        return calendar.date(bySettingHour: timeComponents.hour!, minute: timeComponents.minute!, second: 0, of: date)!
+    }
+
     
     private func updateCurrentlySelectedDate() {
         if let selectedDate = selectedDates.first.flatMap({ Calendar.current.date(from: $0) }) {
@@ -409,12 +487,10 @@ struct CalendarView: View {
         let currentDate = Date()
         let calendar = Calendar.current
         
-        // If the timeSlot is today, check if it has passed
         if calendar.isDateInToday(timeSlot) {
             return timeSlot <= currentDate
         }
         
         return false
     }
-
 }

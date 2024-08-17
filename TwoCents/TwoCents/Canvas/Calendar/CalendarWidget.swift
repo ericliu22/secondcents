@@ -9,8 +9,11 @@ struct OptimalDate {
     var day: String?
     var dayOfWeek: String?
     var date: Date?
+    var maxTimeFrequency: Int
     
-    init(from dateString: String) {
+    init(from dateString: String, maxTimeFrequency: Int) {
+        self.maxTimeFrequency = maxTimeFrequency
+        
         guard !dateString.isEmpty else { return }
         
         let dateFormatter = DateFormatter()
@@ -31,6 +34,8 @@ struct OptimalDate {
             dateFormatter.dateFormat = "EEE"
             self.dayOfWeek = dateFormatter.string(from: date)
         }
+        
+
     }
 }
 
@@ -41,7 +46,8 @@ struct CalendarWidget: View {
     private let preferredTime: String = "7:00 PM"
 
     @State private var closestTime: String = ""
-    @State private var optimalDate = OptimalDate(from: "")
+    @State private var optimalDate = OptimalDate(from: "", maxTimeFrequency: 0)
+    @State private var eventName: String = "Eventful Event"
     
     var body: some View {
         ZStack {
@@ -49,14 +55,14 @@ struct CalendarWidget: View {
             VStack {
                 if let date = optimalDate.date {
                     if isTodayOrTomorrow(date: date) && !hasDatePassed(date: date, time: closestTime) {
-                        EventTimeView(optimalDate: $optimalDate, closestTime: $closestTime)
+                        EventTimeView(optimalDate: $optimalDate, closestTime: $closestTime, eventName: eventName)
                     } else if hasDatePassed(date: date, time: closestTime) {
-                        EventPassedView(optimalDate: $optimalDate, closestTime: $closestTime)
+                        EventPassedView(optimalDate: $optimalDate, closestTime: $closestTime, eventName: eventName)
                     } else {
-                        EventDateView(optimalDate: $optimalDate, closestTime: $closestTime)
+                        EventDateView(optimalDate: $optimalDate, closestTime: $closestTime, eventName: eventName)
                     }
                 } else {
-                    EmptyEventView()
+                    EmptyEventView(eventName: eventName)
                 }
             }
             .background(Color(UIColor.systemBackground))
@@ -83,24 +89,32 @@ struct CalendarWidget: View {
 
                 guard let document = documentSnapshot, document.exists else {
                     DispatchQueue.main.async {
-                        self.optimalDate = OptimalDate(from: "")
+                        self.optimalDate = OptimalDate(from: "", maxTimeFrequency: 0)
                         self.closestTime = ""
+                        self.eventName = "Eventful Event" // Fallback name
                     }
                     return
                 }
 
                 let data = document.data() ?? [:]
                 let preferredTime = data["preferredTime"] as? String ?? self.preferredTime
-                let (mostCommonDate, closestTime) = findOptimalDateAndTime(from: data, preferredTime: preferredTime)
+                let eventName = data["name"] as? String ?? "Eventful Event" // Fetch the event name
+                let (mostCommonDate, closestTime, maxTimeFrequency) = findOptimalDateAndTime(from: data, preferredTime: preferredTime)
 
                 DispatchQueue.main.async {
-                    self.optimalDate = OptimalDate(from: mostCommonDate)
-                    self.closestTime = closestTime
+                    if maxTimeFrequency > 1 {
+                        self.optimalDate = OptimalDate(from: mostCommonDate, maxTimeFrequency: maxTimeFrequency)
+                        self.closestTime = closestTime
+                    } else {
+                        self.optimalDate = OptimalDate(from: "", maxTimeFrequency: 0)
+                        self.closestTime = ""
+                    }
+                    self.eventName = eventName // Set the event name
                 }
             }
     }
     
-    private func findOptimalDateAndTime(from data: [String: Any], preferredTime: String) -> (String, String) {
+    private func findOptimalDateAndTime(from data: [String: Any], preferredTime: String) -> (String, String, Int) {
         var dateFrequencies: [String: Int] = [:]
         var timeFrequencies: [String: [String: Int]] = [:]
         let currentDate = Date()
@@ -142,20 +156,20 @@ struct CalendarWidget: View {
             }
         }
 
-        if dateFrequencies.isEmpty { return ("", "") }
+        if dateFrequencies.isEmpty { return ("", "", 0) }
 
         let maxFrequency = dateFrequencies.values.max() ?? 0
         let mostCommonDates = dateFrequencies.filter { $0.value == maxFrequency }.keys.sorted()
         let mostCommonDate = mostCommonDates.min() ?? ""
 
-        guard let dateTimes = timeFrequencies[mostCommonDate] else { return ("", "") }
+        guard let dateTimes = timeFrequencies[mostCommonDate] else { return ("", "", 0) }
 
         let maxTimeFrequency = dateTimes.values.max() ?? 0
         let mostCommonTimes = dateTimes.filter { $0.value == maxTimeFrequency }.keys
 
         let closestTime = findClosestTime(to: preferredTime, from: Array(mostCommonTimes))
 
-        return (mostCommonDate, closestTime)
+        return (mostCommonDate, closestTime, maxTimeFrequency)
     }
 
     private func findClosestTime(to preferredTime: String, from times: [String]) -> String {
@@ -222,10 +236,11 @@ struct CalendarWidget: View {
 // View for when there is no optimal date
 struct EmptyEventView: View {
     @State private var bounce: Bool = false
+    var eventName: String
 
     var body: some View {
         VStack(alignment: .center, spacing: 0) {
-            Text("Grind Sesh")
+            Text(eventName)
                 .font(.headline)
                 .foregroundColor(Color.accentColor)
                 .fontWeight(.semibold)
@@ -275,10 +290,11 @@ struct EventDateView: View {
  
     @Binding private(set) var optimalDate: OptimalDate
     @Binding private(set) var closestTime: String
+    var eventName: String
 
     var body: some View {
         VStack(alignment: .center, spacing: 0) {
-            Text("Grind Sesh")
+            Text(eventName)
                 .font(.subheadline)
                 .foregroundColor(Color.accentColor)
                 .fontWeight(.semibold)
@@ -334,10 +350,11 @@ struct EventTimeView: View {
  
     @Binding private(set) var optimalDate: OptimalDate
     @Binding private(set) var closestTime: String
+    var eventName: String
 
     var body: some View {
         VStack(alignment: .center, spacing: 0) {
-            Text("Grind Sesh")
+            Text(eventName)
                 .font(.subheadline)
                 .foregroundColor(Color.accentColor)
                 .fontWeight(.semibold)
@@ -364,9 +381,26 @@ struct EventTimeView: View {
             }
             
             Text(closestTime)
-                .font(.title)
+                .font(.title2)
                 .fontWeight(.bold)
                 .foregroundColor(.primary)
+            
+            
+            
+           
+            
+            Text("\(optimalDate.maxTimeFrequency) " + (optimalDate.maxTimeFrequency == 1 ? "Attendee" : "Attendees"))
+
+                .font(.caption2)
+                .fontWeight(.light)
+                .foregroundColor(.secondary)
+                .padding(.top, 3)
+            
+            
+        
+        
+            
+            
             
             Spacer()
         }
@@ -381,10 +415,11 @@ struct EventPassedView: View {
     
     @Binding private(set) var optimalDate: OptimalDate
     @Binding private(set) var closestTime: String
+    var eventName: String
 
     var body: some View {
         VStack(alignment: .center, spacing: 0) {
-            Text("Grind Sesh")
+            Text(eventName)
                 .font(.headline)
                 .foregroundColor(Color.accentColor)
                 .fontWeight(.semibold)

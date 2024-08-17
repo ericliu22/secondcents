@@ -22,7 +22,8 @@ struct CreateSpacesView: View {
     @State private var selectedPhoto: PhotosPickerItem? = nil
     
     
- 
+    @Binding var loadedColor: Color
+    @Binding var activeSheet: sheetTypes?
     
     
     private let noMembersMessage: [String] = [
@@ -168,7 +169,8 @@ struct CreateSpacesView: View {
                     HStack{
                         
                         //No friends  message
-                        if viewModel.allFriends.count == 0 {                            Text("It's a party!")
+                        if viewModel.allFriends.count == 0 && !viewModel.hasNoFriends{
+                            Text("It's a party!")
                                 .italic()
                                 .font(.headline)
                                 .foregroundStyle(.tertiary)
@@ -176,76 +178,99 @@ struct CreateSpacesView: View {
                                 .padding(.vertical,2.5)
                         }
                         
-                        
-                        ForEach(viewModel.allFriends) { userTile    in
-                            let targetUserColor: Color = viewModel.getUserColor(userColor: userTile.userColor!)
-                            Group{
-                                HStack{
-                                    Group{
-                                        //Circle or Profile Pic
-                                        
-                                        
-                                        if let urlString = userTile.profileImageUrl,
-                                           let url = URL(string: urlString) {
+                        if viewModel.allFriends.count == 0 && viewModel.hasNoFriends {
+                            
+                            
+                            NavigationLink {
+                                SearchUserView(activeSheet: $activeSheet, loadedColor: $loadedColor, targetUserId: "")
+                            } label: {
+                                Label("No friends? I figured. Tap me!", systemImage: "person.badge.plus")
+                                    .font(.headline)
+                                    .padding(.horizontal,5)
+                                    .padding(.vertical,2.5)
+//                                    .foregroundColor(Color(UIColor.systemBackground))
+                                    .background(.thickMaterial, in: Capsule())
+                                    .background(Color.accentColor, in: Capsule())
+                                    
+                            }
+
+                            
+                          
+                                
+                                
+                                
+                    
+                        } else {
+                            ForEach(viewModel.allFriends) { userTile    in
+                                let targetUserColor: Color = viewModel.getUserColor(userColor: userTile.userColor!)
+                                Group{
+                                    HStack{
+                                        Group{
+                                            //Circle or Profile Pic
                                             
                                             
-                                            
-                                            //If there is URL for profile pic, show
-                                            //circle with stroke
-                                            AsyncImage(url: url) {image in
-                                                image
-                                                    .resizable()
-                                                    .scaledToFill()
-                                                    .clipShape(Circle())
+                                            if let urlString = userTile.profileImageUrl,
+                                               let url = URL(string: urlString) {
+                                                
+                                                
+                                                
+                                                //If there is URL for profile pic, show
+                                                //circle with stroke
+                                                AsyncImage(url: url) {image in
+                                                    image
+                                                        .resizable()
+                                                        .scaledToFill()
+                                                        .clipShape(Circle())
+                                                        .frame(width: 16, height: 16)
+                                                    
+                                                    
+                                                    
+                                                } placeholder: {
+                                                    //else show loading after user uploads but sending/downloading from database
+                                                    
+                                                    ProgressView()
+                                                        .progressViewStyle(CircularProgressViewStyle(tint: Color(UIColor.systemBackground)))
+                                                        .scaleEffect(0.5, anchor: .center)
+                                                        .frame(width: 16, height: 16)
+                                                        .background(
+                                                            Circle()
+                                                                .fill(targetUserColor)
+                                                                .frame(width: 16, height: 16)
+                                                        )
+                                                }
+                                                
+                                            } else {
+                                                
+                                                //if user has not uploaded profile pic, show circle
+                                                Circle()
+                                                
+                                                    .strokeBorder(targetUserColor, lineWidth:0)
+                                                    .background(Circle().fill(targetUserColor))
                                                     .frame(width: 16, height: 16)
                                                 
-                                                
-                                                
-                                            } placeholder: {
-                                                //else show loading after user uploads but sending/downloading from database
-                                                
-                                                ProgressView()
-                                                    .progressViewStyle(CircularProgressViewStyle(tint: Color(UIColor.systemBackground)))
-                                                    .scaleEffect(0.5, anchor: .center)
-                                                    .frame(width: 16, height: 16)
-                                                    .background(
-                                                        Circle()
-                                                            .fill(targetUserColor)
-                                                            .frame(width: 16, height: 16)
-                                                    )
                                             }
                                             
-                                        } else {
                                             
-                                            //if user has not uploaded profile pic, show circle
-                                            Circle()
                                             
-                                                .strokeBorder(targetUserColor, lineWidth:0)
-                                                .background(Circle().fill(targetUserColor))
-                                                .frame(width: 16, height: 16)
                                             
                                         }
                                         
+                                        Text(userTile.name!)
+                                            .font(.headline)
                                         
                                         
                                         
                                     }
-                                    
-                                    Text(userTile.name!)
-                                        .font(.headline)
-                                    
-                                    
-                                    
                                 }
+                                .onTapGesture {
+                                    viewModel.addMember(friend: userTile)
+                                }
+                                .padding(.horizontal,5)
+                                .padding(.vertical,2.5)
+                                .background(.thickMaterial, in: Capsule())
+                                .background(targetUserColor, in: Capsule())
+                                
                             }
-                            .onTapGesture {
-                                viewModel.addMember(friend: userTile)
-                            }
-                            .padding(.horizontal,5)
-                            .padding(.vertical,2.5)
-                            .background(.thickMaterial, in: Capsule())
-                            .background(targetUserColor, in: Capsule())
-                            
                         }
                     }
                 }
@@ -386,11 +411,11 @@ struct CreateSpacesView: View {
     
 }
 
-
-struct CreateSpacesView_Previews: PreviewProvider {
-    static var previews: some View {
-        NavigationStack{
-            CreateSpacesView(spaceId: UUID().uuidString, isShowingCreateSpaces: .constant(false))
-        }
-    }
-}
+//
+//struct CreateSpacesView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        NavigationStack{
+//            CreateSpacesView(spaceId: UUID().uuidString, isShowingCreateSpaces: .constant(false))
+//        }
+//    }
+//}
