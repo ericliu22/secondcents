@@ -13,7 +13,7 @@ struct VideoWidgetSheetView: View {
         assert(widget.media == .video)
         self.widget = widget
         self.spaceId = spaceId
-        self._playerModel = StateObject(wrappedValue: VideoPlayerModel(url: widget.mediaURL!))
+        self.playerModel = VideoPlayerModel(url: widget.mediaURL!)
     }
     
     
@@ -23,8 +23,7 @@ struct VideoWidgetSheetView: View {
     @State private var user: DBUser? = nil
     @Environment(\.dismiss) var dismissScreen
     
-    @StateObject private var playerModel: VideoPlayerModel
-
+    private var playerModel: VideoPlayerModel
   
     var body: some View {
         NavigationStack {

@@ -336,22 +336,22 @@ struct CanvasPage: View {
 //                
                     .animation(.spring)
                     //emoji react MENU
-                    .overlay( alignment: .top, content: {
+                    .overlay(alignment: .top) {
                         if widgetDoubleTapped && viewModel.selectedWidget == widget {
                             EmojiReactionsView(spaceId: spaceId, widget: widget)
                                 .offset(y:-110)
                                 .position(x: widget.x ??  FRAME_SIZE/2, y: widget.y ?? FRAME_SIZE/2)
 
                         }
-                    })
-                    .overlay(content: {
+                    }
+                    .overlay() {
                         viewModel.selectedWidget == nil/* && draggingItem == nil */?
                         EmojiCountOverlayView(spaceId: spaceId, widget: widget)
                             .offset(y: TILE_SIZE/2)
                             .position(x: widget.x ??  FRAME_SIZE/2, y: widget.y ?? FRAME_SIZE/2)
 
                         : nil
-                    })
+                    }
                     .draggable(widget) {
                         MediaView(widget: widget, spaceId: spaceId)
                             .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
@@ -367,11 +367,17 @@ struct CanvasPage: View {
             }
     }
     
+    
     func widgetDoubleTap(widget: CanvasWidget) {
         if viewModel.selectedWidget != widget || !widgetDoubleTapped {
             //select
             
             viewModel.selectedWidget = widget
+            guard let index = canvasWidgets.firstIndex(of: widget) else {
+                return
+            }
+            print("Moving to top?")
+            canvasWidgets.move(fromOffsets: [index], toOffset: canvasWidgets.count-1)
             widgetDoubleTapped = true
             //                                    showSheet = false
             //                                    showNewWidgetView = false
@@ -781,7 +787,7 @@ struct CanvasPage: View {
         
 //        .background(Color("bgColor"))
 //        .background(.ultraThickMaterial)
-        .overlay(doubleTapOverlay())
+        .overlay() {doubleTapOverlay()}
     }
 }
 

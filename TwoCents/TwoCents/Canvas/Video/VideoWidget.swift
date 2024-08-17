@@ -9,14 +9,16 @@ import Foundation
 import SwiftUI
 import AVKit
 
-class VideoPlayerModel: ObservableObject {
+@Observable
+class VideoPlayerModel {
     var videoPlayer: AVPlayer
-    @Published var isPlaying: Bool = false
+    var isPlaying: Bool = false
     private var playerItem: AVPlayerItem
     
     init(url: URL) {
         let asset = AVAsset(url: url)
-        self.playerItem = AVPlayerItem(asset: asset)
+        let playerItem = AVPlayerItem(asset: asset)
+        self.playerItem = playerItem
         self.videoPlayer = AVPlayer(playerItem: playerItem)
         
         addObservers()
@@ -44,9 +46,9 @@ class VideoPlayerModel: ObservableObject {
 
 
 struct VideoWidget: WidgetView{
-    @StateObject private var playerModel: VideoPlayerModel
-
+    var playerModel: VideoPlayerModel
     var widget: CanvasWidget;
+    
     @State private var width: CGFloat;
     @State private var height: CGFloat;
     
@@ -65,7 +67,7 @@ struct VideoWidget: WidgetView{
     
     init(widget: CanvasWidget) {
         self.widget = widget
-        self._playerModel = StateObject(wrappedValue: VideoPlayerModel(url: widget.mediaURL!))
+        self.playerModel = VideoPlayerModel(url: widget.mediaURL!)
         self.width = widget.width
         self.height = widget.height
     }
