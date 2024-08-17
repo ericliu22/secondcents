@@ -67,7 +67,7 @@ services:
     env_file:
       - ./analytics/plausible-conf.env
     volumes:
-      - ./analytics/dbip-cite-lite-2024-08.mmdb.gz:/dbip-cite-lite-2024-08.mmdb.gz
+      - ./analytics/dbip-city-lite-2024-08.mmdb.gz:/app/dbip-city-lite-2024-08.mmdb.gz
 
 volumes:
   db-data:
