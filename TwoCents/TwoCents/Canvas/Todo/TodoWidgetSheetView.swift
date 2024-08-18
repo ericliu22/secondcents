@@ -30,14 +30,7 @@ struct TodoWidgetSheetView: View {
     
     @ToolbarContentBuilder
     func toolbar() -> some ToolbarContent {
-        ToolbarItem(placement: .navigationBarLeading) {
-            Button(action: {
-                dismissScreen()
-            }, label: {
-                Image(systemName: "xmark")
-                    .foregroundColor(Color(UIColor.label))
-            })
-        }
+      
         ToolbarItem(placement: .navigationBarTrailing) {
             Button(action: {
                 dismissScreen()
@@ -45,18 +38,11 @@ struct TodoWidgetSheetView: View {
                     viewModel.saveChanges(spaceId: spaceId, todoId: widget.id.uuidString)
                 }
             }, label: {
-                Text("Save")
+                Text("Done")
             })
         }
-        ToolbarItem(placement: .navigationBarTrailing)  {
-            
-            Button {
-                print("Add todo task")
-            } label: {
-                Image("plus.circle")
-            }
-            
-        }
+        
+        
     }
 
     var body: some View {
@@ -102,6 +88,58 @@ struct TodoWidgetSheetView: View {
                             .padding(.horizontal)
                             Divider()
                         }
+                        
+                        
+                        Group{
+                            HStack(spacing: 0) {
+                                
+                                
+                                Image(systemName: "circle")
+                                    .foregroundColor(.gray)
+                                    .font(.title3)
+                                    .padding(.trailing)
+                                
+                                
+                                
+                                TextField("New Item", text: $viewModel.newTodoItem.task)
+                                    .textFieldStyle(PlainTextFieldStyle())
+                                    .onChange(of: viewModel.newTodoItem.task, { oldValue, newValue in
+                                        
+                                        if newValue != "" && oldValue == "" {
+                                            Task{
+                                                withAnimation {
+                                                    viewModel.saveChanges(spaceId: spaceId, todoId: widget.id.uuidString)
+                                                }
+                                            }
+                                        }
+                                    })
+                                    .onSubmit {
+                                        viewModel.addNewTodoItem(spaceId: spaceId, todoId: widget.id.uuidString)
+                                        
+                                        
+                                    }
+                                
+                                
+                                Spacer()
+                                
+                            
+                                
+                                
+                                
+                                
+                                
+                            }
+                            .frame(height: 48)
+                            .padding(.horizontal)
+                            Divider()
+                            
+                            
+                            
+                        }
+                        
+                        
+                        
+                        
                         Spacer()
                     }
                     .navigationTitle(todo.name)

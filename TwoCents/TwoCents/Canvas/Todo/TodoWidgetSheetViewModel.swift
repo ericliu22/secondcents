@@ -28,8 +28,65 @@ final class TodoWidgetSheetViewModel: ObservableObject {
     @Published var localTodoList: [TodoItem] = []
 
     
+    @Published var newTodoItem: TodoItem = TodoItem(task: "", mentionedUserId: "")
+    
+    
+   
+    
+    
+    
     @Published var allUsers: [DBUser] = []
     @Published private(set) var space:  DBSpace? = nil
+    
+    // Define the new addNewTodoItem function
+    func addNewTodoItem(spaceId: String, todoId: String) {
+        guard !newTodoItem.task.isEmpty else {
+            print("Task is empty. Cannot add a new todo item.")
+            return
+        }
+
+        let db = Firestore.firestore()
+        let ref = db.collection("spaces").document(spaceId).collection("todo").document(todoId)
+
+        ref.getDocument { [weak self] document, error in
+            guard let self = self else { return }
+
+            if let error = error {
+                print("Error fetching document: \(error)")
+                return
+            }
+
+            guard let document = document, document.exists else {
+                print("Document does not exist.")
+                return
+            }
+
+            // Retrieve the existing todoList
+            var todoList = (document.data()?["todoList"] as? [[String: Any]]) ?? []
+
+            // Add the new todo item to the list
+            let newTodoItemData: [String: Any] = [
+                "task": self.newTodoItem.task,
+                "mentionedUserId": "",
+                "completed": false,
+                "id": UUID().uuidString
+            ]
+            todoList.append(newTodoItemData)
+
+            // Update the Firestore document
+            ref.updateData(["todoList": todoList]) { error in
+                if let error = error {
+                    print("Error updating document: \(error)")
+                } else {
+                    print("New todo item successfully added.")
+                    // Optionally clear the newTodoItem after adding it to the list
+                    self.newTodoItem = TodoItem(task: "", mentionedUserId: "")
+                }
+            }
+        }
+    }
+
+    
     
     func fetchTodo(spaceId: String, widget: CanvasWidget) {
         let db = Firestore.firestore()
