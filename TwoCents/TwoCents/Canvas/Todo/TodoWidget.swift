@@ -55,6 +55,7 @@ struct TodoWidget: View {
                     .padding(.horizontal, 16)
                     .padding(.top, 16)
                     .padding(.bottom, 3)
+                    .padding(.trailing, 16)
                     
                     
                     
