@@ -327,16 +327,16 @@ struct SpaceSettingsView: View {
                 Button(action: {
                     showingAlert = true
                 }, label: {
-                    Text("Leave Space")
+                    Text(viewModel.allMembers.count <= 2 ? "Delete Space" : "Leave Space")
                         .font(.headline)
                         .frame(height: 55)
                         .frame(maxWidth: .infinity)
                     
                 })
-                .alert(Text("Leave Space"), isPresented: $showingAlert, actions: {
+                .alert(Text(viewModel.allMembers.count <= 2 ? "Leave Space" : "Delete Space"), isPresented: $showingAlert, actions: {
                     Button("Cancel", role: .cancel) { }
                     Button("Leave", role: .destructive) { Task{
-                        if viewModel.allMembers.count == 1 {
+                        if viewModel.allMembers.count <= 2 {
                             
                             //delete entire space
                             try? await viewModel.deleteSpace(spaceId: spaceId)
@@ -354,7 +354,14 @@ struct SpaceSettingsView: View {
                     self.presentationMode.wrappedValue.dismiss()
                      }
                 }, message: {
-                    Text("Do it. Your friends won't think twice...")
+                    if viewModel.allMembers.count == 2 {
+                        Text("Yea... It's getting too romantic in here.")
+                    } else if viewModel.allMembers.count == 1 {
+                        Text("Yea... It's getting lonely in here.")
+                    } else {
+                        Text("Do it. Your friends won't think twice...")
+                    }
+                   
                 })
                 
                 
