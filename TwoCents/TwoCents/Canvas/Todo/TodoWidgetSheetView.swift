@@ -170,6 +170,7 @@ struct TodoWidgetSheetView: View {
                     .toolbar {toolbar()}
                 }
             }
+            .interactiveDismissDisabled(true)
             .task{
                 
                 try? await viewModel.getAllUsers(spaceId: spaceId)
