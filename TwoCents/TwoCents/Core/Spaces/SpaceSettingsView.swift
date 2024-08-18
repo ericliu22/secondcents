@@ -15,7 +15,7 @@ struct SpaceSettingsView: View {
     @State var isShowingAddMember: Bool = false
     @State private var linkMessage: String = "Invite Link"
     
-    
+    @State private var showingAlert: Bool = false
     private var spaceLink: String
     private var spaceId: String
     private var chatroomDocument: DocumentReference
@@ -325,7 +325,17 @@ struct SpaceSettingsView: View {
                 
                 
                 Button(action: {
-                    Task{
+                    showingAlert = true
+                }, label: {
+                    Text("Leave Space")
+                        .font(.headline)
+                        .frame(height: 55)
+                        .frame(maxWidth: .infinity)
+                    
+                })
+                .alert(Text("Leave Space"), isPresented: $showingAlert, actions: {
+                    Button("Cancel", role: .cancel) { }
+                    Button("Leave", role: .destructive) { Task{
                         if viewModel.allMembers.count == 1 {
                             
                             //delete entire space
@@ -342,13 +352,9 @@ struct SpaceSettingsView: View {
                         
                     }
                     self.presentationMode.wrappedValue.dismiss()
-                    
-                }, label: {
-                    Text("Leave Space")
-                        .font(.headline)
-                        .frame(height: 55)
-                        .frame(maxWidth: .infinity)
-                    
+                     }
+                }, message: {
+                    Text("Do it. Your friends won't think twice...")
                 })
                 
                 
