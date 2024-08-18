@@ -25,6 +25,7 @@ struct SpacesView: View {
     
     @Environment(AppModel.self) var appModel
     
+    
     var filteredSearch: [DBSpace]{
         guard !searchTerm.isEmpty else { return viewModel.allSpaces}
         return viewModel.allSpaces.filter{$0.name!.localizedCaseInsensitiveContains(searchTerm)}
@@ -156,8 +157,10 @@ struct SpacesView: View {
         
         NavigationStack(path: $presentedPath) {
             ScrollView(.vertical) {
-                
-                if filteredSearch.isEmpty {
+                if !viewModel.finishedLoading {
+                    ProgressView()
+                        .padding(.top, 250)
+                }else if filteredSearch.isEmpty && viewModel.finishedLoading {
                     
                     
                

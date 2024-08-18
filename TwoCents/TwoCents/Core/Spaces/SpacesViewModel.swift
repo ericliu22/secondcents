@@ -18,6 +18,12 @@ final class SpacesViewModel: ObservableObject {
     @Published var user:  DBUser? = nil
     @Published var allSpaces: [DBSpace] = []
     
+    
+ 
+    @Published var finishedLoading: Bool = false
+    
+    
+    
     func loadCurrentUser() async throws {
         let authDataResult = try AuthenticationManager.shared.getAuthenticatedUser()
         self.user = try await UserManager.shared.getUser(userId: authDataResult.uid)
@@ -27,6 +33,8 @@ final class SpacesViewModel: ObservableObject {
         try? await loadCurrentUser()
 
         self.allSpaces = try await UserManager.shared.getAllSpaces(userId: userId)
+        
+        finishedLoading = true
 
     }
     
