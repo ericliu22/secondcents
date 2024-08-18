@@ -206,61 +206,51 @@ final class TodoWidgetSheetViewModel: ObservableObject {
     func autoAssignTasks(spaceId: String) {
         print("autoAssignTasks called")
         
-        // Filter out users who are already assigned to tasks
-        let usersWithoutMention = allUsers.filter { user in
-            !mentionedUsers.contains { $0?.userId == user.userId }
-        }
-        
-        print("Users without mention: \(usersWithoutMention)")
-        
         // Ensure there are users available for assignment
-        guard !usersWithoutMention.isEmpty else {
-            print("No users to assign tasks to")
+        guard !allUsers.isEmpty else {
+            print("No users available in the space")
             return
         }
-        
+
         // Create a frequency dictionary to track the number of tasks per user, including existing mentions
         var userTaskFrequency: [String: Int] = [:]
         
         // Initialize frequency from existing mentions
         for item in mentionedUsers {
-            if item != nil {
-                userTaskFrequency[item!.userId, default: 0] += 1
+            if let user = item {
+                userTaskFrequency[user.userId, default: 0] += 1
             }
         }
         
-        // Initialize the frequency dictionary for users who have no mentions
-        for user in usersWithoutMention {
-            userTaskFrequency[user.userId] = userTaskFrequency[user.userId] ?? 0
+        // Initialize the frequency dictionary for all users
+        for user in allUsers {
+            userTaskFrequency[user.userId, default: 0] += 0
         }
         
         print("Initial user task frequency: \(userTaskFrequency)")
         
         // Function to get the user with the least tasks assigned
         func getLeastFrequentUser() -> DBUser? {
-            let sortedUsers = usersWithoutMention.sorted {
+            return allUsers.min {
                 (userTaskFrequency[$0.userId] ?? 0) < (userTaskFrequency[$1.userId] ?? 0)
             }
-            return sortedUsers.first
         }
         
         // Assign tasks
         print("Assigning tasks...")
         for (index, item) in mentionedUsers.enumerated() {
-            
             if item == nil {
                 if let user = getLeastFrequentUser() {
                     mentionedUsers[index] = user
-                    
                     modifiedMentionedUsers[index] = user.userId
                     userTaskFrequency[user.userId, default: 0] += 1
-                    
                 }
             }
         }
         
-                
+        print("Updated user task frequency: \(userTaskFrequency)")
     }
+
     
     
 }

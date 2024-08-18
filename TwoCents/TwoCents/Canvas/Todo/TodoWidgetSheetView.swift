@@ -44,25 +44,22 @@ struct TodoWidgetSheetView: View {
         
         
         
-        ToolbarItem(placement: .bottomBar) {
-           
+            
+            
+            ToolbarItem(placement: .bottomBar) {
+                
                 Button(action: {
-                    
-                       
-                        viewModel.autoAssignTasks(spaceId: spaceId)
-                    
-                    
+                    viewModel.autoAssignTasks(spaceId: spaceId)
                     
                 }, label: {
                     
                     
                     Text("Auto Assign Tasks")
-//
-//                                .foregroundStyle(.red)
-                  
+                    
                 })
-          
-        }
+                .disabled(viewModel.allUsers.isEmpty)
+                
+            }
         
         
         
@@ -108,6 +105,8 @@ struct TodoWidgetSheetView: View {
                                 } label: {
                                     UserChip(user: viewModel.mentionedUsers[viewModel.localTodoList.firstIndex(where: { $0.id == todoItem.id }) ?? 0])
                                 }
+                                .disabled(viewModel.allUsers.isEmpty)
+                                
                             }
                             .frame(height: 48)
                             .padding(.horizontal)
@@ -171,6 +170,10 @@ struct TodoWidgetSheetView: View {
                     .toolbar {toolbar()}
                 }
             }
+            .task{
+                
+                try? await viewModel.getAllUsers(spaceId: spaceId)
+            }
            
             
         } else {
@@ -178,10 +181,10 @@ struct TodoWidgetSheetView: View {
                
                 .onAppear {
                     
-                    Task{
-                        try? await viewModel.getAllUsers(spaceId: spaceId)
+                   
+                      
                         viewModel.fetchTodo(spaceId: spaceId, widget: widget)
-                    }
+                   
                 }
                
         }
