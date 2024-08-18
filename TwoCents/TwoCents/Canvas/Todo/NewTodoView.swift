@@ -327,6 +327,8 @@ struct NewTodoView: View{
             }
             
             
+            Spacer()
+                .frame(height:300)
            
             
             

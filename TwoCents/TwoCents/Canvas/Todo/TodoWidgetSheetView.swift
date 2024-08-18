@@ -162,6 +162,8 @@ struct TodoWidgetSheetView: View {
                         }
                         
                         
+                        Spacer()
+                            .frame(height:300)
                         
                         
                         Spacer()
