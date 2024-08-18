@@ -238,6 +238,7 @@ struct NewTodoView: View{
     //                                .foregroundStyle(.red)
                               
                             })
+                            .disabled(viewModel.allUsers.isEmpty)
                       
                     }
                     
@@ -304,7 +305,7 @@ struct NewTodoView: View{
                        
                         
                     }
-                    
+                    .disabled(viewModel.allUsers.isEmpty)
                     
                 }
                 .padding(.horizontal)
