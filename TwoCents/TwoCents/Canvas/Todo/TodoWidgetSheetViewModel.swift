@@ -251,6 +251,10 @@ final class TodoWidgetSheetViewModel: ObservableObject {
         print("Updated user task frequency: \(userTaskFrequency)")
     }
 
+    func deleteItem(index: Int) {
+        localTodoList.remove(at: index)
+      }
+    
     
     
 }

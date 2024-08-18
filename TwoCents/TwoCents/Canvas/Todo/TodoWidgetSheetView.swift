@@ -110,9 +110,18 @@ struct TodoWidgetSheetView: View {
                             }
                             .frame(height: 48)
                             .padding(.horizontal)
+                            .contextMenu(ContextMenu(menuItems: {
+                                Button (role: .destructive){
+                                    viewModel.deleteItem(index: originalIndex)
+                                } label: {
+                                    Label("Delete", systemImage: "trash")
+                  
+                                }
+
+                            }))
                             Divider()
                         }
-                        
+                    
                         
                         Group{
                             HStack(spacing: 0) {
