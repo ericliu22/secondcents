@@ -761,6 +761,7 @@ struct CanvasPage: View {
             case .todo:
                     //Waits until activeWidget is not nil
                     TodoWidgetSheetView(widget: waitForVariable{activeWidget}, spaceId: spaceId)
+                    .presentationBackground(Color(UIColor.systemBackground))
             case .image:
                     ImageWidgetSheetView(widget: waitForVariable{activeWidget}, spaceId: spaceId)
                     .presentationBackground(.thickMaterial)

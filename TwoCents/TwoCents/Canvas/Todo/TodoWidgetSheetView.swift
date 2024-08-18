@@ -43,6 +43,31 @@ struct TodoWidgetSheetView: View {
         }
         
         
+        
+        ToolbarItem(placement: .bottomBar) {
+           
+                Button(action: {
+                    
+                       
+                        viewModel.autoAssignTasks(spaceId: spaceId)
+                    
+                    
+                    
+                }, label: {
+                    
+                    
+                    Text("Auto Assign Tasks")
+//
+//                                .foregroundStyle(.red)
+                  
+                })
+          
+        }
+        
+        
+        
+        
+        
     }
 
     var body: some View {
@@ -94,7 +119,7 @@ struct TodoWidgetSheetView: View {
                             HStack(spacing: 0) {
                                 
                                 
-                                Image(systemName: "circle")
+                                Image(systemName: "circle.badge.plus")
                                     .foregroundColor(.gray)
                                     .font(.title3)
                                     .padding(.trailing)
@@ -146,18 +171,22 @@ struct TodoWidgetSheetView: View {
                     .toolbar {toolbar()}
                 }
             }
-            .task{
-                try? await viewModel.getAllUsers(spaceId: spaceId)
-            }
+           
             
         } else {
             ProgressView()
-                .backgroundStyle(Color(UIColor.systemBackground))
+               
                 .onAppear {
-                   
-                    viewModel.fetchTodo(spaceId: spaceId, widget: widget)
+                    
+                    Task{
+                        try? await viewModel.getAllUsers(spaceId: spaceId)
+                        viewModel.fetchTodo(spaceId: spaceId, widget: widget)
+                    }
                 }
+               
         }
+        
+           
     }
 
     struct UserChip: View {

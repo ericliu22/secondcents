@@ -10,28 +10,28 @@ import FirebaseFirestore
 import SwiftUI
 @MainActor
 final class TodoWidgetSheetViewModel: ObservableObject {
-
+    
     @Published private(set) var user: DBUser? = nil
     
     func loadCurrentUser() async throws {
         let authDataResult = try AuthenticationManager.shared.getAuthenticatedUser()
         self.user = try await UserManager.shared.getUser(userId: authDataResult.uid)
     }
-
+    
     func loadUser(userId: String) async throws {
         self.user = try await UserManager.shared.getUser(userId: userId)
     }
-
+    
     @Published private(set) var todo: Todo?
     @Published var mentionedUsers: [DBUser?] = []
     @Published var modifiedMentionedUsers: [Int: String] = [:]  // Store changes locally
     @Published var localTodoList: [TodoItem] = []
-
+    
     
     @Published var newTodoItem: TodoItem = TodoItem(task: "", mentionedUserId: "")
     
     
-   
+    
     
     
     
@@ -44,26 +44,26 @@ final class TodoWidgetSheetViewModel: ObservableObject {
             print("Task is empty. Cannot add a new todo item.")
             return
         }
-
+        
         let db = Firestore.firestore()
         let ref = db.collection("spaces").document(spaceId).collection("todo").document(todoId)
-
+        
         ref.getDocument { [weak self] document, error in
             guard let self = self else { return }
-
+            
             if let error = error {
                 print("Error fetching document: \(error)")
                 return
             }
-
+            
             guard let document = document, document.exists else {
                 print("Document does not exist.")
                 return
             }
-
+            
             // Retrieve the existing todoList
             var todoList = (document.data()?["todoList"] as? [[String: Any]]) ?? []
-
+            
             // Add the new todo item to the list
             let newTodoItemData: [String: Any] = [
                 "task": self.newTodoItem.task,
@@ -72,7 +72,7 @@ final class TodoWidgetSheetViewModel: ObservableObject {
                 "id": UUID().uuidString
             ]
             todoList.append(newTodoItemData)
-
+            
             // Update the Firestore document
             ref.updateData(["todoList": todoList]) { error in
                 if let error = error {
@@ -85,7 +85,7 @@ final class TodoWidgetSheetViewModel: ObservableObject {
             }
         }
     }
-
+    
     
     
     func fetchTodo(spaceId: String, widget: CanvasWidget) {
@@ -105,7 +105,7 @@ final class TodoWidgetSheetViewModel: ObservableObject {
                         self.todo = todoData
                         self.localTodoList = todoData.todoList
                         self.mentionedUsers = Array(repeating: nil, count: todoData.todoList.count)
-
+                        
                         for (index, todoItem) in todoData.todoList.enumerated() {
                             if !todoItem.mentionedUserId.isEmpty {
                                 Task {
@@ -122,7 +122,7 @@ final class TodoWidgetSheetViewModel: ObservableObject {
                                 }
                             }
                         }
-
+                        
                     } else {
                         print("Document data is empty.")
                     }
@@ -131,15 +131,15 @@ final class TodoWidgetSheetViewModel: ObservableObject {
                 }
             }
     }
-
+    
     func toggleCompletionStatus(index: Int) {
         localTodoList[index].completed.toggle()
     }
-
+    
     func saveChanges(spaceId: String, todoId: String) {
         let db = Firestore.firestore()
         let ref = db.collection("spaces").document(spaceId).collection("todo").document(todoId)
-
+        
         ref.getDocument { [weak self] document, error in
             guard let self = self else {
                 return
@@ -148,18 +148,18 @@ final class TodoWidgetSheetViewModel: ObservableObject {
                 print("Error fetching document: \(error)")
                 return
             }
-
+            
             guard let document = document, document.exists, let data = document.data(), var todoList = data["todoList"] as? [[String: Any]] else {
                 print("Document does not exist or is not valid")
                 return
             }
-
+            
             for (index, mentionedUserId) in self.modifiedMentionedUsers {
                 if index < todoList.count {
                     todoList[index]["mentionedUserId"] = mentionedUserId
                 }
             }
-
+            
             for (index, todoItem) in self.localTodoList.enumerated() {
                 if index < todoList.count {
                     todoList[index]["completed"] = todoItem.completed
@@ -171,7 +171,7 @@ final class TodoWidgetSheetViewModel: ObservableObject {
                     todoList[index]["task"] = todoItem.task
                 }
             }
-
+            
             ref.updateData(["todoList": todoList]) { error in
                 if let error = error {
                     print("Error updating document: \(error)")
@@ -190,16 +190,77 @@ final class TodoWidgetSheetViewModel: ObservableObject {
         guard let space = space else { return }
         self.allUsers = try await UserManager.shared.getMembersInfo(members: (space.members)!)
     }
-
-   
-
-  
-   
-   func loadCurrentSpace(spaceId: String) async throws {
-       
-       self.space = try await SpaceManager.shared.getSpace(spaceId: spaceId)
-       
-   }
+    
+    
+    
+    
+    
+    func loadCurrentSpace(spaceId: String) async throws {
+        
+        self.space = try await SpaceManager.shared.getSpace(spaceId: spaceId)
+        
+    }
+    
+    
+    
+    func autoAssignTasks(spaceId: String) {
+        print("autoAssignTasks called")
+        
+        // Filter out users who are already assigned to tasks
+        let usersWithoutMention = allUsers.filter { user in
+            !mentionedUsers.contains { $0?.userId == user.userId }
+        }
+        
+        print("Users without mention: \(usersWithoutMention)")
+        
+        // Ensure there are users available for assignment
+        guard !usersWithoutMention.isEmpty else {
+            print("No users to assign tasks to")
+            return
+        }
+        
+        // Create a frequency dictionary to track the number of tasks per user, including existing mentions
+        var userTaskFrequency: [String: Int] = [:]
+        
+        // Initialize frequency from existing mentions
+        for item in mentionedUsers {
+            if item != nil {
+                userTaskFrequency[item!.userId, default: 0] += 1
+            }
+        }
+        
+        // Initialize the frequency dictionary for users who have no mentions
+        for user in usersWithoutMention {
+            userTaskFrequency[user.userId] = userTaskFrequency[user.userId] ?? 0
+        }
+        
+        print("Initial user task frequency: \(userTaskFrequency)")
+        
+        // Function to get the user with the least tasks assigned
+        func getLeastFrequentUser() -> DBUser? {
+            let sortedUsers = usersWithoutMention.sorted {
+                (userTaskFrequency[$0.userId] ?? 0) < (userTaskFrequency[$1.userId] ?? 0)
+            }
+            return sortedUsers.first
+        }
+        
+        // Assign tasks
+        print("Assigning tasks...")
+        for (index, item) in mentionedUsers.enumerated() {
+            
+            if item == nil {
+                if let user = getLeastFrequentUser() {
+                    mentionedUsers[index] = user
+                    
+                    modifiedMentionedUsers[index] = user.userId
+                    userTaskFrequency[user.userId, default: 0] += 1
+                    
+                }
+            }
+        }
+        
+                
+    }
     
     
 }
