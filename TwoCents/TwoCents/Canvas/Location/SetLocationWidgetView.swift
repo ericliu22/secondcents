@@ -139,6 +139,7 @@ struct SetLocationWidgetView: View {
 
                     }
                 }
+                .scrollDismissesKeyboard(.interactively)
                 .listStyle(PlainListStyle())
                 .padding(EdgeInsets())
 //                

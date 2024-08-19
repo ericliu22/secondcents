@@ -20,11 +20,12 @@ struct SignUpEmailView: View {
     
     var body: some View {
         
-        
+        ScrollView{
         VStack {
             
         
-            
+            Spacer()
+                .frame(height:200)
             
             
             //Name Textfield
@@ -126,7 +127,9 @@ struct SignUpEmailView: View {
         )
         
         
-        
+            
+        }
+        .scrollDismissesKeyboard(.interactively)
         
     }
     

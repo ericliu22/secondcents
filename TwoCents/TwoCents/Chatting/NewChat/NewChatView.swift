@@ -148,6 +148,7 @@ struct NewChatView: View {
                 }
             }
         
+            .scrollDismissesKeyboard(.interactively)
             .padding(.horizontal)
 //            .background(threadId == "" ? Color.clear : Color(UIColor.secondarySystemBackground))
 //            .background(
@@ -188,7 +189,7 @@ struct NewChatView: View {
             .overlay(
             
                     Color("customClear")
-                        .frame(height: 150)
+                        .frame(height: 100)
                         .frame(maxHeight: .infinity, alignment: .top)
              
                 

@@ -92,11 +92,14 @@ struct TodoWidgetSheetView: View {
                                 }
                                 .padding(.trailing)
                                 
-                                TextField("Item \(index)", text: $viewModel.localTodoList[originalIndex].task)
+                                TextField("Item \(index)", text: $viewModel.localTodoList[originalIndex].task ,axis: .vertical)
                                     .textFieldStyle(PlainTextFieldStyle())
-                                
-                                
-                                Spacer()
+                                 
+                                    .submitLabel(.return)
+                                    .truncationMode(.tail)
+                                   
+                           
+                                  
                                 NavigationLink {
                                     MentionUserView(mentionedUser: $viewModel.mentionedUsers[viewModel.localTodoList.firstIndex(where: { $0.id == todoItem.id }) ?? 0], allUsers: viewModel.allUsers)
                                         .onDisappear(perform: {
@@ -108,7 +111,8 @@ struct TodoWidgetSheetView: View {
                                 .disabled(viewModel.allUsers.isEmpty)
                                 
                             }
-                            .frame(height: 48)
+//                            .frame(height: 48)
+                            .frame(minHeight:48)
                             .padding(.horizontal)
                             .contextMenu(ContextMenu(menuItems: {
                                 Button (role: .destructive){
@@ -136,6 +140,8 @@ struct TodoWidgetSheetView: View {
                                 
                                 TextField("New Item", text: $viewModel.newTodoItem.task)
                                     .textFieldStyle(PlainTextFieldStyle())
+                                    .submitLabel(.return)
+                                    .truncationMode(.tail)
                                     .onChange(of: viewModel.newTodoItem.task, { oldValue, newValue in
                                         
                                         if newValue != "" && oldValue == "" {
@@ -162,7 +168,7 @@ struct TodoWidgetSheetView: View {
                                 
                                 
                             }
-                            .frame(height: 48)
+                            .frame(minHeight:48)
                             .padding(.horizontal)
                             Divider()
                             
@@ -180,6 +186,7 @@ struct TodoWidgetSheetView: View {
                     .navigationTitle(todo.name)
                     .toolbar {toolbar()}
                 }
+                .scrollDismissesKeyboard(.interactively)
             }
             .onDisappear(perform: {
                 viewModel.saveChanges(spaceId: spaceId, todoId: widget.id.uuidString)
@@ -250,7 +257,7 @@ struct TodoWidgetSheetView: View {
                 .padding(.vertical, 2.5)
                 .background(.thickMaterial, in: Capsule())
                 .background(targetUserColor, in: Capsule())
-                .frame(width: 100, alignment: .trailing)
+                .frame(width: 80, alignment: .trailing)
             } else {
                 Image(systemName: "at.badge.plus")
                     .frame(height: 54, alignment: .trailing)
@@ -258,3 +265,6 @@ struct TodoWidgetSheetView: View {
         }
     }
 }
+
+
+

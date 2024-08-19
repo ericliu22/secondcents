@@ -19,68 +19,70 @@ struct SignUpPhoneNumberView: View {
     @Binding  var userPhoneNumber: String?
     
     var body: some View {
-        
-        
-        VStack {
+        ScrollView{
             
-        
-            
-            
-            
-            //Name Textfield
-            TextField("Name", text: $viewModel.name)
-                .disableAutocorrection(true)
-                .textInputAutocapitalization(.never)
-                .padding()
-                .background(Color(UIColor.secondarySystemBackground))
-                .cornerRadius(10)
-                .textContentType(.name)
-            
-            
-            Button {
-                //signUp
-                Task {
-                    do {
-                        try await viewModel.signUp(userPhoneNumber: userPhoneNumber ?? "")
-                        
-                        activeSheet  = .addFriendFromContactsView
-                        return
-                    } catch {
+            VStack {
+                
+                
+                Spacer()
+                    .frame(height: 200)
+                
+                
+                //Name Textfield
+                TextField("Name", text: $viewModel.name)
+                    .disableAutocorrection(true)
+                    .textInputAutocapitalization(.never)
+                    .padding()
+                    .background(Color(UIColor.secondarySystemBackground))
+                    .cornerRadius(10)
+                    .textContentType(.name)
+                
+                
+                Button {
+                    //signUp
+                    Task {
+                        do {
+                            try await viewModel.signUp(userPhoneNumber: userPhoneNumber ?? "")
+                            
+                            activeSheet  = .addFriendFromContactsView
+                            return
+                        } catch {
+                        }
                     }
+                    
+                    
+                } label: {
+                    Text("Sign Up")
+                        .font(.headline)
+                        .foregroundColor(Color(UIColor.systemBackground))
+                        .frame(height: 55)
+                        .frame(maxWidth: .infinity)
+                    
                 }
-               
                 
-            } label: {
-                Text("Sign Up")
-                    .font(.headline)
-                    .foregroundColor(Color(UIColor.systemBackground))
-                    .frame(height: 55)
-                    .frame(maxWidth: .infinity)
-                
+                .buttonStyle(.borderedProminent)
+                .tint(Color(UIColor.label))
+                .frame(height: 55)
+                .cornerRadius(10)
             }
             
-            .buttonStyle(.borderedProminent)
+            .padding()
+            .navigationTitle("Welcome, I guess?")
             .tint(Color(UIColor.label))
-            .frame(height: 55)
-            .cornerRadius(10)
+            
+            .navigationBarTitleDisplayMode(.inline)
+            //make back button black... (Gotta have the enviorment line on top)
+            //        .navigationBarBackButtonHidden(true)
+            //        .navigationBarItems(leading:
+            //                                Image(systemName: "chevron.backward")
+            //            .foregroundColor(Color(UIColor.label))
+            //            .onTapGesture {
+            //                self.presentation.wrappedValue.dismiss()
+            //            }
+            //        )
+            
         }
-        
-        .padding()
-        .navigationTitle("Welcome, I guess?")
-        .tint(Color(UIColor.label))
-        
-        .navigationBarTitleDisplayMode(.inline)
-        //make back button black... (Gotta have the enviorment line on top)
-//        .navigationBarBackButtonHidden(true)
-//        .navigationBarItems(leading:
-//                                Image(systemName: "chevron.backward")
-//            .foregroundColor(Color(UIColor.label))
-//            .onTapGesture {
-//                self.presentation.wrappedValue.dismiss()
-//            }
-//        )
-        
-        
+        .scrollDismissesKeyboard(.interactively)
         
         
     }

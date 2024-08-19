@@ -179,6 +179,7 @@ struct NewTodoView: View{
 //                    .padding()
                     
                 }
+                .scrollDismissesKeyboard(.interactively)
                 
                 .navigationTitle("Create List 📋")
                 .navigationBarTitleDisplayMode(.inline)
@@ -290,9 +291,10 @@ struct NewTodoView: View{
 //                    .background(Color(UIColor.secondarySystemBackground))
 //                    .cornerRadius(10)
                    
-                    .submitLabel(.next)
+           
                     
-                    
+                    .submitLabel(.return)
+                    .truncationMode(.tail)
                     
                     
                     NavigationLink {
@@ -301,15 +303,16 @@ struct NewTodoView: View{
                     } label: {
                         
                         UserChip(user: viewModel.mentionedUsers[index])
-                            .frame(height: 48)
+                       
                        
                         
                     }
                     .disabled(viewModel.allUsers.isEmpty)
                     
                 }
+                .frame(minHeight:48)
                 .padding(.horizontal)
-                
+             
 //                .background(/*mentionedUsers[index] == nil ? Color.clear :*/ Color(UIColor.secondarySystemBackground))
                 
                 
@@ -391,7 +394,7 @@ struct UserChip: View {
             .padding(.vertical, 2.5)
             .background(.thickMaterial, in: Capsule())
             .background(targetUserColor, in: Capsule())
-            .frame(width: 100, alignment: .trailing)
+            .frame(width: 80, alignment: .trailing)
         } else {
             Image(systemName: "at.badge.plus")
 //                .padding(.horizontal)

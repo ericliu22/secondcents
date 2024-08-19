@@ -16,8 +16,12 @@ struct SignInEmailView: View {
     
     @StateObject private var viewModel = SignInEmailViewModel()
     var body: some View {
+        ScrollView{
+      
         
         VStack {
+            Spacer()
+                .frame(height:200)
             //Email Textfield
             TextField("Email", text: $viewModel.email)
                 .disableAutocorrection(true)
@@ -102,7 +106,9 @@ struct SignInEmailView: View {
                }
             )
         
-      
+            
+        }
+        .scrollDismissesKeyboard(.interactively)
                    
     }
         
