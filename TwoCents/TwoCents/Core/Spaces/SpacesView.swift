@@ -207,6 +207,9 @@ struct SpacesView: View {
                 }
             }
             
+        
+        .scrollDismissesKeyboard(.interactively)
+            
             
             
             .fullScreenCover(isPresented: $isShowingCreateSpaces, content: {

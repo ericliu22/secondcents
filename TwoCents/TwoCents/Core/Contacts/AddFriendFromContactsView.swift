@@ -263,6 +263,8 @@ struct AddFriendFromContactsView: View {
             }
 //        }
         .searchable(text: $searchTerm, prompt: "Search")
+        
+     .scrollDismissesKeyboard(.interactively)
     }
 }
 

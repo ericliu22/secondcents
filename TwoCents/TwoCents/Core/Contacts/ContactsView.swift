@@ -28,6 +28,8 @@ struct ContactsView: View {
             }
             .navigationBarTitle("Contacts 📇")
             .searchable(text: $searchTerm, prompt: "Search")
+            
+         .scrollDismissesKeyboard(.interactively)
         }
         .onAppear {
             viewModel.fetchContactsIfNeeded()

@@ -137,6 +137,8 @@ import SwiftUI
             .navigationTitle( "Friends 💛" )
             .searchable(text: $searchTerm, placement: .navigationBarDrawer(displayMode: .always), prompt: "Search")
             
+         .scrollDismissesKeyboard(.interactively)
+            
         }
         .task {
            

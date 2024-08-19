@@ -135,6 +135,8 @@ struct SearchUserView: View {
             .listStyle(PlainListStyle())
             .navigationTitle( "Search 👀")
             .searchable(text: $searchTerm, prompt: "Search")
+        
+     .scrollDismissesKeyboard(.interactively)
             
         .task {
          try? await viewModel.getAllUsers()

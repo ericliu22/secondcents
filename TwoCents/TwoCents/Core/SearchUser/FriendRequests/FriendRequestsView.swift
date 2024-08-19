@@ -197,6 +197,8 @@ struct FriendRequestsView: View {
                 .navigationTitle("Friend Requests ✨")
                 .searchable(text: $searchTerm, placement: .navigationBarDrawer(displayMode: .always), prompt: "Search")
                 
+             .scrollDismissesKeyboard(.interactively)
+                
             }
             .task {
                 

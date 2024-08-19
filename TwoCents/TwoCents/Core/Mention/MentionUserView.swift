@@ -136,6 +136,8 @@ struct MentionUserView: View {
                 
                 
             }
+            
+            .scrollDismissesKeyboard(.interactively)
             .listStyle(PlainListStyle())
             .navigationTitle( "Mention 🤝" )
             .searchable(text: $searchTerm, placement: .navigationBarDrawer(displayMode: .always), prompt: "Search")

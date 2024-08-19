@@ -51,59 +51,67 @@ struct NewLinkView: View {
         
             .fullScreenCover(isPresented: $showingView, content: {
                 NavigationStack {
-                    VStack {
-                        // Preview block
-                        LinkPreview(link: $rawURLString)
-                            .frame(width: 200, height: 200)
-                            .cornerRadius(20)
-                        // Text field for input
-                        TextField("Enter text", text: $rawURLString)
-                            .focused($isTextFieldFocused)
-                            .padding()
-                            .background(Color(UIColor.secondarySystemBackground))
-                            .cornerRadius(10)
-                        
-                        Button(action: {
-                            if let userId = viewModel.user?.userId, let url = formattedURL {
-                                print("User ID: \(userId), URL: \(url.absoluteString)")
-                                dismissScreen()
-                                showingView = false
-                                closeNewWidgetview = true
-                                let newLink = CanvasWidget(x: 0, y: 0, borderColor: Color.accentColor, userId: userId, media: .link, mediaURL: url)
-                                SpaceManager.shared.uploadWidget(spaceId: spaceId, widget: newLink)
-                            } else {
-                                print("Error: User ID or URL is nil")
-                            }
-                        }, label: {
-                            Text("Submit")
-                                .font(.headline)
-                                .frame(height: 55)
-                                .frame(maxWidth: .infinity)
-                        })
-                        .buttonStyle(.bordered)
-                        .frame(height: 55)
-                        .cornerRadius(10)
-                        .disabled(rawURLString.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
-                        .onAppear {
-                            isTextFieldFocused = true // Add this line to focus text field on appear
-                        }
-                    }
-                    .navigationTitle("New Link 🔗")
-                    .navigationBarTitleDisplayMode(.inline)
-                    .toolbar {
-                        ToolbarItem(placement: .navigationBarLeading) {
+                    ScrollView{
+                        VStack {
+                            
+                            Spacer()
+                                .frame(height:80)
+                            
+                            
+                            // Preview block
+                            LinkPreview(link: $rawURLString)
+                                .frame(width: 200, height: 200)
+                                .cornerRadius(20)
+                            // Text field for input
+                            TextField("Enter text", text: $rawURLString)
+                                .focused($isTextFieldFocused)
+                                .padding()
+                                .background(Color(UIColor.secondarySystemBackground))
+                                .cornerRadius(10)
+                            
                             Button(action: {
-                                showingView = false
+                                if let userId = viewModel.user?.userId, let url = formattedURL {
+                                    print("User ID: \(userId), URL: \(url.absoluteString)")
+                                    dismissScreen()
+                                    showingView = false
+                                    closeNewWidgetview = true
+                                    let newLink = CanvasWidget(x: 0, y: 0, borderColor: Color.accentColor, userId: userId, media: .link, mediaURL: url)
+                                    SpaceManager.shared.uploadWidget(spaceId: spaceId, widget: newLink)
+                                } else {
+                                    print("Error: User ID or URL is nil")
+                                }
                             }, label: {
-                                Image(systemName: "xmark")
-                                    .foregroundColor(Color(UIColor.label))
+                                Text("Submit")
+                                    .font(.headline)
+                                    .frame(height: 55)
+                                    .frame(maxWidth: .infinity)
                             })
+                            .buttonStyle(.bordered)
+                            .frame(height: 55)
+                            .cornerRadius(10)
+                            .disabled(rawURLString.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                            .onAppear {
+                                isTextFieldFocused = true // Add this line to focus text field on appear
+                            }
+                        }
+                        .navigationTitle("New Link 🔗")
+                        .navigationBarTitleDisplayMode(.inline)
+                        .toolbar {
+                            ToolbarItem(placement: .navigationBarLeading) {
+                                Button(action: {
+                                    showingView = false
+                                }, label: {
+                                    Image(systemName: "xmark")
+                                        .foregroundColor(Color(UIColor.label))
+                                })
+                            }
+                        }
+                        .padding(.horizontal)
+                        .task {
+                            try? await viewModel.loadCurrentUser()
                         }
                     }
-                    .padding(.horizontal)
-                    .task {
-                        try? await viewModel.loadCurrentUser()
-                    }
+                    .scrollDismissesKeyboard(.interactively)
                 }
             })
     }
