@@ -27,10 +27,11 @@ struct NewMessageField: View {
                 }
             
             Button {
-                viewModel.sendMessages(text: message, widget: replyWidget, spaceId: spaceId, threadId: threadId)
-                message = ""
-                replyWidget = nil
-//                isFocused = false // Dismiss keyboard after sending message
+                Task {
+                    await viewModel.sendMessages(text: message, widget: replyWidget, spaceId: spaceId, threadId: threadId)
+                    message = ""
+                    replyWidget = nil
+                }
             } label: {
                 Image(systemName: "arrow.up")
                     .font(.headline)
