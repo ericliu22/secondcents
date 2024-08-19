@@ -181,7 +181,10 @@ struct TodoWidgetSheetView: View {
                     .toolbar {toolbar()}
                 }
             }
-            .interactiveDismissDisabled(true)
+            .onDisappear(perform: {
+                viewModel.saveChanges(spaceId: spaceId, todoId: widget.id.uuidString)
+            })
+//            .interactiveDismissDisabled(true)
             .task{
                 
                 try? await viewModel.getAllUsers(spaceId: spaceId)
