@@ -160,14 +160,11 @@ final class TodoWidgetSheetViewModel: ObservableObject {
                 }
             }
             
-            for (index, todoItem) in self.localTodoList.enumerated() {
-                if index < todoList.count {
-                    todoList[index]["completed"] = todoItem.completed
-                }
-            }
+         
             
             for (index, todoItem) in self.localTodoList.enumerated() {
                 if index < todoList.count {
+                    todoList[index]["completed"] = todoItem.completed
                     todoList[index]["task"] = todoItem.task
                 }
             }
@@ -251,10 +248,48 @@ final class TodoWidgetSheetViewModel: ObservableObject {
         print("Updated user task frequency: \(userTaskFrequency)")
     }
 
-    func deleteItem(index: Int) {
+    func deleteItem(index: Int, todoItemId: String, spaceId: String, todoId: String) {
+        // Remove the item from the local list
         localTodoList.remove(at: index)
-      }
-    
+        
+        // Remove the corresponding mentioned user
+        mentionedUsers.remove(at: index)
+        
+        let db = Firestore.firestore()
+        let ref = db.collection("spaces").document(spaceId).collection("todo").document(todoId)
+        
+        ref.getDocument { [weak self] document, error in
+            guard let self = self else { return }
+            
+            if let error = error {
+                print("Error fetching document: \(error)")
+                return
+            }
+            
+            guard let document = document, document.exists, var todoList = document.data()?["todoList"] as? [[String: Any]] else {
+                print("Document does not exist or is not valid")
+                return
+            }
+            
+            // Find the index of the item to delete in the Firestore list
+            if let firestoreIndex = todoList.firstIndex(where: { $0["id"] as? String == todoItemId }) {
+                // Remove the item from the Firestore list
+                todoList.remove(at: firestoreIndex)
+                
+                // Update the Firestore document with the new list
+                ref.updateData(["todoList": todoList]) { error in
+                    if let error = error {
+                        print("Error updating document: \(error)")
+                    } else {
+                        print("Item successfully deleted from Firestore.")
+                    }
+                }
+            } else {
+                print("Item not found in Firestore list.")
+            }
+        }
+    }
+
     
     
 }

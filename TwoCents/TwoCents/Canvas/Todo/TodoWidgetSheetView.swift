@@ -112,7 +112,7 @@ struct TodoWidgetSheetView: View {
                             .padding(.horizontal)
                             .contextMenu(ContextMenu(menuItems: {
                                 Button (role: .destructive){
-                                    viewModel.deleteItem(index: originalIndex)
+                                    viewModel.deleteItem(index: originalIndex, todoItemId: todoItem.id, spaceId: spaceId, todoId: widget.id.uuidString)
                                 } label: {
                                     Label("Delete", systemImage: "trash")
                   
