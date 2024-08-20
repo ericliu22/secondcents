@@ -59,6 +59,12 @@ struct CanvasPage: View {
     
     
     @State private var widgetDoubleTapped: Bool = false
+    
+    
+    @State private var refreshId = UUID()
+    
+    
+    
     //    @Environment(\.dismiss) var dismissScreen
     
     private var chatroomDocument: DocumentReference
@@ -189,18 +195,18 @@ struct CanvasPage: View {
                 }
             }
    
-                .onTapGesture(count: 2, perform: {
-                    activeSheet = .newTextView
-                })
-            
-                .onTapGesture {
-                    //deselect
-                    if (viewModel.selectedWidget != nil) { 
-                    viewModel.selectedWidget = nil
-                    widgetDoubleTapped = false
-                    activeSheet = .chat
-                    }
-                }
+//                .onTapGesture(count: 2, perform: {
+//                    activeSheet = .newTextView
+//                })
+//            
+//                .onTapGesture {
+//                    //deselect
+//                    if (viewModel.selectedWidget != nil) { 
+//                    viewModel.selectedWidget = nil
+//                    widgetDoubleTapped = false
+//                    activeSheet = .chat
+//                    }
+//                }
                 .overlay(
                     DrawingCanvas(canvas: $canvas, toolPickerActive: $toolPickerActive, toolPicker: $toolkit, spaceId: spaceId)
                         .allowsHitTesting(toolPickerActive)
@@ -300,6 +306,16 @@ struct CanvasPage: View {
             ForEach(canvasWidgets, id:\.id) { widget in
                 //main widget
                 MediaView(widget: widget, spaceId: spaceId)
+                    .contextMenu(ContextMenu(menuItems: {
+                        
+                        EmojiReactionContextView(spaceId: spaceId, widget: widget, refreshId: $refreshId)
+                        
+                        
+
+                    }))
+
+                
+                
                     .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
                     .cornerRadius(CORNER_RADIUS)
 //                    .shadow(color: Color.black.opacity(0.05), radius: 4, x: 0, y: 4)
@@ -309,46 +325,46 @@ struct CanvasPage: View {
                     )
                     .position(x: widget.x ??  FRAME_SIZE/2, y: widget.y ?? FRAME_SIZE/2)
                 //clickable area/outline when clicked
-                    .overlay(
-                        RoundedRectangle(cornerRadius: CORNER_RADIUS)
-                            .strokeBorder(viewModel.selectedWidget == widget ? Color.secondary : .clear, lineWidth: 3)
-                            .contentShape(RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
-                            .frame(width: TILE_SIZE, height: TILE_SIZE)
-                            .position(x: widget.x ??  FRAME_SIZE/2, y: widget.y ?? FRAME_SIZE/2)
-                            .cornerRadius(CORNER_RADIUS)
-                            //on double tap
-                            .onTapGesture(count: 2, perform: {widgetDoubleTap(widget: widget)})
-                            //on single tap
-                            .onTapGesture(count: 1, perform: {widgetSingleTap(widget: widget)})
-                    )
-
-
+//                    .overlay(
+//                        RoundedRectangle(cornerRadius: CORNER_RADIUS)
+//                            .strokeBorder(viewModel.selectedWidget == widget ? Color.secondary : .clear, lineWidth: 3)
+//                            .contentShape(RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
+//                            .frame(width: TILE_SIZE, height: TILE_SIZE)
+//                            .position(x: widget.x ??  FRAME_SIZE/2, y: widget.y ?? FRAME_SIZE/2)
+//                            .cornerRadius(CORNER_RADIUS)
+//                            //on double tap
+////                            .onTapGesture(count: 2, perform: {widgetDoubleTap(widget: widget)})
+//                            //on single tap
+////                            .onTapGesture(count: 1, perform: {widgetSingleTap(widget: widget)})
+//                    )
+                 
                 //full name below widget
-                    .overlay(content: {
-                        Text(widgetDoubleTapped ? fullName : "" )
-                            .position(x: widget.x ??  FRAME_SIZE/2, y: widget.y ?? FRAME_SIZE/2)
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                            .offset(y:90)
-                    })
-                    .blur(radius: widgetDoubleTapped && viewModel.selectedWidget != widget ? 20 : 0)
+//                    .overlay(content: {
+//                        Text(widgetDoubleTapped ? fullName : "" )
+//                            .position(x: widget.x ??  FRAME_SIZE/2, y: widget.y ?? FRAME_SIZE/2)
+//                            .font(.caption)
+//                            .foregroundStyle(.secondary)
+//                            .offset(y:90)
+//                    })
+//                    .blur(radius: widgetDoubleTapped && viewModel.selectedWidget != widget ? 20 : 0)
 //                    .scaleEffect(widgetDoubleTapped && viewModel.selectedWidget == widget ? 1.05 : 1)
 //                
-                    .animation(.spring)
+//                    .animation(.spring)
                     //emoji react MENU
-                    .overlay(alignment: .top) {
-                        if widgetDoubleTapped && viewModel.selectedWidget == widget {
-                            EmojiReactionsView(spaceId: spaceId, widget: widget)
-                                .offset(y:-110)
-                                .position(x: widget.x ??  FRAME_SIZE/2, y: widget.y ?? FRAME_SIZE/2)
-
-                        }
-                    }
+//                    .overlay(alignment: .top) {
+//                        if widgetDoubleTapped && viewModel.selectedWidget == widget {
+//                            EmojiReactionsView(spaceId: spaceId, widget: widget)
+//                                .offset(y:-110)
+//                                .position(x: widget.x ??  FRAME_SIZE/2, y: widget.y ?? FRAME_SIZE/2)
+//
+//                        }
+//                    }
                     .overlay() {
                         viewModel.selectedWidget == nil/* && draggingItem == nil */?
                         EmojiCountOverlayView(spaceId: spaceId, widget: widget)
                             .offset(y: TILE_SIZE/2)
                             .position(x: widget.x ??  FRAME_SIZE/2, y: widget.y ?? FRAME_SIZE/2)
+                            .id(refreshId)
 
                         : nil
                     }

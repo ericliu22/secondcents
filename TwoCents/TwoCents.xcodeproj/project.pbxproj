@@ -152,6 +152,7 @@
 		ABD9F2392C1F34C30041F110 /* SignUpPhoneNumberView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABD9F2382C1F34C30041F110 /* SignUpPhoneNumberView.swift */; };
 		ABD9F23B2C1F34D30041F110 /* SignUpPhoneNumberViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABD9F23A2C1F34D30041F110 /* SignUpPhoneNumberViewModel.swift */; };
 		ABD9F23D2C1F3F910041F110 /* AddFriendFromContactsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABD9F23C2C1F3F910041F110 /* AddFriendFromContactsView.swift */; };
+		ABEE2CF22C7368E6001D2108 /* EmojiReactionContextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABEE2CF12C7368E6001D2108 /* EmojiReactionContextView.swift */; };
 		ABF172A52BFC47FC000B6F9B /* ChattingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABF172A42BFC47FC000B6F9B /* ChattingViewModel.swift */; };
 		ABF172A72BFC6686000B6F9B /* AddMemberView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABF172A62BFC6686000B6F9B /* AddMemberView.swift */; };
 		ABF172A92BFC66AD000B6F9B /* AddMemberViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABF172A82BFC66AD000B6F9B /* AddMemberViewModel.swift */; };
@@ -327,6 +328,7 @@
 		ABD9F2382C1F34C30041F110 /* SignUpPhoneNumberView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpPhoneNumberView.swift; sourceTree = "<group>"; };
 		ABD9F23A2C1F34D30041F110 /* SignUpPhoneNumberViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpPhoneNumberViewModel.swift; sourceTree = "<group>"; };
 		ABD9F23C2C1F3F910041F110 /* AddFriendFromContactsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFriendFromContactsView.swift; sourceTree = "<group>"; };
+		ABEE2CF12C7368E6001D2108 /* EmojiReactionContextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiReactionContextView.swift; sourceTree = "<group>"; };
 		ABF172A42BFC47FC000B6F9B /* ChattingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChattingViewModel.swift; sourceTree = "<group>"; };
 		ABF172A62BFC6686000B6F9B /* AddMemberView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMemberView.swift; sourceTree = "<group>"; };
 		ABF172A82BFC66AD000B6F9B /* AddMemberViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMemberViewModel.swift; sourceTree = "<group>"; };
@@ -445,8 +447,7 @@
 				A2F563182AB4E6240026D8C9 /* CanvasPage.swift */,
 				AB6EA6092B879B7C00CC90FF /* CanvasPageViewModel.swift */,
 				A22F84ED2C2912A20095A087 /* ZoomableScrollView.swift */,
-				AB6EA60B2B87A1FE00CC90FF /* EmojiReactionsView.swift */,
-				AB9C7F672BD83B1E004FC549 /* EmojiCountView.swift */,
+				ABEE2CF02C7368C8001D2108 /* Emoji */,
 			);
 			path = Canvas;
 			sourceTree = "<group>";
@@ -833,6 +834,16 @@
 			path = Mention;
 			sourceTree = "<group>";
 		};
+		ABEE2CF02C7368C8001D2108 /* Emoji */ = {
+			isa = PBXGroup;
+			children = (
+				AB6EA60B2B87A1FE00CC90FF /* EmojiReactionsView.swift */,
+				ABEE2CF12C7368E6001D2108 /* EmojiReactionContextView.swift */,
+				AB9C7F672BD83B1E004FC549 /* EmojiCountView.swift */,
+			);
+			path = Emoji;
+			sourceTree = "<group>";
+		};
 		ABF56DFA2A7C8BC700F959DB /* Core */ = {
 			isa = PBXGroup;
 			children = (
@@ -1127,6 +1138,7 @@
 				A257D7842A6D707600A4E7BD /* TwoCentsApp.swift in Sources */,
 				AB300FB02AC7407000C6719D /* FriendsView.swift in Sources */,
 				ABCA39D42A79FFAD009447C3 /* SignInEmailView.swift in Sources */,
+				ABEE2CF22C7368E6001D2108 /* EmojiReactionContextView.swift in Sources */,
 				AB53655F2C31C807001C444B /* TodoWidget.swift in Sources */,
 				8573EC892AE6EF4A00CFB579 /* HeartParticle.swift in Sources */,
 				A2E5F52B2B5A12D30019C6ED /* DrawingCanvas.swift in Sources */,
