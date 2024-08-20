@@ -313,11 +313,8 @@ struct CanvasPage: View {
                         
                         
                         
-                        if let selectedWidget = viewModel.selectedWidget {
-                               widgetButton(for: selectedWidget.media)
-                           } else {
-                               EmptyView()
-                           }
+                               widgetButton(for: widget.media)
+                         
 
                         
                         
@@ -539,10 +536,12 @@ struct CanvasPage: View {
                 widgetDoubleTapped = false
                 activeSheet =  .poll
             }, label: {
-                Image(systemName: "list.clipboard")
-                    .foregroundColor(Color(UIColor.label))
-                    .font(.title3)
-                    .padding(.horizontal, 5)
+//                Image(systemName: "list.clipboard")
+//                    .foregroundColor(Color(UIColor.label))
+//                    .font(.title3)
+//                    .padding(.horizontal, 5)
+                
+                Label("Open Poll", systemImage: "list.clipboard")
             }).eraseToAnyView()
             
             
@@ -553,10 +552,12 @@ struct CanvasPage: View {
                 widgetDoubleTapped = false
                 activeSheet = .todo
             }, label: {
-                Image(systemName: "checklist")
-                    .foregroundColor(Color(UIColor.label))
-                    .font(.title3)
-                    .padding(.horizontal, 5)
+//                Image(systemName: "checklist")
+//                    .foregroundColor(Color(UIColor.label))
+//                    .font(.title3)
+//                    .padding(.horizontal, 5)
+                
+                Label("Open List", systemImage: "checklist")
             }).eraseToAnyView()
 
         case .map:
@@ -567,9 +568,11 @@ struct CanvasPage: View {
                 viewModel.selectedWidget = nil
                 widgetDoubleTapped = false
             }, label: {
-                Image(systemName: "mappin.and.ellipse")
-                    .foregroundColor(Color(UIColor.label))
-                    .padding(.horizontal, 5)
+//                Image(systemName: "mappin.and.ellipse")
+//                    .foregroundColor(Color(UIColor.label))
+//                    .padding(.horizontal, 5)
+                
+                Label("Open Map", systemImage: "mappin.and.ellipse")
             }).eraseToAnyView()
         case .link:
             return Button(action:{
@@ -580,9 +583,12 @@ struct CanvasPage: View {
                 viewModel.selectedWidget = nil
                 widgetDoubleTapped = false
             }, label: {
-                Image(systemName: "link")
-                    .foregroundColor(Color(UIColor.label))
-                    .padding(.horizontal, 5)
+//                Image(systemName: "link")
+//                    .foregroundColor(Color(UIColor.label))
+//                    .padding(.horizontal, 5)
+                
+                
+                Label("Open Link", systemImage: "link")
             }).eraseToAnyView()
             
             
@@ -593,10 +599,13 @@ struct CanvasPage: View {
                 widgetDoubleTapped = false
                 activeSheet = .image
             }, label: {
-                Image(systemName: "arrow.up.left.and.arrow.down.right")
-                    .foregroundColor(Color(UIColor.label))
-                    .font(.title3)
-                    .padding(.horizontal, 5)
+//                Image(systemName: "arrow.up.left.and.arrow.down.right")
+//                    .foregroundColor(Color(UIColor.label))
+//                    .font(.title3)
+//                    .padding(.horizontal, 5)
+                
+                
+                Label("Open Image", systemImage: "photo")
             }).eraseToAnyView()
 
             
@@ -609,10 +618,12 @@ struct CanvasPage: View {
                 widgetDoubleTapped = false
                 activeSheet = .video
             }, label: {
-                Image(systemName: "arrow.up.left.and.arrow.down.right")
-                    .foregroundColor(Color(UIColor.label))
-                    .font(.title3)
-                    .padding(.horizontal, 5)
+//                Image(systemName: "arrow.up.left.and.arrow.down.right")
+//                    .foregroundColor(Color(UIColor.label))
+//                    .font(.title3)
+//                    .padding(.horizontal, 5)
+                
+                Label("Open Video", systemImage: "video")
             }).eraseToAnyView()
 
             
