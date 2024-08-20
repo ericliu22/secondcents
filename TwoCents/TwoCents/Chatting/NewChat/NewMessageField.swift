@@ -20,11 +20,7 @@ struct NewMessageField: View {
                 .font(.headline)
                 .fontWeight(.regular)
                 .focused($isFocused)
-                .onAppear {
-                    if replyWidget != nil {
-                        isFocused = true
-                    }
-                }
+               
             
             Button {
                 Task {
@@ -63,6 +59,14 @@ struct NewMessageField: View {
                 isFocused = true
             }
         }
+        
+        .onChange(of: replyWidget) { _, newValue in
+            if newValue != nil {
+                isFocused = true
+            }
+        }
+        
+      
     }
 }
 
