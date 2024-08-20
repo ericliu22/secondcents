@@ -329,7 +329,9 @@ struct CanvasPage: View {
                             selectedDetent = .large
                             replyWidget = widget
                         }, label: {
-                            Image(systemName: "arrowshape.turn.up.left")
+                            
+                            Label("Reply", systemImage: "arrowshape.turn.up.left")
+//                            Image(systemName: "arrowshape.turn.up.left")
                               
                         })
                         
@@ -361,7 +363,9 @@ struct CanvasPage: View {
                         
                             activeSheet = .chat
                         } label: {
-                            Image(systemName: "trash")
+                            
+                            Label("Delete", systemImage: "trash")
+                          
                         }
 
                         
