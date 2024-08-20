@@ -311,6 +311,62 @@ struct CanvasPage: View {
                         EmojiReactionContextView(spaceId: spaceId, widget: widget, refreshId: $refreshId)
                         
                         
+                        
+                        
+                        if let selectedWidget = viewModel.selectedWidget {
+                               widgetButton(for: selectedWidget.media)
+                           } else {
+                               EmptyView()
+                           }
+
+                        
+                        
+                        // Reply button
+                        Button(action: {
+                            
+                        
+                            activeSheet = .chat
+                            selectedDetent = .large
+                            replyWidget = widget
+                        }, label: {
+                            Image(systemName: "arrowshape.turn.up.left")
+                              
+                        })
+                        
+                        
+                        
+                        // Delete button
+                  
+                        
+                        Button(role: .destructive) {
+                            if let index = canvasWidgets.firstIndex(of: widget)  {
+                                canvasWidgets.remove(at: index)
+                                SpaceManager.shared.removeWidget(spaceId: spaceId, widget: widget)
+                                
+                                //delete specific widget items (in their own folders)
+                                
+                                switch widget.media {
+                                    
+                                case .poll:
+                                    deletePoll(spaceId: spaceId, pollId: widget.id.uuidString)
+                                case .todo:
+                                    deleteTodoList(spaceId: spaceId, todoId: widget.id.uuidString)
+                                    
+                                default:
+                                    break
+                                    
+                                }
+                           
+                            }
+                        
+                            activeSheet = .chat
+                        } label: {
+                            Image(systemName: "trash")
+                        }
+
+                        
+                        
+                        
 
                     }))
 
