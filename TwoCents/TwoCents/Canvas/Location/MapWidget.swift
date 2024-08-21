@@ -27,11 +27,18 @@ struct MapWidget: WidgetView {
     }
 
     var body: some View {
+        
+        ZStack{
             DisplayLocationWidgetView(latitude: latitude, longitude: longitude)
-            .frame(
-                width: TILE_SIZE,
-                height: TILE_SIZE
-            )
+                .frame(
+                    width: TILE_SIZE,
+                    height: TILE_SIZE
+                )
+            
+            //so context menu works
+            Color.clear
+               .contentShape(Rectangle())
+        }
             
     }
        

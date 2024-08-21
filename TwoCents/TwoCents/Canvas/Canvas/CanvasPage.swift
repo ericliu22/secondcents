@@ -313,7 +313,7 @@ struct CanvasPage: View {
                         
                         
                         
-                               widgetButton(for: widget.media)
+                        widgetButton(widget: widget)
                          
 
                         
@@ -527,13 +527,13 @@ struct CanvasPage: View {
     
 
     
-    func widgetButton(for media: Media) -> some View {
-        switch media {
+    func widgetButton( widget: CanvasWidget) -> some View {
+        switch widget.media {
         case .poll:
             return Button(action: {
-                activeWidget = viewModel.selectedWidget
-                viewModel.selectedWidget = nil
-                widgetDoubleTapped = false
+                activeWidget = widget
+//                viewModel.selectedWidget = nil
+//                widgetDoubleTapped = false
                 activeSheet =  .poll
             }, label: {
 //                Image(systemName: "list.clipboard")
@@ -547,9 +547,9 @@ struct CanvasPage: View {
             
         case .todo:
             return Button(action: {
-                activeWidget = viewModel.selectedWidget
-                viewModel.selectedWidget = nil
-                widgetDoubleTapped = false
+                activeWidget = widget
+//                viewModel.selectedWidget = nil
+//                widgetDoubleTapped = false
                 activeSheet = .todo
             }, label: {
 //                Image(systemName: "checklist")
@@ -562,11 +562,11 @@ struct CanvasPage: View {
 
         case .map:
             return Button(action: {
-                if let location = viewModel.selectedWidget?.location {
+                if let location = widget.location {
                     viewModel.openMapsApp(location: location)
                 }
-                viewModel.selectedWidget = nil
-                widgetDoubleTapped = false
+//                viewModel.selectedWidget = nil
+//                widgetDoubleTapped = false
             }, label: {
 //                Image(systemName: "mappin.and.ellipse")
 //                    .foregroundColor(Color(UIColor.label))
@@ -576,12 +576,12 @@ struct CanvasPage: View {
             }).eraseToAnyView()
         case .link:
             return Button(action:{
-                if let url = viewModel.selectedWidget?.mediaURL {
+                if let url = widget.mediaURL {
                     viewModel.openLink(url: url)
                 }
                 
-                viewModel.selectedWidget = nil
-                widgetDoubleTapped = false
+//                viewModel.selectedWidget = nil
+//                widgetDoubleTapped = false
             }, label: {
 //                Image(systemName: "link")
 //                    .foregroundColor(Color(UIColor.label))
@@ -594,9 +594,9 @@ struct CanvasPage: View {
             
         case .image:
             return Button(action: {
-                activeWidget = viewModel.selectedWidget
-                viewModel.selectedWidget = nil
-                widgetDoubleTapped = false
+                activeWidget = widget
+//                viewModel.selectedWidget = nil
+//                widgetDoubleTapped = false
                 activeSheet = .image
             }, label: {
 //                Image(systemName: "arrow.up.left.and.arrow.down.right")
@@ -613,9 +613,9 @@ struct CanvasPage: View {
             
         case .video:
             return Button(action: {
-                activeWidget = viewModel.selectedWidget
-                viewModel.selectedWidget = nil
-                widgetDoubleTapped = false
+                activeWidget = widget
+//                viewModel.selectedWidget = nil
+//                widgetDoubleTapped = false
                 activeSheet = .video
             }, label: {
 //                Image(systemName: "arrow.up.left.and.arrow.down.right")
@@ -642,7 +642,7 @@ struct CanvasPage: View {
                 
                 
                 if let selectedWidget = viewModel.selectedWidget {
-                       widgetButton(for: selectedWidget.media)
+//                       widgetButton(for: selectedWidget.media)
                    } else {
                        EmptyView()
                    }
