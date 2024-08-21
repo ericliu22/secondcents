@@ -62,7 +62,7 @@ struct CanvasPage: View {
     
     
     @State private var refreshId = UUID()
-    @State private var showingAlert: Bool = false
+    
     
     
     //    @Environment(\.dismiss) var dismissScreen
@@ -338,50 +338,32 @@ struct CanvasPage: View {
                   
                         
                         Button(role: .destructive) {
-                            showingAlert = true
+                            if let index = canvasWidgets.firstIndex(of: widget)  {
+                                canvasWidgets.remove(at: index)
+                                SpaceManager.shared.removeWidget(spaceId: spaceId, widget: widget)
+                                
+                                //delete specific widget items (in their own folders)
+                                
+                                switch widget.media {
+                                    
+                                case .poll:
+                                    deletePoll(spaceId: spaceId, pollId: widget.id.uuidString)
+                                case .todo:
+                                    deleteTodoList(spaceId: spaceId, todoId: widget.id.uuidString)
+                                    
+                                default:
+                                    break
+                                    
+                                }
+                           
+                            }
+                        
+                            activeSheet = .chat
                         } label: {
                             
                             Label("Delete", systemImage: "trash")
                           
                         }
-                        .alert(Text("Delete Widget"), isPresented: $showingAlert, actions: {
-                            Button("Cancel", role: .cancel) { }
-                            Button("Delete", role: .destructive) { 
-                                Task{
-                               
-                                    if let index = canvasWidgets.firstIndex(of: widget)  {
-                                        canvasWidgets.remove(at: index)
-                                        SpaceManager.shared.removeWidget(spaceId: spaceId, widget: widget)
-                                        
-                                        //delete specific widget items (in their own folders)
-                                        
-                                        switch widget.media {
-                                            
-                                        case .poll:
-                                            deletePoll(spaceId: spaceId, pollId: widget.id.uuidString)
-                                        case .todo:
-                                            deleteTodoList(spaceId: spaceId, todoId: widget.id.uuidString)
-                                            
-                                        default:
-                                            break
-                                            
-                                        }
-                                   
-                                    }
-                                
-                                    activeSheet = .chat
-                                
-                                
-                                }
-                           
-                             }
-                        }, message: {
-                           
-                                Text("It wasn't that good anyway.")
-                           
-                           
-                        })
-                        
 
                         
                         
