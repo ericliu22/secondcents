@@ -12,7 +12,11 @@ struct CalendarWidgetSheetView: View {
     @State private var preferredTime: Date? = nil
     @State private var isDatePickerEnabled: Bool = false // Control the enabled/disabled state of the date picker
     @State private var timeSlotUserCounts: [Date: Int] = [:]
+    @State private var name: String = "Eventful Event"
 
+    
+    
+    @Environment(\.dismiss) var dismissScreen
     
     let dateFormatterMonthDay: DateFormatter = {
         let formatter = DateFormatter()
@@ -142,12 +146,14 @@ struct CalendarWidgetSheetView: View {
                 .toolbar {
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Button("Save") {
+                            
                             saveDates()
+                   dismissScreen()
                         }
                     }
                 }
             }
-            .navigationTitle(currentlySelectedDate.map { dateFormatterMonthDay.string(from: $0) } ?? "Select Availability")
+            .navigationTitle(currentlySelectedDate.map { dateFormatterMonthDay.string(from: $0) } ?? self.name)
             .navigationBarTitleDisplayMode(.inline)
         }
     }
@@ -370,24 +376,16 @@ struct CalendarWidgetSheetView: View {
                     print("Document does not exist or failed to retrieve data: \(error?.localizedDescription ?? "Unknown error")")
                     return
                 }
-                print("HERE")
+            
                 if let data = document.data() {
                     if let preferredTimeString = data["preferredTime"] as? String {
                         self.preferredTime = self.timeFormatter.date(from: preferredTimeString)
                     }
                     
-//                if let data = document.data() {
-//                    print("HERE2")
-//                    if let preferredTime = data["preferredTime"] as? String {
-//                        print("HERE3")
-//                        self.preferredTime = dateFormatter.date(from: preferredTime)
-//                        
-//                        //"QWERTY"
-//                        print("HERE4")
-//                        print("SHEET PREFERRED TIME IS  \(preferredTime)")
-//                        print("SHEET PREFERRED TIME IS  \(self.preferredTime)")
-//                    }
-                    
+                    if let name = data["name"] as? String {
+                        self.name = name
+                    }
+                
                     if let userDates = data[userId] as? [String: [String]] {
                         var groupedDates: [Date: Set<Date>] = [:]
                         
