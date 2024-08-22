@@ -135,6 +135,8 @@ struct CalendarWidgetSheetView: View {
                     }
                 }
                 .onAppear {
+                    
+                    print("LOADING SAVED DATES")
                     loadSavedDates()
                 }
                 .toolbar {
@@ -368,11 +370,23 @@ struct CalendarWidgetSheetView: View {
                     print("Document does not exist or failed to retrieve data: \(error?.localizedDescription ?? "Unknown error")")
                     return
                 }
-                
+                print("HERE")
                 if let data = document.data() {
-                    if let preferredTime = data["preferredTime"] as? Timestamp {
-                        self.preferredTime = preferredTime.dateValue()
+                    if let preferredTimeString = data["preferredTime"] as? String {
+                        self.preferredTime = self.timeFormatter.date(from: preferredTimeString)
                     }
+                    
+//                if let data = document.data() {
+//                    print("HERE2")
+//                    if let preferredTime = data["preferredTime"] as? String {
+//                        print("HERE3")
+//                        self.preferredTime = dateFormatter.date(from: preferredTime)
+//                        
+//                        //"QWERTY"
+//                        print("HERE4")
+//                        print("SHEET PREFERRED TIME IS  \(preferredTime)")
+//                        print("SHEET PREFERRED TIME IS  \(self.preferredTime)")
+//                    }
                     
                     if let userDates = data[userId] as? [String: [String]] {
                         var groupedDates: [Date: Set<Date>] = [:]

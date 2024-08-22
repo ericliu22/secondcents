@@ -98,6 +98,8 @@ struct CalendarWidget: View {
 
                 let data = document.data() ?? [:]
                 let preferredTime = data["preferredTime"] as? String ?? self.preferredTime
+                print("PREFERRED TIME IS \(preferredTime)")
+                
                 let eventName = data["name"] as? String ?? "Eventful Event" // Fetch the event name
                 let (mostCommonDate, closestTime, maxTimeFrequency) = findOptimalDateAndTime(from: data, preferredTime: preferredTime)
 
