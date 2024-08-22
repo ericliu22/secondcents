@@ -55,8 +55,6 @@ struct CalendarWidget: View {
     
     
     var body: some View {
-        ZStack {
-            Color(UIColor.tertiarySystemFill)
             VStack {
                 if let date = optimalDate.date {
                     if isTodayOrTomorrow(date: date) && !hasDatePassed(date: date, time: closestTime) {
@@ -73,7 +71,7 @@ struct CalendarWidget: View {
             .background(Color(UIColor.systemBackground))
             .frame(width: TILE_SIZE, height: TILE_SIZE)
             .cornerRadius(CORNER_RADIUS)
-        }
+   
         .task {
             await setupSnapshotListener()
         }
@@ -477,5 +475,18 @@ struct EventPassedView: View {
                 bounce.toggle()
             }
         }
+    }
+}
+
+
+func deleteCalendar(spaceId: String, calendarId: String) {
+    do {
+        try db.collection("spaces")
+            .document(spaceId)
+            .collection("calendar")
+            .document(calendarId)
+            .delete()
+    } catch {
+        print("Error deleting poll")
     }
 }

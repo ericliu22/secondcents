@@ -23,9 +23,9 @@ var textViewTest = CanvasWidget(width: .infinity, height:  .infinity, x: 0, y:0,
 
 var todoViewTest = CanvasWidget(width: .infinity, height:  .infinity, borderColor: .red, userId: "jisookim", media: .todo, widgetName: "List", widgetDescription: "Conquer the world", textString: "")
 
-var linkViewTest = CanvasWidget(width: .infinity, height:  .infinity, borderColor: .red, userId: "jisookim", media: .link, widgetName: "Link", widgetDescription: "Share a link", textString: "")
+var linkViewTest = CanvasWidget(width: .infinity, height:  .infinity, borderColor: .red, userId: "jisookim", media: .link, widgetName: "Link", widgetDescription: "Rickroll someone", textString: "")
 
-var calendarViewTest = CanvasWidget(width: .infinity, height:  .infinity, borderColor: .red, userId: "jisookim", media: .calendar, widgetName: "Calendar", widgetDescription: "When - did I ask", textString: "")
+var calendarViewTest = CanvasWidget(width: .infinity, height:  .infinity, borderColor: .red, userId: "jisookim", media: .calendar, widgetName: "Calendar", widgetDescription: "When... did I ask?", textString: "")
 
 
 

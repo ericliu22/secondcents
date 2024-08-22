@@ -16,29 +16,73 @@ struct NewCalendarView: View {
     @State private var finalDate: Date = Date()
     @State private var isDatePickerVisible: Bool = false
     @State private var createdWidgetId: String = ""
-
+    
     init(spaceId: String, closeNewWidgetview: Binding<Bool>) {
         self.spaceId = spaceId
         self._closeNewWidgetview = closeNewWidgetview
     }
     
     var body: some View {
-        ZStack {
-            VStack {
-                Text("26")
+        
+        
+        
+        
+        VStack(alignment: .center, spacing: 0) {
+            Text("Eventful Event")
+                .font(.headline)
+                .foregroundColor(Color.accentColor)
+                .fontWeight(.semibold)
+                .lineLimit(1)
+                .truncationMode(.tail)
+            
+            
+            
+            
+            Text("6:00 PM・In 4 days")
+                .font(.caption)
+                .foregroundColor(Color.secondary)
+                .fontWeight(.semibold)
+                .padding(.bottom, 3)
+            
+            
+            Divider()
+            Spacer()
+            
+            HStack(spacing: 3) {
+                
+                Text("Tue")
                     .font(.title)
                     .fontWeight(.bold)
-                    .foregroundStyle(userColor)
-                Text("Votes")
-                    .font(.headline)
-                    .fontWeight(.regular)
-                    .foregroundStyle(userColor)
+                    .foregroundColor(Color.accentColor)
+                
+                
+                
+                Text("Aug")
+                    .font(.title)
+                    .fontWeight(.bold)
+                    .foregroundColor(.secondary)
+                
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+            .padding(.top, -8)
+            
+            Text("18")
+                .font(.system(size: 84))
+                .fontWeight(.bold)
+                .foregroundColor(.primary)
+                .padding(.vertical, -15)
+            
         }
+        .padding(20)
+        
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+        
         .background(Color(UIColor.systemBackground))
-        .frame(width: .infinity, height: .infinity)
-        .onTapGesture { showingView.toggle() }
+        
+     
+        .onTapGesture { 
+            showingView.toggle()
+            print("tapped")
+        }
         .fullScreenCover(isPresented: $showingView) {
             NavigationStack {
                 List {
@@ -130,7 +174,7 @@ struct NewCalendarView: View {
                           "preferredTime": formattedTime(),
                           "creator": userId,
                           "endDate": isDatePickerVisible ? finalDate : nil
-                  ])
+                         ])
         } catch {
             print("Error uploading calendar")
         }

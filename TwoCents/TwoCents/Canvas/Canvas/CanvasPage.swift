@@ -342,7 +342,9 @@ struct CanvasPage: View {
                                     deletePoll(spaceId: spaceId, pollId: widget.id.uuidString)
                                 case .todo:
                                     deleteTodoList(spaceId: spaceId, todoId: widget.id.uuidString)
-                                    
+                                
+                                case .calendar:
+                                    deleteCalendar(spaceId: spaceId, calendarId: widget.id.uuidString)
                                 default:
                                     break
                                     
