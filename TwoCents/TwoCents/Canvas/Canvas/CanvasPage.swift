@@ -176,12 +176,15 @@ struct CanvasPage: View {
                 //This is necessary keep these lines
                 
                 if draggingItem != nil {
-                    let x = roundToTile(number: location.x)
-                    let y = roundToTile(number: location.y)
-
-                    SpaceManager.shared.moveWidget(spaceId: spaceId, widgetId: draggingItem!.id.uuidString, x: x, y: y)
-                    draggingItem = nil
-                    return true
+                 
+                        let x = roundToTile(number: location.x)
+                        let y = roundToTile(number: location.y)
+                        
+                        SpaceManager.shared.moveWidget(spaceId: spaceId, widgetId: draggingItem!.id.uuidString, x: x, y: y)
+             
+                        draggingItem = nil
+                        return true
+                   
                 } else {
                     return false
                 }
@@ -356,8 +359,19 @@ struct CanvasPage: View {
                         height: TILE_SIZE
                     )
                     .position(x: widget.x ??  FRAME_SIZE/2, y: widget.y ?? FRAME_SIZE/2)
-                    
+                    .animation(.spring(), value: widget.x) // Add animation for x position
+                    .animation(.spring(), value: widget.y) // Add animation for y position
+                              
                    
+                    .overlay() {
+                        viewModel.selectedWidget == nil/* && draggingItem == nil */?
+                        EmojiCountOverlayView(spaceId: spaceId, widget: widget)
+                            .offset(y: TILE_SIZE/2)
+                            .position(x: widget.x ??  FRAME_SIZE/2, y: widget.y ?? FRAME_SIZE/2)
+                            .id(refreshId)
+
+                        : nil
+                    }
                     .draggable(widget) {
                         MediaView(widget: widget, spaceId: spaceId, activeSheet: $activeSheet, activeWidget: $activeWidget)
                             .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
