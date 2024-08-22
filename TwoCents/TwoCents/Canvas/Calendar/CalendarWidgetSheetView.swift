@@ -145,12 +145,15 @@ struct CalendarWidgetSheetView: View {
                 }
                 .toolbar {
                     ToolbarItem(placement: .navigationBarTrailing) {
-                        Button("Save") {
+                        Button("Done") {
                             
-                            saveDates()
-                   dismissScreen()
+                          
+                            dismissScreen()
                         }
                     }
+                }
+                .onDisappear {
+                    saveDates()
                 }
             }
             .navigationTitle(currentlySelectedDate.map { dateFormatterMonthDay.string(from: $0) } ?? self.name)
