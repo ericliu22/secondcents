@@ -61,6 +61,7 @@ struct CanvasPage: View {
     @State private var widgetDoubleTapped: Bool = false
     
     
+    //helps reset view
     @State private var refreshId = UUID()
     
     
@@ -315,8 +316,6 @@ struct CanvasPage: View {
                         
                         widgetButton(widget: widget)
                          
-
-                        
                         
                         // Reply button
                         Button(action: {
@@ -381,41 +380,7 @@ struct CanvasPage: View {
                         height: TILE_SIZE
                     )
                     .position(x: widget.x ??  FRAME_SIZE/2, y: widget.y ?? FRAME_SIZE/2)
-                //clickable area/outline when clicked
-//                    .overlay(
-//                        RoundedRectangle(cornerRadius: CORNER_RADIUS)
-//                            .strokeBorder(viewModel.selectedWidget == widget ? Color.secondary : .clear, lineWidth: 3)
-//                            .contentShape(RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
-//                            .frame(width: TILE_SIZE, height: TILE_SIZE)
-//                            .position(x: widget.x ??  FRAME_SIZE/2, y: widget.y ?? FRAME_SIZE/2)
-//                            .cornerRadius(CORNER_RADIUS)
-//                            //on double tap
-////                            .onTapGesture(count: 2, perform: {widgetDoubleTap(widget: widget)})
-//                            //on single tap
-////                            .onTapGesture(count: 1, perform: {widgetSingleTap(widget: widget)})
-//                    )
-                 
-                //full name below widget
-//                    .overlay(content: {
-//                        Text(widgetDoubleTapped ? fullName : "" )
-//                            .position(x: widget.x ??  FRAME_SIZE/2, y: widget.y ?? FRAME_SIZE/2)
-//                            .font(.caption)
-//                            .foregroundStyle(.secondary)
-//                            .offset(y:90)
-//                    })
-//                    .blur(radius: widgetDoubleTapped && viewModel.selectedWidget != widget ? 20 : 0)
-//                    .scaleEffect(widgetDoubleTapped && viewModel.selectedWidget == widget ? 1.05 : 1)
-//                
-//                    .animation(.spring)
-                    //emoji react MENU
-//                    .overlay(alignment: .top) {
-//                        if widgetDoubleTapped && viewModel.selectedWidget == widget {
-//                            EmojiReactionsView(spaceId: spaceId, widget: widget)
-//                                .offset(y:-110)
-//                                .position(x: widget.x ??  FRAME_SIZE/2, y: widget.y ?? FRAME_SIZE/2)
-//
-//                        }
-//                    }
+             
                     .overlay() {
                         viewModel.selectedWidget == nil/* && draggingItem == nil */?
                         EmojiCountOverlayView(spaceId: spaceId, widget: widget)
@@ -440,91 +405,7 @@ struct CanvasPage: View {
             }
     }
     
-    
-    func widgetDoubleTap(widget: CanvasWidget) {
-        if viewModel.selectedWidget != widget || !widgetDoubleTapped {
-            //select
-            
-            viewModel.selectedWidget = widget
-            guard let index = canvasWidgets.firstIndex(of: widget) else {
-                return
-            }
-            print("Moving to top?")
-            canvasWidgets.move(fromOffsets: [index], toOffset: canvasWidgets.count-1)
-            widgetDoubleTapped = true
-            //                                    showSheet = false
-            //                                    showNewWidgetView = false
-            activeSheet = nil
-            
-            //haptic
-            let generator = UIImpactFeedbackGenerator(style: .medium)
-            generator.impactOccurred()
-        } else {
-            //deselect
-            viewModel.selectedWidget = nil
-            widgetDoubleTapped = false
-            //                                    showSheet = true
-            //                                    showNewWidgetView = false
-            activeSheet = .chat
-        }
-        Task {
-            do {
-                let user = try await UserManager.shared.getUser(userId: widget.userId)
-                if let name = user.name {
-                    fullName = name
-                } else {
-                    // Handle the case where name is nil
-                    print("User name is nil")
-                    
-                }
-            } catch {
-                // Handle the error
-                print("Failed to get user: \(error.localizedDescription)")
-            }
-        }
-    }
-    
-    func widgetSingleTap(widget: CanvasWidget) {
-        
-        if widgetDoubleTapped{
-            //deselect
-            viewModel.selectedWidget = nil
-            widgetDoubleTapped = false
-            //                                    showSheet = true
-            //                                    showNewWidgetView = false
-            activeSheet = .chat
-        } else {
-            
-            //haptic
-            
-            let generator = UIImpactFeedbackGenerator(style: .medium)
-            generator.impactOccurred()
-            
-            
-            switch widget.media {
-            case .poll:
-                activeWidget = widget
-                activeSheet =  .poll
-            case .todo:
-                activeWidget = widget
-                activeSheet = .todo
-            case .map:
-                if let location = widget.location {
-                    viewModel.openMapsApp(location: location)
-                }
-            case .link:
-                if let url = widget.mediaURL {
-                    viewModel.openLink(url: url)
-                }
-            case .image:
-                activeWidget = widget
-                activeSheet = .image
-            default:
-                break
-            }
-        }
-    }
-    
+  
 
     
     func widgetButton( widget: CanvasWidget) -> some View {
@@ -634,82 +515,7 @@ struct CanvasPage: View {
         }
     }
     
-    func doubleTapOverlay() -> some View {
-        viewModel.selectedWidget != nil ? VStack {
-            EmojiCountHeaderView(spaceId: spaceId, widget: viewModel.selectedWidget!)
-            Spacer()
-            HStack(spacing: 5) { // Increase spacing between buttons
-                
-                
-                if let selectedWidget = viewModel.selectedWidget {
-//                       widgetButton(for: selectedWidget.media)
-                   } else {
-                       EmptyView()
-                   }
-
-                // Reply button
-                Button(action: {
-                    
-                    replyWidget = viewModel.selectedWidget
-                    viewModel.selectedWidget = nil
-                    widgetDoubleTapped = false
-                    activeSheet = .chat
-                }, label: {
-                    Image(systemName: "arrowshape.turn.up.left")
-                        .foregroundColor(Color(UIColor.label))
-                        .font(.title3)
-                        .padding(.horizontal, 5)
-                })
-                
-                
-                
-                // Delete button
-                Button(action: {
-                    if let selectedWidget = viewModel.selectedWidget, let index = canvasWidgets.firstIndex(of: selectedWidget)  {
-                        canvasWidgets.remove(at: index)
-                        SpaceManager.shared.removeWidget(spaceId: spaceId, widget: selectedWidget)
-                        
-                        //delete specific widget items (in their own folders)
-                        
-                        switch selectedWidget.media {
-                            
-                        case .poll:
-                            deletePoll(spaceId: spaceId, pollId: selectedWidget.id.uuidString)
-                        case .todo:
-                            deleteTodoList(spaceId: spaceId, todoId: selectedWidget.id.uuidString)
-                            
-                        default: 
-                            break
-                            
-                        }
-                   
-                    }
-                    viewModel.selectedWidget = nil
-                    widgetDoubleTapped = false
-                    activeSheet = .chat
-                }, label: {
-                    Image(systemName: "trash")
-                        .foregroundColor(.red)
-                        .font(.title3)
-                        .padding(.horizontal, 5) // Increase padding
-                     
-                })
-                
-                
-                
-                
-                
-            }
-            .padding(.horizontal, 20)
-            .padding(.vertical, 10) // Add vertical padding
-            .background(Color(UIColor.systemBackground), in: Capsule())
-            .shadow(color: Color.black.opacity(0.2), radius: 20, x: 0, y: 4)
-            
-        }
-        
-        .frame(maxHeight: .infinity, alignment: .bottom)
-        : nil
-    }
+  
     
     @Environment(\.undoManager) private var undoManager
     var body: some View {
@@ -870,12 +676,8 @@ struct CanvasPage: View {
             print("CANVASPAGE: appModel.inSpace \(appModel.inSpace)")
 
         })
-//        .background(.ultraThickMaterial)
         .background(  Color(UIColor.secondarySystemBackground))
         
-//        .background(Color("bgColor"))
-//        .background(.ultraThickMaterial)
-        .overlay() {doubleTapOverlay()}
     }
 }
 

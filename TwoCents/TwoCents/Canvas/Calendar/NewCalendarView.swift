@@ -8,14 +8,13 @@ struct NewCalendarView: View {
     @State private var showingView: Bool = false
     @State private var userColor: Color = Color.gray
     @Binding private var closeNewWidgetview: Bool
-    @State private var navigateToNextPage = false
     @State private var name: String = ""
     @State private var selectedHour: Int = 6   // Default hour set to 6
     @State private var selectedMinute: Int = 0 // Default minute set to 0
     @State private var AMorPM: String = "PM"  // Default AM/PM set to PM
     @State private var isLabelVisible: Bool = false
     @State private var finalDate: Date = Date()
-    @State private var isDatePickerPresented: Bool = false
+    @State private var isDatePickerVisible: Bool = false
     @State private var createdWidgetId: String = ""
 
     init(spaceId: String, closeNewWidgetview: Binding<Bool>) {
@@ -62,11 +61,11 @@ struct NewCalendarView: View {
                         Divider()
                             .padding(.vertical)
                         
-                        Toggle(isOn: $isLabelVisible) {
+                        Toggle(isOn: $isDatePickerVisible) {
                             Text("End Date")
                         }
                         
-                        if isLabelVisible {
+                        if isDatePickerVisible {
                             DatePicker("Select a Date", selection: $finalDate, in: Date()..., displayedComponents: .date)
                                 .datePickerStyle(GraphicalDatePickerStyle())
                                 .fixedSize(horizontal: false, vertical: true)
