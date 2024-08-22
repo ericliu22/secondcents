@@ -55,17 +55,17 @@ struct EmojiReactionsView: View {
     private func emojiNotification(emoji: String) -> String {
         switch emoji {
         case "❤️":
-            return "❤️loved"
+            return "loved ❤️"
         case "👍":
-            return "👍liked"
+            return "liked 👍"
         case "👎":
-            return "👎hated"
+            return "hated 👎"
         case "😭":
-            return "😭cried at"
+            return "cried at 😭"
         case "🫵":
-            return "🫵SHAMED"
+            return "SHAMED 🫵"
         case "⁉️":
-            return "⁉️AYO'd"
+            return "AYO'd ⁉️"
         default:
             return "reacted"
         }
