@@ -211,13 +211,17 @@ struct CalendarWidget: View {
         let calendar = Calendar.current
         
         if calendar.isDateInToday(date) {
+            print("date is in today")
             return true
         }
         
         if let tomorrow = calendar.date(byAdding: .day, value: 1, to: Date()), calendar.isDate(date, inSameDayAs: tomorrow) {
+            print("date is in tomorrow")
             return true
         }
         
+        
+        print("date is not today or tmr")
         return false
     }
 

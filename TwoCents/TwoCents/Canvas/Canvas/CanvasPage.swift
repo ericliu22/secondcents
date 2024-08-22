@@ -58,8 +58,6 @@ struct CanvasPage: View {
     private var spaceId: String
     
     
-    @State private var widgetDoubleTapped: Bool = false
-    
     
     //helps reset view
     @State private var refreshId = UUID()
@@ -153,7 +151,7 @@ struct CanvasPage: View {
                     .allowsHitTesting(toolPickerActive)
                 }
                 .drawingGroup()
-                .blur(radius: widgetDoubleTapped ? 3 : 0)
+              
                 .clipped() // Ensure the content does not overflow
                 //                    .animation(.spring()) // Optional: Add some animation
                 .frame(width: FRAME_SIZE, height: FRAME_SIZE)
@@ -189,18 +187,6 @@ struct CanvasPage: View {
                 }
             }
    
-//                .onTapGesture(count: 2, perform: {
-//                    activeSheet = .newTextView
-//                })
-//            
-//                .onTapGesture {
-//                    //deselect
-//                    if (viewModel.selectedWidget != nil) { 
-//                    viewModel.selectedWidget = nil
-//                    widgetDoubleTapped = false
-//                    activeSheet = .chat
-//                    }
-//                }
                 .overlay(
                     DrawingCanvas(canvas: $canvas, toolPickerActive: $toolPickerActive, toolPicker: $toolkit, spaceId: spaceId)
                         .allowsHitTesting(toolPickerActive)
@@ -263,10 +249,6 @@ struct CanvasPage: View {
         //add widget
         ToolbarItem(placement: .topBarTrailing) {
             Button(action: {
-                
-                
-                //                        showSheet = true
-                //                        showNewWidgetView = true
                 activeSheet = .newWidgetView
                 
             }, label: {
@@ -369,22 +351,13 @@ struct CanvasPage: View {
                 
                     .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
                     .cornerRadius(CORNER_RADIUS)
-//                    .shadow(color: Color.black.opacity(0.05), radius: 4, x: 0, y: 4)
                     .frame(
                         width: TILE_SIZE,
                         height: TILE_SIZE
                     )
                     .position(x: widget.x ??  FRAME_SIZE/2, y: widget.y ?? FRAME_SIZE/2)
-             
-                    .overlay() {
-                        viewModel.selectedWidget == nil/* && draggingItem == nil */?
-                        EmojiCountOverlayView(spaceId: spaceId, widget: widget)
-                            .offset(y: TILE_SIZE/2)
-                            .position(x: widget.x ??  FRAME_SIZE/2, y: widget.y ?? FRAME_SIZE/2)
-                            .id(refreshId)
-
-                        : nil
-                    }
+                    
+                   
                     .draggable(widget) {
                         MediaView(widget: widget, spaceId: spaceId, activeSheet: $activeSheet, activeWidget: $activeWidget)
                             .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
@@ -408,15 +381,8 @@ struct CanvasPage: View {
         case .poll:
             return Button(action: {
                 activeWidget = widget
-//                viewModel.selectedWidget = nil
-//                widgetDoubleTapped = false
                 activeSheet =  .poll
             }, label: {
-//                Image(systemName: "list.clipboard")
-//                    .foregroundColor(Color(UIColor.label))
-//                    .font(.title3)
-//                    .padding(.horizontal, 5)
-                
                 Label("Open Poll", systemImage: "list.clipboard")
             }).eraseToAnyView()
             
@@ -424,14 +390,8 @@ struct CanvasPage: View {
         case .todo:
             return Button(action: {
                 activeWidget = widget
-//                viewModel.selectedWidget = nil
-//                widgetDoubleTapped = false
                 activeSheet = .todo
             }, label: {
-//                Image(systemName: "checklist")
-//                    .foregroundColor(Color(UIColor.label))
-//                    .font(.title3)
-//                    .padding(.horizontal, 5)
                 
                 Label("Open List", systemImage: "checklist")
             }).eraseToAnyView()
@@ -441,12 +401,7 @@ struct CanvasPage: View {
                 if let location = widget.location {
                     viewModel.openMapsApp(location: location)
                 }
-//                viewModel.selectedWidget = nil
-//                widgetDoubleTapped = false
             }, label: {
-//                Image(systemName: "mappin.and.ellipse")
-//                    .foregroundColor(Color(UIColor.label))
-//                    .padding(.horizontal, 5)
                 
                 Label("Open Map", systemImage: "mappin.and.ellipse")
             }).eraseToAnyView()
@@ -455,14 +410,7 @@ struct CanvasPage: View {
                 if let url = widget.mediaURL {
                     viewModel.openLink(url: url)
                 }
-                
-//                viewModel.selectedWidget = nil
-//                widgetDoubleTapped = false
             }, label: {
-//                Image(systemName: "link")
-//                    .foregroundColor(Color(UIColor.label))
-//                    .padding(.horizontal, 5)
-                
                 
                 Label("Open Link", systemImage: "link")
             }).eraseToAnyView()
@@ -471,15 +419,8 @@ struct CanvasPage: View {
         case .image:
             return Button(action: {
                 activeWidget = widget
-//                viewModel.selectedWidget = nil
-//                widgetDoubleTapped = false
                 activeSheet = .image
             }, label: {
-//                Image(systemName: "arrow.up.left.and.arrow.down.right")
-//                    .foregroundColor(Color(UIColor.label))
-//                    .font(.title3)
-//                    .padding(.horizontal, 5)
-                
                 
                 Label("Open Image", systemImage: "photo")
             }).eraseToAnyView()
@@ -490,14 +431,8 @@ struct CanvasPage: View {
         case .video:
             return Button(action: {
                 activeWidget = widget
-//                viewModel.selectedWidget = nil
-//                widgetDoubleTapped = false
                 activeSheet = .video
             }, label: {
-//                Image(systemName: "arrow.up.left.and.arrow.down.right")
-//                    .foregroundColor(Color(UIColor.label))
-//                    .font(.title3)
-//                    .padding(.horizontal, 5)
                 
                 Label("Open Video", systemImage: "video")
             }).eraseToAnyView()
@@ -543,7 +478,6 @@ struct CanvasPage: View {
                 .toolbar(.hidden, for: .tabBar)
                 .toolbar {toolbar()}
                 .navigationBarTitleDisplayMode(.inline)
-            //            .toolbarBackground(.ultraThinMaterial, for: .navigationBar)
             //SHOW BACKGROUND BY CHANGING BELOW TO VISIBLE
                 .toolbarBackground(.hidden, for: .navigationBar)
                 .task{
@@ -598,8 +532,7 @@ struct CanvasPage: View {
         
             
             //get chat to show up at all times
-            if !widgetDoubleTapped && !inSettingsView && activeSheet == nil{
-                //                                showSheet = true
+            if !inSettingsView && activeSheet == nil{
                 inSettingsView = false
                 activeSheet = .chat
                 selectedDetent = .height(50)
@@ -623,7 +556,7 @@ struct CanvasPage: View {
 //                            .presentationBackground(Color(UIColor.systemBackground))
                     .presentationBackground(.thickMaterial)
             case .chat:
-//                ChatView(spaceId: spaceId,replyMode: $replyMode, replyWidget: $replyWidget, selectedDetent: $selectedDetent)
+
                 
                 NewChatView(spaceId: spaceId, replyWidget: $replyWidget, detent: $selectedDetent,activeSheet: $activeSheet, activeWidget: $activeWidget)
                 
