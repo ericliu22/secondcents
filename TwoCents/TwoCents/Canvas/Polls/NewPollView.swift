@@ -135,7 +135,7 @@ struct NewPoll: View{
                         
                     }
                     
-                    .padding()
+                    .padding(.horizontal)
                 }
                 .scrollDismissesKeyboard(.interactively)
                 .navigationTitle("Create Poll 🤓")

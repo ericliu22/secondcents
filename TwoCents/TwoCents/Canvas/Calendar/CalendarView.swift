@@ -249,8 +249,8 @@ struct CalendarView: View {
 
         let documentRef = db.collection("spaces")
             .document(spaceId)
-            .collection("dates")
-            .document(widget.id.uuidString)
+            .collection("calendar")
+            .document(widgetId)
 
         documentRef.getDocument { document, error in
             if let error = error {
@@ -362,7 +362,7 @@ struct CalendarView: View {
         
         db.collection("spaces")
             .document(spaceId)
-            .collection("dates")
+            .collection("calendar")
             .document(widgetId)
             .getDocument { document, error in
                 guard let document = document, document.exists else {
@@ -443,7 +443,7 @@ struct CalendarView: View {
         
         db.collection("spaces")
             .document(spaceId)
-            .collection("dates")
+            .collection("calendar")
             .document(widgetId)
             .getDocument { document, error in
                 guard let document = document, document.exists else {

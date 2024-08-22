@@ -79,7 +79,7 @@ struct CalendarWidget: View {
 
         db.collection("spaces")
             .document(spaceId)
-            .collection("dates")
+            .collection("calendar")
             .document(widget.id.uuidString)
             .addSnapshotListener { documentSnapshot, error in
                 if let error = error {
