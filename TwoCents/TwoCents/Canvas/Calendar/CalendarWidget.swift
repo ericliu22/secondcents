@@ -2,6 +2,7 @@ import Foundation
 import SwiftUI
 import Firebase
 
+
 // Model to handle date formatting
 struct OptimalDate {
     var shortMonth: String?
@@ -49,6 +50,10 @@ struct CalendarWidget: View {
     @State private var optimalDate = OptimalDate(from: "", maxTimeFrequency: 0)
     @State private var eventName: String = "Eventful Event"
     
+    @Binding var activeSheet: sheetTypesCanvasPage?
+    @Binding var activeWidget: CanvasWidget?
+    
+    
     var body: some View {
         ZStack {
             Color(UIColor.tertiarySystemFill)
@@ -62,7 +67,7 @@ struct CalendarWidget: View {
                         EventDateView(optimalDate: $optimalDate, closestTime: $closestTime, eventName: eventName)
                     }
                 } else {
-                    EmptyEventView(eventName: eventName)
+                    EmptyEventView(eventName: eventName, activeSheet: $activeSheet, activeWidget: $activeWidget, widget: widget)
                 }
             }
             .background(Color(UIColor.systemBackground))
@@ -239,7 +244,9 @@ struct CalendarWidget: View {
 struct EmptyEventView: View {
     @State private var bounce: Bool = false
     var eventName: String
-
+    @Binding var activeSheet: sheetTypesCanvasPage?
+    @Binding var activeWidget: CanvasWidget?
+    let widget: CanvasWidget
     var body: some View {
         VStack(alignment: .center, spacing: 0) {
             Text(eventName)
@@ -274,6 +281,9 @@ struct EmptyEventView: View {
             
             Button(action: {
                 // Add button action here
+                
+                activeSheet = .calendar
+                activeWidget = widget
             }, label: {
                 Text("Party Together!")
                     .font(.caption2)

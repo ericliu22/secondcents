@@ -41,7 +41,7 @@ struct FrontPageView: View {
                 }
                 .tag(1)
 
-            CalendarWidget(widget: CanvasWidget(id: UUID(uuidString: "E2C85940-3266-44F7-B6D2-4D21F507B25C")!, width: .infinity, height:  .infinity, borderColor: .red, userId: "jisookim", media: .text, widgetName: "Text", widgetDescription: "A bar is a bar", textString: "Fruits can't even see so how my Apple Watch"), spaceId: "2FF491A4-CEC6-419F-A199-204810864FCF"
+            CalendarWidget(widget: CanvasWidget(id: UUID(uuidString: "E2C85940-3266-44F7-B6D2-4D21F507B25C")!, width: .infinity, height:  .infinity, borderColor: .red, userId: "jisookim", media: .text, widgetName: "Text", widgetDescription: "A bar is a bar", textString: "Fruits can't even see so how my Apple Watch"), spaceId: "2FF491A4-CEC6-419F-A199-204810864FCF", activeSheet: .constant(.calendar), activeWidget: .constant(nil)
                             )
               
                 .tabItem {

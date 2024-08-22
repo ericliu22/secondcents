@@ -76,14 +76,7 @@ struct CanvasPage: View {
     }
     
     
-    enum sheetTypesCanvasPage: Identifiable  {
-        case newWidgetView, chat, poll, newTextView, todo, image, video, calendar
-        
-        
-        var id: Self {
-            return self
-        }
-    }
+  
     
     
     init(spaceId: String) {
@@ -306,7 +299,7 @@ struct CanvasPage: View {
      func GridView() -> some View {
             ForEach(canvasWidgets, id:\.id) { widget in
                 //main widget
-                MediaView(widget: widget, spaceId: spaceId)
+                MediaView(widget: widget, spaceId: spaceId, activeSheet: $activeSheet, activeWidget: $activeWidget)
                     .contextMenu(ContextMenu(menuItems: {
                         
                         EmojiReactionContextView(spaceId: spaceId, widget: widget, refreshId: $refreshId)
@@ -391,7 +384,7 @@ struct CanvasPage: View {
                         : nil
                     }
                     .draggable(widget) {
-                        MediaView(widget: widget, spaceId: spaceId)
+                        MediaView(widget: widget, spaceId: spaceId, activeSheet: $activeSheet, activeWidget: $activeWidget)
                             .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
                             .frame(
                                 width: TILE_SIZE,
@@ -630,7 +623,7 @@ struct CanvasPage: View {
             case .chat:
 //                ChatView(spaceId: spaceId,replyMode: $replyMode, replyWidget: $replyWidget, selectedDetent: $selectedDetent)
                 
-                NewChatView(spaceId: spaceId, replyWidget: $replyWidget, detent: $selectedDetent)
+                NewChatView(spaceId: spaceId, replyWidget: $replyWidget, detent: $selectedDetent,activeSheet: $activeSheet, activeWidget: $activeWidget)
                 
                     .presentationBackground(Color(UIColor.systemBackground))
                     .presentationDetents([.height(50),.large], selection: $selectedDetent)

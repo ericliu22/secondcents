@@ -26,6 +26,9 @@ struct ChatBubbleView: View {
     @State private var dragOffset: CGSize = .zero
     @Binding var threadId: String
     
+    
+    @Binding var activeSheet: sheetTypesCanvasPage?
+    @Binding var activeWidget: CanvasWidget?
     var body: some View {
         
             
@@ -58,7 +61,7 @@ struct ChatBubbleView: View {
                 
                 
                 if let widget = widget {
-                    MediaView(widget: widget, spaceId: spaceId)
+                    MediaView(widget: widget, spaceId: spaceId, activeSheet: $activeSheet, activeWidget: $activeWidget)
                         .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
                         .cornerRadius(CORNER_RADIUS)
                         .frame(maxWidth: .infinity, minHeight: TILE_SIZE, alignment: sentByMe ? .trailing : .leading)

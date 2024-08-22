@@ -23,6 +23,10 @@ struct universalMessageBubble: View{
     @State var spaceId: String
     
     @State private var loaded: Bool = false
+    
+    @Binding var activeSheet: sheetTypesCanvasPage?
+    
+    @Binding var activeWidget: CanvasWidget?
     var body: some View{
         VStack(alignment: sentByMe ? .trailing : .leading, spacing: 3){
             
@@ -68,7 +72,7 @@ struct universalMessageBubble: View{
               
                 if let widget =  viewModel.WidgetMessage {
                     
-                    MediaView(widget: widget, spaceId: spaceId)
+                    MediaView(widget: widget, spaceId: spaceId, activeSheet: $activeSheet, activeWidget: $activeWidget)
                         .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
                         .cornerRadius(CORNER_RADIUS)
                     

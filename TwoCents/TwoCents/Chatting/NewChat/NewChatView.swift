@@ -28,6 +28,10 @@ struct NewChatView: View {
     @State var threadId: String = ""
     @State private var threadIdChangedTime: Date = Date()
     @Environment(\.dismiss) var dismissScreen
+    
+    
+    @Binding var activeSheet: sheetTypesCanvasPage?
+    @Binding var activeWidget: CanvasWidget?
 
     var body: some View {
     
@@ -44,7 +48,7 @@ struct NewChatView: View {
                         .listRowBackground(Color.clear)
                     
                     if let widget = replyWidget {
-                        MediaView(widget: widget, spaceId: spaceId)
+                        MediaView(widget: widget, spaceId: spaceId, activeSheet: $activeSheet, activeWidget: $activeWidget)
                             .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
                             .cornerRadius(CORNER_RADIUS)
                             .frame(maxWidth: .infinity, alignment: .trailing)
@@ -66,7 +70,8 @@ struct NewChatView: View {
                         (threadId.isEmpty || message.threadId == threadId) && message.ts > threadIdChangedTime
                     }) { message in
                         
-                        ChatBubbleViewBuilder(spaceId: spaceId, message: message, currentUserId: viewModel.user?.id ?? "", threadId: $threadId)
+                        ChatBubbleViewBuilder(spaceId: spaceId, message: message, currentUserId: viewModel.user?.id ?? "", threadId: $threadId, activeSheet: $activeSheet, activeWidget: $activeWidget)
+                 
                             .id(message.id)
                             .rotationEffect(.degrees(180))
                             .listRowSeparator(.hidden)
@@ -79,7 +84,7 @@ struct NewChatView: View {
                     
                     // Display old messages
                     ForEach(viewModel.messages) { message in
-                        ChatBubbleViewBuilder(spaceId: spaceId, message: message, currentUserId: viewModel.user?.id ?? "", threadId: $threadId)
+                        ChatBubbleViewBuilder(spaceId: spaceId, message: message, currentUserId: viewModel.user?.id ?? "", threadId: $threadId, activeSheet: $activeSheet,activeWidget: $activeWidget)
                             .id(message.id)
                             .rotationEffect(.degrees(180))
                             .listRowSeparator(.hidden)
@@ -227,10 +232,10 @@ struct NewChatView: View {
   
 }
 
-struct NewChatView_Previews: PreviewProvider {
-    static var previews: some View {
-        NavigationStack {
-            NewChatView(spaceId: "CF5BDBDF-44C0-4382-AD32-D92EC05AA35E", replyWidget: .constant(nil), detent: .constant(.large))
-        }
-    }
-}
+//struct NewChatView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        NavigationStack {
+//            NewChatView(spaceId: "CF5BDBDF-44C0-4382-AD32-D92EC05AA35E", replyWidget: .constant(nil), detent: .constant(.large))
+//        }
+//    }
+//}

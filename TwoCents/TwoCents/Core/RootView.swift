@@ -21,6 +21,17 @@ enum sheetTypes: Identifiable  {
     
 }
 
+enum sheetTypesCanvasPage: Identifiable  {
+    case newWidgetView, chat, poll, newTextView, todo, image, video, calendar
+    
+    
+    var id: Self {
+        return self
+    }
+}
+
+
+
 struct RootView: View {
     
     

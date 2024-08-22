@@ -46,7 +46,7 @@ struct ChatStruct: View{
             ForEach(messageManager.messages, id:\.id) {
                 message in
                
-                universalMessageBubble(message: message, sentByMe: message.sendBy == userUID, isFirstMsg: message.sendBy != message.parent, spaceId: spaceId)
+//                universalMessageBubble(message: message, sentByMe: message.sendBy == userUID, isFirstMsg: message.sendBy != message.parent, spaceId: spaceId)
                 
                 
             }
@@ -152,17 +152,17 @@ struct ChatView: View {
                         .blur(radius: replyMode ? 2 : 0)
                         
                         if replyWidget != nil && replyMode {
-                            
-                            MediaView(widget: replyWidget!, spaceId: spaceId)
-                                .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
-                                .cornerRadius(CORNER_RADIUS)
-                            
-                                .frame(maxWidth: .infinity, alignment: .trailing)
-                                .id("replyWidget")
-                                .onAppear(perform: {
-                                    proxy.scrollTo(messageManager.lastMessageId, anchor: .bottom)
-                                })
-                                .padding(.top, 3)
+//                            
+//                            MediaView(widget: replyWidget!, spaceId: spaceId)
+//                                .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
+//                                .cornerRadius(CORNER_RADIUS)
+//                            
+//                                .frame(maxWidth: .infinity, alignment: .trailing)
+//                                .id("replyWidget")
+//                                .onAppear(perform: {
+//                                    proxy.scrollTo(messageManager.lastMessageId, anchor: .bottom)
+//                                })
+//                                .padding(.top, 3)
                         }
                     }
                 }
