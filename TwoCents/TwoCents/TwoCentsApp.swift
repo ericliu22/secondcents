@@ -161,7 +161,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 
 extension AppDelegate: MessagingDelegate {
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
-        print("GAY")
+   
         let deviceToken: [String: String] = ["token": fcmToken ?? ""]
         print("Device token: ", deviceToken)
         uploadTokenToServer(fcmToken ?? "")
