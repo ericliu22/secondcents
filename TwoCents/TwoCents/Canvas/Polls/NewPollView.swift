@@ -108,7 +108,6 @@ struct NewPoll: View{
                             //@TODO: Replace with NewWidgetView temp widget behavior
                             Task{
                                 
-                                
                                 pollModel.addOptions(OptionArray: OptionsArray)
                                 await pollModel.createNewPoll()
                                 showingView = false

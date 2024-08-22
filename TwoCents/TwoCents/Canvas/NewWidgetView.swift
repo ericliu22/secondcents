@@ -25,6 +25,8 @@ var todoViewTest = CanvasWidget(width: .infinity, height:  .infinity, borderColo
 
 var linkViewTest = CanvasWidget(width: .infinity, height:  .infinity, borderColor: .red, userId: "jisookim", media: .link, widgetName: "Link", widgetDescription: "Share a link", textString: "")
 
+var calendarViewTest = CanvasWidget(width: .infinity, height:  .infinity, borderColor: .red, userId: "jisookim", media: .calendar, widgetName: "Calendar", widgetDescription: "When - did I ask", textString: "")
+
 
 
 struct NewWidgetView: View {
@@ -140,6 +142,18 @@ struct NewWidgetView: View {
             .cornerRadius(20)
     }
     
+    func newCalendarView(index: Int) -> some View {
+        ZStack{
+            
+           
+            NewCalendarView(spaceId: spaceId, closeNewWidgetview: $closeNewWidgetview)
+          
+                .cornerRadius(20)
+          
+        }
+       
+    }
+    
     
     @State private var showingView: Bool = false
     
@@ -248,6 +262,11 @@ struct NewWidgetView: View {
                                             .shadow(color: Color.black.opacity(0.1), radius: 20, x: 8, y: 4)
                                     case .link:
                                         newLinkView(index: index)
+                                            .aspectRatio(1, contentMode: .fit)
+                                            .shadow(color: Color.black.opacity(0.1), radius: 20, x: 8, y: 4)
+                                    
+                                    case .calendar:
+                                        newCalendarView(index: index)
                                             .aspectRatio(1, contentMode: .fit)
                                             .shadow(color: Color.black.opacity(0.1), radius: 20, x: 8, y: 4)
 

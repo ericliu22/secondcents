@@ -3,7 +3,7 @@ import Firebase
 
 struct CalendarView: View {
     var spaceId: String
-    var widget: CanvasWidget
+    var widgetId: String
     
     @State private var selectedDates: Set<DateComponents> = []
     @State private var localChosenDates: [Date: Set<Date>] = [:]
@@ -363,7 +363,7 @@ struct CalendarView: View {
         db.collection("spaces")
             .document(spaceId)
             .collection("dates")
-            .document(widget.id.uuidString)
+            .document(widgetId)
             .getDocument { document, error in
                 guard let document = document, document.exists else {
                     print("Document does not exist or failed to retrieve data")
@@ -444,7 +444,7 @@ struct CalendarView: View {
         db.collection("spaces")
             .document(spaceId)
             .collection("dates")
-            .document(widget.id.uuidString)
+            .document(widgetId)
             .getDocument { document, error in
                 guard let document = document, document.exists else {
                     print("Document does not exist or failed to retrieve data")

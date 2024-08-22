@@ -92,6 +92,8 @@ extension Media: Codable {
             self = .map
         case "link":
             self = .link
+        case "event":
+            self = .event
         default:
             self = .image
         }
@@ -195,7 +197,10 @@ func MediaView(widget: CanvasWidget, spaceId: String) -> some View{
         TodoWidget(widget: widget, spaceId: spaceId)
     case .link:
         LinkWidget(widget: widget)
-        
+    case .event:
+        EventWidget(widget: widget)
+    case .calendar:
+        CalendarWidget(widget: widget, spaceId: spaceId)
     default:
         EmptyView()
     }

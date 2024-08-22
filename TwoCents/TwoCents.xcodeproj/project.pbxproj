@@ -15,6 +15,7 @@
 		850E12AA2C30A14C000E07C8 /* CalendarWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 850E12A92C30A14C000E07C8 /* CalendarWidget.swift */; };
 		8534B8B92B8001660089AD5C /* NewPollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8534B8B82B8001660089AD5C /* NewPollView.swift */; };
 		855BDECF2C1E54C0002FC428 /* FirebaseDynamicLinks in Frameworks */ = {isa = PBXBuildFile; productRef = 855BDECE2C1E54C0002FC428 /* FirebaseDynamicLinks */; };
+		85629AA42C6EB031007F5D05 /* NewCalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85629AA32C6EB031007F5D05 /* NewCalendarView.swift */; };
 		856E80B12B50E9D00078A2CE /* PencilKitPractice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 856E80B02B50E9CF0078A2CE /* PencilKitPractice.swift */; };
 		856E80B92B50EB260078A2CE /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 856E80B42B50EB260078A2CE /* CardView.swift */; };
 		856E80BA2B50EB260078A2CE /* SabotageSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 856E80B52B50EB260078A2CE /* SabotageSelectionView.swift */; };
@@ -186,6 +187,7 @@
 		850958A92AB8F82D00018A32 /* LuckiestGuy-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "LuckiestGuy-Regular.ttf"; sourceTree = "<group>"; };
 		850E12A92C30A14C000E07C8 /* CalendarWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarWidget.swift; sourceTree = "<group>"; };
 		8534B8B82B8001660089AD5C /* NewPollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewPollView.swift; sourceTree = "<group>"; };
+		85629AA32C6EB031007F5D05 /* NewCalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewCalendarView.swift; sourceTree = "<group>"; };
 		856E80B02B50E9CF0078A2CE /* PencilKitPractice.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PencilKitPractice.swift; sourceTree = "<group>"; };
 		856E80B42B50EB260078A2CE /* CardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 		856E80B52B50EB260078A2CE /* SabotageSelectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SabotageSelectionView.swift; sourceTree = "<group>"; };
@@ -469,6 +471,7 @@
 				850E12A92C30A14C000E07C8 /* CalendarWidget.swift */,
 				85CA3B4C2C2746C400F4A889 /* CalendarView.swift */,
 				85A883592C42F2B20030AE3A /* CustomCalendarView.swift */,
+				85629AA32C6EB031007F5D05 /* NewCalendarView.swift */,
 			);
 			path = Calendar;
 			sourceTree = "<group>";
@@ -1078,6 +1081,7 @@
 				AB9C7F682BD83B1E004FC549 /* EmojiCountView.swift in Sources */,
 				AB370E1A2C35D14400C4431F /* NewMessageFieldViewModel.swift in Sources */,
 				AB2E56CD2AE9C59D0096A58C /* VoteGameView.swift in Sources */,
+				85629AA42C6EB031007F5D05 /* NewCalendarView.swift in Sources */,
 				A22F84EE2C2912A20095A087 /* ZoomableScrollView.swift in Sources */,
 				A2F5631E2AB4E6240026D8C9 /* CanvasPage.swift in Sources */,
 				A21E87FD2C62A1D400B48BCA /* AppModel.swift in Sources */,
