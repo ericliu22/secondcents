@@ -359,9 +359,7 @@ struct CanvasPage: View {
                         height: TILE_SIZE
                     )
                     .position(x: widget.x ??  FRAME_SIZE/2, y: widget.y ?? FRAME_SIZE/2)
-                    .animation(.spring(), value: widget.x) // Add animation for x position
-                    .animation(.spring(), value: widget.y) // Add animation for y position
-                              
+                    
                    
                     .overlay() {
                         viewModel.selectedWidget == nil/* && draggingItem == nil */?
@@ -372,6 +370,10 @@ struct CanvasPage: View {
 
                         : nil
                     }
+                
+                    .animation(.spring(), value: widget.x) // Add animation for x position
+                    .animation(.spring(), value: widget.y) // Add animation for y position
+                              
                     .draggable(widget) {
                         MediaView(widget: widget, spaceId: spaceId, activeSheet: $activeSheet, activeWidget: $activeWidget)
                             .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
