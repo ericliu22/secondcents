@@ -128,7 +128,9 @@ struct NewCalendarView: View {
                 .document(createdWidgetId)
                 .setData(["name": name,
                           "preferredTime": formattedTime(),
-                          "creator": userId])
+                          "creator": userId,
+                          "endDate": isDatePickerVisible ? finalDate : nil
+                  ])
         } catch {
             print("Error uploading calendar")
         }

@@ -35,7 +35,7 @@
 		85BB02F02B5D077E00B9A9EA /* ToolPickerPractice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85BB02EF2B5D077E00B9A9EA /* ToolPickerPractice.swift */; };
 		85C6759A2AB8EE5B00FACCB2 /* HotSeatManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20EBD082AB8A36100EFDDE8 /* HotSeatManager.swift */; };
 		85C6759B2AB8EE6100FACCB2 /* SuperlativeGame.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20EBD092AB8A36100EFDDE8 /* SuperlativeGame.swift */; };
-		85CA3B4D2C2746C400F4A889 /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85CA3B4C2C2746C400F4A889 /* CalendarView.swift */; };
+		85CA3B4D2C2746C400F4A889 /* CalendarWidgetSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85CA3B4C2C2746C400F4A889 /* CalendarWidgetSheetView.swift */; };
 		A200F21B2C0026B400BC1005 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = A200F21A2C0026B400BC1005 /* FirebaseMessaging */; };
 		A21244E32C1E234B005E8C8B /* NewTextWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A21244E22C1E234B005E8C8B /* NewTextWidgetView.swift */; };
 		A21E87FD2C62A1D400B48BCA /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A21E87FC2C62A1D400B48BCA /* AppModel.swift */; };
@@ -205,7 +205,7 @@
 		85A6766C2AE9C6BB003ECAAA /* MessageField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageField.swift; sourceTree = "<group>"; };
 		85A883592C42F2B20030AE3A /* CustomCalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomCalendarView.swift; sourceTree = "<group>"; };
 		85BB02EF2B5D077E00B9A9EA /* ToolPickerPractice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolPickerPractice.swift; sourceTree = "<group>"; };
-		85CA3B4C2C2746C400F4A889 /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
+		85CA3B4C2C2746C400F4A889 /* CalendarWidgetSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarWidgetSheetView.swift; sourceTree = "<group>"; };
 		85DDD0CC2AB4E79A008A9C56 /* VoteGameReal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VoteGameReal.swift; sourceTree = "<group>"; };
 		85FDD15B2C308F430038944B /* EventView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventView.swift; sourceTree = "<group>"; };
 		A2003C942AABA08300B1E551 /* Line.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Line.swift; sourceTree = "<group>"; };
@@ -469,7 +469,7 @@
 			isa = PBXGroup;
 			children = (
 				850E12A92C30A14C000E07C8 /* CalendarWidget.swift */,
-				85CA3B4C2C2746C400F4A889 /* CalendarView.swift */,
+				85CA3B4C2C2746C400F4A889 /* CalendarWidgetSheetView.swift */,
 				85A883592C42F2B20030AE3A /* CustomCalendarView.swift */,
 				85629AA32C6EB031007F5D05 /* NewCalendarView.swift */,
 			);
@@ -1138,7 +1138,7 @@
 				856E80BA2B50EB260078A2CE /* SabotageSelectionView.swift in Sources */,
 				856E80B92B50EB260078A2CE /* CardView.swift in Sources */,
 				AB6778E22AB8F67300C11AA7 /* ImageWidget.swift in Sources */,
-				85CA3B4D2C2746C400F4A889 /* CalendarView.swift in Sources */,
+				85CA3B4D2C2746C400F4A889 /* CalendarWidgetSheetView.swift in Sources */,
 				A257D7842A6D707600A4E7BD /* TwoCentsApp.swift in Sources */,
 				AB300FB02AC7407000C6719D /* FriendsView.swift in Sources */,
 				ABCA39D42A79FFAD009447C3 /* SignInEmailView.swift in Sources */,

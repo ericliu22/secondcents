@@ -77,7 +77,7 @@ struct CanvasPage: View {
     
     
     enum sheetTypesCanvasPage: Identifiable  {
-        case newWidgetView, chat, poll, newTextView, todo, image, video
+        case newWidgetView, chat, poll, newTextView, todo, image, video, calendar
         
         
         var id: Self {
@@ -508,6 +508,15 @@ struct CanvasPage: View {
             }).eraseToAnyView()
 
             
+        case .calendar:
+            return Button(action: {
+                activeWidget = widget
+                activeSheet = .calendar
+            }, label: {
+
+                
+                Label("Select Availability", systemImage: "calendar")
+            }).eraseToAnyView()
             
             
         default:
@@ -663,6 +672,10 @@ struct CanvasPage: View {
                   
             case .video:
                 VideoWidgetSheetView(widget: waitForVariable{activeWidget}, spaceId: spaceId)
+                .presentationBackground(.thickMaterial)
+            case .calendar:
+                
+                CalendarWidgetSheetView(spaceId: spaceId, widgetId:  waitForVariable{activeWidget?.id.uuidString})
                 .presentationBackground(.thickMaterial)
             }
             

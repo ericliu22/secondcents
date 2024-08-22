@@ -1,7 +1,7 @@
 import SwiftUI
 import Firebase
 
-struct CalendarView: View {
+struct CalendarWidgetSheetView: View {
     var spaceId: String
     var widgetId: String
     
@@ -53,10 +53,9 @@ struct CalendarView: View {
         return calendar.startOfDay(for: now)
     }
     
-    private var bounds: Range<Date> {
-        let endDate = Calendar.current.date(byAdding: .year, value: 1, to: startDate)!
-        return startDate..<endDate
-    }
+    @State private var bounds: Range<Date> = Calendar.current.startOfDay(for: Date())..<Calendar.current.date(byAdding: .year, value: 1, to: Date())!
+
+    
 
     private let columns = [
         GridItem(.flexible()),
@@ -64,90 +63,91 @@ struct CalendarView: View {
     ]
     
     var body: some View {
-        
-        ScrollView {
-            VStack {
-                MultiDatePicker("Select Dates", selection: $selectedDates, in: bounds)
-                    .disabled(!isDatePickerEnabled) // Disable the date picker if not enabled
-                    .onChange(of: selectedDates) { newSelection in
-                        handleDateSelectionChange(newSelection)
-                    }
-                    .fixedSize(horizontal: false, vertical: true)
-
-                if let selectedDate = currentlySelectedDate {
-                    VStack {
-                        LazyVGrid(columns: columns, spacing: nil) {
-                            ForEach(timeSlots(for: selectedDate), id: \.self) { timeSlot in
-                                let isPast = isTimeSlotInPast(timeSlot)
-                                let isChosen = localChosenDates[selectedDate]?.contains(timeSlot) == true
-                                let buttonColor: Color = isPast ? .gray : (isChosen ? .green : .red)
-                                let userCount = timeSlotUserCounts[timeSlot, default: 0]  // Get the user count
-
-                                Button {
-                                    toggleTimeSelection(timeSlot, for: selectedDate)
+        NavigationStack{
+            ScrollView {
+                VStack {
+                    MultiDatePicker("Select Dates", selection: $selectedDates, in: bounds)
+                        .disabled(!isDatePickerEnabled) // Disable the date picker if not enabled
+                        .onChange(of: selectedDates) { newSelection in
+                            handleDateSelectionChange(newSelection)
+                        }
+                        .fixedSize(horizontal: false, vertical: true)
+                    
+                    if let selectedDate = currentlySelectedDate {
+                        VStack {
+                            LazyVGrid(columns: columns, spacing: nil) {
+                                ForEach(timeSlots(for: selectedDate), id: \.self) { timeSlot in
+                                    let isPast = isTimeSlotInPast(timeSlot)
+                                    let isChosen = localChosenDates[selectedDate]?.contains(timeSlot) == true
+                                    let buttonColor: Color = isPast ? .gray : (isChosen ? .green : .red)
+                                    let userCount = timeSlotUserCounts[timeSlot, default: 0]  // Get the user count
                                     
-                                    //haptic
-                                    
-                                    let generator = UIImpactFeedbackGenerator(style: .light)
-                                    generator.impactOccurred()
-                                    
-                                    
-                                } label: {
-                                    VStack {
-                                        Text(formatTime(timeSlot))
-                                            .fontWeight(.semibold)
-                                            .foregroundColor(buttonColor)
-                                            .frame(maxWidth: .infinity)
+                                    Button {
+                                        toggleTimeSelection(timeSlot, for: selectedDate)
                                         
-                                        if areTimesEqual(timeSlot: timeSlot, preferredTime: preferredTime ?? Date()) {
-                                            Text("Proposed Time")
-                                                .font(.caption)
-                                            
+                                        //haptic
+                                        
+                                        let generator = UIImpactFeedbackGenerator(style: .light)
+                                        generator.impactOccurred()
+                                        
+                                        
+                                    } label: {
+                                        VStack {
+                                            Text(formatTime(timeSlot))
+                                                .fontWeight(.semibold)
                                                 .foregroundColor(buttonColor)
                                                 .frame(maxWidth: .infinity)
+                                            
+                                            if areTimesEqual(timeSlot: timeSlot, preferredTime: preferredTime ?? Date()) {
+                                                Text("Proposed Time")
+                                                    .font(.caption)
+                                                
+                                                    .foregroundColor(buttonColor)
+                                                    .frame(maxWidth: .infinity)
+                                            }
+                                            
+                                            Text("\(userCount) Selected")  // Display the user count
+                                                .font(.caption)
+                                                .foregroundColor(.secondary)
+                                                .frame(maxWidth: .infinity)
                                         }
-                                        
-                                        Text("\(userCount) Selected")  // Display the user count
-                                            .font(.caption)
-                                            .foregroundColor(.secondary)
-                                            .frame(maxWidth: .infinity)
+                                        .frame(height: 100)
                                     }
-                                    .frame(height: 100)
+                                    .buttonStyle(.bordered)
+                                    .disabled(isPast) // Disable the button if the time slot is in the past
+                                    .tint(buttonColor)
                                 }
-                                .buttonStyle(.bordered)
-                                .disabled(isPast) // Disable the button if the time slot is in the past
-                                .tint(buttonColor)
                             }
+                            
+                            .padding(.horizontal)
                         }
-
-                        .padding(.horizontal)
-                    }
-                } else {
-                    if isDatePickerEnabled {
-                        Text("Select Availability for Start Time")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                            .frame(height: 300)
-                        
-                        Spacer()
                     } else {
-                        ProgressView()
+                        if isDatePickerEnabled {
+                            Text("Select Availability for Start Time")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                                .frame(height: 300)
+                            
+                            Spacer()
+                        } else {
+                            ProgressView()
+                        }
+                    }
+                }
+                .onAppear {
+                    loadSavedDates()
+                }
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button("Save") {
+                            saveDates()
+                        }
                     }
                 }
             }
-            .onAppear {
-                loadSavedDates()
-            }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Save") {
-                        saveDates()
-                    }
-                }
-            }
+            .navigationTitle(currentlySelectedDate.map { dateFormatterMonthDay.string(from: $0) } ?? "Select Availability")
+            .navigationBarTitleDisplayMode(.inline)
         }
-        .navigationTitle(currentlySelectedDate.map { dateFormatterMonthDay.string(from: $0) } ?? "Select Availability")
-        .navigationBarTitleDisplayMode(.inline)
     }
     
     private func handleDateSelectionChange(_ newSelection: Set<DateComponents>) {
@@ -351,12 +351,11 @@ struct CalendarView: View {
             }
         }
     }
-
-
     private func loadSavedDates() {
         let db = Firestore.firestore()
         
         guard let userId: String = try? AuthenticationManager.shared.getAuthenticatedUser().uid else {
+            print("User ID not available")
             return
         }
         
@@ -366,28 +365,30 @@ struct CalendarView: View {
             .document(widgetId)
             .getDocument { document, error in
                 guard let document = document, document.exists else {
-                    print("Document does not exist or failed to retrieve data")
+                    print("Document does not exist or failed to retrieve data: \(error?.localizedDescription ?? "Unknown error")")
                     return
                 }
                 
                 if let data = document.data() {
-                    if let preferredTimeString = data["preferredTime"] as? String {
-                        self.preferredTime = self.timeFormatter.date(from: preferredTimeString)
+                    if let preferredTime = data["preferredTime"] as? Timestamp {
+                        self.preferredTime = preferredTime.dateValue()
                     }
                     
                     if let userDates = data[userId] as? [String: [String]] {
                         var groupedDates: [Date: Set<Date>] = [:]
                         
                         for (dateString, timeStrings) in userDates {
-                            if let date = dateFormatter.date(from: dateString) {
+                            if let date = self.dateFormatter.date(from: dateString) {
                                 let times = timeStrings.compactMap { self.parseTime($0, on: date) }
                                 groupedDates[date] = Set(times)
+                            } else {
+                                print("Failed to parse date from string: \(dateString)")
                             }
                         }
                         
                         self.localChosenDates = groupedDates
                         self.selectedDates = Set(groupedDates.keys.map { Calendar.current.dateComponents([.calendar, .era, .year, .month, .day], from: $0) })
-                        updateCurrentlySelectedDate()
+                        self.updateCurrentlySelectedDate()
                     }
                     
                     if let timeSlotCounts = data["timeSlotCounts"] as? [String: [String: Int]] {
@@ -400,10 +401,33 @@ struct CalendarView: View {
                         }.reduce(into: [Date: Int]()) { $0[$1.0] = $1.1 }
                     }
                     
-                    isDatePickerEnabled = true // Enable the date picker after loading data
+                    // Handle endDate as a Date
+                    if let endDate = data["endDate"] as? Timestamp {
+                        let endDateValue = endDate.dateValue()
+                        print("Fetched endDate: \(endDateValue)")
+                        
+                        if self.startDate < endDateValue {
+                            self.bounds = self.startDate..<endDateValue
+                        } else {
+                            print("EndDate is before startDate. Defaulting to 1 year range.")
+                            let defaultEndDate = Calendar.current.date(byAdding: .year, value: 1, to: self.startDate)!
+                            self.bounds = self.startDate..<defaultEndDate
+                        }
+                    } else {
+                        // Default to 1 year if no endDate is provided
+                        let defaultEndDate = Calendar.current.date(byAdding: .year, value: 1, to: self.startDate)!
+                        self.bounds = self.startDate..<defaultEndDate
+                        print("No endDate provided. Using default range up to \(defaultEndDate).")
+                    }
+                    
+                    print("Bounds set to: \(self.bounds)")
+                    self.isDatePickerEnabled = true // Enable the date picker after loading data
                 }
             }
     }
+
+
+
 
     private func mergeDateAndTime(date: Date, time: Date) -> Date {
         let calendar = Calendar.current
