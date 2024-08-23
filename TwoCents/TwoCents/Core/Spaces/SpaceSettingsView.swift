@@ -360,7 +360,7 @@ struct SpaceSettingsView: View {
                     } else if viewModel.allMembers.count == 1 {
                         Text("Yea... It's getting lonely in here.")
                     } else {
-                        Text("Do it. Your friends won't think twice...")
+                        Text("Do it. Your friends won't mind...")
                     }
                    
                 })
