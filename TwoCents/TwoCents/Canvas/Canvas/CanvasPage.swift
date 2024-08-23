@@ -39,13 +39,10 @@ struct CanvasPage: View {
     @State private var inSettingsView: Bool = false
     @State private var photoLinkedToProfile: Bool = false
     @State private var widgetId: String = UUID().uuidString
-    @State private var toolkit: PKToolPicker = PKToolPicker()
-    @State private var timer: Timer?
-    
     @State private var replyWidget: CanvasWidget?
     @State private var selectedDetent: PresentationDetent = .height(50)
     
-    @Bindable var viewModel = CanvasPageViewModel()
+    @Bindable var viewModel: CanvasPageViewModel
     @Environment(AppModel.self) var appModel
     
     private var spaceId: String
@@ -56,6 +53,7 @@ struct CanvasPage: View {
     
     init(spaceId: String) {
         self.spaceId = spaceId
+        self.viewModel = CanvasPageViewModel(spaceId: spaceId)
     }
     
     func Background() -> some View {
@@ -95,17 +93,22 @@ struct CanvasPage: View {
             
             Background()
             GridView()
+            DrawingCanvas(toolPickerActive: $toolPickerActive, spaceId: spaceId)
+                .allowsHitTesting(toolPickerActive)
+                .clipped() // Ensure the content does not overflow
+                .animation(.spring()) // Optional: Add some animation
+                .frame(width: FRAME_SIZE, height: FRAME_SIZE)
         }
         .dropDestination(for: CanvasWidget.self) { receivedWidgets, location in
-            //This is necessary keep these lines
             guard let draggingItem = draggingItem else {
                 print("Failed to intialize dragging item")
                 return false
             }
             
-            
             let x = roundToTile(number: location.x)
             let y = roundToTile(number: location.y)
+            print("X: \(x)")
+            print("Y: \(y)")
             
             
             SpaceManager.shared.moveWidget(spaceId: spaceId, widgetId: draggingItem.id.uuidString, x: x, y: y)
@@ -113,14 +116,6 @@ struct CanvasPage: View {
             self.draggingItem = nil
             return true
         }
-        
-        .overlay(
-            DrawingCanvas(canvas: $viewModel.canvas, toolPickerActive: $toolPickerActive, toolPicker: $toolkit, spaceId: spaceId)
-                .allowsHitTesting(toolPickerActive)
-                .clipped() // Ensure the content does not overflow
-                .animation(.spring()) // Optional: Add some animation
-                .frame(width: FRAME_SIZE, height: FRAME_SIZE)
-        )
         
     }
     
@@ -264,6 +259,7 @@ struct CanvasPage: View {
                 .animation(.spring(), value: widget.y) // Add animation for y position
             
                 .draggable(widget) {
+                    //@TODO: Sometimes takes too long to render whole functional view. Look into generating a preview
                     MediaView(widget: widget, spaceId: spaceId)
                         .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
                         .frame(
@@ -273,7 +269,6 @@ struct CanvasPage: View {
                         .onAppear{
                             draggingItem = widget
                         }
-                        .environment(viewModel)
                 }
             
         }
@@ -353,14 +348,9 @@ struct CanvasPage: View {
             canvasView()
                 .frame(width: FRAME_SIZE * 1.5, height: FRAME_SIZE * 1.5)
                 .ignoresSafeArea()
-            //add new widget view and ChatSHEET
-            
                 .onAppear(perform: {
                     viewModel.activeSheet = .chat
                 })
-                .onReceive(Timer.publish(every: 5, on: .main, in: .common).autoconnect()) { _ in
-                    viewModel.removeExpiredStrokes()
-                }
             //toolbar
                 .toolbar(.hidden, for: .tabBar)
                 .toolbar {toolbar()}
@@ -371,7 +361,8 @@ struct CanvasPage: View {
                     
                     do {
                         try await viewModel.loadCurrentSpace(spaceId: spaceId)
-                        viewModel.attachDrawingListener()
+                        try await viewModel.loadCurrentUser()
+                        //@TODO: figure out how to put in presentationMode in here
                         viewModel.attachWidgetListener()
                         appModel.currentSpaceId = spaceId
                         appModel.inSpace = true
@@ -392,7 +383,6 @@ struct CanvasPage: View {
                     }
                 }
                 .navigationTitle(toolPickerActive ? "" : viewModel.space?.name ?? "" )
-            //                .background(  Color(UIColor.secondarySystemBackground))
                 .background(Color(UIColor.secondarySystemBackground))
         }
         .onChange(of: appModel.shouldNavigateToSpace, {
@@ -487,14 +477,11 @@ struct CanvasPage: View {
             
         })
         
-        .onDisappear(perform: {
+        .onDisappear {
             viewModel.activeSheet = nil
             appModel.inSpace = false
             appModel.currentSpaceId = nil
-            print("CANVASPAGE DISAPPEARED")
-            print("CANVASPAGE: appModel.inSpace \(appModel.inSpace)")
-            
-        })
+        }
         .background(  Color(UIColor.secondarySystemBackground))
         .environment(viewModel)
     }

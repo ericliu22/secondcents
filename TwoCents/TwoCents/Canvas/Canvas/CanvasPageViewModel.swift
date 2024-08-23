@@ -12,7 +12,6 @@ import PencilKit
 
 
 
-
 @Observable
 final class CanvasPageViewModel {
     
@@ -22,11 +21,7 @@ final class CanvasPageViewModel {
     var activeWidget: CanvasWidget?
     var activeSheet: CanvasSheet?
     var canvasWidgets: [CanvasWidget] = []
-    var canvas: PKCanvasView
-    
-    init() {
-        self.canvas = PKCanvasView()
-    }
+    var spaceId: String
     
     /* Eric: Don't delete this
      init(spaceId: String) {
@@ -37,15 +32,18 @@ final class CanvasPageViewModel {
      }
      */
     
+    //Hard and fast loading
+    init(spaceId: String) {
+        self.spaceId = spaceId
+    }
+    
     func loadCurrentUser() async throws {
         let authDataResult = try AuthenticationManager.shared.getAuthenticatedUser()
         self.user = try await UserManager.shared.getUser(userId: authDataResult.uid)
     }
     
     func loadCurrentSpace(spaceId: String) async throws {
-        
         self.space = try await SpaceManager.shared.getSpace(spaceId: spaceId)
-        
     }
     
     func openMapsApp(location: String) {
@@ -75,48 +73,18 @@ final class CanvasPageViewModel {
         }
     }
     
-    
     func getUserColor(userColor: String) -> Color{
         
         return Color.fromString(name: userColor)
         
     }
     
-    func attachDrawingListener() {
-        guard let space = space else { return }
-        db.collection("spaces").document(space.spaceId).addSnapshotListener { [weak self] documentSnapshot, error in
-            guard let self = self else { return }
-            guard let document = documentSnapshot else {
-                print("Error fetching document: \(error!)")
-                return
-            }
-            
-            guard document.exists else {
-                print("Document doesn't exist")
-                return
-            }
-            
-            guard let data = document.data() else {
-                print("Empty document")
-                return
-            }
-            
-            if let drawingAccess = data["drawing"] as? Data {
-                let databaseDrawing = try! PKDrawingReference(data: drawingAccess)
-                let newDrawing = databaseDrawing.appending(self.canvas.drawing)
-                self.canvas.drawing = newDrawing
-            } else {
-                print("No database drawing")
-            }
-        }
-        
-        
-    }
-    
     func attachWidgetListener() {
-        guard let space = space else { return }
-        db.collection("spaces").document(space.spaceId).collection("widgets").addSnapshotListener { [weak self] querySnapshot, error in
-            guard let self = self else { return }
+        db.collection("spaces").document(spaceId).collection("widgets").addSnapshotListener { [weak self] querySnapshot, error in
+            guard let self = self else {
+                print("attachWidgetListener closure: weak self no reference")
+                return
+            }
             guard let query = querySnapshot else {
                 print("Error fetching query: \(error!)")
                 return
@@ -129,28 +97,10 @@ final class CanvasPageViewModel {
         }
     }
     
-    func removeExpiredStrokes() {
-        var changed: Bool = false
-        let strokes = canvas.drawing.strokes.filter { stroke in
-            if (stroke.isExpired()) {
-                changed = true
-            }
-            //include only if not expired
-            return !stroke.isExpired()
-        }
-        if changed {
-            
-            canvas.drawing = PKDrawing(strokes: strokes)
-            guard let space = space else { return }
-            canvas.upload(spaceId: space.spaceId)
-            
-        }
-    }
 }
 
 enum CanvasSheet: Identifiable  {
     case newWidgetView, chat, poll, newTextView, todo, image, video, calendar
-    
     
     var id: Self {
         return self

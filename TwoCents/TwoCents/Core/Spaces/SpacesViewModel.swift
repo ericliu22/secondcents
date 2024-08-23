@@ -52,7 +52,7 @@ final class SpacesViewModel {
     
     func getNotifcationCount() async {
         for space in allSpaces {
-            guard let unreads = try? await db.collection("spaces").document(space.id).getDocument() as? Int else {
+            guard let unreads = try? await db.collection("spaces").document(space.id).collection("unreads") as? Int else {
                 print("Unable to retrive notification count")
                 continue
             }

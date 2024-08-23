@@ -21,7 +21,7 @@ struct DBSpace: Identifiable, Codable, Hashable {
     let members: Array<String>?
     var nextWidgetX: CGFloat?
     var nextWidgetY: CGFloat?
- 
+    
     
     
     init(
@@ -32,7 +32,7 @@ struct DBSpace: Identifiable, Codable, Hashable {
         profileImagePath: String? = nil,
         profileImageUrl: String? = nil,
         members: Array<String>? = nil
-       
+        
     )
     {
         self.spaceId = spaceId
@@ -56,7 +56,7 @@ final class SpaceManager{
     let FIRST_Y: CGFloat = 720
     let LAST_X: CGFloat = 2340
     let LAST_Y: CGFloat = 2340
-
+    
     static let shared = SpaceManager()
     private init() { }
     
@@ -68,15 +68,13 @@ final class SpaceManager{
         
     }
     
-
-    
     func createNewSpace(space: DBSpace) async throws {
-
+        
         try spaceDocument(spaceId: space.spaceId).setData(from: space, merge: false)
     }
     
     func deleteSpace(spaceId: String) async throws {
-
+        
         try await spaceDocument(spaceId: spaceId).delete()
     }
     
@@ -87,10 +85,10 @@ final class SpaceManager{
         //put friend uid in user database
         let newArray: [String: Any] = [
             "members": FieldValue.arrayRemove([userId])
-          
+            
         ]
         try await spaceDocument(spaceId: spaceId).updateData(newArray)
-    
+        
     }
     
     func moveWidget(spaceId: String, widgetId: String, x: CGFloat, y: CGFloat) {
@@ -107,29 +105,24 @@ final class SpaceManager{
         //put friend uid in user database
         let newArray: [String: Any] = [
             "members": members
-          
+            
         ]
         
         
         try await spaceDocument(spaceId: spaceId).updateData(newArray)
         
         
-     
+        
     }
     
-    
-    
-    
     func getSpace(spaceId: String) async throws -> DBSpace {
-
+        
         try await spaceDocument(spaceId: spaceId).getDocument(as: DBSpace.self)
         
     }
     
-    
-    
     func getWidget(spaceId: String, widgetId: String) async throws -> CanvasWidget {
-
+        
         try await spaceDocument(spaceId: spaceId).collection("widgets").document(widgetId).getDocument(as: CanvasWidget.self)
         
     }
@@ -216,14 +209,14 @@ final class SpaceManager{
     enum FuckedLoop: Error {
         case runtimeError(String)
     }
-        
+    
     private func findNextSpot(spaceId: String, startingX: CGFloat, startingY: CGFloat) async throws -> (CGFloat, CGFloat){
         //@TODO: Stop execution if we reach maximum number of widgets on canvas?? (Design choice here)
         //This is abitrary number didn't actually calculate how many widgets are possible on the canvas
         let LOOP_LIMIT: Int = 100
         var currentX: CGFloat = startingX
         var currentY: CGFloat = startingY
-
+        
         var count: Int = 0
         while (count < LOOP_LIMIT ) {
             let spaceAvailable: Bool = try await spotEmpty(spaceId: spaceId, x: currentX, y: currentY)
@@ -251,22 +244,22 @@ final class SpaceManager{
     
     private func spotEmpty(spaceId: String, x: CGFloat, y: CGFloat) async throws -> Bool {
         return try await spaceDocument(spaceId: spaceId).collection("widgets")
-                .whereField("x", isEqualTo: x)
-                .whereField("y", isEqualTo: y)
-                .limit(to: 1)
-                .getDocuments()
-                .isEmpty
+            .whereField("x", isEqualTo: x)
+            .whereField("y", isEqualTo: y)
+            .limit(to: 1)
+            .getDocuments()
+            .isEmpty
     }
     
     private func withinBounds(x: CGFloat, y: CGFloat) -> Bool {
         return FIRST_X < x && x < LAST_X && FIRST_Y < y && y < LAST_Y
     }
-
+    
     func removeWidget(spaceId: String, widget: CanvasWidget) {
-          spaceDocument(spaceId: spaceId)
-                .collection("widgets")
-                .document(widget.id.uuidString)
-                .delete()
+        spaceDocument(spaceId: spaceId)
+            .collection("widgets")
+            .document(widget.id.uuidString)
+            .delete()
     }
     
     func setImageWidgetPic(spaceId: String, widgetId: String, url: String, path: String) async throws {

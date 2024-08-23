@@ -158,11 +158,7 @@ struct SpacesView: View {
                 if !viewModel.finishedLoading {
                     ProgressView()
                         .padding(.top, 250)
-                }else if filteredSearch.isEmpty && viewModel.finishedLoading {
-                    
-                    
-               
-                    
+                } else if filteredSearch.isEmpty && viewModel.finishedLoading {
                
                         ContentUnavailableView(
                             "No Spaces",
@@ -185,15 +181,20 @@ struct SpacesView: View {
                                     .tint(loadedColor)
                                 
                                     .onDisappear {
+                                        /* Eric
+                                            DO NOT DELETE THIS
+                                            This happens too slow and fucks up the viewModel.loadCurrentUser() of CanvasPage
+                                            Hence resulting in bug where canvas shows up as nothing
+                                         */
                                         //refresh spaces list to check if user left a space
-                                        Task {
-                                            
-                                            try? await viewModel.loadCurrentUser()
-                                            if let user = viewModel.user {
-                                                
-                                                try? await viewModel.getAllSpaces(userId: user.userId)
-                                            }
-                                        }
+//                                        Task {
+//                                            
+//                                            try? await viewModel.loadCurrentUser()
+//                                            if let user = viewModel.user {
+//                                                
+//                                                try? await viewModel.getAllSpaces(userId: user.userId)
+//                                            }
+//                                        }
                                     }
                                 
                             } label: {linkLabel(spaceTile: spaceTile)}

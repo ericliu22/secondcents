@@ -60,7 +60,10 @@ struct ZoomableScrollView<Content: View>: UIViewRepresentable {
     }
     
     private func updateContentSize(for scrollView: UIScrollView) {
-        guard let view = scrollView.subviews.first else { return }
+        guard let view = scrollView.subviews.first else { 
+            print("ZoomableScrollView: no subview")
+            return
+        }
         let zoomScale = scrollView.zoomScale
         let contentSize = CGSize(width: view.intrinsicContentSize.width * zoomScale, height: view.intrinsicContentSize.height * zoomScale)
         scrollView.contentSize = contentSize
@@ -82,7 +85,10 @@ struct ZoomableScrollView<Content: View>: UIViewRepresentable {
         }
 
         private func updateContentSize(for scrollView: UIScrollView) {
-            guard let view = scrollView.subviews.first else { return }
+            guard let view = scrollView.subviews.first else { 
+                print("ZoomableScrollView: no subview")
+                return
+            }
             let zoomScale = scrollView.zoomScale
             let contentSize = CGSize(width: view.intrinsicContentSize.width * zoomScale, height: view.intrinsicContentSize.height * zoomScale)
             scrollView.contentSize = contentSize

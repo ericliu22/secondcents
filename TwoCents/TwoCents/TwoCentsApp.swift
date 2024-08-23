@@ -33,6 +33,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     //If this fucks up everyone is fucked
     override init() {
         super.init()
+        print("RAN APP DELEGATE INIT")
         NSSetUncaughtExceptionHandler({ exception in
             AnalyticsManager.shared.crashEvent(exception: exception)
         })

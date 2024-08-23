@@ -63,7 +63,7 @@ struct Poll: Codable, Identifiable {
             "options": optionsData
         ]
      
-            try db.collection("spaces")
+            db.collection("spaces")
                 .document(spaceId)
                 .collection("polls")
                 .document(id.uuidString)

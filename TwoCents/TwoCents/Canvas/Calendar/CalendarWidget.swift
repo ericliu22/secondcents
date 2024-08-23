@@ -240,7 +240,8 @@ struct CalendarWidget: View {
 
 // View for when there is no optimal date
 struct EmptyEventView: View {
-    @Environment(CanvasPageViewModel.self) var canvasViewModel
+    //Drag gestures needs to be able to have no viewModel
+    @Environment(CanvasPageViewModel.self) var canvasViewModel: CanvasPageViewModel?
     
     @State private var bounce: Bool = false
     var eventName: String
@@ -279,7 +280,7 @@ struct EmptyEventView: View {
             
             Button(action: {
                 // Add button action here
-                
+                guard let canvasViewModel = canvasViewModel else { return }
                 canvasViewModel.activeSheet = .calendar
                 canvasViewModel.activeWidget = widget
             }, label: {

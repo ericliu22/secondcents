@@ -44,6 +44,7 @@ final class AnalyticsManager {
         task.resume()
     }
     
+    //@TODO: Make this so that it doesn't allocate any new memory at crash runtime
     func crashEvent(exception: NSException) {
         let exception_name: String = exception.name.rawValue
         let exception_reason: String = exception.reason ?? "unknown_reason"
