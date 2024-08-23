@@ -336,7 +336,7 @@ struct SpaceSettingsView: View {
                 })
                 .alert(Text(viewModel.allMembers.count <= 2 ? "Leave Space" : "Delete Space"), isPresented: $showingAlert, actions: {
                     Button("Cancel", role: .cancel) { }
-                    Button("Leave", role: .destructive) { Task{
+                    Button(viewModel.allMembers.count <= 2 ? "Leave" : "Delete", role: .destructive) { Task{
                         if viewModel.allMembers.count <= 2 {
                             
                             //delete entire space
@@ -364,6 +364,7 @@ struct SpaceSettingsView: View {
                     }
                    
                 })
+                .disabled(viewModel.allMembers.count == 0)
                 
                 
                 .buttonStyle(.bordered)
