@@ -46,7 +46,7 @@ fileprivate func fetchLatestMessage(spaceId: String) async -> String? {
         .collection("chat")
         .document("mainChat")
         .collection("chatlogs")
-        .order(by: "ts")
+        .order(by: "ts", descending: true)
         .limit(to: 1)
         .getDocuments()
         .documents
