@@ -34,24 +34,24 @@ struct FrontPageView: View {
 //                    Text("Event widget")
 //                }
             
-            //@TODO: Remove this when done
-            EventWidget(widget: CanvasWidget(width: .infinity, height:  .infinity, x:0, y: 0, borderColor: .red, userId: "jisookim", media: .event, widgetName: "Text", widgetDescription: "A bar is a bar", textString: "Fruits can't even see so how my Apple Watch"))
-                .tabItem {
-                    Image(systemName: "magnifyingglass")
-                    Text("Event widget")
-                }
-                .tag(1)
-
-            
-            //@TODO: Remove this when done
-            NavigationStack{
-                CalendarWidgetSheetView(widgetId: "E2C85940-3266-44F7-B6D2-4D21F507B25C", spaceId: "2FF491A4-CEC6-419F-A199-204810864FCF")
-            }
-            .tabItem {
-                Image(systemName: "magnifyingglass")
-                Text("Calendar")
-            }
-            .tag(3)
+//            //@TODO: Remove this when done
+//            EventWidget(widget: CanvasWidget(width: .infinity, height:  .infinity, x:0, y: 0, borderColor: .red, userId: "jisookim", media: .event, widgetName: "Text", widgetDescription: "A bar is a bar", textString: "Fruits can't even see so how my Apple Watch"))
+//                .tabItem {
+//                    Image(systemName: "magnifyingglass")
+//                    Text("Event widget")
+//                }
+//                .tag(1)
+//
+//            
+//            //@TODO: Remove this when done
+//            NavigationStack{
+//                CalendarWidgetSheetView(widgetId: "E2C85940-3266-44F7-B6D2-4D21F507B25C", spaceId: "2FF491A4-CEC6-419F-A199-204810864FCF")
+//            }
+//            .tabItem {
+//                Image(systemName: "magnifyingglass")
+//                Text("Calendar")
+//            }
+//            .tag(3)
             
             
             
