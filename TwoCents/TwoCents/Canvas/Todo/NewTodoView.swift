@@ -221,26 +221,21 @@ struct NewTodoView: View{
                     
                     
                     
-                    
-                    ToolbarItem(placement: .bottomBar) {
-                       
+                    if viewModel.mentionedUsers.contains(where: { $0 == nil }) {
+                        ToolbarItem(placement: .bottomBar) {
                             Button(action: {
                                 
-                                   
-                                    viewModel.autoAssignTasks(spaceId: spaceId)
-                                
-                                
-                                
+                            
+                                viewModel.autoAssignTasks(spaceId: spaceId)
                             }, label: {
-                                
-                                
-                                Text("Auto Assign Tasks")
-    //
-    //                                .foregroundStyle(.red)
-                              
+                                HStack {
+                                    Image(systemName: "wand.and.stars")
+                                    Text("Auto Assign Tasks")
+                                }
                             })
-                            .disabled(viewModel.allUsers.isEmpty)
-                      
+                            .disabled(viewModel.allUsers.isEmpty )
+                        }
+                        
                     }
                     
                     
@@ -396,7 +391,7 @@ struct UserChip: View {
             .background(targetUserColor, in: Capsule())
             .frame(width: 80, alignment: .trailing)
         } else {
-            Image(systemName: "at.badge.plus")
+            Image(systemName: "person.circle")
 //                .padding(.horizontal)
                 .frame(height: 54, alignment: .trailing)
         }

@@ -43,25 +43,22 @@ struct TodoWidgetSheetView: View {
         }
         
         
-        
-            
-            
+        if viewModel.mentionedUsers.contains(where: { $0 == nil }) {
             ToolbarItem(placement: .bottomBar) {
-                
                 Button(action: {
-                    viewModel.autoAssignTasks(spaceId: spaceId)
                     
-                }, label: {
-                    
-                    
-                    Text("Auto Assign Tasks")
-                    
-                })
-                .disabled(viewModel.allUsers.isEmpty)
                 
+                    viewModel.autoAssignTasks(spaceId: spaceId)
+                }, label: {
+                    HStack {
+                        Image(systemName: "wand.and.stars")
+                        Text("Auto Assign Tasks")
+                    }
+                })
+                .disabled(viewModel.allUsers.isEmpty )
             }
-        
-        
+            
+        }
         
         
         
@@ -259,7 +256,7 @@ struct TodoWidgetSheetView: View {
                 .background(targetUserColor, in: Capsule())
                 .frame(width: 80, alignment: .trailing)
             } else {
-                Image(systemName: "at.badge.plus")
+                Image(systemName: "person.circle")
                     .frame(height: 54, alignment: .trailing)
             }
         }
