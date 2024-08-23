@@ -25,7 +25,10 @@ struct NewTodoView: View{
     
     let todoListColor: [Color] = [.orange, .blue, .red, .green]
     
-
+    var hasMoreThanOneNilMentionedUser: Bool {
+        let nilCount = viewModel.mentionedUsers.filter { $0 == nil }.count
+        return nilCount > 1
+    }
     
     init(spaceId: String, closeNewWidgetview: Binding<Bool>) {
         self.spaceId = spaceId
@@ -221,7 +224,7 @@ struct NewTodoView: View{
                     
                     
                     
-                    if viewModel.mentionedUsers.contains(where: { $0 == nil }) {
+                    if hasMoreThanOneNilMentionedUser {
                         ToolbarItem(placement: .bottomBar) {
                             Button(action: {
                                 
