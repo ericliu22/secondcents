@@ -46,7 +46,7 @@ final class TodoWidgetSheetViewModel: ObservableObject {
     
     
     // Define the new addNewTodoItem function
-    func addNewTodoItem(spaceId: String, todoId: String) {
+    func addNewTodoItem(spaceId: String, todoId: String, mentionedUserId: String) {
         guard !newTodoItem.task.isEmpty else {
             print("Task is empty. Cannot add a new todo item.")
             return
@@ -74,7 +74,7 @@ final class TodoWidgetSheetViewModel: ObservableObject {
             // Add the new todo item to the list
             let newTodoItemData: [String: Any] = [
                 "task": self.newTodoItem.task,
-                "mentionedUserId": "",
+                "mentionedUserId": mentionedUserId,
                 "completed": false,
                 "id": UUID().uuidString
             ]

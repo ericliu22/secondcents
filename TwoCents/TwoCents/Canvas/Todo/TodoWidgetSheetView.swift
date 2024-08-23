@@ -55,7 +55,7 @@ struct TodoWidgetSheetView: View {
                     }
                     viewModel.isFilterActive.toggle()
                 }) {
-                    Label(viewModel.isFilterActive ? "Show All Tasks" : "Show My Tasks", systemImage: viewModel.isFilterActive ? "person.2.circle" : "person.crop.circle")
+                    Label(viewModel.isFilterActive ? "Show All Tasks" : "Show My Tasks", systemImage: viewModel.isFilterActive ? "checklist" : "person.crop.circle")
                 }
             } label: {
                 Image(systemName: "line.3.horizontal.decrease.circle")
@@ -63,7 +63,7 @@ struct TodoWidgetSheetView: View {
             }
         }
 
-        if viewModel.mentionedUsers.contains(where: { $0 == nil }) {
+        if viewModel.mentionedUsers.contains(where: { $0 == nil }) && !viewModel.allUsers.isEmpty{
             ToolbarItem(placement: .bottomBar) {
                 Button(action: {
                     viewModel.autoAssignTasks(spaceId: spaceId)
@@ -73,7 +73,7 @@ struct TodoWidgetSheetView: View {
                         Text("Auto Assign Tasks")
                     }
                 })
-                .disabled(viewModel.allUsers.isEmpty)
+               
             }
         }
     }
@@ -165,9 +165,10 @@ struct TodoWidgetSheetView: View {
                                         }
                                     })
                                     .onSubmit {
-                                        viewModel.addNewTodoItem(spaceId: spaceId, todoId: widget.id.uuidString)
-                                        
-                                        
+//                                        viewModel.addNewTodoItem(spaceId: spaceId, todoId: widget.id.uuidString , mentionedUserId: viewModel.isFilterActive ? viewModel.userId : "")
+                                        if let authDataResult = try? AuthenticationManager.shared.getAuthenticatedUser(){
+                                            viewModel.addNewTodoItem(spaceId: spaceId, todoId:  widget.id.uuidString, mentionedUserId: viewModel.isFilterActive ? authDataResult.uid : "")
+                                        }
                                     }
                                 
                                 
@@ -272,7 +273,8 @@ struct TodoWidgetSheetView: View {
                 .frame(width: 80, alignment: .trailing)
             } else {
                 Image(systemName: "person.circle")
-                    .frame(height: 54, alignment: .trailing)
+                    .frame(height: 16, alignment: .trailing)
+                    .padding(.vertical, 2.5)
             }
         }
     }

@@ -224,7 +224,7 @@ struct NewTodoView: View{
                     
                     
                     
-                    if hasMoreThanOneNilMentionedUser {
+                    if hasMoreThanOneNilMentionedUser && !viewModel.allUsers.isEmpty{
                         ToolbarItem(placement: .bottomBar) {
                             Button(action: {
                                 
@@ -236,7 +236,7 @@ struct NewTodoView: View{
                                     Text("Auto Assign Tasks")
                                 }
                             })
-                            .disabled(viewModel.allUsers.isEmpty )
+                         
                         }
                         
                     }
@@ -396,7 +396,8 @@ struct UserChip: View {
         } else {
             Image(systemName: "person.circle")
 //                .padding(.horizontal)
-                .frame(height: 54, alignment: .trailing)
+                .frame(height: 16, alignment: .trailing)
+                .padding(.vertical, 2.5)
         }
     }
 }
