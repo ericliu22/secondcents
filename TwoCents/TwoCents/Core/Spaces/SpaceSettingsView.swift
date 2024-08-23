@@ -270,7 +270,8 @@ struct SpaceSettingsView: View {
                                         //                                    .frame(maxWidth: .infinity)
                                         
                                     }
-                                    .tint(.gray)
+                                    .tint(targetUserColor)
+//                                    .tint(.gray)
                                     .buttonStyle(.bordered)
                                     .cornerRadius(10)
                                     

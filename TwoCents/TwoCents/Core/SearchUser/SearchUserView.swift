@@ -110,9 +110,86 @@ struct SearchUserView: View {
                             
                             //                            VStack(alignment: .leading){
                             
-                            Text(userTile.name!)
-                                .font(.headline)
-                                .foregroundStyle(Color(UIColor.label))
+                        
+                            
+                            
+                          
+                            
+                       
+                            
+                            // if friends
+                            if let friendsList = viewModel.user?.friends, friendsList.contains(userTile.id) {
+                                VStack(alignment: .leading){
+                                    
+                                    Text(userTile.name!)
+                                        .font(.headline)
+                                        .foregroundStyle(Color(UIColor.label))
+                                    
+                                    
+                                    Text("Friended")
+                                    .font(.caption)
+                                    .foregroundStyle(Color.secondary)
+                                    
+                                }
+                                
+                                Spacer()
+                                
+                            } else {
+                                
+                                //not friends view :(
+                                Text(userTile.name!)
+                                    .font(.headline)
+                                    .foregroundStyle(Color(UIColor.label))
+                                
+                                
+                                Spacer()
+                                
+                                
+                                
+                                //add or undo add friend button
+                                if let clickedState = viewModel.clickedStates[userTile.id] {
+                                    
+                                    Button {
+                                        let generator = UIImpactFeedbackGenerator(style: .medium)
+                                        generator.impactOccurred()
+                                        
+                                        
+                                        print(clickedState)
+                                        
+                                        Task{
+                                            //                                            viewModel.sendFriendRequest(friendUserId: user.userId!)
+                                            if clickedState{
+                                                
+                                                viewModel.unsendFriendRequest(friendUserId: userTile.id)
+                                                
+                                                
+                                            } else{
+                                                viewModel.sendFriendRequest(friendUserId: userTile.id)
+                                                
+                                            }
+                                            
+                                            
+                                        }
+                                        
+                                    } label: {
+                                        
+                                        Text(clickedState ? "Undo" : "Add")
+                                            .font(.caption)
+                                            .frame(width:32)
+                                        
+                                    }
+                                    .tint(targetUserColor)
+                                    .buttonStyle(.bordered)
+                                    .cornerRadius(10)
+                                    
+                                }
+                                
+                                
+                                
+                                
+                            }
+                            
+                            
                             
                             
                             //

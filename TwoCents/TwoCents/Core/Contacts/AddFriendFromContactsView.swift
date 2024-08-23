@@ -200,7 +200,8 @@ struct AddFriendFromContactsView: View {
                                             .font(.caption)
                                             .frame(width:32)
                                     }
-                                    .tint(.gray)
+//                                    .tint(.gray)
+                                    .tint(targetUserColor)
                                     .buttonStyle(.bordered)
                                     .cornerRadius(10)
                                 

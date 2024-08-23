@@ -31,13 +31,78 @@ final class SearchUserViewModel: ObservableObject {
     @Published private(set) var allUsers: [DBUser] = []
     
     
+    @Published var clickedStates = [String: Bool]()
+    
+
     
     func getAllUsers() async throws {
-        try? await loadCurrentUser()
-      
-        self.allUsers = try await UserManager.shared.getAllUsers(userId: user!.userId)
-       
+        try await loadCurrentUser()
+        
+        guard let user = user else {
+            return
+        }
+
+        self.allUsers = try await UserManager.shared.getAllUsers(userId: user.userId)
+        
+        // Loop through all users and update the clickedStates dictionary
+        for eachUser in allUsers {
+            if let incomingRequests = user.incomingFriendRequests {
+                clickedStates[eachUser.userId] = incomingRequests.contains(eachUser.userId)
+            } else {
+                clickedStates[eachUser.userId] = false
+            }
+            
+            
+        
+        }
     }
+    
+    
+    
+    
+    func sendFriendRequest(friendUserId: String)  {
+        
+        guard !friendUserId.isEmpty else { return }
+    
+        Task {
+            //loading like this becasuse this viewModel User changes depending on if its current user or a user thats searched
+            
+            let authDataResultUserId = try AuthenticationManager.shared.getAuthenticatedUser().uid
+            
+            guard authDataResultUserId != friendUserId else { return }
+            
+            try? await UserManager.shared.sendFriendRequest(userId: authDataResultUserId, friendUserId: friendUserId)
+            
+            await friendRequestNotification(userUID: authDataResultUserId, friendUID: friendUserId)
+            
+            clickedStates[friendUserId] = true
+        }
+    }
+    
+    
+    
+    func unsendFriendRequest(friendUserId: String)  {
+        
+        guard !friendUserId.isEmpty else { return }
+       
+        Task {
+            //loading like this becasuse this viewModel User changes depending on if its current user or a user thats searched
+            
+            let authDataResultUserId = try AuthenticationManager.shared.getAuthenticatedUser().uid
+            
+            guard authDataResultUserId != friendUserId else { return }
+            
+            
+            try? await UserManager.shared.unsendFriendRequest(userId: authDataResultUserId, friendUserId: friendUserId)
+            
+            
+            
+            clickedStates[friendUserId] = false
+        }
+    }
+    
+    
+    
     
    
     
