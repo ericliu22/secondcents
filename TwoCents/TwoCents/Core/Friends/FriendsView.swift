@@ -36,106 +36,124 @@ import SwiftUI
         //        }.onAppear { viewModel.fetchData() }
         
         NavigationStack{
-            List{
-                
-                ForEach(filteredSearch) { userTile    in
-                    let targetUserColor: Color = viewModel.getUserColor(userColor: userTile.userColor!)
+            ScrollView {
+                LazyVStack(alignment: .leading) {
                     
-                    
-                    
-                    
-                    
-                    
-                    
-                    NavigationLink {
+                    ForEach(filteredSearch) { userTile    in
+                        let targetUserColor: Color = viewModel.getUserColor(userColor: userTile.userColor!)
                         
-//                        ProfileView(showSignInView: $showSignInView, loadedColor: $loadedColor,targetUserColor: targetUserColor, showCreateProfileView: $showCreateProfileView, targetUserId: userTile.userId)
                         
-                        ProfileView(activeSheet: $activeSheet, loadedColor: $loadedColor, targetUserColor: targetUserColor, targetUserId: userTile.userId)
-                    } label: {
-                        HStack(spacing: 20){
+                        
+                        
+                        
+                        
+                        
+                        NavigationLink {
                             
+                            //                        ProfileView(showSignInView: $showSignInView, loadedColor: $loadedColor,targetUserColor: targetUserColor, showCreateProfileView: $showCreateProfileView, targetUserId: userTile.userId)
                             
-                            
-                            Group{
-                                //Circle or Profile Pic
+                            ProfileView(activeSheet: $activeSheet, loadedColor: $loadedColor, targetUserColor: targetUserColor, targetUserId: userTile.userId)
+                        } label: {
+                            HStack(spacing: 20){
                                 
                                 
-                                if let urlString = userTile.profileImageUrl,
-                                   let url = URL(string: urlString) {
+                                
+                                Group{
+                                    //Circle or Profile Pic
                                     
                                     
-                                    
-                                    //If there is URL for profile pic, show
-                                    //circle with stroke
-                                    AsyncImage(url: url) {image in
-                                        image
-                                            .resizable()
-                                            .scaledToFill()
-                                            .clipShape(Circle())
-                                            .frame(width: 48, height: 48)
+                                    if let urlString = userTile.profileImageUrl,
+                                       let url = URL(string: urlString) {
                                         
                                         
                                         
-                                    } placeholder: {
-                                        //else show loading after user uploads but sending/downloading from database
+                                        //If there is URL for profile pic, show
+                                        //circle with stroke
+                                        AsyncImage(url: url) {image in
+                                            image
+                                                .resizable()
+                                                .scaledToFill()
+                                                .clipShape(Circle())
+                                                .frame(width: 64, height: 64)
+                                            
+                                            
+                                            
+                                        } placeholder: {
+                                            //else show loading after user uploads but sending/downloading from database
+                                            
+                                            ProgressView()
+                                                .progressViewStyle(CircularProgressViewStyle(tint: Color(UIColor.systemBackground)))
+                                            //                            .scaleEffect(1, anchor: .center)
+                                                .frame(width: 64, height: 64)
+                                                .background(
+                                                    Circle()
+                                                        .fill(targetUserColor)
+                                                        .frame(width: 64, height: 64)
+                                                )
+                                        }
                                         
-                                        ProgressView()
-                                            .progressViewStyle(CircularProgressViewStyle(tint: Color(UIColor.systemBackground)))
-                                        //                            .scaleEffect(1, anchor: .center)
-                                            .frame(width: 48, height: 48)
-                                            .background(
-                                                Circle()
-                                                    .fill(targetUserColor)
-                                                    .frame(width: 48, height: 48)
-                                            )
+                                    } else {
+                                        
+                                        //if user has not uploaded profile pic, show circle
+                                        Circle()
+                                        
+                                            .strokeBorder(targetUserColor, lineWidth:0)
+                                            .background(Circle().fill(targetUserColor))
+                                            .frame(width: 64, height: 64)
+                                        
                                     }
                                     
-                                } else {
                                     
-                                    //if user has not uploaded profile pic, show circle
-                                    Circle()
                                     
-                                        .strokeBorder(targetUserColor, lineWidth:0)
-                                        .background(Circle().fill(targetUserColor))
-                                        .frame(width: 48, height: 48)
                                     
                                 }
                                 
-                                
-                                
-                                
-                            }
-                            
-//                            VStack(alignment: .leading){
+                                //                            VStack(alignment: .leading){
                                 
                                 Text(userTile.name!)
                                     .font(.headline)
+                                    .foregroundStyle(Color(UIColor.label))
                                 
-//                                
-//                                Text(
-//                                    "@\(userTile.username!)")
-//                                .font(.caption)
+                                //
+                                //                                Text(
+                                //                                    "@\(userTile.username!)")
+                                //                                .font(.caption)
                                 
-//                            }
+                                //                            }
+                                
+                            }
+                            
+                            .frame(maxWidth: .infinity,  alignment: .leading)
+                            
+                            
+                            
+                            .padding(.horizontal)
+                            .padding(.vertical, 8)
+                            
+                            .background(.thickMaterial)
+                            .background(targetUserColor)
+                            .cornerRadius(10)
+                            
+                            .padding(.horizontal)
+                            
                             
                         }
+                        
+                        
+                        
                     }
                     
                     
                     
+                    
+                    
+                    
+                    
                 }
-                
-                
-                
-                
-                
-                
-                
+                .listStyle(PlainListStyle())
+                .navigationTitle( "Friends 💛" )
+                .searchable(text: $searchTerm, placement: .navigationBarDrawer(displayMode: .always), prompt: "Search")
             }
-            .listStyle(PlainListStyle())
-            .navigationTitle( "Friends 💛" )
-            .searchable(text: $searchTerm, placement: .navigationBarDrawer(displayMode: .always), prompt: "Search")
             
          .scrollDismissesKeyboard(.interactively)
             

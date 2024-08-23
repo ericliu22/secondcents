@@ -106,17 +106,17 @@ struct MentionUserView: View {
                             
                         }
                         
-                        VStack(alignment: .leading){
+//                        VStack(alignment: .leading){
                             
                             Text(userTile.name!)
                                 .font(.headline)
                             
-                            
-                            Text(
-                                "@\(userTile.username!)")
-                            .font(.caption)
-                            
-                        }
+//                            
+//                            Text(
+//                                "@\(userTile.username!)")
+//                            .font(.caption)
+//                            
+//                        }
                         
                     }
                     

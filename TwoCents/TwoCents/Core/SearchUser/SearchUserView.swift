@@ -35,8 +35,8 @@ struct SearchUserView: View {
         //            }
         //        }.onAppear { viewModel.fetchData() }
         
-      
-            List{
+        ScrollView {
+            LazyVStack(alignment: .leading) {
                 
                 ForEach(filteredSearch) { userTile    in
                     let targetUserColor: Color = viewModel.getUserColor(userColor: userTile.userColor!)
@@ -49,9 +49,11 @@ struct SearchUserView: View {
                     
                     NavigationLink {
                         
-//                        ProfileView(showSignInView: $showSignInView, loadedColor: $loadedColor,targetUserColor: targetUserColor, showCreateProfileView: $showCreateProfileView, targetUserId: userTile.userId)
+                        //                        ProfileView(showSignInView: $showSignInView, loadedColor: $loadedColor,targetUserColor: targetUserColor, showCreateProfileView: $showCreateProfileView, targetUserId: userTile.userId)
                         ProfileView(activeSheet: $activeSheet, loadedColor: $loadedColor, targetUserColor: targetUserColor, targetUserId: userTile.userId)
                     } label: {
+                        
+                        
                         HStack(spacing: 20){
                             
                             
@@ -72,7 +74,7 @@ struct SearchUserView: View {
                                             .resizable()
                                             .scaledToFill()
                                             .clipShape(Circle())
-                                            .frame(width: 48, height: 48)
+                                            .frame(width: 64, height: 64)
                                         
                                         
                                         
@@ -82,11 +84,11 @@ struct SearchUserView: View {
                                         ProgressView()
                                             .progressViewStyle(CircularProgressViewStyle(tint: Color(UIColor.systemBackground)))
                                         //                            .scaleEffect(1, anchor: .center)
-                                            .frame(width: 48, height: 48)
+                                            .frame(width: 64, height: 64)
                                             .background(
                                                 Circle()
                                                     .fill(targetUserColor)
-                                                    .frame(width: 48, height: 48)
+                                                    .frame(width: 64, height: 64)
                                             )
                                     }
                                     
@@ -97,7 +99,7 @@ struct SearchUserView: View {
                                     
                                         .strokeBorder(targetUserColor, lineWidth:0)
                                         .background(Circle().fill(targetUserColor))
-                                        .frame(width: 48, height: 48)
+                                        .frame(width: 64, height: 64)
                                     
                                 }
                                 
@@ -106,19 +108,31 @@ struct SearchUserView: View {
                                 
                             }
                             
-//                            VStack(alignment: .leading){
-                                
-                                Text(userTile.name!)
-                                    .font(.headline)
-                                
-//                                
-//                                Text(
-//                                    "@\(userTile.username!)")
-//                                .font(.caption)
-//                                
-//                            }
+                            //                            VStack(alignment: .leading){
+                            
+                            Text(userTile.name!)
+                                .font(.headline)
+                                .foregroundStyle(Color(UIColor.label))
+                            
+                            
+                            //
+                            //                                Text(
+                            //                                    "@\(userTile.username!)")
+                            //                                .font(.caption)
+                            //
+                            //                            }
                             
                         }
+                        
+                        .frame(maxWidth: .infinity,  alignment: .leading)
+                        .padding(.horizontal)
+                        .padding(.vertical, 8)
+                        
+                        .background(.thickMaterial)
+                        .background(targetUserColor)
+                        .cornerRadius(10)
+                        .padding(.horizontal)
+                        
                     }
                     
                     
@@ -132,9 +146,10 @@ struct SearchUserView: View {
                 
                 
             }
-            .listStyle(PlainListStyle())
+//            .listStyle(PlainListStyle())
             .navigationTitle( "Search 👀")
             .searchable(text: $searchTerm, prompt: "Search")
+        }
         
      .scrollDismissesKeyboard(.interactively)
             

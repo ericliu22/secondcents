@@ -299,6 +299,64 @@ func reactionNotification(spaceId: String, userUID: String, message: String) {
 }
 
 func friendRequestNotification(userUID: String, friendUID: String) async {
+    // Define the list of friend request messages
+    let friendRequestMessages = [
+        "BEGS to be your friend",
+        "wants to be your friend SO BADLY",
+        "DESPERATELY wants to be your friend",
+        "is feeling lonely... Pls be their friend?",
+        "craves your friendship",
+        "longs for your company",
+        "eagerly awaits your friendship",
+        "yearns for your companionship",
+        "feels a strong need for your friendship",
+        "desperately wishes to be close to you",
+        "wants to be friends more than anything"
+    ]
+    
+    // Helper function to get a random message from the list
+    func getRandomFriendRequestMessage() -> String {
+        return friendRequestMessages.randomElement() ?? "wants to be your friend!"
+    }
+
+    // Fetch the user data
+    guard let user = try? await UserManager.shared.getUser(userId: userUID) else {
+        print("friendRequestNotification: Failed to obtain user")
+        return
+    }
+    
+    let token: String = await getToken(uid: friendUID)
+    
+    guard let name: String = user.name else {
+        print("friendRequestNotification: Failed to obtain name")
+        return
+    }
+    
+    let randomMessage = getRandomFriendRequestMessage()
+    
+    let notificationBody = "\(name) \(randomMessage)"
+    
+    if let profileImage = user.profileImageUrl {
+        print("IMAGE: \(profileImage)")
+        let notification = Notification(title: "\(name)", body: notificationBody, image: profileImage)
+        sendSingleNotification(to: token, notification: notification) { completion in
+            if (completion) {
+                print("Succeeded sending")
+            }
+        }
+    } else {
+        let notification = Notification(title: "\(name)", body: notificationBody)
+        sendSingleNotification(to: token, notification: notification) { completion in
+            if (completion) {
+                print("Succeeded sending")
+            }
+        }
+    }
+}
+
+
+
+func acceptFriendRequestNotification(userUID: String, friendUID: String) async {
     guard let user = try? await UserManager.shared.getUser(userId: userUID) else {
         print("friendRequestNotification: Failed to obtain user")
         return
@@ -312,14 +370,14 @@ func friendRequestNotification(userUID: String, friendUID: String) async {
     
     if let profileImage = user.profileImageUrl {
         print("IMAGE: \(profileImage)")
-        let notification = Notification(title: "\(name) sent you a friend request", body: "\(name) wants to be your friend!", image: profileImage)
+        let notification = Notification(title: "\(name)", body: "\(name) accepted your desperate plea to be friends", image: profileImage)
         sendSingleNotification(to: token, notification: notification) { completion in
             if (completion) {
                 print("Succeeded sending")
             }
         }
     } else {
-        let notification = Notification(title: "\(name) sent you a friend request", body: "\(name) wants to be your friend!")
+        let notification = Notification(title: "\(name)", body: "\(name) accepted your desperate plea to be friends")
         sendSingleNotification(to: token, notification: notification) { completion in
             if (completion) {
                 print("Succeeded sending")
@@ -327,6 +385,9 @@ func friendRequestNotification(userUID: String, friendUID: String) async {
         }
     }
 }
+
+
+
 
 func todoNotification(spaceId: String, userUID: String, message: String) {
     Task {

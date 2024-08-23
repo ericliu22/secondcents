@@ -51,6 +51,8 @@ final class FriendRequestsViewModel: ObservableObject {
             try? await UserManager.shared.acceptFriendRequest(userId: authDataResultUserId, friendUserId: friendUserId)
             
             
+            await acceptFriendRequestNotification(userUID: authDataResultUserId, friendUID: friendUserId)
+            
         }
     }
     
