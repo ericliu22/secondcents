@@ -13,7 +13,7 @@ struct FrontPageView: View {
    
     
     @Binding var loadedColor: Color
-    @Binding var activeSheet: sheetTypes?
+    @Binding var activeSheet: PopupSheet?
     @State var selectedTab: Int = 0
     @Environment(AppModel.self) var appModel
     
@@ -34,6 +34,7 @@ struct FrontPageView: View {
 //                    Text("Event widget")
 //                }
             
+            //@TODO: Remove this when done
             EventWidget(widget: CanvasWidget(width: .infinity, height:  .infinity, x:0, y: 0, borderColor: .red, userId: "jisookim", media: .event, widgetName: "Text", widgetDescription: "A bar is a bar", textString: "Fruits can't even see so how my Apple Watch"))
                 .tabItem {
                     Image(systemName: "magnifyingglass")
@@ -41,31 +42,11 @@ struct FrontPageView: View {
                 }
                 .tag(1)
 
-            CalendarWidget(widget: CanvasWidget(id: UUID(uuidString: "E2C85940-3266-44F7-B6D2-4D21F507B25C")!, width: .infinity, height:  .infinity, borderColor: .red, userId: "jisookim", media: .text, widgetName: "Text", widgetDescription: "A bar is a bar", textString: "Fruits can't even see so how my Apple Watch"), spaceId: "2FF491A4-CEC6-419F-A199-204810864FCF", activeSheet: .constant(.calendar), activeWidget: .constant(nil)
-                            )
-              
-                .tabItem {
-                    Image(systemName: "magnifyingglass")
-                    Text("Calendar")
-                }
-                .tag(2)
             
-            
-//            CustomCalendarView(spaceId: "2FF491A4-CEC6-419F-A199-204810864FCF"
-//                         , widget: CanvasWidget(id: UUID(uuidString: "E2C85940-3266-44F7-B6D2-4D21F507B25C")!, width: .infinity, height:  .infinity, borderColor: .red, userId: "jisookim", media: .text, widgetName: "Text", widgetDescription: "A bar is a bar", textString: "Fruits can't even see so how my Apple Watch"))
-//              
-//                .tabItem {
-//                    Image(systemName: "magnifyingglass")
-//                    Text("CustomCalendar")
-//                }
-            
+            //@TODO: Remove this when done
             NavigationStack{
-                
-                CalendarWidgetSheetView(spaceId: "2FF491A4-CEC6-419F-A199-204810864FCF"
-                             , widgetId: "E2C85940-3266-44F7-B6D2-4D21F507B25C")
-          
+                CalendarWidgetSheetView(widgetId: "E2C85940-3266-44F7-B6D2-4D21F507B25C", spaceId: "2FF491A4-CEC6-419F-A199-204810864FCF")
             }
-            
             .tabItem {
                 Image(systemName: "magnifyingglass")
                 Text("Calendar")
@@ -73,13 +54,6 @@ struct FrontPageView: View {
             .tag(3)
             
             
-            
-//            TodoWidget(widget: CanvasWidget(width: .infinity, height:  .infinity, borderColor: .red, userId: "jisookim", media: .todo, widgetName: "Text", widgetDescription: "A bar is a bar", textString: "Fruits can't even see so how my Apple Watch"))
-//                .tabItem {
-//                    Image(systemName: "magnifyingglass")
-//                    Text("Event widget")
-//                }
-//            
             
             NavigationStack{
                 SearchUserView(activeSheet: $activeSheet, loadedColor: $loadedColor, targetUserId: "")
@@ -106,24 +80,24 @@ struct FrontPageView: View {
         })
         .onChange(of: appModel.shouldNavigateToSpace, {
             DispatchQueue.global().async {
-                appModel.mutex.lock()
+                appModel.navigationMutex.lock()
                 print("FRONTPAGEVIEW ACQUIRED MUTEX")
                 if appModel.shouldNavigateToSpace {
                     while (appModel.inSpace && appModel.navigationSpaceId != appModel.currentSpaceId) {
                             print("FRONTPAGEVIEW WAITING")
-                            appModel.mutex.wait()
+                            appModel.navigationMutex.wait()
                     }
                     print("currentSpaceId \(appModel.currentSpaceId ?? "nil")")
                     if appModel.navigationSpaceId == appModel.currentSpaceId {
-                        appModel.mutex.unlock()
+                        appModel.navigationMutex.unlock()
                         return
                     }
                     selectedTab = 0
                     appModel.correctTab = true
-                    appModel.mutex.broadcast()
+                    appModel.navigationMutex.broadcast()
                     print("FRONTPAGEVIEW NOT WAITING")
                 }
-                appModel.mutex.unlock()
+                appModel.navigationMutex.unlock()
             }
         })
     }

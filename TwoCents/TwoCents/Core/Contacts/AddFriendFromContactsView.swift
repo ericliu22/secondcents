@@ -6,7 +6,7 @@ struct AddFriendFromContactsView: View {
     @StateObject private var viewModel = AddFriendFromContactsViewModel()
     
     @State private var searchTerm = ""
-    @Binding var activeSheet: sheetTypes?
+    @Binding var activeSheet: PopupSheet?
     var filteredSearch: [CNContact] {
         guard !searchTerm.isEmpty else {
             return viewModel.contacts

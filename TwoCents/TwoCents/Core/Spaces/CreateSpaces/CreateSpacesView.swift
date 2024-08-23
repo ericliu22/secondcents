@@ -23,7 +23,7 @@ struct CreateSpacesView: View {
     
     
     @Binding var loadedColor: Color
-    @Binding var activeSheet: sheetTypes?
+    @Binding var activeSheet: PopupSheet?
     
     
     private let noMembersMessage: [String] = [

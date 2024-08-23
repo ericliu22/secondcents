@@ -10,19 +10,25 @@ import FirebaseFirestore
 import SwiftUI
 
 
-
-
-@MainActor
-final class SpacesViewModel: ObservableObject {
+@Observable
+final class SpacesViewModel {
     
-    @Published var user:  DBUser? = nil
-    @Published var allSpaces: [DBSpace] = []
+    var user:  DBUser? = nil
+    var allSpaces: [DBSpace] = []
+    var finishedLoading: Bool = false
+    var notificationCount: [String: Int] = [:]
     
-    
- 
-    @Published var finishedLoading: Bool = false
-    
-    
+    init() {
+        Task {
+            try? await loadCurrentUser()
+            guard let user = user else {
+                print("SpacesViewModel: Failed to get current user")
+                return
+            }
+            try? await getAllSpaces(userId: user.userId)
+            //await getNotifcationCount()
+        }
+    }
     
     func loadCurrentUser() async throws {
         let authDataResult = try AuthenticationManager.shared.getAuthenticatedUser()
@@ -44,14 +50,14 @@ final class SpacesViewModel: ObservableObject {
         
     }
     
-    
-    
-    
-    
-    
-    
+    func getNotifcationCount() async {
+        for space in allSpaces {
+            guard let unreads = try? await db.collection("spaces").document(space.id).getDocument() as? Int else {
+                print("Unable to retrive notification count")
+                continue
+            }
+            notificationCount[space.id] = unreads
+        }
+    }
     
 }
-
-
-

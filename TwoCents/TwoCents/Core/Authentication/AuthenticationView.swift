@@ -10,7 +10,7 @@ import SwiftUI
 struct AuthenticationView: View {
     
 //    @Binding var showSignInView: Bool
-    @Binding var activeSheet: sheetTypes?
+    @Binding var activeSheet: PopupSheet?
     @State private var animateGradient: Bool = false
     
 //    @Binding var showCreateProfileView: Bool

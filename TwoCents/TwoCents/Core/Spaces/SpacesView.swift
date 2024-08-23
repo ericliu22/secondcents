@@ -8,13 +8,10 @@
 import SwiftUI
 
 struct SpacesView: View {
-    @Binding var activeSheet: sheetTypes?
-//    @Binding var showSignInView: Bool
+    @Binding var activeSheet: PopupSheet?
     @Binding var loadedColor: Color
-//    @Binding var showCreateProfileView: Bool
 
     @State private var searchTerm = ""
-    @StateObject var viewModel = SpacesViewModel()
     
     
     @State private var showDetail = false
@@ -23,6 +20,7 @@ struct SpacesView: View {
     @State private var presentedPath: [DBSpace] = []
     @State private var newSpaceUUID = UUID().uuidString
     
+    @Bindable var viewModel = SpacesViewModel()
     @Environment(AppModel.self) var appModel
     
     
@@ -254,12 +252,6 @@ struct SpacesView: View {
         }
         .task {
      
-            try? await viewModel.loadCurrentUser()
-            if let user = viewModel.user {
-                
-                try? await viewModel.getAllSpaces(userId: user.userId)
-                
-            }
             //use self for clarity
             if appModel.shouldNavigateToSpace {
                 guard let spaceId = appModel.navigationSpaceId else { return }
@@ -276,49 +268,49 @@ struct SpacesView: View {
             }
         }
         .modifier(modelNavigation(presentedPath: $presentedPath))
-        .environmentObject(viewModel)
+        .environment(viewModel)
 
     }
     
     struct modelNavigation: ViewModifier {
         @Environment(AppModel.self) var appModel
-        @EnvironmentObject var viewModel: SpacesViewModel
+        @Environment(SpacesViewModel.self) var viewModel
         @Binding var presentedPath: [DBSpace]
         
         func body(content: Content) -> some View {
             content
                 .onChange(of: appModel.shouldNavigateToSpace, {
                     DispatchQueue.global().async {
-                        appModel.mutex.lock()
+                        appModel.navigationMutex.lock()
                         print("SPACESVIEW ACQUIRED MUTEX")
                         if appModel.shouldNavigateToSpace{
                             print("appModel.inSpace \(appModel.inSpace)")
                             print("appModel.currentSpaceId \(appModel.currentSpaceId ?? "nil")")
                             while (appModel.inSpace && appModel.navigationSpaceId != appModel.currentSpaceId) {
                                     print("SPACESVIEW WAITING FOR SPACE")
-                                    appModel.mutex.wait() // Block the thread until the condition is true
+                                    appModel.navigationMutex.wait() // Block the thread until the condition is true
                             }
-                            appModel.mutex.broadcast()
+                            appModel.navigationMutex.broadcast()
                             var succeded: Bool = false
                             while (!appModel.correctTab) {
                                 print("SPACESVIEW WAITING FOR TAB")
-                                succeded = appModel.mutex.wait(until: .now+100)
+                                succeded = appModel.navigationMutex.wait(until: .now+100)
                             }
                             if !succeded {
                                 print("TIMEDOUT")
-                                appModel.mutex.unlock()
+                                appModel.navigationMutex.unlock()
                                 return
                             }
                             print("SPACESVIEW DONE WAITING")
                             if appModel.navigationSpaceId == appModel.currentSpaceId {
-                                appModel.mutex.unlock()
+                                appModel.navigationMutex.unlock()
                                 return
                             }
                             //Just wait lmao
                             DispatchQueue.main.asyncAfter(deadline: .now()+0.5) {
                                 guard let spaceId = appModel.navigationSpaceId else {
                                     print("not spaceId")
-                                    appModel.mutex.unlock()
+                                    appModel.navigationMutex.unlock()
                                     return
                                 }
                                 appModel.shouldNavigateToSpace = false
@@ -339,7 +331,7 @@ struct SpacesView: View {
                                 }
                             }
                         }
-                        appModel.mutex.unlock()
+                        appModel.navigationMutex.unlock()
                     }
     
                 })

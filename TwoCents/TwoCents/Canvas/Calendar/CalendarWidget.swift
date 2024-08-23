@@ -50,10 +50,6 @@ struct CalendarWidget: View {
     @State private var optimalDate = OptimalDate(from: "", maxTimeFrequency: 0)
     @State private var eventName: String = "Eventful Event"
     
-    @Binding var activeSheet: sheetTypesCanvasPage?
-    @Binding var activeWidget: CanvasWidget?
-    
-    
     var body: some View {
             VStack {
                 if let date = optimalDate.date {
@@ -65,7 +61,7 @@ struct CalendarWidget: View {
                         EventDateView(optimalDate: $optimalDate, closestTime: $closestTime, eventName: eventName)
                     }
                 } else {
-                    EmptyEventView(eventName: eventName, activeSheet: $activeSheet, activeWidget: $activeWidget, widget: widget)
+                    EmptyEventView(eventName: eventName, widget: widget)
                 }
             }
             .background(Color(UIColor.systemBackground))
@@ -244,10 +240,10 @@ struct CalendarWidget: View {
 
 // View for when there is no optimal date
 struct EmptyEventView: View {
+    @Environment(CanvasPageViewModel.self) var canvasViewModel
+    
     @State private var bounce: Bool = false
     var eventName: String
-    @Binding var activeSheet: sheetTypesCanvasPage?
-    @Binding var activeWidget: CanvasWidget?
     let widget: CanvasWidget
     var body: some View {
         VStack(alignment: .center, spacing: 0) {
@@ -284,8 +280,8 @@ struct EmptyEventView: View {
             Button(action: {
                 // Add button action here
                 
-                activeSheet = .calendar
-                activeWidget = widget
+                canvasViewModel.activeSheet = .calendar
+                canvasViewModel.activeWidget = widget
             }, label: {
                 Text("Party Together!")
                     .font(.caption2)

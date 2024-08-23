@@ -58,7 +58,7 @@ final class AnalyticsManager {
         sendPlausible(name: "Crash", props: props)
     }
     
-    func pageView(url: String, props: [String: Any]) {
+    func pageView(url: String, props: [String: Any]? = nil) {
         sendPlausible(name: "pageview", url: url, props: props)
     }
     

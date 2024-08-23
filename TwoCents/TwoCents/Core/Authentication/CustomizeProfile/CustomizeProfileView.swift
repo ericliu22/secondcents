@@ -9,7 +9,7 @@ import SwiftUI
 import PhotosUI
 
 struct CustomizeProfileView: View {
-    @Binding var activeSheet: sheetTypes?
+    @Binding var activeSheet: PopupSheet?
     @State private var url: URL? = nil
     
     

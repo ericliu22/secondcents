@@ -47,11 +47,8 @@ struct ZoomableScrollView<Content: View>: UIViewRepresentable {
         uiView.setNeedsLayout()
         uiView.layoutIfNeeded()
         updateContentSize(for: uiView)
-        //@TODO: There's a weird bug where this work on the simulator but not on the phone
-        //Perhaps related to loading times
-        if !(appModel.shouldNavigateToSpace) {
-            centerContent(uiView)
-        }
+        //@TODO: Experiment with the functionality of this
+        centerContent(uiView)
     }
     
     func centerContent(_ uiView: UIScrollView) {

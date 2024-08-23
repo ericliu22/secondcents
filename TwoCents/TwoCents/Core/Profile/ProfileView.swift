@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ProfileView: View {
-    @Binding var activeSheet: sheetTypes?
+    @Binding var activeSheet: PopupSheet?
     @StateObject private var viewModel = ProfileViewModel()
     //    @Binding var showSignInView: Bool
     @Binding var loadedColor: Color

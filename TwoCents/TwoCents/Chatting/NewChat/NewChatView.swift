@@ -30,13 +30,8 @@ struct NewChatView: View {
     @Environment(\.dismiss) var dismissScreen
     
     
-    @Binding var activeSheet: sheetTypesCanvasPage?
-    @Binding var activeWidget: CanvasWidget?
-
     var body: some View {
     
-           
-            
             ScrollViewReader { proxy in
                 
                 List {
@@ -48,7 +43,7 @@ struct NewChatView: View {
                         .listRowBackground(Color.clear)
                     
                     if let widget = replyWidget {
-                        MediaView(widget: widget, spaceId: spaceId, activeSheet: $activeSheet, activeWidget: $activeWidget)
+                        MediaView(widget: widget, spaceId: spaceId)
                             .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
                             .cornerRadius(CORNER_RADIUS)
                             .frame(maxWidth: .infinity, alignment: .trailing)
@@ -70,7 +65,7 @@ struct NewChatView: View {
                         (threadId.isEmpty || message.threadId == threadId) && message.ts > threadIdChangedTime
                     }) { message in
                         
-                        ChatBubbleViewBuilder(spaceId: spaceId, message: message, currentUserId: viewModel.user?.id ?? "", threadId: $threadId, activeSheet: $activeSheet, activeWidget: $activeWidget)
+                        ChatBubbleViewBuilder(spaceId: spaceId, message: message, currentUserId: viewModel.user?.id ?? "", threadId: $threadId)
                  
                             .id(message.id)
                             .rotationEffect(.degrees(180))
@@ -84,7 +79,7 @@ struct NewChatView: View {
                     
                     // Display old messages
                     ForEach(viewModel.messages) { message in
-                        ChatBubbleViewBuilder(spaceId: spaceId, message: message, currentUserId: viewModel.user?.id ?? "", threadId: $threadId, activeSheet: $activeSheet,activeWidget: $activeWidget)
+                        ChatBubbleViewBuilder(spaceId: spaceId, message: message, currentUserId: viewModel.user?.id ?? "", threadId: $threadId)
                             .id(message.id)
                             .rotationEffect(.degrees(180))
                             .listRowSeparator(.hidden)

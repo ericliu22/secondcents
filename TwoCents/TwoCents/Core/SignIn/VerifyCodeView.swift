@@ -14,7 +14,7 @@ struct VerifyCodeView: View {
 //    @Binding var showSignInView: Bool
 //    @Binding var showCreateProfileView: Bool
 // 
-    @Binding var activeSheet: sheetTypes?
+    @Binding var activeSheet: PopupSheet?
       @StateObject private var viewModel = VerifyCodeViewModel()
     var body: some View {
         ScrollView{

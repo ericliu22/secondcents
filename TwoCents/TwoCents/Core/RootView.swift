@@ -9,7 +9,7 @@ import SwiftUI
 import Firebase
 
 
-enum sheetTypes: Identifiable  {
+enum PopupSheet: Identifiable  {
     
     
     
@@ -21,14 +21,6 @@ enum sheetTypes: Identifiable  {
     
 }
 
-enum sheetTypesCanvasPage: Identifiable  {
-    case newWidgetView, chat, poll, newTextView, todo, image, video, calendar
-    
-    
-    var id: Self {
-        return self
-    }
-}
 
 
 
@@ -45,7 +37,7 @@ struct RootView: View {
     @State private var userColor: String = ""
     @State private var loadedColor: Color = .gray
     
-    @State private var activeSheet: sheetTypes?
+    @State private var activeSheet: PopupSheet?
     
     @State private var userPhoneNumber: String?
     

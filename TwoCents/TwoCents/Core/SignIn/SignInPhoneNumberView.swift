@@ -10,7 +10,7 @@ import SwiftUI
 
 struct SignInPhoneNumberView: View {
     @Environment(\.presentationMode) var presentation
-    @Binding var activeSheet: sheetTypes?
+    @Binding var activeSheet: PopupSheet?
 //    @Binding var showSignInView: Bool
 //    @Binding var showCreateProfileView: Bool
     @State private var isActive = false

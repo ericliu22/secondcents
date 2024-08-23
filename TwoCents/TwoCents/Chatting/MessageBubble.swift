@@ -24,7 +24,7 @@ struct universalMessageBubble: View{
     
     @State private var loaded: Bool = false
     
-    @Binding var activeSheet: sheetTypesCanvasPage?
+    @Binding var activeSheet: CanvasSheet?
     
     @Binding var activeWidget: CanvasWidget?
     var body: some View{
@@ -72,7 +72,7 @@ struct universalMessageBubble: View{
               
                 if let widget =  viewModel.WidgetMessage {
                     
-                    MediaView(widget: widget, spaceId: spaceId, activeSheet: $activeSheet, activeWidget: $activeWidget)
+                    MediaView(widget: widget, spaceId: spaceId)
                         .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
                         .cornerRadius(CORNER_RADIUS)
                     

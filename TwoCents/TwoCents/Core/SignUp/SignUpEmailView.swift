@@ -10,7 +10,7 @@ import SwiftUI
 
 struct SignUpEmailView: View {
     @Environment(\.presentationMode) var presentation
-    @Binding var activeSheet: sheetTypes?
+    @Binding var activeSheet: PopupSheet?
 //    @Binding var showSignInView: Bool
     
     @StateObject private var viewModel = SignUpEmailViewModel()

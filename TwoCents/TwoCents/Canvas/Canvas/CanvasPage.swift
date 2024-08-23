@@ -34,10 +34,8 @@ struct CanvasPage: View {
     //@State var isShowingPopup = false
     
     @State private var fullName: String = ""
-    @State var canvas: PKCanvasView = PKCanvasView()
     @State var toolPickerActive: Bool = false
     @State private var currentMode: canvasState = .normal
-    @State private var canvasWidgets: [CanvasWidget] = []
     @State private var draggingItem: CanvasWidget?
     @State private var inSettingsView: Bool = false
     @State private var photoLinkedToProfile: Bool = false
@@ -45,21 +43,17 @@ struct CanvasPage: View {
     @State private var toolkit: PKToolPicker = PKToolPicker()
     @State private var pendingWrites: Bool = false
     @State private var timer: Timer?
-
-    @State private var activeSheet: sheetTypesCanvasPage?
-    @State private var activeWidget: CanvasWidget?
+    
     @State private var replyWidget: CanvasWidget?
     @State private var selectedDetent: PresentationDetent = .height(50)
     
-    
-    @StateObject private var viewModel = CanvasPageViewModel()
+    @Bindable var viewModel = CanvasPageViewModel()
     @Environment(AppModel.self) var appModel
     
     private var spaceId: String
     
-    
-    
     //helps reset view
+    //Eric: Idk what this is
     @State private var refreshId = UUID()
     
     
@@ -74,9 +68,6 @@ struct CanvasPage: View {
     }
     
     
-  
-    
-    
     init(spaceId: String) {
         self.spaceId = spaceId
         
@@ -86,124 +77,77 @@ struct CanvasPage: View {
     
     
     
-    func pullDocuments() {
-        db.collection("spaces").document(spaceId).addSnapshotListener { documentSnapshot, error in
-            guard let document = documentSnapshot else {
-                print("Error fetching document: \(error!)")
-                return
-            }
-            
-            guard document.exists else {
-                print("Document doesn't exist")
-                return
-            }
-            
-            guard let data = document.data() else {
-                print("Empty document")
-                return
-            }
-            
-            if let drawingAccess = data["drawing"] as? Data {
-                let databaseDrawing = try! PKDrawingReference(data: drawingAccess)
-                let newDrawing = databaseDrawing.appending(self.canvas.drawing)
-                self.canvas.drawing = newDrawing
-            } else {
-                print("No database drawing")
-            }
-        }
-        
-        db.collection("spaces").document(spaceId).collection("widgets").addSnapshotListener { querySnapshot, error in
-            guard let query = querySnapshot else {
-                print("Error fetching query: \(error!)")
-                return
-            }
-            self.canvasWidgets = []
-            for document in query.documents {
-                let newWidget = try! document.data(as: CanvasWidget.self)
-                self.canvasWidgets.append(newWidget)
-            }
-        }
-    }
     
-    
-    //For some reason this has to be async or else shit doesn't work
-    func onChange() async {
-        print("ran on change")
-        pullDocuments()
-    }
-    
-
     
     func Background() -> some View {
-                GeometryReader { geometry in
-                    Path { path in
-                        let spacing: CGFloat = TILE_SPACING // Adjust this value for the spacing between dots
-                        let width = geometry.size.width
-                        let height = geometry.size.height
-                        
-                        for x in stride(from: 4, through: width, by: spacing) {
-                            for y in stride(from: 4, through: height, by: spacing) {
-                                path.addEllipse(in: CGRect(x: x, y: y, width: 2, height: 2))
-                            }
-                        }
+        GeometryReader { geometry in
+            Path { path in
+                let spacing: CGFloat = TILE_SPACING // Adjust this value for the spacing between dots
+                let width = geometry.size.width
+                let height = geometry.size.height
+                
+                for x in stride(from: 4, through: width, by: spacing) {
+                    for y in stride(from: 4, through: height, by: spacing) {
+                        path.addEllipse(in: CGRect(x: x, y: y, width: 2, height: 2))
                     }
-                    .fill(Color(UIColor.secondaryLabel)) // Dot color
-                    .allowsHitTesting(toolPickerActive)
                 }
-                .drawingGroup()
-              
-                .clipped() // Ensure the content does not overflow
-                //                    .animation(.spring()) // Optional: Add some animation
-                .frame(width: FRAME_SIZE, height: FRAME_SIZE)
-
+            }
+            .fill(Color(UIColor.secondaryLabel)) // Dot color
+            .allowsHitTesting(toolPickerActive)
+        }
+        .drawingGroup()
+        
+        .clipped() // Ensure the content does not overflow
+        //                    .animation(.spring()) // Optional: Add some animation
+        .frame(width: FRAME_SIZE, height: FRAME_SIZE)
+        
     }
     
-
     
-
+    
+    
     func canvasView() -> some View {
-            ZStack {
-                
-//                                     
-                Color("bgColor")
+        ZStack {
+            
+            //
+            Color("bgColor")
                 .clipped()
                 .frame(width: FRAME_SIZE, height: FRAME_SIZE)
-
-                Background()
-                GridView()
+            
+            Background()
+            GridView()
+        }
+        .dropDestination(for: CanvasWidget.self) { receivedWidgets, location in
+            //This is necessary keep these lines
+            guard let draggingItem = draggingItem else {
+                print("Failed to intialize dragging item")
+                return false
             }
-            .dropDestination(for: CanvasWidget.self) { receivedWidgets, location in
-                //This is necessary keep these lines
-                
-                if draggingItem != nil {
-                 
-                        let x = roundToTile(number: location.x)
-                        let y = roundToTile(number: location.y)
-                        
-                        SpaceManager.shared.moveWidget(spaceId: spaceId, widgetId: draggingItem!.id.uuidString, x: x, y: y)
-             
-                        draggingItem = nil
-                        return true
-                   
-                } else {
-                    return false
-                }
-            }
-   
-                .overlay(
-                    DrawingCanvas(canvas: $canvas, toolPickerActive: $toolPickerActive, toolPicker: $toolkit, spaceId: spaceId)
-                        .allowsHitTesting(toolPickerActive)
-                        .clipped() // Ensure the content does not overflow
-                        .animation(.spring()) // Optional: Add some animation
-                        .frame(width: FRAME_SIZE, height: FRAME_SIZE)
-                    
-                )
-      
+            
+            
+            let x = roundToTile(number: location.x)
+            let y = roundToTile(number: location.y)
+            
+            
+            SpaceManager.shared.moveWidget(spaceId: spaceId, widgetId: draggingItem.id.uuidString, x: x, y: y)
+            
+            self.draggingItem = nil
+            return true
+        }
+        
+        .overlay(
+            DrawingCanvas(canvas: $viewModel.canvas, toolPickerActive: $toolPickerActive, toolPicker: $toolkit, spaceId: spaceId)
+                .allowsHitTesting(toolPickerActive)
+                .clipped() // Ensure the content does not overflow
+                .animation(.spring()) // Optional: Add some animation
+                .frame(width: FRAME_SIZE, height: FRAME_SIZE)
+        )
+        
     }
     
     private func removeExpiredStrokes() {
         var changed: Bool = false
-        let strokes = canvas.drawing.strokes.filter { stroke in
+        let strokes = viewModel.canvas.drawing.strokes.filter { stroke in
             if (stroke.isExpired()) {
                 changed = true
             }
@@ -212,9 +156,8 @@ struct CanvasPage: View {
         }
         if changed {
             
-            canvas.drawing = PKDrawing(strokes: strokes)
-            canvas.upload(spaceId: spaceId)
-            
+            viewModel.canvas.drawing = PKDrawing(strokes: strokes)
+            viewModel.canvas.upload(spaceId: spaceId)
             
         }
     }
@@ -252,7 +195,7 @@ struct CanvasPage: View {
         //add widget
         ToolbarItem(placement: .topBarTrailing) {
             Button(action: {
-                activeSheet = .newWidgetView
+                viewModel.activeSheet = .newWidgetView
                 
             }, label: {
                 Image(systemName: "plus.circle")
@@ -266,11 +209,11 @@ struct CanvasPage: View {
                 
                 SpaceSettingsView(spaceId: spaceId)
                     .onAppear {
-                        activeSheet = nil
+                        viewModel.activeSheet = nil
                         inSettingsView = true
                     }
                     .onDisappear {
-                        activeSheet = .chat
+                        viewModel.activeSheet = .chat
                         inSettingsView = false
                     }
             } label: {
@@ -281,123 +224,103 @@ struct CanvasPage: View {
     }
     
     
-     func GridView() -> some View {
-            ForEach(canvasWidgets, id:\.id) { widget in
-                //main widget
-                MediaView(widget: widget, spaceId: spaceId, activeSheet: $activeSheet, activeWidget: $activeWidget)
-                    .contextMenu(ContextMenu(menuItems: {
-                        
-                        EmojiReactionContextView(spaceId: spaceId, widget: widget, refreshId: $refreshId)
-                        
-                        
-                        
-                        
-                        widgetButton(widget: widget)
-                         
-                        
-                        // Reply button
-                        Button(action: {
-                            
-                        
-                            activeSheet = .chat
-                            selectedDetent = .large
-                            replyWidget = widget
-                        }, label: {
-                            
-                            Label("Reply", systemImage: "arrowshape.turn.up.left")
-//                            Image(systemName: "arrowshape.turn.up.left")
-                              
-                        })
-                        
-                        
-                        
-                        // Delete button
-                  
-                        
-                        Button(role: .destructive) {
-                            if let index = canvasWidgets.firstIndex(of: widget)  {
-                                canvasWidgets.remove(at: index)
-                                SpaceManager.shared.removeWidget(spaceId: spaceId, widget: widget)
-                                
-                                //delete specific widget items (in their own folders)
-                                
-                                switch widget.media {
-                                    
-                                case .poll:
-                                    deletePoll(spaceId: spaceId, pollId: widget.id.uuidString)
-                                case .todo:
-                                    deleteTodoList(spaceId: spaceId, todoId: widget.id.uuidString)
-                                
-                                case .calendar:
-                                    deleteCalendar(spaceId: spaceId, calendarId: widget.id.uuidString)
-                                default:
-                                    break
-                                    
-                                }
-                           
-                            }
-                        
-                            activeSheet = .chat
-                        } label: {
-                            
-                            Label("Delete", systemImage: "trash")
-                          
-                        }
-
-                        
-                        
-                        
-
-                    }))
-
-                
-                
-                    .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
-                    .cornerRadius(CORNER_RADIUS)
-                    .frame(
-                        width: TILE_SIZE,
-                        height: TILE_SIZE
-                    )
-                    .position(x: widget.x ??  FRAME_SIZE/2, y: widget.y ?? FRAME_SIZE/2)
+    func GridView() -> some View {
+        ForEach(viewModel.canvasWidgets, id:\.id) { widget in
+            //main widget
+            MediaView(widget: widget, spaceId: spaceId)
+                .contextMenu(ContextMenu(menuItems: {
                     
-                   
-                    .overlay() {
-                        viewModel.selectedWidget == nil/* && draggingItem == nil */?
-                        EmojiCountOverlayView(spaceId: spaceId, widget: widget)
-                            .offset(y: TILE_SIZE/2)
-                            .position(x: widget.x ??  FRAME_SIZE/2, y: widget.y ?? FRAME_SIZE/2)
-                            .id(refreshId)
-
-                        : nil
-                    }
-                
-                    .animation(.spring(), value: widget.x) // Add animation for x position
-                    .animation(.spring(), value: widget.y) // Add animation for y position
-                              
-                    .draggable(widget) {
-                        MediaView(widget: widget, spaceId: spaceId, activeSheet: $activeSheet, activeWidget: $activeWidget)
-                            .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
-                            .frame(
-                                width: TILE_SIZE,
-                                height: TILE_SIZE
-                            )
-                            .onAppear{
-                                draggingItem = widget
+                    EmojiReactionContextView(spaceId: spaceId, widget: widget, refreshId: $refreshId)
+                    widgetButton(widget: widget)
+                    
+                    // Reply button
+                    Button(action: {
+                        viewModel.activeSheet = .chat
+                        selectedDetent = .large
+                        replyWidget = widget
+                    }, label: {
+                        Label("Reply", systemImage: "arrowshape.turn.up.left")
+                        //                            Image(systemName: "arrowshape.turn.up.left")
+                    })
+                    // Delete button
+                    
+                    
+                    Button(role: .destructive) {
+                        if let index = viewModel.canvasWidgets.firstIndex(of: widget)  {
+                            viewModel.canvasWidgets.remove(at: index)
+                            SpaceManager.shared.removeWidget(spaceId: spaceId, widget: widget)
+                            
+                            //delete specific widget items (in their own folders)
+                            
+                            switch widget.media {
+                                
+                            case .poll:
+                                deletePoll(spaceId: spaceId, pollId: widget.id.uuidString)
+                            case .todo:
+                                deleteTodoList(spaceId: spaceId, todoId: widget.id.uuidString)
+                                
+                            case .calendar:
+                                deleteCalendar(spaceId: spaceId, calendarId: widget.id.uuidString)
+                            default:
+                                break
+                                
                             }
+                            
+                        }
+                        
+                        viewModel.activeSheet = .chat
+                    } label: {
+                        
+                        Label("Delete", systemImage: "trash")
+                        
                     }
-                
-            }
+                }))
+            
+            
+            
+                .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
+                .cornerRadius(CORNER_RADIUS)
+                .frame(
+                    width: TILE_SIZE,
+                    height: TILE_SIZE
+                )
+                .position(x: widget.x ??  FRAME_SIZE/2, y: widget.y ?? FRAME_SIZE/2)
+            
+            
+                .overlay() {
+                    viewModel.selectedWidget == nil/* && draggingItem == nil */?
+                    EmojiCountOverlayView(spaceId: spaceId, widget: widget)
+                        .offset(y: TILE_SIZE/2)
+                        .position(x: widget.x ??  FRAME_SIZE/2, y: widget.y ?? FRAME_SIZE/2)
+                        .id(refreshId)
+                    
+                    : nil
+                }
+            
+                .animation(.spring(), value: widget.x) // Add animation for x position
+                .animation(.spring(), value: widget.y) // Add animation for y position
+            
+                .draggable(widget) {
+                    MediaView(widget: widget, spaceId: spaceId)
+                        .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
+                        .frame(
+                            width: TILE_SIZE,
+                            height: TILE_SIZE
+                        )
+                        .onAppear{
+                            draggingItem = widget
+                        }
+                }
+            
+        }
     }
-    
-  
-
     
     func widgetButton( widget: CanvasWidget) -> some View {
         switch widget.media {
         case .poll:
             return Button(action: {
-                activeWidget = widget
-                activeSheet =  .poll
+                viewModel.activeWidget = widget
+                viewModel.activeSheet =  .poll
             }, label: {
                 Label("Open Poll", systemImage: "list.clipboard")
             }).eraseToAnyView()
@@ -405,13 +328,13 @@ struct CanvasPage: View {
             
         case .todo:
             return Button(action: {
-                activeWidget = widget
-                activeSheet = .todo
+                viewModel.activeWidget = widget
+                viewModel.activeSheet = .todo
             }, label: {
                 
                 Label("Open List", systemImage: "checklist")
             }).eraseToAnyView()
-
+            
         case .map:
             return Button(action: {
                 if let location = widget.location {
@@ -434,32 +357,29 @@ struct CanvasPage: View {
             
         case .image:
             return Button(action: {
-                activeWidget = widget
-                activeSheet = .image
+                viewModel.activeWidget = widget
+                viewModel.activeSheet = .image
             }, label: {
                 
                 Label("Open Image", systemImage: "photo")
             }).eraseToAnyView()
-
-            
-            
             
         case .video:
             return Button(action: {
-                activeWidget = widget
-                activeSheet = .video
+                viewModel.activeWidget = widget
+                viewModel.activeSheet = .video
             }, label: {
                 
                 Label("Open Video", systemImage: "video")
             }).eraseToAnyView()
-
+            
             
         case .calendar:
             return Button(action: {
-                activeWidget = widget
-                activeSheet = .calendar
+                viewModel.activeWidget = widget
+                viewModel.activeSheet = .calendar
             }, label: {
-
+                
                 
                 Label("Select Availability", systemImage: "calendar")
             }).eraseToAnyView()
@@ -470,7 +390,7 @@ struct CanvasPage: View {
         }
     }
     
-  
+    
     
     @Environment(\.undoManager) private var undoManager
     var body: some View {
@@ -478,13 +398,10 @@ struct CanvasPage: View {
             canvasView()
                 .frame(width: FRAME_SIZE * 1.5, height: FRAME_SIZE * 1.5)
                 .ignoresSafeArea()
-                .task {
-                    await onChange()
-                }
             //add new widget view and ChatSHEET
-               
+            
                 .onAppear(perform: {
-                    activeSheet = .chat
+                    viewModel.activeSheet = .chat
                 })
                 .onReceive(Timer.publish(every: 5, on: .main, in: .common).autoconnect()) { _ in
                     
@@ -498,13 +415,13 @@ struct CanvasPage: View {
                 .toolbarBackground(.hidden, for: .navigationBar)
                 .task{
                     
-                    
                     do {
                         try await viewModel.loadCurrentSpace(spaceId: spaceId)
-                        print("Done with loadCurrentSpace")
+                        viewModel.attachDrawingListener()
+                        viewModel.attachWidgetListener()
                         appModel.currentSpaceId = spaceId
                         appModel.inSpace = true
-
+                        
                     } catch {
                         //EXIT IF SPACE DOES NOT EXIST
                         self.presentationMode.wrappedValue.dismiss()
@@ -521,7 +438,7 @@ struct CanvasPage: View {
                     }
                 }
                 .navigationTitle(toolPickerActive ? "" : viewModel.space?.name ?? "" )
-//                .background(  Color(UIColor.secondarySystemBackground))
+            //                .background(  Color(UIColor.secondarySystemBackground))
                 .background(Color(UIColor.secondarySystemBackground))
         }
         .onChange(of: appModel.shouldNavigateToSpace, {
@@ -534,23 +451,23 @@ struct CanvasPage: View {
                 //Wait is necessary because sometimes this shit happens too fast and threads aren't waiting yet
                 //There is a rare bug where the other threads happen way too slow this guy already ends
                 DispatchQueue.main.asyncAfter(deadline: .now()+0.1) {
-                    appModel.mutex.broadcast()
+                    appModel.navigationMutex.broadcast()
                     print("signaled")
                 }
             }
         })
         .ignoresSafeArea()
-        .sheet(item: $activeSheet, onDismiss: {
+        .sheet(item: $viewModel.activeSheet, onDismiss: {
             
             replyWidget = nil
-            activeWidget = nil
+            viewModel.activeWidget = nil
             
-        
+            
             
             //get chat to show up at all times
-            if !inSettingsView && activeSheet == nil{
+            if !inSettingsView && viewModel.activeSheet == nil{
                 inSettingsView = false
-                activeSheet = .chat
+                viewModel.activeSheet = .chat
                 selectedDetent = .height(50)
             }
             
@@ -568,13 +485,13 @@ struct CanvasPage: View {
             
             switch item {
             case .newWidgetView:
-                NewWidgetView(widgetId: widgetId,   spaceId: spaceId, photoLinkedToProfile: $photoLinkedToProfile)
-//                            .presentationBackground(Color(UIColor.systemBackground))
+                NewWidgetView(widgetId: widgetId, spaceId: spaceId, photoLinkedToProfile: $photoLinkedToProfile)
+                //                            .presentationBackground(Color(UIColor.systemBackground))
                     .presentationBackground(.thickMaterial)
             case .chat:
-
                 
-                NewChatView(spaceId: spaceId, replyWidget: $replyWidget, detent: $selectedDetent,activeSheet: $activeSheet, activeWidget: $activeWidget)
+                
+                NewChatView(spaceId: spaceId, replyWidget: $replyWidget, detent: $selectedDetent)
                 
                     .presentationBackground(Color(UIColor.systemBackground))
                     .presentationDetents([.height(50),.large], selection: $selectedDetent)
@@ -588,7 +505,7 @@ struct CanvasPage: View {
                             
                             withAnimation {
                                 replyWidget = nil
-                               
+                                
                             }
                             
                             print("detent is 50")
@@ -597,44 +514,36 @@ struct CanvasPage: View {
                 
                 
             case .poll:
-                
-                //Waits until activeWidget is not nil
-                PollWidgetSheetView(widget: waitForVariable{activeWidget}, spaceId: spaceId)
-                
+                PollWidgetSheetView(widget: waitForVariable{viewModel.activeWidget}, spaceId: spaceId)
             case .newTextView:
                 NewTextWidgetView(spaceId: spaceId)
                     .presentationBackground(Color(UIColor.systemBackground))
             case .todo:
-                    //Waits until activeWidget is not nil
-                    TodoWidgetSheetView(widget: waitForVariable{activeWidget}, spaceId: spaceId)
+                TodoWidgetSheetView(widget: waitForVariable{viewModel.activeWidget}, spaceId: spaceId)
                     .presentationBackground(Color(UIColor.systemBackground))
             case .image:
-                    ImageWidgetSheetView(widget: waitForVariable{activeWidget}, spaceId: spaceId)
+                ImageWidgetSheetView(widget: waitForVariable{viewModel.activeWidget}, spaceId: spaceId)
                     .presentationBackground(.thickMaterial)
-              
-                
-                  
             case .video:
-                VideoWidgetSheetView(widget: waitForVariable{activeWidget}, spaceId: spaceId)
-                .presentationBackground(.thickMaterial)
+                VideoWidgetSheetView(widget: waitForVariable{viewModel.activeWidget}, spaceId: spaceId)
+                    .presentationBackground(.thickMaterial)
             case .calendar:
-                
-                CalendarWidgetSheetView(spaceId: spaceId, widgetId:  waitForVariable{activeWidget?.id.uuidString})
-                .presentationBackground(.thickMaterial)
+                CalendarWidgetSheetView(widgetId:  waitForVariable{viewModel.activeWidget?.id.uuidString}, spaceId: spaceId)
+                    .presentationBackground(.thickMaterial)
             }
             
         })
-
+        
         .onDisappear(perform: {
-            activeSheet = nil            
+            viewModel.activeSheet = nil
             appModel.inSpace = false
             appModel.currentSpaceId = nil
             print("CANVASPAGE DISAPPEARED")
             print("CANVASPAGE: appModel.inSpace \(appModel.inSpace)")
-
+            
         })
         .background(  Color(UIColor.secondarySystemBackground))
-        
+        .environment(viewModel)
     }
 }
 

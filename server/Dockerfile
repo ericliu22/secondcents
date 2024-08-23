@@ -1,4 +1,4 @@
-FROM oven/bun:debian
+FROM oven/bun:alpine
 
 COPY package.json ./
 COPY bun.lockb ./

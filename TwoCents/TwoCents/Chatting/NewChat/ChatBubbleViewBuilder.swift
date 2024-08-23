@@ -25,12 +25,10 @@ struct ChatBubbleViewBuilder: View {
     @Binding var threadId: String
     
     
-    @Binding var activeSheet: sheetTypesCanvasPage?
-    @Binding var activeWidget: CanvasWidget?
     var body: some View {
         ZStack {
 //            if let message {
-            ChatBubbleView(message: message, sentByMe: message.sendBy == currentUserId, isFirstMsg: message.sendBy != message.parent, name: name, userColor: userColor, widget: widget ?? nil, spaceId: spaceId, threadId: $threadId, activeSheet: $activeSheet, activeWidget: $activeWidget)
+            ChatBubbleView(message: message, sentByMe: message.sendBy == currentUserId, isFirstMsg: message.sendBy != message.parent, name: name, userColor: userColor, widget: widget ?? nil, spaceId: spaceId, threadId: $threadId)
 //            }
         }
         .task {

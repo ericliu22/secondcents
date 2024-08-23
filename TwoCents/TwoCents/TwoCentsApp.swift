@@ -19,6 +19,9 @@ struct TwoCentsApp: App {
         WindowGroup {
             RootView()
                 .environment(delegate.appModel)
+                .onAppear {
+                    AnalyticsManager.shared.pageView(url: ANALYTICS_URL)
+                }
         }
     }
 }

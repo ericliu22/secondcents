@@ -2,8 +2,8 @@ import SwiftUI
 import Firebase
 
 struct CalendarWidgetSheetView: View {
-    var spaceId: String
     var widgetId: String
+    var spaceId: String
     
     @State private var selectedDates: Set<DateComponents> = []
     @State private var localChosenDates: [Date: Set<Date>] = [:]

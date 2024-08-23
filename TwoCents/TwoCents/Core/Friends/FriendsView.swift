@@ -8,7 +8,7 @@
 import SwiftUI
 
     struct FriendsView: View {
-        @Binding var activeSheet: sheetTypes?
+        @Binding var activeSheet: PopupSheet?
 //    @Binding var showSignInView: Bool
     @Binding var loadedColor: Color
 //    @Binding var showCreateProfileView: Bool

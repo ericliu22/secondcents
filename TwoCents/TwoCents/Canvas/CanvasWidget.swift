@@ -180,7 +180,7 @@ protocol WidgetView: View {
 
 //There are two implementations and for this one func is faster than struct
 @ViewBuilder
-func MediaView(widget: CanvasWidget, spaceId: String, activeSheet: Binding<sheetTypesCanvasPage?>, activeWidget: Binding<CanvasWidget?>) -> some View {
+func MediaView(widget: CanvasWidget, spaceId: String) -> some View {
     switch widget.media {
     case .text:
         TextWidget(widget: widget)
@@ -199,7 +199,7 @@ func MediaView(widget: CanvasWidget, spaceId: String, activeSheet: Binding<sheet
     case .event:
         EventWidget(widget: widget)
     case .calendar:
-        CalendarWidget(widget: widget, spaceId: spaceId, activeSheet: activeSheet, activeWidget: activeWidget)
+        CalendarWidget(widget: widget, spaceId: spaceId)
     default:
         EmptyView()
     }

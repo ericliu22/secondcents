@@ -10,7 +10,7 @@ import SwiftUI
 struct SettingsView: View {
     @StateObject private var viewModel = SettingsViewModel()
 //    @Binding var showSignInView: Bool
-    @Binding var activeSheet: sheetTypes?
+    @Binding var activeSheet: PopupSheet?
     var body: some View {
         List{
             
