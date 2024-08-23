@@ -13,12 +13,11 @@ struct NotificationCountView : View {
     
     @Binding var value: Int
     @Binding var loadedColor: Color
-    @Environment(SpacesViewModel.self) var viewModel
     
     private let FOREGROUND_COLOR: Color = .white
-    private let SIZE = 16.0
+    private let SIZE = 20.0
     private let x = 20.0
-    private let y = 0.0
+    private let y = 12.0
     
     init(value: Binding<Int>, loadedColor: Binding<Color>) {
         self._value = value

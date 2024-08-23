@@ -134,10 +134,10 @@ class MessageManager: ObservableObject {
                         try mainChatReference.collection("chatlogs").document(uuidString).setData(from: newMessage)
                         mainChatReference.setData(["lastSend": newMessage.sendBy], merge: true)
                         mainChatReference.setData(["lastTs": newMessage.ts], merge: true)
-                        
                     }
                     
                     
+
                     } catch {
                     print("Error adding message to Firestore: \(error)")
                 }

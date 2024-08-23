@@ -93,7 +93,9 @@ final class NewMessageFieldViewModel: ObservableObject {
                         messageNotification(spaceId: spaceId, userUID: user?.userId ?? "", message: text ?? "replied to a widget")
 
                     }
-                    
+                    Task {
+                        await messageUnread(spaceId: spaceId)
+                    }
                     AnalyticsManager.shared.messageSend()
 
                     } catch {
