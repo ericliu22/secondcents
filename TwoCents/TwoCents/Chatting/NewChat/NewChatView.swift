@@ -22,8 +22,9 @@ struct Message: Identifiable, Codable, Equatable {
 struct NewChatView: View {
     @State var spaceId: String
     @StateObject private var viewModel = NewChatViewModel()
+    @Environment(CanvasPageViewModel.self) var canvasViewModel
    
-    @Binding var replyWidget: CanvasWidget?
+    
     @Binding var detent: PresentationDetent
     @State var threadId: String = ""
     @State private var threadIdChangedTime: Date = Date()
@@ -42,7 +43,7 @@ struct NewChatView: View {
                         .id("top")
                         .listRowBackground(Color.clear)
                     
-                    if let widget = replyWidget {
+                    if let widget = canvasViewModel.replyWidget {
                         MediaView(widget: widget, spaceId: spaceId)
                             .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
                             .cornerRadius(CORNER_RADIUS)
@@ -72,7 +73,7 @@ struct NewChatView: View {
                             .listRowSeparator(.hidden)
                             .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
                             .padding(.bottom, 3)
-                            .blur(radius: replyWidget == nil ? 0 : 2)
+                            .blur(radius: canvasViewModel.replyWidget == nil ? 0 : 2)
                             .listRowBackground(Color.clear)
                         //                        .background(.red)
                     }
@@ -85,7 +86,7 @@ struct NewChatView: View {
                             .listRowSeparator(.hidden)
                             .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
                             .padding(.bottom, 3)
-                            .blur(radius: replyWidget == nil ? 0 : 2)
+                            .blur(radius: canvasViewModel.replyWidget == nil ? 0 : 2)
                             .listRowBackground(Color.clear)
                         
                         if message.id == viewModel.messages.last?.id {
@@ -170,7 +171,7 @@ struct NewChatView: View {
        
              
                 withAnimation {
-                    replyWidget = nil
+                    canvasViewModel.replyWidget = nil
                   
                     
                     if threadId != "" {
@@ -198,8 +199,8 @@ struct NewChatView: View {
             .overlay(
             
                 
-                NewMessageField(replyWidget: $replyWidget, spaceId: spaceId, threadId: $threadId)
-//                    .disabled(detent == .height(50) && replyWidget == nil)
+                NewMessageField(spaceId: spaceId, threadId: $threadId)
+//                    .disabled(detent == .height(50) && canvasViewModel.replyWidget == nil)
                     .frame(maxHeight: .infinity, alignment: .bottom)
                     .onTapGesture {
                         if detent == .height(50){
@@ -230,7 +231,7 @@ struct NewChatView: View {
 //struct NewChatView_Previews: PreviewProvider {
 //    static var previews: some View {
 //        NavigationStack {
-//            NewChatView(spaceId: "CF5BDBDF-44C0-4382-AD32-D92EC05AA35E", replyWidget: .constant(nil), detent: .constant(.large))
+//            NewChatView(spaceId: "CF5BDBDF-44C0-4382-AD32-D92EC05AA35E", canvasViewModel.replyWidget: .constant(nil), detent: .constant(.large))
 //        }
 //    }
 //}

@@ -35,11 +35,9 @@ struct CanvasPage: View {
     
     @State private var fullName: String = ""
     @State var toolPickerActive: Bool = false
-    @State private var draggingItem: CanvasWidget?
     @State private var inSettingsView: Bool = false
     @State private var photoLinkedToProfile: Bool = false
     @State private var widgetId: String = UUID().uuidString
-    @State private var replyWidget: CanvasWidget?
     @State private var selectedDetent: PresentationDetent = .height(50)
     
     @Bindable var viewModel: CanvasPageViewModel
@@ -100,7 +98,8 @@ struct CanvasPage: View {
                 .frame(width: FRAME_SIZE, height: FRAME_SIZE)
         }
         .dropDestination(for: CanvasWidget.self) { receivedWidgets, location in
-            guard let draggingItem = draggingItem else {
+            
+            guard let draggingItem = receivedWidgets.first else {
                 print("Failed to intialize dragging item")
                 return false
             }
@@ -113,7 +112,6 @@ struct CanvasPage: View {
             
             SpaceManager.shared.moveWidget(spaceId: spaceId, widgetId: draggingItem.id.uuidString, x: x, y: y)
             
-            self.draggingItem = nil
             return true
         }
         
@@ -195,7 +193,7 @@ struct CanvasPage: View {
                     Button(action: {
                         viewModel.activeSheet = .chat
                         selectedDetent = .large
-                        replyWidget = widget
+                        viewModel.replyWidget = widget
                     }, label: {
                         Label("Reply", systemImage: "arrowshape.turn.up.left")
                         //                            Image(systemName: "arrowshape.turn.up.left")
@@ -246,7 +244,7 @@ struct CanvasPage: View {
             
             
                 .overlay() {
-                    viewModel.selectedWidget == nil/* && draggingItem == nil */?
+                    viewModel.selectedWidget == nil ?
                     EmojiCountOverlayView(spaceId: spaceId, widget: widget)
                         .offset(y: TILE_SIZE/2)
                         .position(x: widget.x ??  FRAME_SIZE/2, y: widget.y ?? FRAME_SIZE/2)
@@ -266,9 +264,6 @@ struct CanvasPage: View {
                             width: TILE_SIZE,
                             height: TILE_SIZE
                         )
-                        .onAppear{
-                            draggingItem = widget
-                        }
                 }
             
         }
@@ -403,7 +398,7 @@ struct CanvasPage: View {
         .ignoresSafeArea()
         .sheet(item: $viewModel.activeSheet, onDismiss: {
             
-            replyWidget = nil
+            viewModel.replyWidget = nil
             viewModel.activeWidget = nil
             
             //get chat to show up at all times
@@ -433,7 +428,7 @@ struct CanvasPage: View {
             case .chat:
                 
                 
-                NewChatView(spaceId: spaceId, replyWidget: $replyWidget, detent: $selectedDetent)
+                NewChatView(spaceId: spaceId, detent: $selectedDetent)
                 
                     .presentationBackground(Color(UIColor.systemBackground))
                     .presentationDetents([.height(50),.large], selection: $selectedDetent)
@@ -446,7 +441,7 @@ struct CanvasPage: View {
                         if selectedDetent != .large {
                             
                             withAnimation {
-                                replyWidget = nil
+                                viewModel.replyWidget = nil
                                 
                             }
                             

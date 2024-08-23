@@ -2,11 +2,12 @@ import SwiftUI
 
 struct NewMessageField: View {
     
+    @StateObject private var viewModel = NewMessageFieldViewModel()
+    @Environment(CanvasPageViewModel.self) var canvasViewModel
+    
     @State private var message = ""
     @FocusState private var isFocused: Bool
-    @Binding var replyWidget: CanvasWidget?
     @State private var userColor: Color = .gray
-    @StateObject private var viewModel = NewMessageFieldViewModel()
     @State var spaceId: String
     @Binding var threadId: String
     
@@ -24,22 +25,22 @@ struct NewMessageField: View {
             
             Button {
                 Task {
-                    await viewModel.sendMessages(text: message, widget: replyWidget, spaceId: spaceId, threadId: threadId)
+                    await viewModel.sendMessages(text: message, widget: canvasViewModel.replyWidget, spaceId: spaceId, threadId: threadId)
                     message = ""
-                    replyWidget = nil
+                    canvasViewModel.replyWidget = nil
                 }
             } label: {
                 Image(systemName: "arrow.up")
                     .font(.headline)
                     .frame(width: 30, height: 30, alignment: .center)
-                    .foregroundColor(message.isEmpty && replyWidget == nil ? .clear : .white)
-                    .background(message.isEmpty && replyWidget == nil ? .clear : userColor)
+                    .foregroundColor(message.isEmpty && canvasViewModel.replyWidget == nil ? .clear : .white)
+                    .background(message.isEmpty && canvasViewModel.replyWidget == nil ? .clear : userColor)
                     .clipShape(Circle())
                     .padding(.bottom, 4)
             }
             .clipped()
             .buttonStyle(PlainButtonStyle())
-            .disabled(message.isEmpty && replyWidget == nil)
+            .disabled(message.isEmpty && canvasViewModel.replyWidget == nil)
             .padding(.trailing, 5)
         }
         .foregroundStyle(Color(UIColor.label))
@@ -60,7 +61,7 @@ struct NewMessageField: View {
             }
         }
         
-        .onChange(of: replyWidget) { _, newValue in
+        .onChange(of: canvasViewModel.replyWidget) { _, newValue in
             if newValue != nil {
                 isFocused = true
             }

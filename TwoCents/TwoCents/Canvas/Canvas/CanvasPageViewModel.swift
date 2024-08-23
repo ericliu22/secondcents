@@ -20,6 +20,7 @@ final class CanvasPageViewModel {
     var selectedWidget: CanvasWidget? = nil
     var activeWidget: CanvasWidget?
     var activeSheet: CanvasSheet?
+    var replyWidget: CanvasWidget?
     var canvasWidgets: [CanvasWidget] = []
     var spaceId: String
     
