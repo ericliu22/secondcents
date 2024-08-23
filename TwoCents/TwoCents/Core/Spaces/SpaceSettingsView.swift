@@ -222,18 +222,18 @@ struct SpaceSettingsView: View {
                                         
                                     }
                                     
-                                    VStack(alignment: .leading){
+//                                    VStack(alignment: .leading){
                                         
                                         Text(userTile.name!)
                                             .font(.headline)
                                         
-                                        
-                                        Text(
-                                            "@\(userTile.username!)")
-                                        .foregroundStyle(.secondary)
-                                        .font(.caption)
-                                        
-                                    }
+//
+//                                        Text(
+//                                            "@\(userTile.)")
+//                                        .foregroundStyle(.secondary)
+//                                        .font(.caption)
+//                                        
+//                                    }
                                     
                                     
                                     

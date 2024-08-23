@@ -181,23 +181,25 @@ struct ProfileView: View {
                             }
                             
                             
-                            if let username = user.username, username != ""  {
-                                Text("@\(username)" )
-                                //                                    .foregroundColor(Color(UIColor.secondaryLabel))
-                                    .foregroundStyle(.secondary)
-                                
-                                    .font(.headline)
-                                
-                                    .fontWeight(.regular)
-                                
-                                //protects text overflow
-                                    .padding([.leading, .trailing],nil)
-                                //                                .minimumScaleFactor(0.5)
-                                    .lineLimit(1)
-                                
-                                
-                                
-                            }
+                            
+                            //CAN ADD NICKNAME IN FUTURE!!!
+//                            if let username = user.username, username != ""  {
+//                                Text("@\(username)" )
+//                                //                                    .foregroundColor(Color(UIColor.secondaryLabel))
+//                                    .foregroundStyle(.secondary)
+//                                
+//                                    .font(.headline)
+//                                
+//                                    .fontWeight(.regular)
+//                                
+//                                //protects text overflow
+//                                    .padding([.leading, .trailing],nil)
+//                                //                                .minimumScaleFactor(0.5)
+//                                    .lineLimit(1)
+//                                
+//                                
+//                                
+//                            }
                         }
                         
                         
