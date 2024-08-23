@@ -28,7 +28,17 @@ struct AddMemberView: View {
     private let noMembersMessage: [String] = [
         "no friends in the industry...",
         "lonely at the top...",
-        "solo queuing social media !!"
+        "solo queuing social media !!",
+        "all my friends are bots...",
+        "lonely hearts club, membership: me...",
+        "just me and my mirror, having deep conversations...",
+        "empty Space, full of existential dread...",
+        "every night's a solo dance party...",
+        "social life on airplane mode...",
+        "talking to myself, and we’re getting along great...",
+        "my phone autocorrects 'friend' to 'solo'...",
+        "i'm not friendless.. i'm just introverted",
+        "not having friends -- its a choice."
     ]
    
     @Environment(\.dismiss) var dismissScreen
@@ -55,9 +65,20 @@ struct AddMemberView: View {
                     HStack{
                         
                         
+                        //No members selected message
+                        if viewModel.selectedMembers.count == 0 {
+                            Text("Loading...")
+                                .italic()
+                                .font(.headline)
+                                .foregroundStyle(.tertiary)
+                                .fontWeight(.regular)
+                                .padding(.vertical,2.5)
+                        }
+                        
                         
                         //No members selected message
-                        if viewModel.selectedMembers.count == 1 && (viewModel.selectedMembersUserId[0] == viewModel.user?.userId )  {                            Text(noMembersMessage[randomIndex])
+                        if viewModel.selectedMembers.count == 1 && (viewModel.selectedMembersUserId[0] == viewModel.user?.userId )  {                           
+                            Text(noMembersMessage[randomIndex])
                                 .italic()
                                 .font(.headline)
                                 .foregroundStyle(.tertiary)
