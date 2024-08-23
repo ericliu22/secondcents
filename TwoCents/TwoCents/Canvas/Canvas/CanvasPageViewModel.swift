@@ -22,15 +22,19 @@ final class CanvasPageViewModel {
     var activeWidget: CanvasWidget?
     var activeSheet: CanvasSheet?
     var canvasWidgets: [CanvasWidget] = []
-    var canvas: PKCanvasView = PKCanvasView()
-
-    /*
-    init(spaceId: String) {
-        loadCurrentUser()
-        loadCurrentSpace(spaceId: spaceId)
-        attachDrawingListener()
-        attachWidgetListener()
+    var canvas: PKCanvasView
+    
+    init() {
+        self.canvas = PKCanvasView()
     }
+    
+    /* Eric: Don't delete this
+     init(spaceId: String) {
+     loadCurrentUser()
+     loadCurrentSpace(spaceId: spaceId)
+     attachDrawingListener()
+     attachWidgetListener()
+     }
      */
     
     func loadCurrentUser() async throws {
@@ -45,7 +49,6 @@ final class CanvasPageViewModel {
     }
     
     func openMapsApp(location: String) {
-        
         
         let locationAray = location.split(separator: ", ")
         let latitude = String(locationAray[0])
@@ -123,6 +126,24 @@ final class CanvasPageViewModel {
                 let newWidget = try! document.data(as: CanvasWidget.self)
                 self.canvasWidgets.append(newWidget)
             }
+        }
+    }
+    
+    func removeExpiredStrokes() {
+        var changed: Bool = false
+        let strokes = canvas.drawing.strokes.filter { stroke in
+            if (stroke.isExpired()) {
+                changed = true
+            }
+            //include only if not expired
+            return !stroke.isExpired()
+        }
+        if changed {
+            
+            canvas.drawing = PKDrawing(strokes: strokes)
+            guard let space = space else { return }
+            canvas.upload(spaceId: space.spaceId)
+            
         }
     }
 }

@@ -24,9 +24,7 @@ struct universalMessageBubble: View{
     
     @State private var loaded: Bool = false
     
-    @Binding var activeSheet: CanvasSheet?
-    
-    @Binding var activeWidget: CanvasWidget?
+
     var body: some View{
         VStack(alignment: sentByMe ? .trailing : .leading, spacing: 3){
             
@@ -75,9 +73,7 @@ struct universalMessageBubble: View{
                     MediaView(widget: widget, spaceId: spaceId)
                         .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
                         .cornerRadius(CORNER_RADIUS)
-                    
                         .frame(maxWidth: .infinity, minHeight: TILE_SIZE, alignment: sentByMe ?  .trailing : .leading)
-                    
                     
                 } 
 
@@ -120,9 +116,6 @@ struct chatBubbleShape: Shape {
             let path = !isFirstMsg 
         ? UIBezierPath(roundedRect: rect, byRoundingCorners: [ sentByMe ? .topLeft : .topRight,sentByMe ? .bottomLeft : .bottomRight], cornerRadii: CGSize(width:12, height: 12))
         : UIBezierPath(roundedRect: rect, byRoundingCorners: [ .topLeft , .topRight,sentByMe ? .bottomLeft : .bottomRight], cornerRadii: CGSize(width:12, height: 12))
-            
-  
-        
         
         return Path(path.cgPath)
     }

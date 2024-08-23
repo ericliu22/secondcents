@@ -35,13 +35,11 @@ struct CanvasPage: View {
     
     @State private var fullName: String = ""
     @State var toolPickerActive: Bool = false
-    @State private var currentMode: canvasState = .normal
     @State private var draggingItem: CanvasWidget?
     @State private var inSettingsView: Bool = false
     @State private var photoLinkedToProfile: Bool = false
     @State private var widgetId: String = UUID().uuidString
     @State private var toolkit: PKToolPicker = PKToolPicker()
-    @State private var pendingWrites: Bool = false
     @State private var timer: Timer?
     
     @State private var replyWidget: CanvasWidget?
@@ -56,28 +54,9 @@ struct CanvasPage: View {
     //Eric: Idk what this is
     @State private var refreshId = UUID()
     
-    
-    
-    //    @Environment(\.dismiss) var dismissScreen
-    
-    private var chatroomDocument: DocumentReference
-    private var drawingDocument: DocumentReference
-    
-    enum canvasState {
-        case drawing, normal
-    }
-    
-    
     init(spaceId: String) {
         self.spaceId = spaceId
-        
-        self.chatroomDocument = db.collection("spaces").document(spaceId)
-        self.drawingDocument = db.collection("spaces").document(spaceId).collection("Widgets").document("Drawings")
     }
-    
-    
-    
-    
     
     func Background() -> some View {
         GeometryReader { geometry in
@@ -143,23 +122,6 @@ struct CanvasPage: View {
                 .frame(width: FRAME_SIZE, height: FRAME_SIZE)
         )
         
-    }
-    
-    private func removeExpiredStrokes() {
-        var changed: Bool = false
-        let strokes = viewModel.canvas.drawing.strokes.filter { stroke in
-            if (stroke.isExpired()) {
-                changed = true
-            }
-            //include only if not expired
-            return !stroke.isExpired()
-        }
-        if changed {
-            
-            viewModel.canvas.drawing = PKDrawing(strokes: strokes)
-            viewModel.canvas.upload(spaceId: spaceId)
-            
-        }
     }
     
     @ToolbarContentBuilder
@@ -228,6 +190,7 @@ struct CanvasPage: View {
         ForEach(viewModel.canvasWidgets, id:\.id) { widget in
             //main widget
             MediaView(widget: widget, spaceId: spaceId)
+                .environment(viewModel)
                 .contextMenu(ContextMenu(menuItems: {
                     
                     EmojiReactionContextView(spaceId: spaceId, widget: widget, refreshId: $refreshId)
@@ -310,83 +273,75 @@ struct CanvasPage: View {
                         .onAppear{
                             draggingItem = widget
                         }
+                        .environment(viewModel)
                 }
             
         }
     }
     
+    @ViewBuilder
     func widgetButton( widget: CanvasWidget) -> some View {
         switch widget.media {
         case .poll:
-            return Button(action: {
+            Button(action: {
                 viewModel.activeWidget = widget
                 viewModel.activeSheet =  .poll
             }, label: {
                 Label("Open Poll", systemImage: "list.clipboard")
-            }).eraseToAnyView()
-            
-            
+            })
         case .todo:
-            return Button(action: {
+            Button(action: {
                 viewModel.activeWidget = widget
                 viewModel.activeSheet = .todo
             }, label: {
                 
                 Label("Open List", systemImage: "checklist")
-            }).eraseToAnyView()
-            
+            })
         case .map:
-            return Button(action: {
+            Button(action: {
                 if let location = widget.location {
                     viewModel.openMapsApp(location: location)
                 }
             }, label: {
                 
                 Label("Open Map", systemImage: "mappin.and.ellipse")
-            }).eraseToAnyView()
+            })
         case .link:
-            return Button(action:{
+            Button(action:{
                 if let url = widget.mediaURL {
                     viewModel.openLink(url: url)
                 }
             }, label: {
                 
                 Label("Open Link", systemImage: "link")
-            }).eraseToAnyView()
-            
-            
+            })
         case .image:
-            return Button(action: {
+            Button(action: {
                 viewModel.activeWidget = widget
                 viewModel.activeSheet = .image
             }, label: {
                 
                 Label("Open Image", systemImage: "photo")
-            }).eraseToAnyView()
-            
+            })
         case .video:
-            return Button(action: {
+            Button(action: {
                 viewModel.activeWidget = widget
                 viewModel.activeSheet = .video
             }, label: {
                 
                 Label("Open Video", systemImage: "video")
-            }).eraseToAnyView()
-            
-            
+            })
         case .calendar:
-            return Button(action: {
+            Button(action: {
                 viewModel.activeWidget = widget
                 viewModel.activeSheet = .calendar
             }, label: {
                 
-                
                 Label("Select Availability", systemImage: "calendar")
-            }).eraseToAnyView()
-            
+            })
             
         default:
-            return EmptyView().eraseToAnyView()
+            EmptyView()
         }
     }
     
@@ -404,8 +359,7 @@ struct CanvasPage: View {
                     viewModel.activeSheet = .chat
                 })
                 .onReceive(Timer.publish(every: 5, on: .main, in: .common).autoconnect()) { _ in
-                    
-                    removeExpiredStrokes()
+                    viewModel.removeExpiredStrokes()
                 }
             //toolbar
                 .toolbar(.hidden, for: .tabBar)
@@ -461,8 +415,6 @@ struct CanvasPage: View {
             
             replyWidget = nil
             viewModel.activeWidget = nil
-            
-            
             
             //get chat to show up at all times
             if !inSettingsView && viewModel.activeSheet == nil{
@@ -530,6 +482,7 @@ struct CanvasPage: View {
             case .calendar:
                 CalendarWidgetSheetView(widgetId:  waitForVariable{viewModel.activeWidget?.id.uuidString}, spaceId: spaceId)
                     .presentationBackground(.thickMaterial)
+                    .environment(viewModel)
             }
             
         })
@@ -551,12 +504,5 @@ struct CanvasPage: View {
 struct CanvasPage_Previews: PreviewProvider {
     static var previews: some View {
         CanvasPage(spaceId:"87D5AC3A-24D8-4B23-BCC7-E268DBBB036F")
-    }
-}
-
-
-extension View {
-    func eraseToAnyView() -> AnyView {
-        AnyView(self)
     }
 }

@@ -71,41 +71,7 @@ struct CanvasWidget: Hashable, Codable, Identifiable, Transferable, Equatable {
     }
 }
 
-enum Media {
 
-    case video, image, chat, text, poll, map, event, todo, calendar, link
-
-}
-
-extension Media: Codable {
-    init (media: String) {
-        switch media {
-        case "video":
-            self = .video
-        case "text":
-            self = .text
-        case "image":
-            self = .image
-        case "poll":
-            self = .poll
-        case "map":
-            self = .map
-        case "link":
-            self = .link
-        case "event":
-            self = .event
-        default:
-            self = .image
-        }
-    }
-    
-    func name() -> String {
-        return String(describing: self)
-    }
-    
-
-    
-}
 
 extension CanvasWidget {
     
@@ -236,3 +202,38 @@ struct MediaView<WidgetView>: View where WidgetView: View {
     }
 }
 */
+enum Media {
+
+    case video, image, chat, text, poll, map, event, todo, calendar, link
+
+}
+
+extension Media: Codable {
+    init (media: String) {
+        switch media {
+        case "video":
+            self = .video
+        case "text":
+            self = .text
+        case "image":
+            self = .image
+        case "poll":
+            self = .poll
+        case "map":
+            self = .map
+        case "link":
+            self = .link
+        case "event":
+            self = .event
+        default:
+            self = .image
+        }
+    }
+    
+    func name() -> String {
+        return String(describing: self)
+    }
+    
+
+    
+}
