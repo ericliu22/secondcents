@@ -25,12 +25,17 @@ struct TodoWidgetSheetView: View {
     @Environment(\.dismiss) var dismissScreen
 
     var sortedTodoItems: [TodoItem] {
-        viewModel.localTodoList.sorted { !$0.completed && $1.completed }
+        let items = viewModel.localTodoList.sorted { !$0.completed && $1.completed }
+        
+        if viewModel.isFilterActive, let userId = viewModel.userId {
+            return items.filter { $0.mentionedUserId == userId }
+        }
+        
+        return items
     }
-    
+
     @ToolbarContentBuilder
     func toolbar() -> some ToolbarContent {
-      
         ToolbarItem(placement: .navigationBarTrailing) {
             Button(action: {
                 dismissScreen()
@@ -41,13 +46,23 @@ struct TodoWidgetSheetView: View {
                 Text("Done")
             })
         }
-        
-        
+
+        ToolbarItem(placement: .navigationBarLeading) {
+            Menu {
+                Button(action: {
+                    viewModel.isFilterActive.toggle()
+                }) {
+                    Label(viewModel.isFilterActive ? "Show All Tasks" : "Show My Tasks", systemImage: viewModel.isFilterActive ? "person.crop.circle.badge.checkmark" : "person.crop.circle")
+                }
+            } label: {
+                Image(systemName: "line.3.horizontal.decrease.circle")
+                Text("Filter")
+            }
+        }
+
         if viewModel.mentionedUsers.contains(where: { $0 == nil }) {
             ToolbarItem(placement: .bottomBar) {
                 Button(action: {
-                    
-                
                     viewModel.autoAssignTasks(spaceId: spaceId)
                 }, label: {
                     HStack {
@@ -55,14 +70,11 @@ struct TodoWidgetSheetView: View {
                         Text("Auto Assign Tasks")
                     }
                 })
-                .disabled(viewModel.allUsers.isEmpty )
+                .disabled(viewModel.allUsers.isEmpty)
             }
-            
         }
-        
-        
-        
     }
+
 
     var body: some View {
         if let todo = viewModel.todo {

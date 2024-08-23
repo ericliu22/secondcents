@@ -38,6 +38,13 @@ final class TodoWidgetSheetViewModel: ObservableObject {
     @Published var allUsers: [DBUser] = []
     @Published private(set) var space:  DBSpace? = nil
     
+    
+    
+    @Published var isFilterActive: Bool = false
+    @Published private(set) var userId: String? = try? AuthenticationManager.shared.getAuthenticatedUser().uid
+
+    
+    
     // Define the new addNewTodoItem function
     func addNewTodoItem(spaceId: String, todoId: String) {
         guard !newTodoItem.task.isEmpty else {
