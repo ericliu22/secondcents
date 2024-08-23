@@ -63,7 +63,7 @@ struct TodoWidgetSheetView: View {
             }
         }
 
-        if viewModel.mentionedUsers.contains(where: { $0 == nil }) && !viewModel.allUsers.isEmpty{
+        if viewModel.mentionedUsers.contains(where: { $0 == nil }) && !viewModel.allUsers.isEmpty && !viewModel.isFilterActive {
             ToolbarItem(placement: .bottomBar) {
                 Button(action: {
                     viewModel.autoAssignTasks(spaceId: spaceId)

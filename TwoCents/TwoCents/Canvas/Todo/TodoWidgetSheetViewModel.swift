@@ -80,14 +80,20 @@ final class TodoWidgetSheetViewModel: ObservableObject {
             ]
             todoList.append(newTodoItemData)
             
+            //clear newTodoItem
+            let backUpTodoItem: TodoItem = self.newTodoItem
+            self.newTodoItem = TodoItem(task: "", mentionedUserId: "")
+            
+            
             // Update the Firestore document
             ref.updateData(["todoList": todoList]) { error in
                 if let error = error {
                     print("Error updating document: \(error)")
+                    self.newTodoItem = backUpTodoItem
                 } else {
                     print("New todo item successfully added.")
                     // Optionally clear the newTodoItem after adding it to the list
-                    self.newTodoItem = TodoItem(task: "", mentionedUserId: "")
+//                    self.newTodoItem = TodoItem(task: "", mentionedUserId: "")
                 }
             }
         }
