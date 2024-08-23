@@ -94,7 +94,6 @@ final class TodoWidgetSheetViewModel: ObservableObject {
     }
     
     
-    
     func fetchTodo(spaceId: String, widget: CanvasWidget) {
         let db = Firestore.firestore()
         db.collection("spaces")
@@ -111,10 +110,16 @@ final class TodoWidgetSheetViewModel: ObservableObject {
                     if let todoData = try snapshot?.data(as: Todo.self) {
                         self.todo = todoData
                         self.localTodoList = todoData.todoList
-                        self.mentionedUsers = Array(repeating: nil, count: todoData.todoList.count)
+                        
+                        // Expand the mentionedUsers array only if the new todoList is longer
+                        if todoData.todoList.count > self.mentionedUsers.count {
+                            let additionalCount = todoData.todoList.count - self.mentionedUsers.count
+                            self.mentionedUsers.append(contentsOf: Array(repeating: nil, count: additionalCount))
+                        }
                         
                         for (index, todoItem) in todoData.todoList.enumerated() {
-                            if !todoItem.mentionedUserId.isEmpty {
+                            // Only fetch the user if it's not already fetched
+                            if !todoItem.mentionedUserId.isEmpty, self.mentionedUsers[index] == nil {
                                 Task {
                                     do {
                                         let user = try await UserManager.shared.getUser(userId: todoItem.mentionedUserId)
@@ -138,6 +143,7 @@ final class TodoWidgetSheetViewModel: ObservableObject {
                 }
             }
     }
+
     
     func toggleCompletionStatus(index: Int) {
         localTodoList[index].completed.toggle()
