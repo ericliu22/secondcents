@@ -10,11 +10,10 @@ import SwiftUI
 
 struct ZoomableScrollView<Content: View>: UIViewRepresentable {
     private var content: Content
-    @Binding var toolPickerActive: Bool
     @Environment(AppModel.self) var appModel
+    @Environment(CanvasPageViewModel.self) var canvasViewModel
 
-    init(toolPickerActive: Binding<Bool>, @ViewBuilder content: () -> Content) {
-        self._toolPickerActive = toolPickerActive
+    init(@ViewBuilder content: () -> Content) {
         self.content = content()
     }
 
@@ -27,7 +26,7 @@ struct ZoomableScrollView<Content: View>: UIViewRepresentable {
         scrollView.bounces = true
         scrollView.showsVerticalScrollIndicator = false
         scrollView.showsHorizontalScrollIndicator = false
-        scrollView.isScrollEnabled = !toolPickerActive
+        scrollView.isScrollEnabled = !canvasViewModel.isDrawing
         scrollView.contentInsetAdjustmentBehavior = .never
 
         let hostedView = context.coordinator.hostingController.view!
@@ -42,7 +41,7 @@ struct ZoomableScrollView<Content: View>: UIViewRepresentable {
     }
 
     func updateUIView(_ uiView: UIScrollView, context: Context) {
-        uiView.isScrollEnabled = !toolPickerActive
+        uiView.isScrollEnabled = !canvasViewModel.isDrawing
         context.coordinator.hostingController.rootView = self.content
         uiView.setNeedsLayout()
         uiView.layoutIfNeeded()

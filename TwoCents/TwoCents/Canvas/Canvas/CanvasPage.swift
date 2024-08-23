@@ -34,7 +34,6 @@ struct CanvasPage: View {
     //@State var isShowingPopup = false
     
     @State private var fullName: String = ""
-    @State var toolPickerActive: Bool = false
     @State private var inSettingsView: Bool = false
     @State private var photoLinkedToProfile: Bool = false
     @State private var widgetId: String = UUID().uuidString
@@ -68,7 +67,7 @@ struct CanvasPage: View {
                 }
             }
             .fill(Color(UIColor.secondaryLabel)) // Dot color
-            .allowsHitTesting(toolPickerActive)
+            .allowsHitTesting(viewModel.isDrawing)
         }
         .drawingGroup()
         
@@ -91,8 +90,8 @@ struct CanvasPage: View {
             
             Background()
             GridView()
-            DrawingCanvas(toolPickerActive: $toolPickerActive, spaceId: spaceId)
-                .allowsHitTesting(toolPickerActive)
+            DrawingCanvas(spaceId: spaceId)
+                .allowsHitTesting(viewModel.isDrawing)
                 .clipped() // Ensure the content does not overflow
                 .animation(.spring()) // Optional: Add some animation
                 .frame(width: FRAME_SIZE, height: FRAME_SIZE)
@@ -119,7 +118,7 @@ struct CanvasPage: View {
     
     @ToolbarContentBuilder
     func toolbar() -> some ToolbarContent {
-        if toolPickerActive{
+        if viewModel.isDrawing{
             //undo
             ToolbarItem(placement: .topBarTrailing) {
                 Button(action: {
@@ -140,9 +139,9 @@ struct CanvasPage: View {
         //pencilkit
         ToolbarItem(placement: .topBarTrailing) {
             Button(action: {
-                self.toolPickerActive.toggle()
+                viewModel.isDrawing.toggle()
             }, label: {
-                toolPickerActive
+                viewModel.isDrawing
                 ? Image(systemName: "pencil.tip.crop.circle.fill")
                 : Image(systemName: "pencil.tip.crop.circle")
             })
@@ -339,7 +338,7 @@ struct CanvasPage: View {
     
     @Environment(\.undoManager) private var undoManager
     var body: some View {
-        ZoomableScrollView(toolPickerActive: $toolPickerActive) {
+        ZoomableScrollView {
             canvasView()
                 .frame(width: FRAME_SIZE * 1.5, height: FRAME_SIZE * 1.5)
                 .ignoresSafeArea()
@@ -377,7 +376,7 @@ struct CanvasPage: View {
                         }
                     }
                 }
-                .navigationTitle(toolPickerActive ? "" : viewModel.space?.name ?? "" )
+                .navigationTitle(viewModel.isDrawing ? "" : viewModel.space?.name ?? "" )
                 .background(Color(UIColor.secondarySystemBackground))
         }
         .onChange(of: appModel.shouldNavigateToSpace, {

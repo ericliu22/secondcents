@@ -23,6 +23,7 @@ final class CanvasPageViewModel {
     var replyWidget: CanvasWidget?
     var canvasWidgets: [CanvasWidget] = []
     var spaceId: String
+    var isDrawing: Bool = false
     
     /* Eric: Don't delete this
      init(spaceId: String) {

@@ -10,7 +10,7 @@ import PencilKit
 
 struct DrawingCanvas: UIViewRepresentable {
     
-    @Binding var toolPickerActive: Bool
+    @Environment(CanvasPageViewModel.self) var canvasViewModel
     @State var toolPicker: PKToolPicker = PKToolPicker()
     @State var canvas: PKCanvasView = PKCanvasView()
     var spaceId: String
@@ -33,9 +33,8 @@ struct DrawingCanvas: UIViewRepresentable {
     }
     
     func updateUIView(_ uiView: PKCanvasView, context: Context) {
-        canvas.drawingGestureRecognizer.isEnabled = toolPickerActive
-        toolPicker.setVisible(toolPickerActive, forFirstResponder: canvas)
-        
+        canvas.drawingGestureRecognizer.isEnabled = canvasViewModel.isDrawing
+        toolPicker.setVisible(canvasViewModel.isDrawing, forFirstResponder: canvas)
     }
     
     func attachDrawingListener() {
@@ -59,7 +58,6 @@ struct DrawingCanvas: UIViewRepresentable {
             if let drawingAccess = data["drawing"] as? Data {
                 let databaseDrawing = try! PKDrawingReference(data: drawingAccess)
                 let newDrawing = databaseDrawing.appending(canvas.drawing)
-                print("CHANGED TO NEW DRAWING")
                 canvas.drawing = newDrawing
             } else {
                 print("No database drawing")
@@ -133,7 +131,6 @@ extension PKStroke {
 
 extension PKCanvasView {
     public func upload(spaceId: String) {
-        print("UPLOADING CANVAS")
         Task {
             do {
                 try await db.collection("spaces").document(spaceId).updateData([
