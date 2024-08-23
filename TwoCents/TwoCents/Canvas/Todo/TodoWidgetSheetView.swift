@@ -55,11 +55,11 @@ struct TodoWidgetSheetView: View {
                     }
                     viewModel.isFilterActive.toggle()
                 }) {
-                    Label(viewModel.isFilterActive ? "Show All Tasks" : "Show My Tasks", systemImage: viewModel.isFilterActive ? "person.crop.circle.badge.checkmark" : "person.crop.circle")
+                    Label(viewModel.isFilterActive ? "Show All Tasks" : "Show My Tasks", systemImage: viewModel.isFilterActive ? "person.2.circle" : "person.crop.circle")
                 }
             } label: {
                 Image(systemName: "line.3.horizontal.decrease.circle")
-                Text("Filter")
+//                Text("Filter")
             }
         }
 
