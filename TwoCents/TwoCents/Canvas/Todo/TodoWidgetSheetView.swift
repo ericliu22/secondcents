@@ -50,6 +50,9 @@ struct TodoWidgetSheetView: View {
         ToolbarItem(placement: .navigationBarLeading) {
             Menu {
                 Button(action: {
+                    if !viewModel.isFilterActive {
+                        viewModel.saveChanges(spaceId: spaceId, todoId: widget.id.uuidString)
+                    }
                     viewModel.isFilterActive.toggle()
                 }) {
                     Label(viewModel.isFilterActive ? "Show All Tasks" : "Show My Tasks", systemImage: viewModel.isFilterActive ? "person.crop.circle.badge.checkmark" : "person.crop.circle")
