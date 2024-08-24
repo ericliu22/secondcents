@@ -15,20 +15,23 @@ struct NotificationCountView : View {
     @Binding var loadedColor: Color
     
     private let FOREGROUND_COLOR: Color = .white
-    private let SIZE = 20.0
-    private let x = 20.0
-    private let y = 12.0
+    private let size: CGFloat
+    private let x: CGFloat
+    private let y: CGFloat
     
-    init(value: Binding<Int>, loadedColor: Binding<Color>) {
+    init(value: Binding<Int>, loadedColor: Binding<Color>, x: CGFloat = 12.0, y: CGFloat = 20.0, size: CGFloat = 20 ) {
         self._value = value
         self._loadedColor = loadedColor
+        self.x = x
+        self.y = y
+        self.size = size
     }
     
     var body: some View {
         ZStack {
             Capsule()
                 .fill(loadedColor)
-                .frame(width: SIZE * widthMultplier(), height: SIZE, alignment: .topTrailing)
+                .frame(width: size * widthMultplier(), height: size, alignment: .topTrailing)
                 .position(x: x, y: y)
             
             if hasTwoOrLessDigits() {
@@ -40,7 +43,7 @@ struct NotificationCountView : View {
                 Text("99+")
                     .foregroundColor(FOREGROUND_COLOR)
                     .font(Font.caption)
-                    .frame(width: SIZE * widthMultplier(), height: SIZE, alignment: .center)
+                    .frame(width: size * widthMultplier(), height: size, alignment: .center)
                     .position(x: x, y: y)
             }
         }
