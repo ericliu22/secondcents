@@ -144,8 +144,13 @@ struct SpacesView: View {
                                 
                                 
                             }
+                            .overlay {
+                                    NotificationCountView(value: Binding<Int>(
+                                        get: { viewModel.notificationCount[spaceTile.spaceId] ?? 0 },
+                                        set: { newValue in viewModel.notificationCount[spaceTile.spaceId] = newValue }
+                                    ), loadedColor: $loadedColor)
+                            }
                             .cornerRadius(20)
-          
                         
         
     }

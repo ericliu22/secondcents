@@ -6,12 +6,14 @@
 //
 
 import SwiftUI
+import Firebase
 
 struct FrontPageView: View {
     
     let CalendarTestWidget = CanvasWidget(width: .infinity, height:  .infinity, borderColor: .red, userId: "jisookim", media: .text, widgetName: "Text", widgetDescription: "A bar is a bar", textString: "Fruits can't even see so how my Apple Watch")
    
     
+    @State var friendRequests: Int = 0
     @Binding var loadedColor: Color
     @Binding var activeSheet: PopupSheet?
     @State var selectedTab: Int = 0
@@ -43,13 +45,33 @@ struct FrontPageView: View {
                 ProfileView(activeSheet: $activeSheet, loadedColor: $loadedColor, targetUserId: "")
             }
             .tabItem {
-                Image(systemName: "person")
-                Text("Profile")
+                Label("Profile", systemImage: "person")
             }
+            .badge(friendRequests)
             .tag(2)
             
             
         })
+        .onAppear {
+            //No error printing at all lowkey jank if something fucks up it's this
+            guard let userId = try? AuthenticationManager.shared.getAuthenticatedUser().uid else {
+                print("auth manager failed")
+                return
+            }
+            db.collection("users").document(userId).addSnapshotListener({ snapshot, error in
+                guard let snapshot = snapshot else {
+                    print("snapshot failed")
+                    return
+                }
+                guard let incomingFriendRequests = snapshot.get("incomingFriendRequests") as? Array<String> else {
+                    print("incoming friend requests failed")
+                    return
+                }
+                friendRequests = incomingFriendRequests.count
+                print("FRIEND REQUESTS \(friendRequests)")
+            })
+
+        }
         .onChange(of: appModel.shouldNavigateToSpace, {
             DispatchQueue.global().async {
                 appModel.navigationMutex.lock()

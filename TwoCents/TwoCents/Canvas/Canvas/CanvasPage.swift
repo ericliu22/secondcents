@@ -105,9 +105,6 @@ struct CanvasPage: View {
             
             let x = roundToTile(number: location.x)
             let y = roundToTile(number: location.y)
-            print("X: \(x)")
-            print("Y: \(y)")
-            
             
             SpaceManager.shared.moveWidget(spaceId: spaceId, widgetId: draggingItem.id.uuidString, x: x, y: y)
             
@@ -199,7 +196,6 @@ struct CanvasPage: View {
                     })
                     // Delete button
                     
-                    
                     Button(role: .destructive) {
                         if let index = viewModel.canvasWidgets.firstIndex(of: widget)  {
                             viewModel.canvasWidgets.remove(at: index)
@@ -231,8 +227,6 @@ struct CanvasPage: View {
                     }
                 }))
             
-            
-            
                 .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
                 .cornerRadius(CORNER_RADIUS)
                 .frame(
@@ -240,9 +234,7 @@ struct CanvasPage: View {
                     height: TILE_SIZE
                 )
                 .position(x: widget.x ??  FRAME_SIZE/2, y: widget.y ?? FRAME_SIZE/2)
-            
-            
-                .overlay() {
+                .overlay {
                     viewModel.selectedWidget == nil ?
                     EmojiCountOverlayView(spaceId: spaceId, widget: widget)
                         .offset(y: TILE_SIZE/2)
@@ -251,10 +243,8 @@ struct CanvasPage: View {
                     
                     : nil
                 }
-            
                 .animation(.spring(), value: widget.x) // Add animation for x position
                 .animation(.spring(), value: widget.y) // Add animation for y position
-            
                 .draggable(widget) {
                     //@TODO: Sometimes takes too long to render whole functional view. Look into generating a preview
                     MediaView(widget: widget, spaceId: spaceId)
@@ -360,7 +350,6 @@ struct CanvasPage: View {
                         viewModel.attachWidgetListener()
                         appModel.currentSpaceId = spaceId
                         appModel.inSpace = true
-                        
                     } catch {
                         //EXIT IF SPACE DOES NOT EXIST
                         self.presentationMode.wrappedValue.dismiss()
@@ -475,6 +464,9 @@ struct CanvasPage: View {
             viewModel.activeSheet = nil
             appModel.inSpace = false
             appModel.currentSpaceId = nil
+            Task {
+                await readNotifications(spaceId: spaceId)
+            }
         }
         .background(  Color(UIColor.secondarySystemBackground))
         .environment(viewModel)

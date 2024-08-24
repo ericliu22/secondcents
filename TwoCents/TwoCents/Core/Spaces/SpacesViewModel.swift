@@ -26,7 +26,7 @@ final class SpacesViewModel {
                 return
             }
             try? await getAllSpaces(userId: user.userId)
-            //await getNotifcationCount()
+            await getNotifcationCount()
         }
     }
     
@@ -51,12 +51,20 @@ final class SpacesViewModel {
     }
     
     func getNotifcationCount() async {
+        guard let user = user else {
+            print("SpacesViewModel: no user")
+            return
+        }
         for space in allSpaces {
-            guard let unreads = try? await db.collection("spaces").document(space.id).collection("unreads") as? Int else {
-                print("Unable to retrive notification count")
-                continue
-            }
-            notificationCount[space.id] = unreads
+            db.collection("spaces").document(space.id).collection("unreads").document(user.id).addSnapshotListener({ [weak self] snapshot, error in
+                
+                guard let self = self else { return }
+                guard let snapshot = snapshot else { return}
+                guard let count = snapshot.data()?["count"] as? Int else {
+                    return
+                }
+                self.notificationCount[space.id] = count
+            })
         }
     }
     
