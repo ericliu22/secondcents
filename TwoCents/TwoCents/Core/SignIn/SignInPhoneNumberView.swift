@@ -10,7 +10,6 @@ import SwiftUI
 
 struct SignInPhoneNumberView: View {
     @Environment(\.presentationMode) var presentation
-    @Binding var activeSheet: PopupSheet?
 //    @Binding var showSignInView: Bool
 //    @Binding var showCreateProfileView: Bool
     @State private var isActive = false
@@ -61,7 +60,7 @@ struct SignInPhoneNumberView: View {
                 //
                 
                 NavigationLink(
-                    destination: /*VerifyCodeView(showSignInView: $showSignInView, showCreateProfileView: $showCreateProfileView)*/ VerifyCodeView(activeSheet: $activeSheet),
+                    destination: /*VerifyCodeView(showSignInView: $showSignInView, showCreateProfileView: $showCreateProfileView)*/ VerifyCodeView(),
                     isActive: $isActive,
                     label: {
                         EmptyView()
@@ -143,12 +142,15 @@ struct SignInPhoneNumberView: View {
         
 }
 
+/*
 struct SignInPhoneNumberView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack{
 //            SignInEmailView(showSignInView: .constant(false),showCreateProfileView: .constant(false))
             
-            SignInEmailView(activeSheet: .constant(nil))
+            SignInEmailView(appModel.activeSheet: .constant(nil))
         }
     }
 }
+
+*/

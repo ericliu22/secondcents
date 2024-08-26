@@ -6,7 +6,7 @@ struct AddFriendFromContactsView: View {
     @StateObject private var viewModel = AddFriendFromContactsViewModel()
     
     @State private var searchTerm = ""
-    @Binding var activeSheet: PopupSheet?
+    @Environment(AppModel.self) var appModel
     var filteredSearch: [CNContact] {
         guard !searchTerm.isEmpty else {
             return viewModel.contacts
@@ -250,10 +250,10 @@ struct AddFriendFromContactsView: View {
             }
             .toolbar {
                 
-                if activeSheet != nil {
+                if appModel.activeSheet != nil {
                     ToolbarItem(placement: .topBarTrailing) {
                         Button {
-                            activeSheet  = .customizeProfileView
+                            appModel.activeSheet  = .customizeProfileView
                         } label: {
                             Image(systemName: "arrow.right")
                                 .foregroundColor(Color(UIColor.label))

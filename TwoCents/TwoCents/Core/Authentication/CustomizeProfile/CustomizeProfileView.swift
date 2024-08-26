@@ -9,7 +9,6 @@ import SwiftUI
 import PhotosUI
 
 struct CustomizeProfileView: View {
-    @Binding var activeSheet: PopupSheet?
     @State private var url: URL? = nil
     
     @Environment(AppModel.self) var appModel
@@ -167,7 +166,7 @@ struct CustomizeProfileView: View {
                 
 //                showCreateProfileView.toggle()
                 
-                activeSheet = nil
+                appModel.activeSheet = nil
                 
             } label: {
                 Text("Done")
@@ -211,7 +210,7 @@ struct CustomizeProfileView_Previews: PreviewProvider {
         NavigationStack{
 //            CustomizeProfileView(showCreateProfileView: .constant(true), appModel.loadedColor: .constant(.red))
             
-            CustomizeProfileView(activeSheet: .constant(nil), appModel.loadedColor: .constant(.red))
+            CustomizeProfileView(appModel.activeSheet: .constant(nil), appModel.loadedColor: .constant(.red))
         }
     }
 }

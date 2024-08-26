@@ -8,11 +8,7 @@
 import SwiftUI
 
 struct SpacesView: View {
-    @Binding var activeSheet: PopupSheet?
 
-    @State private var showDetail = false
-    
-    
     @Bindable var viewModel = SpacesViewModel()
     @Environment(AppModel.self) var appModel
     
@@ -211,7 +207,7 @@ struct SpacesView: View {
             
             .fullScreenCover(isPresented: $viewModel.isShowingCreateSpaces, content: {
                 NavigationView{
-                    CreateSpacesView(spaceId: viewModel.newSpaceUUID, activeSheet: $activeSheet, isShowingCreateSpaces: $viewModel.isShowingCreateSpaces )
+                    CreateSpacesView(spaceId: viewModel.newSpaceUUID, isShowingCreateSpaces: $viewModel.isShowingCreateSpaces )
                     
                 }
             })

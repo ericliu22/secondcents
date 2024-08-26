@@ -9,8 +9,8 @@ import SwiftUI
 
 struct SettingsView: View {
     @StateObject private var viewModel = SettingsViewModel()
+    @Environment(AppModel.self) var appModel
 //    @Binding var showSignInView: Bool
-    @Binding var activeSheet: PopupSheet?
     var body: some View {
         List{
             
@@ -27,7 +27,7 @@ struct SettingsView: View {
                         do{
                           
                             
-                            activeSheet  = .customizeProfileView
+                            appModel.activeSheet  = .customizeProfileView
                         }  catch {
                             print(error)
                         }
@@ -38,7 +38,7 @@ struct SettingsView: View {
                 
              
                 
-                NavigationLink(destination:   AddFriendFromContactsView(activeSheet:$activeSheet)) {
+                NavigationLink(destination:   AddFriendFromContactsView()) {
                     Text("Contacts")
                         .foregroundColor(Color.accentColor)
                 }
@@ -55,7 +55,7 @@ struct SettingsView: View {
                         try viewModel.signOut()
 //                        showSignInView = true
                         
-                        activeSheet  = .signInView
+                        appModel.activeSheet  = .signInView
                     }  catch {
                         print(error)
                     }
@@ -69,15 +69,6 @@ struct SettingsView: View {
     }
 }
 
-struct SettingsView_Previews: PreviewProvider {
-    static var previews: some View {
-        NavigationStack{
-//            SettingsView(showSignInView: .constant(false))
-            
-            SettingsView(activeSheet: .constant(nil))
-        }
-    }
-}
 
 extension SettingsView {
     private var emailSection: some View {
@@ -123,3 +114,15 @@ extension SettingsView {
         }
     }
 }
+
+/*
+struct SettingsView_Previews: PreviewProvider {
+    static var previews: some View {
+        NavigationStack{
+//            SettingsView(showSignInView: .constant(false))
+            
+            SettingsView(appModel.activeSheet: .constant(nil))
+        }
+    }
+}
+ */

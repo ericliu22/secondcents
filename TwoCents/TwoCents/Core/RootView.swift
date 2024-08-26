@@ -37,14 +37,12 @@ struct RootView: View {
     @State private var tintLoaded: Bool = false
     @State private var userColor: String = ""
     
-    @State private var activeSheet: PopupSheet?
-    
     @State private var userPhoneNumber: String?
     
     var body: some View {
-        
+        @Bindable var appModel = appModel
         ZStack {
-            FrontPageView(activeSheet: $activeSheet)
+            FrontPageView()
             //                .tint(viewModel.getUserColor(userColor: viewModel.user?.userColor ?? ""))
                 .tint(appModel.loadedColor)
                 .animation(.easeIn, value: tintLoaded)
@@ -56,29 +54,29 @@ struct RootView: View {
             //            self.showSignInView = authUser == nil
             
             if authUser == nil {
-                activeSheet = .signInView
+                appModel.activeSheet = .signInView
             }
         }
         
-        .fullScreenCover(item: $activeSheet) { item in
+        .fullScreenCover(item: $appModel.activeSheet) { item in
             NavigationStack {
                 
                 switch item {
                 case .signInView:
                   
-                    AuthenticationView(activeSheet: $activeSheet, userPhoneNumber: $userPhoneNumber)
+                    AuthenticationView(userPhoneNumber: $userPhoneNumber)
                 case .customizeProfileView:
-                    CustomizeProfileView(activeSheet: $activeSheet)
+                    CustomizeProfileView()
                         
                     
                 case .verifyCodeView:
-                    VerifyCodeView(activeSheet: $activeSheet)
+                    VerifyCodeView()
                 case .signUpPhoneNumberView:
-                    SignUpPhoneNumberView(activeSheet: $activeSheet, userPhoneNumber: $userPhoneNumber)
+                    SignUpPhoneNumberView(userPhoneNumber: $userPhoneNumber)
                 case .addFriendFromContactsView:
                     
                     NavigationView{
-                        AddFriendFromContactsView(activeSheet:$activeSheet)
+                        AddFriendFromContactsView()
                     }
                     
                 }
@@ -89,20 +87,20 @@ struct RootView: View {
         //        .fullScreenCover(isPresented: $showCreateProfileView,  content: {
         //            NavigationStack{
         ////                CustomizeProfileView(showCreateProfileView: $showCreateProfileView, selectedColor: $appModel.loadedColor)
-        //                CustomizeProfileView(activeSheet: $activeSheet, selectedColor: $appModel.loadedColor)
+        //                CustomizeProfileView(appModel.activeSheet: $appModel.activeSheet, selectedColor: $appModel.loadedColor)
         //            }
         //
         //
         //        })
         
         
-        .onChange(of: activeSheet) { newValue, oldValue in
+        .onChange(of: appModel.activeSheet) { newValue, oldValue in
             Task {
                 do {
                     try await viewModel.loadCurrentUser()
                 } catch {
-                    if activeSheet == nil {
-                        activeSheet = .signUpPhoneNumberView
+                    if appModel.activeSheet == nil {
+                        appModel.activeSheet = .signUpPhoneNumberView
                     }
                 }
             }

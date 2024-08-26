@@ -10,7 +10,7 @@ import SwiftUI
 struct AuthenticationView: View {
     
 //    @Binding var showSignInView: Bool
-    @Binding var activeSheet: PopupSheet?
+    @Environment(AppModel.self) var appModel
     @State private var animateGradient: Bool = false
     
 //    @Binding var showCreateProfileView: Bool
@@ -64,7 +64,7 @@ struct AuthenticationView: View {
                 
                
 //                SignInPhoneNumberView(showSignInView: $showSignInView, showCreateProfileView: $showCreateProfileView)
-                SignInPhoneNumberView(activeSheet: $activeSheet, userPhoneNumber: $userPhoneNumber )
+                SignInPhoneNumberView(userPhoneNumber: $userPhoneNumber )
                 
             } label: {
                 Text("Continue With Phone Number")
@@ -82,7 +82,7 @@ struct AuthenticationView: View {
                
 //                SignInEmailView(showSignInView: $showSignInView, showCreateProfileView: $showCreateProfileView)
                 
-                SignInEmailView(activeSheet: $activeSheet )
+                SignInEmailView()
             } label: {
                 Text("Continue With Email")
                     .font(.headline)
@@ -102,8 +102,8 @@ struct AuthenticationView: View {
 //             
 //
 ////                SignUpEmailView(showSignInView: $showSignInView, showCreateProfileView: $showCreateProfileView)
-////                SignUpEmailView(activeSheet: $activeSheet )
-//                SignInPhoneNumberView(activeSheet: $activeSheet, userPhoneNumber: $userPhoneNumber )
+////                SignUpEmailView(appModel.activeSheet: $appModel.activeSheet )
+//                SignInPhoneNumberView(appModel.activeSheet: $appModel.activeSheet, userPhoneNumber: $userPhoneNumber )
 //
 //            } label: {
 //                Text("New? Ugh. Create a new account")
@@ -125,12 +125,15 @@ struct AuthenticationView: View {
     }
 }
 
+/*
 struct AuthenticationView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack{
 //            AuthenticationView(showSignInView: .constant(false), showCreateProfileView: .constant(false))
-            AuthenticationView(activeSheet: .constant(nil), userPhoneNumber: .constant(""))
+            AuthenticationView(appModel.activeSheet: .constant(nil), userPhoneNumber: .constant(""))
         }
        
     }
 }
+
+*/

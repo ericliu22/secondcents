@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct SearchUserView: View {
-    @Binding var activeSheet: PopupSheet?
 //    @Binding var showSignInView: Bool
 //    @Binding var showCreateProfileView: Bool
     
@@ -49,7 +48,7 @@ struct SearchUserView: View {
                     NavigationLink {
                         
                         //                        ProfileView(showSignInView: $showSignInView, appModel.loadedColor: $appModel.loadedColor,targetUserColor: targetUserColor, showCreateProfileView: $showCreateProfileView, targetUserId: userTile.userId)
-                        ProfileView(activeSheet: $activeSheet, targetUserColor: targetUserColor, targetUserId: userTile.userId)
+                        ProfileView(targetUserColor: targetUserColor, targetUserId: userTile.userId)
                     } label: {
                         
                         

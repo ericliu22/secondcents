@@ -10,11 +10,11 @@ import SwiftUI
 
 struct VerifyCodeView: View {
     @Environment(\.presentationMode) var presentation
+    @Environment(AppModel.self) var appModel
 
 //    @Binding var showSignInView: Bool
 //    @Binding var showCreateProfileView: Bool
 // 
-    @Binding var activeSheet: PopupSheet?
       @StateObject private var viewModel = VerifyCodeViewModel()
     var body: some View {
         ScrollView{
@@ -47,7 +47,7 @@ struct VerifyCodeView: View {
                                 
                                 if success {
                                     
-                                    activeSheet = nil
+                                    appModel.activeSheet = nil
                                     
                                     
                                 }
@@ -111,12 +111,15 @@ struct VerifyCodeView: View {
         
 }
 
+/*
 struct VerifytCodeView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack{
 //            SignInEmailView(showSignInView: .constant(false),showCreateProfileView: .constant(false))
             
-            SignInEmailView(activeSheet: .constant(nil))
+            SignInEmailView(appModel.activeSheet: .constant(nil))
         }
     }
 }
+
+*/

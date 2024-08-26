@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct FriendsView: View {
-    @Binding var activeSheet: PopupSheet?
     //    @Binding var showSignInView: Bool
     @Environment(AppModel.self) var appModel
     //    @Binding var showCreateProfileView: Bool
@@ -52,7 +51,7 @@ struct FriendsView: View {
                             
                             //                        ProfileView(showSignInView: $showSignInView, appModel.loadedColor: $appModel.loadedColor,targetUserColor: targetUserColor, showCreateProfileView: $showCreateProfileView, targetUserId: userTile.userId)
                             
-                            ProfileView(activeSheet: $activeSheet, targetUserColor: targetUserColor, targetUserId: userTile.userId)
+                            ProfileView(targetUserColor: targetUserColor, targetUserId: userTile.userId)
                         } label: {
                             HStack(spacing: 20){
                                 

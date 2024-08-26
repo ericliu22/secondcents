@@ -10,7 +10,7 @@ import SwiftUI
 
 struct SignUpPhoneNumberView: View {
     @Environment(\.presentationMode) var presentation
-    @Binding var activeSheet: PopupSheet?
+    @Environment(AppModel.self) var appModel
 //    @Binding var showSignInView: Bool
     
     @StateObject private var viewModel = SignUpPhoneNumberViewModel()
@@ -44,7 +44,7 @@ struct SignUpPhoneNumberView: View {
                         do {
                             try await viewModel.signUp(userPhoneNumber: userPhoneNumber ?? "")
                             
-                            activeSheet  = .addFriendFromContactsView
+                            appModel.activeSheet  = .addFriendFromContactsView
                             return
                         } catch {
                         }
@@ -92,12 +92,14 @@ struct SignUpPhoneNumberView: View {
     
 }
 
+/*
 struct SignUpPhoneNumberView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack {
 //            SignUpEmailView(showSignInView: .constant(false), showCreateProfileView: .constant(false))
-            SignUpEmailView(activeSheet: .constant(nil))
+            SignUpEmailView(appModel.activeSheet: .constant(nil))
         }
         
     }
 }
+*/

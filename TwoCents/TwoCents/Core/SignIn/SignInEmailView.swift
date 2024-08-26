@@ -10,7 +10,7 @@ import SwiftUI
 
 struct SignInEmailView: View {
     @Environment(\.presentationMode) var presentation
-    @Binding var activeSheet: PopupSheet?
+    @Environment(AppModel.self) var appModel
 //    @Binding var showSignInView: Bool
 //    @Binding var showCreateProfileView: Bool
     
@@ -59,7 +59,7 @@ struct SignInEmailView: View {
 //                        showSignInView = false
 //                        showCreateProfileView = false
                         
-                        activeSheet = nil
+                        appModel.activeSheet = nil
                         
                         
                         return
@@ -114,11 +114,13 @@ struct SignInEmailView: View {
         
 }
 
+/*
 struct SignInEmailView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack{
 //            SignInEmailView(showSignInView: .constant(false),showCreateProfileView: .constant(false))
-            SignInEmailView(activeSheet: .constant(nil))
+            SignInEmailView(appModel.activeSheet: .constant(nil))
         }
     }
 }
+*/

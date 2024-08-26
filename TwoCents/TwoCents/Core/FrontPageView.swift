@@ -14,14 +14,13 @@ struct FrontPageView: View {
    
     
     @State var friendRequests: Int = 0
-    @Binding var activeSheet: PopupSheet?
     @State var selectedTab: Int = 0
     @Environment(AppModel.self) var appModel
     
     var body: some View {
         //Make sure TabView always navigates to SpacesView
         TabView(selection: $selectedTab, content: {
-            SpacesView(activeSheet: $activeSheet)
+            SpacesView()
                 .tabItem {
                     Image(systemName: "rectangle.3.group.fill")
                     Text("Spaces")
@@ -29,7 +28,7 @@ struct FrontPageView: View {
                 .tag(0)
             
             NavigationStack{
-                SearchUserView(activeSheet: $activeSheet, targetUserId: "")
+                SearchUserView(targetUserId: "")
                    
             }
             .tabItem {
@@ -41,7 +40,7 @@ struct FrontPageView: View {
             
             NavigationStack {
 
-                ProfileView(activeSheet: $activeSheet, targetUserId: "")
+                ProfileView(targetUserId: "")
             }
             .tabItem {
                 Label("Profile", systemImage: "person")

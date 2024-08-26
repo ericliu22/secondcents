@@ -2,10 +2,10 @@ import SwiftUI
 import Foundation
 
 struct FriendRequestsView: View {
-    @Binding var activeSheet: PopupSheet?
     @State var targetUserId: String
     @State private var searchTerm = ""
     
+    @Environment(AppModel.self) var appModel
     @StateObject private var viewModel = FriendRequestsViewModel()
     
     private let noFriendsMessage: [String] = [
@@ -30,8 +30,7 @@ struct FriendRequestsView: View {
     // State property to store the selected message
     @State private var friendRequestMessage: String = ""
     
-    init(activeSheet: Binding<PopupSheet?>, targetUserId: String) {
-        self._activeSheet = activeSheet
+    init(targetUserId: String) {
         self._targetUserId = State(initialValue: targetUserId)
         // Initialize the friend request message
         _friendRequestMessage = State(initialValue: friendRequestMessages.randomElement() ?? "No message available")
@@ -51,7 +50,7 @@ struct FriendRequestsView: View {
                     let targetUserColor: Color = viewModel.getUserColor(userColor: userTile.userColor!)
                     
                     NavigationLink {
-                        ProfileView(activeSheet: $activeSheet, targetUserColor: targetUserColor, targetUserId: userTile.userId)
+                        ProfileView(targetUserColor: targetUserColor, targetUserId: userTile.userId)
                     } label: {
                         HStack(spacing: 20) {
                             Group {

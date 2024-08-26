@@ -20,6 +20,7 @@ final class AppModel {
     var navigationMutex: NSCondition = NSCondition()
     var loadedColor: Color = .gray
     var user: DBUser?
+    var activeSheet: PopupSheet?
     
     init() {
         guard let userId = try? AuthenticationManager.shared.getAuthenticatedUser().uid else {

@@ -22,7 +22,6 @@ struct CreateSpacesView: View {
     @State private var selectedPhoto: PhotosPickerItem? = nil
     
     
-    @Binding var activeSheet: PopupSheet?
     
     
     private let noMembersMessage: [String] = [
@@ -181,7 +180,7 @@ struct CreateSpacesView: View {
                                 
                                 
                                 NavigationLink {
-                                    SearchUserView(activeSheet: $activeSheet, targetUserId: "")
+                                    SearchUserView(targetUserId: "")
                                 } label: {
                                     Label("No friends? I figured. Tap me!", systemImage: "person.badge.plus")
                                         .font(.headline)

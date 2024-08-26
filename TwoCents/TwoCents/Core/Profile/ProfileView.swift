@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct ProfileView: View {
-    @Binding var activeSheet: PopupSheet?
     @StateObject private var viewModel = ProfileViewModel()
     @State var targetUserColor: Color?
     @Environment(AppModel.self) var appModel
@@ -111,7 +110,7 @@ struct ProfileView: View {
         .offset(x:44, y:44)
         .onTapGesture{
             //                                        showCreateProfileView = true
-            activeSheet = .customizeProfileView
+            appModel.activeSheet = .customizeProfileView
             
         }
         
@@ -261,7 +260,7 @@ struct ProfileView: View {
                     VStack{
                         NavigationLink {
                             //                            FriendsView(showSignInView: $showSignInView, appModel.loadedColor: $appModel.loadedColor, showCreateProfileView: $showCreateProfileView, targetUserId: viewModel.user?.userId ?? "")
-                            FriendsView(activeSheet: $activeSheet, targetUserId: viewModel.user?.userId ?? "")
+                            FriendsView(targetUserId: viewModel.user?.userId ?? "")
                         } label: {
                             
                             VStack{
@@ -290,7 +289,7 @@ struct ProfileView: View {
                             NavigationLink {
                                 //                                FriendRequestsView(showSignInView: $showSignInView, appModel.loadedColor: $appModel.loadedColor, showCreateProfileView: $showCreateProfileView, targetUserId: viewModel.user?.userId ?? "")
                                 
-                                FriendRequestsView(activeSheet: $activeSheet, targetUserId: viewModel.user?.userId ?? "")
+                                FriendRequestsView(targetUserId: viewModel.user?.userId ?? "")
                             } label: {
                                 
                                 VStack{
@@ -541,7 +540,7 @@ struct ProfileView: View {
                     NavigationLink{
                         //                        SettingsView(showSignInView: $showSignInView)
                         
-                        SettingsView(activeSheet: $activeSheet)
+                        SettingsView()
                     } label: {
                         Image (systemName: "gear")
                             .font(.headline)
@@ -559,7 +558,7 @@ struct ProfileView: View {
  static var previews: some View {
  NavigationStack {
  //            ProfileView(showSignInView: .constant(false),appModel.loadedColor: .constant(.red),showCreateProfileView: .constant(false), targetUserId: "")
- ProfileView(activeSheet: .constant(nil), appModel.loadedColor: .constant(.red), targetUserId: "")
+ ProfileView(appModel.activeSheet: .constant(nil), appModel.loadedColor: .constant(.red), targetUserId: "")
  }
  }
  }
