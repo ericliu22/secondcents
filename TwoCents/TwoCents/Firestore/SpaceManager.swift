@@ -49,6 +49,7 @@ struct DBSpace: Identifiable, Codable, Hashable {
     
 }
 
+let spaceCollection = Firestore.firestore().collection("spaces")
 
 final class SpaceManager{
     
@@ -58,23 +59,20 @@ final class SpaceManager{
     let LAST_Y: CGFloat = 2340
     
     static let shared = SpaceManager()
+    
     private init() { }
     
     //so you dont have to type this many times... creates cleaner code
-    private let spaceCollection = Firestore.firestore().collection("spaces")
     
     private func spaceDocument(spaceId: String) -> DocumentReference {
         spaceCollection.document(spaceId)
-        
     }
     
     func createNewSpace(space: DBSpace) async throws {
-        
         try spaceDocument(spaceId: space.spaceId).setData(from: space, merge: false)
     }
     
     func deleteSpace(spaceId: String) async throws {
-        
         try await spaceDocument(spaceId: spaceId).delete()
     }
     

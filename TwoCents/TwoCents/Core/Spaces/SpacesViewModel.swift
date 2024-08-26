@@ -56,15 +56,17 @@ final class SpacesViewModel {
             return
         }
         for space in allSpaces {
-            db.collection("spaces").document(space.id).collection("unreads").document(user.id).addSnapshotListener({ [weak self] snapshot, error in
-                
-                guard let self = self else { return }
-                guard let snapshot = snapshot else { return}
-                guard let count = snapshot.data()?["count"] as? Int else {
-                    return
-                }
-                self.notificationCount[space.id] = count
-            })
+            guard let unreadCount = try? await db.collection("spaces")
+                .document(space.id)
+                .collection("unreads")
+                .document(user.id)
+                .getDocument()
+                .data()?["count"] as? Int else {
+                print("SpacesViewModel: failed to get unread count")
+                continue
+            }
+            notificationCount[space.id] = unreadCount
+            print(notificationCount)
         }
     }
     

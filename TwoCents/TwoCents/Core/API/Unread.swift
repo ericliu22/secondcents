@@ -26,18 +26,20 @@ import Firebase
  */
 
 
-fileprivate func addMessageUnread(spaceId: String, userId: String) {
+func addMessageUnread(spaceId: String, userId: String) {
     print("ADDDING MESSAGE UNREAD")
-    db.collection("spaces").document(spaceId).collection("unreads").document(userId).setData([
+    Firestore.firestore().collection("spaces").document(spaceId).collection("unreads").document(userId).setData([
         "count": FieldValue.increment(Double(1))
     ], merge: true)
 }
 
-fileprivate func addWidgetUnread(spaceId: String, userId: String, widgetId: String) {
-    db.collection("spaces").document(spaceId).collection("unreads").document(userId).setData([
-        "widgets": FieldValue.arrayUnion([widgetId]),
-        "count": FieldValue.increment(Double(1))
-    ], merge: true)
+func addWidgetUnread(spaceId: String, userId: String, widgetId: String) {
+    DispatchQueue.global().async {
+        db.collection("spaces").document(spaceId).collection("unreads").document(userId).setData([
+            "widgets": FieldValue.arrayUnion([widgetId]),
+            "count": FieldValue.increment(Double(1))
+        ], merge: true)
+    }
 }
 
 fileprivate func fetchLatestMessage(spaceId: String) async -> String? {
@@ -60,7 +62,7 @@ fileprivate func fetchLatestMessage(spaceId: String) async -> String? {
 }
 
 func widgetUnread(spaceId: String, widgetId: String) async {
-    guard let space = try? await SpaceManager.shared.getSpace(spaceId: spaceId) else {
+    guard let space = try? await spaceCollection.document(spaceId).getDocument(as: DBSpace.self) else {
         print("Unreads: failed to get space")
         return
     }
@@ -75,7 +77,7 @@ func widgetUnread(spaceId: String, widgetId: String) async {
  
 
 func messageUnread(spaceId: String) async {
-    guard let space = try? await SpaceManager.shared.getSpace(spaceId: spaceId) else {
+    guard let space = try? await spaceCollection.document(spaceId).getDocument(as: DBSpace.self) else {
         print("Unreads: failed to get space")
         return
     }
@@ -83,6 +85,7 @@ func messageUnread(spaceId: String) async {
         print("This should never happen")
         return
     }
+    print(members)
     for memberId in members {
         addMessageUnread(spaceId: spaceId, userId: memberId)
     }
