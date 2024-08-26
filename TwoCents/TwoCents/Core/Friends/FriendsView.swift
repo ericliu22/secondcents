@@ -7,13 +7,13 @@
 
 import SwiftUI
 
-    struct FriendsView: View {
-        @Binding var activeSheet: PopupSheet?
-//    @Binding var showSignInView: Bool
-    @Binding var loadedColor: Color
-//    @Binding var showCreateProfileView: Bool
+struct FriendsView: View {
+    @Binding var activeSheet: PopupSheet?
+    //    @Binding var showSignInView: Bool
+    @Environment(AppModel.self) var appModel
+    //    @Binding var showCreateProfileView: Bool
     
-
+    
     @State var targetUserId: String
     
     @State private var searchTerm = ""
@@ -50,9 +50,9 @@ import SwiftUI
                         
                         NavigationLink {
                             
-                            //                        ProfileView(showSignInView: $showSignInView, loadedColor: $loadedColor,targetUserColor: targetUserColor, showCreateProfileView: $showCreateProfileView, targetUserId: userTile.userId)
+                            //                        ProfileView(showSignInView: $showSignInView, appModel.loadedColor: $appModel.loadedColor,targetUserColor: targetUserColor, showCreateProfileView: $showCreateProfileView, targetUserId: userTile.userId)
                             
-                            ProfileView(activeSheet: $activeSheet, loadedColor: $loadedColor, targetUserColor: targetUserColor, targetUserId: userTile.userId)
+                            ProfileView(activeSheet: $activeSheet, targetUserColor: targetUserColor, targetUserId: userTile.userId)
                         } label: {
                             HStack(spacing: 20){
                                 
@@ -155,23 +155,25 @@ import SwiftUI
                 .searchable(text: $searchTerm, placement: .navigationBarDrawer(displayMode: .always), prompt: "Search")
             }
             
-         .scrollDismissesKeyboard(.interactively)
+            .scrollDismissesKeyboard(.interactively)
             
         }
         .task {
-           
-          try? await viewModel.getAllFriends(targetUserId: targetUserId)
-         
+            
+            try? await viewModel.getAllFriends(targetUserId: targetUserId)
+            
         }
         
         
     }
 }
 
+/*
 struct FriendsView_Previews: PreviewProvider {
     static var previews: some View {
-//        FriendsView(showSignInView: .constant(false),loadedColor: .constant(.red),showCreateProfileView: .constant(false), targetUserId: "")
+        //        FriendsView(showSignInView: .constant(false),appModel.loadedColor: .constant(.red),showCreateProfileView: .constant(false), targetUserId: "")
         
-        FriendsView(activeSheet: .constant(nil), loadedColor: .constant(.red), targetUserId: "")
+        FriendsView(activeSheet: .constant(nil), appModel.loadedColor: .constant(.red), targetUserId: "")
     }
 }
+*/

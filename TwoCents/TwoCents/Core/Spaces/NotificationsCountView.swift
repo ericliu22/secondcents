@@ -11,17 +11,16 @@ import SwiftUI
 //Legit copy pasted from internet
 struct NotificationCountView : View {
     
+    @Environment(AppModel.self) var appModel
     @Binding var value: Int
-    @Binding var loadedColor: Color
     
     private let FOREGROUND_COLOR: Color = .white
     private let size: CGFloat
     private let x: CGFloat
     private let y: CGFloat
     
-    init(value: Binding<Int>, loadedColor: Binding<Color>, x: CGFloat = 12.0, y: CGFloat = 20.0, size: CGFloat = 20 ) {
+    init(value: Binding<Int>, x: CGFloat = 12.0, y: CGFloat = 20.0, size: CGFloat = 20 ) {
         self._value = value
-        self._loadedColor = loadedColor
         self.x = x
         self.y = y
         self.size = size
@@ -30,7 +29,7 @@ struct NotificationCountView : View {
     var body: some View {
         ZStack {
             Capsule()
-                .fill(loadedColor)
+                .fill(appModel.loadedColor)
                 .frame(width: size * widthMultplier(), height: size, alignment: .topTrailing)
                 .position(x: x, y: y)
             

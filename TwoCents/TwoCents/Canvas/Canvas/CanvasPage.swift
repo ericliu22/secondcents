@@ -30,10 +30,6 @@ let WIDGET_SPACING: CGFloat = TILE_SIZE + TILE_SPACING
 
 struct CanvasPage: View {
     
-    //helps reset view
-    //Eric: Idk what this is
-    @State private var refreshId = UUID()
-
     @Bindable var viewModel: CanvasPageViewModel
     @Environment(AppModel.self) var appModel
     @Environment(\.presentationMode) var presentationMode
@@ -175,7 +171,7 @@ struct CanvasPage: View {
                 .environment(viewModel)
                 .contextMenu(ContextMenu(menuItems: {
                     
-                    EmojiReactionContextView(spaceId: spaceId, widget: widget, refreshId: $refreshId)
+                    EmojiReactionContextView(spaceId: spaceId, widget: widget, refreshId: $viewModel.refreshId)
                     widgetButton(widget: widget)
                     
                     // Reply button
@@ -232,7 +228,7 @@ struct CanvasPage: View {
                     EmojiCountOverlayView(spaceId: spaceId, widget: widget)
                         .offset(y: TILE_SIZE/2)
                         .position(x: widget.x ??  FRAME_SIZE/2, y: widget.y ?? FRAME_SIZE/2)
-                        .id(refreshId)
+                        .id(viewModel.refreshId)
                     
                     : nil
                 }
@@ -343,6 +339,7 @@ struct CanvasPage: View {
                         viewModel.attachWidgetListener()
                         appModel.currentSpaceId = spaceId
                         appModel.inSpace = true
+                        await readNotifications(spaceId: spaceId)
                     } catch {
                         //EXIT IF SPACE DOES NOT EXIST
                         self.presentationMode.wrappedValue.dismiss()

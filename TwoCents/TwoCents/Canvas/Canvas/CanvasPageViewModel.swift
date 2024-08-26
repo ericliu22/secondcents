@@ -28,6 +28,7 @@ final class CanvasPageViewModel {
     var selectedDetent: PresentationDetent = .height(50)
     var photoLinkedToProfile: Bool = false
     var widgetId: String = UUID().uuidString
+    var refreshId = UUID()
 
     /* Eric: Don't delete this
      init(spaceId: String) {
@@ -77,12 +78,6 @@ final class CanvasPageViewModel {
         } else {
             print("Cannot open link")
         }
-    }
-    
-    func getUserColor(userColor: String) -> Color{
-        
-        return Color.fromString(name: userColor)
-        
     }
     
     func attachWidgetListener() {

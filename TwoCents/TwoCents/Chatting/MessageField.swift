@@ -4,10 +4,11 @@ struct MessageField: View {
     
     @StateObject private var viewModel = MessageFieldViewModel()
     @Environment(CanvasPageViewModel.self) var canvasViewModel
+    @Environment(AppModel.self) var appModel
     
     @State private var message = ""
     @FocusState private var isFocused: Bool
-    @State private var userColor: Color = .gray
+    
     @State var spaceId: String
     @Binding var threadId: String
     
@@ -21,7 +22,6 @@ struct MessageField: View {
                 .font(.headline)
                 .fontWeight(.regular)
                 .focused($isFocused)
-               
             
             Button {
                 Task {
@@ -34,7 +34,7 @@ struct MessageField: View {
                     .font(.headline)
                     .frame(width: 30, height: 30, alignment: .center)
                     .foregroundColor(message.isEmpty && canvasViewModel.replyWidget == nil ? .clear : .white)
-                    .background(message.isEmpty && canvasViewModel.replyWidget == nil ? .clear : userColor)
+                    .background(message.isEmpty && canvasViewModel.replyWidget == nil ? .clear : appModel.loadedColor)
                     .clipShape(Circle())
                     .padding(.bottom, 4)
             }
@@ -52,7 +52,6 @@ struct MessageField: View {
         .frame(minHeight: 50, alignment: .center)
         .task {
             try? await viewModel.loadCurrentUser()
-            self.userColor = viewModel.getUserColor(userColor: viewModel.user?.userColor ?? "")
         }
         .background(.clear)
         .onChange(of: threadId) { oldValue, newValue in

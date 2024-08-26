@@ -32,10 +32,10 @@ struct RootView: View {
     //    @State private var showCreateProfileView: Bool = false
     
     var viewModel = RootViewModel()
+    @Environment(AppModel.self) var appModel
     
     @State private var tintLoaded: Bool = false
     @State private var userColor: String = ""
-    @State private var loadedColor: Color = .gray
     
     @State private var activeSheet: PopupSheet?
     
@@ -44,22 +44,9 @@ struct RootView: View {
     var body: some View {
         
         ZStack {
-            FrontPageView(loadedColor: $loadedColor, activeSheet: $activeSheet)
-                .task{
-                    
-                    try? await viewModel.loadCurrentUser()
-                    
-                    if let myColor = viewModel.user?.userColor{
-                        tintLoaded = true
-                        userColor = myColor
-                        print("USERCOLOR: \(userColor)")
-                        loadedColor = viewModel.getUserColor(userColor: userColor)
-                    }
-                    
-                }
+            FrontPageView(activeSheet: $activeSheet)
             //                .tint(viewModel.getUserColor(userColor: viewModel.user?.userColor ?? ""))
-            
-                .tint(tintLoaded ? loadedColor : .gray)
+                .tint(appModel.loadedColor)
                 .animation(.easeIn, value: tintLoaded)
 
         }
@@ -81,7 +68,7 @@ struct RootView: View {
                   
                     AuthenticationView(activeSheet: $activeSheet, userPhoneNumber: $userPhoneNumber)
                 case .customizeProfileView:
-                    CustomizeProfileView(activeSheet: $activeSheet, selectedColor: $loadedColor)
+                    CustomizeProfileView(activeSheet: $activeSheet)
                         
                     
                 case .verifyCodeView:
@@ -99,106 +86,26 @@ struct RootView: View {
         
         }
         
- 
-        
-        
-        
         //        .fullScreenCover(isPresented: $showCreateProfileView,  content: {
         //            NavigationStack{
-        ////                CustomizeProfileView(showCreateProfileView: $showCreateProfileView, selectedColor: $loadedColor)
-        //                CustomizeProfileView(activeSheet: $activeSheet, selectedColor: $loadedColor)
+        ////                CustomizeProfileView(showCreateProfileView: $showCreateProfileView, selectedColor: $appModel.loadedColor)
+        //                CustomizeProfileView(activeSheet: $activeSheet, selectedColor: $appModel.loadedColor)
         //            }
         //
         //
         //        })
         
         
-        .onChange(of: activeSheet) { oldValue, newValue in
-            switch newValue {
-     
-            case .customizeProfileView:
-                Task{
-                    try? await viewModel.loadCurrentUser()
-                    
-                    if let myColor = viewModel.user?.userColor{
-                        tintLoaded = true
-                        
-                        userColor = myColor
-                        print("USERCOLOR: \(userColor)")
-                        loadedColor = viewModel.getUserColor(userColor: userColor)
-                    }
-                    
-                    
-                }
-                
-            default:
-                break
-            }
-            
-    
-            
-            Task{
-                
+        .onChange(of: activeSheet) { newValue, oldValue in
+            Task {
                 do {
                     try await viewModel.loadCurrentUser()
                 } catch {
-                    if activeSheet == nil{
+                    if activeSheet == nil {
                         activeSheet = .signUpPhoneNumberView
-                        
-                        
-                        
-                        
                     }
-                    
                 }
             }
-            
-            switch oldValue  {
-                
-            case .customizeProfileView:
-                Task{
-                    
-                    try? await viewModel.loadCurrentUser()
-                    
-                    if let myColor = viewModel.user?.userColor{
-                        tintLoaded = true
-                        userColor = myColor
-                        print("USERCOLOR: \(userColor)")
-                        loadedColor = viewModel.getUserColor(userColor: userColor)
-                    } else {
-                        print("gray")
-                    }
-                    
-                }
-                
-                
-            case .signInView:
-                Task{
-                    try? await viewModel.loadCurrentUser()
-                    
-                    if let myColor = viewModel.user?.userColor{
-                        withAnimation{
-                        tintLoaded = true
-                        
-                        userColor = myColor
-                        print("USERCOLOR: \(userColor)")
-                        
-                   
-                            loadedColor = viewModel.getUserColor(userColor: userColor)
-                        }
-                    }
-                    
-                    
-                }
-                
-                
-            default:
-                break
-            }
-            
-            
-            
-            
         }
       
         

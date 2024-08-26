@@ -15,6 +15,10 @@ import Darwin
 struct TwoCentsApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     
+    init () {
+        FirebaseApp.configure()
+    }
+    
     var body: some Scene {
         WindowGroup {
             RootView()
@@ -28,7 +32,7 @@ struct TwoCentsApp: App {
 
 class AppDelegate: NSObject, UIApplicationDelegate {
     let gcmMessageIDKey = "gcm.message_id"
-    var appModel: AppModel = AppModel()
+    lazy var appModel: AppModel = AppModel()
     
     //If this fucks up everyone is fucked
     override init() {
@@ -40,7 +44,6 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     }
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
-        FirebaseApp.configure()
 
         Messaging.messaging().delegate = self
 

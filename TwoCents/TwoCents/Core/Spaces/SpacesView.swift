@@ -9,24 +9,17 @@ import SwiftUI
 
 struct SpacesView: View {
     @Binding var activeSheet: PopupSheet?
-    @Binding var loadedColor: Color
 
-    @State private var searchTerm = ""
-    
-    
     @State private var showDetail = false
-    @State var isShowingCreateSpaces: Bool = false
     
-    @State private var presentedPath: [DBSpace] = []
-    @State private var newSpaceUUID = UUID().uuidString
     
     @Bindable var viewModel = SpacesViewModel()
     @Environment(AppModel.self) var appModel
     
     
     var filteredSearch: [DBSpace]{
-        guard !searchTerm.isEmpty else { return viewModel.allSpaces}
-        return viewModel.allSpaces.filter{$0.name!.localizedCaseInsensitiveContains(searchTerm)}
+        guard !viewModel.searchTerm.isEmpty else { return viewModel.allSpaces}
+        return viewModel.allSpaces.filter{$0.name!.localizedCaseInsensitiveContains(viewModel.searchTerm)}
     }
     
     
@@ -148,7 +141,7 @@ struct SpacesView: View {
                                     NotificationCountView(value: Binding<Int>(
                                         get: { viewModel.notificationCount[spaceTile.spaceId] ?? 0 },
                                         set: { newValue in viewModel.notificationCount[spaceTile.spaceId] = newValue }
-                                    ), loadedColor: $loadedColor)
+                                    ))
                             }
                             .cornerRadius(20)
                         
@@ -158,7 +151,7 @@ struct SpacesView: View {
     var body: some View {
         
         
-        NavigationStack(path: $presentedPath) {
+        NavigationStack(path: $viewModel.presentedPath) {
             ScrollView(.vertical) {
                 if !viewModel.finishedLoading {
                     ProgressView()
@@ -171,7 +164,7 @@ struct SpacesView: View {
                             description: Text("But hey, maybe personal space is all you need.")
                         )
                         .onTapGesture {
-                            isShowingCreateSpaces = true
+                            viewModel.isShowingCreateSpaces = true
                         }
                         .padding(.top, 200)
                     
@@ -183,7 +176,7 @@ struct SpacesView: View {
                             
                             NavigationLink {
                                 CanvasPage(spaceId: spaceTile.spaceId)
-                                    .tint(loadedColor)
+                                    .tint(appModel.loadedColor)
                                 
                                     .onDisappear {
                                         /* Eric
@@ -216,14 +209,13 @@ struct SpacesView: View {
             
             
             
-            .fullScreenCover(isPresented: $isShowingCreateSpaces, content: {
+            .fullScreenCover(isPresented: $viewModel.isShowingCreateSpaces, content: {
                 NavigationView{
-                    CreateSpacesView(spaceId: newSpaceUUID, loadedColor: $loadedColor, activeSheet: $activeSheet, isShowingCreateSpaces: $isShowingCreateSpaces )
-                    
+                    CreateSpacesView(spaceId: viewModel.newSpaceUUID, activeSheet: $activeSheet, isShowingCreateSpaces: $viewModel.isShowingCreateSpaces )
                     
                 }
             })
-            .onChange(of: presentedPath, { oldValue, newValue in
+            .onChange(of: viewModel.presentedPath, { oldValue, newValue in
                 print("PRESENTED PATH \(newValue)")
             })
             .navigationDestination(for: DBSpace.self) { space in
@@ -238,8 +230,8 @@ struct SpacesView: View {
                     }
                 }
             }
-            .onChange(of: isShowingCreateSpaces, { oldValue, newValue in
-                if !isShowingCreateSpaces {
+            .onChange(of: viewModel.isShowingCreateSpaces, { oldValue, newValue in
+                if !viewModel.isShowingCreateSpaces {
                     print("YO")
                     
                     Task{
@@ -247,14 +239,14 @@ struct SpacesView: View {
                            
                         if let user = viewModel.user {
                             try? await viewModel.getAllSpaces(userId: user.userId)
-                            newSpaceUUID = UUID().uuidString
+                            viewModel.newSpaceUUID = UUID().uuidString
                         }
                     }
                 }
             })
             .toolbar{toolbar()}
             .navigationTitle( "Spaces 💬" )
-            .searchable(text: $searchTerm, placement: .navigationBarDrawer(displayMode: .always), prompt: "Search")
+            .searchable(text: $viewModel.searchTerm, placement: .navigationBarDrawer(displayMode: .always), prompt: "Search")
         }
         .task {
      
@@ -266,14 +258,14 @@ struct SpacesView: View {
                     return
                 }
                 appModel.shouldNavigateToSpace = false
-                presentedPath.append(space)
+                viewModel.presentedPath.append(space)
                 guard let user = viewModel.user else {
                     return
                 }
                 appModel.addToSpace(userId: user.userId)
             }
         }
-        .modifier(modelNavigation(presentedPath: $presentedPath))
+        .modifier(modelNavigation())
         .environment(viewModel)
 
     }
@@ -281,7 +273,6 @@ struct SpacesView: View {
     struct modelNavigation: ViewModifier {
         @Environment(AppModel.self) var appModel
         @Environment(SpacesViewModel.self) var viewModel
-        @Binding var presentedPath: [DBSpace]
         
         func body(content: Content) -> some View {
             content
@@ -327,8 +318,8 @@ struct SpacesView: View {
                                         print("Failed to get DBSpace from deeplink")
                                         return
                                     }
-                                    if !presentedPath.contains(where: {$0.spaceId == space.spaceId}) {
-                                        presentedPath.append(space)
+                                    if !viewModel.presentedPath.contains(where: {$0.spaceId == space.spaceId}) {
+                                        viewModel.presentedPath.append(space)
                                     }
                                     guard let user = viewModel.user else {
                                         return
@@ -350,7 +341,7 @@ struct SpacesView: View {
     func toolbar() -> some ToolbarContent {
         ToolbarItem(placement: .navigationBarTrailing) {
             Button{
-              isShowingCreateSpaces = true
+              viewModel.isShowingCreateSpaces = true
                 
             } label: {
                 Image (systemName: "square.and.pencil")
@@ -365,8 +356,8 @@ struct SpacesView: View {
 /*
 struct SpacesView_Previews: PreviewProvider {
     static var previews: some View {
-//        SpacesView(showSignInView: .constant(false),loadedColor: .constant(.red),showCreateProfileView: .constant(false))
-        SpacesView(activeSheet: .constant(nil), loadedColor: .constant(.red))
+//        SpacesView(showSignInView: .constant(false),appModel.loadedColor: .constant(.red),showCreateProfileView: .constant(false))
+        SpacesView(activeSheet: .constant(nil), appModel.loadedColor: .constant(.red))
     }
 }
 

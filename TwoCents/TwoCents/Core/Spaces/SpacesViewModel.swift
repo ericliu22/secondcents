@@ -17,7 +17,11 @@ final class SpacesViewModel {
     var allSpaces: [DBSpace] = []
     var finishedLoading: Bool = false
     var notificationCount: [String: Int] = [:]
-    
+    var presentedPath: [DBSpace] = []
+    var newSpaceUUID = UUID().uuidString
+    var searchTerm = ""
+    var isShowingCreateSpaces: Bool = false
+
     init() {
         Task {
             try? await loadCurrentUser()
@@ -44,12 +48,6 @@ final class SpacesViewModel {
 
     }
     
-    func getUserColor(userColor: String) -> Color{
-
-        return Color.fromString(name: userColor)
-        
-    }
-    
     func getNotifcationCount() async {
         guard let user = user else {
             print("SpacesViewModel: no user")
@@ -62,7 +60,6 @@ final class SpacesViewModel {
                 .document(user.id)
                 .getDocument()
                 .data()?["count"] as? Int else {
-                print("SpacesViewModel: failed to get unread count")
                 continue
             }
             notificationCount[space.id] = unreadCount

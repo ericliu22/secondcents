@@ -27,14 +27,9 @@ final class ColorPickerWidgetViewModel: ObservableObject{
         
         Task {
             
-           
-            
             try await UserManager.shared.updateUserColor(userId: user.userId, selectedColor: selectedColor)
        
             try? await loadCurrentUser()
-            
-            
-     
             
         }
         

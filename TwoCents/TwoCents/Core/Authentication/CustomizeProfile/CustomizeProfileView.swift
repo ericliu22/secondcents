@@ -12,15 +12,13 @@ struct CustomizeProfileView: View {
     @Binding var activeSheet: PopupSheet?
     @State private var url: URL? = nil
     
-    
+    @Environment(AppModel.self) var appModel
     @StateObject private var viewModel = CustomizeProfileViewModel()
     
 //    @Binding var showCreateProfileView: Bool
     
     
     @State private var selectedPhoto: PhotosPickerItem? = nil
-    
-    @Binding var selectedColor: Color
     
     
     
@@ -43,7 +41,7 @@ struct CustomizeProfileView: View {
 //                    //If there is URL for profile pic, show
 //                    //circle with stroke
 //                    Circle()
-////                        .strokeBorder(selectedColor, lineWidth:15)
+////                        .strokeBorder(appModel.loadedColor, lineWidth:15)
 //                        .background(
 //                            //profile pic in middle
 //                            AsyncImage(url: url) {image in
@@ -62,7 +60,7 @@ struct CustomizeProfileView: View {
 //                                    .frame(width: 176, height: 176)
 //                                    .background(
 //                                        Circle()
-//                                            .fill(selectedColor)
+//                                            .fill(appModel.loadedColor)
 //                                            .frame(width: 176, height: 176)
 //                                    )
 //                            }
@@ -86,7 +84,7 @@ struct CustomizeProfileView: View {
                             .scaleEffect(1.5, anchor: .center)
                             .background(
                                 Circle()
-                                    .fill(selectedColor)
+                                    .fill(appModel.loadedColor)
                                 .frame(width: 176, height: 176)
                             )
                             
@@ -104,8 +102,8 @@ struct CustomizeProfileView: View {
                     //if user has not uploaded profile pic, show circle
                     Circle()
                     
-//                        .strokeBorder(selectedColor, lineWidth:15)
-                        .fill(selectedColor)
+//                        .strokeBorder(appModel.loadedColor, lineWidth:15)
+                        .fill(appModel.loadedColor)
                         .frame(width: 176, height: 176)
                 }
                 
@@ -125,7 +123,7 @@ struct CustomizeProfileView: View {
                             .frame(width: 64, height: 64)
                         
                         Circle()
-                            .fill(selectedColor)
+                            .fill(appModel.loadedColor)
                             .frame(width: 48, height: 48)
                         
                         Image(systemName: "plus")
@@ -157,7 +155,7 @@ struct CustomizeProfileView: View {
                 .frame(height:30)
             
             //Color Picker
-            ColorPickerWidget(selectedColor: $selectedColor)
+            ColorPickerWidget()
             
             
             Spacer()
@@ -181,13 +179,13 @@ struct CustomizeProfileView: View {
             }
             
             .buttonStyle(.bordered)
-            .tint(selectedColor)
+            .tint(appModel.loadedColor)
             .frame(height: 55)
             .cornerRadius(10)
             .padding(.horizontal)
             
             
-            .disabled(selectedColor == .gray)
+            .disabled(appModel.loadedColor == .gray)
             
             
             
@@ -207,13 +205,14 @@ struct CustomizeProfileView: View {
         
 }
 
-
+/*
 struct CustomizeProfileView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack{
-//            CustomizeProfileView(showCreateProfileView: .constant(true), selectedColor: .constant(.red))
+//            CustomizeProfileView(showCreateProfileView: .constant(true), appModel.loadedColor: .constant(.red))
             
-            CustomizeProfileView(activeSheet: .constant(nil), selectedColor: .constant(.red))
+            CustomizeProfileView(activeSheet: .constant(nil), appModel.loadedColor: .constant(.red))
         }
     }
 }
+*/

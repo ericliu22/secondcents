@@ -47,17 +47,6 @@ final class MessageFieldViewModel: ObservableObject {
     
     
     
-    
-    @Published private(set) var userColor:  Color? = nil
-    
-    func getUserColor(userColor: String) -> Color{
-        return Color.fromString(name: userColor)
-    }
-    
-    
-    
-  
-    
     func sendMessages(text: String?, widget: CanvasWidget?, spaceId: String, threadId: String) {
         let docRef = db.collection("spaces").document(spaceId).collection("chat").document("mainChat")
 

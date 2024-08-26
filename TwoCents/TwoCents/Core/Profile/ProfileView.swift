@@ -10,9 +10,10 @@ import SwiftUI
 struct ProfileView: View {
     @Binding var activeSheet: PopupSheet?
     @StateObject private var viewModel = ProfileViewModel()
-    //    @Binding var showSignInView: Bool
-    @Binding var loadedColor: Color
     @State var targetUserColor: Color?
+    @Environment(AppModel.self) var appModel
+    //    @Binding var showSignInView: Bool
+    @State var target: Color?
     //    @Binding var showCreateProfileView: Bool
     
     @State var targetUserId: String
@@ -54,6 +55,92 @@ struct ProfileView: View {
     }
     
     
+    func profilePic(url: URL) -> some View {
+        
+        //If there is URL for profile pic, show
+        //circle with stroke
+        AsyncImage(url: url) {image in
+            image
+                .resizable()
+                .scaledToFill()
+                .clipShape(Circle())
+                .frame(width: 128, height: 128)
+        } placeholder: {
+            //else show loading after user uploads but sending/downloading from database
+            ProgressView()
+                .progressViewStyle(
+                    CircularProgressViewStyle(tint:
+                                                Color(UIColor.systemBackground)
+                                              
+                                             )
+                )
+            //                            .scaleEffect(1, anchor: .center)
+                .frame(width: 128, height: 128)
+                .background(
+                    Circle()
+                        .fill(targetUserColor ?? appModel.loadedColor)
+                        .frame(width: 128, height: 128)
+                )
+        }
+    }
+    
+    func emptyTargetId() -> some View {
+        ZStack{
+            Circle()
+            
+                .fill(targetUserColor ?? appModel.loadedColor)
+            
+                .frame(width: 48, height: 48)
+            
+            Circle()
+                .fill(.thickMaterial)
+                .scaleEffect(1.015)
+                .frame(width: 48, height: 48)
+            
+            Circle()
+                .fill(targetUserColor ?? appModel.loadedColor)
+                .frame(width: 36, height: 36)
+            
+            
+            Image(systemName: "plus")
+                .font(.headline)
+                .fontWeight(.bold)
+                .foregroundColor(Color(UIColor.systemBackground))
+        }
+        
+        .offset(x:44, y:44)
+        .onTapGesture{
+            //                                        showCreateProfileView = true
+            activeSheet = .customizeProfileView
+            
+        }
+        
+    }
+    
+    @ViewBuilder
+    func friendRequests(incomingFriendRequests: Array<String>) -> some View {
+        if incomingFriendRequests.count == 0 {
+            Label("No Requests",
+                  systemImage: "person.crop.rectangle.stack")
+            
+            .font(.headline)
+            .fontWeight(.regular)
+            //                                                .foregroundColor(Color(UIColor.secondaryLabel))
+            .foregroundStyle(.secondary)
+        } else {
+            
+            Label(incomingFriendRequests.count == 1
+                  ? String(incomingFriendRequests.count)  +   " Request"
+                  : String(incomingFriendRequests.count)  +    " Requests",
+                  systemImage: "person.crop.rectangle.stack")
+            
+            .font(.headline)
+            .fontWeight(.regular)
+            .foregroundColor(appModel.loadedColor)
+            
+        }
+        
+    }
     
     var body: some View {
         
@@ -65,96 +152,21 @@ struct ProfileView: View {
                         ZStack{
                             
                             Group{
-                                //Circle or Profile Pic
-                                //
-                                //
                                 if let urlString = viewModel.user?.profileImageUrl,
                                    let url = URL(string: urlString) {
-                                    
-                                    
-                                    
-                                    //If there is URL for profile pic, show
-                                    //circle with stroke
-                                    AsyncImage(url: url) {image in
-                                        image
-                                            .resizable()
-                                            .scaledToFill()
-                                            .clipShape(Circle())
-                                            .frame(width: 128, height: 128)
-                                        
-                                        
-                                        
-                                    } placeholder: {
-                                        //else show loading after user uploads but sending/downloading from database
-                                        
-                                        ProgressView()
-                                            .progressViewStyle(
-                                                CircularProgressViewStyle(tint:
-                                                                            Color(UIColor.systemBackground)
-                                                                          
-                                                                         )
-                                            )
-                                        //                            .scaleEffect(1, anchor: .center)
-                                            .frame(width: 128, height: 128)
-                                            .background(
-                                                Circle()
-                                                    .fill(targetUserColor ?? loadedColor)
-                                                    .frame(width: 128, height: 128)
-                                            )
-                                    }
-                                    
+                                    profilePic(url: url)
                                 } else {
-                                    
                                     //if user has not uploaded profile pic, show circle
                                     Circle()
-                                    
-                                    
-                                        .background(Circle().fill(targetUserColor ?? loadedColor))
+                                        .background(Circle().fill(targetUserColor ?? appModel.loadedColor))
                                         .frame(width: 128, height: 128)
-                                    
-                                    
                                 }
-                                //
-                                
-                                //
-                                //
                                 
                                 if (targetUserId.isEmpty) {
-                                    ZStack{
-                                        Circle()
-                                        
-                                            .fill(targetUserColor ?? loadedColor)
-                                        
-                                            .frame(width: 48, height: 48)
-                                        
-                                        Circle()
-                                            .fill(.thickMaterial)
-                                            .scaleEffect(1.015)
-                                            .frame(width: 48, height: 48)
-                                        
-                                        Circle()
-                                            .fill(targetUserColor ?? loadedColor)
-                                            .frame(width: 36, height: 36)
-                                        
-                                        
-                                        Image(systemName: "plus")
-                                            .font(.headline)
-                                            .fontWeight(.bold)
-                                            .foregroundColor(Color(UIColor.systemBackground))
-                                    }
-                                    
-                                    .offset(x:44, y:44)
-                                    .onTapGesture{
-                                        //                                        showCreateProfileView = true
-                                        activeSheet = .customizeProfileView
-                                        
-                                    }
+                                    emptyTargetId()
                                 }
                             }
                         }
-                        
-                        
-                        
                         
                     }
                     .frame(maxWidth:.infinity, maxHeight: .infinity)
@@ -171,37 +183,32 @@ struct ProfileView: View {
                                 Text("\(name)")
                                     .font(.largeTitle)
                                     .fontWeight(.bold)
-                                    .foregroundColor(targetUserColor ?? loadedColor)
-                                
-                                
+                                    .foregroundColor(targetUserColor ?? appModel.loadedColor)
                                 //protects text overflow
                                     .padding([.leading, .trailing],nil)
                                     .minimumScaleFactor(0.5)
                                     .lineLimit(1)
                             }
                             
-                            
-                            
                             //CAN ADD NICKNAME IN FUTURE!!!
-//                            if let username = user.username, username != ""  {
-//                                Text("@\(username)" )
-//                                //                                    .foregroundColor(Color(UIColor.secondaryLabel))
-//                                    .foregroundStyle(.secondary)
-//                                
-//                                    .font(.headline)
-//                                
-//                                    .fontWeight(.regular)
-//                                
-//                                //protects text overflow
-//                                    .padding([.leading, .trailing],nil)
-//                                //                                .minimumScaleFactor(0.5)
-//                                    .lineLimit(1)
-//                                
-//                                
-//                                
-//                            }
+                            //                            if let username = user.username, username != ""  {
+                            //                                Text("@\(username)" )
+                            //                                //                                    .foregroundColor(Color(UIColor.secondaryLabel))
+                            //                                    .foregroundStyle(.secondary)
+                            //
+                            //                                    .font(.headline)
+                            //
+                            //                                    .fontWeight(.regular)
+                            //
+                            //                                //protects text overflow
+                            //                                    .padding([.leading, .trailing],nil)
+                            //                                //                                .minimumScaleFactor(0.5)
+                            //                                    .lineLimit(1)
+                            //
+                            //
+                            //
+                            //                            }
                         }
-                        
                         
                     }
                     .frame(maxWidth:.infinity, maxHeight: .infinity)
@@ -209,12 +216,10 @@ struct ProfileView: View {
                     //                    .background(.thinMaterial)
                     //                    .cornerRadius(20)
                 }
-                
                 .frame(maxWidth:.infinity, maxHeight: .infinity)
                 .aspectRatio(2, contentMode: .fit)
                 .background(.thickMaterial)
-                .background(targetUserColor ?? loadedColor)
-                
+                .background(targetUserColor ?? appModel.loadedColor)
                 .cornerRadius(20)
                 //            .padding([.bottom], 0)
                 //            .padding([.top, .leading, .trailing], nil)
@@ -249,27 +254,14 @@ struct ProfileView: View {
                             }
                         }
                     }
-                    
-                    
-                    
-                    
-                    
                     .frame(maxWidth:.infinity, maxHeight: .infinity)
                     .aspectRatio(1, contentMode: .fit)
                     .background(.thickMaterial)
-                    
-                    
                     .cornerRadius(20)
-                    
-                    
-                    
                     VStack{
-                        
-                        
-                        
                         NavigationLink {
-                            //                            FriendsView(showSignInView: $showSignInView, loadedColor: $loadedColor, showCreateProfileView: $showCreateProfileView, targetUserId: viewModel.user?.userId ?? "")
-                            FriendsView(activeSheet: $activeSheet, loadedColor: $loadedColor, targetUserId: viewModel.user?.userId ?? "")
+                            //                            FriendsView(showSignInView: $showSignInView, appModel.loadedColor: $appModel.loadedColor, showCreateProfileView: $showCreateProfileView, targetUserId: viewModel.user?.userId ?? "")
+                            FriendsView(activeSheet: $activeSheet, targetUserId: viewModel.user?.userId ?? "")
                         } label: {
                             
                             VStack{
@@ -278,12 +270,10 @@ struct ProfileView: View {
                                         Text(String(friends.count))
                                             .font(.title)
                                             .fontWeight(.bold)
-                                            .foregroundColor(targetUserColor ?? loadedColor)
-                                        
+                                            .foregroundColor(targetUserColor ?? appModel.loadedColor)
                                         Text(friends.count == 1 ? "Friend" : "Friends")
                                             .font(.headline)
                                             .fontWeight(.regular)
-                                        
                                     }
                                 }
                             }
@@ -298,35 +288,15 @@ struct ProfileView: View {
                         if targetUserId.isEmpty {
                             
                             NavigationLink {
-                                //                                FriendRequestsView(showSignInView: $showSignInView, loadedColor: $loadedColor, showCreateProfileView: $showCreateProfileView, targetUserId: viewModel.user?.userId ?? "")
+                                //                                FriendRequestsView(showSignInView: $showSignInView, appModel.loadedColor: $appModel.loadedColor, showCreateProfileView: $showCreateProfileView, targetUserId: viewModel.user?.userId ?? "")
                                 
-                                FriendRequestsView(activeSheet: $activeSheet, loadedColor: $loadedColor, targetUserId: viewModel.user?.userId ?? "")
+                                FriendRequestsView(activeSheet: $activeSheet, targetUserId: viewModel.user?.userId ?? "")
                             } label: {
                                 
                                 VStack{
                                     if let user = viewModel.user {
                                         if let incomingFriendRequests = user.incomingFriendRequests{
-                                            
-                                            if incomingFriendRequests.count == 0 {
-                                                Label("No Requests",
-                                                      systemImage: "person.crop.rectangle.stack")
-                                                
-                                                .font(.headline)
-                                                .fontWeight(.regular)
-                                                //                                                .foregroundColor(Color(UIColor.secondaryLabel))
-                                                .foregroundStyle(.secondary)
-                                            } else {
-                                                
-                                                Label(incomingFriendRequests.count == 1
-                                                      ? String(incomingFriendRequests.count)  +   " Request"
-                                                      : String(incomingFriendRequests.count)  +    " Requests",
-                                                      systemImage: "person.crop.rectangle.stack")
-                                                
-                                                .font(.headline)
-                                                .fontWeight(.regular)
-                                                .foregroundColor(loadedColor)
-                                                
-                                            }
+                                            friendRequests(incomingFriendRequests: incomingFriendRequests)
                                         }
                                     }
                                 }
@@ -398,7 +368,7 @@ struct ProfileView: View {
                                     
                                     .font(.headline)
                                     .fontWeight(.regular)
-                                    .tint(targetUserColor ?? loadedColor)
+                                    .tint(targetUserColor ?? appModel.loadedColor)
                                     //                                    .animation(.easeInOut, value: viewModel.isFriend!)
                                     .animation(nil, value: viewModel.isFriend!)
                                     .animation(nil, value: viewModel.requestSent!)
@@ -529,7 +499,7 @@ struct ProfileView: View {
         
         .task{
             print(targetUserColor)
-            print(loadedColor)
+            print(appModel.loadedColor)
             print(targetUserId)
             targetUserId.isEmpty ?
             try? await viewModel.loadCurrentUser() :
@@ -584,12 +554,13 @@ struct ProfileView: View {
 
 
 
-
-struct ProfileView_Previews: PreviewProvider {
-    static var previews: some View {
-        NavigationStack {
-            //            ProfileView(showSignInView: .constant(false),loadedColor: .constant(.red),showCreateProfileView: .constant(false), targetUserId: "")
-            ProfileView(activeSheet: .constant(nil), loadedColor: .constant(.red), targetUserId: "")
-        }
-    }
-}
+/*
+ struct ProfileView_Previews: PreviewProvider {
+ static var previews: some View {
+ NavigationStack {
+ //            ProfileView(showSignInView: .constant(false),appModel.loadedColor: .constant(.red),showCreateProfileView: .constant(false), targetUserId: "")
+ ProfileView(activeSheet: .constant(nil), appModel.loadedColor: .constant(.red), targetUserId: "")
+ }
+ }
+ }
+ */

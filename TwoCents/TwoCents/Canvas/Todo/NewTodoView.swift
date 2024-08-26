@@ -12,11 +12,10 @@ import Charts
 
 struct NewTodoView: View{
     private var spaceId: String
+    @Environment(AppModel.self) var appModel
     @StateObject private var viewModel: NewTodoModel
     
     @State private var showingView: Bool = false
-    
-    @State private var userColor: Color = Color.gray
     
     @Binding private var closeNewWidgetview: Bool
     
@@ -249,7 +248,6 @@ struct NewTodoView: View{
         })
         .task {
             try? await viewModel.getAllUsers(spaceId: spaceId)
-            userColor = try! await Color.fromString(name: UserManager.shared.getUser(userId: AuthenticationManager.shared.getAuthenticatedUser().uid).userColor ?? "")
         }
     }
     
@@ -259,7 +257,7 @@ struct NewTodoView: View{
             TextField("List Name", text: $viewModel.listName)
                 .font(.largeTitle)
                 .fontWeight(.bold)
-                .foregroundStyle(userColor)
+                .foregroundStyle(appModel.loadedColor)
                 .padding(.horizontal)
         }
     }

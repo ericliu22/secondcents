@@ -22,7 +22,6 @@ struct CreateSpacesView: View {
     @State private var selectedPhoto: PhotosPickerItem? = nil
     
     
-    @Binding var loadedColor: Color
     @Binding var activeSheet: PopupSheet?
     
     
@@ -182,7 +181,7 @@ struct CreateSpacesView: View {
                                 
                                 
                                 NavigationLink {
-                                    SearchUserView(activeSheet: $activeSheet, loadedColor: $loadedColor, targetUserId: "")
+                                    SearchUserView(activeSheet: $activeSheet, targetUserId: "")
                                 } label: {
                                     Label("No friends? I figured. Tap me!", systemImage: "person.badge.plus")
                                         .font(.headline)

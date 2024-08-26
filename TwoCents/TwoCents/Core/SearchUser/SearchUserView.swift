@@ -10,7 +10,6 @@ import SwiftUI
 struct SearchUserView: View {
     @Binding var activeSheet: PopupSheet?
 //    @Binding var showSignInView: Bool
-    @Binding var loadedColor: Color
 //    @Binding var showCreateProfileView: Bool
     
    
@@ -49,8 +48,8 @@ struct SearchUserView: View {
                     
                     NavigationLink {
                         
-                        //                        ProfileView(showSignInView: $showSignInView, loadedColor: $loadedColor,targetUserColor: targetUserColor, showCreateProfileView: $showCreateProfileView, targetUserId: userTile.userId)
-                        ProfileView(activeSheet: $activeSheet, loadedColor: $loadedColor, targetUserColor: targetUserColor, targetUserId: userTile.userId)
+                        //                        ProfileView(showSignInView: $showSignInView, appModel.loadedColor: $appModel.loadedColor,targetUserColor: targetUserColor, showCreateProfileView: $showCreateProfileView, targetUserId: userTile.userId)
+                        ProfileView(activeSheet: $activeSheet, targetUserColor: targetUserColor, targetUserId: userTile.userId)
                     } label: {
                         
                         
@@ -238,9 +237,11 @@ struct SearchUserView: View {
     }
 }
 
+/*
 struct SearchUserView_Previews: PreviewProvider {
     static var previews: some View {
-//        SearchUserView(showSignInView: .constant(false),loadedColor: .constant(.red),showCreateProfileView: .constant(false),  targetUserId: "")
-        SearchUserView(activeSheet: .constant(.signInView), loadedColor: .constant(.red), targetUserId: "")
+//        SearchUserView(showSignInView: .constant(false),appModel.loadedColor: .constant(.red),showCreateProfileView: .constant(false),  targetUserId: "")
+        SearchUserView(activeSheet: .constant(.signInView), appModel.loadedColor: .constant(.red), targetUserId: "")
     }
 }
+*/

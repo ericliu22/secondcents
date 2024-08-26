@@ -91,13 +91,6 @@ class NewTodoModel: ObservableObject {
         return try await UserManager.shared.getUser(userId: userId).name ?? ""
     }
     
-    func getUserColor(userId: String) async throws -> Color {
-     
-        let colorString = try await UserManager.shared.getUser(userId: userId).userColor ?? ""
-        
-        return Color.fromString(name: colorString)
-    }
-    
     func addItem(todoArray: [String], userArray: [DBUser?]) {
         for (index, object) in todoArray.enumerated() {
             if object.trimmingCharacters(in: .whitespacesAndNewlines) == "" { continue }

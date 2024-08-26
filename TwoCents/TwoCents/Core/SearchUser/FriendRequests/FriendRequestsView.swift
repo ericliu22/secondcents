@@ -3,7 +3,6 @@ import Foundation
 
 struct FriendRequestsView: View {
     @Binding var activeSheet: PopupSheet?
-    @Binding var loadedColor: Color
     @State var targetUserId: String
     @State private var searchTerm = ""
     
@@ -31,9 +30,8 @@ struct FriendRequestsView: View {
     // State property to store the selected message
     @State private var friendRequestMessage: String = ""
     
-    init(activeSheet: Binding<PopupSheet?>, loadedColor: Binding<Color>, targetUserId: String) {
+    init(activeSheet: Binding<PopupSheet?>, targetUserId: String) {
         self._activeSheet = activeSheet
-        self._loadedColor = loadedColor
         self._targetUserId = State(initialValue: targetUserId)
         // Initialize the friend request message
         _friendRequestMessage = State(initialValue: friendRequestMessages.randomElement() ?? "No message available")
@@ -53,7 +51,7 @@ struct FriendRequestsView: View {
                     let targetUserColor: Color = viewModel.getUserColor(userColor: userTile.userColor!)
                     
                     NavigationLink {
-                        ProfileView(activeSheet: $activeSheet, loadedColor: $loadedColor, targetUserColor: targetUserColor, targetUserId: userTile.userId)
+                        ProfileView(activeSheet: $activeSheet, targetUserColor: targetUserColor, targetUserId: userTile.userId)
                     } label: {
                         HStack(spacing: 20) {
                             Group {
@@ -128,8 +126,10 @@ struct FriendRequestsView: View {
     }
 }
 
+/*
 struct FriendRequestsView_Previews: PreviewProvider {
     static var previews: some View {
-        FriendRequestsView(activeSheet: .constant(nil), loadedColor: .constant(.red), targetUserId: "")
+        FriendRequestsView(activeSheet: .constant(nil), appModel.loadedColor: .constant(.red), targetUserId: "")
     }
 }
+*/

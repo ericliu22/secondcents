@@ -12,8 +12,7 @@ import SwiftUI
 
 struct ColorPickerWidget: View {
     
-    @Binding var selectedColor: Color
-    
+    @Environment(AppModel.self) var appModel
     @StateObject private var viewModel = ColorPickerWidgetViewModel()
     
     
@@ -25,28 +24,25 @@ struct ColorPickerWidget: View {
                     Circle()
                         .foregroundColor(color)
                         .frame(width: 45,height: 45)
-                        .opacity(color == selectedColor ? 1.0  : 0.5)
-                        .scaleEffect(color == selectedColor ? 1.1  : 1.0)
+                        .opacity(color == appModel.loadedColor ? 1.0  : 0.5)
+                        .scaleEffect(color == appModel.loadedColor ? 1.1  : 1.0)
                         .onTapGesture{
-                            selectedColor = color
-                           
-                            
-                            viewModel.saveUserColor(selectedColor: selectedColor)
+                            appModel.loadedColor = color
+                            viewModel.saveUserColor(selectedColor: appModel.loadedColor)
                         }
-                        .animation(.easeInOut(duration: 0.25), value: selectedColor)
+                        .animation(.easeInOut(duration: 0.25), value: appModel.loadedColor)
                         
                 }
             }
             
             .padding()
             .background(.thinMaterial)
-            //            .background(selectedColor.opacity(0.3))
-            
+            //            .background(appModel.loadedColor.opacity(0.3))
             .cornerRadius(10)
             .padding(.horizontal)
             .task{
                 try? await viewModel.loadCurrentUser()
-                viewModel.saveUserColor(selectedColor: selectedColor)
+                viewModel.saveUserColor(selectedColor: appModel.loadedColor)
                 
             }
         }
@@ -58,8 +54,11 @@ struct ColorPickerWidget: View {
     
 }
 
+/*
 struct ColorPickerWidget_Previews: PreviewProvider {
     static var previews: some View {
-        ColorPickerWidget(selectedColor: .constant(.blue))
+        ColorPickerWidget(appModel.loadedColor: .constant(.blue))
     }
 }
+
+*/

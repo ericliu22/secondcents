@@ -14,7 +14,6 @@ struct FrontPageView: View {
    
     
     @State var friendRequests: Int = 0
-    @Binding var loadedColor: Color
     @Binding var activeSheet: PopupSheet?
     @State var selectedTab: Int = 0
     @Environment(AppModel.self) var appModel
@@ -22,7 +21,7 @@ struct FrontPageView: View {
     var body: some View {
         //Make sure TabView always navigates to SpacesView
         TabView(selection: $selectedTab, content: {
-            SpacesView(activeSheet: $activeSheet, loadedColor: $loadedColor)
+            SpacesView(activeSheet: $activeSheet)
                 .tabItem {
                     Image(systemName: "rectangle.3.group.fill")
                     Text("Spaces")
@@ -30,7 +29,7 @@ struct FrontPageView: View {
                 .tag(0)
             
             NavigationStack{
-                SearchUserView(activeSheet: $activeSheet, loadedColor: $loadedColor, targetUserId: "")
+                SearchUserView(activeSheet: $activeSheet, targetUserId: "")
                    
             }
             .tabItem {
@@ -42,7 +41,7 @@ struct FrontPageView: View {
             
             NavigationStack {
 
-                ProfileView(activeSheet: $activeSheet, loadedColor: $loadedColor, targetUserId: "")
+                ProfileView(activeSheet: $activeSheet, targetUserId: "")
             }
             .tabItem {
                 Label("Profile", systemImage: "person")
@@ -101,8 +100,8 @@ struct FrontPageView: View {
 struct FrontPageView_Previews: PreviewProvider {
     
     static var previews: some View {
-//        FrontPageView(showSignInView: .constant(false), loadedColor: .constant(.red),showCreateProfileView: .constant(false))
-        FrontPageView(loadedColor: .constant(.red), activeSheet: .constant(nil))
+//        FrontPageView(showSignInView: .constant(false), appModel.loadedColor: .constant(.red),showCreateProfileView: .constant(false))
+        FrontPageView(appModel.loadedColor: .constant(.red), activeSheet: .constant(nil))
     }
 }
 
