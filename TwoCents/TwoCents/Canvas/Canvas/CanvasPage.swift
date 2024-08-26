@@ -28,18 +28,22 @@ let WIDGET_SPACING: CGFloat = TILE_SIZE + TILE_SPACING
 
 
 
-struct CanvasPage: View {
+struct CanvasPage: View, CanvasViewModelDelegate {
     
     @Bindable var viewModel: CanvasPageViewModel
     @Environment(AppModel.self) var appModel
     @Environment(\.presentationMode) var presentationMode
-
+    
     private var spaceId: String
     
     
     init(spaceId: String) {
         self.spaceId = spaceId
         self.viewModel = CanvasPageViewModel(spaceId: spaceId)
+    }
+    
+    func dismissView() {
+        presentationMode.wrappedValue.dismiss()
     }
     
     func Background() -> some View {
@@ -173,7 +177,6 @@ struct CanvasPage: View {
                     
                     EmojiReactionContextView(spaceId: spaceId, widget: widget, refreshId: $viewModel.refreshId)
                     widgetButton(widget: widget)
-                    
                     // Reply button
                     Button(action: {
                         viewModel.activeSheet = .chat
@@ -186,29 +189,7 @@ struct CanvasPage: View {
                     // Delete button
                     
                     Button(role: .destructive) {
-                        if let index = viewModel.canvasWidgets.firstIndex(of: widget)  {
-                            viewModel.canvasWidgets.remove(at: index)
-                            SpaceManager.shared.removeWidget(spaceId: spaceId, widget: widget)
-                            
-                            //delete specific widget items (in their own folders)
-                            
-                            switch widget.media {
-                                
-                            case .poll:
-                                deletePoll(spaceId: spaceId, pollId: widget.id.uuidString)
-                            case .todo:
-                                deleteTodoList(spaceId: spaceId, todoId: widget.id.uuidString)
-                                
-                            case .calendar:
-                                deleteCalendar(spaceId: spaceId, calendarId: widget.id.uuidString)
-                            default:
-                                break
-                                
-                            }
-                            
-                        }
-                        
-                        viewModel.activeSheet = .chat
+                        viewModel.deleteWidget(widget: widget)
                     } label: {
                         
                         Label("Delete", systemImage: "trash")
@@ -243,7 +224,6 @@ struct CanvasPage: View {
                             height: TILE_SIZE
                         )
                 }
-            
         }
     }
     
@@ -313,89 +293,24 @@ struct CanvasPage: View {
         }
     }
     
-    
-    
     @Environment(\.undoManager) private var undoManager
     var body: some View {
         ZoomableScrollView {
             canvasView()
                 .frame(width: FRAME_SIZE * 1.5, height: FRAME_SIZE * 1.5)
                 .ignoresSafeArea()
-                .onAppear(perform: {
-                    viewModel.activeSheet = .chat
-                })
             //toolbar
                 .toolbar(.hidden, for: .tabBar)
                 .toolbar {toolbar()}
                 .navigationBarTitleDisplayMode(.inline)
             //SHOW BACKGROUND BY CHANGING BELOW TO VISIBLE
                 .toolbarBackground(.hidden, for: .navigationBar)
-                .task{
-                    
-                    do {
-                        try await viewModel.loadCurrentSpace(spaceId: spaceId)
-                        try await viewModel.loadCurrentUser()
-                        //@TODO: figure out how to put in presentationMode in here
-                        viewModel.attachWidgetListener()
-                        appModel.currentSpaceId = spaceId
-                        appModel.inSpace = true
-                        await readNotifications(spaceId: spaceId)
-                    } catch {
-                        //EXIT IF SPACE DOES NOT EXIST
-                        self.presentationMode.wrappedValue.dismiss()
-                    }
-                    
-                    if let userInSpace = try? await viewModel.space?.members?.contains(getUID() ?? ""){
-                        print(userInSpace)
-                        if !userInSpace {
-                            
-                            //if user not in space, exit
-                            self.presentationMode.wrappedValue.dismiss()
-                            
-                        }
-                    }
-                }
                 .navigationTitle(viewModel.isDrawing ? "" : viewModel.space?.name ?? "" )
                 .background(Color(UIColor.secondarySystemBackground))
         }
-        .onChange(of: appModel.shouldNavigateToSpace, {
-            if appModel.shouldNavigateToSpace {
-                if (appModel.navigationSpaceId != spaceId) {
-                    print("CANVASPAGE DISMISSING")
-                    presentationMode.wrappedValue.dismiss()
-                    appModel.inSpace = false
-                }
-                //Wait is necessary because sometimes this shit happens too fast and threads aren't waiting yet
-                //There is a rare bug where the other threads happen way too slow this guy already ends
-                DispatchQueue.main.asyncAfter(deadline: .now()+0.1) {
-                    appModel.navigationMutex.broadcast()
-                    print("signaled")
-                }
-            }
-        })
         .ignoresSafeArea()
         .sheet(item: $viewModel.activeSheet, onDismiss: {
-            
-            viewModel.replyWidget = nil
-            viewModel.activeWidget = nil
-            
-            //get chat to show up at all times
-            if !viewModel.inSettingsView && viewModel.activeSheet == nil{
-                viewModel.inSettingsView = false
-                viewModel.activeSheet = .chat
-                viewModel.selectedDetent = .height(50)
-            }
-            
-            
-            if viewModel.photoLinkedToProfile {
-                viewModel.photoLinkedToProfile = false
-                viewModel.widgetId = UUID().uuidString
-            } else {
-                Task{
-                    try await StorageManager.shared.deleteTempWidgetPic(spaceId:spaceId, widgetId: viewModel.widgetId)
-                }
-            }
-            
+            viewModel.sheetDismiss()
         }, content: { item in
             
             switch item {
@@ -404,16 +319,10 @@ struct CanvasPage: View {
                 //                            .presentationBackground(Color(UIColor.systemBackground))
                     .presentationBackground(.thickMaterial)
             case .chat:
-                
-                
                 ChatView(spaceId: spaceId)
-                
                     .presentationBackground(Color(UIColor.systemBackground))
                     .presentationDetents([.height(50),.large], selection: $viewModel.selectedDetent)
-                
-                
                     .presentationCornerRadius(20)
-                
                     .presentationBackgroundInteraction(.enabled)
                     .onChange(of: viewModel.selectedDetent) {
                         if viewModel.selectedDetent != .large {
@@ -426,7 +335,6 @@ struct CanvasPage: View {
                             print("detent is 50")
                         }
                     }
-                
                 
             case .poll:
                 PollWidgetSheetView(widget: waitForVariable{viewModel.activeWidget}, spaceId: spaceId)
@@ -449,7 +357,46 @@ struct CanvasPage: View {
             }
             
         })
-        
+        .onChange(of: appModel.shouldNavigateToSpace, {
+            if appModel.shouldNavigateToSpace {
+                if (appModel.navigationSpaceId != spaceId) {
+                    print("CANVASPAGE DISMISSING")
+                    presentationMode.wrappedValue.dismiss()
+                    appModel.inSpace = false
+                }
+                //Wait is necessary because sometimes this shit happens too fast and threads aren't waiting yet
+                //There is a rare bug where the other threads happen way too slow this guy already ends
+                DispatchQueue.main.asyncAfter(deadline: .now()+0.1) {
+                    appModel.navigationMutex.broadcast()
+                    print("signaled")
+                }
+            }
+        })
+        .task{
+            do {
+                try await viewModel.loadCurrentSpace(spaceId: spaceId)
+                try await viewModel.loadCurrentUser()
+                viewModel.attachWidgetListener()
+                appModel.currentSpaceId = spaceId
+                appModel.inSpace = true
+                await readNotifications(spaceId: spaceId)
+            } catch {
+                //EXIT IF SPACE DOES NOT EXIST
+                presentationMode.wrappedValue.dismiss()
+            }
+            
+            if let userInSpace = try? await viewModel.space?.members?.contains(getUID() ?? ""){
+                print(userInSpace)
+                if !userInSpace {
+                    //if user not in space, exit
+                    presentationMode.wrappedValue.dismiss()
+                }
+            }
+        }
+        .onAppear(perform: {
+            viewModel.activeSheet = .chat
+            viewModel.delegate = self
+        })
         .onDisappear {
             viewModel.activeSheet = nil
             appModel.inSpace = false

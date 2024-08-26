@@ -21,7 +21,7 @@ final class SpacesViewModel {
     var newSpaceUUID = UUID().uuidString
     var searchTerm = ""
     var isShowingCreateSpaces: Bool = false
-
+    
     init() {
         Task {
             try? await loadCurrentUser()
@@ -41,11 +41,11 @@ final class SpacesViewModel {
     
     func getAllSpaces(userId: String) async throws {
         try? await loadCurrentUser()
-
+        
         self.allSpaces = try await UserManager.shared.getAllSpaces(userId: userId)
         
         finishedLoading = true
-
+        
     }
     
     func getNotifcationCount() async {
@@ -63,8 +63,8 @@ final class SpacesViewModel {
                 continue
             }
             notificationCount[space.id] = unreadCount
-            print(notificationCount)
         }
     }
+    
     
 }

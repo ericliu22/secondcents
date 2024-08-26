@@ -10,7 +10,9 @@ import FirebaseFirestore
 import SwiftUI
 import PencilKit
 
-
+protocol CanvasViewModelDelegate {
+    func dismissView()
+}
 
 @Observable
 final class CanvasPageViewModel {
@@ -29,7 +31,8 @@ final class CanvasPageViewModel {
     var photoLinkedToProfile: Bool = false
     var widgetId: String = UUID().uuidString
     var refreshId = UUID()
-
+    var delegate: CanvasViewModelDelegate?
+    
     /* Eric: Don't delete this
      init(spaceId: String) {
      loadCurrentUser()
@@ -38,6 +41,14 @@ final class CanvasPageViewModel {
      attachWidgetListener()
      }
      */
+    
+    enum CanvasSheet: Identifiable  {
+        case newWidgetView, chat, poll, newTextView, todo, image, video, calendar
+        
+        var id: Self {
+            return self
+        }
+    }
     
     //Hard and fast loading
     init(spaceId: String) {
@@ -98,12 +109,51 @@ final class CanvasPageViewModel {
         }
     }
     
-}
-
-enum CanvasSheet: Identifiable  {
-    case newWidgetView, chat, poll, newTextView, todo, image, video, calendar
-    
-    var id: Self {
-        return self
+    func deleteWidget(widget: CanvasWidget) {
+        if let index = canvasWidgets.firstIndex(of: widget)  {
+            canvasWidgets.remove(at: index)
+            SpaceManager.shared.removeWidget(spaceId: spaceId, widget: widget)
+            
+            //delete specific widget items (in their own folders)
+            
+            switch widget.media {
+                
+            case .poll:
+                deletePoll(spaceId: spaceId, pollId: widget.id.uuidString)
+            case .todo:
+                deleteTodoList(spaceId: spaceId, todoId: widget.id.uuidString)
+                
+            case .calendar:
+                deleteCalendar(spaceId: spaceId, calendarId: widget.id.uuidString)
+            default:
+                break
+                
+            }
+            activeSheet = .chat
+            
+        }
     }
+    
+    func sheetDismiss() {
+        replyWidget = nil
+        activeWidget = nil
+        
+        //get chat to show up at all times
+        if !inSettingsView && activeSheet == nil{
+            inSettingsView = false
+            activeSheet = .chat
+            selectedDetent = .height(50)
+        }
+        
+        
+        if photoLinkedToProfile {
+            photoLinkedToProfile = false
+            widgetId = UUID().uuidString
+        } else {
+            Task{
+                try await StorageManager.shared.deleteTempWidgetPic(spaceId:spaceId, widgetId: widgetId)
+            }
+        }
+    }
+    
 }

@@ -19,7 +19,7 @@ final class AppModel {
     var currentSpaceId: String?
     var navigationMutex: NSCondition = NSCondition()
     var loadedColor: Color = .gray
-    var authenticatedUser: DBUser?
+    var user: DBUser?
     
     init() {
         guard let userId = try? AuthenticationManager.shared.getAuthenticatedUser().uid else {
@@ -28,12 +28,13 @@ final class AppModel {
         }
         
         Task {
-            guard let user = try? await UserManager.shared.getUser(userId: userId) else {
+            guard let dbuser = try? await UserManager.shared.getUser(userId: userId) else {
                 print("AppModel: Failed to read uid as DBUser")
                 return
             }
-            self.authenticatedUser = user
-            guard let color = authenticatedUser?.userColor else {
+            //@TODO: Please change everything to appModel.user please :)
+            user = dbuser
+            guard let color = user?.userColor else {
                 print("AppModel: failed to get color")
                 return
             }

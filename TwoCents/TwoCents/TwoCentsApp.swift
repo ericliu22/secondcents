@@ -32,7 +32,7 @@ struct TwoCentsApp: App {
 
 class AppDelegate: NSObject, UIApplicationDelegate {
     let gcmMessageIDKey = "gcm.message_id"
-    lazy var appModel: AppModel = AppModel()
+    var appModel: AppModel = AppModel()
     
     //If this fucks up everyone is fucked
     override init() {
