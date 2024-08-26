@@ -24,7 +24,11 @@ final class CanvasPageViewModel {
     var canvasWidgets: [CanvasWidget] = []
     var spaceId: String
     var isDrawing: Bool = false
-    
+    var inSettingsView: Bool = false
+    var selectedDetent: PresentationDetent = .height(50)
+    var photoLinkedToProfile: Bool = false
+    var widgetId: String = UUID().uuidString
+
     /* Eric: Don't delete this
      init(spaceId: String) {
      loadCurrentUser()

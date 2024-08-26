@@ -21,7 +21,7 @@ struct ChatBubbleView: View {
     let widget: CanvasWidget?
     let spaceId: String
     
-    @StateObject private var viewModel = ChattingViewModel()
+    @StateObject private var viewModel = ChatViewModel()
     @State private var loaded: Bool = false
     @State private var dragOffset: CGSize = .zero
     @Binding var threadId: String

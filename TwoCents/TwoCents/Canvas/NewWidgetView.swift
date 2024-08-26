@@ -31,10 +31,10 @@ var calendarViewTest = CanvasWidget(width: .infinity, height:  .infinity, border
 
 struct NewWidgetView: View {
     
-    @State var widgetId: String
     @State private var userColor: Color = .gray
     
     @StateObject private var viewModel = NewWidgetViewModel()
+    @Environment(CanvasPageViewModel.self) var canvasViewModel
     
     
     @Environment(\.dismiss) var dismissScreen
@@ -53,7 +53,6 @@ struct NewWidgetView: View {
     
     @State var closeNewWidgetview: Bool = false
     
-    @Binding var photoLinkedToProfile: Bool
     
     private let columns = [
         GridItem(.flexible()),
@@ -204,7 +203,7 @@ struct NewWidgetView: View {
         viewModel.saveWidget(index: index)
         
         if !viewModel.loading {
-            photoLinkedToProfile = true
+            canvasViewModel.photoLinkedToProfile = true
         }
         dismissScreen()
     }
@@ -212,7 +211,7 @@ struct NewWidgetView: View {
     func videoSave(index: Int) {
         viewModel.saveWidget(index: index)
         if !viewModel.loading {
-            photoLinkedToProfile = true
+            canvasViewModel.photoLinkedToProfile = true
         }
         dismissScreen()
     }
@@ -367,7 +366,7 @@ struct NewWidgetView: View {
                     
                     if newValue.supportedContentTypes.contains(where: { imageUTTypes.contains($0) }) {
                         print("Saving image")
-                        viewModel.saveTempImage(item: newValue, widgetId: widgetId) { success in
+                        viewModel.saveTempImage(item: newValue, widgetId: canvasViewModel.widgetId) { success in
                             if success {
                                 imageSave(index: 0)
                             } else {
@@ -377,7 +376,7 @@ struct NewWidgetView: View {
                         }
                     } else {
                         print("Saving video")
-                        viewModel.saveTempVideo(item: newValue, widgetId: widgetId) { success in
+                        viewModel.saveTempVideo(item: newValue, widgetId: canvasViewModel.widgetId) { success in
                             if success {
                                 videoSave(index: 1)
                             } else {
@@ -396,10 +395,12 @@ struct NewWidgetView: View {
     }
     
     
-    
+/*
     struct NewWidgetView_Previews: PreviewProvider {
         
         static var previews: some View {
-            NewWidgetView(widgetId: UUID().uuidString, spaceId:"F531C015-E840-4B1B-BB3E-B9E7A3DFB80F", photoLinkedToProfile: .constant(false))
+            NewWidgetView(canvasViewModel.widgetId: UUID().uuidString, spaceId:"F531C015-E840-4B1B-BB3E-B9E7A3DFB80F", canvasViewModel.photoLinkedToProfile: .constant(false))
         }
     }
+
+*/

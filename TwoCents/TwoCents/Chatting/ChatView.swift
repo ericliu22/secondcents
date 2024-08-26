@@ -19,13 +19,12 @@ struct Message: Identifiable, Codable, Equatable {
     var threadId: String?
 }
 
-struct NewChatView: View {
+struct ChatView: View {
     @State var spaceId: String
-    @StateObject private var viewModel = NewChatViewModel()
+    @StateObject private var viewModel = ChatViewModel()
     @Environment(CanvasPageViewModel.self) var canvasViewModel
    
     
-    @Binding var detent: PresentationDetent
     @State var threadId: String = ""
     @State private var threadIdChangedTime: Date = Date()
     @Environment(\.dismiss) var dismissScreen
@@ -122,7 +121,7 @@ struct NewChatView: View {
                 }
          
                 
-                .onChange(of: detent) { _, newValue in
+                .onChange(of: canvasViewModel.selectedDetent) { _, newValue in
                     if newValue == .height(50) {
                         threadId = ""
                         viewModel.removeMessages()
@@ -142,7 +141,7 @@ struct NewChatView: View {
                 }
                 .scrollIndicators(.hidden)
                 .padding(.bottom, 20)
-                .onChange(of: detent) { _, newValue in
+                .onChange(of: canvasViewModel.selectedDetent) { _, newValue in
                     if newValue == .height(50) {
                         proxy.scrollTo("top", anchor: .top)
                     }
@@ -199,12 +198,12 @@ struct NewChatView: View {
             .overlay(
             
                 
-                NewMessageField(spaceId: spaceId, threadId: $threadId)
-//                    .disabled(detent == .height(50) && canvasViewModel.replyWidget == nil)
+                MessageField(spaceId: spaceId, threadId: $threadId)
+//                    .disabled(canvasViewModel.selectedDetent == .height(50) && canvasViewModel.replyWidget == nil)
                     .frame(maxHeight: .infinity, alignment: .bottom)
                     .onTapGesture {
-                        if detent == .height(50){
-                            detent = .large
+                        if canvasViewModel.selectedDetent == .height(50){
+                            canvasViewModel.selectedDetent = .large
                         }
                         }
             )
@@ -231,7 +230,7 @@ struct NewChatView: View {
 //struct NewChatView_Previews: PreviewProvider {
 //    static var previews: some View {
 //        NavigationStack {
-//            NewChatView(spaceId: "CF5BDBDF-44C0-4382-AD32-D92EC05AA35E", canvasViewModel.replyWidget: .constant(nil), detent: .constant(.large))
+//            NewChatView(spaceId: "CF5BDBDF-44C0-4382-AD32-D92EC05AA35E", canvasViewModel.replyWidget: .constant(nil), canvasViewModel.selectedDetent: .constant(.large))
 //        }
 //    }
 //}

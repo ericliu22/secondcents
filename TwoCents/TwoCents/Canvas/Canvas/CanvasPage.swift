@@ -29,24 +29,17 @@ let WIDGET_SPACING: CGFloat = TILE_SIZE + TILE_SPACING
 
 
 struct CanvasPage: View {
-    @Environment(\.presentationMode) var presentationMode
-    //var for widget onTap
-    //@State var isShowingPopup = false
-    
-    @State private var fullName: String = ""
-    @State private var inSettingsView: Bool = false
-    @State private var photoLinkedToProfile: Bool = false
-    @State private var widgetId: String = UUID().uuidString
-    @State private var selectedDetent: PresentationDetent = .height(50)
-    
-    @Bindable var viewModel: CanvasPageViewModel
-    @Environment(AppModel.self) var appModel
-    
-    private var spaceId: String
     
     //helps reset view
     //Eric: Idk what this is
     @State private var refreshId = UUID()
+
+    @Bindable var viewModel: CanvasPageViewModel
+    @Environment(AppModel.self) var appModel
+    @Environment(\.presentationMode) var presentationMode
+
+    private var spaceId: String
+    
     
     init(spaceId: String) {
         self.spaceId = spaceId
@@ -161,11 +154,11 @@ struct CanvasPage: View {
                 SpaceSettingsView(spaceId: spaceId)
                     .onAppear {
                         viewModel.activeSheet = nil
-                        inSettingsView = true
+                        viewModel.inSettingsView = true
                     }
                     .onDisappear {
                         viewModel.activeSheet = .chat
-                        inSettingsView = false
+                        viewModel.inSettingsView = false
                     }
             } label: {
                 Image(systemName: "ellipsis")
@@ -188,7 +181,7 @@ struct CanvasPage: View {
                     // Reply button
                     Button(action: {
                         viewModel.activeSheet = .chat
-                        selectedDetent = .large
+                        viewModel.selectedDetent = .large
                         viewModel.replyWidget = widget
                     }, label: {
                         Label("Reply", systemImage: "arrowshape.turn.up.left")
@@ -390,19 +383,19 @@ struct CanvasPage: View {
             viewModel.activeWidget = nil
             
             //get chat to show up at all times
-            if !inSettingsView && viewModel.activeSheet == nil{
-                inSettingsView = false
+            if !viewModel.inSettingsView && viewModel.activeSheet == nil{
+                viewModel.inSettingsView = false
                 viewModel.activeSheet = .chat
-                selectedDetent = .height(50)
+                viewModel.selectedDetent = .height(50)
             }
             
             
-            if photoLinkedToProfile {
-                photoLinkedToProfile = false
-                widgetId = UUID().uuidString
+            if viewModel.photoLinkedToProfile {
+                viewModel.photoLinkedToProfile = false
+                viewModel.widgetId = UUID().uuidString
             } else {
                 Task{
-                    try await StorageManager.shared.deleteTempWidgetPic(spaceId:spaceId, widgetId: widgetId)
+                    try await StorageManager.shared.deleteTempWidgetPic(spaceId:spaceId, widgetId: viewModel.widgetId)
                 }
             }
             
@@ -410,23 +403,23 @@ struct CanvasPage: View {
             
             switch item {
             case .newWidgetView:
-                NewWidgetView(widgetId: widgetId, spaceId: spaceId, photoLinkedToProfile: $photoLinkedToProfile)
+                NewWidgetView(spaceId: spaceId)
                 //                            .presentationBackground(Color(UIColor.systemBackground))
                     .presentationBackground(.thickMaterial)
             case .chat:
                 
                 
-                NewChatView(spaceId: spaceId, detent: $selectedDetent)
+                ChatView(spaceId: spaceId)
                 
                     .presentationBackground(Color(UIColor.systemBackground))
-                    .presentationDetents([.height(50),.large], selection: $selectedDetent)
+                    .presentationDetents([.height(50),.large], selection: $viewModel.selectedDetent)
                 
                 
                     .presentationCornerRadius(20)
                 
                     .presentationBackgroundInteraction(.enabled)
-                    .onChange(of: selectedDetent) {
-                        if selectedDetent != .large {
+                    .onChange(of: viewModel.selectedDetent) {
+                        if viewModel.selectedDetent != .large {
                             
                             withAnimation {
                                 viewModel.replyWidget = nil

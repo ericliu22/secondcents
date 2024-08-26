@@ -2,7 +2,7 @@ import SwiftUI
 import FirebaseFirestore
 
 @MainActor
-final class NewChatViewModel: ObservableObject {
+final class ChatViewModel: ObservableObject {
     @Published private(set) var messages: [Message] = []
 
   
@@ -23,7 +23,7 @@ final class NewChatViewModel: ObservableObject {
     func getOldMessages(spaceId: String, completion: ((Bool, String?) -> Void)? = nil) {
         Task {
             do {
-                let (newMessages, lastDocument) = try await NewMessageManager.shared.getAllMessages(spaceId: spaceId, count: 20, lastDocument: self.lastDocument)
+                let (newMessages, lastDocument) = try await MessageManager.shared.getAllMessages(spaceId: spaceId, count: 20, lastDocument: self.lastDocument)
            
                 if newMessages.isEmpty {
                     self.hasMoreMessages = false
@@ -87,7 +87,7 @@ final class NewChatViewModel: ObservableObject {
     func getThreadMessages(spaceId: String, threadId: String, completion: ((Bool, String?) -> Void)? = nil) {
         Task {
             do {
-                let (newMessages, lastDocument) = try await NewMessageManager.shared.getThreadMessages(spaceId: spaceId, count: 20, lastDocument: self.lastDocument, threadId: threadId)
+                let (newMessages, lastDocument) = try await MessageManager.shared.getThreadMessages(spaceId: spaceId, count: 20, lastDocument: self.lastDocument, threadId: threadId)
                 
                 for message in newMessages {
                     if let threadId = message.threadId {
