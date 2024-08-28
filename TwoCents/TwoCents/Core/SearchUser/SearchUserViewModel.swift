@@ -33,33 +33,35 @@ final class SearchUserViewModel: ObservableObject {
     
     @Published var clickedStates = [String: Bool]()
     
-
+    @Published var hasMoreUsers: Bool = true
+    private var lastDocument: DocumentSnapshot? = nil
     
-    func getAllUsers() async throws {
-        try await loadCurrentUser()
-        
-        guard let user = user else {
-            return
-        }
-
-        self.allUsers = try await UserManager.shared.getAllUsers(userId: user.userId)
-        
-        // Loop through all users and update the clickedStates dictionary
-        for eachUser in allUsers {
-           
-            
-            if let outgoingRequests = user.outgoingFriendRequests, outgoingRequests.contains(eachUser.userId) {
-                clickedStates[eachUser.userId] = true
-              
-                
-            } else {
-                clickedStates[eachUser.userId] = false
-            }
-            
-            
-        
-        }
-    }
+//    
+//    func getAllUsers() async throws {
+//        try await loadCurrentUser()
+//        
+//        guard let user = user else {
+//            return
+//        }
+//
+//        self.allUsers = try await UserManager.shared.getAllUsers(userId: user.userId)
+//        
+//        // Loop through all users and update the clickedStates dictionary
+//        for eachUser in allUsers {
+//           
+//            
+//            if let outgoingRequests = user.outgoingFriendRequests, outgoingRequests.contains(eachUser.userId) {
+//                clickedStates[eachUser.userId] = true
+//              
+//                
+//            } else {
+//                clickedStates[eachUser.userId] = false
+//            }
+//            
+//            
+//        
+//        }
+//    }
     
     
     
@@ -145,6 +147,68 @@ final class SearchUserViewModel: ObservableObject {
         
         
     }
+    
+    
+    
+    
+    
+    
+    
+    private let userCollection = Firestore.firestore().collection("users")
+        
+    
+
+    
+    
+    // Get a query for all messages in a specific space
+    func getUsersQuery(count: Int) -> Query {
+        
+        userCollection
+            .limit(to: count)
+            .order(by: "name")
+        
+    }
+    
+    
+    
+    
+    func getAllUsers(count: Int, lastDocument: DocumentSnapshot?) async throws -> (products: [DBUser], lastDocument: DocumentSnapshot?) {
+        var query: Query = getUsersQuery(count: count)
+
+        
+        
+        return try await query
+            .startOptionally(afterDocument: lastDocument)
+            .getDocumentsWithSnapshot(as: DBUser.self)
+    }
+    
+    
+    func loadAllUsers(completion: ((Bool, String?) -> Void)? = nil) {
+        Task {
+            do {
+                let (eachUser, lastDocument) = try await getAllUsers(count: 10, lastDocument: self.lastDocument)
+           
+                if eachUser.isEmpty {
+                    self.hasMoreUsers = false
+                } else {
+                    self.hasMoreUsers = true
+//                    let existingMessageIDs = Set(self.messages.map { $0.id })
+//                    let uniqueMessages = newMessages.filter { !existingMessageIDs.contains($0.id) }
+                    self.allUsers.append(contentsOf: eachUser)
+                    if let lastDocument = lastDocument {
+                        self.lastDocument = lastDocument
+                    }
+                }
+                
+                completion?(false, nil)
+            } catch {
+                print("Failed to fetch more users: \(error)")
+            }
+        }
+    }
+    
+    
+    
     
     
     
