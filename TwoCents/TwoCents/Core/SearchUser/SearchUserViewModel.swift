@@ -36,32 +36,7 @@ final class SearchUserViewModel: ObservableObject {
     @Published var hasMoreUsers: Bool = true
     private var lastDocument: DocumentSnapshot? = nil
     
-//    
-//    func getAllUsers() async throws {
-//        try await loadCurrentUser()
-//        
-//        guard let user = user else {
-//            return
-//        }
-//
-//        self.allUsers = try await UserManager.shared.getAllUsers(userId: user.userId)
-//        
-//        // Loop through all users and update the clickedStates dictionary
-//        for eachUser in allUsers {
-//           
-//            
-//            if let outgoingRequests = user.outgoingFriendRequests, outgoingRequests.contains(eachUser.userId) {
-//                clickedStates[eachUser.userId] = true
-//              
-//                
-//            } else {
-//                clickedStates[eachUser.userId] = false
-//            }
-//            
-//            
-//        
-//        }
-//    }
+
     
     
     
@@ -192,15 +167,15 @@ final class SearchUserViewModel: ObservableObject {
                     self.hasMoreUsers = false
                 } else {
                     self.hasMoreUsers = true
-//                    let existingUserIDs = Set(self.allUsers.map { $0.id })
-//                    let uniqueMessages = allUsers.filter { !existingUserIDs.contains($0.id) }
-                    self.allUsers.append(contentsOf: loadedUsers)
+                    
+                    let existingUserIDs = Set(self.allUsers.map { $0.id })
+                    let uniqueUsers = loadedUsers.filter { !existingUserIDs.contains($0.id) }
+                    self.allUsers.append(contentsOf: uniqueUsers)
                     
                     
                     
                     for eachUser in loadedUsers {
-                        
-                        
+                      
                         if let outgoingRequests = user?.outgoingFriendRequests, outgoingRequests.contains(eachUser.userId) {
                             clickedStates[eachUser.userId] = true
                             

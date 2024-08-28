@@ -19,8 +19,8 @@ struct SearchUserView: View {
     var body: some View {
         ScrollView {
             LazyVStack(alignment: .leading) {
-                ForEach(filteredSearch.indices, id: \.self) { index in
-                    let userTile = filteredSearch[index]
+                ForEach(filteredSearch) { userTile in
+                
                     let targetUserColor: Color = viewModel.getUserColor(userColor: userTile.userColor!)
 
                     NavigationLink {
@@ -48,12 +48,17 @@ struct SearchUserView: View {
                                     .frame(width: 64, height: 64)
                             }
 
+                            
+                         
+                            let isFriends =  viewModel.user?.friends?.contains(userTile.id) ?? false
+                            
+                            
                             VStack(alignment: .leading) {
                                 Text(userTile.name!)
                                     .font(.headline)
                                     .foregroundStyle(Color(UIColor.label))
 
-                                if let friendsList = viewModel.user?.friends, friendsList.contains(userTile.id) {
+                                if isFriends {
                                     Text("Friended")
                                         .font(.caption)
                                         .foregroundStyle(Color.secondary)
@@ -62,7 +67,7 @@ struct SearchUserView: View {
 
                             Spacer()
 
-                            if let clickedState = viewModel.clickedStates[userTile.id] {
+                            if let clickedState = viewModel.clickedStates[userTile.id], !isFriends{
                                 Button {
                                     let generator = UIImpactFeedbackGenerator(style: .medium)
                                     generator.impactOccurred()
@@ -105,8 +110,11 @@ struct SearchUserView: View {
             .searchable(text: $searchTerm, prompt: "Search")
         }
         .scrollDismissesKeyboard(.interactively)
-        .onAppear {
-            viewModel.loadAllUsers()
+        .task{
+                try? await viewModel.loadCurrentUser()
+                viewModel.loadAllUsers()
+            
+          
         }
     }
 }
