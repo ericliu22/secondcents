@@ -154,6 +154,8 @@ struct SearchUserView: View {
                                         
                                         print(clickedState)
                                         
+                                        print("^^^^")
+                                        
                                         Task{
                                             //                                            viewModel.sendFriendRequest(friendUserId: user.userId!)
                                             if clickedState{

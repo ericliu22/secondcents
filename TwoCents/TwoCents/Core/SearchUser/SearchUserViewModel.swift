@@ -46,8 +46,12 @@ final class SearchUserViewModel: ObservableObject {
         
         // Loop through all users and update the clickedStates dictionary
         for eachUser in allUsers {
-            if let incomingRequests = user.incomingFriendRequests {
-                clickedStates[eachUser.userId] = incomingRequests.contains(eachUser.userId)
+           
+            
+            if let outgoingRequests = user.outgoingFriendRequests, outgoingRequests.contains(eachUser.userId) {
+                clickedStates[eachUser.userId] = true
+              
+                
             } else {
                 clickedStates[eachUser.userId] = false
             }
