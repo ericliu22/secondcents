@@ -95,8 +95,7 @@ struct MentionUserView: View {
                                 //if user has not uploaded profile pic, show circle
                                 Circle()
                                 
-                                    .strokeBorder(targetUserColor, lineWidth:0)
-                                    .background(Circle().fill(targetUserColor))
+                                    .fill(targetUserColor)
                                     .frame(width: 48, height: 48)
                                 
                             }

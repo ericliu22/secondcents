@@ -74,7 +74,7 @@ struct SpaceSettingsView: View {
                                     .background(
                                         Circle()
                                             .fill(Color.accentColor)
-                                            .frame(width: 160, height: 160)
+                                          
                                     )
                             }
                             
@@ -82,9 +82,7 @@ struct SpaceSettingsView: View {
                             
                             //if no profile pic, show circle
                             Circle()
-                            
-                            
-                                .background(Circle()   .fill(Color.accentColor))
+                             .fill(Color.accentColor)
                                 .frame(width: 160, height: 160)
                             
                             
@@ -202,7 +200,7 @@ struct SpaceSettingsView: View {
                                                     .background(
                                                         Circle()
                                                             .fill(targetUserColor)
-                                                            .frame(width: 64, height: 64)
+                                                      
                                                     )
                                             }
                                             
@@ -210,9 +208,7 @@ struct SpaceSettingsView: View {
                                             
                                             //if user has not uploaded profile pic, show circle
                                             Circle()
-                                            
-                                                .strokeBorder(targetUserColor, lineWidth:0)
-                                                .background(Circle().fill(targetUserColor))
+                                            .fill(targetUserColor)
                                                 .frame(width: 64, height: 64)
                                             
                                         }

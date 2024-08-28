@@ -370,13 +370,16 @@ struct UserChip: View {
                                 .background(
                                     Circle()
                                         .fill(targetUserColor)
-                                        .frame(width: 16, height: 16)
+                                     
+                                    
+                                    
                                 )
+                            
+                            
                         }
                     } else {
                         Circle()
-                            .strokeBorder(targetUserColor, lineWidth: 0)
-                            .background(Circle().fill(targetUserColor))
+                          .fill(targetUserColor)
                             .frame(width: 16, height: 16)
                     }
                 }

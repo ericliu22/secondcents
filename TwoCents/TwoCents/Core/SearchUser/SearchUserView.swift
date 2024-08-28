@@ -19,7 +19,8 @@ struct SearchUserView: View {
     var body: some View {
         ScrollView {
             LazyVStack(alignment: .leading) {
-                ForEach(filteredSearch) { userTile in
+                ForEach(filteredSearch.indices, id: \.self) { index in
+                    let userTile = filteredSearch[index]
                     let targetUserColor: Color = viewModel.getUserColor(userColor: userTile.userColor!)
 
                     NavigationLink {

@@ -186,15 +186,38 @@ final class SearchUserViewModel: ObservableObject {
     func loadAllUsers(completion: ((Bool, String?) -> Void)? = nil) {
         Task {
             do {
-                let (eachUser, lastDocument) = try await getAllUsers(count: 10, lastDocument: self.lastDocument)
+                let (loadedUsers, lastDocument) = try await getAllUsers(count: 10, lastDocument: self.lastDocument)
            
-                if eachUser.isEmpty {
+                if loadedUsers.isEmpty {
                     self.hasMoreUsers = false
                 } else {
                     self.hasMoreUsers = true
-//                    let existingMessageIDs = Set(self.messages.map { $0.id })
-//                    let uniqueMessages = newMessages.filter { !existingMessageIDs.contains($0.id) }
-                    self.allUsers.append(contentsOf: eachUser)
+//                    let existingUserIDs = Set(self.allUsers.map { $0.id })
+//                    let uniqueMessages = allUsers.filter { !existingUserIDs.contains($0.id) }
+                    self.allUsers.append(contentsOf: loadedUsers)
+                    
+                    
+                    
+                    for eachUser in loadedUsers {
+                        
+                        
+                        if let outgoingRequests = user?.outgoingFriendRequests, outgoingRequests.contains(eachUser.userId) {
+                            clickedStates[eachUser.userId] = true
+                            
+                            
+                        } else {
+                            clickedStates[eachUser.userId] = false
+                        }
+                        
+                        
+                        
+                    }
+                    
+                    
+                    
+                    
+                    
+                    
                     if let lastDocument = lastDocument {
                         self.lastDocument = lastDocument
                     }

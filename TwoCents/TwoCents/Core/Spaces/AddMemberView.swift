@@ -132,8 +132,7 @@ struct AddMemberView: View {
                                                 //if user has not uploaded profile pic, show circle
                                                 Circle()
                                                 
-                                                    .strokeBorder(targetUserColor, lineWidth:0)
-                                                    .background(Circle().fill(targetUserColor))
+                                                 .fill(targetUserColor)
                                                     .frame(width: 16, height: 16)
                                                 
                                             }
@@ -231,8 +230,7 @@ struct AddMemberView: View {
                                             //if user has not uploaded profile pic, show circle
                                             Circle()
                                             
-                                                .strokeBorder(targetUserColor, lineWidth:0)
-                                                .background(Circle().fill(targetUserColor))
+                                           .fill(targetUserColor)
                                                 .frame(width: 16, height: 16)
                                             
                                         }

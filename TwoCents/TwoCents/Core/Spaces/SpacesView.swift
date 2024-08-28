@@ -91,7 +91,7 @@ struct SpacesView: View {
                                             //if space does not have profile pic, show circle
                                             Circle()
                                                 .fill(Color.accentColor)
-                                                .clipShape(Circle())
+                                               
                                                 .frame(width: 64, height: 64)
                                         }
                                         

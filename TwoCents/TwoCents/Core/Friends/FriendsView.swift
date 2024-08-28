@@ -95,9 +95,7 @@ struct FriendsView: View {
                                         
                                         //if user has not uploaded profile pic, show circle
                                         Circle()
-                                        
-                                            .strokeBorder(targetUserColor, lineWidth:0)
-                                            .background(Circle().fill(targetUserColor))
+                                        .fill(targetUserColor)
                                             .frame(width: 64, height: 64)
                                         
                                     }

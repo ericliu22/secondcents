@@ -68,9 +68,8 @@ struct FriendRequestsView: View {
                                             .background(Circle().fill(targetUserColor).frame(width: 64, height: 64))
                                     }
                                 } else {
-                                    Circle()
-                                        .strokeBorder(targetUserColor, lineWidth: 0)
-                                        .background(Circle().fill(targetUserColor))
+                                  
+                                    Circle().fill(targetUserColor)
                                         .frame(width: 64, height: 64)
                                 }
                             }
