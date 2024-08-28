@@ -58,7 +58,7 @@ struct TodoWidgetSheetView: View {
                     Label(viewModel.isFilterActive ? "Show All Tasks" : "Show My Tasks", systemImage: viewModel.isFilterActive ? "checklist" : "person.crop.circle")
                 }
             } label: {
-                Image(systemName: "line.3.horizontal.decrease.circle")
+                Image(systemName: viewModel.isFilterActive ?  "line.3.horizontal.decrease.circle.fill" : "line.3.horizontal.decrease.circle")
 //                Text("Filter")
             }
         }
