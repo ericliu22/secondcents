@@ -27,15 +27,14 @@ let WIDGET_SPACING: CGFloat = TILE_SIZE + TILE_SPACING
 
 
 
-
+//CanvasViewModelDelegate is so that we can call dismiss the view from viewModel
 struct CanvasPage: View, CanvasViewModelDelegate {
     
     @Bindable var viewModel: CanvasPageViewModel
     @Environment(AppModel.self) var appModel
     @Environment(\.presentationMode) var presentationMode
     
-    private var spaceId: String
-    
+    private let spaceId: String
     
     init(spaceId: String) {
         self.spaceId = spaceId
@@ -299,14 +298,42 @@ struct CanvasPage: View, CanvasViewModelDelegate {
             canvasView()
                 .frame(width: FRAME_SIZE * 1.5, height: FRAME_SIZE * 1.5)
                 .ignoresSafeArea()
-            //toolbar
                 .toolbar(.hidden, for: .tabBar)
                 .toolbar {toolbar()}
                 .navigationBarTitleDisplayMode(.inline)
-            //SHOW BACKGROUND BY CHANGING BELOW TO VISIBLE
+                //SHOW BACKGROUND BY CHANGING BELOW TO VISIBLE
                 .toolbarBackground(.hidden, for: .navigationBar)
                 .navigationTitle(viewModel.isDrawing ? "" : viewModel.space?.name ?? "" )
                 .background(Color(UIColor.secondarySystemBackground))
+                //IMPORTANT
+                //onAppear and task must must must be here or else ZoomableScrollView is fucked
+                //Don't know the reason why -Eric
+                .onAppear(perform: {
+                    viewModel.activeSheet = .chat
+                    viewModel.delegate = self
+                    appModel.currentSpaceId = spaceId
+                    appModel.inSpace = true
+                })
+                .task{
+                    do {
+                        try await viewModel.loadCurrentSpace(spaceId: spaceId)
+                        try await viewModel.loadCurrentUser()
+                        viewModel.attachWidgetListener()
+                        await readNotifications(spaceId: spaceId)
+                    } catch {
+                        //EXIT IF SPACE DOES NOT EXIST
+                        presentationMode.wrappedValue.dismiss()
+                    }
+                    
+                    if let userInSpace = try? await viewModel.space?.members?.contains(getUID() ?? ""){
+                        print(userInSpace)
+                        if !userInSpace {
+                            //if user not in space, exit
+                            presentationMode.wrappedValue.dismiss()
+                        }
+                    }
+                }
+            
         }
         .ignoresSafeArea()
         .sheet(item: $viewModel.activeSheet, onDismiss: {
@@ -371,31 +398,6 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                     print("signaled")
                 }
             }
-        })
-        .task{
-            do {
-                try await viewModel.loadCurrentSpace(spaceId: spaceId)
-                try await viewModel.loadCurrentUser()
-                viewModel.attachWidgetListener()
-                appModel.currentSpaceId = spaceId
-                appModel.inSpace = true
-                await readNotifications(spaceId: spaceId)
-            } catch {
-                //EXIT IF SPACE DOES NOT EXIST
-                presentationMode.wrappedValue.dismiss()
-            }
-            
-            if let userInSpace = try? await viewModel.space?.members?.contains(getUID() ?? ""){
-                print(userInSpace)
-                if !userInSpace {
-                    //if user not in space, exit
-                    presentationMode.wrappedValue.dismiss()
-                }
-            }
-        }
-        .onAppear(perform: {
-            viewModel.activeSheet = .chat
-            viewModel.delegate = self
         })
         .onDisappear {
             viewModel.activeSheet = nil
