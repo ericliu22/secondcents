@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import AVKit
+import AVFoundation
 
 @Observable
 class VideoPlayerModel {
@@ -42,6 +43,7 @@ class VideoPlayerModel {
             self.isPlaying = false
         }
     }
+    
 }
 
 
@@ -52,16 +54,60 @@ struct VideoWidget: WidgetView{
     @State private var width: CGFloat;
     @State private var height: CGFloat;
     
+    @StateObject private var viewModel = VideoWidgetViewModel()
+    
+    @Environment(CanvasPageViewModel.self) var canvasViewModel: CanvasPageViewModel?
+    
     var body: some View {
-        VideoPlayer(player: playerModel.videoPlayer)
-            .ignoresSafeArea()
-            .frame(width: width, height: height, alignment: .center)
-            .clipShape(RoundedRectangle(cornerRadius: CORNER_RADIUS))
-            .draggable(widget)
-            .onDisappear {
-                playerModel.videoPlayer.pause()
-                playerModel.isPlaying = false
-            }
+//        VideoPlayer(player: playerModel.videoPlayer)
+//            .ignoresSafeArea()
+//            .frame(width: width, height: height, alignment: .center)
+//            .clipShape(RoundedRectangle(cornerRadius: CORNER_RADIUS))
+//            .draggable(widget)
+//            .onDisappear {
+//                playerModel.videoPlayer.pause()
+//                playerModel.isPlaying = false
+//            }
+        
+        
+        
+        if let url = widget.mediaURL, let videoThumbnail = viewModel.getVideoThumbnail(from: url) {
+            Image(uiImage: videoThumbnail)
+                .resizable()
+                .scaledToFill()
+                .frame(width: width, height: height, alignment: .center)
+                .clipShape(RoundedRectangle(cornerRadius: CORNER_RADIUS))
+                .ignoresSafeArea()
+                .draggable(widget) // Assuming you want to drag the URL
+            
+                .overlay{
+                    Image(systemName: "play.circle.fill")
+                        .font(.largeTitle)
+                        .foregroundStyle(.thinMaterial)
+                }
+            
+            
+                .onTapGesture {
+                    guard let canvasViewModel = canvasViewModel else { return }
+                    canvasViewModel.activeSheet = .video
+                    canvasViewModel.activeWidget = widget
+                }
+            
+        } else {
+            Text("Unable to load thumbnail")
+                .frame(width: width, height: height)
+                .background(Color.gray)
+                .clipShape(RoundedRectangle(cornerRadius: CORNER_RADIUS))
+        }
+            
+        
+        
+        
+        
+        
+        
+        
+        
     }
     
     

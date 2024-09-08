@@ -17,6 +17,8 @@ struct ImageWidget: WidgetView {
         self.widget = widget
     }
     
+    @Environment(CanvasPageViewModel.self) var canvasViewModel: CanvasPageViewModel?
+    
     var body: some View {
         AsyncImage(url: widget.mediaURL) {image in
             image
@@ -36,5 +38,10 @@ struct ImageWidget: WidgetView {
                 .frame(width: widget.width, height: widget.height)
                 .background(.thickMaterial)
         }//AsyncImage
+        .onTapGesture {
+            guard let canvasViewModel = canvasViewModel else { return }
+            canvasViewModel.activeSheet = .image
+            canvasViewModel.activeWidget = widget
+        }
     }
 }

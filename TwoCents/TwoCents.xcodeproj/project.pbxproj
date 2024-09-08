@@ -109,6 +109,7 @@
 		AB77664A2C25266300F95E65 /* SetLocationWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB7766492C25266300F95E65 /* SetLocationWidgetView.swift */; };
 		AB77664C2C2526BE00F95E65 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB77664B2C2526BE00F95E65 /* LocationManager.swift */; };
 		AB77664E2C25283A00F95E65 /* DisplayLocationWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB77664D2C25283A00F95E65 /* DisplayLocationWidgetView.swift */; };
+		AB7BA64D2C8E342400D96CD6 /* VideoWidgetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB7BA64C2C8E342400D96CD6 /* VideoWidgetViewModel.swift */; };
 		AB7F3AEE2C164CF000690EF1 /* NewTextWidgetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB7F3AED2C164CF000690EF1 /* NewTextWidgetViewModel.swift */; };
 		AB842C0B2A91E27E00E4A7CE /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = AB842C0A2A91E27E00E4A7CE /* FirebaseStorage */; };
 		AB842C0E2A91E2B500E4A7CE /* StorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB842C0D2A91E2B500E4A7CE /* StorageManager.swift */; };
@@ -286,6 +287,7 @@
 		AB7766492C25266300F95E65 /* SetLocationWidgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetLocationWidgetView.swift; sourceTree = "<group>"; };
 		AB77664B2C2526BE00F95E65 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		AB77664D2C25283A00F95E65 /* DisplayLocationWidgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayLocationWidgetView.swift; sourceTree = "<group>"; };
+		AB7BA64C2C8E342400D96CD6 /* VideoWidgetViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoWidgetViewModel.swift; sourceTree = "<group>"; };
 		AB7F3AED2C164CF000690EF1 /* NewTextWidgetViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewTextWidgetViewModel.swift; sourceTree = "<group>"; };
 		AB842C0D2A91E2B500E4A7CE /* StorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageManager.swift; sourceTree = "<group>"; };
 		AB842C0F2A91E52000E4A7CE /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
@@ -690,6 +692,7 @@
 			isa = PBXGroup;
 			children = (
 				AB6778E52AB8F67D00C11AA7 /* VideoWidget.swift */,
+				AB7BA64C2C8E342400D96CD6 /* VideoWidgetViewModel.swift */,
 				AB73A2892C6F3BA2008C7190 /* VideoWidgetSheetView.swift */,
 			);
 			path = Video;
@@ -1027,6 +1030,7 @@
 				ABC461E52BE28ECF00AE47FF /* TestView.swift in Sources */,
 				85C6759B2AB8EE6100FACCB2 /* SuperlativeGame.swift in Sources */,
 				AB370E162C34FDF300C4431F /* QueryExtension.swift in Sources */,
+				AB7BA64D2C8E342400D96CD6 /* VideoWidgetViewModel.swift in Sources */,
 				AB9C053E2C3CD3B500C21DCE /* TodoWidgetSheetView.swift in Sources */,
 				85BB02F02B5D077E00B9A9EA /* ToolPickerPractice.swift in Sources */,
 				AB77664E2C25283A00F95E65 /* DisplayLocationWidgetView.swift in Sources */,
