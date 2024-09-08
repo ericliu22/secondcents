@@ -16,6 +16,9 @@ struct VideoWidgetSheetView: View {
     @State private var user: DBUser? = nil
     @Environment(\.dismiss) var dismissScreen
     
+    
+    @Environment(CanvasPageViewModel.self) var canvasViewModel: CanvasPageViewModel?
+    
     private var playerModel: VideoPlayerModel
   
     var body: some View {
@@ -43,14 +46,7 @@ struct VideoWidgetSheetView: View {
 //            .navigationTitle(user?.name ?? "Loading...")
 //            
 //            .navigationBarTitleDisplayMode(.inline)
-            .task {
-                do {
-                    let fetchedUser = try await UserManager.shared.getUser(userId: widget.userId)
-                    user = fetchedUser // Update the state variable
-                } catch {
-                    print("Failed to get user: \(error.localizedDescription)")
-                }
-            }
+         
         }
     }
 }

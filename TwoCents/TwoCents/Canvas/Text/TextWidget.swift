@@ -17,6 +17,10 @@ struct TextWidget: WidgetView {
     
     @State private var userColor: Color = .gray
     
+    
+   
+    
+    
     var body: some View {
         Text(widget.textString ?? "")
             .multilineTextAlignment(.leading)
@@ -37,6 +41,11 @@ struct TextWidget: WidgetView {
                 }
                 
             }
+        
+        
+            
+        
+        
         
     }
 }

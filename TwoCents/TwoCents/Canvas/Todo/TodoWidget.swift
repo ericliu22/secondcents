@@ -16,6 +16,10 @@ struct TodoWidget: View {
         self.spaceId = spaceId
     }
     
+    
+    @Environment(CanvasPageViewModel.self) var canvasViewModel: CanvasPageViewModel?
+    
+    
     func fetchTodo() {
         let db = Firestore.firestore()
         db.collection("spaces")
@@ -135,7 +139,20 @@ struct TodoWidget: View {
                     .background(.thinMaterial)
             }
         }
+        .onTapGesture {
+            guard let canvasViewModel = canvasViewModel else { return }
+            canvasViewModel.activeSheet = .todo
+            canvasViewModel.activeWidget = widget
+        }
+    
+        
+        
     }
+    
+    
+    
+    
+    
 }
 
 
