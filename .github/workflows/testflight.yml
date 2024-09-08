@@ -29,6 +29,9 @@ jobs:
       - name: Navigate to App directory
         run: cd ./TwoCents
 
+      - name: List files 
+        run: ls -a
+
       - name: Build & upload iOS binary
         run: bundle exec fastlane ios build_upload_testflight
         env:
