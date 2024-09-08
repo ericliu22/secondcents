@@ -1,6 +1,6 @@
 lane :beta do
   increment_build_number
-  build_app(scheme: "YourAppScheme")
+  build_app(scheme: "TwoCents")
   upload_to_testflight
 end
 
