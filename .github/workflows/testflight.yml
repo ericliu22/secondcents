@@ -19,21 +19,16 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 3.0
+          ruby-version: 3.0  # or the version you require
 
-      - name: Set up Fastlane
+      - name: Install Fastlane
         run: gem install fastlane
 
-      - name: Set up CocoaPods
+      - name: Set up Xcode and resolve Swift Package Manager dependencies
         run: |
-          brew install cocoapods
-          pod install --repo-update
+          xcodebuild -resolvePackageDependencies -scheme "TwoCents"
 
-      - name: Install dependencies
-        run: bundle install
-        working-directory: ./ios
-
-      - name: Decrypt certificates
+      - name: Decrypt certificates (if using Fastlane match)
         run: fastlane match appstore
 
       - name: Build and Deploy to TestFlight
