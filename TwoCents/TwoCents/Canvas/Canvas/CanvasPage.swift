@@ -199,14 +199,14 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                 .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
                 .cornerRadius(CORNER_RADIUS)
                 .frame(
-                    width: TILE_SIZE,
-                    height: TILE_SIZE
+                    width: widget.width,
+                    height: widget.height
                 )
                 .position(x: widget.x ??  FRAME_SIZE/2, y: widget.y ?? FRAME_SIZE/2)
                 .overlay {
                     viewModel.selectedWidget == nil ?
                     EmojiCountOverlayView(spaceId: spaceId, widget: widget)
-                        .offset(y: TILE_SIZE/2)
+                        .offset(y: widget.height/2)
                         .position(x: widget.x ??  FRAME_SIZE/2, y: widget.y ?? FRAME_SIZE/2)
                         .id(viewModel.refreshId)
                     
@@ -219,8 +219,8 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                     MediaView(widget: widget, spaceId: spaceId)
                         .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
                         .frame(
-                            width: TILE_SIZE,
-                            height: TILE_SIZE
+                            width: widget.width,
+                            height: widget.height
                         )
                 }
         }
@@ -317,7 +317,6 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                 .task{
                     do {
                         try await viewModel.loadCurrentSpace(spaceId: spaceId)
-                        try await viewModel.loadCurrentUser()
                         viewModel.attachWidgetListener()
                         await readNotifications(spaceId: spaceId)
                     } catch {
@@ -384,7 +383,7 @@ struct CanvasPage: View, CanvasViewModelDelegate {
             }
             
         })
-        .onChange(of: appModel.shouldNavigateToSpace, {
+        .onChange(of: appModel.shouldNavigateToSpace) {
             if appModel.shouldNavigateToSpace {
                 if (appModel.navigationSpaceId != spaceId) {
                     print("CANVASPAGE DISMISSING")
@@ -398,7 +397,7 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                     print("signaled")
                 }
             }
-        })
+        }
         .onDisappear {
             viewModel.activeSheet = nil
             appModel.inSpace = false

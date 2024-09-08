@@ -109,7 +109,7 @@ struct TodoWidget: View {
                     
                     Spacer()
                 }
-                .frame(width: TILE_SIZE, height: TILE_SIZE)
+                .frame(width: widget.width, height: widget.height)
 //                .background(.ultraThickMaterial)
              
                 .background(Color(UIColor.systemBackground))
@@ -123,7 +123,7 @@ struct TodoWidget: View {
                             .fontWeight(.semibold)
                             .padding(.top, 12)
                             .padding(.trailing, 16)
-                            .frame(width: TILE_SIZE, height: TILE_SIZE, alignment: .topTrailing)
+                            .frame(width: widget.width, height: widget.height, alignment: .topTrailing)
                     
                 )
             } else {
@@ -132,7 +132,7 @@ struct TodoWidget: View {
                     .aspectRatio(1, contentMode: .fit)
                   
                     .cornerRadius(CORNER_RADIUS)
-                    .frame(maxWidth: TILE_SIZE, maxHeight: TILE_SIZE)
+                    .frame(maxWidth: widget.width, maxHeight: widget.height)
                     .onAppear {
                         fetchTodo()
                     }

@@ -65,7 +65,7 @@ struct CalendarWidget: View {
                 }
             }
             .background(Color(UIColor.systemBackground))
-            .frame(width: TILE_SIZE, height: TILE_SIZE)
+            .frame(width: widget.width, height: widget.height)
             .cornerRadius(CORNER_RADIUS)
    
         .task {

@@ -28,16 +28,6 @@ final class TextWidgetViewModel: ObservableObject {
     }
 
     
-    
-    @Published private(set) var space:  DBSpace? = nil
-    func loadCurrentSpace(spaceId: String) async throws {
-        
-        self.space = try await SpaceManager.shared.getSpace(spaceId: spaceId)
-        
-    }
-    
-    
-    
     @Published private(set) var WidgetMessage: CanvasWidget? = nil
     func loadWidget(spaceId: String, widgetId: String) async throws {
         

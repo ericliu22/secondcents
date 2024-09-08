@@ -202,13 +202,10 @@ struct MediaView<WidgetView>: View where WidgetView: View {
     }
 }
 */
-enum Media {
+enum Media: Codable {
 
     case video, image, chat, text, poll, map, event, todo, calendar, link
 
-}
-
-extension Media: Codable {
     init (media: String) {
         switch media {
         case "video":

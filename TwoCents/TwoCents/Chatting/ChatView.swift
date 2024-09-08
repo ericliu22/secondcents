@@ -23,7 +23,6 @@ struct ChatView: View {
     @State var spaceId: String
     @StateObject private var viewModel = ChatViewModel()
     @Environment(CanvasPageViewModel.self) var canvasViewModel
-   
     
     @State var threadId: String = ""
     @State private var threadIdChangedTime: Date = Date()

@@ -31,8 +31,8 @@ struct MapWidget: WidgetView {
         ZStack{
             DisplayLocationWidgetView(latitude: latitude, longitude: longitude)
                 .frame(
-                    width: TILE_SIZE,
-                    height: TILE_SIZE
+                    width: widget.width,
+                    height: widget.height
                 )
             
             //so context menu works
