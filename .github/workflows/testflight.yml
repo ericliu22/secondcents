@@ -21,8 +21,8 @@ jobs:
         with:
           ruby-version: 3.0  # or the version you require
 
-      - name: Install Fastlane
-        run: gem install fastlane
+      - name: Bundle install
+        run: bundle install
 
       - name: Resolve Swift Package Manager dependencies
         run: xcodebuild -resolvePackageDependencies -scheme "TwoCents" -project "./TwoCents/TwoCents.xcodeproj"
