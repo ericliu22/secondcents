@@ -24,7 +24,7 @@ jobs:
       - name: Install Fastlane
         run: gem install fastlane
 
-      -name: Navigate to project directory
+      - name: Navigate to project directory 
         run: cd /Users/runner/work/secondcents/TwoCents
 
       - name: Set up Xcode and resolve Swift Package Manager dependencies
