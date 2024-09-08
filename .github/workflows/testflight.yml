@@ -26,6 +26,9 @@ jobs:
         run: |
           echo $CERTIFICATE_BASE64 | base64 --decode > signing-cert.p12
 
+      - name: Bundle install
+        run: bundle --path ./TwoCents install
+
       - name: Build & upload iOS binary
         run: bundle --path ./TwoCents exec fastlane ios build_upload_testflight
         env:
