@@ -10,16 +10,13 @@ on:
 
 jobs:
   build:
-    runs-on: macos-11
+    runs-on: macos-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
 
       - name: Set up ruby env
-        uses: ruby/setup-ruby@v1.138.0
-        with:
-          ruby-version: 3.2.1
-          bundler-cache: true
+        uses: ruby/setup-ruby@v1.180.0
 
       - name: Decode signing certificate into a file
         env:
