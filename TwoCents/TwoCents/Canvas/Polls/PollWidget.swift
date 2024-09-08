@@ -151,7 +151,7 @@ struct PollWidget: WidgetView {
                 .background(Color(UIColor.systemBackground))
                 //                .background(Color.accentColor)
                 
-                .frame(width: TILE_SIZE, height:TILE_SIZE)
+                .frame(width: widget.width, height: widget.height)
             } else {
                 //                ProgressView()
                 //                    .foregroundStyle(Color(UIColor.label))

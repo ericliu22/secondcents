@@ -21,8 +21,8 @@ struct LinkWidget: WidgetView {
     
     var body: some View {
         VStack {
-            LinkView(url: widget.mediaURL!)
-                .frame(width: TILE_SIZE, height: TILE_SIZE)
+            LinkView(widget: widget)
+                .frame(width: widget.width, height: widget.height)
         }
     }
 }
@@ -30,11 +30,19 @@ struct LinkWidget: WidgetView {
 struct LinkView: UIViewRepresentable {
     
     let url: URL
-    let width: CGFloat = TILE_SIZE
-    let height: CGFloat = TILE_SIZE
+    let width: CGFloat
+    let height: CGFloat
+    
+    init(widget: CanvasWidget) {
+        self.url = widget.mediaURL!
+        self.width = widget.width
+        self.height = widget.height
+    }
     
     init(url: URL) {
         self.url = url
+        self.width = TILE_SIZE
+        self.height = TILE_SIZE
     }
     
     func makeUIView(context: Context) -> LPLinkView {

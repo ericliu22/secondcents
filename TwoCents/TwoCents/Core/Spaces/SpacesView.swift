@@ -272,7 +272,7 @@ struct SpacesView: View {
         
         func body(content: Content) -> some View {
             content
-                .onChange(of: appModel.shouldNavigateToSpace, {
+                .onChange(of: appModel.shouldNavigateToSpace, initial: true) {
                     DispatchQueue.global().async {
                         appModel.navigationMutex.lock()
                         print("SPACESVIEW ACQUIRED MUTEX")
@@ -327,7 +327,7 @@ struct SpacesView: View {
                         appModel.navigationMutex.unlock()
                     }
     
-                })
+                }
     
         }
     }

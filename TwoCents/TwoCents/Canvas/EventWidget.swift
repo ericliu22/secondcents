@@ -101,7 +101,7 @@ struct EventWidget: WidgetView {
                 
             }
             
-            .frame(width: TILE_SIZE, height: TILE_SIZE)
+            .frame(width: widget.width, height: widget.height)
             .background(Color(UIColor.systemBackground))
             .cornerRadius(CORNER_RADIUS)
             

@@ -70,7 +70,7 @@ struct FrontPageView: View {
             })
 
         }
-        .onChange(of: appModel.shouldNavigateToSpace, {
+        .onChange(of: appModel.shouldNavigateToSpace,initial: true) {
             DispatchQueue.global().async {
                 appModel.navigationMutex.lock()
                 print("FRONTPAGEVIEW ACQUIRED MUTEX")
@@ -91,7 +91,7 @@ struct FrontPageView: View {
                 }
                 appModel.navigationMutex.unlock()
             }
-        })
+        }
     }
 }
 

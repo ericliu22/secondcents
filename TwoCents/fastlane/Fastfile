@@ -1,0 +1,6 @@
+lane :beta do
+  increment_build_number
+  build_app(scheme: "YourAppScheme")
+  upload_to_testflight
+end
+

@@ -17,7 +17,6 @@ protocol CanvasViewModelDelegate {
 @Observable
 final class CanvasPageViewModel {
     
-    var user:  DBUser? = nil
     var space:  DBSpace? = nil
     var selectedWidget: CanvasWidget? = nil
     var activeWidget: CanvasWidget?
@@ -35,7 +34,6 @@ final class CanvasPageViewModel {
     
     /* Eric: Don't delete this
      init(spaceId: String) {
-     loadCurrentUser()
      loadCurrentSpace(spaceId: spaceId)
      attachDrawingListener()
      attachWidgetListener()
@@ -53,11 +51,6 @@ final class CanvasPageViewModel {
     //Hard and fast loading
     init(spaceId: String) {
         self.spaceId = spaceId
-    }
-    
-    func loadCurrentUser() async throws {
-        let authDataResult = try AuthenticationManager.shared.getAuthenticatedUser()
-        self.user = try await UserManager.shared.getUser(userId: authDataResult.uid)
     }
     
     func loadCurrentSpace(spaceId: String) async throws {
