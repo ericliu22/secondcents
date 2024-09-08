@@ -1,0 +1,45 @@
+name: Build and Deploy to TestFlight
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v3
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.0
+
+      - name: Set up Fastlane
+        run: gem install fastlane
+
+      - name: Set up CocoaPods
+        run: |
+          brew install cocoapods
+          pod install --repo-update
+
+      - name: Install dependencies
+        run: bundle install
+        working-directory: ./ios
+
+      - name: Decrypt certificates
+        run: fastlane match appstore
+
+      - name: Build and Deploy to TestFlight
+        run: fastlane beta
+        env:
+          APP_STORE_CONNECT_API_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY }}
+          APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+          APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
