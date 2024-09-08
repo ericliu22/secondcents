@@ -24,12 +24,8 @@ jobs:
       - name: Install Fastlane
         run: gem install fastlane
 
-      - name: Navigate to project directory 
-        run: cd ./TwoCents
-
-      - name: Set up Xcode and resolve Swift Package Manager dependencies
-        run: |
-          xcodebuild -resolvePackageDependencies -scheme "TwoCents"
+      - name: Resolve Swift Package Manager dependencies
+        run: xcodebuild -resolvePackageDependencies -scheme "TwoCents" -project "./TwoCents/TwoCents.xcodeproj"
 
       - name: Decrypt certificates (if using Fastlane match)
         run: fastlane match appstore
