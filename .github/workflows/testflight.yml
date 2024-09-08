@@ -17,6 +17,8 @@ jobs:
 
       - name: Set up ruby env
         uses: ruby/setup-ruby@v1.180.0
+        with:
+          ruby-version: 3.3.5
 
       - name: Decode signing certificate into a file
         env:
