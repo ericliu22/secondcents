@@ -1,4 +1,4 @@
-name: iOS binary build & upload
+name: Testflight upload
 
 on:
   push:
@@ -10,7 +10,7 @@ on:
 
 jobs:
   build:
-    runs-on: macos-latest
+    runs-on: macos-11
     steps:
       - name: Checkout
         uses: actions/checkout@v2
