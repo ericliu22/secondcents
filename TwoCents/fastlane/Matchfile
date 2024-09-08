@@ -1,5 +1,4 @@
 # fastlane/Matchfile
 
-git_url "https://gitlab.com/ericliu22/secondcents.git"
+git_url "https://github.com/ericliu22/secondcents"
 type "appstore"  # Specify the type of profile you need (appstore, development, adhoc, etc.)
-
