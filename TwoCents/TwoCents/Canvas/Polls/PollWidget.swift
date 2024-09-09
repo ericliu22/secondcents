@@ -82,71 +82,197 @@ struct PollWidget: WidgetView {
                 
                 
                 let hasNoVotes =  poll.options.allSatisfy { $0.count == 0 }
-                ZStack{
-                    if hasNoVotes {
-                        Chart {
-                            SectorMark(
-                                angle: .value("Vote", 1),
-                                innerRadius: .ratio(0.618),
-                                angularInset: 2
-                            )
-                            .cornerRadius(5)
-                            .foregroundStyle(Color.gray)
-                            //                                    .annotation(position: .overlay, alignment: .center) {
-                            //                                                            Text("No Votes")
-                            //                                                                .font(.caption)
-                            //                                                                .foregroundColor(.white)
-                            //                                                        }
-                        }
+                //                ZStack{
+                //                    if hasNoVotes {
+                //                        Chart {
+                //                            SectorMark(
+                //                                angle: .value("Vote", 1),
+                //                                innerRadius: .ratio(0.618),
+                //                                angularInset: 2
+                //                            )
+                //                            .cornerRadius(5)
+                //                            .foregroundStyle(Color.gray)
+                //                            //                                    .annotation(position: .overlay, alignment: .center) {
+                //                            //                                                            Text("No Votes")
+                //                            //                                                                .font(.caption)
+                //                            //                                                                .foregroundColor(.white)
+                //                            //                                                        }
+                //                        }
+                //
+                //                        .padding(5)
+                //                        .chartLegend(.hidden)
+                //                        //                                .frame(height: 350)
+                //
+                //
+                //                    } else {
+                //                        Chart(poll.options) {option in
+                //                            SectorMark(
+                //                                //                                        angle: .value("Count", option.count),
+                //                                angle: .value("Count", option.count),
+                //                                innerRadius: .ratio(0.618),
+                //                                angularInset: 2
+                //                            )
+                //                            .cornerRadius(3)
+                //
+                //
+                //                            .foregroundStyle(colorForIndex(index: poll.options.firstIndex(of: option)!))
+                //
+                //
+                //                        }
+                //                        .padding(5)
+                //                        .chartLegend(.hidden)
+                //
+                //
+                //                    }
+                //
+                //
+                //
+                //                    VStack{
+                //                        Text("\(totalVotes)")
+                //                            .font(.title)
+                //                            .fontWeight(.bold)
+                //                            .foregroundStyle(Color.accentColor)
+                //                        Text("Votes")
+                //                            .font(.headline)
+                //                            .fontWeight(.regular)
+                //                        //                                        .fill(.ultraThickMaterial)
+                //                            .foregroundStyle(Color.accentColor)
+                //                        //
+                //                        //                            .padding(.bottom)
+                //                    }
+                //                    .frame(maxWidth: .infinity,maxHeight: .infinity,alignment: .center)
+                //
+                //
+                //
+                //                }
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                VStack{
+        
+                    if poll.options.count <= 2 {
                         
-                        .padding(5)
-                        .chartLegend(.hidden)
-                        //                                .frame(height: 350)
                         
-                        
-                    } else {
-                        Chart(poll.options) {option in
-                            SectorMark(
-                                //                                        angle: .value("Count", option.count),
-                                angle: .value("Count", option.count),
-                                innerRadius: .ratio(0.618),
-                                angularInset: 2
-                            )
-                            .cornerRadius(3)
-                            
-                            
-                            .foregroundStyle(colorForIndex(index: poll.options.firstIndex(of: option)!))
-                            
-                            
-                        }
-                        .padding(5)
-                        .chartLegend(.hidden)
-                        
-                        
-                    }
-                    
-                    
-                    
-                    VStack{
-                        Text("\(totalVotes)")
-                            .font(.title)
+                        Text(poll.name)
+                            .font(.title2)
+                            .minimumScaleFactor(0.5)
                             .fontWeight(.bold)
                             .foregroundStyle(Color.accentColor)
-                        Text("Votes")
-                            .font(.headline)
-                            .fontWeight(.regular)
-                        //                                        .fill(.ultraThickMaterial)
-                            .foregroundStyle(Color.accentColor)
-                        //
-                        //                            .padding(.bottom)
+                        
+                        
+                        
+                        
+                        ForEach(0..<poll.options.count) { index in
+                            Button(action: {
+                                self.poll!.incrementOption(index: index)
+                                totalVotes = self.poll!.totalVotes()
+                                self.poll!.updatePoll(spaceId: spaceId)
+                            }, label: {
+                                
+                                Text(poll.options[index].name)
+                                    .font(.caption)
+                                    .frame(maxWidth:.infinity)
+                                    .frame(minHeight: 20, maxHeight: .infinity)
+                                
+                                
+                                
+                            })
+                            
+                            .buttonStyle(.bordered)
+                            .tint(colorForIndex(index: index))
+                            //
+                            
+                            .cornerRadius(10)
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                        }
+                    } else {
+                        
+                        ZStack{
+                            if hasNoVotes {
+                                Chart {
+                                    SectorMark(
+                                        angle: .value("Vote", 1),
+                                        innerRadius: .ratio(0.618),
+                                        angularInset: 2
+                                    )
+                                    .cornerRadius(5)
+                                    .foregroundStyle(Color.gray)
+                                    //                                    .annotation(position: .overlay, alignment: .center) {
+                                    //                                                            Text("No Votes")
+                                    //                                                                .font(.caption)
+                                    //                                                                .foregroundColor(.white)
+                                    //                                                        }
+                                }
+                                
+                                .padding(5)
+                                .chartLegend(.hidden)
+                                //                                .frame(height: 350)
+                                
+                                
+                            } else {
+                                Chart(poll.options) {option in
+                                    SectorMark(
+                                        //                                        angle: .value("Count", option.count),
+                                        angle: .value("Count", option.count),
+                                        innerRadius: .ratio(0.618),
+                                        angularInset: 2
+                                    )
+                                    .cornerRadius(3)
+                                    
+                                    
+                                    .foregroundStyle(colorForIndex(index: poll.options.firstIndex(of: option)!))
+                                    
+                                    
+                                }
+                                .padding(5)
+                                .chartLegend(.hidden)
+                                
+                                
+                            }
+                            
+                            
+                            
+                            
+                                                Text(poll.name)
+                                                    .font(.title2)
+                                                    .minimumScaleFactor(0.5)
+                                                    .fontWeight(.bold)
+//                                                    .foregroundStyle(Color.accentColor)
+                            
+                            
+                            
+                            .frame(maxWidth: .infinity,maxHeight: .infinity,alignment: .center)
+                            
+                            
+                            
+                        }
+                        
+                        
+                        
+                        
                     }
-                    .frame(maxWidth: .infinity,maxHeight: .infinity,alignment: .center)
                     
                     
                     
                 }
-                
-                
                 
                 .background(Color(UIColor.systemBackground))
                 //                .background(Color.accentColor)
@@ -178,7 +304,7 @@ struct PollWidget: WidgetView {
         
     }
     
-  
+    
 }
 
 
