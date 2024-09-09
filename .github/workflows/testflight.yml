@@ -34,6 +34,7 @@ jobs:
         working-directory: ./TwoCents
         run: bundle exec fastlane ios
         env:
+          CI: true
           ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
           ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
           ASC_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
@@ -44,6 +45,7 @@ jobs:
         working-directory: ./TwoCents
         run: bundle exec fastlane build_upload_testflight
         env:
+          CI: true
           ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
           ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
           ASC_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
