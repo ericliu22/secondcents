@@ -29,6 +29,8 @@ jobs:
       - name: Bundle install
         working-directory: ./TwoCents
         run: bundle install
+        env:
+          CI: true
 
       - name: Load iOS
         working-directory: ./TwoCents
