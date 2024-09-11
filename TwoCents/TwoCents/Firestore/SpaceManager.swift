@@ -7,7 +7,6 @@
 
 import Foundation
 import FirebaseFirestore
-import FirebaseFirestoreSwift
 import SwiftUI
 
 struct DBSpace: Identifiable, Codable, Hashable {

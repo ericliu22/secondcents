@@ -65,54 +65,58 @@ final class AuthenticationManager{
     private var verificationId: String?
 
     public func startAuth(phoneNumber: String, completion: @escaping (Bool) -> Void) {
-        
-//        
-//        //disable captcha
-//        Auth.auth().settings?.isAppVerificationDisabledForTesting = true
-        
-
-        
-        
         PhoneAuthProvider.provider().verifyPhoneNumber(phoneNumber, uiDelegate: nil) { verificationId, error in
-            
-            
-            
-            guard let verificationId = verificationId, error == nil else {
+            if let error = error {
+                print("Verification failed with error: \(error.localizedDescription)")
                 completion(false)
                 return
             }
             
-            self.verificationId = verificationId
-            completion(true)
-            
-            
+            if let verificationId = verificationId {
+                print("Verification ID received: \(verificationId)")
+                self.verificationId = verificationId
+                completion(true)
+            } else {
+                print("Failed to receive verification ID.")
+                completion(false)
+            }
         }
     }
+
     
     
     
     public func verifyCode(smsCode: String, completion: @escaping (Bool) -> Void) {
+        print("verifyCode: Entered function")
+
         guard let verificationId = self.verificationId else {
+            print("verifyCode: verificationId is nil")
             completion(false)
             return
         }
         
+        print("verifyCode: verificationId found - \(verificationId)")
+        
         let credential = PhoneAuthProvider.provider().credential(withVerificationID: verificationId, verificationCode: smsCode)
         
         Auth.auth().signIn(with: credential) { result, error in
-            
-            guard result != nil, error == nil else {
-                
+            if let error = error {
+                print("verifyCode: Sign in failed with error: \(error.localizedDescription)")
                 completion(false)
                 return
             }
             
+            guard result != nil else {
+                print("verifyCode: Sign in result is nil")
+                completion(false)
+                return
+            }
+            
+            print("verifyCode: Sign in successful")
             completion(true)
         }
-        
-        
-        
     }
+
     
     
     @discardableResult

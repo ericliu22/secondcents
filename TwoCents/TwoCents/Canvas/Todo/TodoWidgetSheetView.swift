@@ -7,7 +7,6 @@
 import SwiftUI
 import Foundation
 import FirebaseFirestore
-import FirebaseFirestoreSwift
 
 struct TodoWidgetSheetView: View {
 

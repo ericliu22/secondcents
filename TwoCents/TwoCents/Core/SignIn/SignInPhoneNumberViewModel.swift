@@ -33,6 +33,8 @@ final class SignInPhoneNumberViewModel: ObservableObject{
         
         let number = "+1\(phoneNumber)"
         
+        print(number)
+        
         AuthenticationManager.shared.startAuth(phoneNumber: number) { [weak self] success in
             guard success else { return }
             

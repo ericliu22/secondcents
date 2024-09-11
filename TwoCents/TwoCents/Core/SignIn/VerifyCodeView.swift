@@ -37,15 +37,12 @@ struct VerifyCodeView: View {
                     
                     Task {
                         
-                        
-                        
-                        
-                        do {
-                            
-                            
+                        print("clicked")
+                        print(viewModel.verificationCode)
                             try await viewModel.verifyCode() {success in
                                 
                                 if success {
+                                    print("success")
                                     
                                     appModel.activeSheet = nil
                                     
@@ -57,10 +54,7 @@ struct VerifyCodeView: View {
                             
                             
                             
-                            return
-                        } catch {
-                            print("Error verifying code: \(error)")
-                        }
+                       
                         
                     }
                     
