@@ -53,10 +53,8 @@ struct EmojiReactionContextView: View {
     func updateEmoji(emoji: String) {
         if !userPressed[emoji]! {
             addEmoji(emoji: emoji)
-            refreshId = UUID()
         } else {
             removeEmoji(emoji: emoji)
-            refreshId = UUID()
         }
     }
     
@@ -89,10 +87,16 @@ struct EmojiReactionContextView: View {
             .updateData([
                 "emojis": emojiCount,
                 "emojiPressed.\(emoji)": FieldValue.arrayUnion([userUID])
-            ])
-        reactionNotification(spaceId: spaceId, userUID: userUID, message: emojiNotification(emoji: emoji))
+            ]) { error in
+                if error == nil {
+                    reactionNotification(spaceId: spaceId, userUID: userUID, message: emojiNotification(emoji: emoji))
+                    refreshId = UUID() // Only refresh when the update is successful
+                } else {
+                    print("Failed to add emoji: \(error?.localizedDescription ?? "Unknown error")")
+                }
+            }
     }
-    
+
     private func removeEmoji(emoji: String) {
         emojiCount[emoji]! -= 1
         
@@ -103,7 +107,13 @@ struct EmojiReactionContextView: View {
             .updateData([
                 "emojis": emojiCount,
                 "emojiPressed.\(emoji)": FieldValue.arrayRemove([userUID])
-            ])
+            ]) { error in
+                if error == nil {
+                    refreshId = UUID() // Only refresh when the update is successful
+                } else {
+                    print("Failed to remove emoji: \(error?.localizedDescription ?? "Unknown error")")
+                }
+            }
     }
     
     let inboundBubbleColor = Color(#colorLiteral(red: 0.07058823529, green: 0.07843137255, blue: 0.0862745098, alpha: 1))
