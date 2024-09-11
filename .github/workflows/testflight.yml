@@ -13,7 +13,7 @@ jobs:
     runs-on: macos-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4.1.7
 
       - name: Set up ruby env
         uses: ruby/setup-ruby@v1.180.0
@@ -29,6 +29,8 @@ jobs:
       - name: Bundle install
         working-directory: ./TwoCents
         run: bundle install
+        env:
+          CI: true
 
       - name: Load iOS
         working-directory: ./TwoCents
@@ -53,7 +55,7 @@ jobs:
           SIGNING_KEY_FILE_PATH: signing-cert.p12
 
       - name: Upload app-store ipa and dsyms to artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3.2.1-node20
         with:
           name: app-store ipa & dsyms
           path: |
