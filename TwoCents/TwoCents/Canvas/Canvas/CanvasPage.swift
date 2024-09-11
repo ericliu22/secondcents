@@ -313,12 +313,14 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                     viewModel.delegate = self
                     appModel.currentSpaceId = spaceId
                     appModel.inSpace = true
+                    Task {
+                        await readNotifications(spaceId: spaceId, userId: appModel.user!.userId)
+                    }
                 })
                 .task{
                     do {
                         try await viewModel.loadCurrentSpace(spaceId: spaceId)
                         viewModel.attachWidgetListener()
-                        await readNotifications(spaceId: spaceId)
                     } catch {
                         //EXIT IF SPACE DOES NOT EXIST
                         presentationMode.wrappedValue.dismiss()
@@ -403,7 +405,7 @@ struct CanvasPage: View, CanvasViewModelDelegate {
             appModel.inSpace = false
             appModel.currentSpaceId = nil
             Task {
-                await readNotifications(spaceId: spaceId)
+                await readNotifications(spaceId: spaceId, userId: appModel.user!.userId)
             }
         }
         .background(  Color(UIColor.secondarySystemBackground))

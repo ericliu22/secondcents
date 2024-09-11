@@ -91,12 +91,7 @@ func messageUnread(spaceId: String) async {
     }
 }
 
-func readNotifications (spaceId: String) async {
-    guard let userId = try? AuthenticationManager.shared.getAuthenticatedUser().uid else {
-        print("Unreads: failed to get authenticated user")
-        return
-    }
-    
+func readNotifications (spaceId: String, userId: String) async {
     //This is dogshit but should change to more efficient thing
     guard let messageId = await fetchLatestMessage(spaceId: spaceId) else {
         print("Unreads: failed to get message id from helper function")

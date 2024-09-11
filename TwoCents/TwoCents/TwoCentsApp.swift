@@ -8,6 +8,7 @@ import SwiftUI
 import Firebase
 import UserNotifications
 import FirebaseMessaging
+import FirebaseAuth
 import UIKit
 import Darwin
 
@@ -15,14 +16,10 @@ import Darwin
 struct TwoCentsApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     
-    init () {
-        FirebaseApp.configure()
-    }
-    
     var body: some Scene {
         WindowGroup {
             RootView()
-                .environment(delegate.appModel)
+                .environment(delegate.appModel!)
                 .onAppear {
                     AnalyticsManager.shared.pageView(url: ANALYTICS_URL)
                 }
@@ -32,7 +29,7 @@ struct TwoCentsApp: App {
 
 class AppDelegate: NSObject, UIApplicationDelegate {
     let gcmMessageIDKey = "gcm.message_id"
-    var appModel: AppModel = AppModel()
+    var appModel: AppModel?
     
     //If this fucks up everyone is fucked
     override init() {
@@ -42,14 +39,16 @@ class AppDelegate: NSObject, UIApplicationDelegate {
             AnalyticsManager.shared.crashEvent(exception: exception)
         })
     }
-
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
-
+        FirebaseApp.configure()
+        appModel = AppModel()
+        
         Messaging.messaging().delegate = self
-
+        
         if #available(iOS 10.0, *) {
             UNUserNotificationCenter.current().delegate = self
-
+            
             let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
             UNUserNotificationCenter.current().requestAuthorization(
                 options: authOptions,
@@ -59,16 +58,16 @@ class AppDelegate: NSObject, UIApplicationDelegate {
             UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
             application.registerUserNotificationSettings(settings)
         }
-
+        
         application.registerForRemoteNotifications()
         return true
     }
-
+    
     func application(_ application: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
         handleUniversalLink(url)
         return true
     }
-
+    
     func handleUniversalLink(_ universalLink: URL) {
         print("Universal link URL: \(universalLink.absoluteString)")
         let components = universalLink.pathComponents
@@ -84,7 +83,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
             print("Universal link has no subject (e.g. spaceId, friendUid, inviteId) ")
             return
         }
-
+        
         //Tenatively we'll use these link actions, can change if we want it to
         switch action {
         case "space":
@@ -93,10 +92,17 @@ class AppDelegate: NSObject, UIApplicationDelegate {
                 guard let self = self else {
                     return
                 }
+                
                 if valid {
-                    self.appModel.navigationSpaceId = subject
-                    self.appModel.shouldNavigateToSpace = true
+                    guard let appModel = appModel else {
+                        print("AppModel not yet initialized")
+                        return
+                    }
+                    
+                    appModel.navigationSpaceId = subject
+                    appModel.shouldNavigateToSpace = true
                 }
+                
                 else { print("Invalid spaceId: resuming normal execution") }
             })
         case "friend":
@@ -112,25 +118,25 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     
     func isValidSpaceId(spaceId: String, completion: @escaping (Bool) -> Void) {
         Firestore.firestore().collection("spaces").document(spaceId).getDocument(completion: { snapshot, error in
-                if let error = error {
-                    print("Error fetching documents: \(error)")
-                    completion(false)
-                    return
-                }
-
-                if (snapshot != nil) {
-                    completion(true)
-                    //This is just for safety I don't know if necessary
-                    return
-                }
+            if let error = error {
+                print("Error fetching documents: \(error)")
                 completion(false)
+                return
+            }
+            
+            if (snapshot != nil) {
+                completion(true)
+                //This is just for safety I don't know if necessary
+                return
+            }
+            completion(false)
         })
     }
-
+    
     func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
         guard userActivity.activityType == NSUserActivityTypeBrowsingWeb,
               let incomingURL = userActivity.webpageURL
-              else {
+        else {
             return false
         }
         
@@ -144,31 +150,44 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     ) {
         print(deviceToken)
     }
-
+    
     //Runs when app is not open and user clicks on notification
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any],
                      fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
         if let messageID = userInfo[gcmMessageIDKey] {
             print("Message ID: \(messageID)")
         }
+        
+        // Forward the notification to FirebaseAuth
+        if Auth.auth().canHandleNotification(userInfo) {
+            print("Forwarded to firebase")
+            completionHandler(.noData)
+            return
+        }
+        
         print(userInfo)
         if let notificationSpaceId = userInfo["spaceId"] {
             guard let spaceId: String = notificationSpaceId as? String else {
                 return
             }
-            self.appModel.navigationSpaceId = spaceId
-            self.appModel.shouldNavigateToSpace = true
+            
+            guard let appModel = appModel else {
+                print("AppModel not yet initialized")
+                return
+            }
+            appModel.navigationSpaceId = spaceId
+            appModel.shouldNavigateToSpace = true
             print("SPACEID: \(notificationSpaceId)")
-            print("didReceiveRemoteNotification SPACEID: \(self.appModel.navigationSpaceId ?? "nothing")")
+            print("didReceiveRemoteNotification SPACEID: \(appModel.navigationSpaceId ?? "nothing")")
         }
-
-        completionHandler(UIBackgroundFetchResult.newData)
+        
+        completionHandler(.newData)
     }
 }
 
 extension AppDelegate: MessagingDelegate {
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
-   
+        
         let deviceToken: [String: String] = ["token": fcmToken ?? ""]
         print("Device token: ", deviceToken)
         uploadTokenToServer(fcmToken ?? "")
@@ -186,26 +205,26 @@ extension AppDelegate: MessagingDelegate {
 
 @available(iOS 10, *)
 extension AppDelegate : UNUserNotificationCenterDelegate {
-
+    
     //Runs when app is open and user gets notification
     func userNotificationCenter(_ center: UNUserNotificationCenter,
                                 willPresent notification: UNNotification,
-        withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+                                withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         let userInfo = notification.request.content.userInfo
-
+        
         if let messageID = userInfo[gcmMessageIDKey] {
             print("Message ID: \(messageID)")
         }
-
+        
         completionHandler([[.banner, .badge, .sound]])
     }
-
+    
     //Runs when app is open and user click notifications
     func userNotificationCenter(_ center: UNUserNotificationCenter,
                                 didReceive response: UNNotificationResponse,
                                 withCompletionHandler completionHandler: @escaping () -> Void) {
         let userInfo = response.notification.request.content.userInfo
-
+        
         if let messageID = userInfo[gcmMessageIDKey] {
             print("Message ID from userNotificationCenter didReceive: \(messageID)")
         }
@@ -215,12 +234,17 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
             guard let spaceId: String = notificationSpaceId as? String else {
                 return
             }
-            self.appModel.navigationSpaceId = spaceId
-            self.appModel.shouldNavigateToSpace = true
+            guard let appModel = appModel else {
+                print("AppModel not yet initialized")
+                return
+            }
+            
+            appModel.navigationSpaceId = spaceId
+            appModel.shouldNavigateToSpace = true
             print("SPACEID: \(notificationSpaceId)")
-            print("didReceive SPACEID: \(self.appModel.navigationSpaceId ?? "nothing")")
+            print("didReceive SPACEID: \(appModel.navigationSpaceId ?? "nothing")")
         }
-
+        
         completionHandler()
     }
 }
