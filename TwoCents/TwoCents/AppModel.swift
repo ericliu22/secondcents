@@ -30,6 +30,12 @@ final class AppModel {
         
         guard let userId = try? AuthenticationManager.shared.getAuthenticatedUser().uid else {
             print("AppModel: Failed to get authenticated user")
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                self.updateUser()
+            }
+            
+            
             return
         }
         
