@@ -84,25 +84,23 @@ struct RootView: View {
         
         }
         
-        //        .fullScreenCover(isPresented: $showCreateProfileView,  content: {
-        //            NavigationStack{
-        ////                CustomizeProfileView(showCreateProfileView: $showCreateProfileView, selectedColor: $appModel.loadedColor)
-        //                CustomizeProfileView(appModel.activeSheet: $appModel.activeSheet, selectedColor: $appModel.loadedColor)
-        //            }
-        //
-        //
-        //        })
         
         
         .onChange(of: appModel.activeSheet) { newValue, oldValue in
             Task {
                 do {
                     try await viewModel.loadCurrentUser()
+                    
+                    
+                    appModel.updateUser()
                 } catch {
                     if appModel.activeSheet == nil {
                         appModel.activeSheet = .signUpPhoneNumberView
                     }
                 }
+                
+                
+                
             }
         }
       

@@ -23,6 +23,11 @@ final class AppModel {
     var activeSheet: PopupSheet?
     
     init() {
+        updateUser()
+    }
+    
+    func updateUser(){
+        
         guard let userId = try? AuthenticationManager.shared.getAuthenticatedUser().uid else {
             print("AppModel: Failed to get authenticated user")
             return
@@ -33,7 +38,9 @@ final class AppModel {
                 print("AppModel: Failed to read uid as DBUser")
                 return
             }
-            //@TODO: Please change everything to appModel.user please :)
+            
+            
+            
             user = dbuser
             guard let color = user?.userColor else {
                 print("AppModel: failed to get color")
@@ -41,6 +48,13 @@ final class AppModel {
             }
             self.loadedColor = Color.fromString(name: color)
         }
+        
+        
+        
+        
+        
+        
+        
     }
     
     func addToSpace(userId: String) {
