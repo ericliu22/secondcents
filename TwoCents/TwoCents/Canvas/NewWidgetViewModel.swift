@@ -15,14 +15,6 @@ import AVFoundation
 final class NewWidgetViewModel: ObservableObject{
     
     
-    @Published private(set) var user:  DBUser? = nil
-    func loadCurrentUser() async throws {
-        let authDataResult = try AuthenticationManager.shared.getAuthenticatedUser()
-        self.user = try await UserManager.shared.getUser(userId: authDataResult.uid)
-    }
-    
-    
-    
     @Published private(set) var space:  DBSpace? = nil
     func loadCurrentSpace(spaceId: String) async throws {
         

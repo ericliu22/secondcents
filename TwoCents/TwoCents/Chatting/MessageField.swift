@@ -8,6 +8,7 @@ struct MessageField: View {
     
     @State private var message = ""
     @FocusState private var isFocused: Bool
+
     
     @State var spaceId: String
     @Binding var threadId: String

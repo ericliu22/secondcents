@@ -12,7 +12,6 @@ struct ColorSelectionView: View {
 
 
     var body: some View {
-        
                     VStack{
                         Rectangle()
                             .fill(.red)

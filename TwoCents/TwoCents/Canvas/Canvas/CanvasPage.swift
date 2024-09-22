@@ -25,8 +25,6 @@ let FRAME_SIZE: CGFloat = 2000
 let WIDGET_SPACING: CGFloat = TILE_SIZE + TILE_SPACING
 
 
-
-
 //CanvasViewModelDelegate is so that we can call dismiss the view from viewModel
 struct CanvasPage: View, CanvasViewModelDelegate {
     
@@ -320,6 +318,7 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                 .task{
                     do {
                         try await viewModel.loadCurrentSpace(spaceId: spaceId)
+                        //try await viewModel.loadCurrentUser()
                         viewModel.attachWidgetListener()
                     } catch {
                         //EXIT IF SPACE DOES NOT EXIST

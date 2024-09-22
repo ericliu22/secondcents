@@ -35,7 +35,7 @@ struct NewWidgetView: View {
     
     @StateObject private var viewModel = NewWidgetViewModel()
     @Environment(CanvasPageViewModel.self) var canvasViewModel
-    
+    @Environment(AppModel.self) var appModel
     
     @Environment(\.dismiss) var dismissScreen
     
@@ -344,14 +344,6 @@ struct NewWidgetView: View {
                 try? await viewModel.loadCurrentSpace(spaceId: spaceId)
                 print(viewModel.space?.name ?? "Space not available")
                 
-                
-                
-                try? await viewModel.loadCurrentUser()
-                
-                withAnimation {
-                    userColor = Color.fromString(name: viewModel.user?.userColor ?? "")
-                }
-               
             }
             .onAppear {
                 viewModel.loadLatestMedia()

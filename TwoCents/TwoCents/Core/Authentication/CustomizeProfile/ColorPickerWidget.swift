@@ -41,7 +41,6 @@ struct ColorPickerWidget: View {
             .cornerRadius(10)
             .padding(.horizontal)
             .task{
-                try? await viewModel.loadCurrentUser()
                 viewModel.saveUserColor(selectedColor: appModel.loadedColor)
                 
             }

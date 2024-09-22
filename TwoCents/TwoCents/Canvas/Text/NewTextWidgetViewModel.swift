@@ -16,16 +16,16 @@ import SwiftUI
 final class NewTextWidgetViewModel: ObservableObject {
     
     //this might cause errors bc several places are running and creating and overriding db user below... but for now its good
-    @Published private(set) var user:  DBUser? = nil
-    func loadCurrentUser() async throws {
-        let authDataResult = try AuthenticationManager.shared.getAuthenticatedUser()
-        self.user = try await UserManager.shared.getUser(userId: authDataResult.uid)
-    }
-    
-    func loadUser(userId: String) async throws {
-     
-        self.user = try await UserManager.shared.getUser(userId: userId)
-    }
+//    @Published private(set) var user:  DBUser? = nil
+//    func loadCurrentUser() async throws {
+//        let authDataResult = try AuthenticationManager.shared.getAuthenticatedUser()
+//        self.user = try await UserManager.shared.getUser(userId: authDataResult.uid)
+//    }
+//    
+//    func loadUser(userId: String) async throws {
+//     
+//        self.user = try await UserManager.shared.getUser(userId: userId)
+//    }
 
     
     

@@ -23,6 +23,8 @@ struct ChatView: View {
     @State var spaceId: String
     @StateObject private var viewModel = ChatViewModel()
     @Environment(CanvasPageViewModel.self) var canvasViewModel
+   
+    @Environment(AppModel.self) var appModel
     
     @State var threadId: String = ""
     @State private var threadIdChangedTime: Date = Date()
@@ -64,7 +66,7 @@ struct ChatView: View {
                         (threadId.isEmpty || message.threadId == threadId) && message.ts > threadIdChangedTime
                     }) { message in
                         
-                        ChatBubbleViewBuilder(spaceId: spaceId, message: message, currentUserId: viewModel.user?.id ?? "", threadId: $threadId)
+                        ChatBubbleViewBuilder(spaceId: spaceId, message: message, currentUserId: appModel.user?.id ?? "", threadId: $threadId)
                  
                             .id(message.id)
                             .rotationEffect(.degrees(180))
@@ -78,7 +80,7 @@ struct ChatView: View {
                     
                     // Display old messages
                     ForEach(viewModel.messages) { message in
-                        ChatBubbleViewBuilder(spaceId: spaceId, message: message, currentUserId: viewModel.user?.id ?? "", threadId: $threadId)
+                        ChatBubbleViewBuilder(spaceId: spaceId, message: message, currentUserId: appModel.user?.id ?? "", threadId: $threadId)
                             .id(message.id)
                             .rotationEffect(.degrees(180))
                             .listRowSeparator(.hidden)
@@ -155,7 +157,7 @@ struct ChatView: View {
 //                    if threadId == "" {
 //                        Color.clear
 //                    } else {
-//                        Color.fromString(name: viewModel.user?.userColor ?? "")
+//                        Color.fromString(name: appModel.user?.userColor ?? "")
 //                            .brightness(0.6)
 //                            .opacity(0.3)
 //                    }
@@ -206,14 +208,6 @@ struct ChatView: View {
                         }
                         }
             )
-            
-            
-            
-            
-            .task {
-                try? await viewModel.loadCurrentUser()
-                
-            }
             
             
             
