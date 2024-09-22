@@ -54,8 +54,7 @@ struct VideoWidget: WidgetView{
     @State private var width: CGFloat;
     @State private var height: CGFloat;
     
-    @StateObject private var viewModel = VideoWidgetViewModel()
-    
+    private var viewModel = VideoWidgetViewModel()
     @Environment(CanvasPageViewModel.self) var canvasViewModel: CanvasPageViewModel?
     
     var body: some View {
@@ -71,34 +70,43 @@ struct VideoWidget: WidgetView{
         
         
         
-        if let url = widget.mediaURL, let videoThumbnail = viewModel.getVideoThumbnail(from: url) {
-            Image(uiImage: videoThumbnail)
-                .resizable()
-                .scaledToFill()
-                .frame(width: width, height: height, alignment: .center)
-                .clipShape(RoundedRectangle(cornerRadius: CORNER_RADIUS))
-                .ignoresSafeArea()
-                .draggable(widget) // Assuming you want to drag the URL
-            
-                .overlay{
-                    Image(systemName: "play.circle.fill")
-                        .font(.largeTitle)
-                        .foregroundStyle(.thinMaterial)
+            ZStack {
+                if let videoThumbnail = viewModel.videoThumbnail {
+                    Image(uiImage: videoThumbnail)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: width, height: height, alignment: .center)
+                        .clipShape(RoundedRectangle(cornerRadius: CORNER_RADIUS))
+                        .ignoresSafeArea()
+                        .draggable(widget) // Assuming you want to drag the URL
+                    
+                        .overlay{
+                            Image(systemName: "play.circle.fill")
+                                .font(.largeTitle)
+                                .foregroundStyle(.thinMaterial)
+                        }
+                    
+                    
+                        .onTapGesture {
+                            guard let canvasViewModel = canvasViewModel else { return }
+                            canvasViewModel.activeSheet = .video
+                            canvasViewModel.activeWidget = widget
+                        }
+                } else {
+                        Text("Unable to load thumbnail")
+                            .frame(width: width, height: height)
+                            .background(Color.gray)
+                            .clipShape(RoundedRectangle(cornerRadius: CORNER_RADIUS))
                 }
-            
-            
-                .onTapGesture {
-                    guard let canvasViewModel = canvasViewModel else { return }
-                    canvasViewModel.activeSheet = .video
-                    canvasViewModel.activeWidget = widget
+                if viewModel.isLoading {
+                    ProgressView()
+                        .progressViewStyle(CircularProgressViewStyle(tint: .gray))
+                        .scaleEffect(3)
                 }
-            
-        } else {
-            Text("Unable to load thumbnail")
-                .frame(width: width, height: height)
-                .background(Color.gray)
-                .clipShape(RoundedRectangle(cornerRadius: CORNER_RADIUS))
-        }
+            }
+            .task {
+                await viewModel.getVideoThumbnail(from: widget.mediaURL!)
+            }
             
         
         

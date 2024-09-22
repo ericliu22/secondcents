@@ -10,7 +10,7 @@ import FirebaseFirestore
 import SwiftUI
 import Observation
 
-@Observable
+@Observable @MainActor
 final class NewLinkViewModel {
     
     //this might cause errors bc several places are running and creating and overriding db user below... but for now its good

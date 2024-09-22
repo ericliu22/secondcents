@@ -11,11 +11,14 @@ import PhotosUI
 import AVFoundation
 
 
-@MainActor
-final class VideoWidgetViewModel: ObservableObject{
+@Observable @MainActor
+final class VideoWidgetViewModel {
     
+    var isLoading: Bool = true
+    var videoThumbnail: UIImage?
     
-    func getVideoThumbnail(from url: URL) -> UIImage? {
+    func getVideoThumbnail(from url: URL) async {
+        isLoading = true
         let asset = AVAsset(url: url)
         let assetImgGenerate = AVAssetImageGenerator(asset: asset)
         assetImgGenerate.appliesPreferredTrackTransform = true
@@ -25,11 +28,16 @@ final class VideoWidgetViewModel: ObservableObject{
         do {
             let img = try assetImgGenerate.copyCGImage(at: time, actualTime: nil)
             let thumbnail = UIImage(cgImage: img)
-            return thumbnail
+            print("Ended getting videoThumbnail")
+            isLoading = false
+            videoThumbnail = thumbnail
         } catch {
             print("Error generating thumbnail: \(error.localizedDescription)")
-            return nil
+            print("Ended getting videoThumbnail")
+            isLoading = false
         }
+        return
+
     }
     
     
