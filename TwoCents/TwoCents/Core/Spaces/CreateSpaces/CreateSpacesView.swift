@@ -17,7 +17,7 @@ struct CreateSpacesView: View {
     @StateObject private var viewModel = CreateSpacesViewModel()
     @State private var randomIndex: Int = 0
     
-    
+    @Environment(AppModel.self) var appModel
     
     @State private var selectedPhoto: PhotosPickerItem? = nil
     
@@ -358,7 +358,7 @@ struct CreateSpacesView: View {
             .padding()
             .task{
                 try? await viewModel.loadCurrentSpace(spaceId: spaceId)
-                try? await viewModel.loadCurrentUser()
+                //try? await viewModel.loadCurrentUser()
                 //to prevent list from refreshing when one exits tab and comes back
                 if viewModel.selectedMembers.isEmpty {
                     try? await viewModel.getAllFriends()

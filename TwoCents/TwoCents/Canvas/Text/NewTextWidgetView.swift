@@ -12,7 +12,8 @@ struct NewTextWidgetView: View {
     //@StateObject private var nvm = NewWidgetViewModel()
     @State private var inputText: String = ""
 //    @Binding var showPopup: Bool
-    
+    @Environment(AppModel.self) var appModel
+
     @StateObject private var viewModel = NewTextWidgetViewModel()
     
     @State var spaceId: String
@@ -80,7 +81,7 @@ struct NewTextWidgetView: View {
                     
               
      
-                    if let userId = viewModel.user?.userId {
+                    if let userId = appModel.user?.id {
                         
                         dismissScreen()
                         
@@ -141,27 +142,11 @@ struct NewTextWidgetView: View {
             .padding(.horizontal)
             
             
-            .task {
-                try? await viewModel.loadCurrentUser()
-                
-//                try? await viewModel.loadCurrentSpace(spaceId: spaceId)
-                
-               
-                
-            }
-            
-            
-            
-            
+//            .task {
+//                try? await viewModel.loadCurrentUser()
+//                
+////                try? await viewModel.loadCurrentSpace(spaceId: spaceId)
+//            }
         }
-     
-        
-        
-      
-    
-    
     }
-      
-    
-
 }

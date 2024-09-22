@@ -14,6 +14,8 @@ struct TodoWidgetSheetView: View {
     private var spaceId: String
 
     @StateObject private var viewModel = TodoWidgetSheetViewModel()
+    
+    @Environment(AppModel.self) var appModel
 
     init(widget: CanvasWidget, spaceId: String) {
         assert(widget.media == .todo)

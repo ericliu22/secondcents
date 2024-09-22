@@ -13,10 +13,10 @@ final class TodoWidgetSheetViewModel: ObservableObject {
     
     @Published private(set) var user: DBUser? = nil
     
-    func loadCurrentUser() async throws {
-        let authDataResult = try AuthenticationManager.shared.getAuthenticatedUser()
-        self.user = try await UserManager.shared.getUser(userId: authDataResult.uid)
-    }
+//    func loadCurrentUser() async throws {
+//        let authDataResult = try AuthenticationManager.shared.getAuthenticatedUser()
+//        self.user = try await UserManager.shared.getUser(userId: authDataResult.uid)
+//    }
     
     func loadUser(userId: String) async throws {
         self.user = try await UserManager.shared.getUser(userId: userId)

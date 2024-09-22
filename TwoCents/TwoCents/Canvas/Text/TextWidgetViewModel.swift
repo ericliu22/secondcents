@@ -22,10 +22,10 @@ final class TextWidgetViewModel: ObservableObject {
         self.user = try await UserManager.shared.getUser(userId: authDataResult.uid)
     }
     
-    func loadUser(userId: String) async throws {
-     
-        self.user = try await UserManager.shared.getUser(userId: userId)
-    }
+//    func loadUser(userId: String) async throws {
+//     
+//        self.user = try await UserManager.shared.getUser(userId: userId)
+//    }
 
     
     @Published private(set) var WidgetMessage: CanvasWidget? = nil

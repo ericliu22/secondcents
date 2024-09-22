@@ -14,14 +14,10 @@ import Observation
 final class NewLinkViewModel {
     
     //this might cause errors bc several places are running and creating and overriding db user below... but for now its good
+    //var user:  DBUser? = nil
     var space:  DBSpace? = nil
     var WidgetMessage: CanvasWidget? = nil
     var user: DBUser?
-
-    func loadCurrentUser() async throws {
-        let authDataResult = try AuthenticationManager.shared.getAuthenticatedUser()
-        self.user = try await UserManager.shared.getUser(userId: authDataResult.uid)
-    }
     
     func loadCurrentSpace(spaceId: String) async throws {
         

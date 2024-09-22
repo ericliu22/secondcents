@@ -14,6 +14,8 @@ struct NewLinkView: View {
     @State private var showingView: Bool = false
     var viewModel = NewLinkViewModel()
     
+    @Environment(AppModel.self) var appModel
+    
     @FocusState private var isTextFieldFocused: Bool
     @Environment(\.dismiss) var dismissScreen
     
@@ -70,7 +72,7 @@ struct NewLinkView: View {
                                 .cornerRadius(10)
                             
                             Button(action: {
-                                if let userId = viewModel.user?.userId, let url = formattedURL {
+                                if let userId = appModel.user?.id, let url = formattedURL {
                                     print("User ID: \(userId), URL: \(url.absoluteString)")
                                     dismissScreen()
                                     showingView = false
@@ -107,9 +109,9 @@ struct NewLinkView: View {
                             }
                         }
                         .padding(.horizontal)
-                        .task {
-                            try? await viewModel.loadCurrentUser()
-                        }
+//                        .task {
+//                            try? await viewModel.loadCurrentUser()
+//                        }
                     }
                     .scrollDismissesKeyboard(.interactively)
                 }
