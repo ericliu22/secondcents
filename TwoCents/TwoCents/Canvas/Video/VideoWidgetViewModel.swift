@@ -20,7 +20,6 @@ final class VideoWidgetViewModel {
     var videoThumbnail: UIImage?
     
     func getVideoThumbnail(from url: URL) async {
-        print("GET VIDEO THUMBNAIL")
         isLoading = true
         let asset = AVAsset(url: url)
         let assetImgGenerate = AVAssetImageGenerator(asset: asset)

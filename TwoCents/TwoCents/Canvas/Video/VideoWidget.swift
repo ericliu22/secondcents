@@ -59,8 +59,8 @@ struct VideoWidget: WidgetView{
                         .progressViewStyle(CircularProgressViewStyle(tint: .gray))
                         .scaleEffect(3)
                 } else {
-                    //This might freeze the app if the videoThumbnail fails to load
-                    Image(uiImage: waitForVariable{viewModel.videoThumbnail})
+                    if let thumbnail = viewModel.videoThumbnail {
+                        Image(uiImage: thumbnail)
                             .resizable()
                             .scaledToFill()
                             .frame(width: width, height: height, alignment: .center)
@@ -78,6 +78,9 @@ struct VideoWidget: WidgetView{
                                 canvasViewModel.activeSheet = .video
                                 canvasViewModel.activeWidget = widget
                             }
+                    } else {
+                        Image(systemName: "x.circle.fill")
+                    }
                 }
             }
             .onAppear {
