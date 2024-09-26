@@ -11,13 +11,16 @@ import PhotosUI
 import AVFoundation
 
 
-@Observable @MainActor
+//WARNING: This is not and should not be @MainActor for a reason
+//Loading times are slow asf if it is
+@Observable
 final class VideoWidgetViewModel {
     
     var isLoading: Bool = true
     var videoThumbnail: UIImage?
     
     func getVideoThumbnail(from url: URL) async {
+        print("GET VIDEO THUMBNAIL")
         isLoading = true
         let asset = AVAsset(url: url)
         let assetImgGenerate = AVAssetImageGenerator(asset: asset)

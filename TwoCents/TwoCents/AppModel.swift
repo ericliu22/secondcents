@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 import Firebase
 
-@Observable
+@Observable @MainActor
 final class AppModel {
     
     var navigationSpaceId: String?

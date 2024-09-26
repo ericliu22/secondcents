@@ -10,7 +10,7 @@ import FirebaseFirestore
 import SwiftUI
 
 
-@Observable
+@Observable @MainActor
 final class SpacesViewModel {
     
     var user:  DBUser? = nil
