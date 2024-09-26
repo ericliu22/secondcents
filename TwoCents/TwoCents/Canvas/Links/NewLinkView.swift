@@ -12,8 +12,8 @@ struct NewLinkView: View {
     @State private var rawURLString: String = ""
     @State var spaceId: String
     @State private var showingView: Bool = false
-    var viewModel = NewLinkViewModel()
     
+    @State var viewModel = NewLinkViewModel()
     @Environment(AppModel.self) var appModel
     
     @FocusState private var isTextFieldFocused: Bool

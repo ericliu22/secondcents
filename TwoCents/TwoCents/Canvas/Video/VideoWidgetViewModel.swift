@@ -28,12 +28,10 @@ final class VideoWidgetViewModel {
         do {
             let img = try assetImgGenerate.copyCGImage(at: time, actualTime: nil)
             let thumbnail = UIImage(cgImage: img)
-            print("Ended getting videoThumbnail")
             isLoading = false
             videoThumbnail = thumbnail
         } catch {
             print("Error generating thumbnail: \(error.localizedDescription)")
-            print("aborted getting videoThumbnail")
             isLoading = false
         }
         return

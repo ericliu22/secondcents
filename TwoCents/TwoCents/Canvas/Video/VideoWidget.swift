@@ -28,14 +28,15 @@ class VideoPlayerModel {
 
 
 struct VideoWidget: WidgetView{
-    var playerModel: VideoPlayerModel
+    
+    @State var playerModel: VideoPlayerModel
     var widget: CanvasWidget;
     
     @State private var width: CGFloat;
     @State private var height: CGFloat;
     
-    private var viewModel = VideoWidgetViewModel()
-    @Environment(CanvasPageViewModel.self) var canvasViewModel: CanvasPageViewModel?
+    @State private var viewModel = VideoWidgetViewModel()
+    @Environment(CanvasPageViewModel.self) var canvasViewModel
     
     var body: some View {
 //        VideoPlayer(player: playerModel.videoPlayer)
@@ -73,7 +74,6 @@ struct VideoWidget: WidgetView{
                             }
                         
                             .onTapGesture {
-                                guard let canvasViewModel = canvasViewModel else { return }
                                 canvasViewModel.activeSheet = .video
                                 canvasViewModel.activeWidget = widget
                             }

@@ -31,7 +31,8 @@ struct RootView: View {
     //
     //    @State private var showCreateProfileView: Bool = false
     
-    var viewModel = RootViewModel()
+    //@TODO: DEPRECATED CONSIDER REMOVING
+    //@State var viewModel = RootViewModel()
     @Environment(AppModel.self) var appModel
     
     @State private var tintLoaded: Bool = false
@@ -92,9 +93,6 @@ struct RootView: View {
         .onChange(of: appModel.activeSheet) { newValue, oldValue in
             Task {
                 do {
-                    try await viewModel.loadCurrentUser()
-                    
-                    
                     appModel.updateUser()
                 } catch {
                     if appModel.activeSheet == nil {
