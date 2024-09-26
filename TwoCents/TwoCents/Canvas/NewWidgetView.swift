@@ -31,7 +31,7 @@ var calendarViewTest = CanvasWidget(width: .infinity, height:  .infinity, border
 
 struct NewWidgetView: View {
     
-    @State private var userColor: Color = .gray
+//    @State private var userColor: Color = .gray
     
     @StateObject private var viewModel = NewWidgetViewModel()
     @Environment(CanvasPageViewModel.self) var canvasViewModel
@@ -172,8 +172,8 @@ struct NewWidgetView: View {
                 .minimumScaleFactor(0.8)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .background(.ultraThickMaterial)
-                .background(userColor)
-                .foregroundColor(userColor)
+                .background(appModel.loadedColor)
+                .foregroundColor(appModel.loadedColor)
                 .cornerRadius(20)
           
             
