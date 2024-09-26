@@ -14,7 +14,7 @@ protocol CanvasViewModelDelegate {
     func dismissView()
 }
 
-@Observable
+@Observable @MainActor
 final class CanvasPageViewModel {
     
     var space:  DBSpace? = nil
@@ -130,9 +130,10 @@ final class CanvasPageViewModel {
     func sheetDismiss() {
         replyWidget = nil
         activeWidget = nil
-        
+
         //get chat to show up at all times
         if !inSettingsView && activeSheet == nil{
+            print("sheetDismiss: Changing to .chat")
             inSettingsView = false
             activeSheet = .chat
             selectedDetent = .height(50)

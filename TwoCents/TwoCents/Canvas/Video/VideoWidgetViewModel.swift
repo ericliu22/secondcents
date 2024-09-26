@@ -33,7 +33,7 @@ final class VideoWidgetViewModel {
             videoThumbnail = thumbnail
         } catch {
             print("Error generating thumbnail: \(error.localizedDescription)")
-            print("Ended getting videoThumbnail")
+            print("aborted getting videoThumbnail")
             isLoading = false
         }
         return

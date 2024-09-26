@@ -336,6 +336,13 @@ struct CanvasPage: View, CanvasViewModelDelegate {
             
         }
         .ignoresSafeArea()
+        .onChange(of: viewModel.activeSheet) { oldValue, newValue in
+            print("ON CHANGE RAN")
+            print("SHEET CHANGED FROM \(String(describing: oldValue)) to \(String(describing: newValue))")
+            if viewModel.activeSheet == nil {
+                print("NIL SHEET")
+            }
+        }
         .sheet(item: $viewModel.activeSheet, onDismiss: {
             viewModel.sheetDismiss()
         }, content: { item in
@@ -346,23 +353,26 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                 //                            .presentationBackground(Color(UIColor.systemBackground))
                     .presentationBackground(.thickMaterial)
             case .chat:
-                ChatView(spaceId: spaceId)
-                    .presentationBackground(Color(UIColor.systemBackground))
-                    .presentationDetents([.height(50),.large], selection: $viewModel.selectedDetent)
-                    .presentationCornerRadius(20)
-                    .presentationBackgroundInteraction(.enabled)
-                    .onChange(of: viewModel.selectedDetent) {
-                        if viewModel.selectedDetent != .large {
-                            
-                            withAnimation {
-                                viewModel.replyWidget = nil
+                    ChatView(spaceId: spaceId)
+                        .presentationBackground(Color(UIColor.systemBackground))
+                        .presentationDetents([.height(50),.large], selection: $viewModel.selectedDetent)
+                        .presentationCornerRadius(20)
+                        .presentationBackgroundInteraction(.enabled)
+                        .onChange(of: viewModel.selectedDetent) {
+                            if viewModel.selectedDetent != .large {
                                 
+                                withAnimation {
+                                    viewModel.replyWidget = nil
+                                    
+                                }
+                                
+                                print("detent is 50")
                             }
-                            
-                            print("detent is 50")
                         }
-                    }
-                
+                        .onAppear {
+                            viewModel.selectedDetent = .height(50)
+                        }
+                        .interactiveDismissDisabled()
             case .poll:
                 PollWidgetSheetView(widget: waitForVariable{viewModel.activeWidget}, spaceId: spaceId)
             case .newTextView:

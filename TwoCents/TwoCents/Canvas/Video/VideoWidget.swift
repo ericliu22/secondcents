@@ -10,7 +10,7 @@ import SwiftUI
 import AVKit
 import AVFoundation
 
-@Observable
+@Observable @MainActor
 class VideoPlayerModel {
     var videoPlayer: AVPlayer
     var isPlaying: Bool = false
@@ -22,26 +22,6 @@ class VideoPlayerModel {
         self.playerItem = playerItem
         self.videoPlayer = AVPlayer(playerItem: playerItem)
         
-        addObservers()
-    }
-    
-    private func addObservers() {
-        NotificationCenter.default.addObserver(self, selector: #selector(playerDidFinishPlaying), name: .AVPlayerItemDidPlayToEndTime, object: playerItem)
-    }
-    
-    private func removeObservers() {
-        NotificationCenter.default.removeObserver(self)
-    }
-    
-    deinit {
-        removeObservers()
-        self.videoPlayer.pause()
-    }
-    
-    @objc private func playerDidFinishPlaying() {
-        DispatchQueue.main.async {
-            self.isPlaying = false
-        }
     }
     
 }
@@ -71,37 +51,32 @@ struct VideoWidget: WidgetView{
         
         
             ZStack {
-                if let videoThumbnail = viewModel.videoThumbnail {
-                    Image(uiImage: videoThumbnail)
-                        .resizable()
-                        .scaledToFill()
-                        .frame(width: width, height: height, alignment: .center)
-                        .clipShape(RoundedRectangle(cornerRadius: CORNER_RADIUS))
-                        .ignoresSafeArea()
-                        .draggable(widget) // Assuming you want to drag the URL
-                    
-                        .overlay{
-                            Image(systemName: "play.circle.fill")
-                                .font(.largeTitle)
-                                .foregroundStyle(.thinMaterial)
-                        }
-                    
-                    
-                        .onTapGesture {
-                            guard let canvasViewModel = canvasViewModel else { return }
-                            canvasViewModel.activeSheet = .video
-                            canvasViewModel.activeWidget = widget
-                        }
-                } else {
-                        Text("Unable to load thumbnail")
-                            .frame(width: width, height: height)
-                            .background(Color.gray)
-                            .clipShape(RoundedRectangle(cornerRadius: CORNER_RADIUS))
-                }
                 if viewModel.isLoading {
+                    Color(.systemBackground)
+                        .ignoresSafeArea()
                     ProgressView()
                         .progressViewStyle(CircularProgressViewStyle(tint: .gray))
                         .scaleEffect(3)
+                } else {
+                    Image(uiImage: waitForVariable{viewModel.videoThumbnail})
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: width, height: height, alignment: .center)
+                            .clipShape(RoundedRectangle(cornerRadius: CORNER_RADIUS))
+                            .ignoresSafeArea()
+                            .draggable(widget) // Assuming you want to drag the URL
+                        
+                            .overlay{
+                                Image(systemName: "play.circle.fill")
+                                    .font(.largeTitle)
+                                    .foregroundStyle(.thinMaterial)
+                            }
+                        
+                            .onTapGesture {
+                                guard let canvasViewModel = canvasViewModel else { return }
+                                canvasViewModel.activeSheet = .video
+                                canvasViewModel.activeWidget = widget
+                            }
                 }
             }
             .task {
