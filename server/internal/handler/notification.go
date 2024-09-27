@@ -24,49 +24,54 @@ type NotificationRequest struct {
 }
 
 func NotificationHandler(ctx *fasthttp.RequestCtx, app *firebase.App) {
-    // Parse incoming JSON
-    var fcmReq NotificationRequest
-    var notificationRequest NotificationRequest
-    if err := json.Unmarshal(ctx.PostBody(), &notificationRequest); err != nil {
-        log.Printf("Error parsing JSON: %v", err)
-        ctx.Error("Bad request", fasthttp.StatusBadRequest)
+    var notificationReq NotificationRequest
+
+    // Parse the request body (Fasthttp uses ctx.PostBody())
+    if err := json.Unmarshal(ctx.PostBody(), &notificationReq); err != nil {
+        ctx.Error("Invalid request body", fasthttp.StatusBadRequest)
+        return
+    }
+
+    // Validate that token is present
+    if notificationReq.token == "" {
+        ctx.Error("Token is required", fasthttp.StatusBadRequest)
         return
     }
 
     // Initialize FCM messaging client
     client, err := app.Messaging(context.Background())
     if err != nil {
-        log.Printf("Error initializing Firebase Messaging: %v", err)
+        log.Printf("Error initializing Firebase Messaging: %v\n", err)
         ctx.Error("Internal server error", fasthttp.StatusInternalServerError)
         return
     }
 
     // Create FCM message
     message := &messaging.Message{
-        Token: fcmReq.token,
+        Token: notificationReq.token,
         Notification: &messaging.Notification{
-            Title: fcmReq.notification.title,
-            Body:  fcmReq.notification.body,
+            Title: notificationReq.notification.title,
+            Body:  notificationReq.notification.body,
         },
-	Data: fcmReq.data,
+        Data: notificationReq.data,
     }
 
-    fmt.Printf("Preparing to send FCM notification: %+v\n", fcmReq)
-
-    // If the image is provided (not nil), set it in the notification
-    if fcmReq.notification.image != nil {
-        message.Notification.ImageURL = *fcmReq.notification.image
+    // Add image if present
+    if notificationReq.notification.image != nil {
+        message.Notification.ImageURL = *notificationReq.notification.image
     }
 
-    // Send the message to FCM
+    // Send the notification to the token
     response, err := client.Send(context.Background(), message)
     if err != nil {
-        log.Printf("Error sending message to FCM: %v", err)
-        ctx.Error("Error sending message", fasthttp.StatusInternalServerError)
+        ctx.Error("Failed to send notification", fasthttp.StatusInternalServerError)
         return
     }
 
-    // Return FCM response
+    log.Printf("Sent notification to token: %s\n", response)
+
+    // Success response
     ctx.SetStatusCode(fasthttp.StatusOK)
-    ctx.SetBodyString("Message sent successfully: " + response)
+    ctx.SetBodyString("Notification sent successfully")
+
 }
