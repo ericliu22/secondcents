@@ -11,29 +11,35 @@ import (
     "github.com/valyala/fasthttp"
 )
 
+// Notification represents the notification structure
 type Notification struct {
-	title	string `json:"title"`
-	body	string `json:"body"`
-	image	*string `json:"image"`
+    Title string  `json:"title"`  // Match the JSON field "title"
+    Body  string  `json:"body"`   // Match the JSON field "body"
+    Image *string `json:"image,omitempty"` // Optional image field
 }
 
+// NotificationRequest represents the full request structure
 type NotificationRequest struct {
-    token        string            `json:"token"` 
-    notification Notification      `json:"notification"`           // The notification content
-    data         map[string]string `json:"data,omitempty"`         // Optional data
+    Token        string            `json:"token"`        // Single token
+    Notification Notification      `json:"notification"` // The notification content
+    Data         map[string]string `json:"data"`         // Optional data
 }
 
 func NotificationHandler(ctx *fasthttp.RequestCtx, app *firebase.App) {
     var notificationReq NotificationRequest
 
     // Parse the request body (Fasthttp uses ctx.PostBody())
+    fmt.Printf("PostBody: %s\n", string(ctx.PostBody()))
+
     if err := json.Unmarshal(ctx.PostBody(), &notificationReq); err != nil {
         ctx.Error("Invalid request body", fasthttp.StatusBadRequest)
         return
     }
 
+    fmt.Printf("Parsed notification request: %+v\n", notificationReq)
+
     // Validate that token is present
-    if notificationReq.token == "" {
+    if notificationReq.Token == "" {
         ctx.Error("Token is required", fasthttp.StatusBadRequest)
         return
     }
@@ -48,17 +54,17 @@ func NotificationHandler(ctx *fasthttp.RequestCtx, app *firebase.App) {
 
     // Create FCM message
     message := &messaging.Message{
-        Token: notificationReq.token,
+        Token: notificationReq.Token,
         Notification: &messaging.Notification{
-            Title: notificationReq.notification.title,
-            Body:  notificationReq.notification.body,
+            Title: notificationReq.Notification.Title,
+            Body:  notificationReq.Notification.Body,
         },
-        Data: notificationReq.data,
+        Data: notificationReq.Data,
     }
 
     // Add image if present
-    if notificationReq.notification.image != nil {
-        message.Notification.ImageURL = *notificationReq.notification.image
+    if notificationReq.Notification.Image != nil {
+        message.Notification.ImageURL = *notificationReq.Notification.Image
     }
 
     // Send the notification to the token
@@ -73,5 +79,4 @@ func NotificationHandler(ctx *fasthttp.RequestCtx, app *firebase.App) {
     // Success response
     ctx.SetStatusCode(fasthttp.StatusOK)
     ctx.SetBodyString("Notification sent successfully")
-
 }
