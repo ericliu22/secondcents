@@ -14,14 +14,20 @@ import (
 type Notification struct {
 	title	string `json:"title"`
 	body	string `json:"body"`
-	token	string `json:"token"`
 	image	*string `json:"image"`
+}
+
+type NotificationRequest struct {
+    token        string            `json:"token"` 
+    notification Notification      `json:"notification"`           // The notification content
+    data         map[string]string `json:"data,omitempty"`         // Optional data
 }
 
 func NotificationHandler(ctx *fasthttp.RequestCtx, app *firebase.App) {
     // Parse incoming JSON
-    var fcmReq Notification
-    if err := json.Unmarshal(ctx.PostBody(), &fcmReq); err != nil {
+    var fcmReq NotificationRequest
+    var notificationRequest NotificationRequest
+    if err := json.Unmarshal(ctx.PostBody(), &notificationRequest); err != nil {
         log.Printf("Error parsing JSON: %v", err)
         ctx.Error("Bad request", fasthttp.StatusBadRequest)
         return
@@ -39,16 +45,17 @@ func NotificationHandler(ctx *fasthttp.RequestCtx, app *firebase.App) {
     message := &messaging.Message{
         Token: fcmReq.token,
         Notification: &messaging.Notification{
-            Title: fcmReq.title,
-            Body:  fcmReq.body,
+            Title: fcmReq.notification.title,
+            Body:  fcmReq.notification.body,
         },
+	Data: fcmReq.data,
     }
 
     fmt.Printf("Preparing to send FCM notification: %+v\n", fcmReq)
 
     // If the image is provided (not nil), set it in the notification
-    if fcmReq.image != nil {
-        message.Notification.ImageURL = *fcmReq.image
+    if fcmReq.notification.image != nil {
+        message.Notification.ImageURL = *fcmReq.notification.image
     }
 
     // Send the message to FCM
