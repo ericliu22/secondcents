@@ -11,7 +11,7 @@ RUN go mod download
 COPY . .
 
 # Build the Go app
-RUN go build -o server ./cmd/server
+RUN go build -o server ./cmd
 
 # Run the app in a minimal container
 FROM alpine:latest

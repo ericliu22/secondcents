@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 	"os"
+	"fmt"
 
 	"firebase.google.com/go"
 	"github.com/valyala/fasthttp"
@@ -28,10 +29,11 @@ func main() {
 
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "8000" // Default port if not specified
+		port = "8080" // Default port if not specified
 	}
 
 	    // Start the server
+	fmt.Println("Starting server...")
 	log.Fatal(fasthttp.ListenAndServe(":"+port, router.Handler))
 }
 
