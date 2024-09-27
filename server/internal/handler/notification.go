@@ -4,6 +4,7 @@ import (
     "context"
     "encoding/json"
     "log"
+    "fmt"
 
     "firebase.google.com/go/messaging"
     "firebase.google.com/go"
@@ -42,6 +43,8 @@ func NotificationHandler(ctx *fasthttp.RequestCtx, app *firebase.App) {
             Body:  fcmReq.body,
         },
     }
+
+    fmt.Printf("Preparing to send FCM notification: %+v\n", fcmReq)
 
     // If the image is provided (not nil), set it in the notification
     if fcmReq.image != nil {
