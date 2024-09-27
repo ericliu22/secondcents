@@ -46,7 +46,7 @@ func sendSingleNotification(to: String, notification: Notification, data: [Strin
         return
     }
 
-    let parameters: [String: Any] = ["to": to, "notification": notificationDict, "data": data]
+    let parameters: [String: Any] = ["token": to, "notification": notificationDict, "data": data]
 
     do {
         let jsonData = try JSONSerialization.data(withJSONObject: parameters, options: [])
@@ -87,7 +87,7 @@ func sendMultipleNotifcation(to: [String], notification: Notification, completio
         return
     }
 
-    let parameters: [String: Any] = ["to": to, "notification": notificationDict]
+    let parameters: [String: Any] = ["token": to, "notification": notificationDict]
 
     do {
         let jsonData = try JSONSerialization.data(withJSONObject: parameters, options: [])
