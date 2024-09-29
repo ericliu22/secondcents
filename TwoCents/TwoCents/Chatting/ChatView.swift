@@ -185,6 +185,9 @@ struct ChatView: View {
                         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
                     }
                 }
+                
+                
+                
             }
             
             .overlay(
@@ -205,6 +208,7 @@ struct ChatView: View {
                 MessageField(spaceId: spaceId, threadId: $threadId)
 //                    .disabled(canvasViewModel.selectedDetent == .height(50) && canvasViewModel.replyWidget == nil)
                     .frame(maxHeight: .infinity, alignment: .bottom)
+                    .disabled(canvasViewModel.selectedDetent == .height(50))
                     .onTapGesture {
                         if canvasViewModel.selectedDetent == .height(50){
                             canvasViewModel.selectedDetent = .large
