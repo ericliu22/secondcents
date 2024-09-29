@@ -178,7 +178,7 @@ struct SpaceProfilePicView: View {
                 viewModel.saveProfileImage(item: newValue)
             }
         })
-        .navigationTitle("Customize Profile 🎨")
+        .navigationTitle("Customize Space 🎨")
     }
         
 }

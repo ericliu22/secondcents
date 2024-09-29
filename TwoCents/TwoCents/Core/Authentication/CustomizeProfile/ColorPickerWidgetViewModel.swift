@@ -10,26 +10,32 @@ import SwiftUI
 
 @MainActor
 final class ColorPickerWidgetViewModel: ObservableObject{
+    @Environment(AppModel.self) var appModel
     
-    @Published private(set) var user:  DBUser? = nil
-    func loadCurrentUser() async throws {
-        let authDataResult = try AuthenticationManager.shared.getAuthenticatedUser()
-        self.user = try await UserManager.shared.getUser(userId: authDataResult.uid)
+//    
+//    @Published private(set) var user:  DBUser? = nil
+//    func loadCurrentUser() async throws {
+//        let authDataResult = try AuthenticationManager.shared.getAuthenticatedUser()
+//        self.user = try await UserManager.shared.getUser(userId: authDataResult.uid)
+//        
+//    }
+//    
+//    
+    
+    func saveUserColor(selectedColor: Color, userId: String ) {
         
-    }
-    
-    
-    
-    func saveUserColor(selectedColor: Color) {
-        
-        guard let user else { return }
+//        guard let user = appModel.user else { return }
         
         
         Task {
             
-            try await UserManager.shared.updateUserColor(userId: user.userId, selectedColor: selectedColor)
+            try await UserManager.shared.updateUserColor(userId: userId, selectedColor: selectedColor)
+            
+            print(selectedColor)
+//            appModel.loadedColor = selectedColor
+            
        
-            try? await loadCurrentUser()
+//            try? await loadCurrentUser()
             
         }
         

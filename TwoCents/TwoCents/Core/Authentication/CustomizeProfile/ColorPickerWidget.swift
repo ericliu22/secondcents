@@ -28,7 +28,8 @@ struct ColorPickerWidget: View {
                         .scaleEffect(color == appModel.loadedColor ? 1.1  : 1.0)
                         .onTapGesture{
                             appModel.loadedColor = color
-                            viewModel.saveUserColor(selectedColor: appModel.loadedColor)
+                            viewModel.saveUserColor(selectedColor: appModel.loadedColor, userId: appModel.user?.userId ?? "")
+                            
                         }
                         .animation(.easeInOut(duration: 0.25), value: appModel.loadedColor)
                         
@@ -40,10 +41,10 @@ struct ColorPickerWidget: View {
             //            .background(appModel.loadedColor.opacity(0.3))
             .cornerRadius(10)
             .padding(.horizontal)
-            .task{
-                viewModel.saveUserColor(selectedColor: appModel.loadedColor)
-                
-            }
+//            .task{
+//                viewModel.saveUserColor(selectedColor: appModel.loadedColor, userId: appModel.user?.userId ?? "")
+//                
+//            }
         }
         
         
