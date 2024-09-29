@@ -13,7 +13,7 @@ import (
 )
 
 func setupLogging() (*os.File, error) {
-    logFileName := "logs/" time.Now().Format("2006-01-02") + ".log"
+    logFileName := "logs/" + time.Now().Format("2006-01-02") + ".log"
     logFile, err := os.OpenFile(logFileName, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
     if err != nil {
         return nil, err

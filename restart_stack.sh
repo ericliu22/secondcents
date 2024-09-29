@@ -4,7 +4,7 @@
 git pull origin main
 
 # Stop the existing Docker Compose stack
-docker-compose down
+docker compose down
 
 # Restart the Docker Compose stack with the new changes
-docker-compose up -d --build
+docker compose up -d --build
