@@ -189,10 +189,13 @@ struct ChatView: View {
             
             .overlay(
             
-                    Color("customClear")
+//                    Color("customClear")
+//                Color.red
+                Color.clear
+                    
                         .frame(height: 100)
                         .frame(maxHeight: .infinity, alignment: .top)
-             
+                        .contentShape(Rectangle())
                 
             )
        
