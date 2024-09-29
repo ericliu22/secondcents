@@ -41,10 +41,10 @@ struct ColorPickerWidget: View {
             //            .background(appModel.loadedColor.opacity(0.3))
             .cornerRadius(10)
             .padding(.horizontal)
-//            .task{
-//                viewModel.saveUserColor(selectedColor: appModel.loadedColor, userId: appModel.user?.userId ?? "")
-//                
-//            }
+            .task{
+                viewModel.saveUserColor(selectedColor: appModel.loadedColor, userId: appModel.user?.userId ?? "")
+                
+            }
         }
         
         
