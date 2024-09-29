@@ -10,7 +10,7 @@ final class ChatViewModel: ObservableObject {
     private var lastDocument: DocumentSnapshot? = nil
     @Published var hasMoreMessages: Bool = true
     
-    
+  
     
     
 //    @Published private(set) var user:  DBUser? = nil
@@ -84,8 +84,10 @@ final class ChatViewModel: ObservableObject {
         self.lastDocument = nil
     }
     
-    func getThreadMessages(spaceId: String, threadId: String, completion: ((Bool, String?) -> Void)? = nil) {
+    func getThreadMessages(spaceId: String, threadId: String, completion: ((Bool) -> Void)? = nil) {
+        
         Task {
+            
             do {
                 let (newMessages, lastDocument) = try await MessageManager.shared.getThreadMessages(spaceId: spaceId, count: 20, lastDocument: self.lastDocument, threadId: threadId)
                 
@@ -113,11 +115,17 @@ final class ChatViewModel: ObservableObject {
                     }
                 }
                 
-                completion?(false, nil)
+                
+                
+                completion?(true)
+                
             } catch {
                 print("Failed to fetch old messages: \(error)")
             }
+            
+       
         }
+       
     }
     
     

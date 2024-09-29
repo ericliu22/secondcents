@@ -30,7 +30,7 @@ struct ChatView: View {
     @State private var threadIdChangedTime: Date = Date()
     @Environment(\.dismiss) var dismissScreen
     
-    
+    @State private var isLoading: Bool = false
     var body: some View {
     
             ScrollViewReader { proxy in
@@ -113,11 +113,18 @@ struct ChatView: View {
                 }
                 
                 .onChange(of: threadId) { _, newValue in
+                    
+            isLoading = true // Start thread change
                     threadIdChangedTime = Date()
                     
                     if !newValue.isEmpty {
+              
                         viewModel.removeMessages()
-                        viewModel.getThreadMessages(spaceId: spaceId, threadId: newValue)
+                        viewModel.getThreadMessages(spaceId: spaceId, threadId: newValue) { _ in
+                            isLoading = false // End thread change
+                                          }
+                    
+                        
                     }
                 }
          
@@ -167,25 +174,26 @@ struct ChatView: View {
             .onTapGesture {
                 
                 
-           
-       
-             
-                withAnimation {
-                    canvasViewModel.replyWidget = nil
-                  
+                if !isLoading{
                     
-                    if threadId != "" {
+                  
+                    withAnimation {
+                        canvasViewModel.replyWidget = nil
                         
-                        threadId = ""
-                        viewModel.removeMessages()
-                        viewModel.getOldMessages(spaceId: spaceId)
-                        viewModel.fetchNewMessages(spaceId: spaceId)
-                    } else {
                         
-                        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                        if threadId != "" {
+                            
+                            threadId = ""
+                            viewModel.removeMessages()
+                            viewModel.getOldMessages(spaceId: spaceId)
+                            viewModel.fetchNewMessages(spaceId: spaceId)
+                            
+                        } else {
+                            
+                            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                        }
                     }
                 }
-                
                 
                 
             }
