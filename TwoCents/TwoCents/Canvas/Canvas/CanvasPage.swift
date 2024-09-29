@@ -92,7 +92,6 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                 print("Failed to intialize dragging item")
                 return false
             }
-            
             let x = roundToTile(number: location.x)
             let y = roundToTile(number: location.y)
             
@@ -201,10 +200,11 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                     height: widget.height
                 )
                 .position(x: widget.x ??  FRAME_SIZE/2, y: widget.y ?? FRAME_SIZE/2)
+                .offset(x: widget.width/2, y: widget.height/2)
                 .overlay {
                     viewModel.selectedWidget == nil ?
                     EmojiCountOverlayView(spaceId: spaceId, widget: widget)
-                        .offset(y: widget.height/2)
+                        .offset(x: widget.width/2, y: widget.height)
                         .position(x: widget.x ??  FRAME_SIZE/2, y: widget.y ?? FRAME_SIZE/2)
                         .id(viewModel.refreshId)
                     
@@ -336,13 +336,6 @@ struct CanvasPage: View, CanvasViewModelDelegate {
             
         }
         .ignoresSafeArea()
-        .onChange(of: viewModel.activeSheet) { oldValue, newValue in
-            print("ON CHANGE RAN")
-            print("SHEET CHANGED FROM \(String(describing: oldValue)) to \(String(describing: newValue))")
-            if viewModel.activeSheet == nil {
-                print("NIL SHEET")
-            }
-        }
         .sheet(item: $viewModel.activeSheet, onDismiss: {
             viewModel.sheetDismiss()
         }, content: { item in

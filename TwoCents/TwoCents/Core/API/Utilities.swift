@@ -72,6 +72,7 @@ extension Color {
     }
 }
 
+//Size multiplier is width/height divided by TILE_SIZE
 func roundToTile(number : CGFloat) -> CGFloat {
     let tile = WIDGET_SPACING
     return tile * CGFloat(Int(round(number / (tile))))

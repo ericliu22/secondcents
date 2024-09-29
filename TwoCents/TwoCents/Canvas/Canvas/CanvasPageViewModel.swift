@@ -31,6 +31,7 @@ final class CanvasPageViewModel {
     var widgetId: String = UUID().uuidString
     var refreshId = UUID()
     var delegate: CanvasViewModelDelegate?
+    var zoomScale: CGFloat = 1.0
     
     /* Eric: Don't delete this
      init(spaceId: String) {

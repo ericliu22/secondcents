@@ -23,6 +23,7 @@ services:
     restart: "always"
     volumes:
       - "./server/second-cents-firebase-adminsdk-wrv03-0e915b1aca.json:/root/second-cents-firebase-adminsdk-wrv03-0e915b1aca.json"
+      - "./server/logs:/root/logs"
     env_file:
       - server.env
     expose:

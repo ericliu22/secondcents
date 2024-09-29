@@ -259,7 +259,12 @@ final class SpaceManager{
             .delete()
     }
     
-    func changeWidgetSize(spaceId: String, widgetId: String, width: CGFloat, height: CGFloat) {
+    func changeWidgetSize(spaceId: String, widgetId: String, width_multiplier: Int, height_multipler: Int){
+        let width: CGFloat = TILE_SIZE * CGFloat(width_multiplier) + (max(CGFloat(width_multiplier-1), 0) * TILE_SPACING)
+        let height: CGFloat = TILE_SIZE * CGFloat(height_multipler) + (max(CGFloat(height_multipler-1), 0) * TILE_SPACING)
+    }
+    
+    private func setSize(spaceId: String, widgetId: String, width: CGFloat, height: CGFloat) {
         spaceDocument(spaceId: spaceId)
             .collection("widgets")
             .document(widgetId)

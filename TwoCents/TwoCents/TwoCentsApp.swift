@@ -152,6 +152,8 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     }
     
     //Runs when app is not open and user clicks on notification
+    
+    
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any],
                      fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
         if let messageID = userInfo[gcmMessageIDKey] {
