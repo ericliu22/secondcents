@@ -195,10 +195,10 @@ struct ChatView: View {
 //                    Color("customClear")
 //                Color.red
                 Color.clear
-                    
+                    .contentShape(Rectangle())
                         .frame(height: 100)
                         .frame(maxHeight: .infinity, alignment: .top)
-                        .contentShape(Rectangle())
+                       
                 
             )
        
@@ -206,14 +206,14 @@ struct ChatView: View {
             
                 
                 MessageField(spaceId: spaceId, threadId: $threadId)
-//                    .disabled(canvasViewModel.selectedDetent == .height(50) && canvasViewModel.replyWidget == nil)
+                //                    .disabled(canvasViewModel.selectedDetent == .height(50) && canvasViewModel.replyWidget == nil)
                     .frame(maxHeight: .infinity, alignment: .bottom)
                     .disabled(canvasViewModel.selectedDetent == .height(50))
                     .onTapGesture {
                         if canvasViewModel.selectedDetent == .height(50){
                             canvasViewModel.selectedDetent = .large
                         }
-                        }
+                    }
             )
             
             
