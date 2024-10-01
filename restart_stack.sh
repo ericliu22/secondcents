@@ -1,7 +1,10 @@
 #!/bin/sh
 
+user=$(whoami)
+cd /home/user/secondcents
+
 # Pull the latest changes from GitHub
-git pull origin main
+/usr/bin/git pull origin main
 
 # Stop the existing Docker Compose stack
 /usr/bin/docker compose down
