@@ -1,6 +1,6 @@
 #!/bin/sh
 
-user=$(whoami)
+user=$(/usr/bin/whoami)
 cd /home/user/secondcents
 
 # Pull the latest changes from GitHub
