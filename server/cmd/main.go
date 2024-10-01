@@ -13,7 +13,10 @@ import (
 )
 
 func setupLogging() (*os.File, error) {
-    logFileName := "logs/" + time.Now().Local().Format("2006-01-02") + ".log"
+    loc := time.FixedZone("UTC-8", -4*60*60) // EST/EDT timezone
+
+    now := time.Now().In(loc)
+    logFileName := "logs/" + now.Format("2006-01-02") + ".log"
     logFile, err := os.OpenFile(logFileName, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
     if err != nil {
         return nil, err
