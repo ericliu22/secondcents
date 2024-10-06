@@ -59,7 +59,7 @@ struct CanvasPage: View, CanvasViewModelDelegate {
             .fill(Color(UIColor.secondaryLabel)) // Dot color
             .allowsHitTesting(viewModel.isDrawing)
         }
-        .drawingGroup()
+//        .drawingGroup()
         
         .clipped() // Ensure the content does not overflow
         //                    .animation(.spring()) // Optional: Add some animation
