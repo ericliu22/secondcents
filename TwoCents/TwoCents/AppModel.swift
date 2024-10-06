@@ -35,7 +35,6 @@ final class AppModel {
                 self.updateUser()
             }
             
-            
             return
         }
         

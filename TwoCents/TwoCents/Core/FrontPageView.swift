@@ -12,7 +12,6 @@ struct FrontPageView: View {
     
     let CalendarTestWidget = CanvasWidget(width: .infinity, height:  .infinity, borderColor: .red, userId: "jisookim", media: .text, widgetName: "Text", widgetDescription: "A bar is a bar", textString: "Fruits can't even see so how my Apple Watch")
    
-    
     @State var friendRequests: Int = 0
     @State var selectedTab: Int = 0
     @Environment(AppModel.self) var appModel
