@@ -123,15 +123,15 @@ struct CanvasPage: View, CanvasViewModelDelegate {
             }
         }
         //pencilkit
-        ToolbarItem(placement: .topBarTrailing) {
-            Button(action: {
-                viewModel.isDrawing.toggle()
-            }, label: {
-                viewModel.isDrawing
-                ? Image(systemName: "pencil.tip.crop.circle.fill")
-                : Image(systemName: "pencil.tip.crop.circle")
-            })
-        }
+//        ToolbarItem(placement: .topBarTrailing) {
+//            Button(action: {
+//                viewModel.isDrawing.toggle()
+//            }, label: {
+//                viewModel.isDrawing
+//                ? Image(systemName: "pencil.tip.crop.circle.fill")
+//                : Image(systemName: "pencil.tip.crop.circle")
+//            })
+//        }
         //add widget
         ToolbarItem(placement: .topBarTrailing) {
             Button(action: {
@@ -366,6 +366,9 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                             viewModel.selectedDetent = .height(50)
                         }
                         .interactiveDismissDisabled()
+                
+                
+                
             case .poll:
                 PollWidgetSheetView(widget: waitForVariable{viewModel.activeWidget}, spaceId: spaceId)
             case .newTextView:

@@ -56,8 +56,8 @@ struct VideoWidget: WidgetView{
                     Color(.systemBackground)
                         .ignoresSafeArea()
                     ProgressView()
-                        .progressViewStyle(CircularProgressViewStyle(tint: .gray))
-                        .scaleEffect(3)
+                        .progressViewStyle(CircularProgressViewStyle(tint: .primary))
+//                        .scaleEffect(3)
                 } else {
                     if let thumbnail = viewModel.videoThumbnail {
                         Image(uiImage: thumbnail)
