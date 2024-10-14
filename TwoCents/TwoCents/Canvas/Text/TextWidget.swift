@@ -15,8 +15,6 @@ struct TextWidget: WidgetView {
     let widget: CanvasWidget // Assuming CanvasWidget is a defined type
     @StateObject private var viewModel = TextWidgetViewModel()
     
-    @Environment(AppModel.self) var appModel
-    
     @State private var userColor: Color = .gray
     
     
@@ -34,13 +32,9 @@ struct TextWidget: WidgetView {
             .background(userColor)
             .foregroundColor(userColor)
             .task {
-                //try? await viewModel.loadUser(userId: widget.userId)
-                try? await appModel.user?.id
-                
-                
+                try? await viewModel.loadUser(userId: widget.userId)
                 withAnimation{
-                    //self.userColor = viewModel.getUserColor(userColor:viewModel.user?.userColor ?? "")
-                    self.userColor=appModel.loadedColor
+                    self.userColor = viewModel.getUserColor(userColor:viewModel.user?.userColor ?? "")
                 }
                 
             }
