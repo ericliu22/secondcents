@@ -181,14 +181,17 @@ struct SpacesView: View {
                                             Hence resulting in bug where canvas shows up as nothing
                                          */
                                         //refresh spaces list to check if user left a space
-//                                        Task {
-//                                            
+                                        Task {
+                                            
 //                                            try? await viewModel.loadCurrentUser()
-//                                            if let user = viewModel.user {
-//                                                
-//                                                try? await viewModel.getAllSpaces(userId: user.userId)
-//                                            }
-//                                        }
+                                            if let user = appModel.user {
+                                                
+                                                try? await viewModel.getAllSpaces(userId: user.userId)
+                                            }
+                                        }
+                                        
+                                        
+                                        
                                     }
                                 
                             } label: {linkLabel(spaceTile: spaceTile)}
