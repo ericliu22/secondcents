@@ -221,6 +221,7 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                             height: widget.height
                         )
                 }
+               
         }
     }
     
@@ -292,6 +293,7 @@ struct CanvasPage: View, CanvasViewModelDelegate {
     
     @Environment(\.undoManager) private var undoManager
     var body: some View {
+        
         ZoomableScrollView {
             canvasView()
                 .frame(width: FRAME_SIZE * 1.5, height: FRAME_SIZE * 1.5)
