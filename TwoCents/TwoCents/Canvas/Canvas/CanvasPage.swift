@@ -80,11 +80,11 @@ struct CanvasPage: View, CanvasViewModelDelegate {
             
             Background()
             GridView()
-            DrawingCanvas(spaceId: spaceId)
-                .allowsHitTesting(viewModel.isDrawing)
-                .clipped() // Ensure the content does not overflow
-                .animation(.spring()) // Optional: Add some animation
-                .frame(width: FRAME_SIZE, height: FRAME_SIZE)
+//            DrawingCanvas(spaceId: spaceId)
+//                .allowsHitTesting(viewModel.isDrawing)
+//                .clipped() // Ensure the content does not overflow
+//                .animation(.spring()) // Optional: Add some animation
+//                .frame(width: FRAME_SIZE, height: FRAME_SIZE)
         }
         .dropDestination(for: CanvasWidget.self) { receivedWidgets, location in
             
@@ -220,6 +220,7 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                             width: widget.width,
                             height: widget.height
                         )
+                        .environment(viewModel)
                 }
                
         }
