@@ -57,7 +57,7 @@ final class SpaceManager{
     let LAST_X: CGFloat = 2340
     let LAST_Y: CGFloat = 2340
     
-    static let shared = SpaceManager()
+    @MainActor static let shared = SpaceManager()
     
     private init() { }
     
@@ -133,13 +133,24 @@ final class SpaceManager{
         try await spaceDocument(spaceId: spaceId).updateData(data)
     }
     
+    func formatWidget(widget: CanvasWidget) -> CanvasWidget {
+        //Need to copy to variable before uploading (something about actor-isolate whatever)
+        var uploadWidget: CanvasWidget = widget
+        //ensure shits are right dimensions
+        uploadWidget.width = TILE_SIZE
+        uploadWidget.height = TILE_SIZE
+        return uploadWidget
+    }
+
+    
     func uploadWidget(spaceId: String, widget: CanvasWidget) {
+        let uploadWidget = formatWidget(widget: widget)
         do {
             let uid = try AuthenticationManager.shared.getAuthenticatedUser().uid
             try spaceDocument(spaceId: spaceId)
                 .collection("widgets")
-                .document(widget.id.uuidString)
-                .setData(from: widget)
+                .document(uploadWidget.id.uuidString)
+                .setData(from: uploadWidget)
             widgetNotification(spaceId: spaceId, userUID: uid, widget: widget)
         } catch {
             print("Some shit fucked up")
@@ -151,7 +162,7 @@ final class SpaceManager{
             }
             //Race condition: widgets can overlap if user tries to move a widget while user creates a widget
             //Tbh who cares skill issue
-            await moveToEmptySpace(space: space, widgetId: widget.id.uuidString)
+            await moveToEmptySpace(space: space, widgetId: uploadWidget.id.uuidString)
         }
     }
     
@@ -203,7 +214,8 @@ final class SpaceManager{
         ])
     }
     
-    enum FuckedLoop: Error {
+    
+    enum LoopLimit: Error {
         case runtimeError(String)
     }
     
@@ -235,7 +247,7 @@ final class SpaceManager{
             count+=1
         }
         //Highly Questionable while(true); We set a hard coded limit in case things go to shit
-        if count == LOOP_LIMIT { throw FuckedLoop.runtimeError("findNextSpot: Loop reached limit") }
+        if count == LOOP_LIMIT { throw LoopLimit.runtimeError("findNextSpot: Loop reached limit") }
         return (currentX, currentY)
     }
     
@@ -259,9 +271,16 @@ final class SpaceManager{
             .delete()
     }
     
-    func changeWidgetSize(spaceId: String, widgetId: String, width_multiplier: Int, height_multipler: Int){
-        let width: CGFloat = TILE_SIZE * CGFloat(width_multiplier) + (max(CGFloat(width_multiplier-1), 0) * TILE_SPACING)
-        let height: CGFloat = TILE_SIZE * CGFloat(height_multipler) + (max(CGFloat(height_multipler-1), 0) * TILE_SPACING)
+    func changeWidgetSize(spaceId: String, widgetId: String, widthMultiplier: Int, heightMultiplier: Int){
+        let width: CGFloat = TILE_SIZE * CGFloat(widthMultiplier) + (max(CGFloat(widthMultiplier-1), 0) * TILE_SPACING)
+        let height: CGFloat = TILE_SIZE * CGFloat(heightMultiplier) + (max(CGFloat(heightMultiplier-1), 0) * TILE_SPACING)
+    }
+    
+    func getMultipliedSize(widthMultiplier: Int, heightMultiplier: Int) -> (CGFloat, CGFloat) {
+        let width: CGFloat = TILE_SIZE * CGFloat(widthMultiplier) + (max(CGFloat(widthMultiplier-1), 0) * TILE_SPACING)
+        let height: CGFloat = TILE_SIZE * CGFloat(heightMultiplier) + (max(CGFloat(heightMultiplier-1), 0) * TILE_SPACING)
+        
+        return (width, height)
     }
     
     private func setSize(spaceId: String, widgetId: String, width: CGFloat, height: CGFloat) {

@@ -11,7 +11,7 @@ import FirebaseFirestore
 
 final class MessageManager {
     
-    static let shared = MessageManager()
+    @MainActor static let shared = MessageManager()
     private init() { }
     
 
@@ -68,7 +68,7 @@ final class MessageManager {
        }
     
     func getAllMessages(spaceId: String, count: Int, lastDocument: DocumentSnapshot?) async throws -> (products: [Message], lastDocument: DocumentSnapshot?) {
-        var query: Query = getMessagesQuery(spaceId: spaceId, count: count)
+        let query: Query = getMessagesQuery(spaceId: spaceId, count: count)
 
         
         
@@ -78,7 +78,7 @@ final class MessageManager {
     }
     
     func getThreadMessages(spaceId: String, count: Int, lastDocument: DocumentSnapshot?, threadId: String) async throws -> (products: [Message], lastDocument: DocumentSnapshot?) {
-        var query: Query = getThreadQuery(spaceId: spaceId, count: count, threadId: threadId)
+        let query: Query = getThreadQuery(spaceId: spaceId, count: count, threadId: threadId)
 
 //        
 //        print(threadId)

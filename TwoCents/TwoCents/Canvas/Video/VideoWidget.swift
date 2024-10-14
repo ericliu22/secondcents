@@ -66,8 +66,6 @@ struct VideoWidget: WidgetView{
                             .frame(width: width, height: height, alignment: .center)
                             .clipShape(RoundedRectangle(cornerRadius: CORNER_RADIUS))
                             .ignoresSafeArea()
-//                            .draggable(widget) // Assuming you want to drag the URL
-                        
                             .overlay{
                                 Image(systemName: "play.circle.fill")
                                     .font(.largeTitle)

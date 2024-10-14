@@ -76,22 +76,10 @@ class NewPollModel: ObservableObject {
         self.newOptionName = ""
         self.newPollOptions = []
         
-        saveWidget(widget: newCanvasWidget)
+        SpaceManager.shared.uploadWidget(spaceId: spaceId, widget: newCanvasWidget)
         //@TODO: Dismiss after submission
         
     }
-    
-    func saveWidget(widget: CanvasWidget) {
-            var uploadWidget: CanvasWidget = widget
-        
-            uploadWidget.width = TILE_SIZE
-            uploadWidget.height = TILE_SIZE
-            SpaceManager.shared.uploadWidget(spaceId: spaceId, widget: uploadWidget)
-    }
-    
-    
-    
-    
     
 //    func addOption() {
 //        let newOption = Option(name: newOptionName.trimmingCharacters(in: .whitespacesAndNewlines))

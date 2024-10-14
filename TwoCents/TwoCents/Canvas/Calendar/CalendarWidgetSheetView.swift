@@ -199,7 +199,7 @@ struct CalendarWidgetSheetView: View {
         
         for hour in (preferredHour - 2)...(preferredHour + 2) {
             for minute in [0, 30] {
-                var components = DateComponents(year: dateComponents.year, month: dateComponents.month, day: dateComponents.day, hour: hour, minute: minute)
+                let components = DateComponents(year: dateComponents.year, month: dateComponents.month, day: dateComponents.day, hour: hour, minute: minute)
                 if let timeSlot = calendar.date(from: components) {
                     timeSlots.append(timeSlot)
                 }

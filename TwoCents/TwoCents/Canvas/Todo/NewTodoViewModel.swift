@@ -69,21 +69,10 @@ class NewTodoModel: ObservableObject {
         self.newItemName = ""
         self.newTodoItem = []
         
-        saveWidget(widget: newCanvasWidget)
+        SpaceManager.shared.uploadWidget(spaceId: spaceId, widget: newCanvasWidget)
         //@TODO: Dismiss after submission
         
     }
-    
-    func saveWidget(widget: CanvasWidget) {
-        //Need to copy to variable before uploading (something about actor-isolate whatever)
-        var uploadWidget: CanvasWidget = widget
-        //ensure shits are right dimensions
-        uploadWidget.width = TILE_SIZE
-        uploadWidget.height = TILE_SIZE
-        //space call should never fail so we manly exclamation mark
-        SpaceManager.shared.uploadWidget(spaceId: spaceId, widget: uploadWidget)
-    }
-    
     
     
     func getUserName(userId: String) async throws -> String {

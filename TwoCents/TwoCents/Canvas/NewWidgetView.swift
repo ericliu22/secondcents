@@ -12,20 +12,20 @@ import PhotosUI
 
 
 
-var imageViewTest = CanvasWidget(width: .infinity, height:  .infinity, x: 0, y: 0, borderColor: .black, userId: "jennierubyjane", media: .image, mediaURL: URL(string: "https://m.media-amazon.com/images/M/MV5BN2Q0OWJmNWYtYzBiNy00ODAyLWI2NGQtZGFhM2VjOWM5NDNkXkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_.jpg")!, widgetName: "Library", widgetDescription: "Expose someone")
+let imageViewTest = CanvasWidget(width: .infinity, height:  .infinity, x: 0, y: 0, borderColor: .black, userId: "jennierubyjane", media: .image, mediaURL: URL(string: "https://m.media-amazon.com/images/M/MV5BN2Q0OWJmNWYtYzBiNy00ODAyLWI2NGQtZGFhM2VjOWM5NDNkXkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_.jpg")!, widgetName: "Library", widgetDescription: "Expose someone")
 
-var videoViewTest = CanvasWidget(width: .infinity, height:  .infinity, x: 0, y: 0, borderColor: .red, userId: "jisookim", media: .video, mediaURL: URL(string: "https://www.pexels.com/video/10167684/download/")!, widgetName: "Video", widgetDescription: "Nice vid")
+let videoViewTest = CanvasWidget(width: .infinity, height:  .infinity, x: 0, y: 0, borderColor: .red, userId: "jisookim", media: .video, mediaURL: URL(string: "https://www.pexels.com/video/10167684/download/")!, widgetName: "Video", widgetDescription: "Nice vid")
 
-var pollViewTest = CanvasWidget(width: .infinity, height:  .infinity, x: 0, y: 0, borderColor: .red, userId: "jisookim", media: .poll, mediaURL: URL(string: "https://www.pexels.com/video/10167684/download/")!, widgetName: "Poll", widgetDescription: "Gather consensus")
-var mapViewTest = CanvasWidget(width: .infinity, height:  .infinity, x: 0, y: 0, borderColor: .red, userId: "jisookim", media: .map, widgetName: "Map", widgetDescription: "Drop the addy")
+let pollViewTest = CanvasWidget(width: .infinity, height:  .infinity, x: 0, y: 0, borderColor: .red, userId: "jisookim", media: .poll, mediaURL: URL(string: "https://www.pexels.com/video/10167684/download/")!, widgetName: "Poll", widgetDescription: "Gather consensus")
+let mapViewTest = CanvasWidget(width: .infinity, height:  .infinity, x: 0, y: 0, borderColor: .red, userId: "jisookim", media: .map, widgetName: "Map", widgetDescription: "Drop the addy")
 
-var textViewTest = CanvasWidget(width: .infinity, height:  .infinity, x: 0, y:0, borderColor: .red, userId: "jisookim", media: .text, widgetName: "Text", widgetDescription: "A bar is a bar", textString: "Fruits can't even see so how my Apple Watch")
+let textViewTest = CanvasWidget(width: .infinity, height:  .infinity, x: 0, y:0, borderColor: .red, userId: "jisookim", media: .text, widgetName: "Text", widgetDescription: "A bar is a bar", textString: "Fruits can't even see so how my Apple Watch")
 
-var todoViewTest = CanvasWidget(width: .infinity, height:  .infinity, borderColor: .red, userId: "jisookim", media: .todo, widgetName: "List", widgetDescription: "Conquer the world", textString: "")
+let todoViewTest = CanvasWidget(width: .infinity, height:  .infinity, borderColor: .red, userId: "jisookim", media: .todo, widgetName: "List", widgetDescription: "Conquer the world", textString: "")
 
-var linkViewTest = CanvasWidget(width: .infinity, height:  .infinity, borderColor: .red, userId: "jisookim", media: .link, widgetName: "Link", widgetDescription: "Rickroll someone", textString: "")
+let linkViewTest = CanvasWidget(width: .infinity, height:  .infinity, borderColor: .red, userId: "jisookim", media: .link, widgetName: "Link", widgetDescription: "Rickroll someone", textString: "")
 
-var calendarViewTest = CanvasWidget(width: .infinity, height:  .infinity, borderColor: .red, userId: "jisookim", media: .calendar, widgetName: "Calendar", widgetDescription: "When... did I ask?", textString: "")
+let calendarViewTest = CanvasWidget(width: .infinity, height:  .infinity, borderColor: .red, userId: "jisookim", media: .calendar, widgetName: "Calendar", widgetDescription: "When... did I ask?", textString: "")
 
 
 
@@ -163,8 +163,6 @@ struct NewWidgetView: View {
         
         ZStack{
            
-            
-            
             Text("Fruits can't even see so tell me how my Apple Watch")
                 .multilineTextAlignment(.leading)
                 .font(.custom("LuckiestGuy-Regular", size: 24, relativeTo: .headline))
@@ -187,9 +185,6 @@ struct NewWidgetView: View {
                     NewTextWidgetView(spaceId: spaceId, closeNewWidgetview: $closeNewWidgetview)
                      
                 })
-                
-             
-            
             
         }
         
@@ -200,7 +195,7 @@ struct NewWidgetView: View {
     
     
     func imageSave(index: Int) {
-        viewModel.saveWidget(index: index)
+        SpaceManager.shared.uploadWidget(spaceId: spaceId, widget: viewModel.widgets[index])
         
         if !viewModel.loading {
             canvasViewModel.photoLinkedToProfile = true
@@ -209,7 +204,7 @@ struct NewWidgetView: View {
     }
     
     func videoSave(index: Int) {
-        viewModel.saveWidget(index: index)
+        SpaceManager.shared.uploadWidget(spaceId: spaceId, widget: viewModel.widgets[index])
         if !viewModel.loading {
             canvasViewModel.photoLinkedToProfile = true
         }

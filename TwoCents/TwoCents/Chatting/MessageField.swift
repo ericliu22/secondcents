@@ -26,7 +26,7 @@ struct MessageField: View {
             
             Button {
                 Task {
-                    await viewModel.sendMessages(text: message, widget: canvasViewModel.replyWidget, spaceId: spaceId, threadId: threadId)
+                    viewModel.sendMessages(text: message, widget: canvasViewModel.replyWidget, spaceId: spaceId, threadId: threadId)
                     message = ""
                     canvasViewModel.replyWidget = nil
                 }

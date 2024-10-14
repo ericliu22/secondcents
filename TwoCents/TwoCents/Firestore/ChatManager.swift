@@ -39,7 +39,7 @@ struct DBChat: Identifiable, Codable{
 
 final class ChatManager{
     
-    static let shared = ChatManager()
+    @MainActor static let shared = ChatManager()
     private init() { }
     
     //so you dont have to type this many times... creates cleaner code
