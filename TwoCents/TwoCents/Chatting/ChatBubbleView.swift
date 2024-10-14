@@ -59,9 +59,9 @@ struct ChatBubbleView: View {
                 
                 if let widget = widget {
                     MediaView(widget: widget, spaceId: spaceId)
-                        .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
+//                        .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
                         .cornerRadius(CORNER_RADIUS)
-                        .frame(maxWidth: .infinity, minHeight: TILE_SIZE, alignment: sentByMe ? .trailing : .leading)
+                        .frame(maxWidth: TILE_SIZE, minHeight: TILE_SIZE, alignment: sentByMe ? .trailing : .leading)
                 }
             }
             
