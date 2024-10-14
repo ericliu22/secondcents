@@ -21,9 +21,6 @@ enum PopupSheet: Identifiable  {
     
 }
 
-
-
-
 struct RootView: View {
     
     
@@ -35,18 +32,13 @@ struct RootView: View {
     //@State var viewModel = RootViewModel()
     @Environment(AppModel.self) var appModel
     
-    @State private var tintLoaded: Bool = false
-    @State private var userColor: String = ""
-    
     @State private var userPhoneNumber: String?
     
     var body: some View {
         @Bindable var appModel = appModel
         ZStack {
             FrontPageView()
-            //                .tint(viewModel.getUserColor(userColor: viewModel.user?.userColor ?? ""))
                 .tint(appModel.loadedColor)
-                .animation(.easeIn, value: tintLoaded)
 
         }
 //        

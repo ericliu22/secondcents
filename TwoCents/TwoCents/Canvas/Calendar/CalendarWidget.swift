@@ -481,13 +481,9 @@ struct EventPassedView: View {
 
 
 func deleteCalendar(spaceId: String, calendarId: String) {
-    do {
-        try db.collection("spaces")
-            .document(spaceId)
-            .collection("calendar")
-            .document(calendarId)
-            .delete()
-    } catch {
-        print("Error deleting poll")
-    }
+    db.collection("spaces")
+        .document(spaceId)
+        .collection("calendar")
+        .document(calendarId)
+        .delete()
 }

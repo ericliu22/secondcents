@@ -62,7 +62,7 @@ struct TodoWidget: View {
                     
                     
                     
-                    if todo.todoList.filter { !$0.completed }.count == 0 {
+                    if todo.todoList.filter({ !$0.completed }).count == 0 {
                         
                        
                         Spacer()

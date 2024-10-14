@@ -102,19 +102,6 @@ final class NewWidgetViewModel: ObservableObject{
         
     }
     
-    
-    func saveWidget(index: Int) {
-        //Need to copy to variable before uploading (something about actor-isolate whatever)
-        var uploadWidget: CanvasWidget = tempWidget!
-        //ensure shits are right dimensions
-        uploadWidget.width = TILE_SIZE
-        uploadWidget.height = TILE_SIZE
-        //space call should never fail so we manly exclamation mark
-        
-        let uid = try! AuthenticationManager.shared.getAuthenticatedUser().uid
-        SpaceManager.shared.uploadWidget(spaceId: space!.spaceId, widget: uploadWidget)
-    }
-    
     enum VideoCompressionError: Error {
         case exportSessionCreationFailed
         case compressionFailed

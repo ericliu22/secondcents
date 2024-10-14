@@ -32,39 +32,35 @@ struct PollWidget: WidgetView {
     }
     
     func fetchPoll() {
-        Task {
-            //                        print("fetching")
-            
-            db.collection("spaces")
-                .document(spaceId)
-                .collection("polls")
-                .document(widget.id.uuidString)
-                .addSnapshotListener { snapshot, error in
-                    if let error = error {
-                        print("Error getting document: \(error)")
-                        return
-                    }
-                    
-                    
-                    do {
-                        if let pollData = try snapshot?.data(as: Poll?.self) {
-                            //                                                        print(pollData)
-                            
-                            self.poll = pollData
-                            totalVotes = poll!.totalVotes()
-                            //                            print("YOUR POLL IS \(self.poll)")
-                            
-                            // Update your SwiftUI view with the retrieved poll data.
-                        } else {
-                            print("Document data is empty.")
-                        }
-                    } catch {
-                        print("Error decoding document: \(error)")
-                        // Handle the decoding error, such as displaying an error message to the user.
-                    }
+        db.collection("spaces")
+            .document(spaceId)
+            .collection("polls")
+            .document(widget.id.uuidString)
+            .addSnapshotListener { snapshot, error in
+                if let error = error {
+                    print("Error getting document: \(error)")
+                    return
                 }
+                
+                
+                do {
+                    if let pollData = try snapshot?.data(as: Poll?.self) {
+                        //                                                        print(pollData)
+                        
+                        self.poll = pollData
+                        totalVotes = poll!.totalVotes()
+                        //                            print("YOUR POLL IS \(self.poll)")
+                        
+                        // Update your SwiftUI view with the retrieved poll data.
+                    } else {
+                        print("Document data is empty.")
+                    }
+                } catch {
+                    print("Error decoding document: \(error)")
+                    // Handle the decoding error, such as displaying an error message to the user.
+                }
+            }
             
-        }
     }
     
     

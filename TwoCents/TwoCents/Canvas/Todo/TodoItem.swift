@@ -51,11 +51,11 @@ struct Todo: Codable, Identifiable {
             "options": optionsData
         ]
      
-            try db.collection("spaces")
-                .document(spaceId)
-                .collection("todo")
-                .document(id.uuidString)
-                .updateData(data)
+        db.collection("spaces")
+            .document(spaceId)
+            .collection("todo")
+            .document(id.uuidString)
+            .updateData(data)
       
     }
 
@@ -85,13 +85,9 @@ struct Todo: Codable, Identifiable {
 
 
 func deleteTodoList(spaceId: String, todoId: String) {
-    do {
-        try db.collection("spaces")
-            .document(spaceId)
-            .collection("todo")
-            .document(todoId)
-            .delete()
-    } catch {
-        print("Error deleting poll")
-    }
+    db.collection("spaces")
+        .document(spaceId)
+        .collection("todo")
+        .document(todoId)
+        .delete()
 }

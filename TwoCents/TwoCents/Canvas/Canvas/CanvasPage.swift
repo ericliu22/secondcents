@@ -62,7 +62,6 @@ struct CanvasPage: View, CanvasViewModelDelegate {
 //        .drawingGroup()
         
         .clipped() // Ensure the content does not overflow
-        //                    .animation(.spring()) // Optional: Add some animation
         .frame(width: FRAME_SIZE, height: FRAME_SIZE)
         
     }
@@ -192,8 +191,6 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                         
                     }
                 }))
-            
-                .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
                 .cornerRadius(CORNER_RADIUS)
                 .frame(
                     width: widget.width,
@@ -213,13 +210,13 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                 .animation(.spring(), value: widget.x) // Add animation for x position
                 .animation(.spring(), value: widget.y) // Add animation for y position
                 .draggable(widget) {
-                    //@TODO: Sometimes takes too long to render whole functional view. Look into generating a preview
                     MediaView(widget: widget, spaceId: spaceId)
                         .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
                         .frame(
                             width: widget.width,
                             height: widget.height
                         )
+                        .environment(viewModel)
                 }
                
         }

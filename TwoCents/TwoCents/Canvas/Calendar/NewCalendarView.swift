@@ -165,19 +165,16 @@ struct NewCalendarView: View {
     
     func saveCalendar(userId: String) {
         let db = Firestore.firestore()
-        do {
-            try db.collection("spaces")
-                .document(spaceId)
-                .collection("calendar")
-                .document(createdWidgetId)
-                .setData(["name": name,
-                          "preferredTime": formattedTime(),
-                          "creator": userId,
-                          "endDate": isDatePickerVisible ? finalDate : nil
-                         ])
-        } catch {
-            print("Error uploading calendar")
-        }
+        db.collection("spaces")
+            .document(spaceId)
+            .collection("calendar")
+            .document(createdWidgetId)
+            .setData([
+                "name": name,
+                "preferredTime": formattedTime(),
+                "creator": userId,
+                "endDate": isDatePickerVisible ? finalDate : nil
+            ])
     }
 }
 
