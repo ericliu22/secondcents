@@ -330,9 +330,9 @@ struct SpaceSettingsView: View {
                         .frame(maxWidth: .infinity)
                     
                 })
-                .alert(Text(viewModel.allMembers.count <= 2 ? "Leave Space" : "Delete Space"), isPresented: $showingAlert, actions: {
+                .alert(Text(viewModel.allMembers.count <= 2 ? "Delete Space" : "Leave Space"), isPresented: $showingAlert, actions: {
                     Button("Cancel", role: .cancel) { }
-                    Button(viewModel.allMembers.count <= 2 ? "Leave" : "Delete", role: .destructive) { Task{
+                    Button(viewModel.allMembers.count <= 2 ? "Delete" : "Leave", role: .destructive) { Task{
                         if viewModel.allMembers.count <= 2 {
                             
                             //delete entire space
