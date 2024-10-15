@@ -47,6 +47,7 @@ struct ChatView: View {
                         MediaView(widget: widget, spaceId: spaceId)
                             .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
                             .cornerRadius(CORNER_RADIUS)
+                            .frame(width: TILE_SIZE, alignment: .trailing)
                             .frame(maxWidth: .infinity, alignment: .trailing)
                             .id("replyWidget")
                             .listRowSeparator(.hidden)

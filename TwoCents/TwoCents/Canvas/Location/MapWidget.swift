@@ -26,6 +26,26 @@ struct MapWidget: WidgetView {
         self.longitude = String(location?[1] ?? "-73.9626129")
     }
 
+    private func openMapsApp(location: String) {
+        
+        let locationAray = location.split(separator: ", ")
+        let latitude = String(locationAray[0])
+        let longitude = String(locationAray[1])
+        
+        print(location)
+        
+        
+        let url = URL(string: "http://maps.apple.com/?daddr=\(latitude),\(longitude)")!
+        
+        if UIApplication.shared.canOpenURL(url) {
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        } else {
+            // Handle error if the Maps app cannot be opened
+            print("Cannot open Maps app")
+        }
+    }
+    
+    
     var body: some View {
         
         ZStack{
@@ -39,8 +59,16 @@ struct MapWidget: WidgetView {
             Color.clear
                .contentShape(Rectangle())
         }
+        .onTapGesture {
+            if let location = widget.location {
+                openMapsApp(location: location)
+            }
+        }
+        
             
     }
        
    
 }
+
+

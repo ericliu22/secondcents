@@ -42,6 +42,9 @@ struct ImageWidget: WidgetView {
             guard let canvasViewModel = canvasViewModel else { return }
             canvasViewModel.activeSheet = .image
             canvasViewModel.activeWidget = widget
+            
+            
+            print("tapped")
         }
     }
 }
