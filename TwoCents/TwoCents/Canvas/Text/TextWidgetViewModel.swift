@@ -23,7 +23,6 @@ final class TextWidgetViewModel: ObservableObject {
     }
     
     func loadUser(userId: String) async throws {
-     
         self.user = try await UserManager.shared.getUser(userId: userId)
     }
 

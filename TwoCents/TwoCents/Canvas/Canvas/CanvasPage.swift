@@ -28,7 +28,7 @@ let WIDGET_SPACING: CGFloat = TILE_SIZE + TILE_SPACING
 //CanvasViewModelDelegate is so that we can call dismiss the view from viewModel
 struct CanvasPage: View, CanvasViewModelDelegate {
     
-    @Bindable var viewModel: CanvasPageViewModel
+    @State var viewModel: CanvasPageViewModel
     @Environment(AppModel.self) var appModel
     @Environment(\.presentationMode) var presentationMode
     

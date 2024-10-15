@@ -12,20 +12,21 @@ import PhotosUI
 
 
 
-let imageViewTest = CanvasWidget(width: .infinity, height:  .infinity, x: 0, y: 0, borderColor: .black, userId: "jennierubyjane", media: .image, mediaURL: URL(string: "https://m.media-amazon.com/images/M/MV5BN2Q0OWJmNWYtYzBiNy00ODAyLWI2NGQtZGFhM2VjOWM5NDNkXkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_.jpg")!, widgetName: "Library", widgetDescription: "Expose someone")
+@MainActor var imageViewTest = CanvasWidget(width: .infinity, height:  .infinity, x: 0, y: 0, borderColor: .black, userId: "jennierubyjane", media: .image, mediaURL: URL(string: "https://m.media-amazon.com/images/M/MV5BN2Q0OWJmNWYtYzBiNy00ODAyLWI2NGQtZGFhM2VjOWM5NDNkXkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_.jpg")!, widgetName: "Library", widgetDescription: "Expose someone")
 
-let videoViewTest = CanvasWidget(width: .infinity, height:  .infinity, x: 0, y: 0, borderColor: .red, userId: "jisookim", media: .video, mediaURL: URL(string: "https://www.pexels.com/video/10167684/download/")!, widgetName: "Video", widgetDescription: "Nice vid")
+@MainActor var videoViewTest = CanvasWidget(width: .infinity, height:  .infinity, x: 0, y: 0, borderColor: .red, userId: "jisookim", media: .video, mediaURL: URL(string: "https://www.pexels.com/video/10167684/download/")!, widgetName: "Video", widgetDescription: "Nice vid")
 
-let pollViewTest = CanvasWidget(width: .infinity, height:  .infinity, x: 0, y: 0, borderColor: .red, userId: "jisookim", media: .poll, mediaURL: URL(string: "https://www.pexels.com/video/10167684/download/")!, widgetName: "Poll", widgetDescription: "Gather consensus")
-let mapViewTest = CanvasWidget(width: .infinity, height:  .infinity, x: 0, y: 0, borderColor: .red, userId: "jisookim", media: .map, widgetName: "Map", widgetDescription: "Drop the addy")
+@MainActor var pollViewTest = CanvasWidget(width: .infinity, height:  .infinity, x: 0, y: 0, borderColor: .red, userId: "jisookim", media: .poll, mediaURL: URL(string: "https://www.pexels.com/video/10167684/download/")!, widgetName: "Poll", widgetDescription: "Gather consensus")
 
-let textViewTest = CanvasWidget(width: .infinity, height:  .infinity, x: 0, y:0, borderColor: .red, userId: "jisookim", media: .text, widgetName: "Text", widgetDescription: "A bar is a bar", textString: "Fruits can't even see so how my Apple Watch")
+@MainActor var mapViewTest = CanvasWidget(width: .infinity, height:  .infinity, x: 0, y: 0, borderColor: .red, userId: "jisookim", media: .map, widgetName: "Map", widgetDescription: "Drop the addy")
 
-let todoViewTest = CanvasWidget(width: .infinity, height:  .infinity, borderColor: .red, userId: "jisookim", media: .todo, widgetName: "List", widgetDescription: "Conquer the world", textString: "")
+@MainActor var textViewTest = CanvasWidget(width: .infinity, height:  .infinity, x: 0, y:0, borderColor: .red, userId: "jisookim", media: .text, widgetName: "Text", widgetDescription: "A bar is a bar", textString: "Fruits can't even see so how my Apple Watch")
 
-let linkViewTest = CanvasWidget(width: .infinity, height:  .infinity, borderColor: .red, userId: "jisookim", media: .link, widgetName: "Link", widgetDescription: "Rickroll someone", textString: "")
+@MainActor var todoViewTest = CanvasWidget(width: .infinity, height:  .infinity, borderColor: .red, userId: "jisookim", media: .todo, widgetName: "List", widgetDescription: "Conquer the world", textString: "")
 
-let calendarViewTest = CanvasWidget(width: .infinity, height:  .infinity, borderColor: .red, userId: "jisookim", media: .calendar, widgetName: "Calendar", widgetDescription: "When... did I ask?", textString: "")
+@MainActor var linkViewTest = CanvasWidget(width: .infinity, height:  .infinity, borderColor: .red, userId: "jisookim", media: .link, widgetName: "Link", widgetDescription: "Rickroll someone", textString: "")
+
+@MainActor var calendarViewTest = CanvasWidget(width: .infinity, height:  .infinity, borderColor: .red, userId: "jisookim", media: .calendar, widgetName: "Calendar", widgetDescription: "When... did I ask?", textString: "")
 
 
 
@@ -195,7 +196,11 @@ struct NewWidgetView: View {
     
     
     func imageSave(index: Int) {
-        SpaceManager.shared.uploadWidget(spaceId: spaceId, widget: viewModel.widgets[index])
+        guard let tempWidget = viewModel.tempWidget else {
+            print("NewWidgetView/imageSave: Failed to upload image")
+            return
+        }
+        SpaceManager.shared.uploadWidget(spaceId: spaceId, widget: tempWidget)
         
         if !viewModel.loading {
             canvasViewModel.photoLinkedToProfile = true
@@ -204,7 +209,12 @@ struct NewWidgetView: View {
     }
     
     func videoSave(index: Int) {
-        SpaceManager.shared.uploadWidget(spaceId: spaceId, widget: viewModel.widgets[index])
+        guard let tempWidget = viewModel.tempWidget else {
+            print("NewWidgetView/imageSave: Failed to upload image")
+            return
+        }
+        SpaceManager.shared.uploadWidget(spaceId: spaceId, widget: tempWidget)
+        
         if !viewModel.loading {
             canvasViewModel.photoLinkedToProfile = true
         }
@@ -343,17 +353,16 @@ struct NewWidgetView: View {
             .onAppear {
                 viewModel.loadLatestMedia()
             }
-            .onChange(of: selectedPhoto) { newValue in
-                if let newValue {
+            .onChange(of: selectedPhoto) {
+                if let selectedPhoto {
                     viewModel.loading = true
-                    print("Supported Content Types: \(newValue.supportedContentTypes.map { $0.identifier })")
+                    print("Supported Content Types: \(selectedPhoto.supportedContentTypes.map { $0.identifier })")
                     
                     let imageUTTypes: [UTType] = [.jpeg, .png]
                     
-                    
-                    if newValue.supportedContentTypes.contains(where: { imageUTTypes.contains($0) }) {
+                    if selectedPhoto.supportedContentTypes.contains(where: { imageUTTypes.contains($0) }) {
                         print("Saving image")
-                        viewModel.saveTempImage(item: newValue, widgetId: canvasViewModel.widgetId) { success in
+                        viewModel.saveTempImage(item: selectedPhoto, widgetId: canvasViewModel.widgetId) { success in
                             if success {
                                 imageSave(index: 0)
                             } else {
@@ -363,7 +372,7 @@ struct NewWidgetView: View {
                         }
                     } else {
                         print("Saving video")
-                        viewModel.saveTempVideo(item: newValue, widgetId: canvasViewModel.widgetId) { success in
+                        viewModel.saveTempVideo(item: selectedPhoto, widgetId: canvasViewModel.widgetId) { success in
                             if success {
                                 videoSave(index: 1)
                             } else {

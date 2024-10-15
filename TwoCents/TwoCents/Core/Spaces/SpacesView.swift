@@ -9,7 +9,7 @@ import SwiftUI
 
 struct SpacesView: View {
 
-    @Bindable var viewModel = SpacesViewModel()
+    @State var viewModel = SpacesViewModel()
     @Environment(AppModel.self) var appModel
     
     

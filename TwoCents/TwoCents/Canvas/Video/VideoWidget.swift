@@ -29,13 +29,12 @@ class VideoPlayerModel {
 
 struct VideoWidget: WidgetView{
     
+    let widget: CanvasWidget;
+    let width: CGFloat;
+    let height: CGFloat;
+
     @State var playerModel: VideoPlayerModel
-    var widget: CanvasWidget;
-    
-    @State private var width: CGFloat;
-    @State private var height: CGFloat;
-    
-    @State private var viewModel = VideoWidgetViewModel()
+    @State var viewModel = VideoWidgetViewModel()
     @Environment(CanvasPageViewModel.self) var canvasViewModel
     
     var body: some View {

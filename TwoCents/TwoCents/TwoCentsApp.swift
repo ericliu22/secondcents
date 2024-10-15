@@ -168,6 +168,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         }
         
         print(userInfo)
+        
         if let notificationSpaceId = userInfo["spaceId"] {
             guard let spaceId: String = notificationSpaceId as? String else {
                 return
@@ -213,7 +214,12 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
                                 willPresent notification: UNNotification,
                                 withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         let userInfo = notification.request.content.userInfo
-        
+        print("ran bitch 2")
+                // Get the current badge number
+        let currentBadgeNumber = UIApplication.shared.applicationIconBadgeNumber
+        UNUserNotificationCenter.current().setBadgeCount(currentBadgeNumber + 1)
+
+
         if let messageID = userInfo[gcmMessageIDKey] {
             print("Message ID: \(messageID)")
         }
@@ -221,16 +227,22 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
         completionHandler([[.banner, .badge, .sound]])
     }
     
+    
     //Runs when app is open and user click notifications
     func userNotificationCenter(_ center: UNUserNotificationCenter,
                                 didReceive response: UNNotificationResponse,
                                 withCompletionHandler completionHandler: @escaping () -> Void) {
         let userInfo = response.notification.request.content.userInfo
         
+        print("ran bitch 1")
         if let messageID = userInfo[gcmMessageIDKey] {
             print("Message ID from userNotificationCenter didReceive: \(messageID)")
         }
+        // Get the current badge number
+        let currentBadgeNumber = UIApplication.shared.applicationIconBadgeNumber
+        UNUserNotificationCenter.current().setBadgeCount(currentBadgeNumber + 1)
         
+
         print(userInfo)
         if let notificationSpaceId = userInfo["spaceId"] {
             guard let spaceId: String = notificationSpaceId as? String else {
