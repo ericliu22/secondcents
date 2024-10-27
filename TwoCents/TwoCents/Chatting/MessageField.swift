@@ -26,9 +26,13 @@ struct MessageField: View {
             
             Button {
                 Task {
-                    viewModel.sendMessages(text: message, widget: canvasViewModel.replyWidget, spaceId: spaceId, threadId: threadId)
-                    message = ""
-                    canvasViewModel.replyWidget = nil
+                    await viewModel.sendMessages(text: message, widget: canvasViewModel.replyWidget, spaceId: spaceId, threadId: threadId)
+                    
+                    // Ensure message and widget clear on the main thread
+                    DispatchQueue.main.async {
+                        message = ""
+                        canvasViewModel.replyWidget = nil
+                    }
                 }
             } label: {
                 Image(systemName: "arrow.up")
@@ -43,6 +47,7 @@ struct MessageField: View {
             .buttonStyle(PlainButtonStyle())
             .disabled(message.isEmpty && canvasViewModel.replyWidget == nil)
             .padding(.trailing, 5)
+
         }
         .foregroundStyle(Color(UIColor.label))
         .background(.regularMaterial)

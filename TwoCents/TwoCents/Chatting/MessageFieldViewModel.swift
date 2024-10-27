@@ -45,58 +45,61 @@ final class MessageFieldViewModel: ObservableObject {
         
     }
     
-    
-    
-    func sendMessages(text: String?, widget: CanvasWidget?, spaceId: String, threadId: String) {
+    func sendMessages(text: String?, widget: CanvasWidget?, spaceId: String, threadId: String){
         let docRef = db.collection("spaces").document(spaceId).collection("chat").document("mainChat")
 
-        docRef.getDocument{ [self] (document, error) in
-            if let document = document {
-                let property = document.get("lastSend")
-                
-                do {
-                    //if there is both text and widget, send widget first seperately, then the text.
-                    if text != nil && widget != nil {
-                        messageNotification(spaceId: spaceId, userUID: user?.userId ?? "", message: (text == "" ? "Replied to a widget" : text)!)
-                        sendMessages(text: nil, widget: widget, spaceId: spaceId, threadId: threadId)
-                        sendMessages(text: text, widget: nil, spaceId: spaceId, threadId: widget?.id.uuidString ?? "")
-                        print("2")
-                    } else {
-                        
-                        print("thread id is this \(threadId)")
-                       
-                        //create uuid for name
-                        let uuidString = widget?.id.uuidString.isEmpty ?? true ? UUID().uuidString : widget!.id.uuidString
+        docRef.getDocument { [self] (document, error) in
+            guard let document = document, error == nil else {
+                print("Error fetching document: \(error?.localizedDescription ?? "Unknown error")")
+//                completion(false)  // Indicate failure
+                return
+            }
 
-                        
-                        let threadIdInput = threadId == "" ? uuidString : threadId
-                        
-                     
-                        
-                        
-                        let mainChatReference = db.collection("spaces").document(spaceId).collection("chat").document("mainChat")
-                        let newMessage = Message(id: uuidString, sendBy: user?.userId ?? "", text: text, ts: Date(), parent: (property as? String) ?? "", widgetId: widget?.id.uuidString, threadId: threadIdInput)
-                        try mainChatReference.collection("chatlogs").document(uuidString).setData(from: newMessage)
-                        mainChatReference.setData(["lastSend": newMessage.sendBy], merge: true)
-                        mainChatReference.setData(["lastTs": newMessage.ts], merge: true)
-                        messageNotification(spaceId: spaceId, userUID: user?.userId ?? "", message: text ?? "replied to a widget")
+            let lastSendProperty = document.get("lastSend") as? String
 
-                    }
+            do {
+                if let text = text, let widget = widget {
+                    messageNotification(spaceId: spaceId, userUID: user?.userId ?? "", message: text.isEmpty ? "Replied to a widget" : text)
+                    sendMessages(text: nil, widget: widget, spaceId: spaceId, threadId: threadId)
+                    sendMessages(text: text, widget: nil, spaceId: spaceId, threadId: widget.id.uuidString)
+                } else {
+                    let uuidString = widget?.id.uuidString.isEmpty ?? true ? UUID().uuidString : widget!.id.uuidString
+                    let resolvedThreadId = threadId.isEmpty ? uuidString : threadId
+
+                    let newMessage = Message(
+                        id: uuidString,
+                        sendBy: user?.userId ?? "",
+                        text: text,
+                        ts: Date(),
+                        parent: lastSendProperty ?? "",
+                        widgetId: widget?.id.uuidString,
+                        threadId: resolvedThreadId
+                    )
+
+                    let mainChatReference = db.collection("spaces").document(spaceId).collection("chat").document("mainChat")
+                    try mainChatReference.collection("chatlogs").document(uuidString).setData(from: newMessage)
+
+                    mainChatReference.setData([
+                        "lastSend": newMessage.sendBy,
+                        "lastTs": newMessage.ts
+                    ], merge: true)
+
+                    messageNotification(spaceId: spaceId, userUID: user?.userId ?? "", message: text ?? "Replied to a widget")
+
                     Task {
                         await messageUnread(spaceId: spaceId)
                     }
                     AnalyticsManager.shared.messageSend()
 
-                    } catch {
-                    print("Error adding message to Firestore: \(error)")
+//                    completion(true)  // Indicate success
                 }
-                
-            } else {
-                print("Document does not exist in cache")
+            } catch {
+                print("Error adding message to Firestore: \(error.localizedDescription)")
+//                completion(false)  // Indicate failure
             }
         }
-        
     }
+
     
     
     
