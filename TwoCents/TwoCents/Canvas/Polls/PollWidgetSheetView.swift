@@ -170,6 +170,7 @@ struct PollWidgetSheetView: View {
                     HStack{
                         Text(poll!.name)
                             .font(.title)
+                            .fontWeight(.semibold)
                         
                             .minimumScaleFactor(0.5)
                             .lineLimit(0...3)

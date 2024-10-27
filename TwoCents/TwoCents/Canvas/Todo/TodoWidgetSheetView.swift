@@ -37,6 +37,9 @@ struct TodoWidgetSheetView: View {
 
     @ToolbarContentBuilder
     func toolbar() -> some ToolbarContent {
+        
+       
+        
         ToolbarItem(placement: .navigationBarTrailing) {
             Button(action: {
                 dismissScreen()
@@ -63,6 +66,7 @@ struct TodoWidgetSheetView: View {
 //                Text("Filter")
             }
         }
+        
 
         if viewModel.mentionedUsers.contains(where: { $0 == nil }) && !viewModel.allUsers.isEmpty && !viewModel.isFilterActive {
             ToolbarItem(placement: .bottomBar) {
@@ -84,6 +88,13 @@ struct TodoWidgetSheetView: View {
         if let todo = viewModel.todo {
             NavigationStack {
                 ScrollView {
+                    Text(todo.name)
+                        .font(.largeTitle)
+                        .multilineTextAlignment(.leading)
+                        .fontWeight(.bold)
+                        .lineLimit(1...3)
+                        .frame(maxWidth: .infinity,alignment: .leading)
+                        .padding(.horizontal)
                     VStack {
                         ForEach(Array(sortedTodoItems.enumerated()), id: \.element.id) { index, todoItem in
                             
@@ -197,7 +208,7 @@ struct TodoWidgetSheetView: View {
                         
                         Spacer()
                     }
-                    .navigationTitle(todo.name)
+//                    .navigationTitle(todo.name)
                     .toolbar {toolbar()}
                 }
                 .scrollDismissesKeyboard(.interactively)

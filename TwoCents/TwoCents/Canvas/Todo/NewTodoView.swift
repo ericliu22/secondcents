@@ -259,6 +259,10 @@ struct NewTodoView: View{
                 .fontWeight(.bold)
                 .foregroundStyle(appModel.loadedColor)
                 .padding(.horizontal)
+            
+        
+            
+            
         }
     }
     
