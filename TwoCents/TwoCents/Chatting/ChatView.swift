@@ -200,14 +200,21 @@ struct ChatView: View {
             }
             
             .overlay(
-            
-//                    Color("customClear")
-//                Color.red
-                Color.clear
-                    .contentShape(Rectangle())
+                if #available(iOS 18, *) {
+                               // Code for iOS 18 and above can go here
+                    Color.clear
+                        .contentShape(Rectangle())
                         .frame(height: 100)
                         .frame(maxHeight: .infinity, alignment: .top)
-                       
+                    
+                } else {
+                    Color("customClear")
+                        .frame(height: 100)
+                        .frame(maxHeight: .infinity, alignment: .top)
+                }
+                //
+                //                Color.red
+                
                 
             )
        
