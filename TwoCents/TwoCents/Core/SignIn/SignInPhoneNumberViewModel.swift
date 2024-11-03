@@ -14,34 +14,31 @@ final class SignInPhoneNumberViewModel: ObservableObject{
     @Published var phoneNumber = ""
 //    @Published var password = ""
     
-  
+    @Published  var statusMessage: String = ""
     func sendCode() async throws {
-//        guard !email.isEmpty, !password.isEmpty else {
-//            print("No email or password found.")
-//            throw URLError(.badServerResponse)
-//            
-////            return
-//        }
-//        try await AuthenticationManager.shared.signInUser(email: email, password: password)
-      
-      
-        
-        
-       
-        
-        
-        
-        let number = "+1\(phoneNumber)"
-        
-        print(number)
-        
-        AuthenticationManager.shared.startAuth(phoneNumber: number) { [weak self] success in
-            guard success else { return }
-            
-            
+           let number = "+1\(phoneNumber)"
+           print(number)
+           
+        do {
+            try await withCheckedThrowingContinuation { continuation in
+                AuthenticationManager.shared.startAuth(phoneNumber: number) { result in
+                    switch result {
+                    case .success:
+                        continuation.resume()
+                    case .failure(let error):
+                        continuation.resume(throwing: error)
+                    }
+                }
+            }
+        } catch {
+            print("Error occurred during authentication: \(error.localizedDescription)")
+            statusMessage = "\(error.localizedDescription)"
+            // Handle the error, e.g., show an alert to the user
         }
+
         
-    }
+        
+       }
     
     
     func validatePhoneNumber() -> Bool {

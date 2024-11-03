@@ -64,21 +64,21 @@ final class AuthenticationManager{
     
     private var verificationId: String?
 
-    public func startAuth(phoneNumber: String, completion: @escaping (Bool) -> Void) {
+    public func startAuth(phoneNumber: String, completion: @escaping (Result<String, Error>) -> Void) {
         PhoneAuthProvider.provider().verifyPhoneNumber(phoneNumber, uiDelegate: nil) { verificationId, error in
             if let error = error {
                 print("Verification failed with error: \(error.localizedDescription)")
-                completion(false)
+                completion(.failure(error))
                 return
             }
             
             if let verificationId = verificationId {
                 print("Verification ID received: \(verificationId)")
                 self.verificationId = verificationId
-                completion(true)
+                completion(.success(verificationId))
             } else {
                 print("Failed to receive verification ID.")
-                completion(false)
+                completion(.failure(URLError(.badServerResponse)))
             }
         }
     }

@@ -66,7 +66,7 @@ struct SignInPhoneNumberView: View {
                         EmptyView()
                     }
                 )
-                
+                Text(viewModel.statusMessage)
                 
                 Button {
                     //signUp
@@ -81,7 +81,12 @@ struct SignInPhoneNumberView: View {
                     //signIn
                     Task {
                         do {
+//                            try await viewModel.sendCode()
+                            
+                        
                             try await viewModel.sendCode()
+                            //                                viewModel.statusMessage = "Code sent successfully!"
+                            
                             
                             isActive = true
                             userPhoneNumber = viewModel.getCleanPhoneNumber()
