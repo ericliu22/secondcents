@@ -29,6 +29,8 @@
 		8576048E2C1A56B9007F5B0E /* ContactsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8576048D2C1A56B9007F5B0E /* ContactsView.swift */; };
 		857753022C308B0E00B4A971 /* DateAlignment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857753012C308B0E00B4A971 /* DateAlignment.swift */; };
 		85A8835A2C42F2B20030AE3A /* CustomCalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A883592C42F2B20030AE3A /* CustomCalendarView.swift */; };
+		85BAF9C72CCE9CC7002748FF /* EditTextWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85BAF9C62CCE9CBF002748FF /* EditTextWidgetView.swift */; };
+		85BAF9C92CCE9D61002748FF /* EditTextWidgetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85BAF9C82CCE9D57002748FF /* EditTextWidgetViewModel.swift */; };
 		85BB02F02B5D077E00B9A9EA /* ToolPickerPractice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85BB02EF2B5D077E00B9A9EA /* ToolPickerPractice.swift */; };
 		85C6759A2AB8EE5B00FACCB2 /* HotSeatManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20EBD082AB8A36100EFDDE8 /* HotSeatManager.swift */; };
 		85C6759B2AB8EE6100FACCB2 /* SuperlativeGame.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20EBD092AB8A36100EFDDE8 /* SuperlativeGame.swift */; };
@@ -197,6 +199,8 @@
 		8576048D2C1A56B9007F5B0E /* ContactsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsView.swift; sourceTree = "<group>"; };
 		857753012C308B0E00B4A971 /* DateAlignment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateAlignment.swift; sourceTree = "<group>"; };
 		85A883592C42F2B20030AE3A /* CustomCalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomCalendarView.swift; sourceTree = "<group>"; };
+		85BAF9C62CCE9CBF002748FF /* EditTextWidgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTextWidgetView.swift; sourceTree = "<group>"; };
+		85BAF9C82CCE9D57002748FF /* EditTextWidgetViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTextWidgetViewModel.swift; sourceTree = "<group>"; };
 		85BB02EF2B5D077E00B9A9EA /* ToolPickerPractice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolPickerPractice.swift; sourceTree = "<group>"; };
 		85CA3B4C2C2746C400F4A889 /* CalendarWidgetSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarWidgetSheetView.swift; sourceTree = "<group>"; };
 		85DDD0CC2AB4E79A008A9C56 /* VoteGameReal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VoteGameReal.swift; sourceTree = "<group>"; };
@@ -453,7 +457,9 @@
 				AB01CB5E2B855E83004BEB5B /* TextWidget.swift */,
 				ABB68DAF2C15268D00406948 /* TextWidgetViewModel.swift */,
 				AB7F3AED2C164CF000690EF1 /* NewTextWidgetViewModel.swift */,
+				85BAF9C82CCE9D57002748FF /* EditTextWidgetViewModel.swift */,
 				A21244E22C1E234B005E8C8B /* NewTextWidgetView.swift */,
+				85BAF9C62CCE9CBF002748FF /* EditTextWidgetView.swift */,
 			);
 			path = Text;
 			sourceTree = "<group>";
@@ -1040,6 +1046,8 @@
 				AB2E56D12AE9C62C0096A58C /* CapsuleView.swift in Sources */,
 				AB6EA60C2B87A1FE00CC90FF /* EmojiReactionsView.swift in Sources */,
 				ABCA39DA2A7A0881009447C3 /* SettingsView.swift in Sources */,
+				AB90EDBB2B54FDAD002AD855 /* CustomizeWidgetViewModel.swift in Sources */,
+				85BAF9C72CCE9CC7002748FF /* EditTextWidgetView.swift in Sources */,
 				AB58C1E22BDAED9A000B0AC1 /* SpaceSettingsView.swift in Sources */,
 				A2DDB1BE2BB69DD800243E1B /* Poll.swift in Sources */,
 				AB6778E62AB8F67D00C11AA7 /* VideoWidget.swift in Sources */,
@@ -1124,6 +1132,7 @@
 				ABEE2CF22C7368E6001D2108 /* EmojiReactionContextView.swift in Sources */,
 				AB53655F2C31C807001C444B /* TodoWidget.swift in Sources */,
 				8573EC892AE6EF4A00CFB579 /* HeartParticle.swift in Sources */,
+				85BAF9C92CCE9D61002748FF /* EditTextWidgetViewModel.swift in Sources */,
 				A2E5F52B2B5A12D30019C6ED /* DrawingCanvas.swift in Sources */,
 				AB6EA60A2B879B7C00CC90FF /* CanvasPageViewModel.swift in Sources */,
 				AB2E56CF2AE9C5E60096A58C /* ResultView.swift in Sources */,

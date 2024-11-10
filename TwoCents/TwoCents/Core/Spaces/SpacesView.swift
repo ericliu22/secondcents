@@ -220,6 +220,7 @@ struct SpacesView: View {
             .navigationDestination(for: DBSpace.self) { space in
                 CanvasPage(spaceId: space.spaceId)
                 .onDisappear {
+                    print("refreshing spaces - did leave successfully?")
                 //refresh spaces list to check if user left a space
                     Task {
                         try? await viewModel.loadCurrentUser()

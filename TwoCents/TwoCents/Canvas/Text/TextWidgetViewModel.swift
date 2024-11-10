@@ -9,9 +9,6 @@ import Foundation
 import FirebaseFirestore
 import SwiftUI
 
-
-
-
 @MainActor
 final class TextWidgetViewModel: ObservableObject {
     
@@ -47,11 +44,11 @@ final class TextWidgetViewModel: ObservableObject {
         return Color.fromString(name: userColor)
         
     }
-    
-    
-    
-    
-    
+    //Josh Added
+    @Published var canvasWidgetTextString: String? = nil
+    func loadWidgetTextString(spaceId: String, widgetId: String) async throws {
+        self.canvasWidgetTextString = try await SpaceManager.shared.getWidget(spaceId: spaceId, widgetId: widgetId).textString
+    }
     
     
 }

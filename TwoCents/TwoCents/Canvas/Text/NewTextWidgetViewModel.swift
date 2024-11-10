@@ -26,14 +26,12 @@ final class NewTextWidgetViewModel: ObservableObject {
 //     
 //        self.user = try await UserManager.shared.getUser(userId: userId)
 //    }
-
-    
     
     @Published private(set) var space:  DBSpace? = nil
     func loadCurrentSpace(spaceId: String) async throws {
         
         self.space = try await SpaceManager.shared.getSpace(spaceId: spaceId)
-        
+
     }
     
     

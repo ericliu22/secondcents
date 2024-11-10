@@ -12,17 +12,24 @@ import SwiftUI
 struct TextWidget: WidgetView {
     
     @State private var isPresented: Bool = false
-    let widget: CanvasWidget // Assuming CanvasWidget is a defined type
+    
+    var widget: CanvasWidget // Assuming CanvasWidget is a defined type
+    private var spaceId: String
+    
+    @State var textString: String
+    
+    init (widget: CanvasWidget, spaceId: String) {
+        assert(widget.media == .text)
+        self.widget = widget
+        self.spaceId = spaceId
+        self.textString = widget.textString ?? ""
+    }
     @StateObject private var viewModel = TextWidgetViewModel()
     
     @State private var userColor: Color = .gray
     
-    
-   
-    
-    
     var body: some View {
-        Text(widget.textString ?? "")
+        Text(self.textString)
             .multilineTextAlignment(.leading)
             .font(.custom("LuckiestGuy-Regular", size: 24, relativeTo: .headline))
             .padding(5)
@@ -36,13 +43,34 @@ struct TextWidget: WidgetView {
                 withAnimation{
                     self.userColor = viewModel.getUserColor(userColor:viewModel.user?.userColor ?? "")
                 }
+                fetchText()
                 
             }
-        
-        
-            
-        
-        
-        
+    }
+    
+    //plswork
+    func fetchText() {
+        db.collection("spaces")
+            .document(spaceId)
+            .collection("widgets")
+            .document(widget.id.uuidString)
+            .addSnapshotListener{ documentSnapshot, error in
+                if let error = error {
+                            print("Error fetching text: \(error)")
+                            return
+                        }
+                        
+                        guard let document = documentSnapshot else {
+                            print("Document does not exist.")
+                            return
+                        }
+                        
+                        // Fetch and update the widget's textString field
+                        if let textString = document.get("textString") as? String {
+                            DispatchQueue.main.async {
+                                self.textString = textString
+                            }
+                        }
+            }
     }
 }

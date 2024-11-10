@@ -279,10 +279,15 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                 viewModel.activeWidget = widget
                 viewModel.activeSheet = .calendar
             }, label: {
-                
                 Label("Select Availability", systemImage: "calendar")
             })
-            
+        case .text:
+            Button(action: {
+                viewModel.activeWidget = widget
+                viewModel.activeSheet = .text
+            }, label: {
+                Label("Edit Text", systemImage: "message")
+            })
         default:
             EmptyView()
         }
@@ -384,6 +389,10 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                     .presentationBackground(.thickMaterial)
             case .calendar:
                 CalendarWidgetSheetView(widgetId:  waitForVariable{viewModel.activeWidget?.id.uuidString}, spaceId: spaceId)
+                    .presentationBackground(.thickMaterial)
+                    .environment(viewModel)
+            case .text:
+                EditTextWidgetView(widget: waitForVariable{viewModel.activeWidget}, spaceId: spaceId)
                     .presentationBackground(.thickMaterial)
                     .environment(viewModel)
             }

@@ -251,7 +251,7 @@ struct SpaceSettingsView: View {
                                             generator.impactOccurred()
                                       
                                             
-                                            let currentUserId = try!  AuthenticationManager.shared.getAuthenticatedUser().uid
+                                            let currentUserId = try! AuthenticationManager.shared.getAuthenticatedUser().uid
                                             //
                                             //
                                             tickleNotification(userUID: currentUserId, targetUserUID: userTile.userId, title: viewModel.space?.name)
@@ -328,7 +328,7 @@ struct SpaceSettingsView: View {
                         .font(.headline)
                         .frame(height: 55)
                         .frame(maxWidth: .infinity)
-                    
+
                 })
                 .alert(Text(viewModel.allMembers.count <= 2 ? "Delete Space" : "Leave Space"), isPresented: $showingAlert, actions: {
                     Button("Cancel", role: .cancel) { }

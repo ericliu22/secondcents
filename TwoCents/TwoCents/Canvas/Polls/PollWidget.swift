@@ -27,8 +27,6 @@ struct PollWidget: WidgetView {
         assert(widget.media == .poll)
         self.widget = widget
         self.spaceId = spaceId
-        
-        
     }
     
     func fetchPoll() {
@@ -312,7 +310,6 @@ struct PollWidget: WidgetView {
 
 func pollWidget(widget: CanvasWidget, spaceId: String) -> some View {
     return PollWidget(widget: widget, spaceId: spaceId)
-    
 }
 
 //

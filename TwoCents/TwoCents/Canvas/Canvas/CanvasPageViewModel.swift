@@ -42,7 +42,7 @@ final class CanvasPageViewModel {
      */
     
     enum CanvasSheet: Identifiable  {
-        case newWidgetView, chat, poll, newTextView, todo, image, video, calendar
+        case newWidgetView, chat, poll, newTextView, todo, image, video, calendar, text
         
         var id: Self {
             return self

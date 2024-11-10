@@ -149,7 +149,7 @@ protocol WidgetView: View {
 func MediaView(widget: CanvasWidget, spaceId: String) -> some View {
     switch widget.media {
     case .text:
-        TextWidget(widget: widget)
+        TextWidget(widget: widget, spaceId: spaceId) //added spaceId?
     case .video:
         VideoWidget(widget: widget)
     case .image:
