@@ -15,13 +15,18 @@ struct OptimalDate {
     init(from dateString: String, maxTimeFrequency: Int) {
         self.maxTimeFrequency = maxTimeFrequency
         
-        guard !dateString.isEmpty else { return }
+        guard !dateString.isEmpty else {
+            print("DATE STRING IS EMPTY")
+            return
+        }
         
         let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "en_US")
         dateFormatter.dateFormat = "yyyy-MM-dd"
         
         if let date = dateFormatter.date(from: dateString) {
             self.date = date
+            print("GABE ITCH")
             
             dateFormatter.dateFormat = "MMM"
             self.shortMonth = dateFormatter.string(from: date)
@@ -43,216 +48,60 @@ struct OptimalDate {
 // Main view for displaying the calendar widget
 struct CalendarWidget: View {
     let widget: CanvasWidget
-    var spaceId: String
-    private let preferredTime: String = "7:00 PM"
-
-    @State private var closestTime: String = ""
-    @State private var optimalDate = OptimalDate(from: "", maxTimeFrequency: 0)
-    @State private var eventName: String = "Eventful Event"
+    let spaceId: String
     
+    @State var viewModel: CalendarWidgetModel
+    
+    init(widget: CanvasWidget, spaceId: String) {
+        self.widget = widget
+        self.spaceId = spaceId
+        self.viewModel = CalendarWidgetModel(widgetId: widget.id.uuidString, spaceId: spaceId)
+    }
+
     var body: some View {
             VStack {
-                if let date = optimalDate.date {
-                    if isTodayOrTomorrow(date: date) && !hasDatePassed(date: date, time: closestTime) {
-                        EventTimeView(optimalDate: $optimalDate, closestTime: $closestTime, eventName: eventName)
-                    } else if hasDatePassed(date: date, time: closestTime) {
-                        EventPassedView(optimalDate: $optimalDate, closestTime: $closestTime, eventName: eventName)
+                if let date = viewModel.optimalDate {
+                    if viewModel.isTodayOrTomorrow(date: date) && !viewModel.hasDatePassed(date) {
+                        EventTimeView()
+                    } else if viewModel.hasDatePassed(date) {
+                        EventPassedView()
                     } else {
-                        EventDateView(optimalDate: $optimalDate, closestTime: $closestTime, eventName: eventName)
+                        EventDateView()
                     }
                 } else {
-                    EmptyEventView(eventName: eventName, widget: widget)
+                    EmptyEventView(widget: widget)
+                        .onAppear {
+                            print("Hello")
+                        }
                 }
             }
+            .environment(viewModel)
             .background(Color(UIColor.systemBackground))
             .frame(width: widget.width, height: widget.height)
             .cornerRadius(CORNER_RADIUS)
-   
-        .task {
-            await setupSnapshotListener()
-        }
     }
 
-    private func setupSnapshotListener() async {
-        let db = Firestore.firestore()
-
-        db.collection("spaces")
-            .document(spaceId)
-            .collection("calendar")
-            .document(widget.id.uuidString)
-            .addSnapshotListener { documentSnapshot, error in
-                if let error = error {
-                    print("Error fetching document: \(error)")
-                    return
-                }
-
-                guard let document = documentSnapshot, document.exists else {
-                    DispatchQueue.main.async {
-                        self.optimalDate = OptimalDate(from: "", maxTimeFrequency: 0)
-                        self.closestTime = ""
-                        self.eventName = "Eventful Event" // Fallback name
-                    }
-                    return
-                }
-
-                let data = document.data() ?? [:]
-                let preferredTime = data["preferredTime"] as? String ?? self.preferredTime
-                print("PREFERRED TIME IS \(preferredTime)")
-                
-                let eventName = data["name"] as? String ?? "Eventful Event" // Fetch the event name
-                let (mostCommonDate, closestTime, maxTimeFrequency) = findOptimalDateAndTime(from: data, preferredTime: preferredTime)
-
-                DispatchQueue.main.async {
-                    if maxTimeFrequency > 1 {
-                        self.optimalDate = OptimalDate(from: mostCommonDate, maxTimeFrequency: maxTimeFrequency)
-                        self.closestTime = closestTime
-                    } else {
-                        self.optimalDate = OptimalDate(from: "", maxTimeFrequency: 0)
-                        self.closestTime = ""
-                    }
-                    self.eventName = eventName // Set the event name
-                }
-            }
-    }
-    
-    private func findOptimalDateAndTime(from data: [String: Any], preferredTime: String) -> (String, String, Int) {
-        var dateFrequencies: [String: Int] = [:]
-        var timeFrequencies: [String: [String: Int]] = [:]
-        let currentDate = Date()
-        let calendar = Calendar.current
-
-        for (_, userDates) in data where userDates is [String: [String]] {
-            guard let userDatesDict = userDates as? [String: [String]] else { continue }
-
-            for (dateString, times) in userDatesDict {
-                let dateFormatter = DateFormatter()
-                dateFormatter.dateFormat = "yyyy-MM-dd"
-                guard let date = dateFormatter.date(from: dateString) else { continue }
-
-                let validTimes = times.filter { time in
-                    let timeFormatter = DateFormatter()
-                    timeFormatter.dateFormat = "h:mm a"
-                    timeFormatter.timeZone = TimeZone.current
-                    guard let timeDate = timeFormatter.date(from: time) else { return false }
-
-                    let combinedDate = calendar.date(bySettingHour: calendar.component(.hour, from: timeDate),
-                                                     minute: calendar.component(.minute, from: timeDate),
-                                                     second: 0,
-                                                     of: date)
-                    
-                    return combinedDate ?? currentDate > currentDate || Calendar.current.isDateInToday(date) && combinedDate! >= currentDate
-                }
-
-                if validTimes.isEmpty { continue }
-
-                dateFrequencies[dateString, default: 0] += 1
-
-                if timeFrequencies[dateString] == nil {
-                    timeFrequencies[dateString] = [:]
-                }
-
-                for time in validTimes {
-                    timeFrequencies[dateString]?[time, default: 0] += 1
-                }
-            }
-        }
-
-        if dateFrequencies.isEmpty { return ("", "", 0) }
-
-        let maxFrequency = dateFrequencies.values.max() ?? 0
-        let mostCommonDates = dateFrequencies.filter { $0.value == maxFrequency }.keys.sorted()
-        let mostCommonDate = mostCommonDates.min() ?? ""
-
-        guard let dateTimes = timeFrequencies[mostCommonDate] else { return ("", "", 0) }
-
-        let maxTimeFrequency = dateTimes.values.max() ?? 0
-        let mostCommonTimes = dateTimes.filter { $0.value == maxTimeFrequency }.keys
-
-        let closestTime = findClosestTime(to: preferredTime, from: Array(mostCommonTimes))
-
-        return (mostCommonDate, closestTime, maxTimeFrequency)
-    }
-
-    private func findClosestTime(to preferredTime: String, from times: [String]) -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "h:mm a"
-        formatter.timeZone = TimeZone.current
-        
-        guard let preferredDate = formatter.date(from: preferredTime) else {
-            print("Invalid preferred time format")
-            return ""
-        }
-        
-        let timeDifferences = times.compactMap { time -> (String, TimeInterval)? in
-            guard let date = formatter.date(from: time) else {
-                print("Invalid time format: \(time)")
-                return nil
-            }
-            let difference = abs(date.timeIntervalSince(preferredDate))
-            return (time, difference)
-        }
-        
-        let closestTime = timeDifferences.sorted {
-            if $0.1 == $1.1 {
-                return formatter.date(from: $0.0)! < formatter.date(from: $1.0)!
-            } else {
-                return $0.1 < $1.1
-            }
-        }.first?.0 ?? ""
-        
-        return closestTime
-    }
-
-    private func isTodayOrTomorrow(date: Date) -> Bool {
-        let calendar = Calendar.current
-        
-        if calendar.isDateInToday(date) {
-            print("date is in today")
-            return true
-        }
-        
-        if let tomorrow = calendar.date(byAdding: .day, value: 1, to: Date()), calendar.isDate(date, inSameDayAs: tomorrow) {
-            print("date is in tomorrow")
-            return true
-        }
-        
-        
-        print("date is not today or tmr")
-        return false
-    }
-
-    private func hasDatePassed(date: Date, time: String) -> Bool {
-        let calendar = Calendar.current
-        let timeFormatter = DateFormatter()
-        timeFormatter.dateFormat = "h:mm a"
-        timeFormatter.timeZone = TimeZone.current
-        
-        guard let timeDate = timeFormatter.date(from: time) else { return true }
-        
-        let combinedDate = calendar.date(bySettingHour: calendar.component(.hour, from: timeDate),
-                                         minute: calendar.component(.minute, from: timeDate),
-                                         second: 0,
-                                         of: date) ?? date
-        
-        return combinedDate < Date()
-    }
 }
 
 // View for when there is no optimal date
 struct EmptyEventView: View {
     //Drag gestures needs to be able to have no viewModel
-    @Environment(CanvasPageViewModel.self) var canvasViewModel: CanvasPageViewModel?
+    var widget: CanvasWidget
+    @Environment(CanvasPageViewModel.self) var canvasViewModel
+    @Environment(CalendarWidgetModel.self) var calendarViewModel
     
     @State private var bounce: Bool = false
-    var eventName: String
-    let widget: CanvasWidget
+    
     var body: some View {
         VStack(alignment: .center, spacing: 0) {
-            Text(eventName)
+            Text(calendarViewModel.eventName)
                 .font(.headline)
                 .foregroundColor(Color.accentColor)
                 .fontWeight(.semibold)
                 .lineLimit(1)
+                .onAppear {
+                    print("EVENT NAME: \(calendarViewModel.eventName)")
+                }
             
             Spacer()
             
@@ -280,7 +129,6 @@ struct EmptyEventView: View {
             
             Button(action: {
                 // Add button action here
-                guard let canvasViewModel = canvasViewModel else { return }
                 canvasViewModel.activeSheet = .calendar
                 canvasViewModel.activeWidget = widget
             }, label: {
@@ -299,20 +147,18 @@ struct EmptyEventView: View {
 struct EventDateView: View {
     @State private var bounce: Bool = false
  
-    @Binding private(set) var optimalDate: OptimalDate
-    @Binding private(set) var closestTime: String
-    var eventName: String
+    @Environment(CalendarWidgetModel.self) var calendarViewModel
 
     var body: some View {
         VStack(alignment: .center, spacing: 0) {
-            Text(eventName)
+            Text(calendarViewModel.eventName)
                 .font(.subheadline)
                 .foregroundColor(Color.accentColor)
                 .fontWeight(.semibold)
                 .lineLimit(1)
                 .truncationMode(.tail)
 
-            if let date = optimalDate.date {
+            if let date = calendarViewModel.optimalDate, let closestTime = calendarViewModel.optimalDate?.formatted(.dateTime.hour().minute()) {
                 let daysDifference = Calendar.current.dateComponents([.day], from: Date(), to: date).day ?? 0
                 
                 Text("\(closestTime)・In \(daysDifference) day\(daysDifference != 1 ? "s" : "")")
@@ -326,14 +172,14 @@ struct EventDateView: View {
             Spacer()
 
             HStack(spacing: 3) {
-                if let dayOfWeek = optimalDate.dayOfWeek {
+                if let dayOfWeek = calendarViewModel.optimalDate?.formatted(.dateTime.weekday(.abbreviated)) {
                     Text(dayOfWeek)
                         .font(.title2)
                         .fontWeight(.bold)
                         .foregroundColor(Color.accentColor)
                 }
                 
-                if let shortMonth = optimalDate.shortMonth {
+                if let shortMonth = calendarViewModel.optimalDate?.formatted(.dateTime.month(.abbreviated)) {
                     Text(shortMonth)
                         .font(.title2)
                         .fontWeight(.bold)
@@ -342,7 +188,7 @@ struct EventDateView: View {
             }
             .padding(.top, -8)
             
-            if let day = optimalDate.day {
+            if let day = calendarViewModel.optimalDate?.formatted(.dateTime.day()) {
                 Text(day)
                     .font(.system(size: 72))
                     .fontWeight(.bold)
@@ -359,20 +205,18 @@ struct EventDateView: View {
 struct EventTimeView: View {
     @State private var bounce: Bool = false
  
-    @Binding private(set) var optimalDate: OptimalDate
-    @Binding private(set) var closestTime: String
-    var eventName: String
+    @Environment(CalendarWidgetModel.self) var calendarViewModel
 
     var body: some View {
         VStack(alignment: .center, spacing: 0) {
-            Text(eventName)
+            Text(calendarViewModel.eventName)
                 .font(.subheadline)
                 .foregroundColor(Color.accentColor)
                 .fontWeight(.semibold)
                 .lineLimit(1)
                 .truncationMode(.tail)
 
-            if let longMonth = optimalDate.longMonth, let day = optimalDate.day {
+            if let longMonth = calendarViewModel.optimalDate?.formatted(.dateTime.month()), let day = calendarViewModel.optimalDate?.formatted(.dateTime.day()) {
                 Text("\(longMonth) \(day)")
                     .font(.caption2)
                     .foregroundColor(Color.secondary)
@@ -383,7 +227,7 @@ struct EventTimeView: View {
             Divider()
             Spacer()
             
-            if let date = optimalDate.date {
+            if let date = calendarViewModel.optimalDate {
                 Text(Calendar.current.isDateInToday(date) ? "Today" : "Tomorrow")
                     .font(.title2)
                     .fontWeight(.bold)
@@ -391,17 +235,17 @@ struct EventTimeView: View {
                     .padding(.bottom, -5)
             }
             
-            Text(closestTime)
-                .font(.title2)
-                .fontWeight(.bold)
-                .foregroundColor(.primary)
-            
+            if let closestTime = calendarViewModel.optimalDate?.formatted(.dateTime.hour().minute()) {
+                Text(closestTime)
+                    .font(.title2)
+                    .fontWeight(.bold)
+                    .foregroundColor(.primary)
+            }
             
             
            
             
-            Text("\(optimalDate.maxTimeFrequency) " + (optimalDate.maxTimeFrequency == 1 ? "Attendee" : "Attendees"))
-
+            Text("\(calendarViewModel.attendees) " + (calendarViewModel.attendees == 1 ? "Attendee" : "Attendees"))
                 .font(.caption2)
                 .fontWeight(.light)
                 .foregroundColor(.secondary)
@@ -424,19 +268,17 @@ struct EventTimeView: View {
 struct EventPassedView: View {
     @State private var bounce: Bool = false
     
-    @Binding private(set) var optimalDate: OptimalDate
-    @Binding private(set) var closestTime: String
-    var eventName: String
+    @Environment(CalendarWidgetModel.self) var calendarViewModel
 
     var body: some View {
         VStack(alignment: .center, spacing: 0) {
-            Text(eventName)
+            Text(calendarViewModel.eventName)
                 .font(.headline)
                 .foregroundColor(Color.accentColor)
                 .fontWeight(.semibold)
                 .lineLimit(1)
             
-            if let longMonth = optimalDate.longMonth, let day = optimalDate.day {
+            if let longMonth = calendarViewModel.optimalDate?.formatted(.dateTime.month()), let day = calendarViewModel.optimalDate?.formatted(.dateTime.day()) {
                 Text("\(longMonth) \(day)")
                     .font(.caption2)
                     .foregroundColor(Color.secondary)

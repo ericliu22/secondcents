@@ -30,7 +30,7 @@ struct RootView: View {
     
     //@TODO: DEPRECATED CONSIDER REMOVING
     //@State var viewModel = RootViewModel()
-    @Environment(AppModel.self) var appModel
+    @Environment(AppModel.self) var appModel: AppModel
     
     @State private var userPhoneNumber: String?
     

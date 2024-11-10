@@ -61,8 +61,10 @@
 		A2DDB1B92BB6806C00243E1B /* PollWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2DDB1B82BB6806C00243E1B /* PollWidget.swift */; };
 		A2DDB1BB2BB693FD00243E1B /* NewPollViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2DDB1BA2BB693FD00243E1B /* NewPollViewModel.swift */; };
 		A2DDB1BE2BB69DD800243E1B /* Poll.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2DDB1BD2BB69DD800243E1B /* Poll.swift */; };
+		A2E06E9B2CE11921005851F5 /* NewCalendarViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E06E9A2CE1191D005851F5 /* NewCalendarViewModel.swift */; };
 		A2E5F52B2B5A12D30019C6ED /* DrawingCanvas.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E5F52A2B5A12D30019C6ED /* DrawingCanvas.swift */; };
 		A2F5631E2AB4E6240026D8C9 /* CanvasPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F563182AB4E6240026D8C9 /* CanvasPage.swift */; };
+		A2FF34122CCEA1BD00044101 /* CalendarWidgetModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2FF34112CCEA1B100044101 /* CalendarWidgetModel.swift */; };
 		AB01CB5F2B855E83004BEB5B /* TextWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB01CB5E2B855E83004BEB5B /* TextWidget.swift */; };
 		AB0D07662AE6FB95003AC8A4 /* SpacesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB0D07652AE6FB95003AC8A4 /* SpacesView.swift */; };
 		AB140E492C3094AE008321F9 /* EventWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB140E482C3094AE008321F9 /* EventWidget.swift */; };
@@ -239,8 +241,10 @@
 		A2DDB1B82BB6806C00243E1B /* PollWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollWidget.swift; sourceTree = "<group>"; };
 		A2DDB1BA2BB693FD00243E1B /* NewPollViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewPollViewModel.swift; sourceTree = "<group>"; };
 		A2DDB1BD2BB69DD800243E1B /* Poll.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Poll.swift; sourceTree = "<group>"; };
+		A2E06E9A2CE1191D005851F5 /* NewCalendarViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewCalendarViewModel.swift; sourceTree = "<group>"; };
 		A2E5F52A2B5A12D30019C6ED /* DrawingCanvas.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawingCanvas.swift; sourceTree = "<group>"; };
 		A2F563182AB4E6240026D8C9 /* CanvasPage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CanvasPage.swift; sourceTree = "<group>"; };
+		A2FF34112CCEA1B100044101 /* CalendarWidgetModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarWidgetModel.swift; sourceTree = "<group>"; };
 		AB01CB5E2B855E83004BEB5B /* TextWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextWidget.swift; sourceTree = "<group>"; };
 		AB0D07652AE6FB95003AC8A4 /* SpacesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpacesView.swift; sourceTree = "<group>"; };
 		AB140E482C3094AE008321F9 /* EventWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventWidget.swift; sourceTree = "<group>"; };
@@ -468,9 +472,11 @@
 			isa = PBXGroup;
 			children = (
 				850E12A92C30A14C000E07C8 /* CalendarWidget.swift */,
+				A2FF34112CCEA1B100044101 /* CalendarWidgetModel.swift */,
 				85CA3B4C2C2746C400F4A889 /* CalendarWidgetSheetView.swift */,
 				85A883592C42F2B20030AE3A /* CustomCalendarView.swift */,
 				85629AA32C6EB031007F5D05 /* NewCalendarView.swift */,
+				A2E06E9A2CE1191D005851F5 /* NewCalendarViewModel.swift */,
 			);
 			path = Calendar;
 			sourceTree = "<group>";
@@ -1068,6 +1074,7 @@
 				AB2E56D32AE9C6F00096A58C /* VoteGameViewModel.swift in Sources */,
 				A2DDB1BB2BB693FD00243E1B /* NewPollViewModel.swift in Sources */,
 				AB9C7F682BD83B1E004FC549 /* EmojiCountView.swift in Sources */,
+				A2FF34122CCEA1BD00044101 /* CalendarWidgetModel.swift in Sources */,
 				AB370E1A2C35D14400C4431F /* MessageFieldViewModel.swift in Sources */,
 				AB2E56CD2AE9C59D0096A58C /* VoteGameView.swift in Sources */,
 				85629AA42C6EB031007F5D05 /* NewCalendarView.swift in Sources */,
@@ -1080,6 +1087,7 @@
 				ABD9F23D2C1F3F910041F110 /* AddFriendFromContactsView.swift in Sources */,
 				AB90021D2A8B85DA00F970B8 /* UploadExampleViewModel.swift in Sources */,
 				AB4C1E4F2A8785BF00588160 /* ColorSelectionView.swift in Sources */,
+				A2E06E9B2CE11921005851F5 /* NewCalendarViewModel.swift in Sources */,
 				AB7438412AAA349C001B4988 /* SearchUserView.swift in Sources */,
 				AB8C6E202AE6FBD50005B7F9 /* SpacesViewModel.swift in Sources */,
 				ABCA39D22A79FC16009447C3 /* AuthenticationView.swift in Sources */,

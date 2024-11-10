@@ -1,32 +1,21 @@
-import SwiftUI
-import Foundation
 import Firebase
+import Foundation
+import SwiftUI
 
 struct NewCalendarView: View {
-    
-    @State private var spaceId: String
-    @State private var showingView: Bool = false
-    @State private var userColor: Color = Color.gray
-    @Binding private var closeNewWidgetview: Bool
-    @State private var name: String = ""
-    @State private var selectedHour: Int = 6   // Default hour set to 6
-    @State private var selectedMinute: Int = 0 // Default minute set to 0
-    @State private var AMorPM: String = "PM"  // Default AM/PM set to PM
-    @State private var isLabelVisible: Bool = false
-    @State private var finalDate: Date = Date()
-    @State private var isDatePickerVisible: Bool = false
-    @State private var createdWidgetId: String = ""
-    
+
+    @Binding var closeNewWidgetView: Bool
+    @Bindable var viewModel: NewCalendarViewModel
+    @Environment(AppModel.self) var appModel
+
     init(spaceId: String, closeNewWidgetview: Binding<Bool>) {
-        self.spaceId = spaceId
-        self._closeNewWidgetview = closeNewWidgetview
+        self.viewModel = NewCalendarViewModel(spaceId: spaceId)
+        //The incoming closeNewWidgetview is lowercase v
+        self._closeNewWidgetView = closeNewWidgetview
     }
-    
+
     var body: some View {
-        
-        
-        
-        
+
         VStack(alignment: .center, spacing: 0) {
             Text("Eventful Event")
                 .font(.headline)
@@ -34,107 +23,103 @@ struct NewCalendarView: View {
                 .fontWeight(.semibold)
                 .lineLimit(1)
                 .truncationMode(.tail)
-            
-            
-            
-            
+
             Text("6:00 PM・In 4 days")
                 .font(.caption)
                 .foregroundColor(Color.secondary)
                 .fontWeight(.semibold)
                 .padding(.bottom, 3)
-            
-            
+
             Divider()
             Spacer()
-            
+
             HStack(spacing: 3) {
-                
+
                 Text("Tue")
                     .font(.title)
                     .fontWeight(.bold)
                     .foregroundColor(Color.accentColor)
-                
-                
-                
+
                 Text("Aug")
                     .font(.title)
                     .fontWeight(.bold)
                     .foregroundColor(.secondary)
-                
+
             }
             .padding(.top, -8)
-            
+
             Text("18")
                 .font(.system(size: 84))
                 .fontWeight(.bold)
                 .foregroundColor(.primary)
                 .padding(.vertical, -15)
-            
+
         }
         .padding(20)
-        
+
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-        
+
         .background(Color(UIColor.systemBackground))
-        
-     
-        .onTapGesture { 
-            showingView.toggle()
+
+        .onTapGesture {
+            viewModel.showingView.toggle()
             print("tapped")
         }
-        .fullScreenCover(isPresented: $showingView) {
+        .fullScreenCover(isPresented: $viewModel.showingView) {
             NavigationStack {
                 List {
                     VStack {
-                        TextField("Event Name", text: $name)
+                        TextField("Event Name", text: $viewModel.name)
                             .font(.largeTitle)
                             .fontWeight(.bold)
-                            .foregroundStyle(userColor)
-                        
+                            .foregroundStyle(appModel.loadedColor)
+
                         Divider()
                             .padding(.vertical)
-                        
+
                         Text("Preferred Time")
                             .frame(maxWidth: .infinity, alignment: .leading)
-                        
-                        CustomTimePicker(selectedHour: $selectedHour, selectedMinute: $selectedMinute, selectedAMorPM: $AMorPM)
+
+                        CustomTimePicker()
                             .background(.ultraThinMaterial)
                             .cornerRadius(10)
-                        
+                            .environment(viewModel)
+
                         Divider()
                             .padding(.vertical)
-                        
-                        Toggle(isOn: $isDatePickerVisible) {
+
+                        Toggle(isOn: $viewModel.isDatePickerVisible) {
                             Text("End Date")
                         }
-                        
-                        if isDatePickerVisible {
-                            DatePicker("Select a Date", selection: $finalDate, in: Date()..., displayedComponents: .date)
-                                .datePickerStyle(GraphicalDatePickerStyle())
-                                .fixedSize(horizontal: false, vertical: true)
+
+                        if viewModel.isDatePickerVisible {
+                            DatePicker(
+                                "Select a Date", selection: $viewModel.endDate,
+                                in: Date()..., displayedComponents: .date
+                            )
+                            .datePickerStyle(GraphicalDatePickerStyle())
+                            .fixedSize(horizontal: false, vertical: true)
                         }
-                        
+
                         Divider()
                             .padding(.vertical)
-                        
-                        Button(action: {
-                            let userId = try? AuthenticationManager.shared.getAuthenticatedUser().uid
-                            let newWidget = CanvasWidget(x: 0, y: 0, borderColor: Color.accentColor, userId: userId ?? "", media: .calendar)
-                            SpaceManager.shared.uploadWidget(spaceId: spaceId, widget: newWidget)
-                            self.createdWidgetId = newWidget.id.uuidString
-                            saveCalendar(userId: userId ?? "")
-                            closeNewWidgetview = true
-                        }, label: {
-                            Text("Create Widget")
-                                .font(.headline)
-                                .frame(height: 55)
-                                .frame(maxWidth: .infinity)
-                        })
+
+                        Button(
+                            action: {
+                                viewModel.createWidget()
+                                closeNewWidgetView = true
+                            },
+                            label: {
+                                Text("Create Widget")
+                                    .font(.headline)
+                                    .frame(height: 55)
+                                    .frame(maxWidth: .infinity)
+                            }
+                        )
                         .buttonStyle(.bordered)
                         .frame(height: 55)
                         .cornerRadius(10)
-                        .disabled(name.isEmpty)
+                        .disabled(viewModel.name.isEmpty)
                     }
                     .listRowSeparator(.hidden)
                 }
@@ -144,61 +129,43 @@ struct NewCalendarView: View {
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
                     ToolbarItem(placement: .navigationBarLeading) {
-                        Button(action: {
-                            showingView = false
-                        }, label: {
-                            Image(systemName: "xmark")
-                                .foregroundColor(Color(UIColor.label))
-                        })
+                        Button(
+                            action: {
+                                viewModel.showingView = false
+                            },
+                            label: {
+                                Image(systemName: "xmark")
+                                    .foregroundColor(Color(UIColor.label))
+                            })
                     }
                 }
             }
         }
-        .task {
-            userColor = try! await Color.fromString(name: UserManager.shared.getUser(userId: AuthenticationManager.shared.getAuthenticatedUser().uid).userColor ?? "")
-        }
     }
-    
-    private func formattedTime() -> String {
-        return "\(selectedHour):\(String(format: "%02d", selectedMinute)) \(AMorPM)"
-    }
-    
-    func saveCalendar(userId: String) {
-        let db = Firestore.firestore()
-        db.collection("spaces")
-            .document(spaceId)
-            .collection("calendar")
-            .document(createdWidgetId)
-            .setData([
-                "name": name,
-                "preferredTime": formattedTime(),
-                "creator": userId,
-                "endDate": isDatePickerVisible ? finalDate : nil
-            ])
-    }
+
 }
 
 struct CustomTimePicker: View {
-    @Binding var selectedHour: Int
-    @Binding var selectedMinute: Int
-    @Binding var selectedAMorPM: String
-    
+    @Environment(NewCalendarViewModel.self) var viewModel
+
     private var hours: [Int] {
         Array(1..<13)
     }
-    
+
     private var minutes: [Int] {
         Array(stride(from: 0, to: 60, by: 30))
     }
-    
+
     private var circularHours: [Int] {
         Array(1...12)
     }
-    
+
     var body: some View {
+        @Bindable var viewModel = viewModel
         VStack {
             HStack(spacing: 0) {
-                Picker(selection: $selectedHour, label: Text("Hour")) {
+                Picker(selection: $viewModel.selectedHour, label: Text("Hour"))
+                {
                     ForEach(circularHours, id: \.self) { hour in
                         Text(String(format: "%02d", hour)).tag(hour)
                     }
@@ -209,16 +176,18 @@ struct CustomTimePicker: View {
                 .clipped()
                 .onAppear {
                     // Ensure the default value is selected
-                    if !circularHours.contains(selectedHour) {
-                        selectedHour = 6
+                    if !circularHours.contains(viewModel.selectedHour) {
+                        viewModel.selectedHour = 6
                     }
                 }
-                
+
                 Text(":")
                     .font(.headline)
                     .padding(.horizontal, 4)
-                
-                Picker(selection: $selectedMinute, label: Text("Minute")) {
+
+                Picker(
+                    selection: $viewModel.selectedMinute, label: Text("Minute")
+                ) {
                     ForEach(minutes, id: \.self) { minute in
                         Text(String(format: "%02d", minute)).tag(minute)
                     }
@@ -229,16 +198,16 @@ struct CustomTimePicker: View {
                 .clipped()
                 .onAppear {
                     // Ensure the default value is selected
-                    if !minutes.contains(selectedMinute) {
-                        selectedMinute = 0
+                    if !minutes.contains(viewModel.selectedMinute) {
+                        viewModel.selectedMinute = 0
                     }
                 }
-                
+
                 Text(":")
                     .font(.headline)
                     .padding(.horizontal, 4)
-                
-                Picker(selection: $selectedAMorPM, label: Text("AM or PM")) {
+
+                Picker(selection: $viewModel.AMorPM, label: Text("AM or PM")) {
                     Text("AM").tag("AM")
                     Text("PM").tag("PM")
                 }
@@ -248,8 +217,12 @@ struct CustomTimePicker: View {
                 .clipped()
                 .onAppear {
                     // Ensure the default value is selected
-                    if selectedAMorPM != "AM" && selectedAMorPM != "PM" {
-                        selectedAMorPM = "PM"
+                    if viewModel.AMorPM
+                        != "AM"
+                        && viewModel.AMorPM
+                            != "PM"
+                    {
+                        viewModel.AMorPM = "PM"
                     }
                 }
             }
@@ -257,8 +230,10 @@ struct CustomTimePicker: View {
     }
 }
 
+/*
 #Preview {
     NavigationStack {
-        NewCalendarView(spaceId: "E97EAD99-254E-402E-A2C1-491CBC9829FE", closeNewWidgetview: .constant(false))
+        NewCalendarView(viewModel.spaceId: "E97EAD99-254E-402E-A2C1-491CBC9829FE", closeNewWidgetview: .constant(false))
     }
 }
+*/

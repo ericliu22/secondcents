@@ -97,7 +97,6 @@ func readNotifications (spaceId: String, userId: String) async {
         print("Unreads: failed to get message id from helper function")
         return
     }
-    
     do {
         try await db.collection("spaces").document(spaceId).collection("unreads").document(userId).setData([
             "count": 0,
