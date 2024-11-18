@@ -6,6 +6,7 @@ struct TodoWidget: View {
     
     let widget: CanvasWidget // Assuming CanvasWidget is a defined type
     private var spaceId: String
+    let cutoff: Int
     
     @State var todo: Todo?
 
@@ -13,6 +14,7 @@ struct TodoWidget: View {
         assert(widget.media == .todo)
         self.widget = widget
         self.spaceId = spaceId
+        self.cutoff = Int((widget.height-50) / 20)
     }
     
     
@@ -81,15 +83,15 @@ struct TodoWidget: View {
                            
                     }
                     
-                    ForEach(todo.todoList.filter { !$0.completed }.prefix(todo.todoList.filter { !$0.completed }.count == 5 ? 5 : 4), id: \.self) { item in
+                    ForEach(todo.todoList.filter { !$0.completed }.prefix(todo.todoList.filter { !$0.completed }.count == cutoff ? cutoff : cutoff-1), id: \.self) { item in
                         TaskItemView(item: item)
                             .padding(.horizontal, 16)
                     }
 
                     let filteredList = todo.todoList.filter { !$0.completed }
 
-                    if filteredList.count > 5 {
-                        let additionalTaskCount = filteredList.count - 4
+                    if filteredList.count > cutoff {
+                        let additionalTaskCount = filteredList.count - (cutoff-1)
 
                         HStack(spacing: 3) {
                             Color.secondary

@@ -53,7 +53,11 @@ class NewTodoModel: ObservableObject {
             return
         }
 
+        let (width, height) = SpaceManager.shared.getMultipliedSize(widthMultiplier: 1, heightMultiplier: 2)
+        
         let newCanvasWidget: CanvasWidget = CanvasWidget(
+            width: width,
+            height: height,
             borderColor: Color.fromString(name: user.userColor!),
             userId: uid,
             media: .todo,

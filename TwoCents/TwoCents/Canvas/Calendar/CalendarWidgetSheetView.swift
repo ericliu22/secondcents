@@ -147,7 +147,6 @@ struct CalendarWidgetSheetView: View {
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Button("Done") {
                             
-                          
                             dismissScreen()
                         }
                     }

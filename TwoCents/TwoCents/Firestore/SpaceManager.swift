@@ -137,8 +137,8 @@ final class SpaceManager{
         //Need to copy to variable before uploading (something about actor-isolate whatever)
         var uploadWidget: CanvasWidget = widget
         //ensure shits are right dimensions
-        uploadWidget.width = TILE_SIZE
-        uploadWidget.height = TILE_SIZE
+        //uploadWidget.width = TILE_SIZE
+        //uploadWidget.height = TILE_SIZE
         return uploadWidget
     }
 

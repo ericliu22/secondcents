@@ -57,15 +57,18 @@ class NewPollModel: ObservableObject {
             print("Error getting user in NewPollViewModel")
             return
         }
-
+        
+        let (width, height): (CGFloat, CGFloat) = SpaceManager.shared.getMultipliedSize(widthMultiplier: 1, heightMultiplier: 2)
+        
         let newCanvasWidget: CanvasWidget = CanvasWidget(
+            width: width,
+            height: height,
             x: 0,
             y: 0,
             borderColor: Color.fromString(name: user.userColor!),
             userId: uid,
             media: .poll,
             widgetName: newPollName
-            
         )
         
         
