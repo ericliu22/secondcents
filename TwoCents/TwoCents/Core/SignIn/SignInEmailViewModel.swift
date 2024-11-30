@@ -7,24 +7,33 @@
 
 import Foundation
 
+enum SignInError: Error {
+    case emptyField
+}
 
-@MainActor
-final class SignInEmailViewModel: ObservableObject{
+extension SignInError: LocalizedError {
+    public var errorDescription: String? {
+        switch self {
+        case .emptyField:
+            return NSLocalizedString("No email or password found.", comment: "")
+        }
+    }
+}
+
+@Observable @MainActor
+final class SignInEmailViewModel {
    
-    @Published var email = ""
-    @Published var password = ""
+    var email: String = ""
+    var password: String = ""
+    var errorMessage: String = ""
     
   
     func signIn() async throws {
         guard !email.isEmpty, !password.isEmpty else {
-            print("No email or password found.")
-            throw URLError(.badServerResponse)
-            
-//            return
+            throw SignInError.emptyField
         }
-        try await AuthenticationManager.shared.signInUser(email: email, password: password)
-      
         
+        try await AuthenticationManager.shared.signInUser(email: email, password: password)
     }
     
     

@@ -68,6 +68,7 @@ final class AuthenticationManager{
         PhoneAuthProvider.provider().verifyPhoneNumber(phoneNumber, uiDelegate: nil) { verificationId, error in
             if let error = error {
                 print("Verification failed with error: \(error.localizedDescription)")
+                print(error)
                 completion(.failure(error))
                 return
             }

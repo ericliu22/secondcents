@@ -41,6 +41,7 @@ struct Todo: Codable, Identifiable {
     var id: UUID
     var name: String
     var todoList: [TodoItem] = []
+    var userId: String
     
 
     func updateTodo(spaceId: String) {
@@ -80,6 +81,7 @@ struct Todo: Codable, Identifiable {
         self.todoList = todoList
         //Theoretically all polls will have names so we manly exclamation mark
         self.name = canvasWidget.widgetName!
+        self.userId = canvasWidget.userId
     }
 }
 

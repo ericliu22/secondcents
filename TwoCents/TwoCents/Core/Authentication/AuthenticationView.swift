@@ -101,8 +101,8 @@ struct AuthenticationView: View {
 //            NavigationLink{
 //             
 //
-////                SignUpEmailView(showSignInView: $showSignInView, showCreateProfileView: $showCreateProfileView)
-////                SignUpEmailView(appModel.activeSheet: $appModel.activeSheet )
+//              SignUpEmailView(showSignInView: $showSignInView, showCreateProfileView: $showCreateProfileView)
+//                SignUpEmailView(appModel.activeSheet: $appModel.activeSheet )
 //                SignInPhoneNumberView(appModel.activeSheet: $appModel.activeSheet, userPhoneNumber: $userPhoneNumber )
 //
 //            } label: {

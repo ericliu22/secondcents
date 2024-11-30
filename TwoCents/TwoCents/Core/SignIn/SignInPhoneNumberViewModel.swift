@@ -8,13 +8,13 @@
 import Foundation
 
 
-@MainActor
-final class SignInPhoneNumberViewModel: ObservableObject{
+@Observable @MainActor
+final class SignInPhoneNumberViewModel {
    
-    @Published var phoneNumber = ""
-//    @Published var password = ""
+    var phoneNumber = ""
+    var statusMessage: String = ""
+
     
-    @Published  var statusMessage: String = ""
     func sendCode() async throws {
            let number = "+1\(phoneNumber)"
            print(number)
@@ -31,7 +31,7 @@ final class SignInPhoneNumberViewModel: ObservableObject{
                 }
             }
         } catch {
-            print("Error occurred during authentication: \(error.localizedDescription)")
+            print("PHONE SIGNIN ERROR : \(error.localizedDescription)")
             statusMessage = "\(error.localizedDescription)"
             // Handle the error, e.g., show an alert to the user
         }

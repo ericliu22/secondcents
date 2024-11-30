@@ -14,7 +14,7 @@ struct SignInEmailView: View {
 //    @Binding var showSignInView: Bool
 //    @Binding var showCreateProfileView: Bool
     
-    @StateObject private var viewModel = SignInEmailViewModel()
+    @State private var viewModel = SignInEmailViewModel()
     var body: some View {
         ScrollView{
       
@@ -22,6 +22,9 @@ struct SignInEmailView: View {
         VStack {
             Spacer()
                 .frame(height:200)
+            
+            Text(viewModel.errorMessage)
+                .foregroundColor(.red)
             //Email Textfield
             TextField("Email", text: $viewModel.email)
                 .disableAutocorrection(true)
@@ -42,31 +45,14 @@ struct SignInEmailView: View {
             
             
             Button {
-                //signUp
-//                Task {
-//                    do {
-//                        try await viewModel.signUp()
-//                        showSignInView = false
-//                        return
-//                    } catch {
-//                    }
-//                }
-                //signIn
                 Task {
                     do {
                         try await viewModel.signIn()
-                        
-//                        showSignInView = false
-//                        showCreateProfileView = false
-                        
                         appModel.activeSheet = nil
-                        
-                        
-                        return
                     } catch {
+                        viewModel.errorMessage = error.localizedDescription
                     }
                 }
-                
             } label: {
                 Text("Sign In")
                     .font(.headline)

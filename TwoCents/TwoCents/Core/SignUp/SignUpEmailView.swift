@@ -13,7 +13,7 @@ struct SignUpEmailView: View {
     @Binding var activeSheet: PopupSheet?
 //    @Binding var showSignInView: Bool
     
-    @StateObject private var viewModel = SignUpEmailViewModel()
+    @State private var viewModel = SignUpEmailViewModel()
     
 //    @Binding var showCreateProfileView: Bool
     
@@ -27,7 +27,9 @@ struct SignUpEmailView: View {
             Spacer()
                 .frame(height:200)
             
-            
+            Text(viewModel.errorMessage)
+                .foregroundColor(.red)
+
             //Name Textfield
             TextField("Name", text: $viewModel.name)
                 .disableAutocorrection(true)
@@ -79,14 +81,9 @@ struct SignUpEmailView: View {
                 Task {
                     do {
                         try await viewModel.signUp()
-                        
-                        
-//                        showSignInView = false
-                        
                         activeSheet  = .customizeProfileView
-//                        showCreateProfileView = true
-                        return
                     } catch {
+                        viewModel.errorMessage = error.localizedDescription
                     }
                 }
                

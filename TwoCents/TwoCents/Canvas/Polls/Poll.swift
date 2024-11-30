@@ -37,6 +37,7 @@ struct Poll: Codable, Identifiable {
     var id: UUID
     var name: String
     var options: [Option] = []
+    var userId: String
 
     /* Don't know if this is necessary maybe for sorting by lastUpdated -Eric
      
@@ -97,6 +98,7 @@ struct Poll: Codable, Identifiable {
         self.options = options
         //Theoretically all polls will have names so we manly exclamation mark
         self.name = canvasWidget.widgetName!
+        self.userId = canvasWidget.userId
     }
 }
 

@@ -10,12 +10,10 @@ import SwiftUI
 
 struct SignInPhoneNumberView: View {
     @Environment(\.presentationMode) var presentation
-//    @Binding var showSignInView: Bool
-//    @Binding var showCreateProfileView: Bool
     @State private var isActive = false
     @Binding var userPhoneNumber: String?
     
-    @StateObject private var viewModel = SignInPhoneNumberViewModel()
+    @State private var viewModel = SignInPhoneNumberViewModel()
     var body: some View {
         ScrollView{
             VStack {
@@ -49,15 +47,13 @@ struct SignInPhoneNumberView: View {
                     })
                     .keyboardType(.phonePad)
                     .textContentType(.telephoneNumber)
-                //
-                //            //Password Textfield
-                //            SecureField("Password", text: $viewModel.password)
-                //                .disableAutocorrection(true)
-                //                .textInputAutocapitalization(.never)
-                //                .padding()
-                //                .background(Color(UIColor.secondarySystemBackground))
-                //                .cornerRadius(10)
-                //
+                
+                //For legal reasons
+                Text("Sends SMS verification code. Standard rates may apply")
+                    .font(.caption2)
+                    .foregroundColor(Color(UIColor.tertiaryLabel))
+                    .multilineTextAlignment(.leading)
+                    .padding(.bottom, 50)
                 
                 NavigationLink(
                     destination: /*VerifyCodeView(showSignInView: $showSignInView, showCreateProfileView: $showCreateProfileView)*/ VerifyCodeView(),

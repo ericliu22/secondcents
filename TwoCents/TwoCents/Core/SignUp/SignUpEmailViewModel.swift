@@ -7,55 +7,46 @@
 
 import Foundation
 
-@MainActor
+enum SignUpError: Error {
+    case emptyField, passwordNotEqual
+}
 
-final class SignUpEmailViewModel: ObservableObject{
+extension SignUpError: LocalizedError {
+    public var errorDescription: String? {
+        switch self {
+        case .emptyField:
+            return NSLocalizedString("Fields are empty", comment: "")
+        case .passwordNotEqual:
+            return NSLocalizedString("Password and Confirm password are not the same", comment: "")
+        }
+    }
+}
+@Observable @MainActor
+final class SignUpEmailViewModel {
     
     
-    @Published var name = ""
-    @Published var username = ""
-    @Published var email = ""
-    @Published var password = ""
-    @Published var confirmPassword = ""
-    
-  
-    
-    
-    
+    var name = ""
+    var username = ""
+    var email = ""
+    var password = ""
+    var confirmPassword = ""
+    var errorMessage = ""
   
     
     func signUp() async throws {
         guard !email.isEmpty, !password.isEmpty, !name.isEmpty, !username.isEmpty, !confirmPassword.isEmpty else {
-            print("Fields are empty")
-            throw URLError(.badServerResponse)
-//            return
+            throw SignUpError.emptyField
         }
         
         guard password == confirmPassword else {
-            print("password and confirm password are not equal")
-            throw URLError(.badServerResponse)
-//            return
+            throw SignUpError.passwordNotEqual
         }
         
-        
-        
         let authDataResult = try await AuthenticationManager.shared.createUser(email: email, password: password)
-//        try await UserManager.shared.createNewUser(auth: authDataResult)
-        
         let user = DBUser(auth: authDataResult, name: name, username: username)
-        
-//
-//        let userWithName = DBUser(userId: user.userId, email: user.email, photoUrl: user.photoUrl, dateCreated: user.dateCreated, name: name)
-////        UserManager.shared.updateUser(user: updatedUser)
-        
-        
         
         try await UserManager.shared.createNewUser(user: user)
       
-        
     }
-    
-    
-    
     
 }

@@ -172,7 +172,7 @@ struct NewCalendarView: View {
             .setData([
                 "name": name,
                 "preferredTime": formattedTime(),
-                "creator": userId,
+                "userId": userId,
                 "endDate": isDatePickerVisible ? finalDate : nil
             ])
     }

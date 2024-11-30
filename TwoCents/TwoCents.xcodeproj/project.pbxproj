@@ -1046,7 +1046,6 @@
 				AB2E56D12AE9C62C0096A58C /* CapsuleView.swift in Sources */,
 				AB6EA60C2B87A1FE00CC90FF /* EmojiReactionsView.swift in Sources */,
 				ABCA39DA2A7A0881009447C3 /* SettingsView.swift in Sources */,
-				AB90EDBB2B54FDAD002AD855 /* CustomizeWidgetViewModel.swift in Sources */,
 				85BAF9C72CCE9CC7002748FF /* EditTextWidgetView.swift in Sources */,
 				AB58C1E22BDAED9A000B0AC1 /* SpaceSettingsView.swift in Sources */,
 				A2DDB1BE2BB69DD800243E1B /* Poll.swift in Sources */,
