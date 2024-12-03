@@ -10,9 +10,11 @@ import (
 func SetupUserRoutes(client *firestore.Client) *router.Router {
 	r := router.New()
 
-	// Use the middleware to attach context
-	r.GET("/{id}/friend-request/", (func(httpCtx *fasthttp.RequestCtx) {
+	r.POST("/accept-friend-request/", (func(httpCtx *fasthttp.RequestCtx) {
 		user.AcceptFriendRequestHandler(httpCtx, client)
+	}))
+	r.POST("/send-friend-request/", (func(httpCtx *fasthttp.RequestCtx) {
+		user.SendFriendRequestHandler(httpCtx, client)
 	}))
 
 	return r

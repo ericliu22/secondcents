@@ -52,6 +52,7 @@
 		A257D79F2A6D707800A4E7BD /* TwoCentsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A257D79E2A6D707800A4E7BD /* TwoCentsUITests.swift */; };
 		A257D7A12A6D707800A4E7BD /* TwoCentsUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A257D7A02A6D707800A4E7BD /* TwoCentsUITestsLaunchTests.swift */; };
 		A26809CA2AB8A77E003B30DE /* VoteGameReal.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20EBD072AB8A36100EFDDE8 /* VoteGameReal.swift */; };
+		A26EFB1E2CFEC7D600238622 /* FriendRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A26EFB1D2CFEC7CF00238622 /* FriendRequest.swift */; };
 		A279471B2C7954C800EFC28A /* NotificationWidgetWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A279471A2C7954C800EFC28A /* NotificationWidgetWrapper.swift */; };
 		A2C0A2212C77E9060061F62D /* NotificationsCountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2C0A2202C77E9060061F62D /* NotificationsCountView.swift */; };
 		A2C6FE962C5EB94F0074C475 /* LinkWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2C6FE952C5EB94F0074C475 /* LinkWidget.swift */; };
@@ -230,6 +231,7 @@
 		A257D79A2A6D707800A4E7BD /* TwoCentsUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TwoCentsUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A257D79E2A6D707800A4E7BD /* TwoCentsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwoCentsUITests.swift; sourceTree = "<group>"; };
 		A257D7A02A6D707800A4E7BD /* TwoCentsUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwoCentsUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		A26EFB1D2CFEC7CF00238622 /* FriendRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendRequest.swift; sourceTree = "<group>"; };
 		A279471A2C7954C800EFC28A /* NotificationWidgetWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationWidgetWrapper.swift; sourceTree = "<group>"; };
 		A2C0A2202C77E9060061F62D /* NotificationsCountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsCountView.swift; sourceTree = "<group>"; };
 		A2C6FE952C5EB94F0074C475 /* LinkWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkWidget.swift; sourceTree = "<group>"; };
@@ -563,6 +565,7 @@
 			isa = PBXGroup;
 			children = (
 				A2DAF34A2C07CB1C00E778FA /* Notifcations.swift */,
+				A26EFB1D2CFEC7CF00238622 /* FriendRequest.swift */,
 				A240F67A2C6965F100618903 /* Utilities.swift */,
 				A254307B2C6AF53000999CEB /* Unread.swift */,
 				A254307D2C6B0B9800999CEB /* Analytics.swift */,
@@ -1087,6 +1090,7 @@
 				856E80B12B50E9D00078A2CE /* PencilKitPractice.swift in Sources */,
 				AB77664A2C25266300F95E65 /* SetLocationWidgetView.swift in Sources */,
 				AB140E492C3094AE008321F9 /* EventWidget.swift in Sources */,
+				A26EFB1E2CFEC7D600238622 /* FriendRequest.swift in Sources */,
 				ABF556842A95046D00103880 /* ColorPickerWidgetViewModel.swift in Sources */,
 				85741EAF2AD03D370085423E /* PostModel.swift in Sources */,
 				AB73A2872C6EEEC3008C7190 /* ImageWidgetSheetView.swift in Sources */,
