@@ -5,14 +5,13 @@ import (
 	"log"
 	"os"
 
-	"server/internal/routes"
 	"server/internal/middleware"
+	"server/internal/routes"
 
 	"firebase.google.com/go"
 	"github.com/valyala/fasthttp"
 	"google.golang.org/api/option"
 )
-
 
 func main() {
 	// Initialize Firebase Admin SDK
@@ -39,15 +38,25 @@ func main() {
 	}
 	defer client.Close()
 
-
 	coreRouter := routes.SetupCoreRouter(app, client)
+
+	authClient, err := app.Auth(context.Background())
+	if err != nil {
+		log.Fatalf("Error initializing FirestoreAuth client: %v", err)
+	}
+
+	handler := middleware.ChainMiddleware(
+		coreRouter.Handler,
+		middleware.WithAuthClient(authClient),
+		middleware.WithRequestContext(),
+	)
 
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080" // Default port if not specified
 	}
 
-	    // Start the server
+	// Start the server
 	log.Println("Starting server...")
-	log.Fatal(fasthttp.ListenAndServe(":"+port, middleware.WithRequestContext(coreRouter.Handler)))
+	log.Fatal(fasthttp.ListenAndServe(":"+port, handler))
 }

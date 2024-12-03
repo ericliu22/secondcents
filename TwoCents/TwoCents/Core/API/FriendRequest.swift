@@ -32,7 +32,7 @@ extension FriendRequestError: LocalizedError {
 }
 
 func sendFriendRequest(senderId: String, receiverId: String) async throws -> String {
-    guard let url = URL(string: "https://your-backend-url.com/user/friend-request/") else {
+    guard let url = URL(string: "https://api.twocentsapp.com/v1/user/send-friend-request/") else {
         throw FriendRequestError.invalidUrl
     }
     
@@ -65,7 +65,7 @@ func sendFriendRequest(senderId: String, receiverId: String) async throws -> Str
 }
 
 func acceptFriendRequest(senderId: String, receiverId: String) async throws -> String {
-    guard let url = URL(string: "https://your-backend-url.com/user/friend-request/") else {
+    guard let url = URL(string: "https://api.twocentsapp.com/v1/user/accept-friend-request/") else {
         throw FriendRequestError.invalidUrl
     }
     
@@ -94,5 +94,5 @@ func acceptFriendRequest(senderId: String, receiverId: String) async throws -> S
         throw FriendRequestError.invalidResponse
     }
     
-    return "Friend request sent successfully"
+    return "Friend request accepted successfully"
 }

@@ -1,9 +1,9 @@
 package handler
 
 import (
+	"github.com/valyala/fasthttp"
 	"log"
 	"path/filepath"
-	"github.com/valyala/fasthttp"
 )
 
 // HomeHandler handles the root path
@@ -20,5 +20,5 @@ func HomeHandler(ctx *fasthttp.RequestCtx) {
 
 // VersionOneHandler handles the root path
 func VersionOneHandler(ctx *fasthttp.RequestCtx) {
-	ctx.Redirect("https://www.youtube.com/watch?v=dQw4w9WgXcQ",fasthttp.StatusFound)
+	ctx.Redirect("https://www.youtube.com/watch?v=dQw4w9WgXcQ", fasthttp.StatusFound)
 }

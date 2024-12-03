@@ -29,7 +29,7 @@ final class SpacesViewModel {
                 print("SpacesViewModel: Failed to get current user")
                 return
             }
-            try? await getAllSpaces(userId: user.userId)
+            attachSpacesListener(userId: user.userId)
             await getNotifcationCount()
         }
     }
@@ -39,13 +39,34 @@ final class SpacesViewModel {
         self.user = try await UserManager.shared.getUser(userId: authDataResult.uid)
     }
     
-    func getAllSpaces(userId: String) async throws {
-        try? await loadCurrentUser()
-        
-        self.allSpaces = try await UserManager.shared.getAllSpaces(userId: userId)
-        
-        finishedLoading = true
-        
+//    func getAllSpaces(userId: String) async throws {
+//        try? await loadCurrentUser()
+//        
+//        self.allSpaces = try await UserManager.shared.getAllSpaces(userId: userId)
+//        
+//        finishedLoading = true
+//        
+//    }
+    
+    func attachSpacesListener(userId: String) {
+        Firestore.firestore().collection("spaces").whereField("members", arrayContains: userId).addSnapshotListener({ [weak self] querySnapshot, error in
+            guard let self = self else {
+                print("SpacesViewModel: attachSpacesLitener weak self no reference")
+                return
+            }
+            
+            guard let query = querySnapshot else {
+                print("Error fetching query: \(error)")
+                return
+            }
+            
+            self.allSpaces = []
+            for document in query.documents {
+                let space = try! document.data(as: DBSpace.self)
+                self.allSpaces.append(space)
+            }
+            self.finishedLoading = true
+        })
     }
     
     func getNotifcationCount() async {

@@ -7,18 +7,15 @@ import (
 	"github.com/valyala/fasthttp"
 )
 
+func WithRequestContext() Middleware {
+	return func(next fasthttp.RequestHandler) fasthttp.RequestHandler {
+		return func(ctx *fasthttp.RequestCtx) {
+			c, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+			defer cancel()
 
-func WithRequestContext(next fasthttp.RequestHandler) fasthttp.RequestHandler {
-	return func(ctx *fasthttp.RequestCtx) {
-		// Create a context with timeout
-		c, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-		defer cancel()
-
-		// Store the context in fasthttp.RequestCtx
-		ctx.SetUserValue("ctx", c)
-
-		// Call the next handler
-		next(ctx)
+			ctx.SetUserValue("ctx", c)
+			next(ctx)
+		}
 	}
 }
 

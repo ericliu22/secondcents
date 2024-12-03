@@ -18,6 +18,7 @@ struct DBSpace: Identifiable, Codable, Hashable {
     let profileImagePath: String?
     let profileImageUrl: String?
     let members: Array<String>?
+    let admins: [String]?
     var nextWidgetX: CGFloat?
     var nextWidgetY: CGFloat?
     
@@ -31,7 +32,6 @@ struct DBSpace: Identifiable, Codable, Hashable {
         profileImagePath: String? = nil,
         profileImageUrl: String? = nil,
         members: Array<String>? = nil
-        
     )
     {
         self.spaceId = spaceId
@@ -43,6 +43,11 @@ struct DBSpace: Identifiable, Codable, Hashable {
         self.members = members
         self.nextWidgetX = 0
         self.nextWidgetY = 0
+        if let userId = try? AuthenticationManager.shared.getAuthenticatedUser().uid {
+            self.admins = [userId]
+        } else {
+            self.admins = []
+        }
     }
     
     

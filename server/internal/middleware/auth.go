@@ -2,41 +2,19 @@ package middleware
 
 import (
 	"context"
-	"log"
 	"errors"
+	"log"
 
 	"firebase.google.com/go/auth"
 	"github.com/valyala/fasthttp"
 )
 
-func ValidateFirebaseToken(httpCtx *fasthttp.RequestCtx, authClient *auth.Client) (string, int) {
-	// Get the token from the Authorization header
-	authHeader := string(httpCtx.Request.Header.Peek("Authorization"))
-	if authHeader == "" {
-		return "", fasthttp.StatusBadRequest
-	}
-
-	// Extract the Bearer token
-	idToken := authHeader[len("Bearer "):]
-
-	// Verify the token
-	token, err := authClient.VerifyIDToken(context.Background(), idToken)
-	if err != nil {
-		log.Printf("Error verifying ID token: %v\n", err)
-		return "", fasthttp.StatusUnauthorized
-	}
-
-	// Return the user ID from the token
-	return token.UID, 200
-}
-
-func WithAuthClient(authClient *auth.Client, next fasthttp.RequestHandler) fasthttp.RequestHandler {
-	return func(ctx *fasthttp.RequestCtx) {
-		// Inject the authClient into the request context
-		ctx.SetUserValue("authClient", authClient)
-
-		// Call the next handler
-		next(ctx)
+func WithAuthClient(authClient *auth.Client) Middleware {
+	return func(next fasthttp.RequestHandler) fasthttp.RequestHandler {
+		return func(ctx *fasthttp.RequestCtx) {
+			ctx.SetUserValue("authClient", authClient)
+			next(ctx)
+		}
 	}
 }
 

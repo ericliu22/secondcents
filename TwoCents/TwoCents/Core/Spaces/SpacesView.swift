@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SpacesView: View {
-
+    
     @State var viewModel = SpacesViewModel()
     @Environment(AppModel.self) var appModel
     
@@ -26,121 +26,121 @@ struct SpacesView: View {
     
     
     func linkLabel(spaceTile: DBSpace) -> some View {
-                            ZStack{
-                                Group{
-                                    //Circle or Profile Pic
-                                    if let urlString = spaceTile.profileImageUrl,
-                                       let url = URL(string: urlString) {
-                                        
-                                        //If there is URL for profile pic, show
-                                        //circle with stroke
-                                        
-                                        
-                                        Color.clear
-                                            .aspectRatio(1, contentMode: .fit)
-                                            .background(
-                                                
-                                                
-                                                AsyncImage(url: url) {image in
-                                                    image
-                                                        .resizable()
-                                                        .scaledToFill()
-                                                        .layoutPriority(-1)
-                                                    
-                                                } placeholder: {
-                                                    Rectangle()
-                                                        .fill(Color.accentColor)
-                                                }
-                                                
-                                            )
-                                            .clipped()
-                                    } else {
-                                        //if space does not have profile pic, show circle
-                                        Rectangle()
-                                            .fill(Color.accentColor)
-                                    }
-                                }
-                                VStack(alignment:.leading){
-                                    
-                                    Group{
-                                        //Circle or Profile Pic
-                                        if let urlString = spaceTile.profileImageUrl,
-                                           let url = URL(string: urlString) {
-                                            
-                                            //If there is URL for profile pic, show
-                                            //circle with stroke
-                                            AsyncImage(url: url) {image in
-                                                image
-                                                    .resizable()
-                                                    .scaledToFill()
-                                                
-                                            } placeholder: {
-                                                //else show loading after user uploads but sending/downloading from database
-                                                ProgressView()
-                                                    .progressViewStyle(CircularProgressViewStyle(tint: Color(UIColor.systemBackground)))
-                                                    .frame(width: 64, height: 64)
-                                                    .background(
-                                                        Circle()
-                                                            .fill(Color.accentColor)
-                                                    )
-                                            }
-                                            .clipShape(Circle())
-                                            .frame(width: 64, height: 64)
-                                            
-                                        } else {
-                                            //if space does not have profile pic, show circle
-                                            Circle()
-                                                .fill(Color.accentColor)
-                                               
-                                                .frame(width: 64, height: 64)
-                                        }
-                                        
-                                        
-                                    }
-                                    
-                                    
-                                    
-                                    Spacer()
-                         
-                                    
-                                    Text(spaceTile.name!)
-                                        .font(.title)
-                                        .fontWeight(.bold)
-                                    
-                                        .minimumScaleFactor(0.7)
-                                        .lineLimit(1)
-                                    
-                                    
-                                    if let mySpaceMembers = spaceTile.members{
-                                       
-                                            
-                                        Text( "\(mySpaceMembers.count) members")
-                                                .foregroundStyle(.secondary)
-                                                .font(.headline)
-                                            
-//                                                .fontWeight(.regular)
-                                            
-                                            
-                                        
-                                    }
-                                }
-                                .padding()
-                                .frame(maxWidth:.infinity, maxHeight: .infinity, alignment: .topLeading)
-                                .aspectRatio(1, contentMode: .fit)
-                                .background(.regularMaterial)
+        ZStack{
+            Group{
+                //Circle or Profile Pic
+                if let urlString = spaceTile.profileImageUrl,
+                   let url = URL(string: urlString) {
+                    
+                    //If there is URL for profile pic, show
+                    //circle with stroke
+                    
+                    
+                    Color.clear
+                        .aspectRatio(1, contentMode: .fit)
+                        .background(
+                            
+                            
+                            AsyncImage(url: url) {image in
+                                image
+                                    .resizable()
+                                    .scaledToFill()
+                                    .layoutPriority(-1)
                                 
-                               
-                                
-                                
+                            } placeholder: {
+                                Rectangle()
+                                    .fill(Color.accentColor)
                             }
-                            .overlay {
-                                    NotificationCountView(value: Binding<Int>(
-                                        get: { viewModel.notificationCount[spaceTile.spaceId] ?? 0 },
-                                        set: { newValue in viewModel.notificationCount[spaceTile.spaceId] = newValue }
-                                    ))
-                            }
-                            .cornerRadius(20)
+                            
+                        )
+                        .clipped()
+                } else {
+                    //if space does not have profile pic, show circle
+                    Rectangle()
+                        .fill(Color.accentColor)
+                }
+            }
+            VStack(alignment:.leading){
+                
+                Group{
+                    //Circle or Profile Pic
+                    if let urlString = spaceTile.profileImageUrl,
+                       let url = URL(string: urlString) {
                         
+                        //If there is URL for profile pic, show
+                        //circle with stroke
+                        AsyncImage(url: url) {image in
+                            image
+                                .resizable()
+                                .scaledToFill()
+                            
+                        } placeholder: {
+                            //else show loading after user uploads but sending/downloading from database
+                            ProgressView()
+                                .progressViewStyle(CircularProgressViewStyle(tint: Color(UIColor.systemBackground)))
+                                .frame(width: 64, height: 64)
+                                .background(
+                                    Circle()
+                                        .fill(Color.accentColor)
+                                )
+                        }
+                        .clipShape(Circle())
+                        .frame(width: 64, height: 64)
+                        
+                    } else {
+                        //if space does not have profile pic, show circle
+                        Circle()
+                            .fill(Color.accentColor)
+                        
+                            .frame(width: 64, height: 64)
+                    }
+                    
+                    
+                }
+                
+                
+                
+                Spacer()
+                
+                
+                Text(spaceTile.name!)
+                    .font(.title)
+                    .fontWeight(.bold)
+                
+                    .minimumScaleFactor(0.7)
+                    .lineLimit(1)
+                
+                
+                if let mySpaceMembers = spaceTile.members{
+                    
+                    
+                    Text( "\(mySpaceMembers.count) members")
+                        .foregroundStyle(.secondary)
+                        .font(.headline)
+                    
+                    //                                                .fontWeight(.regular)
+                    
+                    
+                    
+                }
+            }
+            .padding()
+            .frame(maxWidth:.infinity, maxHeight: .infinity, alignment: .topLeading)
+            .aspectRatio(1, contentMode: .fit)
+            .background(.regularMaterial)
+            
+            
+            
+            
+        }
+        .overlay {
+            NotificationCountView(value: Binding<Int>(
+                get: { viewModel.notificationCount[spaceTile.spaceId] ?? 0 },
+                set: { newValue in viewModel.notificationCount[spaceTile.spaceId] = newValue }
+            ))
+        }
+        .cornerRadius(20)
+        
         
     }
     
@@ -153,16 +153,16 @@ struct SpacesView: View {
                     ProgressView()
                         .padding(.top, 250)
                 } else if filteredSearch.isEmpty && viewModel.finishedLoading {
-               
-                        ContentUnavailableView(
-                            "No Spaces",
-                            systemImage: "rectangle.3.group.fill",
-                            description: Text("But hey, maybe personal space is all you need.")
-                        )
-                        .onTapGesture {
-                            viewModel.isShowingCreateSpaces = true
-                        }
-                        .padding(.top, 200)
+                    
+                    ContentUnavailableView(
+                        "No Spaces",
+                        systemImage: "rectangle.3.group.fill",
+                        description: Text("But hey, maybe personal space is all you need.")
+                    )
+                    .onTapGesture {
+                        viewModel.isShowingCreateSpaces = true
+                    }
+                    .padding(.top, 200)
                     
                 } else {
                     
@@ -174,26 +174,6 @@ struct SpacesView: View {
                                 CanvasPage(spaceId: spaceTile.spaceId)
                                     .tint(appModel.loadedColor)
                                 
-                                    .onDisappear {
-                                        /* Eric
-                                            DO NOT DELETE THIS
-                                            This happens too slow and fucks up the viewModel.loadCurrentUser() of CanvasPage
-                                            Hence resulting in bug where canvas shows up as nothing
-                                         */
-                                        //refresh spaces list to check if user left a space
-                                        Task {
-                                            
-//                                            try? await viewModel.loadCurrentUser()
-                                            if let user = appModel.user {
-                                                
-                                                try? await viewModel.getAllSpaces(userId: user.userId)
-                                            }
-                                        }
-                                        
-                                        
-                                        
-                                    }
-                                
                             } label: {linkLabel(spaceTile: spaceTile)}
                             
                         }
@@ -203,8 +183,8 @@ struct SpacesView: View {
                 }
             }
             
-        
-        .scrollDismissesKeyboard(.interactively)
+            
+            .scrollDismissesKeyboard(.interactively)
             
             
             
@@ -219,28 +199,11 @@ struct SpacesView: View {
             })
             .navigationDestination(for: DBSpace.self) { space in
                 CanvasPage(spaceId: space.spaceId)
-                .onDisappear {
-                    print("refreshing spaces - did leave successfully?")
-                //refresh spaces list to check if user left a space
-                    Task {
-                        try? await viewModel.loadCurrentUser()
-                        if let user = viewModel.user {
-                            try? await viewModel.getAllSpaces(userId: user.userId)
-                        }
-                    }
-                }
             }
             .onChange(of: viewModel.isShowingCreateSpaces, { oldValue, newValue in
                 if !viewModel.isShowingCreateSpaces {
-                    print("YO")
-                    
-                    Task{
-                        try? await viewModel.loadCurrentUser()
-                           
-                        if let user = viewModel.user {
-                            try? await viewModel.getAllSpaces(userId: user.userId)
-                            viewModel.newSpaceUUID = UUID().uuidString
-                        }
+                    if let user = viewModel.user {
+                        viewModel.newSpaceUUID = UUID().uuidString
                     }
                 }
             })
@@ -249,7 +212,6 @@ struct SpacesView: View {
             .searchable(text: $viewModel.searchTerm, placement: .navigationBarDrawer(displayMode: .always), prompt: "Search")
         }
         .task {
-     
             //use self for clarity
             if appModel.shouldNavigateToSpace {
                 guard let spaceId = appModel.navigationSpaceId else { return }
@@ -267,7 +229,7 @@ struct SpacesView: View {
         }
         .modifier(modelNavigation())
         .environment(viewModel)
-
+        
     }
     
     struct modelNavigation: ViewModifier {
@@ -284,8 +246,8 @@ struct SpacesView: View {
                             print("appModel.inSpace \(appModel.inSpace)")
                             print("appModel.currentSpaceId \(appModel.currentSpaceId ?? "nil")")
                             while (appModel.inSpace && appModel.navigationSpaceId != appModel.currentSpaceId) {
-                                    print("SPACESVIEW WAITING FOR SPACE")
-                                    appModel.navigationMutex.wait() // Block the thread until the condition is true
+                                print("SPACESVIEW WAITING FOR SPACE")
+                                appModel.navigationMutex.wait() // Block the thread until the condition is true
                             }
                             appModel.navigationMutex.broadcast()
                             var succeded: Bool = false
@@ -330,9 +292,9 @@ struct SpacesView: View {
                         }
                         appModel.navigationMutex.unlock()
                     }
-    
+                    
                 }
-    
+            
         }
     }
     
@@ -341,7 +303,7 @@ struct SpacesView: View {
     func toolbar() -> some ToolbarContent {
         ToolbarItem(placement: .navigationBarTrailing) {
             Button{
-              viewModel.isShowingCreateSpaces = true
+                viewModel.isShowingCreateSpaces = true
                 
             } label: {
                 Image (systemName: "square.and.pencil")
@@ -354,11 +316,11 @@ struct SpacesView: View {
 }
 
 /*
-struct SpacesView_Previews: PreviewProvider {
-    static var previews: some View {
-//        SpacesView(showSignInView: .constant(false),appModel.loadedColor: .constant(.red),showCreateProfileView: .constant(false))
-        SpacesView(activeSheet: .constant(nil), appModel.loadedColor: .constant(.red))
-    }
-}
-
-*/
+ struct SpacesView_Previews: PreviewProvider {
+ static var previews: some View {
+ //        SpacesView(showSignInView: .constant(false),appModel.loadedColor: .constant(.red),showCreateProfileView: .constant(false))
+ SpacesView(activeSheet: .constant(nil), appModel.loadedColor: .constant(.red))
+ }
+ }
+ 
+ */

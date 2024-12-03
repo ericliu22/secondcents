@@ -2,8 +2,8 @@ package routes
 
 import (
 	"cloud.google.com/go/firestore"
-	"github.com/valyala/fasthttp"
 	"github.com/fasthttp/router"
+	"github.com/valyala/fasthttp"
 	"server/internal/handler/user"
 )
 

@@ -1,22 +1,17 @@
 package user
 
 import (
+	"context"
 	"encoding/json"
 	"log"
-	"context"
 
 	"cloud.google.com/go/firestore"
 	"github.com/valyala/fasthttp"
 	"server/internal/middleware"
 )
 
-type AcceptFriendRequest struct {
-	SenderUserId string `json:"senderId"`
-	ReceiverUserId string `json:"receiverId"`
-}
-
-type SendFriendRequest struct {
-	SenderUserId string `json:"senderId"`
+type FriendRequest struct {
+	SenderUserId   string `json:"senderId"`
 	ReceiverUserId string `json:"receiverId"`
 }
 
@@ -29,10 +24,9 @@ func AcceptFriendRequestHandler(httpCtx *fasthttp.RequestCtx, client *firestore.
 		return
 	}
 
-
 	firebaseCtx := middleware.GetRequestContext(httpCtx)
 
-	var friendRequest AcceptFriendRequest
+	var friendRequest FriendRequest
 
 	log.Printf("AcceptFriendRequest body: %s\n", string(httpCtx.PostBody()))
 
@@ -46,42 +40,100 @@ func AcceptFriendRequestHandler(httpCtx *fasthttp.RequestCtx, client *firestore.
 		httpCtx.Error("Invalid request body", fasthttp.StatusBadRequest)
 		return
 	}
-	
+
 	log.Printf("Parsed friend request: %+v\n", friendRequest)
 
 	senderDocRef := client.Collection("users").Doc(friendRequest.SenderUserId)
 	receiverDocRef := client.Collection("users").Doc(friendRequest.ReceiverUserId)
 
-	if (!validRequest(friendRequest.SenderUserId, *receiverDocRef, firebaseCtx)) {
+	if !validAcceptRequest(friendRequest.SenderUserId, senderDocRef, friendRequest.ReceiverUserId, receiverDocRef, firebaseCtx) {
 		httpCtx.SetStatusCode(fasthttp.StatusInternalServerError)
 		httpCtx.SetBodyString("Failed to parse receiver's document data")
 		return
 	}
 
-	_, senderErr := senderDocRef.Update(firebaseCtx, []firestore.Update {
+	_, senderErr := senderDocRef.Update(firebaseCtx, []firestore.Update{
 		{
-			Path: "friends",
+			Path:  "friends",
 			Value: firestore.ArrayUnion(friendRequest.ReceiverUserId),
+		},
+		{
+			Path:  "outgoingFriendRequests",
+			Value: firestore.ArrayRemove(friendRequest.ReceiverUserId),
 		},
 	})
 	if senderErr != nil {
-		log.Printf("Parsed friend request: %+v\n", friendRequest)
+		log.Printf("Failed to update receiver friends list: %s", senderErr.Error())
 		return
 	}
 
-	_, receiverErr := receiverDocRef.Update(firebaseCtx, []firestore.Update {
+	_, receiverErr := receiverDocRef.Update(firebaseCtx, []firestore.Update{
 		{
-			Path: "friends",
+			Path:  "friends",
 			Value: firestore.ArrayUnion(friendRequest.SenderUserId),
+		},
+		{
+			Path:  "incomingFriendRequests",
+			Value: firestore.ArrayRemove(friendRequest.SenderUserId),
 		},
 	})
 	if receiverErr != nil {
-		log.Printf("Parsed friend request: %+v\n", friendRequest)
+		log.Printf("Failed to update receiver friends list: %s", receiverErr.Error())
 		return
 	}
 }
 
-func validRequest(senderUserId string, receiverDocRef firestore.DocumentRef, firebaseCtx context.Context) bool {
+func validAcceptRequest(senderUserId string, senderDocRef *firestore.DocumentRef, receiverUserId string, receiverDocRef *firestore.DocumentRef, firebaseCtx context.Context) bool {
+
+	receiverDocumentSnapshot, fetchDocErr := receiverDocRef.Get(firebaseCtx)
+	if fetchDocErr != nil {
+		return false
+	}
+
+	var receiverData map[string]interface{}
+	if err := receiverDocumentSnapshot.DataTo(&receiverData); err != nil {
+		return false
+	}
+
+	incomingFriendRequests, ok := receiverData["incomingFriendRequests"].([]interface{})
+	if !ok {
+		return false
+	}
+
+	senderDocumentSnapshot, fetchDocErr := senderDocRef.Get(firebaseCtx)
+	if fetchDocErr != nil {
+		return false
+	}
+
+	var senderData map[string]interface{}
+	if err := senderDocumentSnapshot.DataTo(&senderData); err != nil {
+		return false
+	}
+
+	outgoingFriendRequests, ok := senderData["outgoingFriendRequests"].([]interface{})
+	if !ok {
+		return false
+	}
+
+	var validIncoming bool = false
+	var validOutgoing bool = false
+
+	for _, id := range incomingFriendRequests {
+		if id == senderUserId {
+			validIncoming = true
+		}
+	}
+	for _, id := range outgoingFriendRequests {
+		if id == receiverUserId {
+			validOutgoing = true
+		}
+	}
+
+	return validOutgoing && validIncoming
+}
+
+// For now not needed
+func validSendRequest(senderUserId string, senderDocRef firestore.DocumentRef, receiverUserId string, receiverDocRef firestore.DocumentRef, firebaseCtx context.Context) bool {
 	documentSnapshot, fetchDocErr := receiverDocRef.Get(firebaseCtx)
 	if fetchDocErr != nil {
 		return false
@@ -94,18 +146,17 @@ func validRequest(senderUserId string, receiverDocRef firestore.DocumentRef, fir
 
 	incomingFriendRequests, ok := data["incomingFriendRequests"].([]interface{})
 	if !ok {
-		return false 
+		return false
 	}
 
 	for _, id := range incomingFriendRequests {
-		if id == senderUserId{
+		if id == senderUserId {
 			return true
 		}
 	}
 
 	return false
 }
-
 
 func SendFriendRequestHandler(httpCtx *fasthttp.RequestCtx, client *firestore.Client) {
 
@@ -118,7 +169,7 @@ func SendFriendRequestHandler(httpCtx *fasthttp.RequestCtx, client *firestore.Cl
 
 	firebaseCtx := middleware.GetRequestContext(httpCtx)
 
-	var friendRequest AcceptFriendRequest
+	var friendRequest FriendRequest
 
 	log.Printf("SendFriendRequest body: %s\n", string(httpCtx.PostBody()))
 
@@ -132,19 +183,31 @@ func SendFriendRequestHandler(httpCtx *fasthttp.RequestCtx, client *firestore.Cl
 		httpCtx.Error("Invalid request body", fasthttp.StatusBadRequest)
 		return
 	}
-	
+
 	log.Printf("Parsed friend request: %+v\n", friendRequest)
 
 	receiverDocRef := client.Collection("users").Doc(friendRequest.ReceiverUserId)
+	senderDocRef := client.Collection("users").Doc(friendRequest.SenderUserId)
 
-	_, err := receiverDocRef.Update(firebaseCtx, []firestore.Update {
+	_, receiverErr := receiverDocRef.Update(firebaseCtx, []firestore.Update{
 		{
-			Path: "incomingFriendRequests",
+			Path:  "incomingFriendRequests",
 			Value: firestore.ArrayUnion(friendRequest.SenderUserId),
 		},
 	})
-	if err != nil {
-		log.Printf("Parsed friend request: %+v\n", friendRequest)
+	if receiverErr != nil {
+		log.Printf("Failed to update incomingFriendRequests: %s", receiverErr.Error())
+		return
+	}
+
+	_, senderErr := senderDocRef.Update(firebaseCtx, []firestore.Update{
+		{
+			Path:  "outgoingFriendRequests",
+			Value: firestore.ArrayUnion(friendRequest.ReceiverUserId),
+		},
+	})
+	if senderErr != nil {
+		log.Printf("Failed to update outgoingFriendRequests: %s", senderErr.Error())
 		return
 	}
 }
