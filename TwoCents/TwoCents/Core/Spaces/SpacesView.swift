@@ -173,6 +173,12 @@ struct SpacesView: View {
                             NavigationLink {
                                 CanvasPage(spaceId: spaceTile.spaceId)
                                     .tint(appModel.loadedColor)
+                                    .onAppear {
+                                        if let notificationCount = viewModel.notificationCount[spaceTile.spaceId] {
+                                            let currentBadgeNumber = UIApplication.shared.applicationIconBadgeNumber
+                                            UNUserNotificationCenter.current().setBadgeCount(currentBadgeNumber - notificationCount)
+                                        }
+                                    }
                                 
                             } label: {linkLabel(spaceTile: spaceTile)}
                             
