@@ -4,37 +4,19 @@ import (
 	"context"
 	"log"
 	"os"
-	"time"
+
+	"server/internal/routes"
+	"server/internal/middleware"
 
 	"firebase.google.com/go"
 	"github.com/valyala/fasthttp"
-	"server/internal"
 	"google.golang.org/api/option"
 )
 
-func setupLogging() (*os.File, error) {
-    loc := time.FixedZone("UTC-8", -4*60*60) // EST/EDT timezone
-
-    now := time.Now().In(loc)
-    logFileName := "logs/" + now.Format("2006-01-02") + ".log"
-    logFile, err := os.OpenFile(logFileName, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
-    if err != nil {
-        return nil, err
-    }
-
-    log.SetFlags(0) // Disable default timestamp (we'll add our own)
-    
-    // Define the logger prefix with the time in the desired timezone
-    log.SetPrefix(time.Now().In(loc).Format("2006-01-02 15:04:05 "))
-
-    log.SetOutput(logFile)
-    return logFile, nil
-}
 
 func main() {
 	// Initialize Firebase Admin SDK
-	setupLogging()
-	logFile, err := setupLogging()
+	logFile, err := middleware.SetupLogging()
 	if err != nil {
 		log.Fatalf("Failed to set up logging: %v", err)
 	}
@@ -44,14 +26,21 @@ func main() {
 	if credential_path == "" {
 		log.Fatalf("Firebase credential path not set")
 	}
+
 	opt := option.WithCredentialsFile(credential_path)
 	app, err := firebase.NewApp(context.Background(), nil, opt)
 	if err != nil {
 		log.Fatalf("error initializing Firebase app: %v", err)
 	}
 
-	// Set up the router
-	router := internal.SetupRouter(app)
+	client, err := app.Firestore(context.Background())
+	if err != nil {
+		log.Fatalf("Error initializing Firestore client: %v", err)
+	}
+	defer client.Close()
+
+
+	coreRouter := routes.SetupCoreRouter(app, client)
 
 	port := os.Getenv("PORT")
 	if port == "" {
@@ -60,6 +49,5 @@ func main() {
 
 	    // Start the server
 	log.Println("Starting server...")
-	log.Fatal(fasthttp.ListenAndServe(":"+port, router.Handler))
+	log.Fatal(fasthttp.ListenAndServe(":"+port, middleware.WithRequestContext(coreRouter.Handler)))
 }
-
