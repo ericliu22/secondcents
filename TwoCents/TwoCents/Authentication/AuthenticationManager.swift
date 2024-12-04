@@ -19,10 +19,6 @@ struct AuthDataResultModel{
         self.uid = user.uid
         self.email = user.email
 //        self.photoUrl = user.photoURL?.absoluteString
-     
-
-        
-        
         
     }
     
@@ -30,12 +26,13 @@ struct AuthDataResultModel{
 
 final class AuthenticationManager{
     
-    static let shared = AuthenticationManager()
+    @MainActor static let shared = AuthenticationManager()
     
+    private var verificationId: String?
+
     private init (){
         
     }
-    
     
     func getAuthenticatedUser() throws -> AuthDataResultModel {
         
@@ -47,14 +44,23 @@ final class AuthenticationManager{
         
     }
     
+    #warning("Don't use this unless absolutely necessary. This shit is essentially the user's password")
+    /**
+     CAUTION: Don't use this anywhere in the app unless it's absolutely necessary
+    */
+    func getJwtToken() async throws -> String {
+        guard let user = Auth.auth().currentUser else {
+            throw AuthErrorCode.nullUser
+        }
+        
+        return try await user.getIDToken()
+    }
+    
     
     //WITH EMAIL
     @discardableResult
     func createUser(email: String, password: String) async throws -> AuthDataResultModel {
         let authDataResult = try await Auth.auth().createUser(withEmail: email, password: password)
-        
-  
-        
         
         return AuthDataResultModel(user: authDataResult.user)
     }
@@ -62,7 +68,6 @@ final class AuthenticationManager{
     
     
     
-    private var verificationId: String?
 
     public func startAuth(phoneNumber: String, completion: @escaping (Result<String, Error>) -> Void) {
         PhoneAuthProvider.provider().verifyPhoneNumber(phoneNumber, uiDelegate: nil) { verificationId, error in
@@ -83,9 +88,6 @@ final class AuthenticationManager{
             }
         }
     }
-
-    
-    
     
     public func verifyCode(smsCode: String, completion: @escaping (Bool) -> Void) {
         print("verifyCode: Entered function")
@@ -118,8 +120,6 @@ final class AuthenticationManager{
         }
     }
 
-    
-    
     @discardableResult
     func signInUser(email: String, password: String) async throws -> AuthDataResultModel {
         let authDataResult = try await Auth.auth().signIn(withEmail: email, password: password)

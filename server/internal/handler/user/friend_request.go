@@ -17,12 +17,6 @@ type FriendRequest struct {
 
 func AcceptFriendRequestHandler(httpCtx *fasthttp.RequestCtx, client *firestore.Client) {
 
-	authenticatedUserId, authErr := middleware.GetAuthenticatedUserId(httpCtx)
-	if authErr != nil {
-		httpCtx.SetStatusCode(fasthttp.StatusUnauthorized)
-		httpCtx.SetBodyString("Unauthorized: " + authErr.Error())
-		return
-	}
 
 	firebaseCtx := middleware.GetRequestContext(httpCtx)
 
@@ -30,18 +24,19 @@ func AcceptFriendRequestHandler(httpCtx *fasthttp.RequestCtx, client *firestore.
 
 	log.Printf("AcceptFriendRequest body: %s\n", string(httpCtx.PostBody()))
 
-	if authenticatedUserId != friendRequest.ReceiverUserId {
-		httpCtx.SetStatusCode(fasthttp.StatusUnauthorized)
-		httpCtx.SetBodyString("Unauthorized accepting of friend request")
-		return
-	}
-
 	if err := json.Unmarshal(httpCtx.PostBody(), &friendRequest); err != nil {
 		httpCtx.Error("Invalid request body", fasthttp.StatusBadRequest)
 		return
 	}
 
 	log.Printf("Parsed friend request: %+v\n", friendRequest)
+
+	if (!isAuthenticated(httpCtx, friendRequest.ReceiverUserId)) {
+		log.Printf("Unauthenticated request")
+		return
+	}
+
+
 
 	senderDocRef := client.Collection("users").Doc(friendRequest.SenderUserId)
 	receiverDocRef := client.Collection("users").Doc(friendRequest.ReceiverUserId)
@@ -133,7 +128,7 @@ func validAcceptRequest(senderUserId string, senderDocRef *firestore.DocumentRef
 }
 
 // For now not needed
-func validSendRequest(senderUserId string, senderDocRef firestore.DocumentRef, receiverUserId string, receiverDocRef firestore.DocumentRef, firebaseCtx context.Context) bool {
+func validSendRequest(senderUserId string, receiverDocRef firestore.DocumentRef, firebaseCtx context.Context) bool {
 	documentSnapshot, fetchDocErr := receiverDocRef.Get(firebaseCtx)
 	if fetchDocErr != nil {
 		return false
@@ -160,27 +155,19 @@ func validSendRequest(senderUserId string, senderDocRef firestore.DocumentRef, r
 
 func SendFriendRequestHandler(httpCtx *fasthttp.RequestCtx, client *firestore.Client) {
 
-	authenticatedUserId, authErr := middleware.GetAuthenticatedUserId(httpCtx)
-	if authErr != nil {
-		httpCtx.SetStatusCode(fasthttp.StatusUnauthorized)
-		httpCtx.SetBodyString("Unauthorized: " + authErr.Error())
-		return
-	}
-
 	firebaseCtx := middleware.GetRequestContext(httpCtx)
 
 	var friendRequest FriendRequest
 
 	log.Printf("SendFriendRequest body: %s\n", string(httpCtx.PostBody()))
 
-	if authenticatedUserId != friendRequest.SenderUserId {
-		httpCtx.SetStatusCode(fasthttp.StatusUnauthorized)
-		httpCtx.SetBodyString("Unauthorized sending of friend request")
+	if err := json.Unmarshal(httpCtx.PostBody(), &friendRequest); err != nil {
+		httpCtx.Error("Invalid request body", fasthttp.StatusBadRequest)
 		return
 	}
 
-	if err := json.Unmarshal(httpCtx.PostBody(), &friendRequest); err != nil {
-		httpCtx.Error("Invalid request body", fasthttp.StatusBadRequest)
+	if (!isAuthenticated(httpCtx, friendRequest.SenderUserId)) {
+		log.Printf("Unauthenticated request")
 		return
 	}
 
@@ -210,4 +197,68 @@ func SendFriendRequestHandler(httpCtx *fasthttp.RequestCtx, client *firestore.Cl
 		log.Printf("Failed to update outgoingFriendRequests: %s", senderErr.Error())
 		return
 	}
+}
+
+func UnsendFriendRequestHandler(httpCtx *fasthttp.RequestCtx, client *firestore.Client) {
+
+	firebaseCtx := middleware.GetRequestContext(httpCtx)
+
+	var friendRequest FriendRequest
+
+	if (!isAuthenticated(httpCtx, friendRequest.SenderUserId)) {
+		log.Printf("Unauthenticated request")
+		return
+	}
+
+	log.Printf("UnsendFriendRequest body: %s\n", string(httpCtx.PostBody()))
+
+	if err := json.Unmarshal(httpCtx.PostBody(), &friendRequest); err != nil {
+		httpCtx.Error("Invalid request body", fasthttp.StatusBadRequest)
+		return
+	}
+
+	log.Printf("Parsed friend request: %+v\n", friendRequest)
+
+	receiverDocRef := client.Collection("users").Doc(friendRequest.ReceiverUserId)
+	senderDocRef := client.Collection("users").Doc(friendRequest.SenderUserId)
+
+	_, receiverErr := receiverDocRef.Update(firebaseCtx, []firestore.Update{
+		{
+			Path:  "incomingFriendRequests",
+			Value: firestore.ArrayRemove(friendRequest.SenderUserId),
+		},
+	})
+	if receiverErr != nil {
+		log.Printf("Failed to update incomingFriendRequests: %s", receiverErr.Error())
+		return
+	}
+
+	_, senderErr := senderDocRef.Update(firebaseCtx, []firestore.Update{
+		{
+			Path:  "outgoingFriendRequests",
+			Value: firestore.ArrayRemove(friendRequest.ReceiverUserId),
+		},
+	})
+	if senderErr != nil {
+		log.Printf("Failed to update outgoingFriendRequests: %s", senderErr.Error())
+		return
+	}
+}
+
+func isAuthenticated(httpCtx *fasthttp.RequestCtx, requestOwnerId string) bool {
+
+	authenticatedUserId, authErr := middleware.GetAuthenticatedUserId(httpCtx)
+	if authErr != nil {
+		httpCtx.SetStatusCode(fasthttp.StatusUnauthorized)
+		httpCtx.SetBodyString("Unauthorized: " + authErr.Error())
+		return false
+	}
+
+	if authenticatedUserId != requestOwnerId {
+		httpCtx.SetStatusCode(fasthttp.StatusUnauthorized)
+		httpCtx.SetBodyString("Unauthorized accepting of friend request")
+		return false
+	}
+
+	return true
 }

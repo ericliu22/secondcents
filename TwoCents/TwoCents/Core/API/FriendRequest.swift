@@ -35,41 +35,32 @@ func sendFriendRequest(senderId: String, receiverId: String) async throws -> Str
     guard let url = URL(string: "https://api.twocentsapp.com/v1/user/send-friend-request/") else {
         throw FriendRequestError.invalidUrl
     }
+    try await sendRequest(senderId: senderId, receiverId: receiverId, url: url)
     
-    guard let firebaseToken = try? AuthenticationManager.shared.getAuthenticatedUser().uid else {
-        throw FriendRequestError.unauthorizedApp
-    }
-    
-    // Prepare the request
-    var request = URLRequest(url: url)
-    request.httpMethod = "POST"
-    request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-    request.setValue("Bearer \(firebaseToken)", forHTTPHeaderField: "Authorization")
-    
-    // Encode the body
-    let friendRequest = FriendRequest(senderId: senderId, receiverId: receiverId)
-    do {
-        let body = try JSONEncoder().encode(friendRequest)
-        request.httpBody = body
-    } catch {
-        throw error
-    }
-    
-    let (data, response) = try await URLSession.shared.data(for: request)
-    
-    guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
-        throw FriendRequestError.invalidResponse
-    }
-    
-    return "Friend request sent successfully"
+    return "Friend request accepted successfully"
 }
+
+func unsendFriendRequest(senderId: String, receiverId: String) async throws -> String {
+    guard let url = URL(string: "https://api.twocentsapp.com/v1/user/unsend-friend-request/") else {
+        throw FriendRequestError.invalidUrl
+    }
+    try await sendRequest(senderId: senderId, receiverId: receiverId, url: url)
+    
+    return "Friend request accepted successfully"
+}
+
 
 func acceptFriendRequest(senderId: String, receiverId: String) async throws -> String {
     guard let url = URL(string: "https://api.twocentsapp.com/v1/user/accept-friend-request/") else {
         throw FriendRequestError.invalidUrl
     }
+    try await sendRequest(senderId: senderId, receiverId: receiverId, url: url)
     
-    guard let firebaseToken = try? AuthenticationManager.shared.getAuthenticatedUser().uid else {
+    return "Friend request accepted successfully"
+}
+
+fileprivate func sendRequest(senderId: String, receiverId: String, url: URL) async throws {
+    guard let firebaseToken = try? await AuthenticationManager.shared.getJwtToken() else {
         throw FriendRequestError.unauthorizedApp
     }
     
@@ -93,6 +84,4 @@ func acceptFriendRequest(senderId: String, receiverId: String) async throws -> S
     guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
         throw FriendRequestError.invalidResponse
     }
-    
-    return "Friend request accepted successfully"
 }

@@ -39,15 +39,6 @@ final class SpacesViewModel {
         self.user = try await UserManager.shared.getUser(userId: authDataResult.uid)
     }
     
-//    func getAllSpaces(userId: String) async throws {
-//        try? await loadCurrentUser()
-//        
-//        self.allSpaces = try await UserManager.shared.getAllSpaces(userId: userId)
-//        
-//        finishedLoading = true
-//        
-//    }
-    
     func attachSpacesListener(userId: String) {
         Firestore.firestore().collection("spaces").whereField("members", arrayContains: userId).addSnapshotListener({ [weak self] querySnapshot, error in
             guard let self = self else {
