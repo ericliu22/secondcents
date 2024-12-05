@@ -52,9 +52,12 @@ final class SearchUserViewModel: ObservableObject {
             
             guard authDataResultUserId != friendUserId else { return }
             
-            try? await UserManager.shared.sendFriendRequest(userId: authDataResultUserId, friendUserId: friendUserId)
-            
-            await friendRequestNotification(userUID: authDataResultUserId, friendUID: friendUserId)
+            do {
+                try await UserManager.shared.sendFriendRequest(userId: authDataResultUserId, friendUserId: friendUserId)
+                await friendRequestNotification(userUID: authDataResultUserId, friendUID: friendUserId)
+            } catch {
+                print(error.localizedDescription)
+            }
             
             clickedStates[friendUserId] = true
         }

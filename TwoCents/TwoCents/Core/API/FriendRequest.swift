@@ -60,6 +60,7 @@ func acceptFriendRequest(senderId: String, receiverId: String) async throws -> S
 }
 
 fileprivate func sendRequest(senderId: String, receiverId: String, url: URL) async throws {
+    print("ASDFASDFASFASSDF")
     guard let firebaseToken = try? await AuthenticationManager.shared.getJwtToken() else {
         throw FriendRequestError.unauthorizedApp
     }

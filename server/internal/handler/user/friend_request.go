@@ -163,6 +163,7 @@ func SendFriendRequestHandler(httpCtx *fasthttp.RequestCtx, client *firestore.Cl
 
 	if err := json.Unmarshal(httpCtx.PostBody(), &friendRequest); err != nil {
 		httpCtx.Error("Invalid request body", fasthttp.StatusBadRequest)
+		log.Printf("Invalid request body")
 		return
 	}
 

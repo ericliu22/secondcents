@@ -388,49 +388,12 @@ final class UserManager{
         
     }
     
-    
-    
-    
-    
-    
     func sendFriendRequest(userId: String, friendUserId: String) async throws {
-        
-        
-        
-        //put friend uid in user database
-        let intoUserDatabase: [String: Any] = [
-            "outgoingFriendRequests": FieldValue.arrayUnion([friendUserId])
-        ]
-        try await userDocument(userId: userId).updateData(intoUserDatabase)
-        
-        
-        //put user uid in friend database
-        let intoFriendDatabase: [String: Any] = [
-            "incomingFriendRequests": FieldValue.arrayUnion([userId])
-        ]
-        try await userDocument(userId: friendUserId).updateData(intoFriendDatabase)
-
-        
+        try await TwoCents.sendFriendRequest(senderId: userId, receiverId: friendUserId)
     }
     
     func unsendFriendRequest(userId: String, friendUserId: String) async throws {
-        
-        
-        
-        //put friend uid in user database
-        let intoUserDatabase: [String: Any] = [
-            "outgoingFriendRequests": FieldValue.arrayRemove([friendUserId])
-        ]
-        try await userDocument(userId: userId).updateData(intoUserDatabase)
-        
-        
-        //put user uid in friend database
-        let intoFriendDatabase: [String: Any] = [
-            "incomingFriendRequests": FieldValue.arrayRemove([userId])
-        ]
-        try await userDocument(userId: friendUserId).updateData(intoFriendDatabase)
-
-        
+        try await TwoCents.unsendFriendRequest(senderId: userId, receiverId: friendUserId)
     }
     
     

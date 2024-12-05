@@ -268,29 +268,20 @@ final class AddFriendFromContactsViewModel: NSObject, ObservableObject,
 
     func friendRequest(friendUserId: String) {
 
-        guard !friendUserId.isEmpty else { return }
+        guard !friendUserId.isEmpty else {
+            print("AddFriendFromContactsView: Failed to get friendUserId")
+            return
+        }
 
         Task {
-            //loading like this becasuse this viewModel User changes depending on if its current user or a user thats searched
-
-            let authDataResultUserId = try AuthenticationManager.shared
-                .getAuthenticatedUser().uid
-
-            guard authDataResultUserId != friendUserId else { return }
-
-            try? await UserManager.shared.sendFriendRequest(
-                userId: authDataResultUserId, friendUserId: friendUserId)
-
+            guard let senderId = try? AuthenticationManager.shared.getAuthenticatedUser().uid else {
+                print("AddFriendFromContactsView: Failed to get userId")
+                return
+            }
             do {
-                let result = try await sendFriendRequest(
-                    senderId: authDataResultUserId, receiverId: friendUserId)
-                await friendRequestNotification(
-                    userUID: authDataResultUserId, friendUID: friendUserId)
-                clickedStates[friendUserId] = true
+                try await sendFriendRequest(senderId: senderId, receiverId: friendUserId)
             } catch {
-                print(
-                    "Failed to send friend request: \(error.localizedDescription)"
-                )
+                print(error.localizedDescription)
             }
         }
     }

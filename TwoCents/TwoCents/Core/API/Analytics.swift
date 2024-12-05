@@ -13,7 +13,7 @@ let ANALYTICS_URL = "https://analytics.twocentsapp.com"
 
 final class AnalyticsManager {
     
-    static let shared = AnalyticsManager()
+    @MainActor static let shared = AnalyticsManager()
     
     private func sendPlausible(name: String, url: String = ANALYTICS_URL, props: [String: Any]? = nil) {
         let url = URL(string: "\(ANALYTICS_URL)/api/event")!
