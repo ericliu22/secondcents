@@ -21,9 +21,7 @@ func SetupCoreRouter(app *firebase.App, client *firestore.Client) *router.Router
 
 	userRouter := SetupUserRoutes(client)
 
-	r.ANY("/v1/user/{wildcard:*}", func(ctx *fasthttp.RequestCtx) {
-		// Strip the "/user" prefix and forward to the user router
-		ctx.SetUserValue("wildcard", ctx.Path()[len("/user"):])
+	r.ANY("/", func(ctx *fasthttp.RequestCtx) {
 		userRouter.Handler(ctx)
 	})
 
