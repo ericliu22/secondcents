@@ -10,13 +10,13 @@ import (
 func SetupUserRoutes(client *firestore.Client) *router.Router {
 	r := router.New()
 
-	r.POST("/accept-friend-request/", (func(httpCtx *fasthttp.RequestCtx) {
+	r.POST("/accept-friend-request", (func(httpCtx *fasthttp.RequestCtx) {
 		user.AcceptFriendRequestHandler(httpCtx, client)
 	}))
-	r.POST("/send-friend-request/", (func(httpCtx *fasthttp.RequestCtx) {
+	r.POST("/send-friend-request", (func(httpCtx *fasthttp.RequestCtx) {
 		user.SendFriendRequestHandler(httpCtx, client)
 	}))
-	r.POST("/unsend-friend-request/", (func(httpCtx *fasthttp.RequestCtx) {
+	r.POST("/unsend-friend-request", (func(httpCtx *fasthttp.RequestCtx) {
 		user.UnsendFriendRequestHandler(httpCtx, client)
 	}))
 

@@ -252,12 +252,14 @@ func isAuthenticated(httpCtx *fasthttp.RequestCtx, requestOwnerId string) bool {
 	if authErr != nil {
 		httpCtx.SetStatusCode(fasthttp.StatusUnauthorized)
 		httpCtx.SetBodyString("Unauthorized: " + authErr.Error())
+		log.Printf("Unauthorized")
 		return false
 	}
 
 	if authenticatedUserId != requestOwnerId {
 		httpCtx.SetStatusCode(fasthttp.StatusUnauthorized)
 		httpCtx.SetBodyString("Unauthorized accepting of friend request")
+		log.Printf("Unauthorized bum")
 		return false
 	}
 

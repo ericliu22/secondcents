@@ -32,7 +32,7 @@ extension FriendRequestError: LocalizedError {
 }
 
 func sendFriendRequest(senderId: String, receiverId: String) async throws -> String {
-    guard let url = URL(string: "https://api.twocentsapp.com/v1/user/send-friend-request/") else {
+    guard let url = URL(string: "https://api.twocentsapp.com/v1/user/send-friend-request") else {
         throw FriendRequestError.invalidUrl
     }
     try await sendRequest(senderId: senderId, receiverId: receiverId, url: url)
@@ -41,7 +41,7 @@ func sendFriendRequest(senderId: String, receiverId: String) async throws -> Str
 }
 
 func unsendFriendRequest(senderId: String, receiverId: String) async throws -> String {
-    guard let url = URL(string: "https://api.twocentsapp.com/v1/user/unsend-friend-request/") else {
+    guard let url = URL(string: "https://api.twocentsapp.com/v1/user/unsend-friend-request") else {
         throw FriendRequestError.invalidUrl
     }
     try await sendRequest(senderId: senderId, receiverId: receiverId, url: url)
@@ -51,7 +51,7 @@ func unsendFriendRequest(senderId: String, receiverId: String) async throws -> S
 
 
 func acceptFriendRequest(senderId: String, receiverId: String) async throws -> String {
-    guard let url = URL(string: "https://api.twocentsapp.com/v1/user/accept-friend-request/") else {
+    guard let url = URL(string: "https://api.twocentsapp.com/v1/user/accept-friend-request") else {
         throw FriendRequestError.invalidUrl
     }
     try await sendRequest(senderId: senderId, receiverId: receiverId, url: url)
@@ -60,10 +60,12 @@ func acceptFriendRequest(senderId: String, receiverId: String) async throws -> S
 }
 
 fileprivate func sendRequest(senderId: String, receiverId: String, url: URL) async throws {
-    print("ASDFASDFASFASSDF")
+    print("SENDERID: \(senderId)")
+    print("RECEIVERID: \(receiverId)")
     guard let firebaseToken = try? await AuthenticationManager.shared.getJwtToken() else {
         throw FriendRequestError.unauthorizedApp
     }
+    print(firebaseToken)
     
     // Prepare the request
     var request = URLRequest(url: url)
