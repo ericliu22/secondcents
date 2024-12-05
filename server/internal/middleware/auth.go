@@ -32,12 +32,14 @@ func GetAuthenticatedUserId(ctx *fasthttp.RequestCtx) (string, error) {
 	// Retrieve the authClient from the request context
 	authClient := GetAuthClient(ctx)
 	if authClient == nil {
+		log.Printf("Auth client not found")
 		return "", errors.New("authentication client not found")
 	}
 
 	// Get the Authorization header
 	authHeader := string(ctx.Request.Header.Peek("Authorization"))
 	if authHeader == "" {
+		log.Printf("Auth beader missing")
 		return "", errors.New("authorization header is missing")
 	}
 
