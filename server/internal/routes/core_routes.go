@@ -19,11 +19,7 @@ func SetupCoreRouter(app *firebase.App, client *firestore.Client) *router.Router
 		handler.NotificationHandler(ctx, app)
 	})
 
-	userRouter := SetupUserRoutes(client)
-
-	r.ANY("/", func(ctx *fasthttp.RequestCtx) {
-		userRouter.Handler(ctx)
-	})
+	SetupUserRoutes(r, client)
 
 	return r
 }
