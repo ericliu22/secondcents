@@ -40,6 +40,7 @@
 		A21E87FD2C62A1D400B48BCA /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A21E87FC2C62A1D400B48BCA /* AppModel.swift */; };
 		A21FDDAB2CB331B700A3EB7E /* WidgetSizeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A21FDDAA2CB3319D00A3EB7E /* WidgetSizeView.swift */; };
 		A22F84EE2C2912A20095A087 /* ZoomableScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A22F84ED2C2912A20095A087 /* ZoomableScrollView.swift */; };
+		A24087272D013265000E36DC /* AddFriendsFromContactsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24087262D01325E000E36DC /* AddFriendsFromContactsViewModel.swift */; };
 		A240F67B2C6965F100618903 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = A240F67A2C6965F100618903 /* Utilities.swift */; };
 		A246A42E2B43A1B700F0F6E6 /* NewWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A246A42D2B43A1B700F0F6E6 /* NewWidgetView.swift */; };
 		A254307C2C6AF53000999CEB /* Unread.swift in Sources */ = {isa = PBXBuildFile; fileRef = A254307B2C6AF53000999CEB /* Unread.swift */; };
@@ -217,6 +218,7 @@
 		A22F84ED2C2912A20095A087 /* ZoomableScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomableScrollView.swift; sourceTree = "<group>"; };
 		A2354EF52AA0D6CB0092BF1C /* ImageWidget.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageWidget.swift; sourceTree = "<group>"; };
 		A2354EF72AA0D6CB0092BF1C /* CanvasWidget.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CanvasWidget.swift; sourceTree = "<group>"; };
+		A24087262D01325E000E36DC /* AddFriendsFromContactsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFriendsFromContactsViewModel.swift; sourceTree = "<group>"; };
 		A240F67A2C6965F100618903 /* Utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
 		A246A42D2B43A1B700F0F6E6 /* NewWidgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewWidgetView.swift; sourceTree = "<group>"; };
 		A254307B2C6AF53000999CEB /* Unread.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Unread.swift; sourceTree = "<group>"; };
@@ -406,6 +408,7 @@
 			children = (
 				8576048D2C1A56B9007F5B0E /* ContactsView.swift */,
 				ABD9F23C2C1F3F910041F110 /* AddFriendFromContactsView.swift */,
+				A24087262D01325E000E36DC /* AddFriendsFromContactsViewModel.swift */,
 			);
 			path = Contacts;
 			sourceTree = "<group>";
@@ -1028,6 +1031,7 @@
 				AB58C1E62BDAF54B000B0AC1 /* SpaceSettingsViewModel.swift in Sources */,
 				AB370E0D2C34EDD400C4431F /* ChatViewModel.swift in Sources */,
 				856E80BD2B50EB260078A2CE /* SabotageGameViewModel.swift in Sources */,
+				A24087272D013265000E36DC /* AddFriendsFromContactsViewModel.swift in Sources */,
 				ABCDA06E2C39B04A002C23E1 /* NewTodoViewModel.swift in Sources */,
 				850958A72AB8F41D00018A32 /* HotSeat.swift in Sources */,
 				ABC461E52BE28ECF00AE47FF /* TestView.swift in Sources */,
