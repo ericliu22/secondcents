@@ -6,7 +6,7 @@ struct FriendRequestsView: View {
     @State private var searchTerm = ""
     
     @Environment(AppModel.self) var appModel
-    @StateObject private var viewModel = FriendRequestsViewModel()
+    @State private var viewModel = FriendRequestsViewModel()
     
     private let noFriendsMessage: [String] = [
         "it's getting dry 😬",

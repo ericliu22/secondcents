@@ -17,4 +17,10 @@ func SetupUserRoutes(r *router.Router, client *firestore.Client) {
 	r.POST("/v1/user/unsend-friend-request", (func(httpCtx *fasthttp.RequestCtx) {
 		user.UnsendFriendRequestHandler(httpCtx, client)
 	}))
+	r.POST("/v1/user/remove-friend-request", (func(httpCtx *fasthttp.RequestCtx) {
+		user.RemoveFriendRequestHandler(httpCtx, client)
+	}))
+	r.POST("/v1/user/decline-friend-request", (func(httpCtx *fasthttp.RequestCtx) {
+		user.DeclineFriendRequestHandler(httpCtx, client)
+	}))
 }

@@ -12,28 +12,22 @@ import SwiftUI
 
 
 
-@MainActor
-final class FriendRequestsViewModel: ObservableObject {
+@Observable @MainActor
+final class FriendRequestsViewModel {
     
-    @Published private(set) var user:  DBUser? = nil
+    var user:  DBUser? = nil
+    var allRequests: [DBUser] = []
+    
     func loadCurrentUser() async throws {
         let authDataResult = try AuthenticationManager.shared.getAuthenticatedUser()
         self.user = try await UserManager.shared.getUser(userId: authDataResult.uid)
     }
-    
-    
-    
-    @Published private(set) var allRequests: [DBUser] = []
-//    @State private(set) var requestLoaded: Bool = false
     
     func getAllRequests(targetUserId: String) async throws {
        
         try? await loadCurrentUser()
         self.allRequests = try await UserManager.shared.getAllRequests(userId: targetUserId)
         
-//        requestLoaded = true
-        
-//        self.allRequests = try await UserManager.shared.getAllUsers(userId: targetUserId, friendsOnly: true)
     }
     
     func acceptFriendRequest(friendUserId: String)  {
@@ -41,7 +35,6 @@ final class FriendRequestsViewModel: ObservableObject {
         
         Task {
             //loading like this becasuse this viewModel User changes depending on if its current user or a user thats searched
-            
             
             let authDataResultUserId = try AuthenticationManager.shared.getAuthenticatedUser().uid
             
@@ -52,7 +45,7 @@ final class FriendRequestsViewModel: ObservableObject {
                 try await UserManager.shared.acceptFriendRequest(userId: authDataResultUserId, friendUserId: friendUserId)
                 await acceptFriendRequestNotification(userUID: authDataResultUserId, friendUID: friendUserId)
             } catch {
-                print\(error.localizedDescription)
+                print(error.localizedDescription)
             }
             
             

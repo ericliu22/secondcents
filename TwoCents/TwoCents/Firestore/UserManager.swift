@@ -320,72 +320,15 @@ final class UserManager{
     }
     
     func removeFriend(userId: String, friendUserId: String) async throws {
-        
-        
-        
-        //put friend uid in user database
-        let intoUserDatabase: [String: Any] = [
-            "friends": FieldValue.arrayRemove([friendUserId])
-          
-        ]
-        try await userDocument(userId: userId).updateData(intoUserDatabase)
-        
-        
-        //put user uid in friend database
-        let intoFriendDatabase: [String: Any] = [
-            "friends": FieldValue.arrayRemove([userId])
-          
-        ]
-        try await userDocument(userId: friendUserId).updateData(intoFriendDatabase)
-
-        
+        try await TwoCents.removefriendRequest(senderId: userId, receiverId: friendUserId)
     }
     
-    
     func acceptFriendRequest(userId: String, friendUserId: String) async throws {
-        
-        
-        
-        //put friend uid in user database
-        let intoUserDatabase: [String: Any] = [
-            "incomingFriendRequests": FieldValue.arrayRemove([friendUserId])
-          
-        ]
-        try await userDocument(userId: userId).updateData(intoUserDatabase)
-        
-        
-        //put user uid in friend database
-        let intoFriendDatabase: [String: Any] = [
-            "outgoingFriendRequests": FieldValue.arrayRemove([userId])
-          
-        ]
-        
-        try await userDocument(userId: friendUserId).updateData(intoFriendDatabase)
-
-        try? await addFriend(userId: userId, friendUserId: friendUserId)
-        
+        try await TwoCents.acceptFriendRequest(senderId: userId, receiverId: friendUserId)
     }
     
     func declineFriendRequest(userId: String, friendUserId: String) async throws {
-        
-        
-        
-        //put friend uid in user database
-        let intoUserDatabase: [String: Any] = [
-            "incomingFriendRequests": FieldValue.arrayRemove([friendUserId])
-          
-        ]
-        try await userDocument(userId: userId).updateData(intoUserDatabase)
-        
-        
-        //put user uid in friend database
-        let intoFriendDatabase: [String: Any] = [
-            "outgoingFriendRequests": FieldValue.arrayRemove([userId])
-          
-        ]
-        
-        try await userDocument(userId: friendUserId).updateData(intoFriendDatabase)
-        
+        try await TwoCents.declineFriendRequest(senderId: userId, receiverId: friendUserId)
     }
     
     func sendFriendRequest(userId: String, friendUserId: String) async throws {

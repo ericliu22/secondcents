@@ -31,32 +31,54 @@ extension FriendRequestError: LocalizedError {
     }
 }
 
+@discardableResult
 func sendFriendRequest(senderId: String, receiverId: String) async throws -> String {
     guard let url = URL(string: "https://api.twocentsapp.com/v1/user/send-friend-request") else {
         throw FriendRequestError.invalidUrl
     }
     try await sendRequest(senderId: senderId, receiverId: receiverId, url: url)
     
-    return "Friend request accepted successfully"
+    return "Send Friend request successful"
 }
 
+@discardableResult
 func unsendFriendRequest(senderId: String, receiverId: String) async throws -> String {
     guard let url = URL(string: "https://api.twocentsapp.com/v1/user/unsend-friend-request") else {
         throw FriendRequestError.invalidUrl
     }
     try await sendRequest(senderId: senderId, receiverId: receiverId, url: url)
     
-    return "Friend request accepted successfully"
+    return "Unsend Friend request success"
 }
 
+@discardableResult
+func removefriendRequest(senderId: String, receiverId: String) async throws -> String {
+    guard let url = URL(string: "https://api.twocentsapp.com/v1/user/remove-friend-request") else {
+        throw FriendRequestError.invalidUrl
+    }
+    try await sendRequest(senderId: senderId, receiverId: receiverId, url: url)
+    
+    return "Remove Friend request success"
+}
 
+@discardableResult
 func acceptFriendRequest(senderId: String, receiverId: String) async throws -> String {
     guard let url = URL(string: "https://api.twocentsapp.com/v1/user/accept-friend-request") else {
         throw FriendRequestError.invalidUrl
     }
     try await sendRequest(senderId: senderId, receiverId: receiverId, url: url)
     
-    return "Friend request accepted successfully"
+    return "Accept Friend request success"
+}
+
+@discardableResult
+func declineFriendRequest(senderId: String, receiverId: String) async throws -> String {
+    guard let url = URL(string: "https://api.twocentsapp.com/v1/user/decline-friend-request") else {
+        throw FriendRequestError.invalidUrl
+    }
+    try await sendRequest(senderId: senderId, receiverId: receiverId, url: url)
+    
+    return "Decline Friend request success"
 }
 
 fileprivate func sendRequest(senderId: String, receiverId: String, url: URL) async throws {

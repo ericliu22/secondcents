@@ -265,3 +265,100 @@ func isAuthenticated(httpCtx *fasthttp.RequestCtx, requestOwnerId string) bool {
 
 	return true
 }
+
+func RemoveFriendRequestHandler(httpCtx *fasthttp.RequestCtx, client *firestore.Client) {
+	firebaseCtx := middleware.GetRequestContext(httpCtx)
+
+	var friendRequest FriendRequest
+
+	log.Printf("FriendRequest body: %s\n", string(httpCtx.PostBody()))
+
+	if err := json.Unmarshal(httpCtx.PostBody(), &friendRequest); err != nil {
+		httpCtx.Error("Invalid request body", fasthttp.StatusBadRequest)
+		return
+	}
+
+	log.Printf("Parsed friend request: %+v\n", friendRequest)
+
+	if (!isAuthenticated(httpCtx, friendRequest.ReceiverUserId)) {
+		log.Printf("Unauthenticated request")
+		return
+	}
+
+	senderDocRef := client.Collection("users").Doc(friendRequest.SenderUserId)
+	receiverDocRef := client.Collection("users").Doc(friendRequest.ReceiverUserId)
+
+	_, senderErr := senderDocRef.Update(firebaseCtx, []firestore.Update{
+		{
+			Path:  "friends",
+			Value: firestore.ArrayRemove(friendRequest.ReceiverUserId),
+		},
+	})
+	if senderErr != nil {
+		log.Printf("Failed to update receiver friends list: %s", senderErr.Error())
+		return
+	}
+
+	_, receiverErr := receiverDocRef.Update(firebaseCtx, []firestore.Update{
+		{
+			Path:  "friends",
+			Value: firestore.ArrayRemove(friendRequest.SenderUserId),
+		},
+	})
+	if receiverErr != nil {
+		log.Printf("Failed to update receiver friends list: %s", receiverErr.Error())
+		return
+	}
+}
+
+func DeclineFriendRequestHandler(httpCtx *fasthttp.RequestCtx, client *firestore.Client) {
+
+	firebaseCtx := middleware.GetRequestContext(httpCtx)
+
+	var friendRequest FriendRequest
+
+	log.Printf("DeclineFriendRequest body: %s\n", string(httpCtx.PostBody()))
+
+	if err := json.Unmarshal(httpCtx.PostBody(), &friendRequest); err != nil {
+		httpCtx.Error("Invalid request body", fasthttp.StatusBadRequest)
+		return
+	}
+
+	log.Printf("Parsed friend request: %+v\n", friendRequest)
+
+	if (!isAuthenticated(httpCtx, friendRequest.ReceiverUserId)) {
+		log.Printf("Unauthenticated request")
+		return
+	}
+
+	senderDocRef := client.Collection("users").Doc(friendRequest.SenderUserId)
+	receiverDocRef := client.Collection("users").Doc(friendRequest.ReceiverUserId)
+
+	if !validAcceptRequest(friendRequest.SenderUserId, senderDocRef, friendRequest.ReceiverUserId, receiverDocRef, firebaseCtx) {
+		httpCtx.SetStatusCode(fasthttp.StatusInternalServerError)
+		httpCtx.SetBodyString("Failed to parse receiver's document data")
+		return
+	}
+
+	_, senderErr := senderDocRef.Update(firebaseCtx, []firestore.Update{
+		{
+			Path:  "outgoingFriendRequests",
+			Value: firestore.ArrayRemove(friendRequest.ReceiverUserId),
+		},
+	})
+	if senderErr != nil {
+		log.Printf("Failed to update receiver friends list: %s", senderErr.Error())
+		return
+	}
+
+	_, receiverErr := receiverDocRef.Update(firebaseCtx, []firestore.Update{
+		{
+			Path:  "incomingFriendRequests",
+			Value: firestore.ArrayRemove(friendRequest.SenderUserId),
+		},
+	})
+	if receiverErr != nil {
+		log.Printf("Failed to update receiver friends list: %s", receiverErr.Error())
+		return
+	}
+}
