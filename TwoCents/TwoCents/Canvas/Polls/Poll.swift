@@ -37,7 +37,7 @@ struct Poll: Codable, Identifiable {
     var id: UUID
     var name: String
     var options: [Option] = []
-    var userId: String
+    var userId: String?
 
     /* Don't know if this is necessary maybe for sorting by lastUpdated -Eric
      

@@ -41,7 +41,7 @@ struct Todo: Codable, Identifiable {
     var id: UUID
     var name: String
     var todoList: [TodoItem] = []
-    var userId: String
+    var userId: String?
     
 
     func updateTodo(spaceId: String) {
