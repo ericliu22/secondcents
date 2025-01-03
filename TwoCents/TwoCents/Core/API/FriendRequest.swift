@@ -87,7 +87,6 @@ fileprivate func sendRequest(senderId: String, receiverId: String, url: URL) asy
     guard let firebaseToken = try? await AuthenticationManager.shared.getJwtToken() else {
         throw FriendRequestError.unauthorizedApp
     }
-    print(firebaseToken)
     
     // Prepare the request
     var request = URLRequest(url: url)

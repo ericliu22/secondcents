@@ -60,6 +60,7 @@
 		A2C6FE982C5ECAD40074C475 /* NewLinkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2C6FE972C5ECAD40074C475 /* NewLinkView.swift */; };
 		A2C6FE9A2C5ECC170074C475 /* NewLinkViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2C6FE992C5ECC170074C475 /* NewLinkViewModel.swift */; };
 		A2DAF34B2C07CB1C00E778FA /* Notifcations.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2DAF34A2C07CB1C00E778FA /* Notifcations.swift */; };
+		A2DCA8E42D2628F6008551EE /* DeepLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2DCA8E32D2628E7008551EE /* DeepLink.swift */; };
 		A2DDB1B92BB6806C00243E1B /* PollWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2DDB1B82BB6806C00243E1B /* PollWidget.swift */; };
 		A2DDB1BB2BB693FD00243E1B /* NewPollViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2DDB1BA2BB693FD00243E1B /* NewPollViewModel.swift */; };
 		A2DDB1BE2BB69DD800243E1B /* Poll.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2DDB1BD2BB69DD800243E1B /* Poll.swift */; };
@@ -240,6 +241,7 @@
 		A2C6FE972C5ECAD40074C475 /* NewLinkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewLinkView.swift; sourceTree = "<group>"; };
 		A2C6FE992C5ECC170074C475 /* NewLinkViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewLinkViewModel.swift; sourceTree = "<group>"; };
 		A2DAF34A2C07CB1C00E778FA /* Notifcations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notifcations.swift; sourceTree = "<group>"; };
+		A2DCA8E32D2628E7008551EE /* DeepLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeepLink.swift; sourceTree = "<group>"; };
 		A2DDB1B82BB6806C00243E1B /* PollWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollWidget.swift; sourceTree = "<group>"; };
 		A2DDB1BA2BB693FD00243E1B /* NewPollViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewPollViewModel.swift; sourceTree = "<group>"; };
 		A2DDB1BD2BB69DD800243E1B /* Poll.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Poll.swift; sourceTree = "<group>"; };
@@ -567,6 +569,7 @@
 		A2DAF3492C07CB0300E778FA /* API */ = {
 			isa = PBXGroup;
 			children = (
+				A2DCA8E32D2628E7008551EE /* DeepLink.swift */,
 				A2DAF34A2C07CB1C00E778FA /* Notifcations.swift */,
 				A26EFB1D2CFEC7CF00238622 /* FriendRequest.swift */,
 				A240F67A2C6965F100618903 /* Utilities.swift */,
@@ -1034,6 +1037,7 @@
 				A24087272D013265000E36DC /* AddFriendsFromContactsViewModel.swift in Sources */,
 				ABCDA06E2C39B04A002C23E1 /* NewTodoViewModel.swift in Sources */,
 				850958A72AB8F41D00018A32 /* HotSeat.swift in Sources */,
+				A2DCA8E42D2628F6008551EE /* DeepLink.swift in Sources */,
 				ABC461E52BE28ECF00AE47FF /* TestView.swift in Sources */,
 				85C6759B2AB8EE6100FACCB2 /* SuperlativeGame.swift in Sources */,
 				AB370E162C34FDF300C4431F /* QueryExtension.swift in Sources */,
