@@ -24,7 +24,6 @@ final class CanvasPageViewModel {
     var replyWidget: CanvasWidget?
     var canvasWidgets: [CanvasWidget] = []
     var spaceId: String
-    var isDrawing: Bool = false
     var inSettingsView: Bool = false
     var selectedDetent: PresentationDetent = .height(50)
     var photoLinkedToProfile: Bool = false
@@ -32,6 +31,8 @@ final class CanvasPageViewModel {
     var refreshId = UUID()
     var delegate: CanvasViewModelDelegate?
     var zoomScale: CGFloat = 1.0
+    var canvasMode: CanvasMode = .normal
+    var cursor: CGPoint = CGPoint(x: 0, y: 0)
 
     /* Eric: Don't delete this
      init(spaceId: String) {
@@ -40,6 +41,10 @@ final class CanvasPageViewModel {
      attachWidgetListener()
      }
      */
+    
+    enum CanvasMode {
+        case normal, placement, drawing
+    }
 
     enum CanvasSheet: Identifiable {
         case newWidgetView, chat, poll, newTextView, todo, image, video,

@@ -64,7 +64,7 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                 }
             }
             .fill(Color(UIColor.secondaryLabel)) // Dot color
-            .allowsHitTesting(viewModel.isDrawing)
+            .allowsHitTesting(viewModel.canvasMode == .drawing)
         }
 //        .drawingGroup()
         
@@ -88,6 +88,11 @@ struct CanvasPage: View, CanvasViewModelDelegate {
 //                .clipped() // Ensure the content does not overflow
 //                .animation(.spring()) // Optional: Add some animation
 //                .frame(width: FRAME_SIZE, height: FRAME_SIZE)
+            Image(systemName: "plus.circle.fill")
+                .resizable()
+                .position(viewModel.cursor)
+                .frame(width: 36, height: 36)
+                .foregroundColor(.red)
         }
         .dropDestination(for: CanvasWidget.self) { receivedWidgets, location in
             
@@ -107,7 +112,7 @@ struct CanvasPage: View, CanvasViewModelDelegate {
     
     @ToolbarContentBuilder
     func toolbar() -> some ToolbarContent {
-        if viewModel.isDrawing{
+        if viewModel.canvasMode == .drawing {
             //undo
             ToolbarItem(placement: .topBarTrailing) {
                 Button(action: {
@@ -183,7 +188,6 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                         viewModel.replyWidget = widget
                     }, label: {
                         Label("Reply", systemImage: "arrowshape.turn.up.left")
-                        //                            Image(systemName: "arrowshape.turn.up.left")
                     })
                     // Delete button
                     
@@ -300,52 +304,53 @@ struct CanvasPage: View, CanvasViewModelDelegate {
             EmptyView()
         }
     }
+
     
     @Environment(\.undoManager) private var undoManager
     var body: some View {
-        
-        ZoomableScrollView {
-            canvasView()
-                .frame(width: FRAME_SIZE * 1.5, height: FRAME_SIZE * 1.5)
-                .ignoresSafeArea()
-                .toolbar(.hidden, for: .tabBar)
-                .toolbar {toolbar()}
-                .navigationBarTitleDisplayMode(.inline)
+        ZStack {
+            ZoomableScrollView {
+                canvasView()
+                    .frame(width: FRAME_SIZE * 1.5, height: FRAME_SIZE * 1.5)
+                    .ignoresSafeArea()
+                    .toolbar(.hidden, for: .tabBar)
+                    .toolbar {toolbar()}
+                    .navigationBarTitleDisplayMode(.inline)
                 //SHOW BACKGROUND BY CHANGING BELOW TO VISIBLE
-                .toolbarBackground(.hidden, for: .navigationBar)
-                .navigationTitle(viewModel.isDrawing ? "" : viewModel.space?.name ?? "" )
-                .background(Color(UIColor.secondarySystemBackground))
+                    .toolbarBackground(.hidden, for: .navigationBar)
+                    .navigationTitle(viewModel.canvasMode != .normal ? "" : viewModel.space?.name ?? "" )
+                    .background(Color(UIColor.secondarySystemBackground))
                 //IMPORTANT
                 //onAppear and task must must must be here or else ZoomableScrollView is fucked
                 //Don't know the reason why -Eric
-                .onAppear(perform: {
-                    viewModel.activeSheet = .chat
-                    viewModel.delegate = self
-                    appModel.currentSpaceId = spaceId
-                    appModel.inSpace = true
-                    Task {
-                        await readNotifications(spaceId: spaceId, userId: appModel.user!.userId)
-                    }
-                })
-                .task{
-                    do {
-                        try await viewModel.loadCurrentSpace(spaceId: spaceId)
-                        //try await viewModel.loadCurrentUser()
-                        viewModel.attachWidgetListener()
-                    } catch {
-                        //EXIT IF SPACE DOES NOT EXIST
-                        presentationMode.wrappedValue.dismiss()
-                    }
-                    
-                    if let userInSpace = try? await viewModel.space?.members?.contains(getUID() ?? ""){
-                        print(userInSpace)
-                        if !userInSpace {
-                            //if user not in space, exit
+                    .onAppear(perform: {
+                        viewModel.activeSheet = .chat
+                        viewModel.delegate = self
+                        appModel.currentSpaceId = spaceId
+                        appModel.inSpace = true
+                        Task {
+                            await readNotifications(spaceId: spaceId, userId: appModel.user!.userId)
+                        }
+                    })
+                    .task{
+                        do {
+                            try await viewModel.loadCurrentSpace(spaceId: spaceId)
+                            viewModel.attachWidgetListener()
+                        } catch {
+                            //EXIT IF SPACE DOES NOT EXIST
                             presentationMode.wrappedValue.dismiss()
                         }
+                        
+                        if let userInSpace = try? await viewModel.space?.members?.contains(getUID() ?? ""){
+                            print(userInSpace)
+                            if !userInSpace {
+                                //if user not in space, exit
+                                presentationMode.wrappedValue.dismiss()
+                            }
+                        }
                     }
-                }
-            
+                
+            }
         }
         .ignoresSafeArea()
         .sheet(item: $viewModel.activeSheet, onDismiss: {
@@ -431,6 +436,7 @@ struct CanvasPage: View, CanvasViewModelDelegate {
         }
         .background(  Color(UIColor.secondarySystemBackground))
         .environment(viewModel)
+        
     }
 }
 

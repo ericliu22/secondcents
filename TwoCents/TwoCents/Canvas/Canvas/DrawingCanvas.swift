@@ -33,8 +33,8 @@ struct DrawingCanvas: UIViewRepresentable {
     }
     
     func updateUIView(_ uiView: PKCanvasView, context: Context) {
-        canvas.drawingGestureRecognizer.isEnabled = canvasViewModel.isDrawing
-        toolPicker.setVisible(canvasViewModel.isDrawing, forFirstResponder: canvas)
+        canvas.drawingGestureRecognizer.isEnabled = canvasViewModel.canvasMode == .drawing
+        toolPicker.setVisible(canvasViewModel.canvasMode == .drawing, forFirstResponder: canvas)
     }
     
     func attachDrawingListener() {
