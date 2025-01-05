@@ -15,6 +15,7 @@ struct NewLinkView: View {
     
     @State var viewModel = NewLinkViewModel()
     @Environment(AppModel.self) var appModel
+    @Environment(CanvasPageViewModel.self) var canvasViewModel
     
     @FocusState private var isTextFieldFocused: Bool
     @Environment(\.dismiss) var dismissScreen
@@ -78,7 +79,9 @@ struct NewLinkView: View {
                                     showingView = false
                                     closeNewWidgetview = true
                                     let newLink = CanvasWidget(x: 0, y: 0, borderColor: Color.accentColor, userId: userId, media: .link, mediaURL: url)
-                                    SpaceManager.shared.uploadWidget(spaceId: spaceId, widget: newLink)
+                                    canvasViewModel.newWidget = newLink
+                                    canvasViewModel.canvasMode = .placement
+                                    
                                 } else {
                                     print("Error: User ID or URL is nil")
                                 }

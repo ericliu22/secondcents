@@ -13,6 +13,7 @@ import Charts
 struct NewTodoView: View{
     private var spaceId: String
     @Environment(AppModel.self) var appModel
+    @Environment(CanvasPageViewModel.self) var canvasViewModel
     @StateObject private var viewModel: NewTodoModel
     
     @State private var showingView: Bool = false
@@ -205,7 +206,10 @@ struct NewTodoView: View{
                             
                             viewModel.addItem(todoArray: viewModel.todoArray, userArray: viewModel.mentionedUsers)
                             Task{
-                                await viewModel.createNewTodo()
+                                if let newTodo = await viewModel.createNewTodo() {
+                                    canvasViewModel.newWidget = newTodo
+                                    canvasViewModel.canvasMode = .placement
+                                }
                             }
                             showingView = false
                             

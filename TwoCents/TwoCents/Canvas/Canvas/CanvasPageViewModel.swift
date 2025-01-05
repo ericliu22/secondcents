@@ -22,6 +22,7 @@ final class CanvasPageViewModel {
     var activeWidget: CanvasWidget?
     var activeSheet: CanvasSheet?
     var replyWidget: CanvasWidget?
+    var newWidget: CanvasWidget? = CanvasWidget(borderColor: .red, userId: "xOEUuSr8q4UIC9Xrs14kO6gHpoD3", media: .text, textString: "Some New Widget")
     var canvasWidgets: [CanvasWidget] = []
     var spaceId: String
     var inSettingsView: Bool = false
@@ -33,6 +34,7 @@ final class CanvasPageViewModel {
     var zoomScale: CGFloat = 1.0
     var canvasMode: CanvasMode = .normal
     var cursor: CGPoint = CGPoint(x: 0, y: 0)
+    var widgetCursor: CGPoint = CGPoint(x: 0, y: 0)
 
     /* Eric: Don't delete this
      init(spaceId: String) {
@@ -110,6 +112,20 @@ final class CanvasPageViewModel {
                 }
             }
     }
+    
+    func confirmPlacement() {
+        guard let newWidget = newWidget else {
+            print("New Widget is nil")
+            return
+        }
+        
+        var uploadWidget = newWidget
+        uploadWidget.x = widgetCursor.x
+        uploadWidget.y = widgetCursor.y
+        SpaceManager.shared.uploadWidget(spaceId: spaceId, widget: uploadWidget)
+        self.newWidget = nil
+        canvasMode = .normal
+    }
 
     func deleteWidget(widget: CanvasWidget) {
         if let index = canvasWidgets.firstIndex(of: widget) {
@@ -117,23 +133,24 @@ final class CanvasPageViewModel {
             SpaceManager.shared.removeWidget(spaceId: spaceId, widget: widget)
 
             //delete specific widget items (in their own folders)
+            deleteAssociatedWidget(spaceId: spaceId, widgetId: widget.id.uuidString, media: widget.media)
 
-            switch widget.media {
-
-            case .poll:
-                deletePoll(spaceId: spaceId, pollId: widget.id.uuidString)
-            case .todo:
-                deleteTodoList(spaceId: spaceId, todoId: widget.id.uuidString)
-
-            case .calendar:
-                deleteCalendar(
-                    spaceId: spaceId, calendarId: widget.id.uuidString)
-            default:
-                break
-
-            }
             activeSheet = .chat
 
+        }
+    }
+    
+    func deleteAssociatedWidget(spaceId: String, widgetId: String, media: Media) {
+        switch media {
+            case .poll:
+                deletePoll(spaceId: spaceId, pollId: widgetId)
+            case .todo:
+                deleteTodoList(spaceId: spaceId, todoId: widgetId)
+            case .calendar:
+                deleteCalendar(
+                    spaceId: spaceId, calendarId: widgetId)
+            default:
+                break
         }
     }
 

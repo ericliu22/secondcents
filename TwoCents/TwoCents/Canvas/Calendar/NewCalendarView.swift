@@ -4,6 +4,7 @@ import Firebase
 
 struct NewCalendarView: View {
     
+    @Environment(CanvasPageViewModel.self) var canvasViewModel
     @State private var spaceId: String
     @State private var showingView: Bool = false
     @State private var userColor: Color = Color.gray
@@ -121,7 +122,8 @@ struct NewCalendarView: View {
                         Button(action: {
                             let userId = try? AuthenticationManager.shared.getAuthenticatedUser().uid
                             let newWidget = CanvasWidget(x: 0, y: 0, borderColor: Color.accentColor, userId: userId ?? "", media: .calendar)
-                            SpaceManager.shared.uploadWidget(spaceId: spaceId, widget: newWidget)
+                            canvasViewModel.newWidget = newWidget
+                            canvasViewModel.canvasMode = .placement
                             self.createdWidgetId = newWidget.id.uuidString
                             saveCalendar(userId: userId ?? "")
                             closeNewWidgetview = true

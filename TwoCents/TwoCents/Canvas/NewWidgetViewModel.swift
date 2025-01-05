@@ -11,35 +11,27 @@ import PhotosUI
 import AVFoundation
 
 
-@MainActor
-final class NewWidgetViewModel: ObservableObject{
+@Observable @MainActor
+final class NewWidgetViewModel {
     
+    var loading: Bool = false
+    var widgets: [CanvasWidget] = [ imageViewTest, /*videoViewTest,*/ mapViewTest, todoViewTest, pollViewTest, calendarViewTest, textViewTest, linkViewTest]
+    var tempWidget: CanvasWidget?
+    var latestImage: UIImage?
+    var latestVideoThumbnail: UIImage?
     
-    @Published private(set) var space:  DBSpace? = nil
-    func loadCurrentSpace(spaceId: String) async throws {
-        
-        self.space = try await SpaceManager.shared.getSpace(spaceId: spaceId)
-        
-    }
-    
-    
- 
-    @Published var loading: Bool = false
-//    @Published var widgetId = UUID().uuidString
-    
-    
+
+    private var spaceId: String
     private var path = ""
     private var url = ""
     
-    
-    @Published var widgets: [CanvasWidget] = [ imageViewTest, /*videoViewTest,*/ mapViewTest, todoViewTest, pollViewTest, calendarViewTest, textViewTest, linkViewTest]
-    
-    @Published var tempWidget: CanvasWidget?
-    
+    init(spaceId: String) {
+        self.spaceId = spaceId
+    }
+
     func saveTempVideo(item: PhotosPickerItem, widgetId: String, completion: @escaping (Bool) -> Void) {
         
         print("saving temp video")
-        guard let space else { return }
         Task {
             
             guard let data = try await item.loadTransferable(type: Data.self) else {
@@ -51,7 +43,7 @@ final class NewWidgetViewModel: ObservableObject{
                 return
             }
             
-            let (path, name) = try await StorageManager.shared.saveTempWidgetVideo(data: videoData, spaceId: space.spaceId, widgetId: widgetId)
+            let (path, name) = try await StorageManager.shared.saveTempWidgetVideo(data: videoData, spaceId: spaceId, widgetId: widgetId)
             print("Saved video")
             print(path)
             let url = try await StorageManager.shared.getURLForVideo(path: path)
@@ -72,15 +64,13 @@ final class NewWidgetViewModel: ObservableObject{
     func saveTempImage(item: PhotosPickerItem, widgetId: String, completion: @escaping (Bool) -> Void) {
       
     
-        guard let space else { return }
-        
         Task {
             
             guard let data = try await item.loadTransferable(type: Data.self) else { return }
             if let image = UIImage(data: data), let imageData = resizeImage(image: image, targetSize: CGSize(width: 250, height: 250))?.jpegData(compressionQuality: 1)  {
                 
                 
-                let (path, name) = try await StorageManager.shared.saveTempWidgetPic(data: imageData, spaceId: space.spaceId, widgetId: widgetId)
+                let (path, name) = try await StorageManager.shared.saveTempWidgetPic(data: imageData, spaceId: spaceId, widgetId: widgetId)
                 print ("Saved Image")
                 print (path)
                 let url = try await StorageManager.shared.getURLForImage(path: path)
@@ -206,9 +196,6 @@ final class NewWidgetViewModel: ObservableObject{
            }
        }
     
-    
-    @Published var latestImage: UIImage? 
-    @Published var latestVideoThumbnail: UIImage?
     
     
        

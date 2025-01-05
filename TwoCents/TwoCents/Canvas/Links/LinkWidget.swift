@@ -62,12 +62,14 @@ struct LinkView: UIViewRepresentable {
     }
 
     func updateUIView(_ uiView: LPLinkView, context: Context) {
-        NSLayoutConstraint.deactivate(uiView.constraints)
-        NSLayoutConstraint.activate([
-            uiView.widthAnchor.constraint(equalToConstant: width),
-            uiView.heightAnchor.constraint(equalToConstant: height),
-        ])
-        uiView.invalidateIntrinsicContentSize()
+        DispatchQueue.main.async {
+            NSLayoutConstraint.deactivate(uiView.constraints)
+            NSLayoutConstraint.activate([
+                uiView.widthAnchor.constraint(equalToConstant: width),
+                uiView.heightAnchor.constraint(equalToConstant: height),
+            ])
+            uiView.invalidateIntrinsicContentSize()
+        }
     }
 
     private func hideTextSubviews(in view: UIView) {

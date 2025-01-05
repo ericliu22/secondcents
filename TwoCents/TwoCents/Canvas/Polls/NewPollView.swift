@@ -13,6 +13,7 @@ import Charts
 struct NewPoll: View{
     private var spaceId: String
     @StateObject private var pollModel: NewPollModel
+    @Environment(CanvasPageViewModel.self) var canvasViewModel
     
     @State private var showingView: Bool = false
     
@@ -109,11 +110,13 @@ struct NewPoll: View{
                             Task{
                                 
                                 pollModel.addOptions(OptionArray: OptionsArray)
-                                await pollModel.createNewPoll()
                                 showingView = false
                                 
                                 closeNewWidgetview = true
-                                
+                                if let newPoll = await pollModel.createNewPoll() {
+                                    canvasViewModel.newWidget = newPoll
+                                    canvasViewModel.canvasMode = .placement
+                                }
                                 
                             }
                         }, label: {

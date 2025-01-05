@@ -88,7 +88,9 @@ struct ZoomableScrollView<Content: View>: UIViewRepresentable {
         private func resetIdleTimer(_ scrollView: UIScrollView) {
             idleTimer?.invalidate()
             idleTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false) { [weak self] _ in
-                self?.autoCenterOnCursor(scrollView)
+                if self?.canvasViewModel.canvasMode == .normal {
+                    self?.autoCenterOnCursor(scrollView)
+                }
             }
         }
         
@@ -158,6 +160,7 @@ struct ZoomableScrollView<Content: View>: UIViewRepresentable {
                 print("updateCenter: subview not ready yet")
                 return
             }
+            
             // 1) The center in the zoomed coordinate system:
             let zoomedCenterX = scrollView.contentOffset.x + (scrollView.bounds.width / 2)
             let zoomedCenterY = scrollView.contentOffset.y + (scrollView.bounds.height / 2)
@@ -165,6 +168,11 @@ struct ZoomableScrollView<Content: View>: UIViewRepresentable {
             // 2) Convert to unscaled coordinates by dividing out zoomScale:
             var unscaledCenterX = zoomedCenterX / scrollView.zoomScale
             var unscaledCenterY = zoomedCenterY / scrollView.zoomScale
+            
+            canvasViewModel.widgetCursor = CGPoint(
+                x: roundToTile(number: unscaledCenterX),
+                y: roundToTile(number: unscaledCenterY)
+            )
             
             // 3) If you want (0,0) to be the subview’s center:
             let unscaledWidth  = hostedView.intrinsicContentSize.width

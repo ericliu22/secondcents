@@ -161,14 +161,6 @@ final class SpaceManager{
             print("Some shit fucked up")
         }
         
-        Task {
-            guard let space: DBSpace = try? await SpaceManager.shared.getSpace(spaceId: spaceId) else {
-                return
-            }
-            //Race condition: widgets can overlap if user tries to move a widget while user creates a widget
-            //Tbh who cares skill issue
-            await moveToEmptySpace(space: space, widgetId: uploadWidget.id.uuidString)
-        }
     }
     
     func moveToEmptySpace(space: DBSpace, widgetId: String) async {

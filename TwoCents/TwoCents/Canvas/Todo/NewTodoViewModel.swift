@@ -37,7 +37,7 @@ class NewTodoModel: ObservableObject {
     
     
     @MainActor
-    func createNewTodo() async {
+    func createNewTodo() async -> CanvasWidget? {
         
         isLoading = true
         
@@ -50,7 +50,7 @@ class NewTodoModel: ObservableObject {
             user = try await UserManager.shared.getUser(userId: uid)
         } catch {
             print("Error getting user in ViewModel")
-            return
+            return nil
         }
 
         let (width, height) = SpaceManager.shared.getMultipliedSize(widthMultiplier: 1, heightMultiplier: 2)
@@ -73,9 +73,8 @@ class NewTodoModel: ObservableObject {
         self.newItemName = ""
         self.newTodoItem = []
         
-        SpaceManager.shared.uploadWidget(spaceId: spaceId, widget: newCanvasWidget)
         //@TODO: Dismiss after submission
-        
+        return newCanvasWidget
     }
     
     

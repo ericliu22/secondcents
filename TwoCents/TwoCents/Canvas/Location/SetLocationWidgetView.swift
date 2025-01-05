@@ -9,6 +9,8 @@ struct IdentifiableLocation: Identifiable {
 
 struct SetLocationWidgetView: View {
     @StateObject private var locationManager = LocationManager()
+    @Environment(CanvasPageViewModel.self) var canvasViewModel
+    
     @State private var region = MKCoordinateRegion(
         center: CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194),
         span: MKCoordinateSpan(latitudeDelta: 0.005, longitudeDelta: 0.005)
@@ -300,9 +302,8 @@ struct SetLocationWidgetView: View {
             
         )
         
-        
-        SpaceManager.shared.uploadWidget(spaceId: spaceId, widget: newCanvasWidget)
-        //@TODO: Dismiss after submission
+        canvasViewModel.newWidget = newCanvasWidget
+        canvasViewModel.canvasMode = .placement
         
     }
     

@@ -83,16 +83,12 @@ struct CanvasPage: View, CanvasViewModelDelegate {
             
             Background()
             GridView()
+            NewWidgetOverlay()
 //            DrawingCanvas(spaceId: spaceId)
 //                .allowsHitTesting(viewModel.isDrawing)
 //                .clipped() // Ensure the content does not overflow
 //                .animation(.spring()) // Optional: Add some animation
 //                .frame(width: FRAME_SIZE, height: FRAME_SIZE)
-            Image(systemName: "plus.circle.fill")
-                .resizable()
-                .position(viewModel.cursor)
-                .frame(width: 36, height: 36)
-                .foregroundColor(.red)
         }
         .dropDestination(for: CanvasWidget.self) { receivedWidgets, location in
             
@@ -108,6 +104,27 @@ struct CanvasPage: View, CanvasViewModelDelegate {
             return true
         }
         
+    }
+    
+    @ViewBuilder
+    func NewWidgetOverlay() -> some View {
+        if viewModel.canvasMode == .placement {
+            if let widget = viewModel.newWidget {
+                MediaView(widget: widget, spaceId: spaceId)
+                    .environment(viewModel)
+                    .cornerRadius(CORNER_RADIUS)
+                    .frame(
+                        width: widget.width,
+                        height: widget.height
+                    )
+                    .position(viewModel.widgetCursor)
+                    .offset(x: widget.width/2, y: widget.height/2)
+                    .animation(.spring(), value: widget.x) // Add animation for x position
+                    .animation(.spring(), value: widget.y) // Add animation for y position
+            }
+        } else {
+            EmptyView()
+        }
     }
     
     @ToolbarContentBuilder
@@ -141,32 +158,54 @@ struct CanvasPage: View, CanvasViewModelDelegate {
 //            })
 //        }
         //add widget
-        ToolbarItem(placement: .topBarTrailing) {
-            Button(action: {
-                viewModel.activeSheet = .newWidgetView
-                
-            }, label: {
-                Image(systemName: "plus.circle")
-            })
-        }
-        
-        //SPACE SETTINGS
-        ToolbarItem(placement: .topBarTrailing) {
+        if viewModel.canvasMode != .placement {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button(action: {
+                    viewModel.activeSheet = .newWidgetView
+                    
+                }, label: {
+                    Image(systemName: "plus.circle")
+                })
+            }
             
-            NavigationLink {
+            //SPACE SETTINGS
+            ToolbarItem(placement: .topBarTrailing) {
                 
-                SpaceSettingsView(spaceId: spaceId)
-                    .onAppear {
-                        viewModel.activeSheet = nil
-                        viewModel.inSettingsView = true
+                NavigationLink {
+                    
+                    SpaceSettingsView(spaceId: spaceId)
+                        .onAppear {
+                            viewModel.activeSheet = nil
+                            viewModel.inSettingsView = true
+                        }
+                        .onDisappear {
+                            viewModel.activeSheet = .chat
+                            viewModel.inSettingsView = false
+                        }
+                } label: {
+                    Image(systemName: "ellipsis")
+                    
+                }
+            }
+        } else {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button(action: {
+                    viewModel.confirmPlacement()
+                }, label: {
+                    Image(systemName: "checkmark.circle")
+                })
+            }
+            ToolbarItem(placement: .topBarTrailing) {
+                Button(action: {
+                    viewModel.canvasMode = .normal
+                    
+                    guard let newWidget = viewModel.newWidget else {
+                        return
                     }
-                    .onDisappear {
-                        viewModel.activeSheet = .chat
-                        viewModel.inSettingsView = false
-                    }
-            } label: {
-                Image(systemName: "ellipsis")
-                
+                    viewModel.deleteAssociatedWidget(spaceId: spaceId, widgetId: newWidget.id.uuidString, media: newWidget.media)
+                }, label: {
+                    Image(systemName: "x.circle")
+                })
             }
         }
     }
@@ -360,6 +399,7 @@ struct CanvasPage: View, CanvasViewModelDelegate {
             switch item {
             case .newWidgetView:
                 NewWidgetView(spaceId: spaceId)
+                    .environment(viewModel)
                 //                            .presentationBackground(Color(UIColor.systemBackground))
                     .presentationBackground(.thickMaterial)
             case .chat:

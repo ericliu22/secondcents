@@ -34,25 +34,20 @@ struct NewWidgetView: View {
     
 //    @State private var userColor: Color = .gray
     
-    @StateObject private var viewModel = NewWidgetViewModel()
+    @State var viewModel: NewWidgetViewModel
     @Environment(CanvasPageViewModel.self) var canvasViewModel
     @Environment(AppModel.self) var appModel
-    
     @Environment(\.dismiss) var dismissScreen
-    
-    
-    
-    
-    //    @Binding var showNewWidgetView: Bool
-    
     
     @State private var selectedPhoto: PhotosPickerItem? = nil
     @State private var selectedVideo: PhotosPickerItem? = nil
-    //    @State private var imagePreview: UIImage?
-    
     @State var spaceId: String
-    
     @State var closeNewWidgetview: Bool = false
+    
+    init(spaceId: String) {
+        self.spaceId = spaceId
+        self.viewModel = NewWidgetViewModel(spaceId: spaceId)
+    }
     
     
     private let columns = [
@@ -200,8 +195,9 @@ struct NewWidgetView: View {
             print("NewWidgetView/imageSave: Failed to upload image")
             return
         }
-        SpaceManager.shared.uploadWidget(spaceId: spaceId, widget: tempWidget)
-        
+        canvasViewModel.newWidget = tempWidget
+        canvasViewModel.canvasMode = .placement
+
         if !viewModel.loading {
             canvasViewModel.photoLinkedToProfile = true
         }
@@ -213,8 +209,9 @@ struct NewWidgetView: View {
             print("NewWidgetView/imageSave: Failed to upload image")
             return
         }
-        SpaceManager.shared.uploadWidget(spaceId: spaceId, widget: tempWidget)
-        
+        canvasViewModel.newWidget = tempWidget
+        canvasViewModel.canvasMode = .placement
+
         if !viewModel.loading {
             canvasViewModel.photoLinkedToProfile = true
         }
@@ -342,13 +339,9 @@ struct NewWidgetView: View {
             }
             .onChange(of: closeNewWidgetview) { oldValue, newValue in
                 if newValue {
+                    
                     dismissScreen()
                 }
-            }
-            .task{
-                try? await viewModel.loadCurrentSpace(spaceId: spaceId)
-                print(viewModel.space?.name ?? "Space not available")
-                
             }
             .onAppear {
                 viewModel.loadLatestMedia()

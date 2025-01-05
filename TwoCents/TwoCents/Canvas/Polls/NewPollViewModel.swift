@@ -42,7 +42,7 @@ class NewPollModel: ObservableObject {
     
     
     @MainActor
-    func createNewPoll() async {
+    func createNewPoll() async -> CanvasWidget? {
         
         isLoading = true
         
@@ -55,7 +55,7 @@ class NewPollModel: ObservableObject {
             user = try await UserManager.shared.getUser(userId: uid)
         } catch {
             print("Error getting user in NewPollViewModel")
-            return
+            return nil
         }
         
         let (width, height): (CGFloat, CGFloat) = SpaceManager.shared.getMultipliedSize(widthMultiplier: 1, heightMultiplier: 2)
@@ -79,9 +79,8 @@ class NewPollModel: ObservableObject {
         self.newOptionName = ""
         self.newPollOptions = []
         
-        SpaceManager.shared.uploadWidget(spaceId: spaceId, widget: newCanvasWidget)
         //@TODO: Dismiss after submission
-        
+        return newCanvasWidget
     }
     
 //    func addOption() {

@@ -13,6 +13,7 @@ struct NewTextWidgetView: View {
     @State private var inputText: String = ""
 //    @Binding var showPopup: Bool
     @Environment(AppModel.self) var appModel
+    @Environment(CanvasPageViewModel.self) var canvasViewModel
 
     @StateObject private var viewModel = NewTextWidgetViewModel()
     
@@ -87,7 +88,9 @@ struct NewTextWidgetView: View {
                         
                         closeNewWidgetview = true
                         let newText = CanvasWidget(x: 0, y: 0, borderColor: Color.accentColor, userId: userId, media: .text, textString: inputText)
-                        SpaceManager.shared.uploadWidget(spaceId: spaceId, widget: newText)
+                        
+                        canvasViewModel.newWidget = newText
+                        canvasViewModel.canvasMode = .placement
                         
                         inputText = ""
                         
