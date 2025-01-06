@@ -22,7 +22,7 @@ final class CanvasPageViewModel {
     var activeWidget: CanvasWidget?
     var activeSheet: CanvasSheet?
     var replyWidget: CanvasWidget?
-    var newWidget: CanvasWidget? = CanvasWidget(borderColor: .red, userId: "xOEUuSr8q4UIC9Xrs14kO6gHpoD3", media: .text, textString: "Some New Widget")
+    var newWidget: CanvasWidget?
     var canvasWidgets: [CanvasWidget] = []
     var spaceId: String
     var inSettingsView: Bool = false
@@ -33,7 +33,6 @@ final class CanvasPageViewModel {
     var delegate: CanvasViewModelDelegate?
     var canvasMode: CanvasMode = .normal
     var zoomScale: CGFloat = 1.0
-    var canvasMode: CanvasMode = .normal
     var cursor: CGPoint = CGPoint(x: 0, y: 0)
     var widgetCursor: CGPoint = CGPoint(x: 0, y: 0)
 
