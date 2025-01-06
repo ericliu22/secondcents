@@ -20,9 +20,9 @@ struct PollWidgetSheetView: View {
     private var widget: CanvasWidget
     @State var poll: Poll?
     @State var totalVotes: Int = 0
+    @State var userVote: [String: Int] = [:]
     
-    
-    
+    @Environment(AppModel.self) var appModel
     @Environment(\.dismiss) var dismissScreen
     
     
@@ -34,9 +34,6 @@ struct PollWidgetSheetView: View {
     }
     
     func fetchPoll() {
-        Task {
-            //                        print("fetching")
-            
             db.collection("spaces")
                 .document(spaceId)
                 .collection("polls")
@@ -53,9 +50,9 @@ struct PollWidgetSheetView: View {
                             //                                                        print(pollData)
                             
                             self.poll = pollData
+                            
                             totalVotes = poll!.totalVotes()
 //                            print("YOUR POLL IS \(self.poll)")
-                            
                             // Update your SwiftUI view with the retrieved poll data.
                         } else {
                             print("Document data is empty.")
@@ -65,8 +62,6 @@ struct PollWidgetSheetView: View {
                         // Handle the decoding error, such as displaying an error message to the user.
                     }
                 }
-            
-        }
     }
     
     
@@ -190,7 +185,7 @@ struct PollWidgetSheetView: View {
                     //                                      GridItem(.flexible())], spacing: nil){
                     ForEach(0..<poll!.options.count) { index in
                         Button(action: {
-                            poll!.incrementOption(index: index)
+                            poll!.incrementOption(index: index, userVoted: appModel.user?.userId != nil ? poll!.votes?[appModel.user!.userId] : nil, userId: appModel.user?.userId)
                             totalVotes = poll!.totalVotes()
                             poll!.updatePoll(spaceId: spaceId)
                         }, label: {

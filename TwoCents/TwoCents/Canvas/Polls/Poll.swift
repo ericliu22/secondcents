@@ -38,6 +38,7 @@ struct Poll: Codable, Identifiable {
     var name: String
     var options: [Option] = []
     var userId: String?
+    var votes: [String: Int]?
 
     /* Don't know if this is necessary maybe for sorting by lastUpdated -Eric
      
@@ -49,26 +50,44 @@ struct Poll: Codable, Identifiable {
      */
     
 
-    mutating func incrementOption(index: Int) {
+    mutating func incrementOption(index: Int, userVoted: Int?, userId: String?) {
+        if index == userVoted {
+            return
+        }
+        
+        //@TODO: There is race condition here
+        if userVoted != index && userVoted != nil {
+            options[userVoted!].count -= 1
+        }
+        
         options[index].count += 1
+
+        guard let userId = userId else {
+            return
+        }
+        
+        if votes != nil {
+            votes![userId] = index
+        } else {
+            votes = [:]
+            votes![userId] = index
+        }
     }
-    
-    
-    
     
     func updatePoll(spaceId: String) {
         // Convert options to an array of dictionaries
         let optionsData = options.map { $0.toDictionary() }
         
         let data: [String: Any] = [
-            "options": optionsData
+            "options": optionsData,
+            "votes": votes ?? [:]
         ]
      
-            db.collection("spaces")
-                .document(spaceId)
-                .collection("polls")
-                .document(id.uuidString)
-                .updateData(data)
+        db.collection("spaces")
+            .document(spaceId)
+            .collection("polls")
+            .document(id.uuidString)
+            .updateData(data)
       
     }
 

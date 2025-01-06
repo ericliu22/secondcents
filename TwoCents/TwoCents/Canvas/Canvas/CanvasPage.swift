@@ -264,6 +264,7 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                             height: widget.height
                         )
                         .environment(viewModel)
+                        .environment(appModel)
                 }
                
         }

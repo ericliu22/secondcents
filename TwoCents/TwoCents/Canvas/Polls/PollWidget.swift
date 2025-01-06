@@ -21,6 +21,7 @@ struct PollWidget: WidgetView {
     var widget: CanvasWidget
     @State var poll: Poll?
     @State var totalVotes: Int = 0
+    @Environment(AppModel.self) var appModel
     
     
     init(widget: CanvasWidget, spaceId: String) {
@@ -170,7 +171,7 @@ struct PollWidget: WidgetView {
                         
                         ForEach(0..<poll.options.count) { index in
                             Button(action: {
-                                self.poll!.incrementOption(index: index)
+                                self.poll!.incrementOption(index: index, userVoted: appModel.user?.userId != nil ? poll.votes?[appModel.user!.userId] : nil, userId: appModel.user?.userId)
                                 totalVotes = self.poll!.totalVotes()
                                 self.poll!.updatePoll(spaceId: spaceId)
                             }, label: {
