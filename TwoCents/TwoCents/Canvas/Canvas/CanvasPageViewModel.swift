@@ -31,6 +31,7 @@ final class CanvasPageViewModel {
     var widgetId: String = UUID().uuidString
     var refreshId = UUID()
     var delegate: CanvasViewModelDelegate?
+    var canvasMode: CanvasMode = .normal
     var zoomScale: CGFloat = 1.0
     var canvasMode: CanvasMode = .normal
     var cursor: CGPoint = CGPoint(x: 0, y: 0)
