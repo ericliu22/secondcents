@@ -113,7 +113,17 @@ struct ZoomableScrollView<Content: View>: UIViewRepresentable {
         func scrollViewDidScroll(_ scrollView: UIScrollView) {
             updateCenter(for: scrollView)
             resetIdleTimer(scrollView)
+            checkVisibleBounds(scrollView)
+        }
+        
+        func scrollViewDidZoom(_ scrollView: UIScrollView) {
+            updateContentSize(for: scrollView)
+            updateCenter(for: scrollView)
+            resetIdleTimer(scrollView)
+            checkVisibleBounds(scrollView)
+        }
 
+        private func checkVisibleBounds(_ scrollView: UIScrollView) {
             let visibleOrigin = scrollView.contentOffset
             let visibleSize = scrollView.bounds.size
             let visibleRect = CGRect(origin: visibleOrigin, size: visibleSize)
@@ -198,12 +208,6 @@ struct ZoomableScrollView<Content: View>: UIViewRepresentable {
             } catch {
                 print("Failed to remove widget from unreads: \(error)")
             }
-        }
-
-        func scrollViewDidZoom(_ scrollView: UIScrollView) {
-            updateContentSize(for: scrollView)
-            updateCenter(for: scrollView)
-            resetIdleTimer(scrollView)
         }
 
         private func updateContentSize(for scrollView: UIScrollView) {
