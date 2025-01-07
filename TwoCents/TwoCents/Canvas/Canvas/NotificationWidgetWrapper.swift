@@ -14,8 +14,6 @@ struct NotificationWidgetWrapper : View {
     let widgetUserId: String
     private let FOREGROUND_COLOR: Color = .white
     private let SIZE = 20.0
-    private let x = 20.0
-    private let y = 12.0
     
     init(widgetUserId: String) {
         self.widgetUserId = widgetUserId
@@ -37,12 +35,13 @@ struct NotificationWidgetWrapper : View {
             Capsule()
                 .fill(loadedColor)
                 .frame(width: SIZE, height: SIZE, alignment: .topTrailing)
-                .position(x: x, y: y)
             
             Text("New")
                 .foregroundColor(FOREGROUND_COLOR)
                 .font(Font.caption)
-                .position(x: x, y: y)
+        }
+        .task {
+            await loadColor(widgetUserId: widgetUserId)
         }
     }
     

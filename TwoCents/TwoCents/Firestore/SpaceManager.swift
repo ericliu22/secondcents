@@ -157,6 +157,9 @@ final class SpaceManager{
                 .document(uploadWidget.id.uuidString)
                 .setData(from: uploadWidget)
             widgetNotification(spaceId: spaceId, userUID: uid, widget: widget)
+            Task {
+                await widgetUnread(spaceId: spaceId, widgetId: widget.id.uuidString)
+            }
         } catch {
             print("Some shit fucked up")
         }

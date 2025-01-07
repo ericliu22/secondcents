@@ -214,6 +214,7 @@ struct CanvasPage: View, CanvasViewModelDelegate {
     func GridView() -> some View {
         ForEach(viewModel.canvasWidgets, id:\.id) { widget in
             //main widget
+            ZStack {
             MediaView(widget: widget, spaceId: spaceId)
                 .environment(viewModel)
                 .contextMenu(ContextMenu(menuItems: {
@@ -246,13 +247,14 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                 .position(x: widget.x ??  FRAME_SIZE/2, y: widget.y ?? FRAME_SIZE/2)
                 .offset(x: widget.width/2, y: widget.height/2)
                 .overlay {
-                    viewModel.selectedWidget == nil ?
-                    EmojiCountOverlayView(spaceId: spaceId, widget: widget)
-                        .offset(x: widget.width/2, y: widget.height)
-                        .position(x: widget.x ??  FRAME_SIZE/2, y: widget.y ?? FRAME_SIZE/2)
-                        .id(viewModel.refreshId)
-                    
-                    : nil
+                        if viewModel.selectedWidget == nil {
+                            EmojiCountOverlayView(spaceId: spaceId, widget: widget)
+                                .offset(x: widget.width/2, y: widget.height)
+                                .position(x: widget.x ??  FRAME_SIZE/2, y: widget.y ?? FRAME_SIZE/2)
+                                .id(viewModel.refreshId)
+                        } else {
+                            EmptyView()
+                        }
                 }
                 .animation(.spring(), value: widget.x) // Add animation for x position
                 .animation(.spring(), value: widget.y) // Add animation for y position
@@ -266,7 +268,12 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                         .environment(viewModel)
                         .environment(appModel)
                 }
-               
+                if viewModel.unreadWidgets.contains(where: {unread in
+                    return unread == widget.id.uuidString}) {
+                        NotificationWidgetWrapper(widgetUserId: widget.userId)
+                            .position(x: widget.x ?? FRAME_SIZE/2, y: widget.y ?? FRAME_SIZE/2)
+                }
+            }
         }
     }
     
@@ -368,26 +375,18 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                         viewModel.delegate = self
                         appModel.currentSpaceId = spaceId
                         appModel.inSpace = true
-                        Task {
-                            await readNotifications(spaceId: spaceId, userId: appModel.user!.userId)
-                        }
                     })
                     .task{
                         do {
-                            try await viewModel.loadCurrentSpace(spaceId: spaceId)
+                            try await viewModel.loadCurrentSpace()
                             viewModel.attachWidgetListener()
                         } catch {
                             //EXIT IF SPACE DOES NOT EXIST
                             presentationMode.wrappedValue.dismiss()
                         }
                         
-                        if let userInSpace = try? await viewModel.space?.members?.contains(getUID() ?? ""){
-                            print(userInSpace)
-                            if !userInSpace {
-                                //if user not in space, exit
-                                presentationMode.wrappedValue.dismiss()
-                            }
-                        }
+                        await viewModel.loadUnreadWidgets(userId: appModel.user!.userId)
+                        await readNotifications(spaceId: spaceId, userId: appModel.user!.userId)
                     }
                 
             }

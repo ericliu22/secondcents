@@ -74,6 +74,15 @@ func widgetUnread(spaceId: String, widgetId: String) async {
         addWidgetUnread(spaceId: spaceId, userId: memberId, widgetId: widgetId)
     }
 }
+
+func getUnreadWidgets(spaceId: String, userId: String) async -> [String]? {
+    return try? await db.collection("spaces")
+        .document(spaceId)
+        .collection("unreads")
+        .document(userId)
+        .getDocument()
+        .data()?["widgets"] as? [String]
+    }
  
 
 func messageUnread(spaceId: String) async {

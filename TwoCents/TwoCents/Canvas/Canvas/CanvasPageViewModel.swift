@@ -35,6 +35,7 @@ final class CanvasPageViewModel {
     var zoomScale: CGFloat = 1.0
     var cursor: CGPoint = CGPoint(x: 0, y: 0)
     var widgetCursor: CGPoint = CGPoint(x: 0, y: 0)
+    var unreadWidgets: [String] = []
 
     /* Eric: Don't delete this
      init(spaceId: String) {
@@ -62,10 +63,18 @@ final class CanvasPageViewModel {
         self.spaceId = spaceId
     }
 
-    func loadCurrentSpace(spaceId: String) async throws {
+    func loadCurrentSpace() async throws {
         self.space = try await SpaceManager.shared.getSpace(spaceId: spaceId)
     }
-
+    
+    func loadUnreadWidgets(userId: String) async{
+        guard let unreads = await getUnreadWidgets(spaceId: spaceId, userId: userId) else {
+            print("No unread widgets")
+            return
+        }
+        unreadWidgets = unreads
+    }
+    
     func openMapsApp(location: String) {
 
         let locationAray = location.split(separator: ", ")
