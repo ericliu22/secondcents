@@ -5,12 +5,14 @@
 //  Created by Eric Liu on 2024/6/23.
 //
 
+import Firebase
 import Foundation
 import SwiftUI
 
 struct ZoomableScrollView<Content: View>: UIViewRepresentable {
     private var content: Content
     @Environment(CanvasPageViewModel.self) var canvasViewModel
+    @Environment(AppModel.self) var appModel
 
     init(@ViewBuilder content: () -> Content) {
         self.content = content()
@@ -36,7 +38,9 @@ struct ZoomableScrollView<Content: View>: UIViewRepresentable {
     }
 
     func makeCoordinator() -> Coordinator {
-        return Coordinator(hostingController: UIHostingController(rootView: self.content), canvasViewModel: canvasViewModel)
+        return Coordinator(
+            hostingController: UIHostingController(rootView: self.content),
+            canvasViewModel: canvasViewModel, appModel: appModel)
     }
 
     func updateUIView(_ uiView: UIScrollView, context: Context) {
@@ -51,55 +55,150 @@ struct ZoomableScrollView<Content: View>: UIViewRepresentable {
             context.coordinator.updateCenter(for: uiView)
         }
     }
-    
+
     func centerContent(_ uiView: UIScrollView) {
         if uiView.contentOffset == .zero {
-            let initialOffsetX = (uiView.contentSize.width - uiView.bounds.width) / 2
-            let initialOffsetY = (uiView.contentSize.height - uiView.bounds.height) / 2
+            let initialOffsetX =
+                (uiView.contentSize.width - uiView.bounds.width) / 2
+            let initialOffsetY =
+                (uiView.contentSize.height - uiView.bounds.height) / 2
             uiView.contentOffset = CGPoint(x: initialOffsetX, y: initialOffsetY)
         }
     }
-    
+
     private func updateContentSize(for scrollView: UIScrollView) {
-        guard let view = scrollView.subviews.first else { 
+        guard let view = scrollView.subviews.first else {
             print("ZoomableScrollView: no subview")
             return
         }
         let zoomScale = scrollView.zoomScale
-        let contentSize = CGSize(width: view.intrinsicContentSize.width * zoomScale, height: view.intrinsicContentSize.height * zoomScale)
+        let contentSize = CGSize(
+            width: view.intrinsicContentSize.width * zoomScale,
+            height: view.intrinsicContentSize.height * zoomScale)
         scrollView.contentSize = contentSize
     }
 
     class Coordinator: NSObject, UIScrollViewDelegate {
         var hostingController: UIHostingController<Content>
         var canvasViewModel: CanvasPageViewModel
-        
-        private var idleTimer: Timer?
+        var appModel: AppModel
 
-        init(hostingController: UIHostingController<Content>, canvasViewModel: CanvasPageViewModel) {
+        private var idleTimer: Timer?
+        private var unreadTimers: [String: Timer] = [:]
+
+        init(
+            hostingController: UIHostingController<Content>,
+            canvasViewModel: CanvasPageViewModel, appModel: AppModel
+        ) {
             self.hostingController = hostingController
             self.canvasViewModel = canvasViewModel
+            self.appModel = appModel
         }
 
         func viewForZooming(in scrollView: UIScrollView) -> UIView? {
             return hostingController.view
         }
-        
+
         private func resetIdleTimer(_ scrollView: UIScrollView) {
             idleTimer?.invalidate()
-            idleTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false) { [weak self] _ in
+            idleTimer = Timer.scheduledTimer(
+                withTimeInterval: 1.0, repeats: false
+            ) { [weak self] _ in
                 if self?.canvasViewModel.canvasMode == .normal {
                     self?.autoCenterOnCursor(scrollView)
                 }
             }
         }
-        
+
         func scrollViewDidScroll(_ scrollView: UIScrollView) {
             updateCenter(for: scrollView)
             resetIdleTimer(scrollView)
+
+            let visibleOrigin = scrollView.contentOffset
+            let visibleSize = scrollView.bounds.size
+            let visibleRect = CGRect(origin: visibleOrigin, size: visibleSize)
+
+            // 2) For each unread widget, see if it's visible
+            for widgetId in canvasViewModel.unreadWidgets {
+                guard
+                    let widget = canvasViewModel.canvasWidgets.first(where: {
+                        $0.id.uuidString == widgetId
+                    })
+                else { continue }
+
+                let widgetRect = CGRect(
+                    x: widget.x ?? 0,
+                    y: widget.y ?? 0,
+                    width: widget.width,
+                    height: widget.height
+                )
+
+                // Check if widgetRect intersects the visibleRect
+                if visibleRect.intersects(widgetRect) {
+                    scheduleReadTimer(for: widgetId)
+                } else {
+                    cancelReadTimer(for: widgetId)
+                }
+            }
         }
-        
-        
+
+        private func scheduleReadTimer(for widgetId: String) {
+            // If we already have a timer for this widget, do nothing
+            if unreadTimers[widgetId] != nil { return }
+
+            // Create a 3-second timer
+            let timer = Timer.scheduledTimer(
+                withTimeInterval: 1.0, repeats: false
+            ) { [weak self] _ in
+                guard let self = self else { return }
+                // Once 3s pass, mark as read
+                self.markWidgetAsRead(widgetId)
+            }
+            unreadTimers[widgetId] = timer
+        }
+
+        private func cancelReadTimer(for widgetId: String) {
+            if let timer = unreadTimers[widgetId] {
+                timer.invalidate()
+                unreadTimers.removeValue(forKey: widgetId)
+            }
+        }
+
+        private func markWidgetAsRead(_ widgetId: String) {
+            // 1) Invalidate and remove the timer (just in case)
+            unreadTimers[widgetId]?.invalidate()
+            unreadTimers.removeValue(forKey: widgetId)
+
+            // 2) Update your local `unreadWidgets` in the ViewModel
+            if let index = canvasViewModel.unreadWidgets.firstIndex(
+                of: widgetId)
+            {
+                canvasViewModel.unreadWidgets.remove(at: index)
+            }
+
+            // 3) Do your Firebase call to mark it as read
+            Task {
+                await removeWidgetFromUnreads(widgetId: widgetId)
+            }
+        }
+
+        /// Example of removing that widget from the "unreads" array in Firestore
+        private func removeWidgetFromUnreads(widgetId: String) async {
+            guard let userId = appModel.user?.userId else { return }
+            let spaceId = canvasViewModel.spaceId
+            do {
+                try await db.collection("spaces")
+                    .document(spaceId)
+                    .collection("unreads")
+                    .document(userId)
+                    .updateData([
+                        "widgets": FieldValue.arrayRemove([widgetId]),
+                        "count": FieldValue.increment(Int64(-1)),
+                    ])
+            } catch {
+                print("Failed to remove widget from unreads: \(error)")
+            }
+        }
 
         func scrollViewDidZoom(_ scrollView: UIScrollView) {
             updateContentSize(for: scrollView)
@@ -108,79 +207,86 @@ struct ZoomableScrollView<Content: View>: UIViewRepresentable {
         }
 
         private func updateContentSize(for scrollView: UIScrollView) {
-            guard let view = scrollView.subviews.first else { 
+            guard let view = scrollView.subviews.first else {
                 print("ZoomableScrollView: no subview")
                 return
             }
             let zoomScale = scrollView.zoomScale
-            let contentSize = CGSize(width: view.intrinsicContentSize.width * zoomScale, height: view.intrinsicContentSize.height * zoomScale)
+            let contentSize = CGSize(
+                width: view.intrinsicContentSize.width * zoomScale,
+                height: view.intrinsicContentSize.height * zoomScale)
             scrollView.contentSize = contentSize
         }
-        
+
         private func autoCenterOnCursor(_ scrollView: UIScrollView) {
             guard let hostedView = scrollView.subviews.first else { return }
-            
+
             // 1) The subview’s unscaled size:
             //    In your code, it might be 2000×2000 or 3000×3000.
-            let unscaledWidth  = hostedView.intrinsicContentSize.width
+            let unscaledWidth = hostedView.intrinsicContentSize.width
             let unscaledHeight = hostedView.intrinsicContentSize.height
-            
+
             // 2) The model's cursor is presumably in "subview center = (0,0)" space,
             //    or maybe it's top-left based. Adjust if needed.
             //    For example, if (0,0) is the subview center, then to get the
             //    subview’s absolute coordinate for that cursor, we do:
             let cursorX = canvasViewModel.cursor.x + (unscaledWidth / 2)
             let cursorY = canvasViewModel.cursor.y + (unscaledHeight / 2)
-            
+
             // 3) Convert from unscaled coords to zoomed coords:
             let zoomedX = cursorX * scrollView.zoomScale
             let zoomedY = cursorY * scrollView.zoomScale
-            
+
             // 4) We want `zoomedX, zoomedY` to appear at the center of the scrollView's visible area.
             //    So the offset is that point minus half of the scrollView’s width/height:
             let offsetX = zoomedX - (scrollView.bounds.width / 2)
             let offsetY = zoomedY - (scrollView.bounds.height / 2)
-            
+
             // 5) Clamp offset so we don’t scroll beyond content bounds:
-            let maxOffsetX = scrollView.contentSize.width  - scrollView.bounds.width
-            let maxOffsetY = scrollView.contentSize.height - scrollView.bounds.height
-            
+            let maxOffsetX =
+                scrollView.contentSize.width - scrollView.bounds.width
+            let maxOffsetY =
+                scrollView.contentSize.height - scrollView.bounds.height
+
             let clampedX = max(0, min(offsetX, maxOffsetX))
             let clampedY = max(0, min(offsetY, maxOffsetY))
-            
+
             // 6) Animate the scroll so the user sees it smoothly:
-            scrollView.setContentOffset(CGPoint(x: clampedX, y: clampedY), animated: true)
+            scrollView.setContentOffset(
+                CGPoint(x: clampedX, y: clampedY), animated: true)
         }
 
-        
         func updateCenter(for scrollView: UIScrollView) {
             guard let hostedView = scrollView.subviews.first,
-                  hostedView.intrinsicContentSize.width  > 0,
-                  hostedView.intrinsicContentSize.height > 0 else {
+                hostedView.intrinsicContentSize.width > 0,
+                hostedView.intrinsicContentSize.height > 0
+            else {
                 print("updateCenter: subview not ready yet")
                 return
             }
-            
+
             // 1) The center in the zoomed coordinate system:
-            let zoomedCenterX = scrollView.contentOffset.x + (scrollView.bounds.width / 2)
-            let zoomedCenterY = scrollView.contentOffset.y + (scrollView.bounds.height / 2)
-            
+            let zoomedCenterX =
+                scrollView.contentOffset.x + (scrollView.bounds.width / 2)
+            let zoomedCenterY =
+                scrollView.contentOffset.y + (scrollView.bounds.height / 2)
+
             // 2) Convert to unscaled coordinates by dividing out zoomScale:
             var unscaledCenterX = zoomedCenterX / scrollView.zoomScale
             var unscaledCenterY = zoomedCenterY / scrollView.zoomScale
-            
+
             canvasViewModel.widgetCursor = CGPoint(
                 x: roundToTile(number: unscaledCenterX),
                 y: roundToTile(number: unscaledCenterY)
             )
-            
+
             // 3) If you want (0,0) to be the subview’s center:
-            let unscaledWidth  = hostedView.intrinsicContentSize.width
+            let unscaledWidth = hostedView.intrinsicContentSize.width
             let unscaledHeight = hostedView.intrinsicContentSize.height
-            
-            unscaledCenterX -= unscaledWidth  / 2
+
+            unscaledCenterX -= unscaledWidth / 2
             unscaledCenterY -= unscaledHeight / 2
-            
+
             // 4) Assign to your ViewModel
             let centerPoint = CGPoint(
                 x: roundToTile(number: unscaledCenterX),

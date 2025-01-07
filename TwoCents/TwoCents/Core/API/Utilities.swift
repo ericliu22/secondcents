@@ -82,3 +82,46 @@ func getUID() async throws -> String? {
     let authDataResult = try AuthenticationManager.shared.getAuthenticatedUser()
     return authDataResult.uid
 }
+
+func convertSwiftUIPointToUIKit(
+    swiftUIPoint: CGPoint,
+    geometry: GeometryProxy,
+    hostView: UIView
+) -> CGPoint {
+    // 1) Get the SwiftUI view’s frame in the global (screen) coordinate space.
+    let globalRect = geometry.frame(in: .global)
+    // This rect’s origin is where the SwiftUI view starts on the screen.
+    
+    // 2) Add the SwiftUI point to the SwiftUI view’s global origin.
+    //    That yields a "screen coordinate" in UIKit terms.
+    let screenX = globalRect.origin.x + swiftUIPoint.x
+    let screenY = globalRect.origin.y + swiftUIPoint.y
+    let screenPoint = CGPoint(x: screenX, y: screenY)
+    
+    // 3) Convert from screen coords into `hostView`’s local coords.
+    //    Passing `nil` for `from`/`to` generally means "the window’s coordinate space."
+    let uiKitPoint = hostView.convert(screenPoint, from: nil)
+    
+    return uiKitPoint
+}
+
+/// Convert a point in hostView's UIKit coords to SwiftUI coords
+/// (e.g., geometry's .global or .local).
+func convertUIKitPointToSwiftUI(
+    uiKitPoint: CGPoint,
+    geometry: GeometryProxy,
+    hostView: UIView
+) -> CGPoint {
+    // 1) Convert from the hostView’s local coords to the screen coords
+    let screenPoint = hostView.convert(uiKitPoint, to: nil)
+    
+    // 2) Get the SwiftUI view’s global frame
+    let globalRect = geometry.frame(in: .global)
+    
+    // 3) Subtract the SwiftUI view’s global origin from the screen point
+    //    to get a local SwiftUI coordinate
+    let swiftUIX = screenPoint.x - globalRect.origin.x
+    let swiftUIY = screenPoint.y - globalRect.origin.y
+    
+    return CGPoint(x: swiftUIX, y: swiftUIY)
+}

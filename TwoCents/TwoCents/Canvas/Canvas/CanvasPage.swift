@@ -386,7 +386,6 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                         }
                         
                         await viewModel.loadUnreadWidgets(userId: appModel.user!.userId)
-                        await readNotifications(spaceId: spaceId, userId: appModel.user!.userId)
                     }
                 
             }
@@ -470,9 +469,6 @@ struct CanvasPage: View, CanvasViewModelDelegate {
             viewModel.activeSheet = nil
             appModel.inSpace = false
             appModel.currentSpaceId = nil
-            Task {
-                await readNotifications(spaceId: spaceId, userId: appModel.user!.userId)
-            }
         }
         .background(  Color(UIColor.secondarySystemBackground))
         .environment(viewModel)
