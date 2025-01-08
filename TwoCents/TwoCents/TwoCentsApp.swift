@@ -88,7 +88,13 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         switch action {
         case "space":
             print("space link")
-            isValidSpaceId(spaceId: subject, completion: { [weak self] valid in
+            
+            guard let spaceJwtToken = components[safe: 3] else {
+                print("Universal link has no spaceJwtToken")
+                return
+            }
+            
+            isValidSpaceLink(spaceId: subject, spaceToken: spaceJwtToken, completion: { [weak self] valid in
                 guard let self = self else {
                     return
                 }
@@ -99,8 +105,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
                         return
                     }
                     
-                    appModel.navigationSpaceId = subject
-                    appModel.shouldNavigateToSpace = true
+                    appModel.navigationRequest = .space(spaceId: subject)
                 }
                 
                 else { print("Invalid spaceId: resuming normal execution") }
@@ -116,7 +121,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         }
     }
     
-    func isValidSpaceId(spaceId: String, completion: @escaping (Bool) -> Void) {
+    func isValidSpaceLink(spaceId: String, spaceToken: String, completion: @escaping (Bool) -> Void) {
         Firestore.firestore().collection("spaces").document(spaceId).getDocument(completion: { snapshot, error in
             if let error = error {
                 print("Error fetching documents: \(error)")
@@ -178,10 +183,9 @@ class AppDelegate: NSObject, UIApplicationDelegate {
                 print("AppModel not yet initialized")
                 return
             }
-            appModel.navigationSpaceId = spaceId
-            appModel.shouldNavigateToSpace = true
+            appModel.navigationRequest = .space(spaceId: spaceId)
             print("SPACEID: \(notificationSpaceId)")
-            print("didReceiveRemoteNotification SPACEID: \(appModel.navigationSpaceId ?? "nothing")")
+            print("didReceiveRemoteNotification SPACEID: \(spaceId ?? "nothing")")
         }
         
         completionHandler(.newData)
@@ -253,10 +257,9 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
                 return
             }
             
-            appModel.navigationSpaceId = spaceId
-            appModel.shouldNavigateToSpace = true
+            appModel.navigationRequest = .space(spaceId: spaceId)
             print("SPACEID: \(notificationSpaceId)")
-            print("didReceive SPACEID: \(appModel.navigationSpaceId ?? "nothing")")
+            print("didReceive SPACEID: \(spaceId ?? "nothing")")
         }
         
         completionHandler()

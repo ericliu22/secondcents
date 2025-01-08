@@ -69,26 +69,13 @@ struct FrontPageView: View {
             })
 
         }
-        .onChange(of: appModel.shouldNavigateToSpace,initial: true) {
-            DispatchQueue.global().async {
-                appModel.navigationMutex.lock()
-                print("FRONTPAGEVIEW ACQUIRED MUTEX")
-                if appModel.shouldNavigateToSpace {
-                    while (appModel.inSpace && appModel.navigationSpaceId != appModel.currentSpaceId) {
-                            print("FRONTPAGEVIEW WAITING")
-                            appModel.navigationMutex.wait()
-                    }
-                    print("currentSpaceId \(appModel.currentSpaceId ?? "nil")")
-                    if appModel.navigationSpaceId == appModel.currentSpaceId {
-                        appModel.navigationMutex.unlock()
-                        return
-                    }
-                    selectedTab = 0
-                    appModel.correctTab = true
-                    appModel.navigationMutex.broadcast()
-                    print("FRONTPAGEVIEW NOT WAITING")
-                }
-                appModel.navigationMutex.unlock()
+        .onChange(of: appModel.navigationRequest) { newValue in
+            switch newValue {
+                case .none:
+                    break  // do nothing
+                case .space(let spaceId):
+                    // We want the user to see the SpacesView tab, then navigate to CanvasPage
+                    selectedTab = 0 // switch the TabView to “Spaces”
             }
         }
     }

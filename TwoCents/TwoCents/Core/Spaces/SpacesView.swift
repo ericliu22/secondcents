@@ -25,6 +25,28 @@ struct SpacesView: View {
     ]
     
     
+    private func handleNavigationRequest() async {
+               // If the request is for a space, load that space and push CanvasPage
+               guard case .space(let spaceId) = appModel.navigationRequest else {
+                   return
+               }
+
+               do {
+                   // Attempt to load the space from Firestore
+                   let space = try await SpaceManager.shared.getSpace(spaceId: spaceId)
+                   // Once loaded, reset the request so we don’t do it again
+                   appModel.navigationRequest = .none
+                   
+                   // Push the space onto the navigation stack
+                   // This triggers your .navigationDestination(for: DBSpace.self) block
+                   viewModel.presentedPath.removeAll()
+                   viewModel.presentedPath.append(space)
+               } catch {
+                   print("Failed to get DBSpace for \(spaceId)")
+               }
+   }
+
+    
     func linkLabel(spaceTile: DBSpace) -> some View {
         ZStack{
             Group{
@@ -218,92 +240,14 @@ struct SpacesView: View {
             .searchable(text: $viewModel.searchTerm, placement: .navigationBarDrawer(displayMode: .always), prompt: "Search")
         }
         .task {
-            //use self for clarity
-            if appModel.shouldNavigateToSpace {
-                guard let spaceId = appModel.navigationSpaceId else { return }
-                guard let space: DBSpace = try? await SpaceManager.shared.getSpace(spaceId: spaceId) else {
-                    print("Failed to get DBSpace from deeplink")
-                    return
-                }
-                appModel.shouldNavigateToSpace = false
-                viewModel.presentedPath.append(space)
-                guard let user = viewModel.user else {
-                    return
-                }
-                appModel.addToSpace(userId: user.userId)
-            }
+            await handleNavigationRequest()
         }
-        .modifier(modelNavigation())
+        .onChange(of: appModel.navigationRequest) { _ in
+            Task { await handleNavigationRequest() }
+        }
         .environment(viewModel)
         
     }
-    
-    struct modelNavigation: ViewModifier {
-        @Environment(AppModel.self) var appModel
-        @Environment(SpacesViewModel.self) var viewModel
-        
-        func body(content: Content) -> some View {
-            content
-                .onChange(of: appModel.shouldNavigateToSpace, initial: false) {
-                    DispatchQueue.global().async {
-                        appModel.navigationMutex.lock()
-                        print("SPACESVIEW ACQUIRED MUTEX")
-                        if appModel.shouldNavigateToSpace{
-                            print("appModel.inSpace \(appModel.inSpace)")
-                            print("appModel.currentSpaceId \(appModel.currentSpaceId ?? "nil")")
-                            while (appModel.inSpace && appModel.navigationSpaceId != appModel.currentSpaceId) {
-                                print("SPACESVIEW WAITING FOR SPACE")
-                                appModel.navigationMutex.wait() // Block the thread until the condition is true
-                            }
-                            appModel.navigationMutex.broadcast()
-                            var succeded: Bool = false
-                            while (!appModel.correctTab) {
-                                print("SPACESVIEW WAITING FOR TAB")
-                                succeded = appModel.navigationMutex.wait(until: .now+100)
-                            }
-                            if !succeded {
-                                print("TIMEDOUT")
-                                appModel.navigationMutex.unlock()
-                                return
-                            }
-                            print("SPACESVIEW DONE WAITING")
-                            if appModel.navigationSpaceId == appModel.currentSpaceId {
-                                appModel.navigationMutex.unlock()
-                                return
-                            }
-                            //Just wait lmao
-                            DispatchQueue.main.asyncAfter(deadline: .now()+0.5) {
-                                guard let spaceId = appModel.navigationSpaceId else {
-                                    print("not spaceId")
-                                    appModel.navigationMutex.unlock()
-                                    return
-                                }
-                                appModel.shouldNavigateToSpace = false
-                                appModel.correctTab = false
-                                print("APPENDING TO PRESENTED PATH")
-                                Task {
-                                    guard let space: DBSpace = try? await SpaceManager.shared.getSpace(spaceId: spaceId) else {
-                                        print("Failed to get DBSpace from deeplink")
-                                        return
-                                    }
-                                    if !viewModel.presentedPath.contains(where: {$0.spaceId == space.spaceId}) {
-                                        viewModel.presentedPath.append(space)
-                                    }
-                                    guard let user = viewModel.user else {
-                                        return
-                                    }
-                                    appModel.addToSpace(userId: user.userId)
-                                }
-                            }
-                        }
-                        appModel.navigationMutex.unlock()
-                    }
-                    
-                }
-            
-        }
-    }
-    
     
     @ToolbarContentBuilder
     func toolbar() -> some ToolbarContent {

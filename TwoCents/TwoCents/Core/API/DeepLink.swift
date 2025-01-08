@@ -5,6 +5,8 @@
 //  Created by Eric Liu on 2025/1/1.
 //
 import Foundation
+import CoreImage.CIFilterBuiltins
+import UIKit
 
 enum JoinSpaceError: Error{
     case invalidUrl
@@ -79,11 +81,11 @@ extension GenerateInviteLinkError: LocalizedError {
 
 func fetchInviteLink(spaceId: String) async throws -> String {
     guard let apiUrl: URL = URL(string: "https://api.twocentsapp.com/v1/space/generate-invite-link/") else {
-        throw JoinSpaceError.invalidUrl
+        throw GenerateInviteLinkError.invalidUrl
     }
     
     guard let firebaseToken = try? await AuthenticationManager.shared.getJwtToken() else {
-        throw JoinSpaceError.unauthorizedApp
+        throw GenerateInviteLinkError.unauthorizedApp
     }
     
     var request = URLRequest(url: apiUrl)
@@ -98,6 +100,17 @@ func fetchInviteLink(spaceId: String) async throws -> String {
     return inviteLink
 }
 
-func getQRcode(spaceId: String) {
+
+func generateQRCode(from string: String) -> UIImage? {
+    let data = Data(string.utf8)
+    guard let filter = CIFilter(name: "CIQRCodeGenerator") else { return nil }
+    filter.setValue(data, forKey: "inputMessage")
+    // L, M, Q, H - sets the correction level
+    filter.setValue("M", forKey: "inputCorrectionLevel")
     
+    guard let outputImage = filter.outputImage else { return nil }
+    let transform = CGAffineTransform(scaleX: 10, y: 10)
+    let scaledImage = outputImage.transformed(by: transform)
+    
+    return UIImage(ciImage: scaledImage)
 }

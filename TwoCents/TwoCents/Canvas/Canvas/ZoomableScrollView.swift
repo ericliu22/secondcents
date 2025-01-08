@@ -161,7 +161,6 @@ struct ZoomableScrollView<Content: View>: UIViewRepresentable {
                 withTimeInterval: 1.0, repeats: false
             ) { [weak self] _ in
                 guard let self = self else { return }
-                // Once 3s pass, mark as read
                 self.markWidgetAsRead(widgetId)
             }
             unreadTimers[widgetId] = timer
