@@ -12,6 +12,7 @@ import (
 	"github.com/valyala/fasthttp"
 	"github.com/golang-jwt/jwt/v5"
 	"server/internal/middleware"
+	"server/internal/core/models"
 )
 
 func GetSpaceKey(ctx context.Context, client *firestore.Client, spaceId string) (string, error) {
@@ -86,8 +87,13 @@ func createSpaceJwt(spaceId string, ctx context.Context, client *firestore.Clien
 	return tokenString, nil
 }
 
-func ValidateSpaceJwt(tokenString string, spaceId string) error {
-	return nil
+func ValidateSpaceToken(firebaseCtx context.Context, client *firestore.Client, tokenString string, spaceId string) (bool, error) {
+	privateKey, err := GetSpaceKey(firebaseCtx, client, spaceId)
+	if err != nil {
+		return false, err
+	}
+	valid, err := isValidToken(tokenString, privateKey)
+	return valid, err
 }
 
 func isValidToken(tokenString string, privateKey string) (bool, error) {
@@ -119,22 +125,11 @@ func isValidToken(tokenString string, privateKey string) (bool, error) {
 	return false, fmt.Errorf("invalid token")
 }
 
-func isMember(data map[string]interface{}, userId string) (bool, error) {
+func isMember(space *models.DBSpace, userId string) (bool, error) {
 	// Query the document to check if the user is in the 'members' array
 
-	members, exists := data["members"]
-	if !exists {
-		return false, fmt.Errorf("field 'members' does not exist")
-	}
-
-	// Check if 'members' is an array
-	array, ok := members.([]interface{})
-	if !ok {
-		return false, fmt.Errorf("'members' is not an array")
-	}
-
 	// Check if the userID exists in the array
-	for _, member := range array {
+	for _, member := range *space.Members {
 		if member == userId {
 			return true, nil
 		}
@@ -143,7 +138,7 @@ func isMember(data map[string]interface{}, userId string) (bool, error) {
 	return false, nil
 }
 
-func RegenerateInviteLink(ctx context.Context, client *firestore.Client, spaceId string) (string, error) {
+func GenerateSpaceToken(ctx context.Context, client *firestore.Client, spaceId string) (string, error) {
 
 	token, err := createSpaceJwt(spaceId, ctx, client)
 	if err != nil {
@@ -153,14 +148,14 @@ func RegenerateInviteLink(ctx context.Context, client *firestore.Client, spaceId
 	return token, nil
 }
 
-func AuthenticatedInviteLink(httpCtx *fasthttp.RequestCtx, data map[string]interface{}) bool {
+func ValidateGenerateInviteLink(httpCtx *fasthttp.RequestCtx, space *models.DBSpace) bool {
 	authenticatedUserId, authErr := middleware.GetAuthenticatedUserId(httpCtx)
 
 	if authErr != nil {
 		return false
 	}
 
-	isMember, membershipErr := isMember(data, authenticatedUserId)
+	isMember, membershipErr := isMember(space, authenticatedUserId)
 	if membershipErr != nil {
 		log.Printf(membershipErr.Error())
 		return false

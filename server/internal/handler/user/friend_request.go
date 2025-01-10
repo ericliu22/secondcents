@@ -8,6 +8,7 @@ import (
 	"cloud.google.com/go/firestore"
 	"github.com/valyala/fasthttp"
 	"server/internal/middleware"
+	"server/internal/core/auth"
 )
 
 type FriendRequest struct {
@@ -31,8 +32,9 @@ func AcceptFriendRequestHandler(httpCtx *fasthttp.RequestCtx, client *firestore.
 
 	log.Printf("Parsed friend request: %+v\n", friendRequest)
 
-	if (!isAuthenticated(httpCtx, friendRequest.ReceiverUserId)) {
-		log.Printf("Unauthenticated request")
+	if (!auth.ValidateUser(httpCtx, friendRequest.ReceiverUserId)) {
+		httpCtx.SetStatusCode(fasthttp.StatusUnauthorized)
+		httpCtx.SetBodyString("Unauthorized user friend request")
 		return
 	}
 
@@ -167,7 +169,9 @@ func SendFriendRequestHandler(httpCtx *fasthttp.RequestCtx, client *firestore.Cl
 		return
 	}
 
-	if (!isAuthenticated(httpCtx, friendRequest.SenderUserId)) {
+	if (!auth.ValidateUser(httpCtx, friendRequest.SenderUserId)) {
+		httpCtx.SetStatusCode(fasthttp.StatusUnauthorized)
+		httpCtx.SetBodyString("Unauthorized user friend request")
 		log.Printf("Unauthenticated request")
 		return
 	}
@@ -206,7 +210,9 @@ func UnsendFriendRequestHandler(httpCtx *fasthttp.RequestCtx, client *firestore.
 
 	var friendRequest FriendRequest
 
-	if (!isAuthenticated(httpCtx, friendRequest.SenderUserId)) {
+	if (!auth.ValidateUser(httpCtx, friendRequest.SenderUserId)) {
+		httpCtx.SetStatusCode(fasthttp.StatusUnauthorized)
+		httpCtx.SetBodyString("Unauthorized user friend request")
 		log.Printf("Unauthenticated request")
 		return
 	}
@@ -246,26 +252,6 @@ func UnsendFriendRequestHandler(httpCtx *fasthttp.RequestCtx, client *firestore.
 	}
 }
 
-func isAuthenticated(httpCtx *fasthttp.RequestCtx, requestOwnerId string) bool {
-
-	authenticatedUserId, authErr := middleware.GetAuthenticatedUserId(httpCtx)
-	if authErr != nil {
-		httpCtx.SetStatusCode(fasthttp.StatusUnauthorized)
-		httpCtx.SetBodyString("Unauthorized: " + authErr.Error())
-		log.Printf("Unauthorized")
-		return false
-	}
-
-	if authenticatedUserId != requestOwnerId {
-		httpCtx.SetStatusCode(fasthttp.StatusUnauthorized)
-		httpCtx.SetBodyString("Unauthorized accepting of friend request")
-		log.Printf("Unauthorized bum")
-		return false
-	}
-
-	return true
-}
-
 func RemoveFriendRequestHandler(httpCtx *fasthttp.RequestCtx, client *firestore.Client) {
 	firebaseCtx := middleware.GetRequestContext(httpCtx)
 
@@ -280,7 +266,9 @@ func RemoveFriendRequestHandler(httpCtx *fasthttp.RequestCtx, client *firestore.
 
 	log.Printf("Parsed friend request: %+v\n", friendRequest)
 
-	if (!isAuthenticated(httpCtx, friendRequest.ReceiverUserId)) {
+	if (!auth.ValidateUser(httpCtx, friendRequest.ReceiverUserId)) {
+		httpCtx.SetStatusCode(fasthttp.StatusUnauthorized)
+		httpCtx.SetBodyString("Unauthorized user friend request")
 		log.Printf("Unauthenticated request")
 		return
 	}
@@ -326,7 +314,9 @@ func DeclineFriendRequestHandler(httpCtx *fasthttp.RequestCtx, client *firestore
 
 	log.Printf("Parsed friend request: %+v\n", friendRequest)
 
-	if (!isAuthenticated(httpCtx, friendRequest.ReceiverUserId)) {
+	if (!auth.ValidateUser(httpCtx, friendRequest.ReceiverUserId)) {
+		httpCtx.SetStatusCode(fasthttp.StatusUnauthorized)
+		httpCtx.SetBodyString("Unauthorized user friend request")
 		log.Printf("Unauthenticated request")
 		return
 	}

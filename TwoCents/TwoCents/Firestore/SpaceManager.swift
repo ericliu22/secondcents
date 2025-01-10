@@ -19,6 +19,8 @@ struct DBSpace: Identifiable, Codable, Hashable {
     let profileImageUrl: String?
     let members: Array<String>?
     let admins: [String]?
+    var privateKey: String?
+    var spaceToken: String?
     var nextWidgetX: CGFloat?
     var nextWidgetY: CGFloat?
     

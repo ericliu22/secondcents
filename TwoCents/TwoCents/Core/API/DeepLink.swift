@@ -46,7 +46,7 @@ extension JoinSpaceError: LocalizedError {
  9. Accept user into the space
  10. (Optional and really hard) auto navigate app to space
 */
-func joinSpace(spaceId: String, spaceJwtToken: String) async throws {
+func joinSpace(spaceId: String, spaceToken: String) async throws {
     guard let apiUrl: URL = URL(string: "https://api.twocentsapp.com/v1/space/join-space/\(spaceId)") else {
         throw JoinSpaceError.invalidUrl
     }
@@ -60,7 +60,19 @@ func joinSpace(spaceId: String, spaceJwtToken: String) async throws {
     request.httpMethod = "POST"
     request.setValue("application/json", forHTTPHeaderField: "Content-Type")
     request.setValue("Bearer \(firebaseToken)", forHTTPHeaderField: "Authorization")
-    request.setValue("\(spaceJwtToken)", forHTTPHeaderField: "SpaceToken")
+    
+    let joinRequest = JoinSpaceRequest(spaceId: spaceId, spaceToken: spaceToken)
+    do {
+        let body = try JSONEncoder().encode(joinRequest)
+        request.httpBody = body
+    } catch {
+        throw error
+    }
+}
+
+fileprivate struct JoinSpaceRequest: Codable {
+    let spaceId: String
+    let spaceToken: String
 }
 
 enum GenerateInviteLinkError: Error{
@@ -79,8 +91,12 @@ extension GenerateInviteLinkError: LocalizedError {
     }
 }
 
-func fetchInviteLink(spaceId: String) async throws -> String {
-    guard let apiUrl: URL = URL(string: "https://api.twocentsapp.com/v1/space/generate-invite-link/") else {
+fileprivate struct FetchSpaceTokenRequest: Codable {
+    let spaceId: String
+}
+
+func fetchSpaceToken(spaceId: String) async throws -> String {
+    guard let apiUrl: URL = URL(string: "https://api.twocentsapp.com/v1/space/fetch-space-token/") else {
         throw GenerateInviteLinkError.invalidUrl
     }
     
@@ -94,10 +110,19 @@ func fetchInviteLink(spaceId: String) async throws -> String {
     request.setValue("application/json", forHTTPHeaderField: "Content-Type")
     request.setValue("Bearer \(firebaseToken)", forHTTPHeaderField: "Authorization")
     
+    let fetchRequest = FetchSpaceTokenRequest(spaceId: spaceId)
+    do {
+        let body = try JSONEncoder().encode(fetchRequest)
+        request.httpBody = body
+    } catch {
+        throw error
+    }
+    
+    
     let (data, response) = try await URLSession.shared.data(for: request)
     
-    let inviteLink = String(data: data, encoding: String.Encoding(rawValue: NSUTF8StringEncoding))!
-    return inviteLink
+    let spaceToken = String(data: data, encoding: String.Encoding(rawValue: NSUTF8StringEncoding))!
+    return spaceToken
 }
 
 
