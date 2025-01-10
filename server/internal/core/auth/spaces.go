@@ -63,28 +63,35 @@ func generatePrivateKey() string {
 }
 
 func createSpaceJwt(spaceId string, ctx context.Context, client *firestore.Client) (string, error) {
-	// Define claims
-	claims := jwt.MapClaims{
-		"sub": spaceId,
-		"exp": time.Now().Add(24 * time.Hour).Unix(),
-		"iat": time.Now().Unix(),
-	}
+    // Define claims
+    claims := jwt.MapClaims{
+        "sub": spaceId,
+        "exp": time.Now().Add(24 * time.Hour).Unix(),
+        "iat": time.Now().Unix(),
+    }
 
-	// Create the token
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+    // Create the token
+    token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
-	privateKey, err := GetSpaceKey(ctx, client, spaceId)
-	if err != nil {
+    // Retrieve the private key
+    privateKey, err := GetSpaceKey(ctx, client, spaceId)
+    if err != nil {
+        return "", err
+    }
 
-		return "", err
-	}
-	// Sign the token
-	tokenString, err := token.SignedString(privateKey)
-	if err != nil {
-		return "", err
-	}
+    // Decode the Base64-encoded privateKey to []byte
+    decodedKey, err := base64.StdEncoding.DecodeString(privateKey)
+    if err != nil {
+        return "", fmt.Errorf("failed to decode private key: %w", err)
+    }
 
-	return tokenString, nil
+    // Sign the token
+    tokenString, err := token.SignedString(decodedKey)
+    if err != nil {
+        return "", fmt.Errorf("failed to sign token: %w", err)
+    }
+
+    return tokenString, nil
 }
 
 func ValidateSpaceToken(firebaseCtx context.Context, client *firestore.Client, tokenString string, spaceId string) (bool, error) {
@@ -97,32 +104,38 @@ func ValidateSpaceToken(firebaseCtx context.Context, client *firestore.Client, t
 }
 
 func isValidToken(tokenString string, privateKey string) (bool, error) {
-	// Parse the token
-	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-		// Validate the signing method
-		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
-		}
+    // Decode the Base64-encoded privateKey to []byte
+    decodedKey, err := base64.StdEncoding.DecodeString(privateKey)
+    if err != nil {
+        return false, fmt.Errorf("failed to decode private key: %w", err)
+    }
 
-		// Return the secret key for validation
-		return privateKey, nil
-	})
-	if err != nil {
-		return false, err
-	}
+    // Parse the token
+    token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+        // Validate the signing method
+        if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+            return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+        }
 
-	// Extract claims and check validity
-	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-		// Extract the expiration time
-		if exp, ok := claims["exp"].(float64); ok {
-			expirationTime := time.Unix(int64(exp), 0)
-			isValid := time.Now().Before(expirationTime)
-			return isValid, nil
-		}
-		return false, fmt.Errorf("expiration (exp) claim missing or invalid")
-	}
+        // Return the decoded key for validation
+        return decodedKey, nil
+    })
+    if err != nil {
+        return false, err
+    }
 
-	return false, fmt.Errorf("invalid token")
+    // Extract claims and check validity
+    if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
+        // Extract the expiration time
+        if exp, ok := claims["exp"].(float64); ok {
+            expirationTime := time.Unix(int64(exp), 0)
+            isValid := time.Now().Before(expirationTime)
+            return isValid, nil
+        }
+        return false, fmt.Errorf("expiration (exp) claim missing or invalid")
+    }
+
+    return false, fmt.Errorf("invalid token")
 }
 
 func isMember(space *models.DBSpace, userId string) (bool, error) {
