@@ -198,8 +198,11 @@ final class SpaceManager{
         await setNextWidgetSpot(spaceId: space.spaceId, startingX: space.nextWidgetX!, startingY: space.nextWidgetY!)
     }
     
-    func generateSpaceLink(spaceId: String ) -> String {
-        return "https://api.twocentsapp.com/app/space/\(spaceId)"
+    func generateSpaceLink(spaceId: String ) async throws -> String {
+        
+        let spaceToken = try await fetchSpaceToken(spaceId: spaceId)
+        return "https://api.twocentsapp.com/app/space/\(spaceId)/\(spaceToken)"
+        
     }
     
     func setNextWidgetSpot(spaceId: String, startingX: CGFloat, startingY: CGFloat) async {

@@ -96,7 +96,7 @@ fileprivate struct FetchSpaceTokenRequest: Codable {
 }
 
 func fetchSpaceToken(spaceId: String) async throws -> String {
-    guard let apiUrl: URL = URL(string: "https://api.twocentsapp.com/v1/space/fetch-space-token/") else {
+    guard let apiUrl: URL = URL(string: "https://api.twocentsapp.com/v1/space/fetch-space-token") else {
         throw GenerateInviteLinkError.invalidUrl
     }
     
@@ -105,7 +105,6 @@ func fetchSpaceToken(spaceId: String) async throws -> String {
     }
     
     var request = URLRequest(url: apiUrl)
-    
     request.httpMethod = "POST"
     request.setValue("application/json", forHTTPHeaderField: "Content-Type")
     request.setValue("Bearer \(firebaseToken)", forHTTPHeaderField: "Authorization")
@@ -118,10 +117,22 @@ func fetchSpaceToken(spaceId: String) async throws -> String {
         throw error
     }
     
-    
     let (data, response) = try await URLSession.shared.data(for: request)
     
-    let spaceToken = String(data: data, encoding: String.Encoding(rawValue: NSUTF8StringEncoding))!
+    // Validate HTTP response
+    guard let httpResponse = response as? HTTPURLResponse else {
+        throw NSError(domain: "Invalid Response", code: 0, userInfo: nil)
+    }
+    
+    guard (200...299).contains(httpResponse.statusCode) else {
+        let serverError = String(data: data, encoding: .utf8) ?? "Unknown server error"
+        throw NSError(domain: "Server Error", code: httpResponse.statusCode, userInfo: [NSLocalizedDescriptionKey: serverError])
+    }
+    
+    guard let spaceToken = String(data: data, encoding: .utf8) else {
+        throw NSError(domain: "Invalid Response Data", code: 0, userInfo: nil)
+    }
+    
     return spaceToken
 }
 

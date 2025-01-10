@@ -174,6 +174,7 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                 NavigationLink {
                     
                     SpaceSettingsView(spaceId: spaceId)
+                        .environment(viewModel)
                         .onAppear {
                             viewModel.activeSheet = nil
                             viewModel.inSettingsView = true
