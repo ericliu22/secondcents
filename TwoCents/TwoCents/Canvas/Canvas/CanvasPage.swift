@@ -383,7 +383,7 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                             presentationMode.wrappedValue.dismiss()
                         }
                         
-                        await viewModel.loadUnreadWidgets(userId: appModel.user!.userId)
+                        viewModel.attachUnreadListener(userId: appModel.user!.userId)
                     }
                 
             }

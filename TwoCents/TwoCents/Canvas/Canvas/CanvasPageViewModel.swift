@@ -67,12 +67,25 @@ final class CanvasPageViewModel {
         self.space = try await SpaceManager.shared.getSpace(spaceId: spaceId)
     }
     
-    func loadUnreadWidgets(userId: String) async{
-        guard let unreads = await getUnreadWidgets(spaceId: spaceId, userId: userId) else {
-            print("No unread widgets")
-            return
-        }
-        unreadWidgets = unreads
+    func attachUnreadListener(userId: String) {
+        Firestore.firestore().collection("spaces").document(spaceId).collection("unreads").document(userId).addSnapshotListener({ [weak self] documentSnapshot, error in
+            guard let self = self else {
+                print(
+                    "attachUnreadListener closure: weak self no reference")
+                return
+            }
+            guard let document = documentSnapshot else {
+                print("Error fetching query: \(error!)")
+                return
+            }
+            
+            guard let unreads = document.data()?["widgets"] as? [String] else {
+                print("attachWidgetListener: Failed to load unreads")
+                return
+            }
+            
+            self.unreadWidgets = unreads
+        })
     }
     
     func openMapsApp(location: String) {
