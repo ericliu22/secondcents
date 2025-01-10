@@ -1,8 +1,10 @@
 package models
 
 import (
-	"cloud.google.com/go/firestore"
+	"context"
 	"time"
+
+	"cloud.google.com/go/firestore"
 )
 
 type DBUser struct {
@@ -18,4 +20,20 @@ type DBUser struct {
 	IncomingFriendRequests *[]string `firestore:"incomingFriendRequests"`
 	OutgoingFriendRequests *[]string `firestore:"outgoingFriendRequests"`
 	UserPhoneNumber        *string   `firestore:"userPhoneNumber"`
+}
+
+func GetUser(client *firestore.Client, firebaseCtx context.Context, userId string) (*DBUser, error) {
+	spaceDoc := client.Collection("users").Doc(userId)
+
+	snapshot, err := spaceDoc.Get(firebaseCtx)
+	if err != nil {
+		return nil, err
+	}
+
+	var user DBUser
+	if err := snapshot.DataTo(&user); err != nil {
+		return nil, err
+	}
+
+	return &user, nil // Return a pointer to DBUser
 }
