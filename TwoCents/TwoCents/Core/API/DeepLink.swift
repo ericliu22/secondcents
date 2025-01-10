@@ -141,12 +141,30 @@ func generateQRCode(from string: String) -> UIImage? {
     let data = Data(string.utf8)
     guard let filter = CIFilter(name: "CIQRCodeGenerator") else { return nil }
     filter.setValue(data, forKey: "inputMessage")
-    // L, M, Q, H - sets the correction level
-    filter.setValue("M", forKey: "inputCorrectionLevel")
+    filter.setValue("M", forKey: "inputCorrectionLevel") // Medium error correction level
     
     guard let outputImage = filter.outputImage else { return nil }
-    let transform = CGAffineTransform(scaleX: 10, y: 10)
+    let transform = CGAffineTransform(scaleX: 10, y: 10) // Scale the QR code
     let scaledImage = outputImage.transformed(by: transform)
     
-    return UIImage(ciImage: scaledImage)
+    // Convert to a non-transparent UIImage with proper colors
+    let context = CIContext()
+    guard let cgImage = context.createCGImage(scaledImage, from: scaledImage.extent) else { return nil }
+    
+    let size = CGSize(width: scaledImage.extent.size.width, height: scaledImage.extent.size.height)
+    UIGraphicsBeginImageContext(size)
+    guard let graphicsContext = UIGraphicsGetCurrentContext() else { return nil }
+    
+    // Fill the background with white
+    graphicsContext.setFillColor(UIColor.systemBackground.cgColor)
+    graphicsContext.fill(CGRect(origin: .zero, size: size))
+    
+    // Draw the QR code in black
+    graphicsContext.setFillColor(UIColor.systemFill.cgColor)
+    graphicsContext.draw(cgImage, in: CGRect(origin: .zero, size: size))
+    let finalImage = UIGraphicsGetImageFromCurrentImageContext()
+    UIGraphicsEndImageContext()
+    
+    return finalImage
 }
+

@@ -122,6 +122,12 @@ struct SpaceSettingsView: View {
                                 }
                                 .transition(.opacity)
                             }
+                            NavigationLink {
+                                QRCodeView(spaceLink: viewModel.spaceLink!)
+                            } label: {
+                                Image(systemName: "qrcode")
+                                    .frame(width: 30, height: 30)
+                            }
                         } else {
                             HStack {
                                 ProgressView()
