@@ -161,7 +161,7 @@ func ValidateGenerateInviteLink(httpCtx *fasthttp.RequestCtx, space *models.DBSp
 		return false
 	}
 
-	if isMember {
+	if !isMember {
 		log.Printf("Unauthorized bum")
 		return false
 	}
