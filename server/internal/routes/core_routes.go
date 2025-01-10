@@ -20,6 +20,7 @@ func SetupCoreRouter(app *firebase.App, client *firestore.Client) *router.Router
 	})
 
 	SetupUserRoutes(r, client)
+	SetupSpaceRoutes(r, client)
 
 	return r
 }
