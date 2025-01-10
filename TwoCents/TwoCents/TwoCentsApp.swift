@@ -64,6 +64,8 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     }
     
     func application(_ application: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
+                print("Ran thing 2")
+
         handleUniversalLink(url)
         return true
     }
@@ -83,18 +85,15 @@ class AppDelegate: NSObject, UIApplicationDelegate {
             print("Universal link has no subject (e.g. spaceId, friendUid, inviteId) ")
             return
         }
+        print("asdfkalsjdfalskjdflk")
         
         //Tenatively we'll use these link actions, can change if we want it to
         switch action {
         case "space":
             print("space link")
             
-            guard let spaceJwtToken = components[safe: 3] else {
-                print("Universal link has no spaceJwtToken")
-                return
-            }
             
-            isValidSpaceLink(spaceId: subject, spaceToken: spaceJwtToken, completion: { [weak self] valid in
+            isValidSpaceLink(spaceId: subject, completion: { [weak self] valid in
                 guard let self = self else {
                     return
                 }
@@ -114,6 +113,16 @@ class AppDelegate: NSObject, UIApplicationDelegate {
             print("friend link")
         case "invite":
             print("invite link")
+            guard let spaceToken = components[safe: 3] else {
+                print("Universal link has no spaceJwtToken")
+                return
+            }
+            
+            guard let appModel = appModel else {
+                print("AppModel not initialized yet")
+                return
+            }
+            appModel.activeSheet = .joinSpaceView(spaceId: subject, spaceToken: spaceToken)
         default:
             //Should never return if it does continue normal execution
             print("Must set switch statement of subject")
@@ -121,7 +130,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         }
     }
     
-    func isValidSpaceLink(spaceId: String, spaceToken: String, completion: @escaping (Bool) -> Void) {
+    func isValidSpaceLink(spaceId: String, completion: @escaping (Bool) -> Void) {
         Firestore.firestore().collection("spaces").document(spaceId).getDocument(completion: { snapshot, error in
             if let error = error {
                 print("Error fetching documents: \(error)")
@@ -139,12 +148,12 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     }
     
     func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
+        print("Ran thing 1")
         guard userActivity.activityType == NSUserActivityTypeBrowsingWeb,
               let incomingURL = userActivity.webpageURL
         else {
             return false
         }
-        
         handleUniversalLink(incomingURL)
         return true
     }

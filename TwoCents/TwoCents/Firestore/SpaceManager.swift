@@ -201,7 +201,7 @@ final class SpaceManager{
     func generateSpaceLink(spaceId: String ) async throws -> String {
         
         let spaceToken = try await fetchSpaceToken(spaceId: spaceId)
-        return "https://api.twocentsapp.com/app/space/\(spaceId)/\(spaceToken)"
+        return "https://api.twocentsapp.com/app/invite/\(spaceId)/\(spaceToken)"
         
     }
     

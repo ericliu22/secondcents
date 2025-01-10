@@ -56,6 +56,7 @@
 		A26EFB1E2CFEC7D600238622 /* FriendRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A26EFB1D2CFEC7CF00238622 /* FriendRequest.swift */; };
 		A279471B2C7954C800EFC28A /* NotificationWidgetWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A279471A2C7954C800EFC28A /* NotificationWidgetWrapper.swift */; };
 		A2AC0C0C2D319E3100B6BF15 /* QRCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2AC0C0B2D319E2900B6BF15 /* QRCodeView.swift */; };
+		A2AC0C0E2D31C5C600B6BF15 /* JoinSpaceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2AC0C0D2D31C5C000B6BF15 /* JoinSpaceView.swift */; };
 		A2C0A2212C77E9060061F62D /* NotificationsCountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2C0A2202C77E9060061F62D /* NotificationsCountView.swift */; };
 		A2C6FE962C5EB94F0074C475 /* LinkWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2C6FE952C5EB94F0074C475 /* LinkWidget.swift */; };
 		A2C6FE982C5ECAD40074C475 /* NewLinkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2C6FE972C5ECAD40074C475 /* NewLinkView.swift */; };
@@ -238,6 +239,7 @@
 		A26EFB1D2CFEC7CF00238622 /* FriendRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendRequest.swift; sourceTree = "<group>"; };
 		A279471A2C7954C800EFC28A /* NotificationWidgetWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationWidgetWrapper.swift; sourceTree = "<group>"; };
 		A2AC0C0B2D319E2900B6BF15 /* QRCodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeView.swift; sourceTree = "<group>"; };
+		A2AC0C0D2D31C5C000B6BF15 /* JoinSpaceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoinSpaceView.swift; sourceTree = "<group>"; };
 		A2C0A2202C77E9060061F62D /* NotificationsCountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsCountView.swift; sourceTree = "<group>"; };
 		A2C6FE952C5EB94F0074C475 /* LinkWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkWidget.swift; sourceTree = "<group>"; };
 		A2C6FE972C5ECAD40074C475 /* NewLinkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewLinkView.swift; sourceTree = "<group>"; };
@@ -644,6 +646,7 @@
 				ABF172A62BFC6686000B6F9B /* AddMemberView.swift */,
 				A2C0A2202C77E9060061F62D /* NotificationsCountView.swift */,
 				A2AC0C0B2D319E2900B6BF15 /* QRCodeView.swift */,
+				A2AC0C0D2D31C5C000B6BF15 /* JoinSpaceView.swift */,
 			);
 			path = Spaces;
 			sourceTree = "<group>";
@@ -1037,6 +1040,7 @@
 				AB58C1E62BDAF54B000B0AC1 /* SpaceSettingsViewModel.swift in Sources */,
 				AB370E0D2C34EDD400C4431F /* ChatViewModel.swift in Sources */,
 				856E80BD2B50EB260078A2CE /* SabotageGameViewModel.swift in Sources */,
+				A2AC0C0E2D31C5C600B6BF15 /* JoinSpaceView.swift in Sources */,
 				A24087272D013265000E36DC /* AddFriendsFromContactsViewModel.swift in Sources */,
 				ABCDA06E2C39B04A002C23E1 /* NewTodoViewModel.swift in Sources */,
 				850958A72AB8F41D00018A32 /* HotSeat.swift in Sources */,

@@ -8,21 +8,31 @@ import Foundation
 import CoreImage.CIFilterBuiltins
 import UIKit
 
-enum JoinSpaceError: Error{
+enum JoinSpaceError: Error {
     case invalidUrl
     case unauthorizedApp
+    case invalidResponse
+    case serverError(message: String, code: Int)
+    case invalidResponseData
 }
 
 extension JoinSpaceError: LocalizedError {
     public var errorDescription: String? {
         switch self {
         case .invalidUrl:
-            return NSLocalizedString("Invalid URL", comment: "")
+            return NSLocalizedString("Invalid URL.", comment: "")
         case .unauthorizedApp:
-            return NSLocalizedString("App user is not authorized", comment: "")
+            return NSLocalizedString("User is not authorized.", comment: "")
+        case .invalidResponse:
+            return NSLocalizedString("Invalid response from server.", comment: "")
+        case .serverError(let message, _):
+            return NSLocalizedString("Server error: \(message)", comment: "")
+        case .invalidResponseData:
+            return NSLocalizedString("Invalid response data.", comment: "")
         }
     }
 }
+
 
 /**
  
@@ -31,7 +41,7 @@ extension JoinSpaceError: LocalizedError {
  REQUIREMENTS:
  - Authorization token of the user to verify request (prevents forcing users into random spaces)
  - Valid link of space (prevents random users into spaces) space JWT token
-     - Initial QRCode/Link must have the following structure: https://api.twocentsapp.com/app/space/{spaceId}/{spaceJwtToken}
+     - Initial QRCode/Link must have the following structure: https://api.twocentsapp.com/app/space/invite/{spaceId}/{spaceJwtToken}
  (This shit so sus lmao)
  
  Assumes the user currently on the app is the one that is trying to join the space. There is the following workflow that must happen in order:
@@ -47,20 +57,23 @@ extension JoinSpaceError: LocalizedError {
  10. (Optional and really hard) auto navigate app to space
 */
 func joinSpace(spaceId: String, spaceToken: String) async throws {
-    guard let apiUrl: URL = URL(string: "https://api.twocentsapp.com/v1/space/join-space/\(spaceId)") else {
+    // Validate and construct the URL
+    guard let apiUrl = URL(string: "https://api.twocentsapp.com/v1/space/join-space") else {
         throw JoinSpaceError.invalidUrl
     }
     
+    // Get the Firebase token
     guard let firebaseToken = try? await AuthenticationManager.shared.getJwtToken() else {
         throw JoinSpaceError.unauthorizedApp
     }
     
+    // Create the URLRequest
     var request = URLRequest(url: apiUrl)
-    
     request.httpMethod = "POST"
     request.setValue("application/json", forHTTPHeaderField: "Content-Type")
     request.setValue("Bearer \(firebaseToken)", forHTTPHeaderField: "Authorization")
     
+    // Encode the request body
     let joinRequest = JoinSpaceRequest(spaceId: spaceId, spaceToken: spaceToken)
     do {
         let body = try JSONEncoder().encode(joinRequest)
@@ -68,7 +81,26 @@ func joinSpace(spaceId: String, spaceToken: String) async throws {
     } catch {
         throw error
     }
+    
+    // Perform the network request
+    let (data, response) = try await URLSession.shared.data(for: request)
+    
+    // Validate the HTTP response
+    guard let httpResponse = response as? HTTPURLResponse else {
+        throw JoinSpaceError.invalidResponse
+    }
+    
+    // Check if the response indicates success
+    guard (200...299).contains(httpResponse.statusCode) else {
+        // Read error message from server response
+        let serverErrorMessage = String(data: data, encoding: .utf8) ?? "Unknown server error"
+        throw JoinSpaceError.serverError(message: serverErrorMessage, code: httpResponse.statusCode)
+    }
+    
+    // Optionally, process the response data if needed
+    // For example, parse any returned JSON data
 }
+
 
 fileprivate struct JoinSpaceRequest: Codable {
     let spaceId: String

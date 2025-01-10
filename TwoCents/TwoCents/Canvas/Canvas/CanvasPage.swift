@@ -180,7 +180,6 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                             viewModel.inSettingsView = true
                         }
                         .onDisappear {
-                            viewModel.activeSheet = .chat
                             viewModel.inSettingsView = false
                         }
                 } label: {

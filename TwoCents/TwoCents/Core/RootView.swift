@@ -9,16 +9,45 @@ import SwiftUI
 import Firebase
 
 
-enum PopupSheet: Identifiable  {
+enum PopupSheet: Identifiable, Equatable {
+    case customizeProfileView
+    case signInView
+    case verifyCodeView
+    case signUpPhoneNumberView
+    case addFriendFromContactsView
+    case joinSpaceView(spaceId: String, spaceToken: String)
     
-    
-    
-    case customizeProfileView, signInView, verifyCodeView, signUpPhoneNumberView, addFriendFromContactsView
-    
-    var id: Self {
-        return self
+    var id: String {
+        switch self {
+        case .customizeProfileView:
+            return "customizeProfileView"
+        case .signInView:
+            return "signInView"
+        case .verifyCodeView:
+            return "verifyCodeView"
+        case .signUpPhoneNumberView:
+            return "signUpPhoneNumberView"
+        case .addFriendFromContactsView:
+            return "addFriendFromContactsView"
+        case .joinSpaceView(let spaceId, let spaceToken):
+            return "joinSpaceView-\(spaceId)-\(spaceToken)"
+        }
     }
     
+    static func == (lhs: PopupSheet, rhs: PopupSheet) -> Bool {
+        switch (lhs, rhs) {
+        case (.customizeProfileView, .customizeProfileView),
+             (.signInView, .signInView),
+             (.verifyCodeView, .verifyCodeView),
+             (.signUpPhoneNumberView, .signUpPhoneNumberView),
+             (.addFriendFromContactsView, .addFriendFromContactsView):
+            return true
+        case let (.joinSpaceView(lhsSpaceId, lhsSpaceToken), .joinSpaceView(rhsSpaceId, rhsSpaceToken)):
+            return lhsSpaceId == rhsSpaceId && lhsSpaceToken == rhsSpaceToken
+        default:
+            return false
+        }
+    }
 }
 
 struct RootView: View {
@@ -74,7 +103,8 @@ struct RootView: View {
                     NavigationView{
                         AddFriendFromContactsView()
                     }
-                    
+                case .joinSpaceView(let spaceId, let spaceToken):
+                    JoinSpaceView(spaceId: spaceId, spaceToken: spaceToken)
                 }
             }
         

@@ -198,7 +198,7 @@ struct SpacesView: View {
                                     .onAppear {
                                         if let notificationCount = viewModel.notificationCount[spaceTile.spaceId] {
                                             let currentBadgeNumber = UIApplication.shared.applicationIconBadgeNumber
-                                            UNUserNotificationCenter.current().setBadgeCount(currentBadgeNumber - notificationCount)
+                                            UNUserNotificationCenter.current().setBadgeCount(max(currentBadgeNumber - notificationCount, 0))
                                         }
                                     }
                                 
