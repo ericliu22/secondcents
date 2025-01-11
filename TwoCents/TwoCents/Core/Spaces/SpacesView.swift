@@ -242,8 +242,14 @@ struct SpacesView: View {
         .task {
             await handleNavigationRequest()
         }
-        .onChange(of: appModel.navigationRequest) { _ in
+        .onChange(of: appModel.navigationRequest) {
             Task { await handleNavigationRequest() }
+        }
+        .onChange(of: appModel.user) {
+            viewModel.detachListener()
+            if let user = appModel.user {
+                viewModel.attachSpacesListener(userId: user.userId)
+            }
         }
         .environment(viewModel)
         

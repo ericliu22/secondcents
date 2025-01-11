@@ -21,6 +21,7 @@ final class SpacesViewModel {
     var newSpaceUUID = UUID().uuidString
     var searchTerm = ""
     var isShowingCreateSpaces: Bool = false
+    private var spacesListener: ListenerRegistration? // Store the listener reference
     
     init() {
         Task {
@@ -40,7 +41,8 @@ final class SpacesViewModel {
     }
     
     func attachSpacesListener(userId: String) {
-        Firestore.firestore().collection("spaces").whereField("members", arrayContains: userId).addSnapshotListener({ [weak self] querySnapshot, error in
+        spacesListener?.remove()
+        spacesListener = Firestore.firestore().collection("spaces").whereField("members", arrayContains: userId).addSnapshotListener({ [weak self] querySnapshot, error in
             guard let self = self else {
                 print("SpacesViewModel: attachSpacesLitener weak self no reference")
                 return
@@ -58,6 +60,11 @@ final class SpacesViewModel {
             }
             self.finishedLoading = true
         })
+    }
+    
+    func detachListener() {
+        spacesListener?.remove()
+        spacesListener = nil
     }
     
     func getNotifcationCount() async {
