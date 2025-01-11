@@ -11,12 +11,17 @@ import SwiftUI
 
 struct ZoomableScrollView<Content: View>: UIViewRepresentable {
     private var content: Content
+    
     @Environment(CanvasPageViewModel.self) var canvasViewModel
+    //@TODO: Can change this with just user lmao
     @Environment(AppModel.self) var appModel
 
-    init(@ViewBuilder content: () -> Content) {
+    init(
+        @ViewBuilder content: () -> Content
+    ) {
         self.content = content()
     }
+    
 
     func makeUIView(context: Context) -> UIScrollView {
         let scrollView = UIScrollView()
@@ -34,13 +39,19 @@ struct ZoomableScrollView<Content: View>: UIViewRepresentable {
         hostedView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.addSubview(hostedView)
 
+        context.coordinator.scrollView = scrollView
         return scrollView
     }
 
     func makeCoordinator() -> Coordinator {
-        return Coordinator(
+        let c = Coordinator(
             hostingController: UIHostingController(rootView: self.content),
-            canvasViewModel: canvasViewModel, appModel: appModel)
+            canvasViewModel: canvasViewModel,
+            appModel: appModel
+        )
+        // 1) Fire the callback
+        canvasViewModel.coordinator = c
+        return c
     }
 
     func updateUIView(_ uiView: UIScrollView, context: Context) {
@@ -79,6 +90,8 @@ struct ZoomableScrollView<Content: View>: UIViewRepresentable {
     }
 
     class Coordinator: NSObject, UIScrollViewDelegate {
+        weak var scrollView: UIScrollView?
+        
         var hostingController: UIHostingController<Content>
         var canvasViewModel: CanvasPageViewModel
         var appModel: AppModel
@@ -114,6 +127,8 @@ struct ZoomableScrollView<Content: View>: UIViewRepresentable {
             updateCenter(for: scrollView)
             resetIdleTimer(scrollView)
             checkVisibleBounds(scrollView)
+            let rect = getUnscaledVisibleRect(scrollView: scrollView)
+            canvasViewModel.visibleRectInCanvas = rect
         }
         
         func scrollViewDidZoom(_ scrollView: UIScrollView) {
@@ -121,6 +136,8 @@ struct ZoomableScrollView<Content: View>: UIViewRepresentable {
             updateCenter(for: scrollView)
             resetIdleTimer(scrollView)
             checkVisibleBounds(scrollView)
+            let rect = getUnscaledVisibleRect(scrollView: scrollView)
+            canvasViewModel.visibleRectInCanvas = rect
         }
 
         private func checkVisibleBounds(_ scrollView: UIScrollView) {
@@ -220,6 +237,36 @@ struct ZoomableScrollView<Content: View>: UIViewRepresentable {
                 height: view.intrinsicContentSize.height * zoomScale)
             scrollView.contentSize = contentSize
         }
+        
+        // In ZoomableScrollView.Coordinator
+        func scrollToWidget(_ widget: CanvasWidget) {
+            // 1) Grab the scrollView from our stored reference
+            guard let scrollView = self.scrollView else { return }
+
+            // 2) The rest of your logic is unchanged:
+            guard let hostedView = scrollView.subviews.first else { return }
+            
+            let unscaledWidth = hostedView.intrinsicContentSize.width
+            let unscaledHeight = hostedView.intrinsicContentSize.height
+
+            let widgetCenterX = (widget.x ?? 0) + widget.width / 2
+            let widgetCenterY = (widget.y ?? 0) + widget.height / 2
+
+            let zoomedX = widgetCenterX * scrollView.zoomScale
+            let zoomedY = widgetCenterY * scrollView.zoomScale
+
+            let offsetX = zoomedX - (scrollView.bounds.width / 2)
+            let offsetY = zoomedY - (scrollView.bounds.height / 2)
+
+            let maxOffsetX = scrollView.contentSize.width - scrollView.bounds.width
+            let maxOffsetY = scrollView.contentSize.height - scrollView.bounds.height
+
+            let clampedX = max(0, min(offsetX, maxOffsetX))
+            let clampedY = max(0, min(offsetY, maxOffsetY))
+
+            scrollView.setContentOffset(CGPoint(x: clampedX, y: clampedY), animated: true)
+        }
+
 
         private func autoCenterOnCursor(_ scrollView: UIScrollView) {
             guard let hostedView = scrollView.subviews.first else { return }
@@ -233,8 +280,8 @@ struct ZoomableScrollView<Content: View>: UIViewRepresentable {
             //    or maybe it's top-left based. Adjust if needed.
             //    For example, if (0,0) is the subview center, then to get the
             //    subview’s absolute coordinate for that cursor, we do:
-            let cursorX = canvasViewModel.cursor.x + (unscaledWidth / 2)
-            let cursorY = canvasViewModel.cursor.y + (unscaledHeight / 2)
+            let cursorX = canvasViewModel.scrollViewCursor.x + (unscaledWidth / 2)
+            let cursorY = canvasViewModel.scrollViewCursor.y + (unscaledHeight / 2)
 
             // 3) Convert from unscaled coords to zoomed coords:
             let zoomedX = cursorX * scrollView.zoomScale
@@ -277,6 +324,8 @@ struct ZoomableScrollView<Content: View>: UIViewRepresentable {
             // 2) Convert to unscaled coordinates by dividing out zoomScale:
             var unscaledCenterX = zoomedCenterX / scrollView.zoomScale
             var unscaledCenterY = zoomedCenterY / scrollView.zoomScale
+            
+            canvasViewModel.canvasPageCursor = CGPoint(x: unscaledCenterX, y: unscaledCenterY)
 
             canvasViewModel.widgetCursor = CGPoint(
                 x: roundToTile(number: unscaledCenterX),
@@ -294,8 +343,26 @@ struct ZoomableScrollView<Content: View>: UIViewRepresentable {
             let centerPoint = CGPoint(
                 x: roundToTile(number: unscaledCenterX),
                 y: roundToTile(number: unscaledCenterY))
-            canvasViewModel.cursor = centerPoint
+            canvasViewModel.scrollViewCursor = centerPoint
         }
 
+        func getUnscaledVisibleRect(scrollView: UIScrollView) -> CGRect {
+            let scale = scrollView.zoomScale
+            
+            let x = scrollView.contentOffset.x / scale
+            let y = scrollView.contentOffset.y / scale
+            let width = scrollView.bounds.size.width / scale
+            let height = scrollView.bounds.size.height / scale
+            
+            return CGRect(x: x, y: y, width: width, height: height)
+        }
     }
+}
+
+protocol ZoomCoordinatorProtocol: AnyObject {
+    func scrollToWidget(_ widget: CanvasWidget)
+}
+
+extension ZoomableScrollView.Coordinator: ZoomCoordinatorProtocol {
+    // already has scrollToWidget, so we conform
 }

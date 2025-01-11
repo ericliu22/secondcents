@@ -47,7 +47,6 @@ struct FrontPageView: View {
             .badge(friendRequests)
             .tag(2)
             
-            
         })
         .onAppear {
             //No error printing at all lowkey jank if something fucks up it's this

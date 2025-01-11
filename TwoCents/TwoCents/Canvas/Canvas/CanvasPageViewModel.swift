@@ -32,10 +32,12 @@ final class CanvasPageViewModel {
     var refreshId = UUID()
     var delegate: CanvasViewModelDelegate?
     var canvasMode: CanvasMode = .normal
-    var zoomScale: CGFloat = 1.0
-    var cursor: CGPoint = CGPoint(x: 0, y: 0)
+    var scrollViewCursor: CGPoint = CGPoint(x: 0, y: 0)
+    var canvasPageCursor: CGPoint = CGPoint(x: 0, y: 0)
     var widgetCursor: CGPoint = CGPoint(x: 0, y: 0)
     var unreadWidgets: [String] = []
+    var visibleRectInCanvas: CGRect = CGRect(x: 0, y:0, width: 0, height: 0)
+    weak var coordinator: ZoomCoordinatorProtocol?
 
     /* Eric: Don't delete this
      init(spaceId: String) {
@@ -63,6 +65,11 @@ final class CanvasPageViewModel {
         self.spaceId = spaceId
     }
 
+    func scrollTo(widgetId: String) {
+        guard let widget = canvasWidgets.first(where: { $0.id.uuidString == widgetId }) else { return }
+        coordinator?.scrollToWidget(widget)
+    }
+    
     func loadCurrentSpace() async throws {
         self.space = try await SpaceManager.shared.getSpace(spaceId: spaceId)
     }

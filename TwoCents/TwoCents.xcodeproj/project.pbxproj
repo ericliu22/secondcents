@@ -55,6 +55,7 @@
 		A26809CA2AB8A77E003B30DE /* VoteGameReal.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20EBD072AB8A36100EFDDE8 /* VoteGameReal.swift */; };
 		A26EFB1E2CFEC7D600238622 /* FriendRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A26EFB1D2CFEC7CF00238622 /* FriendRequest.swift */; };
 		A279471B2C7954C800EFC28A /* NotificationWidgetWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A279471A2C7954C800EFC28A /* NotificationWidgetWrapper.swift */; };
+		A2A33CA02D32D35600056DE6 /* OffScreenIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2A33C9F2D32D34B00056DE6 /* OffScreenIndicator.swift */; };
 		A2AC0C0C2D319E3100B6BF15 /* QRCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2AC0C0B2D319E2900B6BF15 /* QRCodeView.swift */; };
 		A2AC0C0E2D31C5C600B6BF15 /* JoinSpaceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2AC0C0D2D31C5C000B6BF15 /* JoinSpaceView.swift */; };
 		A2C0A2212C77E9060061F62D /* NotificationsCountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2C0A2202C77E9060061F62D /* NotificationsCountView.swift */; };
@@ -238,6 +239,7 @@
 		A257D7A02A6D707800A4E7BD /* TwoCentsUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwoCentsUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		A26EFB1D2CFEC7CF00238622 /* FriendRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendRequest.swift; sourceTree = "<group>"; };
 		A279471A2C7954C800EFC28A /* NotificationWidgetWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationWidgetWrapper.swift; sourceTree = "<group>"; };
+		A2A33C9F2D32D34B00056DE6 /* OffScreenIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OffScreenIndicator.swift; sourceTree = "<group>"; };
 		A2AC0C0B2D319E2900B6BF15 /* QRCodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeView.swift; sourceTree = "<group>"; };
 		A2AC0C0D2D31C5C000B6BF15 /* JoinSpaceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoinSpaceView.swift; sourceTree = "<group>"; };
 		A2C0A2202C77E9060061F62D /* NotificationsCountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsCountView.swift; sourceTree = "<group>"; };
@@ -452,6 +454,7 @@
 		A240F6752C6964BA00618903 /* Canvas */ = {
 			isa = PBXGroup;
 			children = (
+				A2A33C9F2D32D34B00056DE6 /* OffScreenIndicator.swift */,
 				A2E5F52A2B5A12D30019C6ED /* DrawingCanvas.swift */,
 				A2F563182AB4E6240026D8C9 /* CanvasPage.swift */,
 				AB6EA6092B879B7C00CC90FF /* CanvasPageViewModel.swift */,
@@ -1160,6 +1163,7 @@
 				AB6778E42AB8F67800C11AA7 /* CanvasWidget.swift in Sources */,
 				ABF56DFF2A7C8C5200F959DB /* SettingsViewModel.swift in Sources */,
 				AB842C102A91E52000E4A7CE /* ProfileViewModel.swift in Sources */,
+				A2A33CA02D32D35600056DE6 /* OffScreenIndicator.swift in Sources */,
 				A2DDB1B92BB6806C00243E1B /* PollWidget.swift in Sources */,
 				AB7438432AAA34AD001B4988 /* SearchUserViewModel.swift in Sources */,
 				AB2E56CA2AE9BB410096A58C /* SpaceManager.swift in Sources */,

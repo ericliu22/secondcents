@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct JoinSpaceView: View {
+    
+    @Environment(AppModel.self) var appModel
 
     let spaceId: String
     let spaceToken: String
@@ -73,7 +75,14 @@ struct JoinSpaceView: View {
             .cornerRadius(20)
 
             Button {
-                print("hello")
+                appModel.activeSheet = nil
+                Task {
+                    do {
+                        try await joinSpace(spaceId: spaceId, spaceToken: spaceToken)
+                    } catch {
+                        print("Failed to join space")
+                    }
+                }
             } label: {
                 Text("Join Space")
                     .font(.headline)
@@ -95,8 +104,4 @@ struct JoinSpaceView: View {
             }
         }
     }
-}
-
-#Preview {
-    JoinSpaceView(spaceId: "232D4422-8856-468B-A9F3-E0DAD5180F82", spaceToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MzY2Mjk5NzIsImlhdCI6MTczNjU0MzU3Miwic3ViIjoiMjMyRDQ0MjItODg1Ni00NjhCLUE5RjMtRTBEQUQ1MTgwRjgyIn0.HzhIPrTwl41dD6gC-HPz5YMaizsWANaxVmPYCILUZbw")
 }
