@@ -39,14 +39,20 @@ func UserNotificationHandler(httpCtx *fasthttp.RequestCtx, firestoreClient *fire
 
 	log.Printf("Parsed UserNotificationRequest: %+v\n", notificationRequest)
 
-	user, userErr := models.GetUser(firestoreClient, firebaseCtx, userId)
+	receiverUser, userErr := models.GetUser(firestoreClient, firebaseCtx, notificationRequest.UserId)
+	if userErr != nil {
+		httpCtx.Error("Internal server error", fasthttp.StatusBadRequest)
+		log.Printf("Failed to get user: %v", userErr.Error())
+		return
+	}
+	senderUser, userErr := models.GetUser(firestoreClient, firebaseCtx, userId)
 	if userErr != nil {
 		httpCtx.Error("Internal server error", fasthttp.StatusBadRequest)
 		log.Printf("Failed to get user: %v", userErr.Error())
 		return
 	}
 
-	if !auth.ValidateUserNotification(userId, user) {
+	if !auth.ValidateUserNotification(userId, receiverUser) {
 		httpCtx.Error("Unauthorized", fasthttp.StatusUnauthorized)
 		log.Printf("Not friends; notification request unauhtorized")
 		return
@@ -71,16 +77,16 @@ func UserNotificationHandler(httpCtx *fasthttp.RequestCtx, firestoreClient *fire
 	case "tickle":
 		notification = notifications.SingleNotification{
 			Token: *privateUser.Token,
-			Title: user.Name,
-			Body:  user.Name + " tickled you 🤗",
-			Image: user.ProfileImageURL,
+			Title: senderUser.Name,
+			Body:  senderUser.Name + " tickled you 🤗",
+			Image: senderUser.ProfileImageURL,
 		}
 	case "multiTickle":
 		notification = notifications.SingleNotification{
 			Token: *privateUser.Token,
-			Title: user.Name,
-			Body:  user.Name + " tickled you" + notificationRequest.Data["count"] + " times 🤗",
-			Image: user.ProfileImageURL,
+			Title: senderUser.Name,
+			Body:  senderUser.Name + " tickled you" + notificationRequest.Data["count"] + " times 🤗",
+			Image: senderUser.ProfileImageURL,
 		}
 	default:
 		httpCtx.Error("Invalid request body", fasthttp.StatusBadRequest)
