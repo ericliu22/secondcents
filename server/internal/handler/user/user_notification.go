@@ -17,7 +17,6 @@ import (
 type UserNotificationRequest struct {
 	Type   string            `json:"type"`
 	UserId string            `json:"userId"`
-	Body   string            `json:"body"`
 	Data   map[string]string `json:"data"`
 }
 

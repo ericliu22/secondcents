@@ -43,7 +43,6 @@ final class FriendRequestsViewModel {
             
             do {
                 try await UserManager.shared.acceptFriendRequest(userId: authDataResultUserId, friendUserId: friendUserId)
-                await acceptFriendRequestNotification(userUID: authDataResultUserId, friendUID: friendUserId)
             } catch {
                 print(error.localizedDescription)
             }

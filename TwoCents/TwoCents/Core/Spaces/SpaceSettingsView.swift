@@ -245,10 +245,9 @@ struct SpaceSettingsView: View {
                                                     style: .medium)
                                             generator.impactOccurred()
                                             //
-                                            tickleNotification(
-                                                userUID: appModel.user!.userId,
-                                                targetUserUID: member.userId,
-                                                title: canvasViewModel.space?.name)
+                                            Task {
+                                                try await tickleNotification(userId: member.userId, count: 1)
+                                            }
 
                                         }
                                     } label: {

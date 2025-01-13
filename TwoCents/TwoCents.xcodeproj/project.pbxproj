@@ -55,6 +55,7 @@
 		A26809CA2AB8A77E003B30DE /* VoteGameReal.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20EBD072AB8A36100EFDDE8 /* VoteGameReal.swift */; };
 		A26EFB1E2CFEC7D600238622 /* FriendRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A26EFB1D2CFEC7CF00238622 /* FriendRequest.swift */; };
 		A279471B2C7954C800EFC28A /* NotificationWidgetWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A279471A2C7954C800EFC28A /* NotificationWidgetWrapper.swift */; };
+		A27E2C322D35B1750050D9C8 /* UserNotifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = A27E2C312D35B16F0050D9C8 /* UserNotifications.swift */; };
 		A2A33CA02D32D35600056DE6 /* OffScreenIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2A33C9F2D32D34B00056DE6 /* OffScreenIndicator.swift */; };
 		A2AC0C0C2D319E3100B6BF15 /* QRCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2AC0C0B2D319E2900B6BF15 /* QRCodeView.swift */; };
 		A2AC0C0E2D31C5C600B6BF15 /* JoinSpaceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2AC0C0D2D31C5C000B6BF15 /* JoinSpaceView.swift */; };
@@ -62,7 +63,7 @@
 		A2C6FE962C5EB94F0074C475 /* LinkWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2C6FE952C5EB94F0074C475 /* LinkWidget.swift */; };
 		A2C6FE982C5ECAD40074C475 /* NewLinkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2C6FE972C5ECAD40074C475 /* NewLinkView.swift */; };
 		A2C6FE9A2C5ECC170074C475 /* NewLinkViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2C6FE992C5ECC170074C475 /* NewLinkViewModel.swift */; };
-		A2DAF34B2C07CB1C00E778FA /* Notifcations.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2DAF34A2C07CB1C00E778FA /* Notifcations.swift */; };
+		A2DAF34B2C07CB1C00E778FA /* SpaceNotifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2DAF34A2C07CB1C00E778FA /* SpaceNotifications.swift */; };
 		A2DCA8E42D2628F6008551EE /* DeepLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2DCA8E32D2628E7008551EE /* DeepLink.swift */; };
 		A2DDB1B92BB6806C00243E1B /* PollWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2DDB1B82BB6806C00243E1B /* PollWidget.swift */; };
 		A2DDB1BB2BB693FD00243E1B /* NewPollViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2DDB1BA2BB693FD00243E1B /* NewPollViewModel.swift */; };
@@ -239,6 +240,7 @@
 		A257D7A02A6D707800A4E7BD /* TwoCentsUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwoCentsUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		A26EFB1D2CFEC7CF00238622 /* FriendRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendRequest.swift; sourceTree = "<group>"; };
 		A279471A2C7954C800EFC28A /* NotificationWidgetWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationWidgetWrapper.swift; sourceTree = "<group>"; };
+		A27E2C312D35B16F0050D9C8 /* UserNotifications.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserNotifications.swift; sourceTree = "<group>"; };
 		A2A33C9F2D32D34B00056DE6 /* OffScreenIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OffScreenIndicator.swift; sourceTree = "<group>"; };
 		A2AC0C0B2D319E2900B6BF15 /* QRCodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeView.swift; sourceTree = "<group>"; };
 		A2AC0C0D2D31C5C000B6BF15 /* JoinSpaceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoinSpaceView.swift; sourceTree = "<group>"; };
@@ -246,7 +248,7 @@
 		A2C6FE952C5EB94F0074C475 /* LinkWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkWidget.swift; sourceTree = "<group>"; };
 		A2C6FE972C5ECAD40074C475 /* NewLinkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewLinkView.swift; sourceTree = "<group>"; };
 		A2C6FE992C5ECC170074C475 /* NewLinkViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewLinkViewModel.swift; sourceTree = "<group>"; };
-		A2DAF34A2C07CB1C00E778FA /* Notifcations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notifcations.swift; sourceTree = "<group>"; };
+		A2DAF34A2C07CB1C00E778FA /* SpaceNotifications.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpaceNotifications.swift; sourceTree = "<group>"; };
 		A2DCA8E32D2628E7008551EE /* DeepLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeepLink.swift; sourceTree = "<group>"; };
 		A2DDB1B82BB6806C00243E1B /* PollWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollWidget.swift; sourceTree = "<group>"; };
 		A2DDB1BA2BB693FD00243E1B /* NewPollViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewPollViewModel.swift; sourceTree = "<group>"; };
@@ -577,7 +579,8 @@
 			isa = PBXGroup;
 			children = (
 				A2DCA8E32D2628E7008551EE /* DeepLink.swift */,
-				A2DAF34A2C07CB1C00E778FA /* Notifcations.swift */,
+				A2DAF34A2C07CB1C00E778FA /* SpaceNotifications.swift */,
+				A27E2C312D35B16F0050D9C8 /* UserNotifications.swift */,
 				A26EFB1D2CFEC7CF00238622 /* FriendRequest.swift */,
 				A240F67A2C6965F100618903 /* Utilities.swift */,
 				A254307B2C6AF53000999CEB /* Unread.swift */,
@@ -1096,9 +1099,10 @@
 				A2F5631E2AB4E6240026D8C9 /* CanvasPage.swift in Sources */,
 				A21E87FD2C62A1D400B48BCA /* AppModel.swift in Sources */,
 				8534B8B92B8001660089AD5C /* NewPollView.swift in Sources */,
-				A2DAF34B2C07CB1C00E778FA /* Notifcations.swift in Sources */,
+				A2DAF34B2C07CB1C00E778FA /* SpaceNotifications.swift in Sources */,
 				ABD9F23D2C1F3F910041F110 /* AddFriendFromContactsView.swift in Sources */,
 				AB90021D2A8B85DA00F970B8 /* UploadExampleViewModel.swift in Sources */,
+				A27E2C322D35B1750050D9C8 /* UserNotifications.swift in Sources */,
 				AB4C1E4F2A8785BF00588160 /* ColorSelectionView.swift in Sources */,
 				AB7438412AAA349C001B4988 /* SearchUserView.swift in Sources */,
 				AB8C6E202AE6FBD50005B7F9 /* SpacesViewModel.swift in Sources */,

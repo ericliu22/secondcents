@@ -64,7 +64,6 @@ final class ProfileViewModel: ObservableObject {
             
             try? await UserManager.shared.sendFriendRequest(userId: authDataResultUserId, friendUserId: friendUserId)
             
-            await friendRequestNotification(userUID: authDataResultUserId, friendUID: friendUserId)
         }
     }
     

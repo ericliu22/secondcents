@@ -54,7 +54,6 @@ final class SearchUserViewModel: ObservableObject {
             
             do {
                 try await UserManager.shared.sendFriendRequest(userId: authDataResultUserId, friendUserId: friendUserId)
-                await friendRequestNotification(userUID: authDataResultUserId, friendUID: friendUserId)
             } catch {
                 print(error.localizedDescription)
             }

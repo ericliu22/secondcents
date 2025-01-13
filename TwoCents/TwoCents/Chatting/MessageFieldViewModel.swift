@@ -59,7 +59,10 @@ final class MessageFieldViewModel: ObservableObject {
 
             do {
                 if let text = text, let widget = widget {
-                    messageNotification(spaceId: spaceId, userUID: user?.userId ?? "", message: text.isEmpty ? "Replied to a widget" : text)
+                    let body: String = text.isEmpty ? "Replied to a widget" : text
+                    Task {
+                        try await chatNotification(spaceId: spaceId, body: body)
+                    }
                     sendMessages(text: nil, widget: widget, spaceId: spaceId, threadId: threadId)
                     sendMessages(text: text, widget: nil, spaceId: spaceId, threadId: widget.id.uuidString)
                 } else {
@@ -84,7 +87,10 @@ final class MessageFieldViewModel: ObservableObject {
                         "lastTs": newMessage.ts
                     ], merge: true)
 
-                    messageNotification(spaceId: spaceId, userUID: user?.userId ?? "", message: text ?? "Replied to a widget")
+                    let body: String = text ?? "Replied to a widget"
+                    Task {
+                        try await chatNotification(spaceId: spaceId, body: body)
+                    }
 
                     Task {
                         await messageUnread(spaceId: spaceId)

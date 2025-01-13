@@ -414,7 +414,9 @@ struct ProfileView: View {
                                                 let currentUserId = try!  AuthenticationManager.shared.getAuthenticatedUser().uid
                                                 //
                                                 //
-                                                tickleNotification(userUID: currentUserId, targetUserUID: targetUserId.isEmpty ? currentUserId : targetUserId)
+                                                Task {
+                                                    try await tickleNotification(userId: targetUserId, count: tickleCount)
+                                                }
                                                 AnalyticsManager.shared.tickle(count: tickleCount)
                                             }
                                             
@@ -442,8 +444,9 @@ struct ProfileView: View {
                                                 
                                                 if tickleCount > 1 {
                                                     let currentUserId = try! AuthenticationManager.shared.getAuthenticatedUser().uid
-                                                    
-                                                    tickleNotification(userUID: currentUserId, targetUserUID: targetUserId.isEmpty ? currentUserId : targetUserId, count: tickleCount)
+                                                    Task {
+                                                        try await tickleNotification(userId: targetUserId, count: tickleCount)
+                                                    }
                                                     AnalyticsManager.shared.tickle(count: tickleCount)
                                                 }
                                             }
@@ -523,7 +526,9 @@ struct ProfileView: View {
                     if tickleCount > 1 {
                         let currentUserId = try! AuthenticationManager.shared.getAuthenticatedUser().uid
                         
-                        tickleNotification(userUID: currentUserId, targetUserUID: targetUserId.isEmpty ? currentUserId : targetUserId, count: tickleCount)
+                        Task {
+                            try await tickleNotification(userId: targetUserId, count: tickleCount)
+                        }
                         AnalyticsManager.shared.tickle(count: tickleCount)
                     }
                 }

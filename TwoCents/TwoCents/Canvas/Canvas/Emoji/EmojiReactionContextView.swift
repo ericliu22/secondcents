@@ -15,6 +15,7 @@ struct EmojiReactionContextView: View {
         "⁉️":false
     ]
     @State private var emojiCount: [String: Int]
+    @Environment(AppModel.self) var appModel
     private var spaceId: String
     private var widget: CanvasWidget
     private var userUID: String
@@ -89,8 +90,16 @@ struct EmojiReactionContextView: View {
                 "emojiPressed.\(emoji)": FieldValue.arrayUnion([userUID])
             ]) { error in
                 if error == nil {
-                    reactionNotification(spaceId: spaceId, userUID: userUID, message: emojiNotification(emoji: emoji))
-                    refreshId = UUID() // Only refresh when the update is successful
+                    Task {
+                        guard let username = appModel.user?.name else {
+                            print("Failed to get username")
+                            return
+                        }
+                        let body = "\(username) \(emojiNotification(emoji: emoji))"
+                        
+                        try await reactionNotification(spaceId: spaceId, body: body, widgetId: widget.id.uuidString)
+                        refreshId = UUID() // Only refresh when the update is successful
+                    }
                 } else {
                     print("Failed to add emoji: \(error?.localizedDescription ?? "Unknown error")")
                 }
