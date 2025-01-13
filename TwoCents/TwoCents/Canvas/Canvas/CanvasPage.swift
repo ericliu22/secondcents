@@ -36,13 +36,11 @@ struct CanvasPage: View, CanvasViewModelDelegate {
     init(spaceId: String) {
         self.spaceId = spaceId
         self.viewModel = CanvasPageViewModel(spaceId: spaceId)
-        self.widgetUserId = ""
     }
 
     //Josh --> get current user
     private(set) var userId: String? = try? AuthenticationManager.shared
         .getAuthenticatedUser().uid
-    @State private var widgetUserId: String
 
     func dismissView() {
         presentationMode.wrappedValue.dismiss()
@@ -389,7 +387,6 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                 })
         //boutta fuck up this section right here lmfao
         case .text:
-            //getWidgetUserId(spaceId: spaceId, widgetId: widget.id)
             if userId == widget.userId {
                 Button(
                     action: {

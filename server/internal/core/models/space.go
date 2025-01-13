@@ -22,8 +22,8 @@ type DBSpace struct {
 	PrivateKey       *string   `firestore:"privateKey"`
 }
 
-func GetSpace(client *firestore.Client, firebaseCtx context.Context, spaceId string) (*DBSpace, error) {
-	spaceDoc := client.Collection("spaces").Doc(spaceId)
+func GetSpace(firestoreClient *firestore.Client, firebaseCtx context.Context, spaceId string) (*DBSpace, error) {
+	spaceDoc := firestoreClient.Collection("spaces").Doc(spaceId)
 
 	snapshot, err := spaceDoc.Get(firebaseCtx)
 	if err != nil {

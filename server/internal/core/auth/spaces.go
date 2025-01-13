@@ -9,14 +9,14 @@ import (
 	"time"
 
 	"cloud.google.com/go/firestore"
-	"github.com/valyala/fasthttp"
 	"github.com/golang-jwt/jwt/v5"
-	"server/internal/middleware"
+	"github.com/valyala/fasthttp"
 	"server/internal/core/models"
+	"server/internal/middleware"
 )
 
-func GetSpaceKey(ctx context.Context, client *firestore.Client, spaceId string) (string, error) {
-	spaceDoc := client.Collection("spaces").Doc(spaceId)
+func GetSpaceKey(ctx context.Context, firestoreClient *firestore.Client, spaceId string) (string, error) {
+	spaceDoc := firestoreClient.Collection("spaces").Doc(spaceId)
 
 	docSnapshot, err := spaceDoc.Get(ctx)
 	if err != nil {
@@ -37,7 +37,7 @@ func GetSpaceKey(ctx context.Context, client *firestore.Client, spaceId string) 
 		privateKey = generatePrivateKey()
 		_, err := spaceDoc.Update(ctx, []firestore.Update{
 			{
-				Path: "privateKey",
+				Path:  "privateKey",
 				Value: privateKey,
 			},
 		})
@@ -62,40 +62,40 @@ func generatePrivateKey() string {
 	return base64.StdEncoding.EncodeToString(key)
 }
 
-func createSpaceJwt(spaceId string, ctx context.Context, client *firestore.Client) (string, error) {
-    // Define claims
-    claims := jwt.MapClaims{
-        "sub": spaceId,
-        "exp": time.Now().Add(24 * time.Hour).Unix(),
-        "iat": time.Now().Unix(),
-    }
+func createSpaceJwt(spaceId string, ctx context.Context, firestoreClient *firestore.Client) (string, error) {
+	// Define claims
+	claims := jwt.MapClaims{
+		"sub": spaceId,
+		"exp": time.Now().Add(24 * time.Hour).Unix(),
+		"iat": time.Now().Unix(),
+	}
 
-    // Create the token
-    token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	// Create the token
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
-    // Retrieve the private key
-    privateKey, err := GetSpaceKey(ctx, client, spaceId)
-    if err != nil {
-        return "", err
-    }
+	// Retrieve the private key
+	privateKey, err := GetSpaceKey(ctx, firestoreClient, spaceId)
+	if err != nil {
+		return "", err
+	}
 
-    // Decode the Base64-encoded privateKey to []byte
-    decodedKey, err := base64.StdEncoding.DecodeString(privateKey)
-    if err != nil {
-        return "", fmt.Errorf("failed to decode private key: %w", err)
-    }
+	// Decode the Base64-encoded privateKey to []byte
+	decodedKey, err := base64.StdEncoding.DecodeString(privateKey)
+	if err != nil {
+		return "", fmt.Errorf("failed to decode private key: %w", err)
+	}
 
-    // Sign the token
-    tokenString, err := token.SignedString(decodedKey)
-    if err != nil {
-        return "", fmt.Errorf("failed to sign token: %w", err)
-    }
+	// Sign the token
+	tokenString, err := token.SignedString(decodedKey)
+	if err != nil {
+		return "", fmt.Errorf("failed to sign token: %w", err)
+	}
 
-    return tokenString, nil
+	return tokenString, nil
 }
 
-func ValidateSpaceToken(firebaseCtx context.Context, client *firestore.Client, tokenString string, spaceId string) (bool, error) {
-	privateKey, err := GetSpaceKey(firebaseCtx, client, spaceId)
+func ValidateSpaceToken(firebaseCtx context.Context, firestoreClient *firestore.Client, tokenString string, spaceId string) (bool, error) {
+	privateKey, err := GetSpaceKey(firebaseCtx, firestoreClient, spaceId)
 	if err != nil {
 		return false, err
 	}
@@ -104,56 +104,56 @@ func ValidateSpaceToken(firebaseCtx context.Context, client *firestore.Client, t
 }
 
 func isValidToken(tokenString string, privateKey string) (bool, error) {
-    // Decode the Base64-encoded privateKey to []byte
-    decodedKey, err := base64.StdEncoding.DecodeString(privateKey)
-    if err != nil {
-        return false, fmt.Errorf("failed to decode private key: %w", err)
-    }
+	// Decode the Base64-encoded privateKey to []byte
+	decodedKey, err := base64.StdEncoding.DecodeString(privateKey)
+	if err != nil {
+		return false, fmt.Errorf("failed to decode private key: %w", err)
+	}
 
-    // Parse the token
-    token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-        // Validate the signing method
-        if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-            return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
-        }
+	// Parse the token
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		// Validate the signing method
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+		}
 
-        // Return the decoded key for validation
-        return decodedKey, nil
-    })
-    if err != nil {
-        return false, err
-    }
+		// Return the decoded key for validation
+		return decodedKey, nil
+	})
+	if err != nil {
+		return false, err
+	}
 
-    // Extract claims and check validity
-    if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-        // Extract the expiration time
-        if exp, ok := claims["exp"].(float64); ok {
-            expirationTime := time.Unix(int64(exp), 0)
-            isValid := time.Now().Before(expirationTime)
-            return isValid, nil
-        }
-        return false, fmt.Errorf("expiration (exp) claim missing or invalid")
-    }
+	// Extract claims and check validity
+	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
+		// Extract the expiration time
+		if exp, ok := claims["exp"].(float64); ok {
+			expirationTime := time.Unix(int64(exp), 0)
+			isValid := time.Now().Before(expirationTime)
+			return isValid, nil
+		}
+		return false, fmt.Errorf("expiration (exp) claim missing or invalid")
+	}
 
-    return false, fmt.Errorf("invalid token")
+	return false, fmt.Errorf("invalid token")
 }
 
-func isMember(space *models.DBSpace, userId string) (bool, error) {
+func isMember(space *models.DBSpace, userId string) bool {
 	// Query the document to check if the user is in the 'members' array
 
 	// Check if the userID exists in the array
 	for _, member := range *space.Members {
 		if member == userId {
-			return true, nil
+			return true
 		}
 	}
 
-	return false, nil
+	return false
 }
 
-func GenerateSpaceToken(ctx context.Context, client *firestore.Client, spaceId string) (string, error) {
+func GenerateSpaceToken(ctx context.Context, firestoreClient *firestore.Client, spaceId string) (string, error) {
 
-	token, err := createSpaceJwt(spaceId, ctx, client)
+	token, err := createSpaceJwt(spaceId, ctx, firestoreClient)
 	if err != nil {
 		return "", err
 	}
@@ -168,16 +168,14 @@ func ValidateGenerateInviteLink(httpCtx *fasthttp.RequestCtx, space *models.DBSp
 		return false
 	}
 
-	isMember, membershipErr := isMember(space, authenticatedUserId)
-	if membershipErr != nil {
-		log.Printf(membershipErr.Error())
-		return false
-	}
-
-	if !isMember {
+	if !isMember(space, authenticatedUserId) {
 		log.Printf("Unauthorized bum")
 		return false
 	}
 
 	return true
+}
+
+func ValidateSpaceNotifcationRequest(space *models.DBSpace, userId string) bool {
+	return isMember(space, userId)
 }

@@ -12,7 +12,6 @@ import SwiftUI
 struct DBUser: Identifiable, Codable, Equatable {
     var id: String { userId }
     let userId: String
-    let email: String?
    
     let dateCreated: Date?
     let name: String?
@@ -23,13 +22,11 @@ struct DBUser: Identifiable, Codable, Equatable {
     let friends: Array<String>?
     let incomingFriendRequests: Array<String>?
     let outgoingFriendRequests: Array<String>?
-    let userPhoneNumber: String?
     
     //create from just name
     
     init(uid: String, name: String, userPhoneNumber: String) {
         self.userId = uid
-        self.email = ""
        
         self.dateCreated = Date()
         self.name = name
@@ -40,8 +37,6 @@ struct DBUser: Identifiable, Codable, Equatable {
         self.friends = []
         self.incomingFriendRequests = []
         self.outgoingFriendRequests = []
-        self.userPhoneNumber = userPhoneNumber
-        
     }
     
     
@@ -50,7 +45,6 @@ struct DBUser: Identifiable, Codable, Equatable {
     //create from auth data result
     init(auth: AuthDataResultModel, name: String, username: String) {
         self.userId = auth.uid
-        self.email = auth.email
        
         self.dateCreated = Date()
         self.name = name
@@ -61,28 +55,22 @@ struct DBUser: Identifiable, Codable, Equatable {
         self.friends = []
         self.incomingFriendRequests = []
         self.outgoingFriendRequests = []
-        self.userPhoneNumber = ""
     }
     
     
     
     init(
         userId: String,
-        email: String? = nil,
-
         dateCreated: Date? = nil,
         name: String? = nil,
         username: String? = nil,
         profileImagePath: String? = nil,
         profileImageUrl: String? = nil,
         userColor: String? = nil,
-        friends: Array<String>? = nil,
-        incomingFriendRequests: Array<String>? = nil,
-        outgoingFriendRequests: Array<String>? = nil
+        friends: Array<String>? = nil
     )
     {
         self.userId = userId
-        self.email = email
     
         self.dateCreated = dateCreated
         self.name = name
@@ -93,7 +81,6 @@ struct DBUser: Identifiable, Codable, Equatable {
         self.friends = []
         self.incomingFriendRequests = []
         self.outgoingFriendRequests = []
-        self.userPhoneNumber = ""
     }
     
     
@@ -101,7 +88,7 @@ struct DBUser: Identifiable, Codable, Equatable {
 
 final class UserManager{
     
-    static let shared = UserManager()
+    @MainActor static let shared = UserManager()
     private init() { }
     
     //so you dont have to type this many times... creates cleaner code

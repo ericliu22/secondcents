@@ -32,13 +32,19 @@ func main() {
 		log.Fatalf("error initializing Firebase app: %v", err)
 	}
 
-	client, err := app.Firestore(context.Background())
+	firestoreClient, err := app.Firestore(context.Background())
 	if err != nil {
 		log.Fatalf("Error initializing Firestore client: %v", err)
 	}
-	defer client.Close()
+	defer firestoreClient.Close()
 
-	coreRouter := routes.SetupCoreRouter(app, client)
+	messagingClient, err := app.Messaging(context.Background())
+	if err != nil {
+		log.Fatalf("Error intializing Firebase Messing Client: %v", err)
+	}
+	defer firestoreClient.Close()
+
+	coreRouter := routes.SetupCoreRouter(firestoreClient, messagingClient)
 
 	authClient, err := app.Auth(context.Background())
 	if err != nil {

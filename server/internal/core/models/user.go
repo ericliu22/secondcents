@@ -9,7 +9,6 @@ import (
 
 type DBUser struct {
 	UserID                 string    `firestore:"userId"`
-	Email                  *string   `firestore:"email"`
 	DateCreated            time.Time `firestore:"dateCreated"`
 	Name                   string    `firestore:"name"`
 	Username               string    `firestore:"username"`
@@ -19,11 +18,16 @@ type DBUser struct {
 	Friends                *[]string `firestore:"friends"`
 	IncomingFriendRequests *[]string `firestore:"incomingFriendRequests"`
 	OutgoingFriendRequests *[]string `firestore:"outgoingFriendRequests"`
-	UserPhoneNumber        *string   `firestore:"userPhoneNumber"`
 }
 
-func GetUser(client *firestore.Client, firebaseCtx context.Context, userId string) (*DBUser, error) {
-	spaceDoc := client.Collection("users").Doc(userId)
+type PrivateUser struct {
+	Email           *string `firestore:"email"`
+	UserPhoneNumber *string `firestore:"email"`
+	Token           *string `firestore:"token"`
+}
+
+func GetUser(firestoreClient *firestore.Client, firebaseCtx context.Context, userId string) (*DBUser, error) {
+	spaceDoc := firestoreClient.Collection("users").Doc(userId)
 
 	snapshot, err := spaceDoc.Get(firebaseCtx)
 	if err != nil {
@@ -36,4 +40,20 @@ func GetUser(client *firestore.Client, firebaseCtx context.Context, userId strin
 	}
 
 	return &user, nil // Return a pointer to DBUser
+}
+
+func GetPrivateUser(firestoreClient *firestore.Client, firebaseCtx context.Context, userId string) (*PrivateUser, error) {
+	spaceDoc := firestoreClient.Collection("usersPrivate").Doc(userId)
+
+	snapshot, err := spaceDoc.Get(firebaseCtx)
+	if err != nil {
+		return nil, err
+	}
+
+	var privateUser PrivateUser
+	if err := snapshot.DataTo(&privateUser); err != nil {
+		return nil, err
+	}
+
+	return &privateUser, nil // Return a pointer to PrivateUser
 }

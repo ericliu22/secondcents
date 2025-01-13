@@ -212,7 +212,7 @@ extension AppDelegate: MessagingDelegate {
     func uploadTokenToServer(_ token: String) {
         do {
             let uid = try AuthenticationManager.shared.getAuthenticatedUser().uid
-            db.collection("users").document(uid).setData(["token": token], merge: true)
+            db.collection("usersPrivate").document(uid).setData(["token": token], merge: true)
         } catch {
             print("FAILED TO UPLOAD DEVICE TOKEN")
         }

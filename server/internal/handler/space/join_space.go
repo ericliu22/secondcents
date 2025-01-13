@@ -1,17 +1,18 @@
 package space
 
 import (
+	"encoding/json"
 	"log"
-	"encoding/json" 
+
+	"server/internal/core/auth"
+	"server/internal/middleware"
 
 	"cloud.google.com/go/firestore"
 	"github.com/valyala/fasthttp"
-	"server/internal/middleware"
-	"server/internal/core/auth"
 )
 
 type JoinSpaceRequest struct {
-	SpaceId string `json:"spaceId"`
+	SpaceId    string `json:"spaceId"`
 	SpaceToken string `json:"spaceToken"`
 }
 
@@ -34,13 +35,13 @@ func JoinSpaceHandler(httpCtx *fasthttp.RequestCtx, client *firestore.Client) {
 
 	log.Printf("Parsed friend request: %+v\n", joinRequest)
 	validSpace, spaceErr := auth.ValidateSpaceToken(firebaseCtx, client, joinRequest.SpaceToken, joinRequest.SpaceId)
-	if (spaceErr != nil) {
+	if spaceErr != nil {
 		log.Printf("Interal Server Error")
 		httpCtx.Error("Internal Server Error", fasthttp.StatusInternalServerError)
 		return
 	}
 
-	if (!validSpace) {
+	if !validSpace {
 		log.Printf("Invalid spaceToken")
 		httpCtx.Error("spaceToken is not valid JWT token", fasthttp.StatusUnauthorized)
 		return
@@ -48,8 +49,10 @@ func JoinSpaceHandler(httpCtx *fasthttp.RequestCtx, client *firestore.Client) {
 
 	client.Collection("spaces").Doc(joinRequest.SpaceId).Update(firebaseCtx, []firestore.Update{
 		{
-			Path: "members",
+			Path:  "members",
 			Value: firestore.ArrayUnion(userId),
 		},
 	})
+	httpCtx.SetStatusCode(fasthttp.StatusOK)
+	httpCtx.SetBodyString("Joined Space successfully")
 }
