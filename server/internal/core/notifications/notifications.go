@@ -2,7 +2,6 @@ package notifications
 
 import (
 	"context"
-	"encoding/json"
 	"log"
 
 	"firebase.google.com/go/messaging"
