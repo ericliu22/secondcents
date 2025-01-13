@@ -76,6 +76,6 @@ func tickleNotification(userId: String, count: Int) async throws {
         let data: [String: String] = [
             "count": count.description
         ]
-        try await userNotification(type: "multiTickle", userId: userId)
+        try await userNotification(type: "multiTickle", userId: userId, data: data)
     }
 }

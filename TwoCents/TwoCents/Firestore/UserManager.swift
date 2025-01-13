@@ -311,11 +311,11 @@ final class UserManager{
     }
     
     func acceptFriendRequest(userId: String, friendUserId: String) async throws {
-        try await TwoCents.acceptFriendRequest(senderId: userId, receiverId: friendUserId)
+        try await TwoCents.acceptFriendRequest(senderId: friendUserId, receiverId: userId)
     }
     
     func declineFriendRequest(userId: String, friendUserId: String) async throws {
-        try await TwoCents.declineFriendRequest(senderId: userId, receiverId: friendUserId)
+        try await TwoCents.declineFriendRequest(senderId: friendUserId, receiverId: userId)
     }
     
     func sendFriendRequest(userId: String, friendUserId: String) async throws {

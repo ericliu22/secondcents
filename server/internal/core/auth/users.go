@@ -28,6 +28,8 @@ func ValidateUser(httpCtx *fasthttp.RequestCtx, userId string) bool {
 }
 
 func ValidateUserNotification(senderId string, targetUser *models.DBUser) bool {
+	log.Printf("SENDERUSERID: " + senderId)
+	log.Printf("targetUser: %v", targetUser)
 	for _, friendId := range *targetUser.Friends {
 		if friendId == senderId {
 			return true
