@@ -85,7 +85,7 @@ func UserNotificationHandler(httpCtx *fasthttp.RequestCtx, firestoreClient *fire
 		notification = notifications.SingleNotification{
 			Token: *privateUser.Token,
 			Title: senderUser.Name,
-			Body:  senderUser.Name + " tickled you" + notificationRequest.Data["count"] + " times 🤗",
+			Body:  senderUser.Name + " tickled you " + notificationRequest.Data["count"] + " times 🤗",
 			Image: senderUser.ProfileImageURL,
 		}
 	default:
