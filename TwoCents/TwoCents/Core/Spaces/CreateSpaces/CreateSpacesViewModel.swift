@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import PhotosUI
+import FirebaseMessaging
 
 
 
@@ -71,6 +72,10 @@ final class CreateSpacesViewModel: ObservableObject{
           
           try await SpaceManager.shared.createNewSpace(space: space)
         
+        
+        Messaging.messaging().subscribe(toTopic: spaceId) { error in
+          print("Subscribed to weather topic")
+        }
           
       }
     

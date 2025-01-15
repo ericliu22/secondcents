@@ -88,7 +88,7 @@ struct CanvasPage: View, CanvasViewModelDelegate {
             //                .frame(width: FRAME_SIZE, height: FRAME_SIZE)
         }
         .dropDestination(for: CanvasWidget.self) { receivedWidgets, location in
-
+            viewModel.canvasMode = .normal
             guard let draggingItem = receivedWidgets.first else {
                 print("Failed to intialize dragging item")
                 return false
@@ -97,8 +97,11 @@ struct CanvasPage: View, CanvasViewModelDelegate {
             let y = roundToTile(number: location.y)
 
             SpaceManager.shared.moveWidget(
-                spaceId: spaceId, widgetId: draggingItem.id.uuidString, x: x,
-                y: y)
+                spaceId: spaceId,
+                widgetId: draggingItem.id.uuidString,
+                x: x,
+                y: y
+            )
 
             return true
         }
@@ -282,8 +285,6 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                             EmptyView()
                         }
                     }
-                    .animation(.spring(), value: widget.x)  // Add animation for x position
-                    .animation(.spring(), value: widget.y)  // Add animation for y position
                     .draggable(widget) {
                         MediaView(widget: widget, spaceId: spaceId)
                             .contentShape(
@@ -298,7 +299,12 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                             )
                             .environment(viewModel)
                             .environment(appModel)
+                            .onAppear {
+                                viewModel.canvasMode = .dragging
+                            }
                     }
+                    .animation(.spring(), value: widget.x)  // Add animation for x position
+                    .animation(.spring(), value: widget.y)
                 if viewModel.unreadWidgets.contains(where: { unread in
                     return unread == widget.id.uuidString
                 }) {
@@ -470,13 +476,14 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                         .presentationBackground(.thickMaterial)
                 case .chat:
                     ChatView(spaceId: spaceId)
+                        .interactiveDismissDisabled(true)
                         .presentationBackground(Color(UIColor.systemBackground))
                         .presentationDetents(
                             [.height(50), .large],
                             selection: $viewModel.selectedDetent
                         )
                         .presentationCornerRadius(20)
-                        .presentationBackgroundInteraction(.enabled)
+                        .presentationBackgroundInteraction(.enabled(upThrough: .height(50)))
                         .onChange(of: viewModel.selectedDetent) {
                             if viewModel.selectedDetent != .large {
 
@@ -491,7 +498,6 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                         .onAppear {
                             viewModel.selectedDetent = .height(50)
                         }
-                        .interactiveDismissDisabled()
 
                 case .poll:
                     PollWidgetSheetView(

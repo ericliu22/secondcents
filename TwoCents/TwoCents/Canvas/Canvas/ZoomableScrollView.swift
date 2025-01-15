@@ -38,6 +38,13 @@ struct ZoomableScrollView<Content: View>: UIViewRepresentable {
         let hostedView = context.coordinator.hostingController.view!
         hostedView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.addSubview(hostedView)
+        
+        let edgePanGesture = UIPanGestureRecognizer(
+                target: context.coordinator,
+                action: #selector(Coordinator.handleEdgePan(_:))
+            )
+        edgePanGesture.delegate = context.coordinator
+        scrollView.addGestureRecognizer(edgePanGesture)
 
         context.coordinator.scrollView = scrollView
         return scrollView
@@ -89,9 +96,24 @@ struct ZoomableScrollView<Content: View>: UIViewRepresentable {
         scrollView.contentSize = contentSize
     }
 
-    class Coordinator: NSObject, UIScrollViewDelegate {
+    class Coordinator: NSObject, UIScrollViewDelegate, UIGestureRecognizerDelegate {
         weak var scrollView: UIScrollView?
         
+        private var displayLink: CADisplayLink?
+        private var autoScrollDirection: AutoScrollDirection = .none
+        
+        // Some margin threshold (in points) from the edge:
+        private let horizontalThreshold: CGFloat = 300
+        private let verticalThreshold: CGFloat = 500
+
+        enum AutoScrollDirection {
+            case none
+            case left
+            case right
+            case up
+            case down
+        }
+
         var hostingController: UIHostingController<Content>
         var canvasViewModel: CanvasPageViewModel
         var appModel: AppModel
@@ -356,6 +378,109 @@ struct ZoomableScrollView<Content: View>: UIViewRepresentable {
             
             return CGRect(x: x, y: y, width: width, height: height)
         }
+        
+        @objc func handleEdgePan(_ gesture: UIPanGestureRecognizer) {
+                guard let scrollView = scrollView else { return }
+            
+                if canvasViewModel.canvasMode != .dragging { return }
+                let location = gesture.location(in: scrollView)
+                
+                switch gesture.state {
+                case .began, .changed:
+                    // Figure out which edge we’re nearest to:
+                    autoScrollDirection = calculateDirectionIfNearEdge(
+                        location: location,
+                        scrollView: scrollView
+                    )
+                    
+                    if autoScrollDirection != .none {
+                        // If not already auto-scrolling, start it
+                        startAutoScroll()
+                    } else {
+                        // If we’ve moved away from the edge, stop auto-scrolling
+                        stopAutoScroll()
+                    }
+                    
+                case .ended, .cancelled, .failed:
+                    // User lifted finger or gesture ended—stop auto-scrolling
+                    stopAutoScroll()
+                    
+                default:
+                    break
+                }
+            }
+            
+            private func calculateDirectionIfNearEdge(location: CGPoint,
+                                                      scrollView: UIScrollView) -> AutoScrollDirection {
+                // Convert local point to the scrollView’s coordinate space
+                // For example, if near left edge:
+                if location.x < horizontalThreshold {
+                    return .left
+                }
+                // if near right edge:
+                if location.x > scrollView.bounds.width - horizontalThreshold {
+                    return .right
+                }
+                // if near top edge:
+                if location.y < verticalThreshold {
+                    return .up
+                }
+                // if near bottom edge:
+                if location.y > scrollView.bounds.height - verticalThreshold {
+                    return .down
+                }
+                
+                return .none
+            }
+            
+            private func startAutoScroll() {
+                guard displayLink == nil else { return }
+                displayLink = CADisplayLink(target: self, selector: #selector(handleAutoScroll))
+                displayLink?.add(to: .main, forMode: .common)
+            }
+            
+            private func stopAutoScroll() {
+                displayLink?.invalidate()
+                displayLink = nil
+                autoScrollDirection = .none
+            }
+            
+            @objc private func handleAutoScroll() {
+                guard let scrollView = scrollView else { return }
+                
+                // Adjust this speed as needed
+                let scrollSpeed: CGFloat = 8
+                
+                var offset = scrollView.contentOffset
+                
+                switch autoScrollDirection {
+                case .left:
+                    offset.x -= scrollSpeed
+                    offset.x = max(offset.x, 0) // prevent overscrolling
+                case .right:
+                    offset.x += scrollSpeed
+                    let maxOffsetX = scrollView.contentSize.width - scrollView.bounds.width
+                    offset.x = min(offset.x, maxOffsetX)
+                case .up:
+                    offset.y -= scrollSpeed
+                    offset.y = max(offset.y, 0)
+                case .down:
+                    offset.y += scrollSpeed
+                    let maxOffsetY = scrollView.contentSize.height - scrollView.bounds.height
+                    offset.y = min(offset.y, maxOffsetY)
+                case .none:
+                    return
+                }
+                
+                // Update the scrollView’s offset (no animation).
+                scrollView.setContentOffset(offset, animated: false)
+            }
+
+            func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
+                                   shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer
+            ) -> Bool {
+                return true
+            }
     }
 }
 

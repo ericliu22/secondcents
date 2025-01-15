@@ -20,21 +20,20 @@ struct Message: Identifiable, Codable, Equatable {
 }
 
 struct ChatView: View {
-    @State var spaceId: String
-    @StateObject private var viewModel = ChatViewModel()
+    let spaceId: String
+    @State var viewModel: ChatViewModel
     @Environment(CanvasPageViewModel.self) var canvasViewModel
-   
     @Environment(AppModel.self) var appModel
-    
-    @State var threadId: String = ""
-    @State private var threadIdChangedTime: Date = Date()
     @Environment(\.dismiss) var dismissScreen
     
-    @State private var isLoading: Bool = false
+    init(spaceId: String) {
+        self.spaceId = spaceId
+        viewModel = ChatViewModel(spaceId: spaceId)
+    }
+    
     var body: some View {
     
             ScrollViewReader { proxy in
-                
                 List {
                     Spacer()
                         .frame(height: 30)
@@ -64,10 +63,10 @@ struct ChatView: View {
                     
                     // Display new messages
                     ForEach(viewModel.messagesFromListener.filter { message in
-                        (threadId.isEmpty || message.threadId == threadId) && message.ts > threadIdChangedTime
+                        (viewModel.threadId.isEmpty || message.threadId == viewModel.threadId) && message.ts > viewModel.threadIdChangedTime
                     }) { message in
                         
-                        ChatBubbleViewBuilder(spaceId: spaceId, message: message, currentUserId: appModel.user?.id ?? "", threadId: $threadId)
+                        ChatBubbleViewBuilder(spaceId: spaceId, message: message, currentUserId: appModel.user?.id ?? "")
                  
                             .id(message.id)
                             .rotationEffect(.degrees(180))
@@ -76,12 +75,13 @@ struct ChatView: View {
                             .padding(.bottom, 3)
                             .blur(radius: canvasViewModel.replyWidget == nil ? 0 : 2)
                             .listRowBackground(Color.clear)
+                            .environment(viewModel)
                         //                        .background(.red)
                     }
                     
                     // Display old messages
                     ForEach(viewModel.messages) { message in
-                        ChatBubbleViewBuilder(spaceId: spaceId, message: message, currentUserId: appModel.user?.id ?? "", threadId: $threadId)
+                        ChatBubbleViewBuilder(spaceId: spaceId, message: message, currentUserId: appModel.user?.id ?? "")
                             .id(message.id)
                             .rotationEffect(.degrees(180))
                             .listRowSeparator(.hidden)
@@ -89,15 +89,16 @@ struct ChatView: View {
                             .padding(.bottom, 3)
                             .blur(radius: canvasViewModel.replyWidget == nil ? 0 : 2)
                             .listRowBackground(Color.clear)
+                            .environment(viewModel)
                         
                         if message.id == viewModel.messages.last?.id {
                             if viewModel.hasMoreMessages {
                                 ProgressView()
                                     .onAppear {
-                                        if threadId == "" {
+                                        if viewModel.threadId == "" {
                                             viewModel.getOldMessages(spaceId: spaceId)
                                         } else {
-                                            viewModel.getThreadMessages(spaceId: spaceId, threadId: threadId)
+                                            viewModel.getThreadMessages(spaceId: spaceId, threadId: viewModel.threadId)
                                         }
                                     }
                                     .rotationEffect(.degrees(180))
@@ -113,16 +114,16 @@ struct ChatView: View {
                     
                 }
                 
-                .onChange(of: threadId) { _, newValue in
+                .onChange(of: viewModel.threadId) { _, newValue in
                     
-            isLoading = true // Start thread change
-                    threadIdChangedTime = Date()
+                    viewModel.isLoading = true // Start thread change
+                    viewModel.threadIdChangedTime = Date()
                     
                     if !newValue.isEmpty {
               
                         viewModel.removeMessages()
                         viewModel.getThreadMessages(spaceId: spaceId, threadId: newValue) { _ in
-                            isLoading = false // End thread change
+                            viewModel.isLoading = false // End thread change
                                           }
                     
                         
@@ -132,7 +133,7 @@ struct ChatView: View {
                 
                 .onChange(of: canvasViewModel.selectedDetent) { _, newValue in
                     if newValue == .height(50) {
-                        threadId = ""
+                        viewModel.threadId = ""
                         viewModel.removeMessages()
                         viewModel.getOldMessages(spaceId: spaceId)
                         viewModel.fetchNewMessages(spaceId: spaceId)
@@ -175,16 +176,16 @@ struct ChatView: View {
             .onTapGesture {
                 
                 
-                if !isLoading{
+                if !viewModel.isLoading{
                     
                   
                     withAnimation {
                         canvasViewModel.replyWidget = nil
                         
                         
-                        if threadId != "" {
+                        if viewModel.threadId != "" {
                             
-                            threadId = ""
+                            viewModel.threadId = ""
                             viewModel.removeMessages()
                             viewModel.getOldMessages(spaceId: spaceId)
                             viewModel.fetchNewMessages(spaceId: spaceId)
@@ -199,26 +200,26 @@ struct ChatView: View {
                 
             }
             
-            .overlay(
-                Group {
-                    if #available(iOS 18, *) {
-                        Color.clear
-                            .frame(height: 100)
-                            .frame(maxHeight: .infinity, alignment: .top)
-                            .contentShape(Rectangle())
-                    } else {
-                        Color("customClear")
-                            .frame(height: 100)
-                            .frame(maxHeight: .infinity, alignment: .top)
-                    }
-                }
-            )
+//            .overlay(
+//                Group {
+//                    if #available(iOS 18, *) {
+//                        Color.clear
+//                            .frame(height: 100)
+//                            .frame(maxHeight: .infinity, alignment: .top)
+//                            .contentShape(Rectangle())
+//                    } else {
+//                        Color("customClear")
+//                            .frame(height: 100)
+//                            .frame(maxHeight: .infinity, alignment: .top)
+//                    }
+//                }
+//            )
 
        
             .overlay(
             
                 
-                MessageField(spaceId: spaceId, threadId: $threadId)
+                MessageField()
                 //                    .disabled(canvasViewModel.selectedDetent == .height(50) && canvasViewModel.replyWidget == nil)
                     .frame(maxHeight: .infinity, alignment: .bottom)
                     .disabled(canvasViewModel.selectedDetent == .height(50))
@@ -227,6 +228,7 @@ struct ChatView: View {
                             canvasViewModel.selectedDetent = .large
                         }
                     }
+                    .environment(viewModel)
             )
             
             

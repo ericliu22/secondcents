@@ -69,6 +69,9 @@
 		A2DDB1BB2BB693FD00243E1B /* NewPollViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2DDB1BA2BB693FD00243E1B /* NewPollViewModel.swift */; };
 		A2DDB1BE2BB69DD800243E1B /* Poll.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2DDB1BD2BB69DD800243E1B /* Poll.swift */; };
 		A2E5F52B2B5A12D30019C6ED /* DrawingCanvas.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E5F52A2B5A12D30019C6ED /* DrawingCanvas.swift */; };
+		A2F504262D384C39002F88FD /* ChatWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F504242D384C31002F88FD /* ChatWidget.swift */; };
+		A2F504282D384C69002F88FD /* ChatWidgetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F504272D384C61002F88FD /* ChatWidgetViewModel.swift */; };
+		A2F5042A2D384CD9002F88FD /* ChatBubble.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F504292D384CD3002F88FD /* ChatBubble.swift */; };
 		A2F5631E2AB4E6240026D8C9 /* CanvasPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F563182AB4E6240026D8C9 /* CanvasPage.swift */; };
 		AB01CB5F2B855E83004BEB5B /* TextWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB01CB5E2B855E83004BEB5B /* TextWidget.swift */; };
 		AB0D07662AE6FB95003AC8A4 /* SpacesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB0D07652AE6FB95003AC8A4 /* SpacesView.swift */; };
@@ -254,6 +257,9 @@
 		A2DDB1BA2BB693FD00243E1B /* NewPollViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewPollViewModel.swift; sourceTree = "<group>"; };
 		A2DDB1BD2BB69DD800243E1B /* Poll.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Poll.swift; sourceTree = "<group>"; };
 		A2E5F52A2B5A12D30019C6ED /* DrawingCanvas.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawingCanvas.swift; sourceTree = "<group>"; };
+		A2F504242D384C31002F88FD /* ChatWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatWidget.swift; sourceTree = "<group>"; };
+		A2F504272D384C61002F88FD /* ChatWidgetViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatWidgetViewModel.swift; sourceTree = "<group>"; };
+		A2F504292D384CD3002F88FD /* ChatBubble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatBubble.swift; sourceTree = "<group>"; };
 		A2F563182AB4E6240026D8C9 /* CanvasPage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CanvasPage.swift; sourceTree = "<group>"; };
 		AB01CB5E2B855E83004BEB5B /* TextWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextWidget.swift; sourceTree = "<group>"; };
 		AB0D07652AE6FB95003AC8A4 /* SpacesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpacesView.swift; sourceTree = "<group>"; };
@@ -601,9 +607,20 @@
 			path = Polls;
 			sourceTree = "<group>";
 		};
+		A2F504252D384C39002F88FD /* Chat */ = {
+			isa = PBXGroup;
+			children = (
+				A2F504292D384CD3002F88FD /* ChatBubble.swift */,
+				A2F504272D384C61002F88FD /* ChatWidgetViewModel.swift */,
+				A2F504242D384C31002F88FD /* ChatWidget.swift */,
+			);
+			path = Chat;
+			sourceTree = "<group>";
+		};
 		A2F563122AB4E6240026D8C9 /* Canvas */ = {
 			isa = PBXGroup;
 			children = (
+				A2F504252D384C39002F88FD /* Chat */,
 				ABCDA0682C39AFD3002C23E1 /* Todo */,
 				A2DDB1BC2BB69D7100243E1B /* Polls */,
 				A267CB712C6339A90002E5BD /* Links */,
@@ -1050,6 +1067,7 @@
 				A24087272D013265000E36DC /* AddFriendsFromContactsViewModel.swift in Sources */,
 				ABCDA06E2C39B04A002C23E1 /* NewTodoViewModel.swift in Sources */,
 				850958A72AB8F41D00018A32 /* HotSeat.swift in Sources */,
+				A2F5042A2D384CD9002F88FD /* ChatBubble.swift in Sources */,
 				A2DCA8E42D2628F6008551EE /* DeepLink.swift in Sources */,
 				ABC461E52BE28ECF00AE47FF /* TestView.swift in Sources */,
 				85C6759B2AB8EE6100FACCB2 /* SuperlativeGame.swift in Sources */,
@@ -1163,6 +1181,7 @@
 				AB2E56CF2AE9C5E60096A58C /* ResultView.swift in Sources */,
 				ABB84C342A8CBA03009C7550 /* FrontPageView.swift in Sources */,
 				850E12AA2C30A14C000E07C8 /* CalendarWidget.swift in Sources */,
+				A2F504282D384C69002F88FD /* ChatWidgetViewModel.swift in Sources */,
 				ABB68DB02C15268D00406948 /* TextWidgetViewModel.swift in Sources */,
 				AB6778E42AB8F67800C11AA7 /* CanvasWidget.swift in Sources */,
 				ABF56DFF2A7C8C5200F959DB /* SettingsViewModel.swift in Sources */,
@@ -1181,6 +1200,7 @@
 				ABD01A9D2C39CDEE00C9F288 /* MentionUserView.swift in Sources */,
 				ABC426B12A863D9F00873EE1 /* SignUpEmailView.swift in Sources */,
 				ABA45E7E2A7C8D8C0015F000 /* SignInEmailViewModel.swift in Sources */,
+				A2F504262D384C39002F88FD /* ChatWidget.swift in Sources */,
 				AB0D07662AE6FB95003AC8A4 /* SpacesView.swift in Sources */,
 				AB90021A2A8B85BD00F970B8 /* UploadExample.swift in Sources */,
 				AB9909AB2ABE3BF2004B3021 /* FriendRequestsView.swift in Sources */,

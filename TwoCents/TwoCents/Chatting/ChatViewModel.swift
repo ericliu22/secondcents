@@ -1,16 +1,20 @@
 import SwiftUI
 import FirebaseFirestore
 
-@MainActor
-final class ChatViewModel: ObservableObject {
-    @Published private(set) var messages: [Message] = []
-
-  
-    @Published private(set) var messagesFromListener: [Message] = []
+@Observable @MainActor
+final class ChatViewModel {
+    var messages: [Message] = []
+    var hasMoreMessages: Bool = true
+    var messagesFromListener: [Message] = []
     private var lastDocument: DocumentSnapshot? = nil
-    @Published var hasMoreMessages: Bool = true
+    var threadId: String = ""
+    var threadIdChangedTime: Date = Date()
+    var isLoading: Bool = false
+    let spaceId: String
     
-  
+    init(spaceId: String ) {
+        self.spaceId = spaceId
+    }
     
     
 //    @Published private(set) var user:  DBUser? = nil

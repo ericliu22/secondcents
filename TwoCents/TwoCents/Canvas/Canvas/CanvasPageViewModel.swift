@@ -37,6 +37,7 @@ final class CanvasPageViewModel {
     var widgetCursor: CGPoint = CGPoint(x: 0, y: 0)
     var unreadWidgets: [String] = []
     var visibleRectInCanvas: CGRect = CGRect(x: 0, y:0, width: 0, height: 0)
+    
     weak var coordinator: ZoomCoordinatorProtocol?
 
     /* Eric: Don't delete this
@@ -48,7 +49,7 @@ final class CanvasPageViewModel {
      */
     
     enum CanvasMode {
-        case normal, placement, drawing
+        case normal, placement, drawing, dragging
     }
 
     enum CanvasSheet: Identifiable {

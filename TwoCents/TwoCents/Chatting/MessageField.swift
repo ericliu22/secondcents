@@ -4,18 +4,15 @@ struct MessageField: View {
     
     @StateObject private var viewModel = MessageFieldViewModel()
     @Environment(CanvasPageViewModel.self) var canvasViewModel
+    @Environment(ChatViewModel.self) var chatViewModel
     @Environment(AppModel.self) var appModel
     
     @State private var message = ""
     @FocusState private var isFocused: Bool
-
-    
-    @State var spaceId: String
-    @Binding var threadId: String
     
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
-            TextField(threadId == "" ? "Message" : "Reply", text: $message, axis: .vertical)
+            TextField(chatViewModel.threadId == "" ? "Message" : "Reply", text: $message, axis: .vertical)
                 .lineLimit(0...5)
                 .padding(.horizontal, 12)
                 .padding(.vertical, 8)
@@ -26,7 +23,7 @@ struct MessageField: View {
             
             Button {
                 Task {
-                    await viewModel.sendMessages(text: message, widget: canvasViewModel.replyWidget, spaceId: spaceId, threadId: threadId)
+                    await viewModel.sendMessages(text: message, widget: canvasViewModel.replyWidget, spaceId: chatViewModel.spaceId, threadId: chatViewModel.threadId)
                     
                     // Ensure message and widget clear on the main thread
                     DispatchQueue.main.async {
@@ -60,7 +57,7 @@ struct MessageField: View {
             try? await viewModel.loadCurrentUser()
         }
         .background(.clear)
-        .onChange(of: threadId) { oldValue, newValue in
+        .onChange(of: chatViewModel.threadId) { oldValue, newValue in
             if newValue != "" {
                 isFocused = true
             }

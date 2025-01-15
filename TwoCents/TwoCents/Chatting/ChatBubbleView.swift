@@ -10,21 +10,16 @@ import SwiftUI
 struct ChatBubbleView: View {
     
     let message: Message
-    
     let sentByMe: Bool
     let isFirstMsg: Bool
-    
     let name: String
-    
     let userColor: Color
-    
     let widget: CanvasWidget?
     let spaceId: String
     
-    @StateObject private var viewModel = ChatViewModel()
+    @Environment(ChatViewModel.self) var chatViewModel
     @State private var loaded: Bool = false
     @State private var dragOffset: CGSize = .zero
-    @Binding var threadId: String
     
     var body: some View {
         
@@ -96,7 +91,7 @@ struct ChatBubbleView: View {
             DragGesture(minimumDistance: 25, coordinateSpace: .scrollView)
                 .onChanged { value in
 
-                    if threadId == ""{
+                    if chatViewModel.threadId == ""{
                         let isDraggingLeft = sentByMe && value.translation.width < 0 && value.translation.width > -50
                         let isDraggingRight = !sentByMe && value.translation.width > 0 && value.translation.width < 50
 
@@ -120,17 +115,17 @@ struct ChatBubbleView: View {
 
                     if (isDraggingLeft || isDraggingRight) && abs(value.translation.width) > 35 {
                         
-                        if let messageThreadId = message.threadId, threadId == ""{
+                        if let messageThreadId = message.threadId, chatViewModel.threadId == ""{
                             print("the msg u swiped on's id is \(messageThreadId)")
                             
                             if !messageThreadId.isEmpty{
                               
                                 //if the msg ur replying to has a thread id, use the same one
-                                threadId = messageThreadId
+                                chatViewModel.threadId = messageThreadId
                             }  else {
                                 //if msg ur replying to doesnt have thread id, use it (the root)'s id
                                 
-                                threadId = message.id
+                                chatViewModel.threadId = message.id
                             }
                             
                             
