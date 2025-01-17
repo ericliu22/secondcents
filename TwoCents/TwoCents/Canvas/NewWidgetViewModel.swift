@@ -15,7 +15,7 @@ import AVFoundation
 final class NewWidgetViewModel {
     
     var loading: Bool = false
-    var widgets: [CanvasWidget] = [ imageViewTest, /*videoViewTest,*/ mapViewTest, todoViewTest, pollViewTest, calendarViewTest, textViewTest, linkViewTest]
+    var widgets: [CanvasWidget] = [ imageViewTest, /*videoViewTest,*/ mapViewTest, todoViewTest, pollViewTest, calendarViewTest, textViewTest, linkViewTest, chatViewTest]
     var tempWidget: CanvasWidget?
     var latestImage: UIImage?
     var latestVideoThumbnail: UIImage?

@@ -25,7 +25,7 @@ final class CanvasPageViewModel {
     var newWidget: CanvasWidget?
     var canvasWidgets: [CanvasWidget] = []
     var spaceId: String
-    var inSettingsView: Bool = false
+    var inSubView: Bool = false
     var selectedDetent: PresentationDetent = .height(50)
     var photoLinkedToProfile: Bool = false
     var widgetId: String = UUID().uuidString
@@ -179,6 +179,8 @@ final class CanvasPageViewModel {
             case .calendar:
                 deleteCalendar(
                     spaceId: spaceId, calendarId: widgetId)
+            case .chat:
+            deleteChat(spaceId: spaceId, chatId: widgetId)
             default:
                 break
         }
@@ -189,9 +191,9 @@ final class CanvasPageViewModel {
         activeWidget = nil
 
         //get chat to show up at all times
-        if !inSettingsView && activeSheet == nil {
+        if !inSubView && activeSheet == nil {
             print("sheetDismiss: Changing to .chat")
-            inSettingsView = false
+            inSubView = false
             activeSheet = .chat
             selectedDetent = .height(50)
         }

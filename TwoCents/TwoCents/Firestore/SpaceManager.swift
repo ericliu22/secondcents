@@ -173,50 +173,6 @@ final class SpaceManager {
 
     }
 
-    func moveToEmptySpace(space: DBSpace, widgetId: String) async {
-        guard space.nextWidgetX != nil || space.nextWidgetY != nil else {
-            let newX = roundToTile(number: FRAME_SIZE / 2)
-            let newY = roundToTile(number: FRAME_SIZE / 2)
-            moveWidget(
-                spaceId: space.spaceId, widgetId: widgetId, x: newX, y: newY)
-            await setNextWidgetSpot(
-                spaceId: space.spaceId, startingX: newX, startingY: newY)
-            return
-        }
-
-        if !withinBounds(x: space.nextWidgetX!, y: space.nextWidgetY!) {
-            let newX = roundToTile(number: FRAME_SIZE / 2)
-            let newY = roundToTile(number: FRAME_SIZE / 2)
-            moveWidget(
-                spaceId: space.spaceId, widgetId: widgetId, x: newX, y: newY)
-            await setNextWidgetSpot(
-                spaceId: space.spaceId, startingX: newX, startingY: newY)
-            return
-        }
-
-        //We already checked for null you cunt stop making me exclamation mark
-        guard
-            let empty = try? await spotEmpty(
-                spaceId: space.spaceId, x: space.nextWidgetX!,
-                y: space.nextWidgetY!)
-        else {
-            return
-        }
-
-        if !empty {
-            await setNextWidgetSpot(
-                spaceId: space.spaceId, startingX: space.nextWidgetX!,
-                startingY: space.nextWidgetY!)
-        }
-
-        moveWidget(
-            spaceId: space.spaceId, widgetId: widgetId, x: space.nextWidgetX!,
-            y: space.nextWidgetY!)
-        await setNextWidgetSpot(
-            spaceId: space.spaceId, startingX: space.nextWidgetX!,
-            startingY: space.nextWidgetY!)
-    }
-
     func generateSpaceLink(spaceId: String) async throws -> String {
 
         let spaceToken = try await fetchSpaceToken(spaceId: spaceId)
@@ -224,81 +180,8 @@ final class SpaceManager {
 
     }
 
-    func setNextWidgetSpot(
-        spaceId: String, startingX: CGFloat, startingY: CGFloat
-    ) async {
-        guard
-            let (newX, newY) = try? await findNextSpot(
-                spaceId: spaceId, startingX: startingX, startingY: startingY)
-        else {
-            print("Failed to find next spot")
-            return
-        }
 
-        //If the function gets here anyways it should work
-        //Unless someone deletes the space as this happens; Rare but we don't care
-        try! await spaceDocument(spaceId: spaceId).updateData([
-            "nextWidgetX": newX,
-            "nextWidgetY": newY,
-        ])
-    }
 
-    enum LoopLimit: Error {
-        case runtimeError(String)
-    }
-
-    private func findNextSpot(
-        spaceId: String, startingX: CGFloat, startingY: CGFloat
-    ) async throws -> (CGFloat, CGFloat) {
-        //@TODO: Stop execution if we reach maximum number of widgets on canvas?? (Design choice here)
-        //This is abitrary number didn't actually calculate how many widgets are possible on the canvas
-        let LOOP_LIMIT: Int = 100
-        var currentX: CGFloat = startingX
-        var currentY: CGFloat = startingY
-
-        var count: Int = 0
-        while count < LOOP_LIMIT {
-            let spaceAvailable: Bool = try await spotEmpty(
-                spaceId: spaceId, x: currentX, y: currentY)
-            if spaceAvailable && withinBounds(x: currentX, y: currentY) {
-                break
-            }
-
-            if currentX + WIDGET_SPACING > LAST_X {
-                currentX = FIRST_X
-                currentY += WIDGET_SPACING
-            } else if currentY + WIDGET_SPACING > LAST_Y {
-                currentX = FIRST_X
-                currentY = FIRST_Y
-            } else {
-                currentX += WIDGET_SPACING
-            }
-            //Optional if we wanna be really safe
-            currentX = roundToTile(number: currentX)
-            currentY = roundToTile(number: currentY)
-            count += 1
-        }
-        //Highly Questionable while(true); We set a hard coded limit in case things go to shit
-        if count == LOOP_LIMIT {
-            throw LoopLimit.runtimeError("findNextSpot: Loop reached limit")
-        }
-        return (currentX, currentY)
-    }
-
-    private func spotEmpty(spaceId: String, x: CGFloat, y: CGFloat) async throws
-        -> Bool
-    {
-        return try await spaceDocument(spaceId: spaceId).collection("widgets")
-            .whereField("x", isEqualTo: x)
-            .whereField("y", isEqualTo: y)
-            .limit(to: 1)
-            .getDocuments()
-            .isEmpty
-    }
-
-    private func withinBounds(x: CGFloat, y: CGFloat) -> Bool {
-        return FIRST_X < x && x < LAST_X && FIRST_Y < y && y < LAST_Y
-    }
 
     func removeWidget(spaceId: String, widget: CanvasWidget) {
         spaceDocument(spaceId: spaceId)

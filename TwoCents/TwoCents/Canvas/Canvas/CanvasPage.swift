@@ -185,10 +185,10 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                         .environment(viewModel)
                         .onAppear {
                             viewModel.activeSheet = nil
-                            viewModel.inSettingsView = true
+                            viewModel.inSubView = true
                         }
                         .onDisappear {
-                            viewModel.inSettingsView = false
+                            viewModel.inSubView = false
                         }
                 } label: {
                     Image(systemName: "ellipsis")

@@ -166,6 +166,8 @@ func MediaView(widget: CanvasWidget, spaceId: String) -> some View {
         EventWidget(widget: widget)
     case .calendar:
         CalendarWidget(widget: widget, spaceId: spaceId)
+    case .chat:
+        ChatWidget(widget: widget, spaceId: spaceId)
     default:
         EmptyView()
     }
@@ -222,6 +224,8 @@ enum Media: Codable {
             self = .link
         case "event":
             self = .event
+        case "chat":
+            self = .chat
         default:
             self = .image
         }
