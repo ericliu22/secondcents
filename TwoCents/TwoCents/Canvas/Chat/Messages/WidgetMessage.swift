@@ -18,16 +18,8 @@ func makeMessage(message: any WidgetMessage) -> some View{
         if let textMsg = message as? TextMessage {
             // If it's not actually a TextMessage, return an error view
             TextMessageView(message: textMsg)
-                .onAppear {
-                    
-                    print("Text Message")
-                }
         } else {
             EmptyMessageView(message: message)
-                .onAppear {
-                    
-                    print("Empty Message")
-                }
         }
     default:
         EmptyMessageView(message: message)

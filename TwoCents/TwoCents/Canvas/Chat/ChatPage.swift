@@ -3,21 +3,26 @@ import SwiftUI
 struct ChatPage: View {
 
     @Environment(ChatWidgetViewModel.self) var viewModel
+    @Environment(CanvasPageViewModel.self) var canvasViewModel
+    @Environment(AppModel.self) var appModel
     @FocusState var isFocused: Bool
 
     var body: some View {
         @Bindable var viewModel = viewModel
         VStack {
-            List {
-                ForEach(viewModel.messages, id: \.id) { message in
-                    makeMessage(message: message)
-                        .rotationEffect(.degrees(180))
-                        .listRowSeparator(.hidden)
-                        .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-                        .listRowBackground(Color.clear)
+            ScrollViewReader { proxy in
+                List {
+                    ForEach(viewModel.messages, id: \.id) { message in
+                        makeMessage(message: message)
+                            .rotationEffect(.degrees(180))
+                            .listRowSeparator(.hidden)
+                            .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+                            .listRowBackground(Color.clear)
+                            .environment(canvasViewModel)
+                    }
                 }
+                .rotationEffect(.degrees(180))
             }
-            .rotationEffect(.degrees(180))
             
             ZStack(alignment: .bottomTrailing) {
                 TextField(
@@ -33,7 +38,7 @@ struct ChatPage: View {
                 .focused($isFocused)
                 
                 Button {
-                    viewModel.sendMessage()
+                    viewModel.sendMessage(userId: appModel.user!.userId)
                 } label: {
                     Image(systemName: "arrow.up")
                         .font(.headline)
@@ -42,7 +47,7 @@ struct ChatPage: View {
                             viewModel.message.isEmpty ? .clear : .white
                         )
                         .background(
-                            viewModel.message.isEmpty ? .clear : .purple
+                            viewModel.message.isEmpty ? .clear : appModel.loadedColor
                             //@TODO: This is supposed to be appModel.loadedColor
                         )
                         .clipShape(Circle())
@@ -63,7 +68,7 @@ struct ChatPage: View {
             .frame(minHeight: 50, alignment: .center)
             
         }
-        .frame(maxHeight: .infinity)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
 }

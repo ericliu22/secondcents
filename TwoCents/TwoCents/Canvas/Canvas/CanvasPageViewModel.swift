@@ -37,6 +37,7 @@ final class CanvasPageViewModel {
     var widgetCursor: CGPoint = CGPoint(x: 0, y: 0)
     var unreadWidgets: [String] = []
     var visibleRectInCanvas: CGRect = CGRect(x: 0, y:0, width: 0, height: 0)
+    var members: [DBUser] = []
     
     weak var coordinator: ZoomCoordinatorProtocol?
 
@@ -73,6 +74,24 @@ final class CanvasPageViewModel {
     
     func loadCurrentSpace() async throws {
         self.space = try await SpaceManager.shared.getSpace(spaceId: spaceId)
+    }
+    
+    func fetchUsers(currentUserId: String) async {
+        guard let space = space else {
+            return
+        }
+        
+        guard let members = space.members else {
+            return
+        }
+        for member in members {
+            guard let user = try? await UserManager.shared.getUser(userId: member) else {
+                continue
+            }
+            print("added member")
+            self.members.append(user)
+        }
+        print(members)
     }
     
     func attachUnreadListener(userId: String) {

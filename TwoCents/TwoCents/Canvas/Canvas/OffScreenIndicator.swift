@@ -15,100 +15,109 @@ struct OffScreenIndicator: View {
     @State var user: DBUser?
     
     var body: some View {
-        GeometryReader { proxy in
-            // 1) The screen’s center in local coordinates
-            let screenSize = proxy.size
-            let screenCenter = CGPoint(x: screenSize.width / 2,
-                                       y: screenSize.height / 2)
-            
-            // 2) Find the widget we’re pointing to
+        if
             let widget = canvasViewModel.canvasWidgets.first(where: {
                 $0.id.uuidString == widgetId
-            })!
-            
-            let widgetRect = CGRect(
-                x: widget.x ?? 0,
-                y: widget.y ?? 0,
-                width: widget.width,
-                height: widget.height
-            )
-            if !widgetRect.intersects(canvasViewModel.visibleRectInCanvas) {
-                // 3) Calculate the angle between the scrollCenter and the widget's center
-                //    If your (0,0) is truly top-left in the canvas,
-                //    then `widget.x, widget.y` is also top-left.
-                //    Often you want the widget's center:
-                let widgetCenterX = (widget.x ?? 0) + widget.width / 2
-                let widgetCenterY = (widget.y ?? 0) + widget.height / 2
+            }) {
+            GeometryReader { proxy in
+                // 1) The screen’s center in local coordinates
+                let screenSize = proxy.size
+                let screenCenter = CGPoint(x: screenSize.width / 2,
+                                           y: screenSize.height / 2)
                 
-                // The difference in unscaled coords
-                let dx = widgetCenterX - canvasViewModel.canvasPageCursor.x
-                let dy = widgetCenterY - canvasViewModel.canvasPageCursor.y
+                // 2) Find the widget we’re pointing to
                 
-                // Angle in radians
-                let radians = atan2(dy, dx)
-                let degrees = radians * 180 / .pi
-                
-                // 4) Project to the edge of the screen so that the indicator sits
-                //    on a circle at the screen’s perimeter (minus some padding)
-                let radius = min(screenSize.width, screenSize.height) / 2 - 40
-                let x = screenCenter.x + cos(radians) * radius
-                let y = screenCenter.y + sin(radians) * radius
-                let center = CGPoint(x: screenSize.width/2, y: screenSize.height/2)
-                
-                
-                let edgePoint = pointOnScreenEdge(
-                    screenSize: proxy.size,
-                    center: screenCenter,
-                    angle: radians
+                let widgetRect = CGRect(
+                    x: widget.x ?? 0,
+                    y: widget.y ?? 0,
+                    width: widget.width,
+                    height: widget.height
                 )
-                // 5) Your indicator
-                ZStack {
-                    // The pin or tear-drop shape
-                    Pin(userColor: $userColor)
-                    // If your teardrop tip is "down", you might add +90° or +180° offset
-                    // so that it visually points at the widget
-                        .rotationEffect(.radians(radians - .pi/2))
-                    // or if you prefer degrees: .rotationEffect(.degrees(degrees + 180))
+                if !widgetRect.intersects(canvasViewModel.visibleRectInCanvas) {
+                    // 3) Calculate the angle between the scrollCenter and the widget's center
+                    //    If your (0,0) is truly top-left in the canvas,
+                    //    then `widget.x, widget.y` is also top-left.
+                    //    Often you want the widget's center:
+                    let widgetCenterX = (widget.x ?? 0) + widget.width / 2
+                    let widgetCenterY = (widget.y ?? 0) + widget.height / 2
                     
-                    // Possibly an avatar or text overlay
-                    if let user {
-                        if let profileImageUrl = user.profileImageUrl {
-                            AsyncImage(url: URL(string: profileImageUrl)!) { image in
-                                image
-                                    .resizable()
-                                    .scaledToFill()
-                                    .clipShape(Circle())
-                                    .frame(width: 40, height: 40)
-                            } placeholder: {
-                                ProgressView()
-                                    .frame(width: 30, height: 30)
+                    // The difference in unscaled coords
+                    let dx = widgetCenterX - canvasViewModel.canvasPageCursor.x
+                    let dy = widgetCenterY - canvasViewModel.canvasPageCursor.y
+                    
+                    // Angle in radians
+                    let radians = atan2(dy, dx)
+                    let degrees = radians * 180 / .pi
+                    
+                    // 4) Project to the edge of the screen so that the indicator sits
+                    //    on a circle at the screen’s perimeter (minus some padding)
+                    let radius = min(screenSize.width, screenSize.height) / 2 - 40
+                    let x = screenCenter.x + cos(radians) * radius
+                    let y = screenCenter.y + sin(radians) * radius
+                    let center = CGPoint(x: screenSize.width/2, y: screenSize.height/2)
+                    
+                    
+                    let edgePoint = pointOnScreenEdge(
+                        screenSize: proxy.size,
+                        center: screenCenter,
+                        angle: radians
+                    )
+                    // 5) Your indicator
+                    ZStack {
+                        // The pin or tear-drop shape
+                        Pin(userColor: $userColor)
+                        // If your teardrop tip is "down", you might add +90° or +180° offset
+                        // so that it visually points at the widget
+                            .rotationEffect(.radians(radians - .pi/2))
+                        // or if you prefer degrees: .rotationEffect(.degrees(degrees + 180))
+                        
+                        // Possibly an avatar or text overlay
+                        if let user {
+                            if let profileImageUrl = user.profileImageUrl {
+                                AsyncImage(url: URL(string: profileImageUrl)!) { image in
+                                    image
+                                        .resizable()
+                                        .scaledToFill()
+                                        .clipShape(Circle())
+                                        .frame(width: 40, height: 40)
+                                } placeholder: {
+                                    ProgressView()
+                                        .frame(width: 30, height: 30)
+                                }
+                            } else {
+                                Text("New")
                             }
-                        } else {
-                            Text("New")
                         }
                     }
-                }
-                .position(x: edgePoint.x, y: edgePoint.y)
-                // Tapping it scrolls to the widget
-                .onTapGesture {
-                    // Possibly call your scrollToWidget here
-                    // e.g. canvasViewModel.scrollToWidget(widget)
-                    // or environment(\.scrollToWidget) if you followed that approach
-                    canvasViewModel.coordinator?.scrollToWidget(widget)
-                }
-                .task {
-                    // Load user info, etc.
-                    do {
-                        let fetchedUser = try await UserManager.shared.getUser(userId: widget.userId)
-                        self.user = fetchedUser
-                        self.userColor = Color.fromString(name: fetchedUser.userColor ?? "gray")
-                    } catch {
-                        print("Error fetching user: \(error)")
+                    .position(x: edgePoint.x, y: edgePoint.y)
+                    // Tapping it scrolls to the widget
+                    .onTapGesture {
+                        // Possibly call your scrollToWidget here
+                        // e.g. canvasViewModel.scrollToWidget(widget)
+                        // or environment(\.scrollToWidget) if you followed that approach
+                        canvasViewModel.coordinator?.scrollToWidget(widget)
                     }
+                    .task {
+                        // Load user info, etc.
+                        do {
+                            self.user = self.canvasViewModel.members.first(where: { u in u.userId == widget.userId})
+                            guard let user = self.user else {
+                                return
+                            }
+                            self.userColor = Color.fromString(name: user.userColor ?? "gray")
+                        } catch {
+                            print("Error fetching user: \(error)")
+                        }
+                    }
+                } else {
+                    EmptyView()
                 }
-            } else {
-                EmptyView()
             }
+        } else {
+            EmptyView()
+                .onAppear {
+                    print(widgetId)
+                }
         }
     }
 }

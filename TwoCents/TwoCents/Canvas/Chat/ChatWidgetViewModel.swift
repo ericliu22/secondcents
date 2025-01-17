@@ -149,13 +149,13 @@ class ChatWidgetViewModel {
             }
     }
 
-    func sendMessage() {
+    func sendMessage(userId: String) {
 
         var finalMessage: any WidgetMessage
         switch messageType {
         case .text:
             finalMessage = TextMessage(
-                sendBy: "xOEUuSr8q4UIC9Xrs14kO6gHpoD3", text: message)
+                sendBy: userId, text: message)
         default:
             finalMessage = EmptyMessage()
         }

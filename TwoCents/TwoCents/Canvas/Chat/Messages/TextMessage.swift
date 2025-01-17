@@ -27,9 +27,11 @@ struct TextMessage: WidgetMessage {
 
 struct TextMessageView: MessageView {
     
-    let userColor: Color = .purple
+    @Environment(CanvasPageViewModel.self) var canvasViewModel
+    @Environment(AppModel.self) var appModel
     let message: any WidgetMessage
     let textMessage: TextMessage
+    @State var userColor: Color = .gray
     
     init(message: TextMessage) {
         assert(message.messageType == .text)
@@ -48,7 +50,13 @@ struct TextMessageView: MessageView {
                 .background(.ultraThickMaterial)
                 .background(userColor)
                 .clipShape(RoundedRectangle(cornerRadius: 20))
-                .frame(maxWidth: 300, alignment: true ? .trailing : .leading)
+                .frame(alignment: appModel.user!.userId == textMessage.sendBy ? .trailing : .leading)
+        }
+        .onAppear {
+            guard let colorString = canvasViewModel.members.first(where: {u in u.userId == textMessage.sendBy})?.userColor else {
+                return
+            }
+            userColor = Color.fromString(name: colorString)
         }
     }
     

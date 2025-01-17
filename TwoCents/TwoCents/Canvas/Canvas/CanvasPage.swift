@@ -437,6 +437,7 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                         do {
                             try await viewModel.loadCurrentSpace()
                             viewModel.attachWidgetListener()
+                            await viewModel.fetchUsers(currentUserId: appModel.user!.userId)
                         } catch {
                             //EXIT IF SPACE DOES NOT EXIST
                             presentationMode.wrappedValue.dismiss()

@@ -54,6 +54,7 @@ struct ChatWidget: WidgetView {
                         canvasViewModel.activeWidget = nil
                     }
                     .environment(viewModel)
+                    .environment(canvasViewModel)
             } label: {
                 ChatPreview(messages: viewModel.messages)
                     .frame(width: widget.width, height: widget.height)
