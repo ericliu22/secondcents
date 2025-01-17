@@ -50,7 +50,6 @@ struct TextMessageView: MessageView {
                 .background(.ultraThickMaterial)
                 .background(userColor)
                 .clipShape(RoundedRectangle(cornerRadius: 20))
-                .frame(alignment: appModel.user!.userId == textMessage.sendBy ? .trailing : .leading)
         }
         .onAppear {
             guard let colorString = canvasViewModel.members.first(where: {u in u.userId == textMessage.sendBy})?.userColor else {

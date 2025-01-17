@@ -67,6 +67,7 @@ struct ChatWidget: WidgetView {
 }
 
 struct ChatPreview: View {
+    @Environment(AppModel.self) var appModel
     var messages: [any WidgetMessage]
 
     init(messages: [any WidgetMessage]) {
@@ -82,6 +83,7 @@ struct ChatPreview: View {
                         .listRowSeparator(.hidden)
                         .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
                         .listRowBackground(Color.clear)
+                        .frame(maxWidth: .infinity, alignment: appModel.user!.userId == message.sendBy ? .leading : .trailing)
                 }
             }
             .rotationEffect(.degrees(180))
