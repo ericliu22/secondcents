@@ -16,8 +16,13 @@ func makeMessage(message: any WidgetMessage) -> some View{
     switch message.messageType {
     case .text:
         if let textMsg = message as? TextMessage {
-            // If it's not actually a TextMessage, return an error view
             TextMessageView(message: textMsg)
+        } else {
+            EmptyMessageView(message: message)
+        }
+    case .widget:
+        if let canvasWidgetMessage = message as? CanvasWidgetMessage {
+            CanvasWidgetMessageView(message: canvasWidgetMessage)
         } else {
             EmptyMessageView(message: message)
         }
@@ -40,6 +45,7 @@ func makePreviewMessage(message: any WidgetMessage) -> some View {
     }
 }
 
+//TEMPORARILY WIDGET MESSAGE
 protocol WidgetMessage: Codable, Equatable, Identifiable {
     var id: String { get }
     var dateCreated: Date { get }

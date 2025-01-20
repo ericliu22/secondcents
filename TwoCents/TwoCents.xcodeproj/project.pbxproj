@@ -36,6 +36,7 @@
 		85C6759B2AB8EE6100FACCB2 /* SuperlativeGame.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20EBD092AB8A36100EFDDE8 /* SuperlativeGame.swift */; };
 		85CA3B4D2C2746C400F4A889 /* CalendarWidgetSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85CA3B4C2C2746C400F4A889 /* CalendarWidgetSheetView.swift */; };
 		A200F21B2C0026B400BC1005 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = A200F21A2C0026B400BC1005 /* FirebaseMessaging */; };
+		A200F72C2D3EDA5B009D4E2A /* CanvasWidgetMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200F72B2D3EDA55009D4E2A /* CanvasWidgetMessage.swift */; };
 		A21244E32C1E234B005E8C8B /* NewTextWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A21244E22C1E234B005E8C8B /* NewTextWidgetView.swift */; };
 		A212A19A2D398D820057E89D /* NewChatWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A212A1992D398D7D0057E89D /* NewChatWidgetView.swift */; };
 		A212A19C2D398E4F0057E89D /* ChatPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A212A19B2D398E4A0057E89D /* ChatPage.swift */; };
@@ -220,6 +221,7 @@
 		85DDD0CC2AB4E79A008A9C56 /* VoteGameReal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VoteGameReal.swift; sourceTree = "<group>"; };
 		85FDD15B2C308F430038944B /* EventView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventView.swift; sourceTree = "<group>"; };
 		A2003C942AABA08300B1E551 /* Line.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Line.swift; sourceTree = "<group>"; };
+		A200F72B2D3EDA55009D4E2A /* CanvasWidgetMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasWidgetMessage.swift; sourceTree = "<group>"; };
 		A20EBD062AB8A36100EFDDE8 /* HotSeat.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HotSeat.swift; sourceTree = "<group>"; };
 		A20EBD072AB8A36100EFDDE8 /* VoteGameReal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VoteGameReal.swift; sourceTree = "<group>"; };
 		A20EBD082AB8A36100EFDDE8 /* HotSeatManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HotSeatManager.swift; sourceTree = "<group>"; };
@@ -631,6 +633,7 @@
 		A2F504322D386133002F88FD /* Messages */ = {
 			isa = PBXGroup;
 			children = (
+				A200F72B2D3EDA55009D4E2A /* CanvasWidgetMessage.swift */,
 				A2F504292D384CD3002F88FD /* WidgetMessage.swift */,
 				A2F504302D386115002F88FD /* TextMessage.swift */,
 			);
@@ -1133,6 +1136,7 @@
 				AB2E56CD2AE9C59D0096A58C /* VoteGameView.swift in Sources */,
 				85629AA42C6EB031007F5D05 /* NewCalendarView.swift in Sources */,
 				A279471B2C7954C800EFC28A /* NotificationWidgetWrapper.swift in Sources */,
+				A200F72C2D3EDA5B009D4E2A /* CanvasWidgetMessage.swift in Sources */,
 				A22F84EE2C2912A20095A087 /* ZoomableScrollView.swift in Sources */,
 				A2F5631E2AB4E6240026D8C9 /* CanvasPage.swift in Sources */,
 				A21E87FD2C62A1D400B48BCA /* AppModel.swift in Sources */,
