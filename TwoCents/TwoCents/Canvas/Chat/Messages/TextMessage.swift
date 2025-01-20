@@ -27,6 +27,7 @@ struct TextMessage: WidgetMessage {
 
 struct TextMessageView: MessageView {
     
+    @Environment(ChatWidgetViewModel.self) var chatViewModel
     @Environment(CanvasPageViewModel.self) var canvasViewModel
     @Environment(AppModel.self) var appModel
     let message: any WidgetMessage
@@ -41,6 +42,13 @@ struct TextMessageView: MessageView {
     
     var body: some View {
         VStack{
+            if chatViewModel.messageChange(messageId: textMessage.id) {
+                Text(canvasViewModel.members.first(where: { u in u.userId == textMessage.sendBy})?.name ?? "")
+                    .foregroundStyle(userColor)
+                    .font(.caption)
+                    .padding(.top, 3)
+                    .padding(textMessage.sendBy == appModel.user!.userId ? .leading : .trailing, 6)
+            }
             Text(textMessage.text)
                 .font(.headline)
                 .fontWeight(.regular)
@@ -60,3 +68,4 @@ struct TextMessageView: MessageView {
     }
     
 }
+

@@ -59,6 +59,8 @@ struct ChatWidget: WidgetView {
                 ChatPreview(messages: viewModel.messages)
                     .frame(width: widget.width, height: widget.height)
             }
+            .environment(viewModel)
+            .environment(canvasViewModel)
         } else {
             ProgressView()
                 .progressViewStyle(.circular)

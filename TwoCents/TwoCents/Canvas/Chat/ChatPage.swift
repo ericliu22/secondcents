@@ -23,6 +23,7 @@ struct ChatPage: View {
                             .listRowBackground(Color.clear)
                             .frame(maxWidth: .infinity, alignment: appModel.user!.userId == message.sendBy ? .leading : .trailing)
                             .environment(canvasViewModel)
+                            .environment(viewModel)
                     }
                 }
                 .rotationEffect(.degrees(180))

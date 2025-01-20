@@ -14,6 +14,7 @@ class ChatWidgetViewModel {
     var messageType: MessageType = .text
     var chat: Chat?
     var message: String = ""
+    var changeIndices: [Int] = []
     var lastDocument: DocumentSnapshot?
     private let chatRef: DocumentReference
     private let FETCH_LIMIT: Int = 20
@@ -89,6 +90,7 @@ class ChatWidgetViewModel {
                 }
                 guard let doc = snapshot.documents.last else { return }
                 self.lastDocument = doc
+                messageSenderChangeIndices()
             }
     }
 
@@ -146,8 +148,30 @@ class ChatWidgetViewModel {
                 guard let doc = snapshot.documents.last else { return }
                 // The last document in this query is the new "oldest" message
                 self.lastDocument = doc
+                messageSenderChangeIndices()
             }
     }
+    
+    
+    func messageSenderChangeIndices() {
+        // If we have no messages, return an empty array
+        guard !messages.isEmpty else { return }
+        
+        // The first message is always a "change" since there's nothing before it
+        changeIndices = [messages.count-1]
+        
+        for i in 0..<messages.count-1 {
+            // Check if this message is from a different sender than the previous one
+            if messages[i].sendBy != messages[i + 1].sendBy {
+                changeIndices.append(i)
+            }
+        }
+    }
+    
+    func messageChange(messageId: String) -> Bool {
+        return changeIndices.contains([messages.firstIndex(where: { $0.id == messageId})!])
+    }
+    
 
     func sendMessage(userId: String) {
 
@@ -167,6 +191,7 @@ class ChatWidgetViewModel {
         } catch {
             print("Failed to send message")
         }
+        message = ""
     }
 
 }
