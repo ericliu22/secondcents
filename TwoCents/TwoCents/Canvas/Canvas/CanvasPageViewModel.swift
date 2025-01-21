@@ -6,6 +6,7 @@
 //
 
 import FirebaseFirestore
+import FirebaseMessaging
 import Foundation
 import PencilKit
 import SwiftUI
@@ -65,10 +66,17 @@ final class CanvasPageViewModel {
     //Hard and fast loading
     init(spaceId: String) {
         self.spaceId = spaceId
+        Messaging.messaging().subscribe(toTopic: spaceId) { error in
+          print("Subscribed to space")
+        }
+
     }
 
     func scrollTo(widgetId: String) {
-        guard let widget = canvasWidgets.first(where: { $0.id.uuidString == widgetId }) else { return }
+        guard let widget = canvasWidgets.first(where: { $0.id.uuidString == widgetId }) else {
+            print("AHHHH")
+            return
+        }
         coordinator?.scrollToWidget(widget)
     }
     

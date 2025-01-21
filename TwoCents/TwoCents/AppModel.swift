@@ -11,7 +11,7 @@ import Firebase
 
 enum NavigationRequest: Equatable {
     case none
-    case space(spaceId: String)
+    case space(spaceId: String, widgetId: String?)
 }
 @Observable @MainActor
 final class AppModel {

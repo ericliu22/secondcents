@@ -104,7 +104,8 @@ class AppDelegate: NSObject, UIApplicationDelegate {
                         return
                     }
                     
-                    appModel.navigationRequest = .space(spaceId: subject)
+                    appModel.navigationRequest = .space(spaceId: subject, widgetId: nil)
+                    
                 }
                 
                 else { print("Invalid spaceId: resuming normal execution") }
@@ -192,8 +193,8 @@ class AppDelegate: NSObject, UIApplicationDelegate {
                 print("AppModel not yet initialized")
                 return
             }
-            appModel.navigationRequest = .space(spaceId: spaceId)
-            print("SPACEID: \(notificationSpaceId)")
+            let widgetId = userInfo["widgetId"] as? String
+            appModel.navigationRequest = .space(spaceId: spaceId, widgetId: widgetId)
             print("didReceiveRemoteNotification SPACEID: \(spaceId ?? "nothing")")
         }
         
@@ -266,7 +267,8 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
                 return
             }
             
-            appModel.navigationRequest = .space(spaceId: spaceId)
+            let widgetId = userInfo["widgetId"] as? String
+            appModel.navigationRequest = .space(spaceId: spaceId, widgetId: widgetId)
             print("SPACEID: \(notificationSpaceId)")
             print("didReceive SPACEID: \(spaceId ?? "nothing")")
         }

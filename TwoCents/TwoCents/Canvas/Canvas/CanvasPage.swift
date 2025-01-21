@@ -30,12 +30,14 @@ struct CanvasPage: View, CanvasViewModelDelegate {
     @State var viewModel: CanvasPageViewModel
     @Environment(AppModel.self) var appModel
     @Environment(\.presentationMode) var presentationMode
+    let widgetId: String?
 
     private let spaceId: String
 
-    init(spaceId: String) {
+    init(spaceId: String, widgetId: String? = nil) {
         self.spaceId = spaceId
         self.viewModel = CanvasPageViewModel(spaceId: spaceId)
+        self.widgetId = widgetId
     }
 
     //Josh --> get current user
@@ -432,6 +434,11 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                     .onAppear(perform: {
                         viewModel.activeSheet = .chat
                         viewModel.delegate = self
+                        if let id = widgetId {
+                            print("THERE IS A WIDGET ID MOTHERFUCKER")
+                            viewModel.scrollTo(widgetId: id)
+                        }
+
                     })
                     .task {
                         do {

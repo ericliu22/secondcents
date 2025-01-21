@@ -22,7 +22,6 @@ final class SpaceSettingsViewModel {
 
     init(spaceId: String) {
         self.spaceId = spaceId
-        getInviteLink()
     }
     
     func getInviteLink() {
@@ -35,14 +34,6 @@ final class SpaceSettingsViewModel {
             linkMessage = "Copy Inite Link"
             fetchedInvite = true
         }
-    }
-
-    func getMembersInfo(space: DBSpace?) async throws {
-
-        guard let space else { return }
-
-        self.allMembers = try await UserManager.shared.getMembersInfo(
-            members: (space.members)!)
     }
 
     //Leave Space (REMOVE YOURSELF)

@@ -55,12 +55,7 @@ struct NewChatWidgetPreview: View {
             NavigationLink {
                 NewChatWidgetView(spaceId: spaceId, closeNewWidgetView: $closeNewWidgetView)
             } label: {
-                ChatPreview(messages: [
-                    TextMessage(sendBy: "Joe", text: "Heyyy"),
-                    TextMessage(
-                        sendBy: appModel.user?.userId ?? "",
-                        text: "Stop contacting me"),
-                ])
+                NewChatPreview()
                 .cornerRadius(20)
             }
         }

@@ -140,6 +140,10 @@ struct SpaceSettingsView: View {
                     }
                     .animation(.easeInOut, value: viewModel.fetchedInvite)
                 }
+                .onAppear {
+                    viewModel.getInviteLink()
+
+                }
                 .padding()
                 .frame(maxWidth: .infinity)
                 .background(.thickMaterial)
@@ -157,7 +161,7 @@ struct SpaceSettingsView: View {
                                     tint: Color(UIColor.label)))
 
                     } else {
-                        ForEach(viewModel.allMembers) { member in
+                        ForEach(canvasViewModel.members) { member in
 
                             if member.userId != appModel.user?.userId {
 
@@ -352,16 +356,13 @@ struct SpaceSettingsView: View {
             }
         }
         .padding(.horizontal)
-        .task {
-            try? await viewModel.getMembersInfo(space: canvasViewModel.space)
-        }
 
         .fullScreenCover(
             isPresented: $viewModel.isShowingAddMember,
             onDismiss: {
-                Task {
-                    try? await viewModel.getMembersInfo(space: canvasViewModel.space)
-                }
+//                Task {
+//                    try? await viewModel.getMembersInfo(space: canvasViewModel.space)
+//                }
             },
             content: {
                 NavigationView {

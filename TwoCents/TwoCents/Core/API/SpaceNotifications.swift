@@ -7,8 +7,14 @@
 
 import Foundation
 
+enum SpaceNotificationType: String, Codable {
+    case chat
+    case widget
+    case emoji
+}
+
 struct SpaceNotificationRequest: Codable {
-    let type: String
+    let type: SpaceNotificationType
     let spaceId: String
     let body: String
     let data: [String: String]?
@@ -21,7 +27,7 @@ enum SpaceNotificationError: Error {
 }
 
 fileprivate func spaceNotification(
-    type: String,
+    type: SpaceNotificationType,
     spaceId: String,
     body: String,
     data: [String: String]? = nil
@@ -53,6 +59,8 @@ fileprivate func spaceNotification(
     let (responseData, response) = try await URLSession.shared.data(
         for: request)
 
+    
+    print("Sent space notification")
     guard let httpResponse = response as? HTTPURLResponse else {
         throw SpaceNotificationError.requestFailed(statusCode: -1)
     }
@@ -78,8 +86,11 @@ func chatNotification(
     body: String,
     data: [String: String]? = nil
 ) async throws -> String {
+    let data: [String: String] = [
+        "spaceId": spaceId
+    ]
     return try await spaceNotification(
-        type: "chat",
+        type: .chat,
         spaceId: spaceId,
         body: body,
         data: data
@@ -93,10 +104,11 @@ func reactionNotification(
     widgetId: String
 ) async throws -> String {
     let data: [String: String] = [
+        "spaceId": spaceId,
         "widgetId": widgetId
     ]
     return try await spaceNotification(
-        type: "emoji",
+        type: .emoji,
         spaceId: spaceId,
         body: body,
         data: data
@@ -111,11 +123,12 @@ func widgetNotification(
 ) async throws -> String {
 
     let data: [String: String] = [
+        "spaceId": spaceId,
         "widgetId": widget.id.uuidString
     ]
     let body: String = "\(name) added a new \(widget.media.name()) widget"
     return try await spaceNotification(
-        type: "widget",
+        type: .widget,
         spaceId: spaceId,
         body: body,
         data: data

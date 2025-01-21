@@ -94,6 +94,49 @@ struct ChatPreview: View {
     }
 }
 
+struct NewChatPreview: View {
+    @Environment(AppModel.self) var appModel
+    
+    var body: some View {
+        VStack {
+            VStack {
+                Text("Alice")
+                    .foregroundStyle(appModel.loadedColor)
+                    .font(.caption)
+                    .padding(.top, 3)
+                    .padding(.leading)
+                Text("Heyyy")
+                    .font(.headline)
+                    .fontWeight(.regular)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 8)
+                    .foregroundStyle(appModel.loadedColor)
+                    .background(.ultraThickMaterial)
+                    .background(appModel.loadedColor)
+                    .clipShape(RoundedRectangle(cornerRadius: 20))
+            }
+            .frame(maxWidth: .infinity, alignment: .trailing)
+            VStack{
+                Text("Bob")
+                    .foregroundStyle(.purple)
+                    .font(.caption)
+                    .padding(.top, 3)
+                    .padding(.trailing)
+                Text("Ew")
+                    .font(.headline)
+                    .fontWeight(.regular)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 8)
+                    .foregroundStyle(.purple)
+                    .background(.ultraThickMaterial)
+                    .background(.purple)
+                    .clipShape(RoundedRectangle(cornerRadius: 20))
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
+    }
+}
+
 func deleteChat(spaceId: String, chatId: String) {
     Firestore.firestore().collection("spaces")
         .document(spaceId)

@@ -14,10 +14,10 @@ import SwiftUI
 final class SpacesViewModel {
     
     var user:  DBUser? = nil
-    var allSpaces: [DBSpace] = []
+    var allSpaces: [NavigationSpace] = []
     var finishedLoading: Bool = false
     var notificationCount: [String: Int] = [:]
-    var presentedPath: [DBSpace] = []
+    var presentedPath: [NavigationSpace] = []
     var newSpaceUUID = UUID().uuidString
     var searchTerm = ""
     var isShowingCreateSpaces: Bool = false
@@ -56,7 +56,8 @@ final class SpacesViewModel {
             self.allSpaces = []
             for document in query.documents {
                 let space = try! document.data(as: DBSpace.self)
-                self.allSpaces.append(space)
+                let navigationSpace = NavigationSpace(space: space)
+                self.allSpaces.append(navigationSpace)
             }
             self.finishedLoading = true
         })
@@ -74,14 +75,14 @@ final class SpacesViewModel {
         }
         for space in allSpaces {
             guard let unreadCount = try? await db.collection("spaces")
-                .document(space.id)
+                .document(space.space.id)
                 .collection("unreads")
                 .document(user.id)
                 .getDocument()
                 .data()?["count"] as? Int else {
                 continue
             }
-            notificationCount[space.id] = unreadCount
+            notificationCount[space.space.id] = unreadCount
         }
     }
     
