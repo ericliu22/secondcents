@@ -20,4 +20,7 @@ func SetupSpaceRoutes(r *router.Router, firestoreClient *firestore.Client, messa
 	r.POST("/v1/space/space-notification", (func(httpCtx *fasthttp.RequestCtx) {
 		space.SpaceNotificationHandler(httpCtx, firestoreClient, messagingClient)
 	}))
+	r.POST("/v1/space/add-member", (func(httpCtx *fasthttp.RequestCtx) {
+		space.AddMemberHandler(httpCtx, firestoreClient, messagingClient)
+	}))
 }
