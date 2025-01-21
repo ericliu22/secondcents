@@ -12,7 +12,6 @@ import SwiftUI
 @Observable @MainActor
 final class SpaceSettingsViewModel {
 
-    var allMembers: [DBUser] = []
     var spaceId: String
     var isShowingAddMember: Bool = false
     var linkMessage: String = "Fetching Invite Link..."
@@ -63,8 +62,8 @@ final class SpaceSettingsViewModel {
 
     }
 
-    func leaveSpaceButton() {
-            if allMembers.count <= 3 {
+    func leaveSpaceButton(members: [DBUser]) {
+            if members.count <= 3 {
                 Task {
                     try? await deleteSpace(
                         spaceId: spaceId)

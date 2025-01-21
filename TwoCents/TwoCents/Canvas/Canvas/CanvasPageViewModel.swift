@@ -92,6 +92,7 @@ final class CanvasPageViewModel {
         guard let members = space.members else {
             return
         }
+        self.members = []
         for member in members {
             guard let user = try? await UserManager.shared.getUser(userId: member) else {
                 continue

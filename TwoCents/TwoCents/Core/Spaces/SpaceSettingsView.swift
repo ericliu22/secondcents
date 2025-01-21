@@ -154,12 +154,11 @@ struct SpaceSettingsView: View {
 
                 VStack {
 
-                    if viewModel.allMembers.isEmpty {
+                    if canvasViewModel.members.isEmpty {
                         ProgressView()
                             .progressViewStyle(
                                 CircularProgressViewStyle(
                                     tint: Color(UIColor.label)))
-
                     } else {
                         ForEach(canvasViewModel.members) { member in
 
@@ -312,7 +311,7 @@ struct SpaceSettingsView: View {
                     },
                     label: {
                         Text(
-                            viewModel.allMembers.count <= 2
+                            canvasViewModel.members.count <= 2
                                 ? "Delete Space" : "Leave Space"
                         )
                         .font(.headline)
@@ -323,23 +322,23 @@ struct SpaceSettingsView: View {
                 )
                 .alert(
                     Text(
-                        viewModel.allMembers.count <= 2
+                        canvasViewModel.members.count <= 2
                             ? "Delete Space" : "Leave Space"),
                     isPresented: $viewModel.showingAlert,
                     actions: {
                         Button("Cancel", role: .cancel) {}
                         Button(
-                            viewModel.allMembers.count <= 2
+                            canvasViewModel.members.count <= 2
                                 ? "Delete" : "Leave", role: .destructive
                         ) {
-                            viewModel.leaveSpaceButton()
+                            viewModel.leaveSpaceButton(members: canvasViewModel.members)
                             self.presentationMode.wrappedValue.dismiss()
                         }
                     },
                     message: {
-                        if viewModel.allMembers.count == 2 {
+                        if canvasViewModel.members.count == 2 {
                             Text("Yea... It's getting too romantic in here.")
-                        } else if viewModel.allMembers.count == 1 {
+                        } else if canvasViewModel.members.count == 1 {
                             Text("Yea... It's getting lonely in here.")
                         } else {
                             Text("Do it. Your friends won't mind...")
@@ -347,7 +346,7 @@ struct SpaceSettingsView: View {
 
                     }
                 )
-                .disabled(viewModel.allMembers.count == 0)
+                .disabled(canvasViewModel.members.count == 0)
 
                 .buttonStyle(.bordered)
                 .tint(.red)
