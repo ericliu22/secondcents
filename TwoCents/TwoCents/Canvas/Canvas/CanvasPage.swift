@@ -256,6 +256,9 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                                 Label("Delete", systemImage: "trash")
 
                             }
+                            ShareLink(item: viewModel.generateWidgetLink(widget: widget)) {
+                                Label("Share widget", systemImage: "square.and.arrow.up")
+                            }
                         })
                     )
                     .cornerRadius(CORNER_RADIUS)

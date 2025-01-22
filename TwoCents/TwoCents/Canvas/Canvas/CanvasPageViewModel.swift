@@ -237,4 +237,8 @@ final class CanvasPageViewModel {
         }
     }
 
+    func generateWidgetLink(widget: CanvasWidget) -> String {
+        return "https://api.twocentsapp.com/app/widget/\(spaceId)/\(widget.id.uuidString)"
+    }
+    
 }

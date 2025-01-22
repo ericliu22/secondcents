@@ -89,6 +89,20 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         
         //Tenatively we'll use these link actions, can change if we want it to
         switch action {
+        case "widget":
+            guard let widgetId = components[safe: 3] else {
+                print("Universal link has no widgetId")
+                return
+            }
+            
+            Task {
+                if await !validWidgetLink(spaceId: subject) {
+                    print("Invalid widget link")
+                    return
+                }
+                
+                appModel?.navigationRequest = .space(spaceId: subject, widgetId: widgetId)
+            }
         case "space":
             print("space link")
             
@@ -146,6 +160,22 @@ class AppDelegate: NSObject, UIApplicationDelegate {
             }
             completion(false)
         })
+    }
+    
+    func validWidgetLink(spaceId: String) async -> Bool {
+        guard let space = try? await SpaceManager.shared.getSpace(spaceId: spaceId) else {
+            print("Failed to fetch space")
+            return false
+        }
+        guard let user = appModel?.user else {
+            print("No authenticated user")
+            return false
+        }
+        guard let inSpace = space.members?.contains(where: { member in user.userId == member}) else {
+            print("Space has no members")
+            return false
+        }
+        return inSpace
     }
     
     func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
