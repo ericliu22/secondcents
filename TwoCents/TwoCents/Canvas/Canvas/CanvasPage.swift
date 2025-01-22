@@ -40,10 +40,6 @@ struct CanvasPage: View, CanvasViewModelDelegate {
         self.widgetId = widgetId
     }
 
-    //Josh --> get current user
-    private(set) var userId: String? = try? AuthenticationManager.shared
-        .getAuthenticatedUser().uid
-
     func dismissView() {
         presentationMode.wrappedValue.dismiss()
     }
@@ -395,7 +391,7 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                 })
         //boutta fuck up this section right here lmfao
         case .text:
-            if userId == widget.userId {
+            if appModel.user?.userId == widget.userId {
                 Button(
                     action: {
                         viewModel.activeWidget = widget
@@ -440,10 +436,12 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                         do {
                             try await viewModel.loadCurrentSpace()
                             viewModel.attachWidgetListener()
-                            await viewModel.fetchUsers(currentUserId: appModel.user!.userId)
-                                                        if let id = widgetId {
-                            viewModel.scrollTo(widgetId: id)
-                        }
+                            await viewModel.fetchUsers(
+                                currentUserId: appModel.user!.userId)
+                            //Scroll to has to happen here because widgets are not yet initialized until we attach the listener
+                            if let id = widgetId {
+                                viewModel.scrollTo(widgetId: id)
+                            }
 
                         } catch {
                             //EXIT IF SPACE DOES NOT EXIST
@@ -491,7 +489,9 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                             selection: $viewModel.selectedDetent
                         )
                         .presentationCornerRadius(20)
-                        .presentationBackgroundInteraction(.enabled(upThrough: .height(50)))
+                        .presentationBackgroundInteraction(
+                            .enabled(upThrough: .height(50))
+                        )
                         .onChange(of: viewModel.selectedDetent) {
                             if viewModel.selectedDetent != .large {
 

@@ -11,7 +11,7 @@ import SwiftUI
 
 struct ZoomableScrollView<Content: View>: UIViewRepresentable {
     private var content: Content
-    
+
     @Environment(CanvasPageViewModel.self) var canvasViewModel
     //@TODO: Can change this with just user lmao
     @Environment(AppModel.self) var appModel
@@ -21,7 +21,6 @@ struct ZoomableScrollView<Content: View>: UIViewRepresentable {
     ) {
         self.content = content()
     }
-    
 
     func makeUIView(context: Context) -> UIScrollView {
         let scrollView = UIScrollView()
@@ -38,11 +37,11 @@ struct ZoomableScrollView<Content: View>: UIViewRepresentable {
         let hostedView = context.coordinator.hostingController.view!
         hostedView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.addSubview(hostedView)
-        
+
         let edgePanGesture = UIPanGestureRecognizer(
-                target: context.coordinator,
-                action: #selector(Coordinator.handleEdgePan(_:))
-            )
+            target: context.coordinator,
+            action: #selector(Coordinator.handleEdgePan(_:))
+        )
         edgePanGesture.delegate = context.coordinator
         scrollView.addGestureRecognizer(edgePanGesture)
 
@@ -96,12 +95,14 @@ struct ZoomableScrollView<Content: View>: UIViewRepresentable {
         scrollView.contentSize = contentSize
     }
 
-    class Coordinator: NSObject, UIScrollViewDelegate, UIGestureRecognizerDelegate {
+    class Coordinator: NSObject, UIScrollViewDelegate,
+        UIGestureRecognizerDelegate
+    {
         weak var scrollView: UIScrollView?
-        
+
         private var displayLink: CADisplayLink?
         private var autoScrollDirection: AutoScrollDirection = .none
-        
+
         // Some margin threshold (in points) from the edge:
         private let horizontalThreshold: CGFloat = 300
         private let verticalThreshold: CGFloat = 500
@@ -152,7 +153,7 @@ struct ZoomableScrollView<Content: View>: UIViewRepresentable {
             let rect = getUnscaledVisibleRect(scrollView: scrollView)
             canvasViewModel.visibleRectInCanvas = rect
         }
-        
+
         func scrollViewDidZoom(_ scrollView: UIScrollView) {
             updateContentSize(for: scrollView)
             updateCenter(for: scrollView)
@@ -259,7 +260,7 @@ struct ZoomableScrollView<Content: View>: UIViewRepresentable {
                 height: view.intrinsicContentSize.height * zoomScale)
             scrollView.contentSize = contentSize
         }
-        
+
         // In ZoomableScrollView.Coordinator
         func scrollToWidget(_ widget: CanvasWidget) {
             // 1) Grab the scrollView from our stored reference
@@ -267,7 +268,7 @@ struct ZoomableScrollView<Content: View>: UIViewRepresentable {
 
             // 2) The rest of your logic is unchanged:
             guard let hostedView = scrollView.subviews.first else { return }
-            
+
             let unscaledWidth = hostedView.intrinsicContentSize.width
             let unscaledHeight = hostedView.intrinsicContentSize.height
 
@@ -280,41 +281,6 @@ struct ZoomableScrollView<Content: View>: UIViewRepresentable {
             let offsetX = zoomedX - (scrollView.bounds.width / 2)
             let offsetY = zoomedY - (scrollView.bounds.height / 2)
 
-            let maxOffsetX = scrollView.contentSize.width - scrollView.bounds.width
-            let maxOffsetY = scrollView.contentSize.height - scrollView.bounds.height
-
-            let clampedX = max(0, min(offsetX, maxOffsetX))
-            let clampedY = max(0, min(offsetY, maxOffsetY))
-
-            scrollView.setContentOffset(CGPoint(x: clampedX, y: clampedY), animated: true)
-        }
-
-
-        private func autoCenterOnCursor(_ scrollView: UIScrollView) {
-            guard let hostedView = scrollView.subviews.first else { return }
-
-            // 1) The subview’s unscaled size:
-            //    In your code, it might be 2000×2000 or 3000×3000.
-            let unscaledWidth = hostedView.intrinsicContentSize.width
-            let unscaledHeight = hostedView.intrinsicContentSize.height
-
-            // 2) The model's cursor is presumably in "subview center = (0,0)" space,
-            //    or maybe it's top-left based. Adjust if needed.
-            //    For example, if (0,0) is the subview center, then to get the
-            //    subview’s absolute coordinate for that cursor, we do:
-            let cursorX = canvasViewModel.scrollViewCursor.x + (unscaledWidth / 2)
-            let cursorY = canvasViewModel.scrollViewCursor.y + (unscaledHeight / 2)
-
-            // 3) Convert from unscaled coords to zoomed coords:
-            let zoomedX = cursorX * scrollView.zoomScale
-            let zoomedY = cursorY * scrollView.zoomScale
-
-            // 4) We want `zoomedX, zoomedY` to appear at the center of the scrollView's visible area.
-            //    So the offset is that point minus half of the scrollView’s width/height:
-            let offsetX = zoomedX - (scrollView.bounds.width / 2)
-            let offsetY = zoomedY - (scrollView.bounds.height / 2)
-
-            // 5) Clamp offset so we don’t scroll beyond content bounds:
             let maxOffsetX =
                 scrollView.contentSize.width - scrollView.bounds.width
             let maxOffsetY =
@@ -323,9 +289,24 @@ struct ZoomableScrollView<Content: View>: UIViewRepresentable {
             let clampedX = max(0, min(offsetX, maxOffsetX))
             let clampedY = max(0, min(offsetY, maxOffsetY))
 
-            // 6) Animate the scroll so the user sees it smoothly:
             scrollView.setContentOffset(
                 CGPoint(x: clampedX, y: clampedY), animated: true)
+        }
+
+        private func autoCenterOnCursor(_ scrollView: UIScrollView) {
+            // Only auto-center in .normal mode
+            guard canvasViewModel.canvasMode == .normal else { return }
+
+            // 1) The cursor in “unscaled subview coordinates”
+            let cursorPoint = canvasViewModel.canvasPageCursor
+
+            // 2) Find the nearest widget
+            guard let widget = nearestWidget(to: cursorPoint) else {
+                return
+            }
+
+            // 3) Reuse your “scrollToWidget(_:)” method
+            scrollToWidget(widget)
         }
 
         func updateCenter(for scrollView: UIScrollView) {
@@ -346,8 +327,9 @@ struct ZoomableScrollView<Content: View>: UIViewRepresentable {
             // 2) Convert to unscaled coordinates by dividing out zoomScale:
             var unscaledCenterX = zoomedCenterX / scrollView.zoomScale
             var unscaledCenterY = zoomedCenterY / scrollView.zoomScale
-            
-            canvasViewModel.canvasPageCursor = CGPoint(x: unscaledCenterX, y: unscaledCenterY)
+
+            canvasViewModel.canvasPageCursor = CGPoint(
+                x: unscaledCenterX, y: unscaledCenterY)
 
             canvasViewModel.widgetCursor = CGPoint(
                 x: roundToTile(number: unscaledCenterX),
@@ -370,117 +352,151 @@ struct ZoomableScrollView<Content: View>: UIViewRepresentable {
 
         func getUnscaledVisibleRect(scrollView: UIScrollView) -> CGRect {
             let scale = scrollView.zoomScale
-            
+
             let x = scrollView.contentOffset.x / scale
             let y = scrollView.contentOffset.y / scale
             let width = scrollView.bounds.size.width / scale
             let height = scrollView.bounds.size.height / scale
-            
+
             return CGRect(x: x, y: y, width: width, height: height)
         }
-        
+
         @objc func handleEdgePan(_ gesture: UIPanGestureRecognizer) {
-                guard let scrollView = scrollView else { return }
-            
-                if canvasViewModel.canvasMode != .dragging { return }
-                let location = gesture.location(in: scrollView)
-                
-                switch gesture.state {
-                case .began, .changed:
-                    // Figure out which edge we’re nearest to:
-                    autoScrollDirection = calculateDirectionIfNearEdge(
-                        location: location,
-                        scrollView: scrollView
-                    )
-                    
-                    if autoScrollDirection != .none {
-                        // If not already auto-scrolling, start it
-                        startAutoScroll()
-                    } else {
-                        // If we’ve moved away from the edge, stop auto-scrolling
-                        stopAutoScroll()
-                    }
-                    
-                case .ended, .cancelled, .failed:
-                    // User lifted finger or gesture ended—stop auto-scrolling
+            guard let scrollView = scrollView else { return }
+
+            if canvasViewModel.canvasMode != .dragging { return }
+            let location = gesture.location(in: scrollView)
+
+            switch gesture.state {
+            case .began, .changed:
+                // Figure out which edge we’re nearest to:
+                autoScrollDirection = calculateDirectionIfNearEdge(
+                    location: location,
+                    scrollView: scrollView
+                )
+
+                if autoScrollDirection != .none {
+                    // If not already auto-scrolling, start it
+                    startAutoScroll()
+                } else {
+                    // If we’ve moved away from the edge, stop auto-scrolling
                     stopAutoScroll()
-                    
-                default:
-                    break
                 }
+
+            case .ended, .cancelled, .failed:
+                // User lifted finger or gesture ended—stop auto-scrolling
+                stopAutoScroll()
+
+            default:
+                break
             }
-            
-            private func calculateDirectionIfNearEdge(location: CGPoint,
-                                                      scrollView: UIScrollView) -> AutoScrollDirection {
-                // Convert local point to the scrollView’s coordinate space
-                // For example, if near left edge:
-                if location.x < horizontalThreshold {
-                    return .left
-                }
-                // if near right edge:
-                if location.x > scrollView.bounds.width - horizontalThreshold {
-                    return .right
-                }
-                // if near top edge:
-                if location.y < verticalThreshold {
-                    return .up
-                }
-                // if near bottom edge:
-                if location.y > scrollView.bounds.height - verticalThreshold {
-                    return .down
-                }
-                
-                return .none
+        }
+
+        private func calculateDirectionIfNearEdge(
+            location: CGPoint,
+            scrollView: UIScrollView
+        ) -> AutoScrollDirection {
+            // Convert local point to the scrollView’s coordinate space
+            // For example, if near left edge:
+            if location.x < horizontalThreshold {
+                return .left
             }
-            
-            private func startAutoScroll() {
-                guard displayLink == nil else { return }
-                displayLink = CADisplayLink(target: self, selector: #selector(handleAutoScroll))
-                displayLink?.add(to: .main, forMode: .common)
+            // if near right edge:
+            if location.x > scrollView.bounds.width - horizontalThreshold {
+                return .right
             }
-            
-            private func stopAutoScroll() {
-                displayLink?.invalidate()
-                displayLink = nil
-                autoScrollDirection = .none
+            // if near top edge:
+            if location.y < verticalThreshold {
+                return .up
             }
-            
-            @objc private func handleAutoScroll() {
-                guard let scrollView = scrollView else { return }
-                
-                // Adjust this speed as needed
-                let scrollSpeed: CGFloat = 8
-                
-                var offset = scrollView.contentOffset
-                
-                switch autoScrollDirection {
-                case .left:
-                    offset.x -= scrollSpeed
-                    offset.x = max(offset.x, 0) // prevent overscrolling
-                case .right:
-                    offset.x += scrollSpeed
-                    let maxOffsetX = scrollView.contentSize.width - scrollView.bounds.width
-                    offset.x = min(offset.x, maxOffsetX)
-                case .up:
-                    offset.y -= scrollSpeed
-                    offset.y = max(offset.y, 0)
-                case .down:
-                    offset.y += scrollSpeed
-                    let maxOffsetY = scrollView.contentSize.height - scrollView.bounds.height
-                    offset.y = min(offset.y, maxOffsetY)
-                case .none:
-                    return
-                }
-                
-                // Update the scrollView’s offset (no animation).
-                scrollView.setContentOffset(offset, animated: false)
+            // if near bottom edge:
+            if location.y > scrollView.bounds.height - verticalThreshold {
+                return .down
             }
 
-            func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
-                                   shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer
-            ) -> Bool {
-                return true
+            return .none
+        }
+
+        private func startAutoScroll() {
+            guard displayLink == nil else { return }
+            displayLink = CADisplayLink(
+                target: self, selector: #selector(handleAutoScroll))
+            displayLink?.add(to: .main, forMode: .common)
+        }
+
+        private func stopAutoScroll() {
+            displayLink?.invalidate()
+            displayLink = nil
+            autoScrollDirection = .none
+        }
+
+        @objc private func handleAutoScroll() {
+            guard let scrollView = scrollView else { return }
+
+            // Adjust this speed as needed
+            let scrollSpeed: CGFloat = 8
+
+            var offset = scrollView.contentOffset
+
+            switch autoScrollDirection {
+            case .left:
+                offset.x -= scrollSpeed
+                offset.x = max(offset.x, 0)  // prevent overscrolling
+            case .right:
+                offset.x += scrollSpeed
+                let maxOffsetX =
+                    scrollView.contentSize.width - scrollView.bounds.width
+                offset.x = min(offset.x, maxOffsetX)
+            case .up:
+                offset.y -= scrollSpeed
+                offset.y = max(offset.y, 0)
+            case .down:
+                offset.y += scrollSpeed
+                let maxOffsetY =
+                    scrollView.contentSize.height - scrollView.bounds.height
+                offset.y = min(offset.y, maxOffsetY)
+            case .none:
+                return
             }
+
+            // Update the scrollView’s offset (no animation).
+            scrollView.setContentOffset(offset, animated: false)
+        }
+
+        func gestureRecognizer(
+            _ gestureRecognizer: UIGestureRecognizer,
+            shouldRecognizeSimultaneouslyWith otherGestureRecognizer:
+                UIGestureRecognizer
+        ) -> Bool {
+            return true
+        }
+
+        private func nearestWidget(to point: CGPoint) -> CanvasWidget? {
+            // If you have no widgets, early-exit
+            guard !canvasViewModel.canvasWidgets.isEmpty else { return nil }
+
+            var closestWidget: CanvasWidget?
+            var smallestDistance = CGFloat.infinity
+
+            for widget in canvasViewModel.canvasWidgets {
+                // Compute each widget’s center:
+                let widgetCenter = CGPoint(
+                    x: (widget.x ?? 0) + widget.width / 2,
+                    y: (widget.y ?? 0) + widget.height / 2
+                )
+
+                let dx = point.x - widgetCenter.x
+                let dy = point.y - widgetCenter.y
+                let distanceSquared = dx * dx + dy * dy
+
+                if distanceSquared < smallestDistance {
+                    smallestDistance = distanceSquared
+                    closestWidget = widget
+                }
+            }
+
+            return closestWidget
+        }
     }
 }
 
