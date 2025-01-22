@@ -138,7 +138,7 @@ func isValidToken(tokenString string, privateKey string) (bool, error) {
 	return false, fmt.Errorf("invalid token")
 }
 
-func isMember(space *models.DBSpace, userId string) bool {
+func IsMember(space *models.DBSpace, userId string) bool {
 	// Query the document to check if the user is in the 'members' array
 
 	// Check if the userID exists in the array
@@ -168,7 +168,7 @@ func ValidateGenerateInviteLink(httpCtx *fasthttp.RequestCtx, space *models.DBSp
 		return false
 	}
 
-	if !isMember(space, authenticatedUserId) {
+	if !IsMember(space, authenticatedUserId) {
 		log.Printf("Unauthorized bum")
 		return false
 	}
@@ -177,5 +177,5 @@ func ValidateGenerateInviteLink(httpCtx *fasthttp.RequestCtx, space *models.DBSp
 }
 
 func ValidateSpaceNotifcationRequest(space *models.DBSpace, userId string) bool {
-	return isMember(space, userId)
+	return IsMember(space, userId)
 }

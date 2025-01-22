@@ -16,7 +16,7 @@ import (
 
 type AddMemberRequest struct {
 	SpaceId string `json:"spaceId"`
-	UserId string `json:"userId"`
+	UserId  string `json:"userId"`
 }
 
 func AddMemberHandler(httpCtx *fasthttp.RequestCtx, firestoreClient *firestore.Client, messagingClient *messaging.Client) {
@@ -70,7 +70,7 @@ func AddMemberHandler(httpCtx *fasthttp.RequestCtx, firestoreClient *firestore.C
 
 	firestoreClient.Collection("users").Doc(addRequest.UserId).Update(firebaseCtx, []firestore.Update{
 		{
-			Path: "spaceRequests",
+			Path:  "spaceRequests",
 			Value: firestore.ArrayUnion(addRequest.SpaceId),
 		},
 	})
@@ -83,10 +83,10 @@ func AddMemberHandler(httpCtx *fasthttp.RequestCtx, firestoreClient *firestore.C
 	}
 
 	var notification notifications.SingleNotification
-	notification = notifications.SingleNotification {
+	notification = notifications.SingleNotification{
 		Token: *privateUser.Token,
-		Title: senderUser.Name + " invited you to [" + space.Name +"]!",
-		Body: "Accept the invite and join the space",
+		Title: senderUser.Name + " invited you to [" + space.Name + "]!",
+		Body:  "Accept the invite and join the space",
 	}
 	if err := notifications.SendSingleNotification(&notification, messagingClient, firebaseCtx); err != nil {
 		log.Printf("Failed to send notification: %v", err.Error())

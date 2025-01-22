@@ -7,12 +7,11 @@ import (
 )
 
 type DBChat struct {
-	Id string `firestore:"id"`
-	SpaceId string `firestore:"spaceId"`
-	Name string `firestore:"name"`
-	Members *[]string `firestore:"members"`
-	LastSender string `firestore:"lastSender"`
-    
+	Id         string    `firestore:"id"`
+	SpaceId    string    `firestore:"spaceId"`
+	Name       string    `firestore:"name"`
+	Members    *[]string `firestore:"members"`
+	LastSender string    `firestore:"lastSender"`
 }
 
 func GetChat(firestoreClient *firestore.Client, firebaseCtx context.Context, spaceId string, chatId string) (*DBChat, error) {

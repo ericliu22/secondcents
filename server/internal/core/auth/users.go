@@ -81,3 +81,16 @@ func ValidSendRequest(senderUserId string, receiverDocRef firestore.DocumentRef,
 
 	return false
 }
+
+func ValidateAddMember(senderId string, targetUser *models.DBUser) bool {
+	log.Printf("SENDERUSERID: " + senderId)
+	log.Printf("targetUser: %v", targetUser)
+	for _, friendId := range *targetUser.Friends {
+		log.Printf(friendId)
+		if friendId == senderId {
+			return true
+		}
+	}
+
+	return false
+}
