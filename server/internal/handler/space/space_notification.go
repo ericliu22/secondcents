@@ -88,7 +88,7 @@ func SpaceNotificationHandler(httpCtx *fasthttp.RequestCtx, firestoreClient *fir
 		chat, chatErr := models.GetChat(firestoreClient, firebaseCtx, notificationRequest.SpaceId, notificationRequest.Data["widgetId"])
 		if chatErr != nil {
 			httpCtx.Error("Internal server error", fasthttp.StatusBadRequest)
-			log.Printf("Failed to get user: %v", userErr.Error())
+			log.Printf("Failed to get user: %v", chatErr.Error())
 			return
 		}
 
