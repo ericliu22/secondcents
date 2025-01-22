@@ -191,11 +191,12 @@ class ChatWidgetViewModel {
         } catch {
             print("Failed to send message")
         }
+        let tempMessage = message
+        message = ""
         Task {
-            try await chatWidgetNotification(spaceId: spaceId, body: message, widgetId: chatId)
+            try await chatWidgetNotification(spaceId: spaceId, body: tempMessage, widgetId: chatId)
         }
         addWidgetUnread(spaceId: spaceId, userId: userId, widgetId: chatId)
-        message = ""
     }
 
 }
