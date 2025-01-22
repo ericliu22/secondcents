@@ -11,6 +11,7 @@ enum SpaceNotificationType: String, Codable {
     case chat
     case widget
     case emoji
+    case chatWidget
 }
 
 struct SpaceNotificationRequest: Codable {
@@ -87,7 +88,7 @@ func chatNotification(
     data: [String: String]? = nil
 ) async throws -> String {
     let data: [String: String] = [
-        "spaceId": spaceId
+        "spaceId": spaceId,
     ]
     return try await spaceNotification(
         type: .chat,
@@ -95,6 +96,19 @@ func chatNotification(
         body: body,
         data: data
     )
+}
+
+func chatWidgetNotification(
+    spaceId: String,
+    body: String,
+    widgetId: String,
+    data: [String: String]? = nil
+) async throws -> String {
+    let data: [String: String] = [
+        "spaceId": spaceId,
+        "widgetId": widgetId
+    ]
+    return try await spaceNotification(type: .chatWidget, spaceId: spaceId, body: body, data: data)
 }
 
 /// Send an "emoji" notification.

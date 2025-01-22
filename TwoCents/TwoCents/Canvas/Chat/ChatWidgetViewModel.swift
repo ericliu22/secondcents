@@ -192,7 +192,7 @@ class ChatWidgetViewModel {
             print("Failed to send message")
         }
         Task {
-            try await chatNotification(spaceId: spaceId, body: message)
+            try await chatWidgetNotification(spaceId: spaceId, body: message, widgetId: chatId)
         }
         addWidgetUnread(spaceId: spaceId, userId: userId, widgetId: chatId)
         message = ""

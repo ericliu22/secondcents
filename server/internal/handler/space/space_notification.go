@@ -63,6 +63,7 @@ func SpaceNotificationHandler(httpCtx *fasthttp.RequestCtx, firestoreClient *fir
 	switch notificationRequest.Type {
 	case "chat":
 		notification = notifications.TopicNotification{
+
 			Topic: notificationRequest.SpaceId,
 			Title: "[" + space.Name + "] " + user.Username,
 			Body:  notificationRequest.Body,
@@ -81,6 +82,21 @@ func SpaceNotificationHandler(httpCtx *fasthttp.RequestCtx, firestoreClient *fir
 			Title: "[" + space.Name + "] " + user.Username,
 			Body:  notificationRequest.Body,
 			Data:  notificationRequest.Data,
+		}
+	case "chatWidget":
+		
+		chat, chatErr := models.GetChat(firestoreClient, firebaseCtx, notificationRequest.SpaceId, notificationRequest.Data["widgetId"])
+		if chatErr != nil {
+			httpCtx.Error("Internal server error", fasthttp.StatusBadRequest)
+			log.Printf("Failed to get user: %v", userErr.Error())
+			return
+		}
+
+		notification = notifications.TopicNotification{
+			Topic: notificationRequest.SpaceId,
+			Title: "[" + space.Name + "/" + chat.Name + "] " + user.Username,
+			Body: notificationRequest.Body,
+			Data: notificationRequest.Data,
 		}
 	default:
 		httpCtx.Error("Invalid request body", fasthttp.StatusBadRequest)
