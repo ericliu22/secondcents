@@ -434,10 +434,6 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                     .onAppear(perform: {
                         viewModel.activeSheet = .chat
                         viewModel.delegate = self
-                        if let id = widgetId {
-                            print("THERE IS A WIDGET ID MOTHERFUCKER")
-                            viewModel.scrollTo(widgetId: id)
-                        }
 
                     })
                     .task {
@@ -445,6 +441,10 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                             try await viewModel.loadCurrentSpace()
                             viewModel.attachWidgetListener()
                             await viewModel.fetchUsers(currentUserId: appModel.user!.userId)
+                                                        if let id = widgetId {
+                            viewModel.scrollTo(widgetId: id)
+                        }
+
                         } catch {
                             //EXIT IF SPACE DOES NOT EXIST
                             presentationMode.wrappedValue.dismiss()

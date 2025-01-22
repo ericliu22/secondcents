@@ -67,14 +67,15 @@ final class CanvasPageViewModel {
     init(spaceId: String) {
         self.spaceId = spaceId
         Messaging.messaging().subscribe(toTopic: spaceId) { error in
-          print("Subscribed to space")
+            if error != nil {
+                print("Failed to subscribe")
+            }
         }
 
     }
 
     func scrollTo(widgetId: String) {
         guard let widget = canvasWidgets.first(where: { $0.id.uuidString == widgetId }) else {
-            print("AHHHH")
             return
         }
         coordinator?.scrollToWidget(widget)
@@ -97,7 +98,6 @@ final class CanvasPageViewModel {
             guard let user = try? await UserManager.shared.getUser(userId: member) else {
                 continue
             }
-            print("added member")
             self.members.append(user)
         }
         print(members)
