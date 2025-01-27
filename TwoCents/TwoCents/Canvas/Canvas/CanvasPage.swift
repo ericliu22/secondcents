@@ -428,7 +428,7 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                     )
                     .background(Color(UIColor.secondarySystemBackground))
                     //IMPORTANT
-                    //onAppear and task must must must be here or else ZoomableScrollView is fucked
+                    //onAppear and task must must must be here or else ZoomableScrollView is aed
                     //Don't know the reason why -Eric
                     .onAppear(perform: {
                         viewModel.activeSheet = .chat

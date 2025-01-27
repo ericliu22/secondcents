@@ -75,6 +75,7 @@
 		A2E1BB572D42A131002993F0 /* AcceptSpaceRequestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E1BB562D42A129002993F0 /* AcceptSpaceRequestView.swift */; };
 		A2E1BB592D42A1FC002993F0 /* SpaceRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E1BB582D42A1F5002993F0 /* SpaceRequest.swift */; };
 		A2E5F52B2B5A12D30019C6ED /* DrawingCanvas.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E5F52A2B5A12D30019C6ED /* DrawingCanvas.swift */; };
+		A2E7AAAE2D48231800C1DC1D /* InAppNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E7AAAD2D48231200C1DC1D /* InAppNotification.swift */; };
 		A2F504262D384C39002F88FD /* ChatWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F504242D384C31002F88FD /* ChatWidget.swift */; };
 		A2F504282D384C69002F88FD /* ChatWidgetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F504272D384C61002F88FD /* ChatWidgetViewModel.swift */; };
 		A2F5042A2D384CD9002F88FD /* WidgetMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F504292D384CD3002F88FD /* WidgetMessage.swift */; };
@@ -270,6 +271,7 @@
 		A2E1BB562D42A129002993F0 /* AcceptSpaceRequestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AcceptSpaceRequestView.swift; sourceTree = "<group>"; };
 		A2E1BB582D42A1F5002993F0 /* SpaceRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpaceRequest.swift; sourceTree = "<group>"; };
 		A2E5F52A2B5A12D30019C6ED /* DrawingCanvas.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawingCanvas.swift; sourceTree = "<group>"; };
+		A2E7AAAD2D48231200C1DC1D /* InAppNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InAppNotification.swift; sourceTree = "<group>"; };
 		A2F504242D384C31002F88FD /* ChatWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatWidget.swift; sourceTree = "<group>"; };
 		A2F504272D384C61002F88FD /* ChatWidgetViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatWidgetViewModel.swift; sourceTree = "<group>"; };
 		A2F504292D384CD3002F88FD /* WidgetMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetMessage.swift; sourceTree = "<group>"; };
@@ -917,6 +919,7 @@
 				ABF56E002A7C8C9300F959DB /* Authentication */,
 				ABF56DFB2A7C8C1200F959DB /* Settings */,
 				ABCA39D72A7A0671009447C3 /* RootView.swift */,
+				A2E7AAAD2D48231200C1DC1D /* InAppNotification.swift */,
 				ABF556852A950BCB00103880 /* RootViewModel.swift */,
 				ABB84C332A8CBA03009C7550 /* FrontPageView.swift */,
 			);
@@ -1190,6 +1193,7 @@
 				AB69F03F2C1D189800B81E79 /* SignInPhoneNumberViewModel.swift in Sources */,
 				AB9EB95D2B1E805300F58EA5 /* ChatManager.swift in Sources */,
 				A21FDDAB2CB331B700A3EB7E /* WidgetSizeView.swift in Sources */,
+				A2E7AAAE2D48231800C1DC1D /* InAppNotification.swift in Sources */,
 				AB370E112C34F31500C4431F /* ChatBubbleViewBuilder.swift in Sources */,
 				AB6EE7782C25FE4400F6FDE2 /* NewMapView.swift in Sources */,
 				AB370E182C35D0B800C4431F /* MessageField.swift in Sources */,

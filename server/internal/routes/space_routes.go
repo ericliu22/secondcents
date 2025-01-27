@@ -26,4 +26,7 @@ func SetupSpaceRoutes(r *router.Router, firestoreClient *firestore.Client, messa
 	r.POST("/v1/space/accept-space-request", (func(httpCtx *fasthttp.RequestCtx) {
 		space.InviteSpaceRequestHandler(httpCtx, firestoreClient, messagingClient)
 	}))
+	r.POST("/v1/space/hot-seat", (func(httpCtx *fasthttp.RequestCtx) {
+		space.InviteSpaceRequestHandler(httpCtx, firestoreClient, messagingClient)
+	}))
 }

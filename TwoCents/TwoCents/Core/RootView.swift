@@ -68,19 +68,21 @@ struct RootView: View {
         ZStack {
             FrontPageView()
                 .tint(appModel.loadedColor)
-
         }
 //        
         .onAppear{
             let authUser = try? AuthenticationManager.shared.getAuthenticatedUser()
-            
-          
             
             //            self.showSignInView = authUser == nil
             
             if authUser == nil {
                 appModel.activeSheet = .signInView
             }
+        }
+        .overlay {
+            VStack {
+                InAppNotification()
+            }.frame(maxHeight: .infinity, alignment: .top)
         }
         
         .fullScreenCover(item: $appModel.activeSheet) { item in
@@ -109,9 +111,6 @@ struct RootView: View {
             }
         
         }
-        
-        
-        
         .onChange(of: appModel.activeSheet) { newValue, oldValue in
             Task {
                 do {

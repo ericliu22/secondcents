@@ -100,7 +100,6 @@ final class CanvasPageViewModel {
             }
             self.members.append(user)
         }
-        print(members)
     }
     
     func attachUnreadListener(userId: String) {

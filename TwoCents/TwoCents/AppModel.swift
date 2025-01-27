@@ -13,6 +13,12 @@ enum NavigationRequest: Equatable {
     case none
     case space(spaceId: String, widgetId: String?)
 }
+
+enum NotificationRequest: Equatable {
+    case none
+    case notification(title: String, message: String)
+}
+
 @Observable @MainActor
 final class AppModel {
     
@@ -20,6 +26,7 @@ final class AppModel {
     var loadedColor: Color = .gray
     var user: DBUser?
     var activeSheet: PopupSheet?
+    var notificationRequest: NotificationRequest = .none
     
     init() {
         updateUser()
@@ -59,6 +66,10 @@ final class AppModel {
         
         
         
+    }
+    
+    func showNotification(title: String, message: String) {
+        notificationRequest = .notification(title: title, message: message)
     }
     
     func addToSpace(userId: String) {

@@ -4,18 +4,18 @@
 //
 //  Created by Eric Liu on 2023/7/23.
 
-import SwiftUI
-import Firebase
-import UserNotifications
-import FirebaseMessaging
-import FirebaseAuth
-import UIKit
 import Darwin
+import Firebase
+import FirebaseAuth
+import FirebaseMessaging
+import SwiftUI
+import UIKit
+import UserNotifications
 
 @main
 struct TwoCentsApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
-    
+
     var body: some Scene {
         WindowGroup {
             RootView()
@@ -30,7 +30,7 @@ struct TwoCentsApp: App {
 class AppDelegate: NSObject, UIApplicationDelegate {
     let gcmMessageIDKey = "gcm.message_id"
     var appModel: AppModel?
-    
+
     //If this fucks up everyone is fucked
     override init() {
         super.init()
@@ -39,54 +39,63 @@ class AppDelegate: NSObject, UIApplicationDelegate {
             AnalyticsManager.shared.crashEvent(exception: exception)
         })
     }
-    
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+
+    func application(
+        _ application: UIApplication,
+        didFinishLaunchingWithOptions launchOptions: [UIApplication
+            .LaunchOptionsKey: Any]? = nil
+    ) -> Bool {
         FirebaseApp.configure()
         appModel = AppModel()
-        
+
         Messaging.messaging().delegate = self
-        
+
         if #available(iOS 10.0, *) {
             UNUserNotificationCenter.current().delegate = self
-            
             let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
             UNUserNotificationCenter.current().requestAuthorization(
                 options: authOptions,
-                completionHandler: {_, _ in })
+                completionHandler: { _, _ in })
         } else {
             let settings: UIUserNotificationSettings =
-            UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
+                UIUserNotificationSettings(
+                    types: [.alert, .badge, .sound], categories: nil)
             application.registerUserNotificationSettings(settings)
         }
-        
+
         application.registerForRemoteNotifications()
         return true
     }
-    
-    func application(_ application: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
-                print("Ran thing 2")
+
+    func application(
+        _ application: UIApplication, open url: URL,
+        options: [UIApplication.OpenURLOptionsKey: Any] = [:]
+    ) -> Bool {
+        print("Ran thing 2")
 
         handleUniversalLink(url)
         return true
     }
-    
+
     func handleUniversalLink(_ universalLink: URL) {
         print("Universal link URL: \(universalLink.absoluteString)")
         let components = universalLink.pathComponents
         //We want to crash the app if this fucks up because it means there is a security leak
         //Should never happen though :)
         assert(components[0] == "app")
-        
+
         guard let action = components[safe: 1] else {
             print("Universal link has no action (e.g. space, friend, invite) ")
             return
         }
         guard let subject = components[safe: 2] else {
-            print("Universal link has no subject (e.g. spaceId, friendUid, inviteId) ")
+            print(
+                "Universal link has no subject (e.g. spaceId, friendUid, inviteId) "
+            )
             return
         }
         print("asdfkalsjdfalskjdflk")
-        
+
         //Tenatively we'll use these link actions, can change if we want it to
         switch action {
         case "widget":
@@ -94,36 +103,39 @@ class AppDelegate: NSObject, UIApplicationDelegate {
                 print("Universal link has no widgetId")
                 return
             }
-            
+
             Task {
                 if await !validWidgetLink(spaceId: subject) {
                     print("Invalid widget link")
                     return
                 }
-                
-                appModel?.navigationRequest = .space(spaceId: subject, widgetId: widgetId)
+
+                appModel?.navigationRequest = .space(
+                    spaceId: subject, widgetId: widgetId)
             }
         case "space":
             print("space link")
-            
-            
-            isValidSpaceLink(spaceId: subject, completion: { [weak self] valid in
-                guard let self = self else {
-                    return
-                }
-                
-                if valid {
-                    guard let appModel = appModel else {
-                        print("AppModel not yet initialized")
+
+            isValidSpaceLink(
+                spaceId: subject,
+                completion: { [weak self] valid in
+                    guard let self = self else {
                         return
                     }
-                    
-                    appModel.navigationRequest = .space(spaceId: subject, widgetId: nil)
-                    
-                }
-                
-                else { print("Invalid spaceId: resuming normal execution") }
-            })
+
+                    if valid {
+                        guard let appModel = appModel else {
+                            print("AppModel not yet initialized")
+                            return
+                        }
+
+                        appModel.navigationRequest = .space(
+                            spaceId: subject, widgetId: nil)
+
+                    } else {
+                        print("Invalid spaceId: resuming normal execution")
+                    }
+                })
         case "friend":
             print("friend link")
         case "invite":
@@ -132,38 +144,44 @@ class AppDelegate: NSObject, UIApplicationDelegate {
                 print("Universal link has no spaceJwtToken")
                 return
             }
-            
+
             guard let appModel = appModel else {
                 print("AppModel not initialized yet")
                 return
             }
-            appModel.activeSheet = .joinSpaceView(spaceId: subject, spaceToken: spaceToken)
+            appModel.activeSheet = .joinSpaceView(
+                spaceId: subject, spaceToken: spaceToken)
         default:
             //Should never return if it does continue normal execution
             print("Must set switch statement of subject")
             return
         }
     }
-    
-    func isValidSpaceLink(spaceId: String, completion: @escaping (Bool) -> Void) {
-        Firestore.firestore().collection("spaces").document(spaceId).getDocument(completion: { snapshot, error in
-            if let error = error {
-                print("Error fetching documents: \(error)")
+
+    func isValidSpaceLink(spaceId: String, completion: @escaping (Bool) -> Void)
+    {
+        Firestore.firestore().collection("spaces").document(spaceId)
+            .getDocument(completion: { snapshot, error in
+                if let error = error {
+                    print("Error fetching documents: \(error)")
+                    completion(false)
+                    return
+                }
+
+                if snapshot != nil {
+                    completion(true)
+                    //This is just for safety I don't know if necessary
+                    return
+                }
                 completion(false)
-                return
-            }
-            
-            if (snapshot != nil) {
-                completion(true)
-                //This is just for safety I don't know if necessary
-                return
-            }
-            completion(false)
-        })
+            })
     }
-    
+
     func validWidgetLink(spaceId: String) async -> Bool {
-        guard let space = try? await SpaceManager.shared.getSpace(spaceId: spaceId) else {
+        guard
+            let space = try? await SpaceManager.shared.getSpace(
+                spaceId: spaceId)
+        else {
             print("Failed to fetch space")
             return false
         }
@@ -171,79 +189,95 @@ class AppDelegate: NSObject, UIApplicationDelegate {
             print("No authenticated user")
             return false
         }
-        guard let inSpace = space.members?.contains(where: { member in user.userId == member}) else {
+        guard
+            let inSpace = space.members?.contains(where: { member in
+                user.userId == member
+            })
+        else {
             print("Space has no members")
             return false
         }
         return inSpace
     }
-    
-    func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
+
+    func application(
+        _ application: UIApplication, continue userActivity: NSUserActivity,
+        restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void
+    ) -> Bool {
         print("Ran thing 1")
         guard userActivity.activityType == NSUserActivityTypeBrowsingWeb,
-              let incomingURL = userActivity.webpageURL
+            let incomingURL = userActivity.webpageURL
         else {
             return false
         }
         handleUniversalLink(incomingURL)
         return true
     }
-    
+
     func application(
         _ application: UIApplication,
         didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data
     ) {
         print(deviceToken)
     }
-    
+
     //Runs when app is not open and user clicks on notification
-    
-    
-    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any],
-                     fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+    func application(
+        _ application: UIApplication,
+        didReceiveRemoteNotification userInfo: [AnyHashable: Any],
+        fetchCompletionHandler completionHandler: @escaping (
+            UIBackgroundFetchResult
+        ) -> Void
+    ) {
         if let messageID = userInfo[gcmMessageIDKey] {
             print("Message ID: \(messageID)")
         }
-        
+
         // Forward the notification to FirebaseAuth
         if Auth.auth().canHandleNotification(userInfo) {
             print("Forwarded to firebase")
             completionHandler(.noData)
             return
         }
-        
+
         print(userInfo)
-        
+
         if let notificationSpaceId = userInfo["spaceId"] {
             guard let spaceId: String = notificationSpaceId as? String else {
                 return
             }
-            
+
             guard let appModel = appModel else {
                 print("AppModel not yet initialized")
                 return
             }
             let widgetId = userInfo["widgetId"] as? String
-            appModel.navigationRequest = .space(spaceId: spaceId, widgetId: widgetId)
-            print("didReceiveRemoteNotification SPACEID: \(spaceId ?? "nothing")")
+            appModel.navigationRequest = .space(
+                spaceId: spaceId, widgetId: widgetId)
+            print(
+                "didReceiveRemoteNotification SPACEID: \(spaceId ?? "nothing")")
         }
-        
+
         completionHandler(.newData)
     }
 }
 
 extension AppDelegate: MessagingDelegate {
-    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
-        
+    func messaging(
+        _ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?
+    ) {
+
         let deviceToken: [String: String] = ["token": fcmToken ?? ""]
         print("Device token: ", deviceToken)
         uploadTokenToServer(fcmToken ?? "")
     }
-    
+
     func uploadTokenToServer(_ token: String) {
         do {
-            let uid = try AuthenticationManager.shared.getAuthenticatedUser().uid
-            db.collection("usersPrivate").document(uid).setData(["token": token], merge: true)
+            let uid = try AuthenticationManager.shared.getAuthenticatedUser()
+                .uid
+            db.collection("usersPrivate").document(uid).setData(
+                ["token": token], merge: true)
         } catch {
             print("FAILED TO UPLOAD DEVICE TOKEN")
         }
@@ -251,41 +285,47 @@ extension AppDelegate: MessagingDelegate {
 }
 
 @available(iOS 10, *)
-extension AppDelegate : UNUserNotificationCenterDelegate {
-    
+extension AppDelegate: UNUserNotificationCenterDelegate {
+
     //Runs when app is open and user gets notification
-    func userNotificationCenter(_ center: UNUserNotificationCenter,
-                                willPresent notification: UNNotification,
-                                withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-        let userInfo = notification.request.content.userInfo
-        print("ran bitch 2")
-                // Get the current badge number
-        let currentBadgeNumber = UIApplication.shared.applicationIconBadgeNumber
-        UNUserNotificationCenter.current().setBadgeCount(currentBadgeNumber + 1)
+    func userNotificationCenter(
+        _ center: UNUserNotificationCenter,
+        willPresent notification: UNNotification,
+        withCompletionHandler completionHandler: @escaping (
+            UNNotificationPresentationOptions
+        ) -> Void
+    ) {
+        if UIApplication.shared.applicationState == .active {
+            
+            let title = notification.request.content.title
+            let message = notification.request.content.body
+            
+            appModel?.showNotification(title: title, message: message)
 
-
-        if let messageID = userInfo[gcmMessageIDKey] {
-            print("Message ID: \(messageID)")
+            completionHandler([])
+        } else {
+            completionHandler([[.banner, .badge, .sound]])
         }
-        
-        completionHandler([[.banner, .badge, .sound]])
+
     }
-    
-    
+
     //Runs when app is open and user click notifications
-    func userNotificationCenter(_ center: UNUserNotificationCenter,
-                                didReceive response: UNNotificationResponse,
-                                withCompletionHandler completionHandler: @escaping () -> Void) {
+    func userNotificationCenter(
+        _ center: UNUserNotificationCenter,
+        didReceive response: UNNotificationResponse,
+        withCompletionHandler completionHandler: @escaping () -> Void
+    ) {
         let userInfo = response.notification.request.content.userInfo
-        
+
         print("ran bitch 1")
         if let messageID = userInfo[gcmMessageIDKey] {
-            print("Message ID from userNotificationCenter didReceive: \(messageID)")
+            print(
+                "Message ID from userNotificationCenter didReceive: \(messageID)"
+            )
         }
         // Get the current badge number
         let currentBadgeNumber = UIApplication.shared.applicationIconBadgeNumber
         UNUserNotificationCenter.current().setBadgeCount(currentBadgeNumber + 1)
-        
 
         print(userInfo)
         if let notificationSpaceId = userInfo["spaceId"] {
@@ -296,14 +336,14 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
                 print("AppModel not yet initialized")
                 return
             }
-            
+
             let widgetId = userInfo["widgetId"] as? String
-            appModel.navigationRequest = .space(spaceId: spaceId, widgetId: widgetId)
+            appModel.navigationRequest = .space(
+                spaceId: spaceId, widgetId: widgetId)
             print("SPACEID: \(notificationSpaceId)")
             print("didReceive SPACEID: \(spaceId ?? "nothing")")
         }
-        
+
         completionHandler()
     }
 }
-

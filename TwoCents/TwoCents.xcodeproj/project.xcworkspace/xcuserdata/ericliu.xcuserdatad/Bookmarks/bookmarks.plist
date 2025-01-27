@@ -10,7 +10,7 @@
 				<key>location-parameters</key>
 				<dict>
 					<key>EndingColumnNumber</key>
-					<string>53</string>
+					<string>35</string>
 					<key>EndingLineNumber</key>
 					<string>98</string>
 					<key>StartingColumnNumber</key>
@@ -18,7 +18,7 @@
 					<key>StartingLineNumber</key>
 					<string>98</string>
 					<key>Timestamp</key>
-					<string>758587236.89583</string>
+					<string>759687785.22463</string>
 				</dict>
 				<key>rebasable-url</key>
 				<dict>
@@ -34,15 +34,15 @@
 			<key>text-context</key>
 			<dict>
 				<key>focused</key>
-				<string>UIScrollViewDelegate</string>
+				<string>te</string>
 				<key>leading</key>
-				<string>    }
-
-    class Coordinator: NSObject, </string>
+				<string>
+    class Coordinator: NSObject, UIScrollViewDelegate,
+        UIGestureRecognizerDelega</string>
 				<key>trailing</key>
-				<string>, UIGestureRecognizerDelegate {
+				<string>
+    {
         weak var scrollView: UIScrollView?
-        
 </string>
 			</dict>
 			<key>type</key>

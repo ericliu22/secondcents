@@ -1,7 +1,7 @@
 #!/bin/sh
 
 user=$(/usr/bin/whoami)
-cd /home/user/secondcents
+cd /home/$user/secondcents
 
 # Pull the latest changes from GitHub
 /usr/bin/git pull origin main
