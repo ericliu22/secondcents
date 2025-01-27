@@ -35,7 +35,7 @@ struct FrontPageView: View {
                 Text("Search")
             }
             .tag(1)
-        
+            
             
             NavigationStack {
 
@@ -47,6 +47,14 @@ struct FrontPageView: View {
             .badge(friendRequests)
             .tag(2)
             
+            NavigationStack {
+                AcceptSpaceRequestView(spaceId: "232D4422-8856-468B-A9F3-E0DAD5180F82")
+            }
+            .tabItem {
+                Label("AcceptSpace", systemImage: "person")
+            }
+            .tag(3)
+
         })
         .onAppear {
             //No error printing at all lowkey jank if something fucks up it's this

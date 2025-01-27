@@ -59,23 +59,22 @@ final class CreateSpacesViewModel: ObservableObject{
 
         print("Selected members: \(selectedMembersUserId)")
         
-        
-        if let user = user {
-            if !selectedMembersUserId.contains(user.userId){
-                selectedMembersUserId.append(user.userId)
-            }
-            
+        guard let user = user else {
+            return
         }
-        let space = DBSpace(spaceId: spaceId, name: name.isEmpty ? "Untitled Space" : name.trimmingCharacters(in: .whitespacesAndNewlines), members: selectedMembersUserId)
-          
-
-          
-          try await SpaceManager.shared.createNewSpace(space: space)
         
+        let space = DBSpace(spaceId: spaceId, name: name.isEmpty ? "Untitled Space" : name.trimmingCharacters(in: .whitespacesAndNewlines), members: [user.userId])
+          
+        try await SpaceManager.shared.createNewSpace(space: space)
         
         Messaging.messaging().subscribe(toTopic: spaceId) { error in
-          print("Subscribed to weather topic")
+          print("Subscribed to spaceId")
         }
+        
+        for member in selectedMembers {
+            try await SpaceManager.shared.inviteMember(spaceId: spaceId, userId: member.userId)
+        }
+        
           
       }
     

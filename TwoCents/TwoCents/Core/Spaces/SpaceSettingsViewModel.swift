@@ -12,7 +12,7 @@ import SwiftUI
 @Observable @MainActor
 final class SpaceSettingsViewModel {
 
-    var spaceId: String
+    let spaceId: String
     var isShowingAddMember: Bool = false
     var linkMessage: String = "Fetching Invite Link..."
     var fetchedInvite: Bool = false
@@ -30,7 +30,7 @@ final class SpaceSettingsViewModel {
                 return
             }
             spaceLink = link
-            linkMessage = "Copy Inite Link"
+            linkMessage = "Copy Invite Link"
             fetchedInvite = true
         }
     }

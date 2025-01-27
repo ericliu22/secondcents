@@ -14,12 +14,12 @@ import (
 	"github.com/valyala/fasthttp"
 )
 
-type AddMemberRequest struct {
+type InviteSpaceRequest struct {
 	SpaceId string `json:"spaceId"`
 	UserId  string `json:"userId"`
 }
 
-func AddMemberHandler(httpCtx *fasthttp.RequestCtx, firestoreClient *firestore.Client, messagingClient *messaging.Client) {
+func InviteSpaceRequestHandler(httpCtx *fasthttp.RequestCtx, firestoreClient *firestore.Client, messagingClient *messaging.Client) {
 	firebaseCtx := middleware.GetRequestContext(httpCtx)
 
 	userId, err := middleware.GetAuthenticatedUserId(httpCtx)
@@ -27,16 +27,16 @@ func AddMemberHandler(httpCtx *fasthttp.RequestCtx, firestoreClient *firestore.C
 		httpCtx.Error("Unauthorized", fasthttp.StatusUnauthorized)
 		return
 	}
-	var addRequest AddMemberRequest
+	var inviteRequest InviteSpaceRequest
 
 	log.Printf("JoinSpaceRequest body: %s\n", string(httpCtx.PostBody()))
 
-	if err := json.Unmarshal(httpCtx.PostBody(), &addRequest); err != nil {
+	if err := json.Unmarshal(httpCtx.PostBody(), &inviteRequest); err != nil {
 		httpCtx.Error("Invalid request body", fasthttp.StatusBadRequest)
 		return
 	}
 
-	receiverUser, userErr := models.GetUser(firestoreClient, firebaseCtx, addRequest.UserId)
+	receiverUser, userErr := models.GetUser(firestoreClient, firebaseCtx, inviteRequest.UserId)
 	if userErr != nil {
 		httpCtx.Error("Internal server error", fasthttp.StatusBadRequest)
 		log.Printf("Failed to get user: %v", userErr.Error())
@@ -55,7 +55,7 @@ func AddMemberHandler(httpCtx *fasthttp.RequestCtx, firestoreClient *firestore.C
 		return
 	}
 
-	space, spaceErr := models.GetSpace(firestoreClient, firebaseCtx, addRequest.SpaceId)
+	space, spaceErr := models.GetSpace(firestoreClient, firebaseCtx, inviteRequest.SpaceId)
 	if spaceErr != nil {
 		httpCtx.Error("Internal server error", fasthttp.StatusBadRequest)
 		log.Printf("Failed to get space: %v", spaceErr.Error())
@@ -68,17 +68,29 @@ func AddMemberHandler(httpCtx *fasthttp.RequestCtx, firestoreClient *firestore.C
 		return
 	}
 
-	firestoreClient.Collection("users").Doc(addRequest.UserId).Update(firebaseCtx, []firestore.Update{
+	if auth.IsMember(space, inviteRequest.UserId) {
+		httpCtx.Error("Already part of space", fasthttp.StatusBadRequest)
+		log.Printf("Already a member of space; add request unauhtorized")
+		return
+	}
+
+	firestoreClient.Collection("users").Doc(inviteRequest.UserId).Update(firebaseCtx, []firestore.Update{
 		{
 			Path:  "spaceRequests",
-			Value: firestore.ArrayUnion(addRequest.SpaceId),
+			Value: firestore.ArrayUnion(inviteRequest.SpaceId),
+		},
+	})
+	firestoreClient.Collection("spaces").Doc(inviteRequest.SpaceId).Update(firebaseCtx, []firestore.Update{
+		{
+			Path:  "spaceRequests",
+			Value: firestore.ArrayUnion(inviteRequest.UserId),
 		},
 	})
 
-	privateUser, privateErr := models.GetPrivateUser(firestoreClient, firebaseCtx, addRequest.UserId)
+	privateUser, privateErr := models.GetPrivateUser(firestoreClient, firebaseCtx, inviteRequest.UserId)
 	if privateErr != nil {
 		httpCtx.Error("Internal server error", fasthttp.StatusBadRequest)
-		log.Printf("Failed to get private user: %v", spaceErr.Error())
+		log.Printf("Failed to get private user: %v", privateErr.Error())
 		return
 	}
 

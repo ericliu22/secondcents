@@ -72,6 +72,8 @@
 		A2DDB1B92BB6806C00243E1B /* PollWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2DDB1B82BB6806C00243E1B /* PollWidget.swift */; };
 		A2DDB1BB2BB693FD00243E1B /* NewPollViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2DDB1BA2BB693FD00243E1B /* NewPollViewModel.swift */; };
 		A2DDB1BE2BB69DD800243E1B /* Poll.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2DDB1BD2BB69DD800243E1B /* Poll.swift */; };
+		A2E1BB572D42A131002993F0 /* AcceptSpaceRequestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E1BB562D42A129002993F0 /* AcceptSpaceRequestView.swift */; };
+		A2E1BB592D42A1FC002993F0 /* SpaceRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E1BB582D42A1F5002993F0 /* SpaceRequest.swift */; };
 		A2E5F52B2B5A12D30019C6ED /* DrawingCanvas.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E5F52A2B5A12D30019C6ED /* DrawingCanvas.swift */; };
 		A2F504262D384C39002F88FD /* ChatWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F504242D384C31002F88FD /* ChatWidget.swift */; };
 		A2F504282D384C69002F88FD /* ChatWidgetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F504272D384C61002F88FD /* ChatWidgetViewModel.swift */; };
@@ -265,6 +267,8 @@
 		A2DDB1B82BB6806C00243E1B /* PollWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollWidget.swift; sourceTree = "<group>"; };
 		A2DDB1BA2BB693FD00243E1B /* NewPollViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewPollViewModel.swift; sourceTree = "<group>"; };
 		A2DDB1BD2BB69DD800243E1B /* Poll.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Poll.swift; sourceTree = "<group>"; };
+		A2E1BB562D42A129002993F0 /* AcceptSpaceRequestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AcceptSpaceRequestView.swift; sourceTree = "<group>"; };
+		A2E1BB582D42A1F5002993F0 /* SpaceRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpaceRequest.swift; sourceTree = "<group>"; };
 		A2E5F52A2B5A12D30019C6ED /* DrawingCanvas.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawingCanvas.swift; sourceTree = "<group>"; };
 		A2F504242D384C31002F88FD /* ChatWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatWidget.swift; sourceTree = "<group>"; };
 		A2F504272D384C61002F88FD /* ChatWidgetViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatWidgetViewModel.swift; sourceTree = "<group>"; };
@@ -594,6 +598,7 @@
 		A2DAF3492C07CB0300E778FA /* API */ = {
 			isa = PBXGroup;
 			children = (
+				A2E1BB582D42A1F5002993F0 /* SpaceRequest.swift */,
 				A2DCA8E32D2628E7008551EE /* DeepLink.swift */,
 				A2DAF34A2C07CB1C00E778FA /* SpaceNotifications.swift */,
 				A27E2C312D35B16F0050D9C8 /* UserNotifications.swift */,
@@ -693,6 +698,7 @@
 				A2C0A2202C77E9060061F62D /* NotificationsCountView.swift */,
 				A2AC0C0B2D319E2900B6BF15 /* QRCodeView.swift */,
 				A2AC0C0D2D31C5C000B6BF15 /* JoinSpaceView.swift */,
+				A2E1BB562D42A129002993F0 /* AcceptSpaceRequestView.swift */,
 			);
 			path = Spaces;
 			sourceTree = "<group>";
@@ -1199,6 +1205,7 @@
 				A257D7842A6D707600A4E7BD /* TwoCentsApp.swift in Sources */,
 				AB300FB02AC7407000C6719D /* FriendsView.swift in Sources */,
 				ABCA39D42A79FFAD009447C3 /* SignInEmailView.swift in Sources */,
+				A2E1BB572D42A131002993F0 /* AcceptSpaceRequestView.swift in Sources */,
 				ABEE2CF22C7368E6001D2108 /* EmojiReactionContextView.swift in Sources */,
 				AB53655F2C31C807001C444B /* TodoWidget.swift in Sources */,
 				8573EC892AE6EF4A00CFB579 /* HeartParticle.swift in Sources */,
@@ -1236,6 +1243,7 @@
 				AB9455232A9468130055B44A /* ColorPickerWidget.swift in Sources */,
 				A2AC0C0C2D319E3100B6BF15 /* QRCodeView.swift in Sources */,
 				A254307E2C6B0B9800999CEB /* Analytics.swift in Sources */,
+				A2E1BB592D42A1FC002993F0 /* SpaceRequest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

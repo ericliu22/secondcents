@@ -105,7 +105,6 @@ final class SpaceManager {
         //put friend uid in user database
         let newArray: [String: Any] = [
             "members": members
-
         ]
 
         try await spaceDocument(spaceId: spaceId).updateData(newArray)
@@ -141,9 +140,7 @@ final class SpaceManager {
     func formatWidget(widget: CanvasWidget) -> CanvasWidget {
         //Need to copy to variable before uploading (something about actor-isolate whatever)
         var uploadWidget: CanvasWidget = widget
-        //ensure shits are right dimensions
-        //uploadWidget.width = TILE_SIZE
-        //uploadWidget.height = TILE_SIZE
+        //ensure shits are right dimensions (depreacated)
         return uploadWidget
     }
 
@@ -172,6 +169,10 @@ final class SpaceManager {
         }
 
     }
+    
+    func inviteMember(spaceId: String, userId: String ) async throws {
+        try await sendSpaceRequest(spaceId: spaceId, userId: userId)
+    }
 
     func generateSpaceLink(spaceId: String) async throws -> String {
 
@@ -179,9 +180,6 @@ final class SpaceManager {
         return "https://api.twocentsapp.com/app/invite/\(spaceId)/\(spaceToken)"
 
     }
-
-
-
 
     func removeWidget(spaceId: String, widget: CanvasWidget) {
         spaceDocument(spaceId: spaceId)

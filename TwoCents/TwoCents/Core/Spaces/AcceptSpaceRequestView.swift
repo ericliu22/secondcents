@@ -1,24 +1,23 @@
 //
-//  JoinSpaceView.swift
+//  JoinSpaceInviteView.swift
 //  TwoCents
 //
-//  Created by Eric Liu on 2025/1/10.
+//  Created by Eric Liu on 2025/1/23.
 //
+
 
 import SwiftUI
 
-struct JoinSpaceView: View {
+struct AcceptSpaceRequestView: View {
     
     @Environment(AppModel.self) var appModel
 
     let spaceId: String
-    let spaceToken: String
     @State var space: DBSpace?
     @State var loaded: Bool = false
 
-    init(spaceId: String, spaceToken: String) {
+    init(spaceId: String) {
         self.spaceId = spaceId
-        self.spaceToken = spaceToken
     }
 
     var body: some View {
@@ -61,6 +60,11 @@ struct JoinSpaceView: View {
                             .foregroundStyle(Color.accentColor)
                             .minimumScaleFactor(0.7)
                             .lineLimit(1)
+                        if let members = space.members {
+                            Text("\(members.count) members")
+                                .foregroundStyle(.secondary)
+                                .font(.headline)
+                        }
                     } else {
                         Text("Invalid space invite link")
                     }
@@ -69,6 +73,7 @@ struct JoinSpaceView: View {
                         .progressViewStyle(CircularProgressViewStyle())
                 }
             }
+            .padding()
             .frame(maxWidth: .infinity)
             .background(.thickMaterial)
             .cornerRadius(20)
@@ -77,7 +82,7 @@ struct JoinSpaceView: View {
                 appModel.activeSheet = nil
                 Task {
                     do {
-                        try await joinSpace(spaceId: spaceId, spaceToken: spaceToken)
+                        try await acceptSpaceRequest(spaceId: spaceId)
                     } catch {
                         print("Failed to join space")
                     }
