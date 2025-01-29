@@ -9,4 +9,6 @@ import (
 
 func HotSeatHandler(httpCtx *fasthttp.RequestCtx, firestoreClient *firestore.Client, messagingClient *messaging.Client) {
 
+	// 
+
 }

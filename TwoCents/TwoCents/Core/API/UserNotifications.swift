@@ -73,8 +73,9 @@ func tickleNotification(userId: String, count: Int) async throws {
     if count <= 1 {
         try await userNotification(type: "tickle", userId: userId)
     } else {
-        let data: [String: String] = [
-            "count": count.description
+        let data: [String: String] = await [
+            "count": count.description,
+            "userId": try AuthenticationManager.shared.getAuthenticatedUser().uid,
         ]
         try await userNotification(type: "multiTickle", userId: userId, data: data)
     }

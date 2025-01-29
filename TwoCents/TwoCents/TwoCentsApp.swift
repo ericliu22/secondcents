@@ -297,10 +297,21 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     ) {
         if UIApplication.shared.applicationState == .active {
             
+            guard let user = appModel?.user else {
+                completionHandler([])
+                return
+            }
             let title = notification.request.content.title
             let message = notification.request.content.body
             
-            appModel?.showNotification(title: title, message: message)
+            guard let notificationUserId = notification.request.content.userInfo["userId"] as? String else {
+                appModel?.showNotification(title: title, message: message)
+                completionHandler([])
+                return
+            }
+            if user.userId != notificationUserId {
+                appModel?.showNotification(title: title, message: message)
+            }
 
             completionHandler([])
         } else {

@@ -87,8 +87,9 @@ func chatNotification(
     body: String,
     data: [String: String]? = nil
 ) async throws -> String {
-    let data: [String: String] = [
+    let data: [String: String] = await [
         "spaceId": spaceId,
+        "userId": try AuthenticationManager.shared.getAuthenticatedUser().uid,
     ]
     return try await spaceNotification(
         type: .chat,
@@ -104,8 +105,9 @@ func chatWidgetNotification(
     widgetId: String,
     data: [String: String]? = nil
 ) async throws -> String {
-    let data: [String: String] = [
+    let data: [String: String] = await [
         "spaceId": spaceId,
+        "userId": try AuthenticationManager.shared.getAuthenticatedUser().uid,
         "widgetId": widgetId
     ]
     return try await spaceNotification(type: .chatWidget, spaceId: spaceId, body: body, data: data)
@@ -117,8 +119,9 @@ func reactionNotification(
     body: String,
     widgetId: String
 ) async throws -> String {
-    let data: [String: String] = [
+    let data: [String: String] = await [
         "spaceId": spaceId,
+        "userId": try AuthenticationManager.shared.getAuthenticatedUser().uid,
         "widgetId": widgetId
     ]
     return try await spaceNotification(
@@ -136,8 +139,9 @@ func widgetNotification(
     widget: CanvasWidget
 ) async throws -> String {
 
-    let data: [String: String] = [
+    let data: [String: String] = await [
         "spaceId": spaceId,
+        "userId": try AuthenticationManager.shared.getAuthenticatedUser().uid,
         "widgetId": widget.id.uuidString
     ]
     let body: String = "\(name) added a new \(widget.media.name()) widget"
