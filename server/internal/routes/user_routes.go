@@ -25,7 +25,6 @@ func SetupUserRoutes(r *router.Router, firestoreClient *firestore.Client, messag
 	r.POST("/v1/user/decline-friend-request", (func(httpCtx *fasthttp.RequestCtx) {
 		user.DeclineFriendRequestHandler(httpCtx, firestoreClient)
 	}))
-
 	r.POST("/v1/user/user-notification", (func(httpCtx *fasthttp.RequestCtx) {
 		user.UserNotificationHandler(httpCtx, firestoreClient, messagingClient)
 	}))

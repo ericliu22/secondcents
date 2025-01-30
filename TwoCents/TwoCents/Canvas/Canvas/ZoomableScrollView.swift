@@ -57,6 +57,7 @@ struct ZoomableScrollView<Content: View>: UIViewRepresentable {
         )
         // 1) Fire the callback
         canvasViewModel.coordinator = c
+        c.startPeriodicCheck()
         return c
     }
 
@@ -121,6 +122,7 @@ struct ZoomableScrollView<Content: View>: UIViewRepresentable {
 
         private var idleTimer: Timer?
         private var unreadTimers: [String: Timer] = [:]
+        private var checkTimer: Timer?
 
         init(
             hostingController: UIHostingController<Content>,
@@ -496,6 +498,30 @@ struct ZoomableScrollView<Content: View>: UIViewRepresentable {
             }
 
             return closestWidget
+        }
+        
+        func startPeriodicCheck() {
+            // Invalidate if somehow still running
+            checkTimer?.invalidate()
+
+            checkTimer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: true) { [weak self] _ in
+                guard let self = self, let scrollView = self.scrollView else { return }
+                self.checkVisibleBounds(scrollView)
+            }
+
+            // If you want the timer to run while the user is interacting with the scrollview,
+            // you may need to add it to the run loop in .common modes:
+            // RunLoop.main.add(checkTimer!, forMode: .common)
+        }
+
+        func stopPeriodicCheck() {
+            checkTimer?.invalidate()
+            checkTimer = nil
+        }
+
+        deinit {
+            // In case the Coordinator is deallocated, clean up the timer
+            stopPeriodicCheck()
         }
     }
 }
