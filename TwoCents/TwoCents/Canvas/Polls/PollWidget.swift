@@ -59,23 +59,12 @@ struct PollWidget: WidgetView {
                     // Handle the decoding error, such as displaying an error message to the user.
                 }
             }
-            
     }
-    
     
     var body: some View {
         ZStack {
-            
-            
             if let poll = poll {
-                
-                
-                
                 //main content
-                
-                
-                
-                
                 let hasNoVotes =  poll.options.allSatisfy { $0.count == 0 }
                 //                ZStack{
                 //                    if hasNoVotes {
@@ -140,34 +129,18 @@ struct PollWidget: WidgetView {
                 //
                 //
                 //                }
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
                 VStack{
-        
                     if poll.options.count <= 2 {
                         
-                        
                         Text(poll.name)
+                            .lineLimit(2)
+                            .truncationMode(.tail)
                             .font(.title2)
-                            .minimumScaleFactor(0.5)
+                            //.font(.system(size: 22))
+                            //.minimumScaleFactor(0.5)
                             .fontWeight(.bold)
                             .foregroundStyle(Color.accentColor)
-                        
-                        
-                        
+                            .padding(EdgeInsets(top: 20, leading: 20, bottom: 20, trailing: 20))
                         
                         ForEach(0..<poll.options.count) { index in
                             Button(action: {
@@ -175,31 +148,22 @@ struct PollWidget: WidgetView {
                                 totalVotes = self.poll!.totalVotes()
                                 self.poll!.updatePoll(spaceId: spaceId)
                             }, label: {
-                                
                                 Text(poll.options[index].name)
-                                    .font(.caption)
+                                    .lineLimit(1)
+                                    .truncationMode(.tail)
+                                    .frame(width: 175, alignment: .center)
+                                    .font(.system(size: 20))
                                     .frame(maxWidth:.infinity)
                                     .frame(minHeight: 20, maxHeight: .infinity)
-                                
-                                
-                                
+                                    .padding(EdgeInsets(top: 5, leading: 10, bottom: 5, trailing: 10))
                             })
-                            
                             .buttonStyle(.bordered)
                             .tint(colorForIndex(index: index))
                             //
-                            
                             .cornerRadius(10)
-                            
-                            
-                            
-                            
-                            
-                            
-                            
+                            .padding(EdgeInsets(top: 0, leading: 20, bottom: 20, trailing: 20))
                         }
                     } else {
-                        
                         ZStack{
                             if hasNoVotes {
                                 Chart {
@@ -231,44 +195,33 @@ struct PollWidget: WidgetView {
                                         angularInset: 2
                                     )
                                     .cornerRadius(3)
-                                    
-                                    
                                     .foregroundStyle(colorForIndex(index: poll.options.firstIndex(of: option)!))
-                                    
-                                    
                                 }
                                 .padding(5)
                                 .chartLegend(.hidden)
-                                
-                                
                             }
-                            
-                            
-                            
-                            
-                                                Text(poll.name)
-                                                    .font(.title2)
-                                                    .minimumScaleFactor(0.5)
-                                                    .fontWeight(.bold)
-//                                                    .foregroundStyle(Color.accentColor)
-                            
-                            
-                            
-                            .frame(maxWidth: .infinity,maxHeight: .infinity,alignment: .center)
-                            
-                            
-                            
+                            //Fading in and out???
+//                                                Text(poll.name)
+//                                                    .font(.title2)
+//                                                    .minimumScaleFactor(0.5)
+//                                                    .fontWeight(.bold)
+////                                                    .foregroundStyle(Color.accentColor)
+//                                                    .frame(maxWidth: .infinity,maxHeight: .infinity,alignment: .center)
+                            if hasNoVotes {
+                                FadeInOutView(mainText: poll.name)
+                            } else {
+                                Text(poll.name)
+                                    .lineLimit(2)
+                                    .truncationMode(.tail)
+                                    .font(.title2)
+                                    //.minimumScaleFactor(0.5)
+                                    .fontWeight(.bold)
+                                    //.foregroundStyle(Color.accentColor)
+                                    .frame(maxWidth: .infinity,maxHeight: .infinity,alignment: .center)
+                            }
                         }
-                        
-                        
-                        
-                        
                     }
-                    
-                    
-                    
                 }
-                
                 .background(Color(UIColor.systemBackground))
                 //                .background(Color.accentColor)
                 
@@ -285,21 +238,12 @@ struct PollWidget: WidgetView {
                     .aspectRatio(1, contentMode: .fit)
                     .background(.thinMaterial)
                     .cornerRadius(20)
-                
                     .onAppear {
-                        
                         fetchPoll()
-                        
-                        
                     }
             }
         }
-        
-        
-        
     }
-    
-    
 }
 
 
@@ -322,6 +266,78 @@ func pollWidget(widget: CanvasWidget, spaceId: String) -> some View {
 //}
 //
 //
+
+struct FadeInOutView: View {
+    // Accept the main text as a parameter
+    let mainText: String
+    
+    // The array of phrases
+    private let phrases = ["Tell me NOW", "I'm dying to know", "lmkkkkkkk"]
+    private let maxCharacters = 15
+    
+    // Track which text is currently shown
+    @State private var currentText: String = ""
+    
+    // Whether the text is visible (opacity 1) or hidden (opacity 0)
+    @State private var isVisible: Bool = true
+    
+    var body: some View {
+        Text(currentText)
+            .font(.title2)
+            .minimumScaleFactor(0.5)
+            .fontWeight(.bold)
+            .foregroundStyle(Color.accentColor)
+            .frame(maxWidth: .infinity,maxHeight: .infinity,alignment: .center)
+            .opacity(isVisible ? 1 : 0)
+            .onAppear {
+                startFadingLoop()
+            }
+    }
+    
+    private var truncatedMainText: String {
+            guard mainText.count > maxCharacters else { return mainText }
+            
+            // Find the cut-off index
+            let endIndex = mainText.index(mainText.startIndex, offsetBy: maxCharacters)
+            
+            // Take the substring up to `maxCharacters`, then append custom ellipsis
+            let partial = mainText[..<endIndex]
+            return partial + "...."  // Or "...", "―", etc., as you wish
+    }
+    
+    /// Repeatedly fades out the current text, switches it, fades it back in.
+    func startFadingLoop() {
+        Task {
+            // Initialize the text to `mainText` when the view first appears
+            currentText = truncatedMainText
+            
+            while true {
+                // 1) Fade out
+                withAnimation(.easeInOut(duration: 0.5)) {
+                    isVisible = false
+                }
+                // Wait for the fade-out to finish + a small delay
+                try await Task.sleep(nanoseconds: 1_000_000_000)
+                
+                // 2) Switch the text
+                if currentText == truncatedMainText {
+                                    // Random phrase (no need to truncate if you don't want to)
+                currentText = phrases.randomElement() ?? ""
+                } else {
+                                    // Go back to truncated main text
+                currentText = truncatedMainText
+                }
+                
+                // 3) Fade in
+                withAnimation(.easeInOut(duration: 0.5)) {
+                    isVisible = true
+                }
+                // Wait for the fade-in to finish + a small delay
+                try await Task.sleep(nanoseconds: 2_500_000_000)
+            }
+        }
+    }
+}
 
 struct PollWidget_Previews: PreviewProvider {
     

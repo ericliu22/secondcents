@@ -24,9 +24,6 @@ struct Option: Codable, Identifiable, Hashable {
                "name": name
            ]
        }
-    
-  
-    
 }
 
 struct Poll: Codable, Identifiable {
@@ -133,3 +130,5 @@ func deletePoll(spaceId: String, pollId: String) {
         print("Error deleting poll")
     }
 }
+
+
