@@ -217,8 +217,6 @@ final class CanvasPageViewModel {
         replyWidget = nil
         activeWidget = nil
 
-        canvasMode = .normal
-
         if photoLinkedToProfile {
             photoLinkedToProfile = false
             widgetId = UUID().uuidString
