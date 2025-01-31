@@ -236,9 +236,10 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                                 refreshId: $viewModel.refreshId)
                             widgetButton(widget: widget)
                             // Reply button
+                            //@TODO: This will not work for the time being
                             Button(
                                 action: {
-                                    viewModel.activeSheet = .chat
+                                    viewModel.activeSheet = nil
                                     viewModel.selectedDetent = .large
                                     viewModel.replyWidget = widget
                                 },
@@ -431,7 +432,7 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                     //onAppear and task must must must be here or else ZoomableScrollView is aed
                     //Don't know the reason why -Eric
                     .onAppear(perform: {
-                        viewModel.activeSheet = .chat
+                        viewModel.activeSheet = nil
                         viewModel.delegate = self
 
                     })
@@ -483,33 +484,6 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                         .environment(viewModel)
                         //                            .presentationBackground(Color(UIColor.systemBackground))
                         .presentationBackground(.thickMaterial)
-                case .chat:
-                    ChatView(spaceId: spaceId)
-                        .interactiveDismissDisabled(true)
-                        .presentationBackground(Color(UIColor.systemBackground))
-                        .presentationDetents(
-                            [.height(50), .large],
-                            selection: $viewModel.selectedDetent
-                        )
-                        .presentationCornerRadius(20)
-                        .presentationBackgroundInteraction(
-                            .enabled(upThrough: .height(50))
-                        )
-                        .onChange(of: viewModel.selectedDetent) {
-                            if viewModel.selectedDetent != .large {
-
-                                withAnimation {
-                                    viewModel.replyWidget = nil
-
-                                }
-
-                                print("detent is 50")
-                            }
-                        }
-                        .onAppear {
-                            viewModel.selectedDetent = .height(50)
-                        }
-
                 case .poll:
                     PollWidgetSheetView(
                         widget: waitForVariable { viewModel.activeWidget },

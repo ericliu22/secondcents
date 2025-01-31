@@ -105,7 +105,7 @@ struct ZoomableScrollView<Content: View>: UIViewRepresentable {
         private var autoScrollDirection: AutoScrollDirection = .none
 
         // Some margin threshold (in points) from the edge:
-        private let horizontalThreshold: CGFloat = 300
+        private let horizontalThreshold: CGFloat = 1000
         private let verticalThreshold: CGFloat = 500
 
         enum AutoScrollDirection {

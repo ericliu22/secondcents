@@ -55,7 +55,7 @@ final class CanvasPageViewModel {
     }
 
     enum CanvasSheet: Identifiable {
-        case newWidgetView, chat, poll, newTextView, todo, image, video,
+        case newWidgetView, poll, newTextView, todo, image, video,
             calendar, text
 
         var id: Self {
@@ -192,7 +192,7 @@ final class CanvasPageViewModel {
             //delete specific widget items (in their own folders)
             deleteAssociatedWidget(spaceId: spaceId, widgetId: widget.id.uuidString, media: widget.media)
 
-            activeSheet = .chat
+            activeSheet = nil
 
         }
     }
@@ -217,13 +217,7 @@ final class CanvasPageViewModel {
         replyWidget = nil
         activeWidget = nil
 
-        //get chat to show up at all times
-        if !inSubView && activeSheet == nil {
-            print("sheetDismiss: Changing to .chat")
-            inSubView = false
-            activeSheet = .chat
-            selectedDetent = .height(50)
-        }
+        canvasMode = .normal
 
         if photoLinkedToProfile {
             photoLinkedToProfile = false
