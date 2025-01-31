@@ -89,12 +89,11 @@ struct CustomizeProfileView: View {
                             
                     }
                     
-                
-                .frame(width: 176, height: 176)
-            
-            .frame(width: 176, height: 176)
-            .clipShape(Circle())
-            
+                    
+                    .frame(width: 176, height: 176)
+                    
+                    .clipShape(Circle())
+                    
                     
                 } else {
                     

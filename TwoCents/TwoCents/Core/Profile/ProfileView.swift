@@ -81,6 +81,8 @@ struct ProfileView: View {
                         .frame(width: 128, height: 128)
                 )
         }
+        
+        
     }
     
     func emptyTargetId() -> some View {
@@ -157,7 +159,7 @@ struct ProfileView: View {
                                 } else {
                                     //if user has not uploaded profile pic, show circle
                                     Circle()
-                                        .background(Circle().fill(targetUserColor ?? appModel.loadedColor))
+                                        .fill(targetUserColor ?? appModel.loadedColor)
                                         .frame(width: 128, height: 128)
                                 }
                                 
