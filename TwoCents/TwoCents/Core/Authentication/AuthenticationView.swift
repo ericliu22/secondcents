@@ -11,7 +11,7 @@ struct AuthenticationView: View {
     
 //    @Binding var showSignInView: Bool
     @Environment(AppModel.self) var appModel
-    @State private var animateGradient: Bool = false
+//    @State private var animateGradient: Bool = false
     
 //    @Binding var showCreateProfileView: Bool
     
@@ -24,39 +24,47 @@ struct AuthenticationView: View {
             
             
             Spacer()
-                .frame(height:200)
+                .frame(height:100)
             
             //TwoCents Text
             
             /*  First writes out the text, then overlays gradient over it (so that it scales with text instead of whole screen). Then, masks the text over it to cutout the words */
           
             
-            Text("TwoCents")
-//                .frame(maxWidth: .infinity, alignment: .leading)
-                .bold()
-                .font(.system(size: 64))
-                .overlay{
-                    
-                    LinearGradient(colors: [Color("TwoCentsGreen"),Color("TwoCentsCyan")], startPoint: .leading, endPoint: .trailing)
-                        .ignoresSafeArea()
-                        .hueRotation(.degrees(animateGradient ? 45 : 0))
-                        .onAppear{
-                            
-                            //this line fixes problem of page animating around unintentionally?
-                            DispatchQueue.main.async {
-                                withAnimation(.easeInOut(duration: 3).repeatForever(autoreverses:true)){
-                                    animateGradient.toggle()
-                                }
-                            }
-                        }
-                    
-                        .mask(
-                            Text("TwoCents")
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .bold()
-                                .font(.system(size: 64))
-                        )
-                }
+//            Text("TwoCents")
+////                .frame(maxWidth: .infinity, alignment: .leading)
+//                .bold()
+//                .font(.system(size: 64))
+//                .overlay{
+//                    
+//                    LinearGradient(colors: [Color("TwoCentsGreen"),Color("TwoCentsCyan")], startPoint: .leading, endPoint: .trailing)
+//                        .ignoresSafeArea()
+//                        .hueRotation(.degrees(animateGradient ? 45 : 0))
+//                        .onAppear{
+//                            
+//                            //this line fixes problem of page animating around unintentionally?
+//                            DispatchQueue.main.async {
+//                                withAnimation(.easeInOut(duration: 3).repeatForever(autoreverses:true)){
+//                                    animateGradient.toggle()
+//                                }
+//                            }
+//                        }
+//                    
+//                        .mask(
+//                            Text("TwoCents")
+//                                .frame(maxWidth: .infinity, alignment: .leading)
+//                                .bold()
+//                                .font(.system(size: 64))
+//                        )
+//                }
+            
+            Image("TwoCentsLogo")
+                       .resizable() // Makes the image resizable
+                       .scaledToFit() // Maintains the aspect ratio
+                       .frame(width: 200, height: 200) // Sets the desired size
+                       
+                     
+            
             
             Spacer()
             
@@ -117,15 +125,19 @@ struct AuthenticationView: View {
 
             }
             
-            
-
+//            .padding()
+            Spacer()
+                .frame(height:50)
         }
-        .padding()
+        .padding(.horizontal)
+     
+       
 //        .navigationTitle("Sign In")
+//        .background(Color("bgColor"))
+       
         
-        Spacer()
-            .frame(height:50)
     }
+    
 }
 
 /*
