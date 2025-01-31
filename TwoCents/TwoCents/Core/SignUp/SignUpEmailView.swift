@@ -10,12 +10,16 @@ import SwiftUI
 
 struct SignUpEmailView: View {
     @Environment(\.presentationMode) var presentation
-    @Binding var activeSheet: PopupSheet?
+//    @Binding var activeSheet: PopupSheet?
 //    @Binding var showSignInView: Bool
+    
+    @Environment(AppModel.self) var appModel
     
     @State private var viewModel = SignUpEmailViewModel()
     
 //    @Binding var showCreateProfileView: Bool
+    
+    @State private var navigateToSignUp = false
     
     
     var body: some View {
@@ -35,18 +39,19 @@ struct SignUpEmailView: View {
                 .disableAutocorrection(true)
                 .textInputAutocapitalization(.never)
                 .padding()
+                .frame(height: 50)  // Set a fixed height for the text field
                 .background(Color(UIColor.secondarySystemBackground))
                 .cornerRadius(10)
             
-           
-            //Username Textfield
-            TextField("Username", text: $viewModel.username)
-                .disableAutocorrection(true)
-                .textInputAutocapitalization(.never)
-                .padding()
-                .background(Color(UIColor.secondarySystemBackground))
-                .cornerRadius(10)
-            
+//           
+//            //Username Textfield
+//            TextField("Username", text: $viewModel.username)
+//                .disableAutocorrection(true)
+//                .textInputAutocapitalization(.never)
+//                .padding()
+//                .background(Color(UIColor.secondarySystemBackground))
+//                .cornerRadius(10)
+//            
             
             //Email Textfield
             
@@ -54,6 +59,7 @@ struct SignUpEmailView: View {
                 .disableAutocorrection(true)
                 .textInputAutocapitalization(.never)
                 .padding()
+                .frame(height: 50)  // Set a fixed height for the text field
                 .background(Color(UIColor.secondarySystemBackground))
                 .cornerRadius(10)
             
@@ -63,6 +69,7 @@ struct SignUpEmailView: View {
                 .disableAutocorrection(true)
                 .textInputAutocapitalization(.never)
                 .padding()
+                .frame(height: 50)  // Set a fixed height for the text field
                 .background(Color(UIColor.secondarySystemBackground))
                 .cornerRadius(10)
             
@@ -71,17 +78,23 @@ struct SignUpEmailView: View {
                 .disableAutocorrection(true)
                 .textInputAutocapitalization(.never)
                 .padding()
+                .frame(height: 50)  // Set a fixed height for the text field
+
                 .background(Color(UIColor.secondarySystemBackground))
                 .cornerRadius(10)
             
-            
+//            
             
             Button {
                 //signUp
                 Task {
                     do {
                         try await viewModel.signUp()
-                        activeSheet  = .customizeProfileView
+                        appModel.loadedColor = .gray
+//                        appModel.activeSheet  = .customizeProfileView
+//                        appModel.activeSheet  = nil
+                        navigateToSignUp = true
+                        
                     } catch {
                         viewModel.errorMessage = error.localizedDescription
                     }
@@ -101,6 +114,21 @@ struct SignUpEmailView: View {
             .tint(Color(UIColor.label))
             .frame(height: 55)
             .cornerRadius(10)
+
+            
+            
+            
+            NavigationLink(
+                destination:
+                    CustomizeProfileView()
+                    .navigationBarBackButtonHidden(true) , 
+                isActive: $navigateToSignUp
+            ) {
+                EmptyView()
+            }
+            
+            
+            
             
             
         }
@@ -139,7 +167,7 @@ struct SignUpEmailView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack {
 //            SignUpEmailView(showSignInView: .constant(false), showCreateProfileView: .constant(false))
-            SignUpEmailView(activeSheet: .constant(nil))
+            SignUpEmailView()
         }
         
     }

@@ -171,6 +171,7 @@ struct CustomizeProfileView: View {
             } label: {
                 Text("Done")
                     .font(.headline)
+                    .disabled(     appModel.loadedColor == .gray)
               
                     .frame(height: 55)
                     .frame(maxWidth: .infinity)

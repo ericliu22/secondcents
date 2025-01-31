@@ -39,7 +39,7 @@ struct FriendRequestsView: View {
     var filteredSearch: [DBUser] {
         guard !searchTerm.isEmpty else { return viewModel.allRequests }
         return viewModel.allRequests.filter {
-            $0.name!.localizedCaseInsensitiveContains(searchTerm) || $0.username!.localizedCaseInsensitiveContains(searchTerm)
+            $0.name!.localizedCaseInsensitiveContains(searchTerm) /*|| $0.username!.localizedCaseInsensitiveContains(searchTerm)*/
         }
     }
     

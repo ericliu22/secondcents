@@ -26,7 +26,7 @@ final class SignUpEmailViewModel {
     
     
     var name = ""
-    var username = ""
+//    var username = ""
     var email = ""
     var password = ""
     var confirmPassword = ""
@@ -34,7 +34,7 @@ final class SignUpEmailViewModel {
   
     
     func signUp() async throws {
-        guard !email.isEmpty, !password.isEmpty, !name.isEmpty, !username.isEmpty, !confirmPassword.isEmpty else {
+        guard !email.isEmpty, !password.isEmpty, !name.isEmpty, /*!username.isEmpty,*/ !confirmPassword.isEmpty else {
             throw SignUpError.emptyField
         }
         
@@ -43,7 +43,7 @@ final class SignUpEmailViewModel {
         }
         
         let authDataResult = try await AuthenticationManager.shared.createUser(email: email, password: password)
-        let user = DBUser(auth: authDataResult, name: name, username: username)
+        let user = DBUser(auth: authDataResult, name: name/*, username: username*/)
         
         try await UserManager.shared.createNewUser(user: user)
       

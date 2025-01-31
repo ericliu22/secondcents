@@ -24,7 +24,7 @@ struct FriendsView: View {
     
     var filteredSearch: [DBUser]{
         guard !searchTerm.isEmpty else { return viewModel.allFriends}
-        return viewModel.allFriends.filter{$0.name!.localizedCaseInsensitiveContains(searchTerm) || $0.username!.localizedCaseInsensitiveContains(searchTerm)}
+        return viewModel.allFriends.filter{$0.name!.localizedCaseInsensitiveContains(searchTerm) /*|| $0.username!.localizedCaseInsensitiveContains(searchTerm)*/}
     }
     var body: some View {
         //        VStack {

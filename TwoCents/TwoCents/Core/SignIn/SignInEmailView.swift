@@ -25,11 +25,13 @@ struct SignInEmailView: View {
             
             Text(viewModel.errorMessage)
                 .foregroundColor(.red)
+            
             //Email Textfield
             TextField("Email", text: $viewModel.email)
                 .disableAutocorrection(true)
                 .textInputAutocapitalization(.never)
                 .padding()
+                .frame(height: 50)  // Set a fixed height for the text field
                 .background(Color(UIColor.secondarySystemBackground))
                 .cornerRadius(10)
             
@@ -38,6 +40,7 @@ struct SignInEmailView: View {
                 .disableAutocorrection(true)
                 .textInputAutocapitalization(.never)
                 .padding()
+                .frame(height: 50)  // Set a fixed height for the text field
                 .background(Color(UIColor.secondarySystemBackground))
                 .cornerRadius(10)
             

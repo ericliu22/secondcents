@@ -25,7 +25,7 @@ struct MentionUserView: View {
     
     var filteredSearch: [DBUser]{
         guard !searchTerm.isEmpty else { return allUsers}
-        return allUsers.filter{$0.name!.localizedCaseInsensitiveContains(searchTerm) || $0.username!.localizedCaseInsensitiveContains(searchTerm)}
+        return allUsers.filter{$0.name!.localizedCaseInsensitiveContains(searchTerm) /*|| $0.username!.localizedCaseInsensitiveContains(searchTerm)*/}
     }
     
     

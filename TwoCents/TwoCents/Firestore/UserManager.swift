@@ -15,7 +15,7 @@ struct DBUser: Identifiable, Codable, Equatable {
    
     let dateCreated: Date?
     let name: String?
-    let username: String?
+//    let username: String?
     let profileImagePath: String?
     let profileImageUrl: String?
     let userColor: String?
@@ -30,7 +30,7 @@ struct DBUser: Identifiable, Codable, Equatable {
        
         self.dateCreated = Date()
         self.name = name
-        self.username = ""
+//        self.username = ""
         self.profileImagePath = nil
         self.profileImageUrl = nil
         self.userColor = nil
@@ -43,12 +43,12 @@ struct DBUser: Identifiable, Codable, Equatable {
     
     
     //create from auth data result
-    init(auth: AuthDataResultModel, name: String, username: String) {
+    init(auth: AuthDataResultModel, name: String/*, username: String*/) {
         self.userId = auth.uid
        
         self.dateCreated = Date()
         self.name = name
-        self.username = username
+//        self.username = username
         self.profileImagePath = nil
         self.profileImageUrl = nil
         self.userColor = nil
@@ -63,7 +63,7 @@ struct DBUser: Identifiable, Codable, Equatable {
         userId: String,
         dateCreated: Date? = nil,
         name: String? = nil,
-        username: String? = nil,
+//        username: String? = nil,
         profileImagePath: String? = nil,
         profileImageUrl: String? = nil,
         userColor: String? = nil,
@@ -74,7 +74,7 @@ struct DBUser: Identifiable, Codable, Equatable {
     
         self.dateCreated = dateCreated
         self.name = name
-        self.username = username
+//        self.username = username
         self.profileImagePath = profileImagePath
         self.profileImageUrl = profileImageUrl
         self.userColor = nil

@@ -16,8 +16,10 @@ struct AuthenticationView: View {
 //    @Binding var showCreateProfileView: Bool
     
     
+    
     @Binding  var userPhoneNumber: String?
     var body: some View {
+       
         VStack{
             
             
@@ -64,10 +66,11 @@ struct AuthenticationView: View {
                 
                
 //                SignInPhoneNumberView(showSignInView: $showSignInView, showCreateProfileView: $showCreateProfileView)
-                SignInPhoneNumberView(userPhoneNumber: $userPhoneNumber )
+//              SignInPhoneNumberView(userPhoneNumber: $userPhoneNumber )
+                SignInEmailView()
                 
             } label: {
-                Text("Continue With Phone Number")
+                Text("Sign In With Email")
                     .font(.headline)
                     .foregroundColor(Color(UIColor.systemBackground))
                     .frame(height: 55)
@@ -76,44 +79,44 @@ struct AuthenticationView: View {
                     .cornerRadius(10)
             }
             
-            
-            NavigationLink {
-                
-               
-//                SignInEmailView(showSignInView: $showSignInView, showCreateProfileView: $showCreateProfileView)
-                
-                SignInEmailView()
-            } label: {
-                Text("Continue With Email")
-                    .font(.headline)
-                    .foregroundColor(Color(UIColor.label))
-                    .frame(height: 55)
-                    .frame(maxWidth: .infinity)
-//                    .background(Color(UIColor.secondaryLabel))
-                    .overlay(
-                                  RoundedRectangle(cornerRadius: 10)
-                                    .stroke(Color(UIColor.secondaryLabel), lineWidth: 2)
-                              )
-                    .cornerRadius(10)
-            }
-            
-//            
-//            NavigationLink{
-//             
-//
-//              SignUpEmailView(showSignInView: $showSignInView, showCreateProfileView: $showCreateProfileView)
-//                SignUpEmailView(appModel.activeSheet: $appModel.activeSheet )
-//                SignInPhoneNumberView(appModel.activeSheet: $appModel.activeSheet, userPhoneNumber: $userPhoneNumber )
-//
+//            NavigationLink {
+//                
+//                
+//                //                SignInEmailView(showSignInView: $showSignInView, showCreateProfileView: $showCreateProfileView)
+//                
+//                SignUpEmailView()
+//                
 //            } label: {
-//                Text("New? Ugh. Create a new account")
-//                    .font(.footnote)
-//                    .foregroundColor(Color(UIColor.secondaryLabel))
-//                    .frame(height: 30)
+//                Text("Sign Up With Email")
+//                    .font(.headline)
+//                    .foregroundColor(Color(UIColor.label))
+//                    .frame(height: 55)
 //                    .frame(maxWidth: .infinity)
-//
+////                    .background(Color(UIColor.secondaryLabel))
+//                    .overlay(
+//                                  RoundedRectangle(cornerRadius: 10)
+//                                    .stroke(Color(UIColor.secondaryLabel), lineWidth: 2)
+//                              )
+//                    .cornerRadius(10)
 //            }
 //            
+            
+            NavigationLink{
+             
+
+//              SignUpEmailView(showSignInView: $showSignInView, showCreateProfileView: $showCreateProfileView)
+                SignUpEmailView()
+//                SignInPhoneNumberView(appModel.activeSheet: $appModel.activeSheet, userPhoneNumber: $userPhoneNumber )
+
+            } label: {
+                Text("New? Ugh. Create a new account")
+                    .font(.footnote)
+                    .foregroundColor(Color(UIColor.secondaryLabel))
+                    .frame(height: 30)
+                    .frame(maxWidth: .infinity)
+
+            }
+            
             
 
         }

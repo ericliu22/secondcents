@@ -13,7 +13,7 @@ struct SearchUserView: View {
 
     var filteredSearch: [DBUser] {
         guard !searchTerm.isEmpty else { return viewModel.allUsers }
-        return viewModel.allUsers.filter { $0.name!.localizedCaseInsensitiveContains(searchTerm) || $0.username!.localizedCaseInsensitiveContains(searchTerm) }
+        return viewModel.allUsers.filter { $0.name!.localizedCaseInsensitiveContains(searchTerm) /*|| $0.username!.localizedCaseInsensitiveContains(searchTerm) */}
     }
 
     var body: some View {
