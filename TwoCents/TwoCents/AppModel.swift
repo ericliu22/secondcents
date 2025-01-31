@@ -16,7 +16,7 @@ enum NavigationRequest: Equatable {
 
 enum NotificationRequest: Equatable {
     case none
-    case notification(title: String, message: String)
+    case notification(title: String, message: String, spaceId: String? = nil, widgetId: String? = nil)
 }
 
 @Observable @MainActor
@@ -68,8 +68,8 @@ final class AppModel {
         
     }
     
-    func showNotification(title: String, message: String) {
-        notificationRequest = .notification(title: title, message: message)
+    func showNotification(title: String, message: String, spaceId: String? = nil, widgetId: String? = nil) {
+        notificationRequest = .notification(title: title, message: message, spaceId: spaceId, widgetId: widgetId)
     }
     
     func addToSpace(userId: String) {

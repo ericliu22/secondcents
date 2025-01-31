@@ -13,6 +13,8 @@ struct InAppNotification: View {
     @State private var presented: Bool = false
     @State private var title: String = ""
     @State private var message: String = ""
+    @State private var spaceId: String = ""
+    @State private var widgetId: String = ""
     
     // Progress bar state
     @State private var progress: CGFloat = 0.0
@@ -47,18 +49,31 @@ struct InAppNotification: View {
                 // When the view first appears, animate the progress bar
             }
         }
+        .onTapGesture {
+            print(spaceId)
+            print(widgetId)
+            if !spaceId.isEmpty && !widgetId.isEmpty {
+                appModel.navigationRequest = .space(spaceId: spaceId, widgetId: widgetId)
+            }
+        }
         // Animate the transition in/out
         .animation(.easeInOut, value: presented)
         // Respond to changes in notificationRequest
         .onChange(of: appModel.notificationRequest) { newValue in
-            guard case .notification(let newTitle, let newMessage) = newValue else {
+            guard case .notification(let newTitle, let newMessage, let newSpaceId, let newWidgetId) = newValue else {
                 return
             }
             
             // Set the content
             self.title = newTitle
             self.message = newMessage
-            
+            if let newSpaceId {
+                self.spaceId = newSpaceId
+            }
+            if let newWidgetId {
+                self.widgetId = newWidgetId
+            }
+
             // Present the banner
             self.presented = true
             self.progress = 0  // reset progress in case a second notification triggers quickly

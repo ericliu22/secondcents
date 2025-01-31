@@ -295,6 +295,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
             UNNotificationPresentationOptions
         ) -> Void
     ) {
+        let userInfo = notification.request.content.userInfo
         if UIApplication.shared.applicationState == .active {
             
             guard let user = appModel?.user else {
@@ -304,13 +305,13 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
             let title = notification.request.content.title
             let message = notification.request.content.body
             
-            guard let notificationUserId = notification.request.content.userInfo["userId"] as? String else {
+            guard let notificationUserId = userInfo["userId"] as? String else {
                 appModel?.showNotification(title: title, message: message)
                 completionHandler([])
                 return
             }
             if user.userId != notificationUserId {
-                appModel?.showNotification(title: title, message: message)
+                appModel?.showNotification(title: title, message: message, spaceId: userInfo["spaceId"] as? String, widgetId: userInfo["widgetId"] as? String)
             }
 
             completionHandler([])
