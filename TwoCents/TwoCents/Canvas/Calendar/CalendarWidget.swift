@@ -249,15 +249,16 @@ struct EmptyEventView: View {
     var body: some View {
         VStack(alignment: .center, spacing: 0) {
             Text(eventName)
-                .font(.headline)
+                .font(.title)
                 .foregroundColor(Color.accentColor)
                 .fontWeight(.semibold)
                 .lineLimit(1)
+                .truncationMode(.tail)
             
             Spacer()
             
             Text("😔")
-                .font(.system(size: 44))
+                .font(.system(size: 60))
                 .foregroundColor(.primary)
                 .overlay {
                     Text("🤘")
@@ -276,6 +277,8 @@ struct EmptyEventView: View {
                         .rotationEffect(.degrees(-10))
                 }
             
+            EmptyCalendarFadeInOutView().padding(.top, -20)
+            
             Spacer()
             
             Button(action: {
@@ -285,13 +288,68 @@ struct EmptyEventView: View {
                 canvasViewModel.activeWidget = widget
             }, label: {
                 Text("Party Together!")
-                    .font(.caption2)
+                    .font(.subheadline)
+                    .padding(15)
             })
             .buttonStyle(.bordered)
             .foregroundColor(Color.accentColor)
+            .padding(.top, -20)
         }
-        .padding(16)
+        .padding(30)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+}
+
+struct EmptyCalendarFadeInOutView: View{
+    
+    private let phrases = ["Let's Hanggg!", "rEndEZvoUs??", "I KNOW you're free..."]
+    
+    //State variables for fade in fade out
+    @State private var currentText: String = ""
+    @State private var isVisible: Bool = true
+    
+    var body: some View {
+        Text(currentText)
+            .font(.title2)
+            .minimumScaleFactor(0.5)
+            .fontWeight(.bold)
+            .foregroundStyle(Color.accentColor)
+            .frame(maxWidth: .infinity,maxHeight: .infinity,alignment: .center)
+            .opacity(isVisible ? 1 : 0)
+            .onAppear {
+                startFadingLoop()
+            }
+    }
+    //fading loop
+    func startFadingLoop() {
+        Task {
+            // Start with the first random phrase immediately
+            currentText = phrases.randomElement() ?? ""
+            
+            while true {
+                // 1) Fade out
+                withAnimation(.easeInOut(duration: 0.5)) {
+                    isVisible = false
+                }
+                // Wait for fade-out + delay
+                try await Task.sleep(nanoseconds: 1_000_000_000)
+                
+                // 2) Pick a new random phrase (avoid repeats if desired)
+                var newText: String
+                repeat {
+                    newText = phrases.randomElement() ?? ""
+                } while newText == currentText // Ensure new phrase is different
+                
+                currentText = newText
+                
+                // 3) Fade in
+                withAnimation(.easeInOut(duration: 0.5)) {
+                    isVisible = true
+                }
+                // Wait for fade-in + longer delay
+                try await Task.sleep(nanoseconds: 2_500_000_000)
+            }
+        }
     }
 }
 
@@ -304,13 +362,14 @@ struct EventDateView: View {
     var eventName: String
 
     var body: some View {
-        VStack(alignment: .center, spacing: 0) {
+        VStack() {
             Text(eventName)
-                .font(.subheadline)
+                .font(.title)
                 .foregroundColor(Color.accentColor)
                 .fontWeight(.semibold)
                 .lineLimit(1)
                 .truncationMode(.tail)
+                .padding(.top, 20)
 
             if let date = optimalDate.date {
                 let daysDifference = Calendar.current.dateComponents([.day], from: Date(), to: date).day ?? 0
@@ -323,8 +382,30 @@ struct EventDateView: View {
             }
             
             Divider()
-            Spacer()
-
+            
+            FutureCalendarFadeInOutView()
+            //Spacer()
+            Text("🥳")
+                .font(.system(size: 50))
+                .foregroundColor(.primary)
+                .padding(.top, -8)
+                .overlay {
+                    Text("✌️")
+                        .font(.system(size: 32))
+                        .padding(.top, -8)
+                        .foregroundColor(.primary)
+                        .offset(x: -28, y: -4)
+                        .offset(y: bounce ? 3 : 0)
+                        .animation(
+                            Animation.easeInOut(duration: 1)
+                                .repeatForever(autoreverses: true)
+                        )
+                        .onAppear {
+                            bounce.toggle()
+                        }
+                        .shadow(color: Color.accentColor.opacity(0.3), radius: 2, x: 2, y: 0)
+                        .rotationEffect(.degrees(-10))
+                }
             HStack(spacing: 3) {
                 if let dayOfWeek = optimalDate.dayOfWeek {
                     Text(dayOfWeek)
@@ -340,18 +421,69 @@ struct EventDateView: View {
                         .foregroundColor(.secondary)
                 }
             }
-            .padding(.top, -8)
+            .padding(.top, -20)
             
             if let day = optimalDate.day {
                 Text(day)
                     .font(.system(size: 72))
                     .fontWeight(.bold)
                     .foregroundColor(.primary)
-                    .padding(.vertical, -15)
+                    .padding(.bottom, 30)
             }
         }
-        .padding(16)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+}
+
+struct FutureCalendarFadeInOutView: View{
+    
+    private let phrases = ["Save the Date!", "Add Availability!"]
+    
+    //State variables for fade in fade out
+    @State private var currentText: String = ""
+    @State private var isVisible: Bool = true
+    
+    var body: some View {
+        Text(currentText)
+            .font(.title2)
+            .fontWeight(.bold)
+            .foregroundStyle(Color.accentColor)
+            .frame(maxWidth: .infinity,maxHeight: .infinity,alignment: .center)
+            .opacity(isVisible ? 1 : 0)
+            .onAppear {
+                startFadingLoop()
+            }
+    }
+    //fading loop
+    func startFadingLoop() {
+        Task {
+            // Start with the first random phrase immediately
+            currentText = phrases.randomElement() ?? ""
+            
+            while true {
+                // 1) Fade out
+                withAnimation(.easeInOut(duration: 0.5)) {
+                    isVisible = false
+                }
+                // Wait for fade-out + delay
+                try await Task.sleep(nanoseconds: 1_000_000_000)
+                
+                // 2) Pick a new random phrase (avoid repeats if desired)
+                var newText: String
+                repeat {
+                    newText = phrases.randomElement() ?? ""
+                } while newText == currentText // Ensure new phrase is different
+                
+                currentText = newText
+                
+                // 3) Fade in
+                withAnimation(.easeInOut(duration: 0.5)) {
+                    isVisible = true
+                }
+                // Wait for fade-in + longer delay
+                try await Task.sleep(nanoseconds: 2_500_000_000)
+            }
+        }
     }
 }
 
@@ -366,7 +498,7 @@ struct EventTimeView: View {
     var body: some View {
         VStack(alignment: .center, spacing: 0) {
             Text(eventName)
-                .font(.subheadline)
+                .font(.title)
                 .foregroundColor(Color.accentColor)
                 .fontWeight(.semibold)
                 .lineLimit(1)
@@ -374,49 +506,63 @@ struct EventTimeView: View {
 
             if let longMonth = optimalDate.longMonth, let day = optimalDate.day {
                 Text("\(longMonth) \(day)")
-                    .font(.caption2)
+                    .font(.caption)
                     .foregroundColor(Color.secondary)
                     .fontWeight(.semibold)
                     .padding(.bottom, 3)
             }
             
             Divider()
+            
+            Spacer()
+            
+            Text(bounce ? "⌛️" : "⏳")
+                .font(.system(size: 50))
+                .foregroundColor(.primary)
+                .onAppear {
+                    startAnimation()
+                }
+
+            
             Spacer()
             
             if let date = optimalDate.date {
                 Text(Calendar.current.isDateInToday(date) ? "Today" : "Tomorrow")
-                    .font(.title2)
+                    .font(.title)
                     .fontWeight(.bold)
                     .foregroundColor(Color.accentColor)
                     .padding(.bottom, -5)
             }
             
             Text(closestTime)
-                .font(.title2)
+                .font(.title)
                 .fontWeight(.bold)
                 .foregroundColor(.primary)
             
-            
-            
-           
-            
             Text("\(optimalDate.maxTimeFrequency) " + (optimalDate.maxTimeFrequency == 1 ? "Attendee" : "Attendees"))
 
-                .font(.caption2)
+                .font(.subheadline)
                 .fontWeight(.light)
                 .foregroundColor(.secondary)
                 .padding(.top, 3)
-            
-            
-        
-        
-            
-            
-            
             Spacer()
         }
         .padding(16)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+    
+    private func startAnimation() {
+        bounce = false
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            let animation = Animation.easeInOut(duration: 1)
+                .delay(2.0)
+                .repeatForever(autoreverses: true)
+
+            withAnimation(animation) {
+                bounce.toggle()
+            }
+        }
     }
 }
 
@@ -431,21 +577,21 @@ struct EventPassedView: View {
     var body: some View {
         VStack(alignment: .center, spacing: 0) {
             Text(eventName)
-                .font(.headline)
+                .font(.title)
                 .foregroundColor(Color.accentColor)
                 .fontWeight(.semibold)
                 .lineLimit(1)
             
             if let longMonth = optimalDate.longMonth, let day = optimalDate.day {
                 Text("\(longMonth) \(day)")
-                    .font(.caption2)
+                    .font(.caption)
                     .foregroundColor(Color.secondary)
                     .fontWeight(.semibold)
                     .padding(.bottom, 5)
             }
             
             Text(bounce ? "🥳" : "☺️")
-                .font(.system(size: 44))
+                .font(.system(size: 50))
                 .foregroundColor(.primary)
                 .onAppear {
                     startAnimation()
@@ -454,7 +600,7 @@ struct EventPassedView: View {
             Spacer()
             
             Text("Til next time!")
-                .font(.caption2)
+                .font(.subheadline)
                 .foregroundColor(Color.secondary)
                 .fontWeight(.semibold)
             

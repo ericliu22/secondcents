@@ -120,8 +120,21 @@ struct NewCalendarView: View {
                             .padding(.vertical)
                         
                         Button(action: {
-                            let userId = try? AuthenticationManager.shared.getAuthenticatedUser().uid
-                            let newWidget = CanvasWidget(x: 0, y: 0, borderColor: Color.accentColor, userId: userId ?? "", media: .calendar)
+                            guard let userId = try? AuthenticationManager.shared.getAuthenticatedUser().uid else {
+                                print("retard")
+                                return
+                            }
+                            
+                            let (width, height): (CGFloat, CGFloat) = SpaceManager.shared.getMultipliedSize(widthMultiplier: 2, heightMultiplier: 2)
+                            
+                            let newWidget: CanvasWidget = CanvasWidget(
+                                width: width,
+                                height: height,
+                                borderColor: Color.accentColor,
+                                userId: userId,
+                                media: .calendar
+                            )
+//                            let newWidget = CanvasWidget(x: 0, y: 0, borderColor: Color.accentColor, userId: userId ?? "", media: .calendar)
                             canvasViewModel.newWidget = newWidget
                             canvasViewModel.canvasMode = .placement
                             self.createdWidgetId = newWidget.id.uuidString
