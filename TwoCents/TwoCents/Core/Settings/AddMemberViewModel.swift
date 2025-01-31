@@ -32,17 +32,30 @@ final class AddMemberViewModel {
             userId: authDataResult.uid)
     }
 
-    func saveSpace(spaceId: String) async throws {
-
-        if let user = user {
-            if !selectedMembersUserId.contains(user.userId) {
-                selectedMembersUserId.append(user.userId)
-            }
+    func saveSpace(spaceId: String, members: [String]) async throws {
+        // Ensure the current user is present in the new selection
+        if let user = user, !selectedMembersUserId.contains(user.userId) {
+            selectedMembersUserId.append(user.userId)
         }
 
-        try await SpaceManager.shared.updateSpaceMembers(
-            spaceId: spaceId, members: selectedMembersUserId)
+        // "newlyAdded" = present in "selectedMembersUserId" but NOT in "members"
+        let newlyAdded = selectedMembersUserId.filter { !members.contains($0) }
+
+        // "removed" = present in "members" but NOT in "selectedMembersUserId"
+        let removed = members.filter { !selectedMembersUserId.contains($0) }
+
+        // Invite newly added members
+        try await SpaceManager.shared.inviteSpaceMembers(
+            spaceId: spaceId,
+            members: newlyAdded
+        )
+        // Remove members that no longer appear in the new list
+        try await SpaceManager.shared.removeSpaceMembers(
+            spaceId: spaceId,
+            members: removed
+        )
     }
+
 
     func saveProfileImage(item: PhotosPickerItem) {
 

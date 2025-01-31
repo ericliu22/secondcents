@@ -140,7 +140,7 @@ struct ZoomableScrollView<Content: View>: UIViewRepresentable {
         private func resetIdleTimer(_ scrollView: UIScrollView) {
             idleTimer?.invalidate()
             idleTimer = Timer.scheduledTimer(
-                withTimeInterval: 1.0, repeats: false
+                withTimeInterval: 2.0, repeats: false
             ) { [weak self] _ in
                 if self?.canvasViewModel.canvasMode == .normal {
                     self?.autoCenterOnCursor(scrollView)

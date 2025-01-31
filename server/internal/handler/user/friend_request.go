@@ -210,13 +210,6 @@ func UnsendFriendRequestHandler(httpCtx *fasthttp.RequestCtx, firestoreClient *f
 
 	var friendRequest FriendRequest
 
-	if !auth.ValidateUser(httpCtx, friendRequest.SenderUserId) {
-		httpCtx.SetStatusCode(fasthttp.StatusUnauthorized)
-		httpCtx.SetBodyString("Unauthorized user friend request")
-		log.Printf("Unauthenticated request")
-		return
-	}
-
 	log.Printf("UnsendFriendRequest body: %s\n", string(httpCtx.PostBody()))
 
 	if err := json.Unmarshal(httpCtx.PostBody(), &friendRequest); err != nil {
@@ -225,6 +218,14 @@ func UnsendFriendRequestHandler(httpCtx *fasthttp.RequestCtx, firestoreClient *f
 	}
 
 	log.Printf("Parsed friend request: %+v\n", friendRequest)
+
+	if !auth.ValidateUser(httpCtx, friendRequest.SenderUserId) {
+		httpCtx.SetStatusCode(fasthttp.StatusUnauthorized)
+		httpCtx.SetBodyString("Unauthorized user friend request")
+		log.Printf("Unauthenticated request")
+		return
+	}
+
 
 	receiverDocRef := firestoreClient.Collection("users").Doc(friendRequest.ReceiverUserId)
 	senderDocRef := firestoreClient.Collection("users").Doc(friendRequest.SenderUserId)
@@ -266,7 +267,7 @@ func RemoveFriendRequestHandler(httpCtx *fasthttp.RequestCtx, firestoreClient *f
 
 	log.Printf("Parsed friend request: %+v\n", friendRequest)
 
-	if !auth.ValidateUser(httpCtx, friendRequest.ReceiverUserId) {
+	if !auth.ValidateUser(httpCtx, friendRequest.SenderUserId) {
 		httpCtx.SetStatusCode(fasthttp.StatusUnauthorized)
 		httpCtx.SetBodyString("Unauthorized user friend request")
 		log.Printf("Unauthenticated request")
