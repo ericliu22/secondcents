@@ -14,6 +14,7 @@ func SetupCoreRouter(firestoreClient *firestore.Client, messagingClient *messagi
 
 	r.GET("/", handler.HomeHandler)
 	r.GET("/v1", handler.VersionOneHandler)
+	r.GET("/version", handler.VersionHandler)
 
 	SetupUserRoutes(r, firestoreClient, messagingClient)
 	SetupSpaceRoutes(r, firestoreClient, messagingClient)

@@ -64,8 +64,122 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         }
 
         application.registerForRemoteNotifications()
+        
+        DispatchQueue.main.async {
+            self.checkVersionWithAPI()
+        }
+        
         return true
     }
+
+    func checkVersionWithAPI() {
+        Task {
+            do {
+                // 1. Fetch the required version string from your server
+                let requiredVersion = try await fetchRequiredVersion(from: "https://api.twocentsapp.com/version")
+                
+                // 2. Get the current app version
+                let currentAppVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
+                
+                // 3. Compare
+                if isOlderVersion(currentAppVersion, than: requiredVersion) {
+                    // 4. Show your force-update alert
+                    DispatchQueue.main.async {
+                        self.showForceUpdateAlert()
+                    }
+                }
+            } catch {
+                print("Failed to check version from API: \(error)")
+                // Decide if you want to handle failures differently
+                // (e.g., allow user to continue, or set default required version, etc.)
+                showServerOffline()
+            }
+        }
+    }
+    
+    private func showServerOffline() {
+        let alert = UIAlertController(
+            title: "TwoCents servers unavailable",
+            message: "We apologize for the inconvenience. Please try again later",
+            preferredStyle: .alert
+        )
+        
+        let updateAction = UIAlertAction(title: "Ok", style: .default) { _ in
+            // Replace with your actual App Store URL
+            exit(0)  // Force-close the app (not recommended by Apple)
+        }
+        
+        alert.addAction(updateAction)
+        
+        // Present the alert on the key window.
+        DispatchQueue.main.async {
+            if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+               let rootVC = windowScene.windows.first?.rootViewController {
+                rootVC.present(alert, animated: true)
+            }
+        }
+    }
+
+    
+    private func showForceUpdateAlert() {
+        let alert = UIAlertController(
+            title: "Update Required",
+            message: "A new version is required to continue. Please update now.",
+            preferredStyle: .alert
+        )
+        
+        let updateAction = UIAlertAction(title: "Update Now", style: .default) { _ in
+            // Replace with your actual App Store URL
+            exit(0)  // Force-close the app (not recommended by Apple)
+        }
+        
+        alert.addAction(updateAction)
+        
+        // Present the alert on the key window.
+        DispatchQueue.main.async {
+            if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+               let rootVC = windowScene.windows.first?.rootViewController {
+                rootVC.present(alert, animated: true)
+            }
+        }
+    }
+
+    /// Returns true if `current` is strictly older than `required`.
+    private func isOlderVersion(_ current: String, than required: String) -> Bool {
+        let currentComponents = current.split(separator: ".").compactMap { Int($0) }
+        let requiredComponents = required.split(separator: ".").compactMap { Int($0) }
+        
+        for i in 0..<max(currentComponents.count, requiredComponents.count) {
+            let c = (i < currentComponents.count) ? currentComponents[i] : 0
+            let r = (i < requiredComponents.count) ? requiredComponents[i] : 0
+            
+            if c < r {
+                return true
+            } else if c > r {
+                return false
+            }
+        }
+        return false
+    }
+
+
+    /// Fetches the "minimum_version" from a JSON endpoint.
+    private func fetchRequiredVersion(from urlString: String) async throws -> String {
+        guard let url = URL(string: urlString) else {
+            throw URLError(.badURL)
+        }
+        
+        let (data, _) = try await URLSession.shared.data(from: url)
+        
+        // For example, the JSON structure might look like {"minimum_version": "2.3"}
+        struct VersionResponse: Decodable {
+            let minimum_version: String
+        }
+        
+        let decoded = try JSONDecoder().decode(VersionResponse.self, from: data)
+        return decoded.minimum_version
+    }
+
 
     func application(
         _ application: UIApplication, open url: URL,
