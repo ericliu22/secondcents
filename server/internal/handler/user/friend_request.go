@@ -266,7 +266,7 @@ func RemoveFriendRequestHandler(httpCtx *fasthttp.RequestCtx, firestoreClient *f
 
 	log.Printf("Parsed friend request: %+v\n", friendRequest)
 
-	if !auth.ValidateUser(httpCtx, friendRequest.ReceiverUserId) {
+	if !auth.ValidateUser(httpCtx, friendRequest.SenderUserId) {
 		httpCtx.SetStatusCode(fasthttp.StatusUnauthorized)
 		httpCtx.SetBodyString("Unauthorized user friend request")
 		log.Printf("Unauthenticated request")
