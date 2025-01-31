@@ -28,6 +28,7 @@ struct ChatPage: View {
                 }
                 .rotationEffect(.degrees(180))
             }
+            .navigationTitle(viewModel.chat?.name ?? "")
 
             ZStack(alignment: .bottomTrailing) {
                 TextField(

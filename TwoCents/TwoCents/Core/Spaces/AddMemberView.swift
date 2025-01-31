@@ -277,8 +277,7 @@ struct AddMemberView: View {
 
             Button {
                 Task {
-                    try? await viewModel.saveSpace(spaceId: spaceId)
-
+                    try? await viewModel.saveSpace(spaceId: spaceId, members: canvasViewModel.members.map({ $0.userId }))
                 }
                 dismissScreen()
 
