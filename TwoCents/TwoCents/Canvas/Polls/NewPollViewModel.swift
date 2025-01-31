@@ -58,6 +58,7 @@ class NewPollModel: ObservableObject {
             return nil
         }
         
+        //copy for changing widget sizes
         let (width, height): (CGFloat, CGFloat) = SpaceManager.shared.getMultipliedSize(widthMultiplier: 2, heightMultiplier: 2)
         
         let newCanvasWidget: CanvasWidget = CanvasWidget(
@@ -68,7 +69,7 @@ class NewPollModel: ObservableObject {
             media: .poll,
             widgetName: newPollName
         )
-        
+        //end of copy
         
         print(newPollOptions)
         let poll=Poll(canvasWidget: newCanvasWidget, options: newPollOptions)
