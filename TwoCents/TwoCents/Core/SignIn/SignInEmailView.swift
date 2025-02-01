@@ -89,7 +89,7 @@ struct SignInEmailView: View {
             
         }
         .padding()
-        .navigationTitle("Sign In With Email")
+        .navigationTitle("Back to the chaos")
         .tint(Color(UIColor.label))
         .navigationBarTitleDisplayMode(.inline)
         //make back button black... (Gotta have the enviorment line on top)
