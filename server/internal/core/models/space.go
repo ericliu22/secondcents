@@ -20,7 +20,7 @@ type DBSpace struct {
 	NextWidgetY      *float64  `firestore:"nextWidgetY"`
 	SpaceToken       *string   `firestore:"spaceToken"`
 	PrivateKey       *string   `firestore:"privateKey"`
-	SpaceRequests	 *[]string `firestore:"spaceRequests"`
+	SpaceRequests    *[]string `firestore:"spaceRequests"`
 }
 
 func GetSpace(firestoreClient *firestore.Client, firebaseCtx context.Context, spaceId string) (*DBSpace, error) {

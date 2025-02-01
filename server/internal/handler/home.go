@@ -1,9 +1,9 @@
 package handler
 
 import (
+	"encoding/json"
 	"log"
 	"path/filepath"
-	"encoding/json"
 
 	"github.com/valyala/fasthttp"
 )
@@ -26,21 +26,21 @@ func VersionOneHandler(ctx *fasthttp.RequestCtx) {
 }
 
 type VersionResponse struct {
-    MinimumVersion string `json:"minimum_version"`
+	MinimumVersion string `json:"minimum_version"`
 }
 
 func VersionHandler(ctx *fasthttp.RequestCtx) {
-    ctx.SetContentType("application/json; charset=utf-8")
+	ctx.SetContentType("application/json; charset=utf-8")
 
-    // Example version. In reality you might read it from an env var or config.
-    response := VersionResponse{MinimumVersion: "0.1.0"}
+	// Example version. In reality you might read it from an env var or config.
+	response := VersionResponse{MinimumVersion: "0.1.0"}
 
-    // Encode to JSON
-    if jsonBytes, err := json.Marshal(response); err == nil {
-        ctx.SetStatusCode(fasthttp.StatusOK)
-        ctx.Write(jsonBytes)
-    } else {
-        ctx.SetStatusCode(fasthttp.StatusInternalServerError)
-        ctx.Write([]byte(`{"error":"failed to encode JSON"}`))
-    }
+	// Encode to JSON
+	if jsonBytes, err := json.Marshal(response); err == nil {
+		ctx.SetStatusCode(fasthttp.StatusOK)
+		ctx.Write(jsonBytes)
+	} else {
+		ctx.SetStatusCode(fasthttp.StatusInternalServerError)
+		ctx.Write([]byte(`{"error":"failed to encode JSON"}`))
+	}
 }
