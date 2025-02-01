@@ -129,7 +129,7 @@ struct AuthenticationView: View {
             Spacer().frame(height: 50)
         }
         .padding(.horizontal)
-        .background(Color("bgColor"))
+        .background(Color("bg"))
         // Start the animation when the view appears.
         .onAppear {
             showNewMessage()

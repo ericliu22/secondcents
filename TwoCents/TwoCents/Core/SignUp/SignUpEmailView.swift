@@ -26,14 +26,18 @@ struct SignUpEmailView: View {
         
         ScrollView{
         VStack {
-            
-        
             Spacer()
-                .frame(height:200)
+                .frame(height:50)
             
-            Text(viewModel.errorMessage)
-                .foregroundColor(.red)
-
+            Image("TwoCentsLogo")
+                .resizable() // Makes the image resizable
+                .scaledToFit() // Maintains the aspect ratio
+                .frame(width: 100, height: 100) // Sets the desired size
+            
+            
+            Spacer()
+                .frame(height:25)
+            
             //Name Textfield
             TextField("Name", text: $viewModel.name)
                 .disableAutocorrection(true)
@@ -116,6 +120,11 @@ struct SignUpEmailView: View {
             .cornerRadius(10)
 
             
+            Text(viewModel.errorMessage)
+                .foregroundColor(.red)
+                .padding(.top)
+                .font(.caption)
+          
             
             
             NavigationLink(

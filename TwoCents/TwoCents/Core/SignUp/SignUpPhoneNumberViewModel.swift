@@ -32,6 +32,7 @@ final class SignUpPhoneNumberViewModel: ObservableObject{
 
         
         let user = DBUser( uid: uid, name: name.trimmingCharacters(in: .whitespacesAndNewlines), userPhoneNumber: userPhoneNumber)
+     
         try await UserManager.shared.createNewUser(user: user)
       
         

@@ -26,12 +26,11 @@ struct SignInEmailView: View {
             Image("TwoCentsLogo")
                 .resizable() // Makes the image resizable
                 .scaledToFit() // Maintains the aspect ratio
-                .frame(width: 200, height: 200) // Sets the desired size
+                .frame(width: 100, height: 100) // Sets the desired size
             
             
-            
-            Text(viewModel.errorMessage)
-                .foregroundColor(.red)
+            Spacer()
+                .frame(height:50)
             
             //Email Textfield
             TextField("Email", text: $viewModel.email)
@@ -79,6 +78,10 @@ struct SignInEmailView: View {
             .cornerRadius(10)
 
             
+            Text(viewModel.errorMessage)
+                .foregroundColor(.red)
+                .padding(.top)
+                .font(.caption)
           
            
       
