@@ -71,9 +71,9 @@ struct ChatWidget: WidgetView {
 
 struct ChatPreview: View {
     @Environment(AppModel.self) var appModel
-    var messages: [any WidgetMessage]
+    var messages: [any Message]
 
-    init(messages: [any WidgetMessage]) {
+    init(messages: [any Message]) {
         self.messages = messages
     }
 

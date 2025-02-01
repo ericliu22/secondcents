@@ -11,7 +11,7 @@ import (
 
 func SetupSpaceRoutes(r *router.Router, firestoreClient *firestore.Client, messagingClient *messaging.Client) {
 	r.POST("/v1/space/join-space", (func(httpCtx *fasthttp.RequestCtx) {
-		space.JoinSpaceHandler(httpCtx, firestoreClient)
+		space.JoinSpaceHandler(httpCtx, firestoreClient, messagingClient)
 	}))
 	r.POST("/v1/space/fetch-space-token", (func(httpCtx *fasthttp.RequestCtx) {
 		space.FetchSpaceTokenHandler(httpCtx, firestoreClient)
@@ -24,9 +24,14 @@ func SetupSpaceRoutes(r *router.Router, firestoreClient *firestore.Client, messa
 		space.InviteSpaceRequestHandler(httpCtx, firestoreClient, messagingClient)
 	}))
 	r.POST("/v1/space/accept-space-request", (func(httpCtx *fasthttp.RequestCtx) {
-		space.InviteSpaceRequestHandler(httpCtx, firestoreClient, messagingClient)
+		space.AcceptSpaceRequestHandler(httpCtx, firestoreClient, messagingClient)
 	}))
-	r.POST("/v1/space/hot-seat", (func(httpCtx *fasthttp.RequestCtx) {
-		space.InviteSpaceRequestHandler(httpCtx, firestoreClient, messagingClient)
+	r.POST("/v1/space/decline-space-request", (func(httpCtx *fasthttp.RequestCtx) {
+		space.DeclineSpaceRequestHandler(httpCtx, firestoreClient, messagingClient)
 	}))
+	/*
+		r.POST("/v1/space/hot-seat", (func(httpCtx *fasthttp.RequestCtx) {
+			space.InviteSpaceRequestHandler(httpCtx, firestoreClient, messagingClient)
+		}))
+	*/
 }

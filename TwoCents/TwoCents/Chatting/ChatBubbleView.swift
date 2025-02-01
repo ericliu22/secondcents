@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ChatBubbleView: View {
     
-    let message: Message
+    let message: OldMessage
     let sentByMe: Bool
     let isFirstMsg: Bool
     let name: String

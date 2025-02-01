@@ -173,3 +173,86 @@ func sendSpaceRequest(spaceId: String, userId: String) async throws {
     // For example, parse any returned JSON data
 
 }
+
+private struct DeclineSpaceRequest: Codable {
+    let spaceId: String
+}
+
+private enum DeclineSpaceError: Error {
+    case invalidUrl
+    case unauthorizedApp
+    case invalidResponse
+    case serverError(message: String, code: Int)
+}
+
+extension DeclineSpaceError: LocalizedError {
+    public var errorDescription: String? {
+        switch self {
+        case .invalidUrl:
+            return NSLocalizedString("Invalid URL.", comment: "")
+        case .unauthorizedApp:
+            return NSLocalizedString("User is not authorized.", comment: "")
+        case .invalidResponse:
+            return NSLocalizedString(
+                "Invalid response from server.", comment: "")
+        case .serverError(let message, _):
+            return NSLocalizedString("Server error: \(message)", comment: "")
+        }
+    }
+}
+
+func declineSpaceRequest(spaceId: String) async throws {
+
+    // Validate and construct the URL
+    guard
+        let apiUrl = URL(
+            string: "https://api.twocentsapp.com/v1/space/decline-space-request")
+    else {
+        throw AcceptSpaceError.invalidUrl
+    }
+
+    // Get the Firebase token
+    guard
+        let firebaseToken = try? await AuthenticationManager.shared
+            .getJwtToken()
+    else {
+        throw AcceptSpaceError.unauthorizedApp
+    }
+
+    // Create the URLRequest
+    var request = URLRequest(url: apiUrl)
+    request.httpMethod = "POST"
+    request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+    request.setValue(
+        "Bearer \(firebaseToken)", forHTTPHeaderField: "Authorization")
+
+    // Encode the request body
+    let acceptSpace = AcceptSpaceRequest(spaceId: spaceId)
+    do {
+        let body = try JSONEncoder().encode(acceptSpace)
+        request.httpBody = body
+    } catch {
+        throw error
+    }
+
+    // Perform the network request
+    let (data, response) = try await URLSession.shared.data(for: request)
+
+    // Validate the HTTP response
+    guard let httpResponse = response as? HTTPURLResponse else {
+        throw AcceptSpaceError.invalidResponse
+    }
+
+    // Check if the response indicates success
+    guard (200...299).contains(httpResponse.statusCode) else {
+        // Read error message from server response
+        let serverErrorMessage =
+            String(data: data, encoding: .utf8) ?? "Unknown server error"
+        throw AcceptSpaceError.serverError(
+            message: serverErrorMessage, code: httpResponse.statusCode)
+    }
+
+    // Optionally, process the response data if needed
+    // For example, parse any returned JSON data
+
+}

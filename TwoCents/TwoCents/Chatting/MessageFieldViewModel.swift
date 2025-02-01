@@ -69,7 +69,7 @@ final class MessageFieldViewModel: ObservableObject {
                     let uuidString = widget?.id.uuidString.isEmpty ?? true ? UUID().uuidString : widget!.id.uuidString
                     let resolvedThreadId = threadId.isEmpty ? uuidString : threadId
 
-                    let newMessage = Message(
+                    let newMessage = OldMessage(
                         id: uuidString,
                         sendBy: user?.userId ?? "",
                         text: text,

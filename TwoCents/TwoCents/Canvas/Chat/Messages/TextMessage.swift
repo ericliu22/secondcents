@@ -7,7 +7,7 @@
 import Foundation
 import SwiftUI
 
-struct TextMessage: WidgetMessage {
+struct TextMessage: Message {
     
     let id: String
     let dateCreated: Date
@@ -30,7 +30,7 @@ struct TextMessageView: MessageView {
     @Environment(ChatWidgetViewModel.self) var chatViewModel
     @Environment(CanvasPageViewModel.self) var canvasViewModel
     @Environment(AppModel.self) var appModel
-    let message: any WidgetMessage
+    let message: any Message
     let textMessage: TextMessage
     @State var userColor: Color = .gray
     

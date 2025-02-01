@@ -63,7 +63,7 @@ final class FriendRequestsViewModel {
             guard authDataResultUserId != friendUserId else { return }
             
             
-            try? await UserManager.shared.acceptFriendRequest(userId: authDataResultUserId, friendUserId: friendUserId)
+            try? await UserManager.shared.declineFriendRequest(userId: authDataResultUserId, friendUserId: friendUserId)
             
             
         }

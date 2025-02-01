@@ -3,9 +3,9 @@ import FirebaseFirestore
 
 @Observable @MainActor
 final class ChatViewModel {
-    var messages: [Message] = []
+    var messages: [OldMessage] = []
     var hasMoreMessages: Bool = true
-    var messagesFromListener: [Message] = []
+    var messagesFromListener: [OldMessage] = []
     private var lastDocument: DocumentSnapshot? = nil
     var threadId: String = ""
     var threadIdChangedTime: Date = Date()
@@ -68,9 +68,9 @@ final class ChatViewModel {
                 
                
                 
-                self.messagesFromListener = documents.compactMap { document -> Message? in
+                self.messagesFromListener = documents.compactMap { document -> OldMessage? in
                     do {
-                        return try document.data(as: Message.self)
+                        return try document.data(as: OldMessage.self)
                     } catch {
                         print("Error decoding document into message: \(error)")
                         return nil

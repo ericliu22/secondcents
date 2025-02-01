@@ -6,9 +6,8 @@ import (
 	"github.com/valyala/fasthttp"
 )
 
-
 func HotSeatHandler(httpCtx *fasthttp.RequestCtx, firestoreClient *firestore.Client, messagingClient *messaging.Client) {
 
-	// 
+	//
 
 }

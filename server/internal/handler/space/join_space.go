@@ -5,9 +5,12 @@ import (
 	"log"
 
 	"server/internal/core/auth"
+	"server/internal/core/models"
+	"server/internal/core/notifications"
 	"server/internal/middleware"
 
 	"cloud.google.com/go/firestore"
+	"firebase.google.com/go/messaging"
 	"github.com/valyala/fasthttp"
 )
 
@@ -16,7 +19,7 @@ type JoinSpaceRequest struct {
 	SpaceToken string `json:"spaceToken"`
 }
 
-func JoinSpaceHandler(httpCtx *fasthttp.RequestCtx, client *firestore.Client) {
+func JoinSpaceHandler(httpCtx *fasthttp.RequestCtx, firestoreClient *firestore.Client, messagingClient *messaging.Client) {
 	firebaseCtx := middleware.GetRequestContext(httpCtx)
 
 	userId, err := middleware.GetAuthenticatedUserId(httpCtx)
@@ -33,8 +36,8 @@ func JoinSpaceHandler(httpCtx *fasthttp.RequestCtx, client *firestore.Client) {
 		return
 	}
 
-	log.Printf("Parsed friend request: %+v\n", joinRequest)
-	validSpace, spaceErr := auth.ValidateSpaceToken(firebaseCtx, client, joinRequest.SpaceToken, joinRequest.SpaceId)
+	log.Printf("Parsed join request: %+v\n", joinRequest)
+	validSpace, spaceErr := auth.ValidateSpaceToken(firebaseCtx, firestoreClient, joinRequest.SpaceToken, joinRequest.SpaceId)
 	if spaceErr != nil {
 		log.Printf("Interal Server Error")
 		httpCtx.Error("Internal Server Error", fasthttp.StatusInternalServerError)
@@ -47,12 +50,31 @@ func JoinSpaceHandler(httpCtx *fasthttp.RequestCtx, client *firestore.Client) {
 		return
 	}
 
-	client.Collection("spaces").Doc(joinRequest.SpaceId).Update(firebaseCtx, []firestore.Update{
+	firestoreClient.Collection("spaces").Doc(joinRequest.SpaceId).Update(firebaseCtx, []firestore.Update{
 		{
 			Path:  "members",
 			Value: firestore.ArrayUnion(userId),
 		},
 	})
+
+	user, userErr := models.GetUser(firestoreClient, firebaseCtx, userId)
+	if userErr != nil {
+		httpCtx.Error("Internal server error", fasthttp.StatusBadRequest)
+		log.Printf("Failed to get private user: %v", userErr.Error())
+		return
+
+	}
+
+	var notification notifications.TopicNotification
+	notification = notifications.TopicNotification{
+		Topic: joinRequest.SpaceId,
+		Title: user.Name + " just joined the Space!",
+		Body:  "",
+	}
+	if err := notifications.SendTopicNotification(&notification, messagingClient, firebaseCtx); err != nil {
+		log.Printf("Failed to send notification: %v", err.Error())
+	}
+
 	httpCtx.SetStatusCode(fasthttp.StatusOK)
 	httpCtx.SetBodyString("Joined Space successfully")
 }

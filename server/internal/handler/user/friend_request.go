@@ -226,7 +226,6 @@ func UnsendFriendRequestHandler(httpCtx *fasthttp.RequestCtx, firestoreClient *f
 		return
 	}
 
-
 	receiverDocRef := firestoreClient.Collection("users").Doc(friendRequest.ReceiverUserId)
 	senderDocRef := firestoreClient.Collection("users").Doc(friendRequest.SenderUserId)
 
