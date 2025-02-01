@@ -1,84 +1,113 @@
-//
-//  AuthenticationView.swift
-//  TwoCents
-//
-//  Created by jonathan on 8/2/23.
-//
-
 import SwiftUI
 
 struct AuthenticationView: View {
     
-//    @Binding var showSignInView: Bool
     @Environment(AppModel.self) var appModel
-//    @State private var animateGradient: Bool = false
+    @State private var animateGradient: Bool = false
+    @Binding var userPhoneNumber: String?
     
-//    @Binding var showCreateProfileView: Bool
+    private let welcomeMessages = [
+        "Prepare for some serious sass.",
+        "This is not a safe space. It's TwoCents.",
+        "If you can’t handle the heat, get out.",
+        "No softies allowed.",
+        "Leave your feelings at the door.",
+        "You think you’re safe? Think again.",
+        "This is where your ego dies.",
+        "Bring your A-game or stay quiet.",
+        "We roast, you suffer, it’s fun.",
+        "It's not personal, you’re just easy to roast.",
+        "Tears are a sign of a good joke.",
+        "Your weakness is our favorite target.",
+        "It’s not personal, it’s just brutal.",
+        "In this kitchen, we serve only flames.",
+        "Don’t cry, it’s only your dignity.",
+        "We’re here to break you (in a fun way?)"
+    ]
     
+    @State private var shownMessages: [String] = []
+    @State private var welcomeMessage = ""
+    @State private var currentText = ""
+    @State private var timer: Timer?
+
+    private func startTypingAnimation() {
+        var characterIndex = 0
+        timer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { timer in
+            if characterIndex < welcomeMessage.count {
+                let index = welcomeMessage.index(welcomeMessage.startIndex, offsetBy: characterIndex)
+                currentText += String(welcomeMessage[index])
+                characterIndex += 1
+            } else {
+                timer.invalidate() // Stop the timer when the whole message is typed out
+                
+                // After 2 seconds, reset the current text and display a new random message
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                    currentText = ""
+                    showNewMessage()
+                    startTypingAnimation() // Start typing the new message
+                }
+            }
+        }
+    }
     
+    private func showNewMessage() {
+        // If all messages have been shown, reset the shownMessages array
+        if shownMessages.count == welcomeMessages.count {
+            shownMessages.removeAll()
+        }
+        
+        // Pick a random message that has not been shown yet
+        var randomMessage: String
+        repeat {
+            randomMessage = welcomeMessages.randomElement() ?? ""
+        } while shownMessages.contains(randomMessage)
+        
+        // Add the message to the list of shown messages
+        shownMessages.append(randomMessage)
+        
+        // Set the new message
+        welcomeMessage = randomMessage
+    }
     
-    @Binding  var userPhoneNumber: String?
     var body: some View {
-       
         VStack{
-            
-            
             Spacer()
-                .frame(height:100)
+                .frame(height:200)
             
-            //TwoCents Text
-            
-            /*  First writes out the text, then overlays gradient over it (so that it scales with text instead of whole screen). Then, masks the text over it to cutout the words */
-          
-            
-//            Text("TwoCents")
-////                .frame(maxWidth: .infinity, alignment: .leading)
-//                .bold()
-//                .font(.system(size: 64))
-//                .overlay{
-//                    
-//                    LinearGradient(colors: [Color("TwoCentsGreen"),Color("TwoCentsCyan")], startPoint: .leading, endPoint: .trailing)
-//                        .ignoresSafeArea()
-//                        .hueRotation(.degrees(animateGradient ? 45 : 0))
-//                        .onAppear{
-//                            
-//                            //this line fixes problem of page animating around unintentionally?
-//                            DispatchQueue.main.async {
-//                                withAnimation(.easeInOut(duration: 3).repeatForever(autoreverses:true)){
-//                                    animateGradient.toggle()
-//                                }
-//                            }
-//                        }
-//                    
-//                        .mask(
-//                            Text("TwoCents")
-//                                .frame(maxWidth: .infinity, alignment: .leading)
-//                                .bold()
-//                                .font(.system(size: 64))
-//                        )
-//                }
-            
-            Image("TwoCentsLogo")
-                       .resizable() // Makes the image resizable
-                       .scaledToFit() // Maintains the aspect ratio
-                       .frame(width: 200, height: 200) // Sets the desired size
-                       
-                     
-            
-            
+            HStack {
+                Image("TwoCentsLogo")
+                    .resizable() // Makes the image resizable
+                    .scaledToFit() // Maintains the aspect ratio
+                    .frame(width: 100, height: 100) // Sets the desired size
+                
+                // Display typed-out welcome message
+                VStack(alignment: .leading) { // Use VStack for top alignment
+                    Text(currentText)
+                        .font(.title3)
+                        .fontWeight(.semibold)
+                        .foregroundColor(Color(UIColor.secondaryLabel))
+                        .multilineTextAlignment(.leading) // Aligns text to the leading edge
+                        .padding(.bottom, 5)
+                        .onAppear {
+                            showNewMessage()
+                            startTypingAnimation() // Start the typing animation
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading) // Keeps text aligned to leading edge
+                        .fixedSize(horizontal: false, vertical: true) // Prevents text from causing layout issues during wrapping
+                }
+                .frame(maxWidth: .infinity) // Align the VStack to the top
+                .frame(height:50, alignment: .top)
+            }
+
+
             Spacer()
-            
+        
             
             
             NavigationLink {
-                
-               
-//                SignInPhoneNumberView(showSignInView: $showSignInView, showCreateProfileView: $showCreateProfileView)
-//              SignInPhoneNumberView(userPhoneNumber: $userPhoneNumber )
                 SignInEmailView()
-                
             } label: {
-                Text("Sign In With Email")
+                Text("Sign In")
                     .font(.headline)
                     .foregroundColor(Color(UIColor.systemBackground))
                     .frame(height: 55)
@@ -87,68 +116,20 @@ struct AuthenticationView: View {
                     .cornerRadius(10)
             }
             
-//            NavigationLink {
-//                
-//                
-//                //                SignInEmailView(showSignInView: $showSignInView, showCreateProfileView: $showCreateProfileView)
-//                
-//                SignUpEmailView()
-//                
-//            } label: {
-//                Text("Sign Up With Email")
-//                    .font(.headline)
-//                    .foregroundColor(Color(UIColor.label))
-//                    .frame(height: 55)
-//                    .frame(maxWidth: .infinity)
-////                    .background(Color(UIColor.secondaryLabel))
-//                    .overlay(
-//                                  RoundedRectangle(cornerRadius: 10)
-//                                    .stroke(Color(UIColor.secondaryLabel), lineWidth: 2)
-//                              )
-//                    .cornerRadius(10)
-//            }
-//            
-            
-            NavigationLink{
-             
-
-//              SignUpEmailView(showSignInView: $showSignInView, showCreateProfileView: $showCreateProfileView)
+            NavigationLink {
                 SignUpEmailView()
-//                SignInPhoneNumberView(appModel.activeSheet: $appModel.activeSheet, userPhoneNumber: $userPhoneNumber )
-
             } label: {
                 Text("New? Ugh. Create a new account")
                     .font(.footnote)
                     .foregroundColor(Color(UIColor.secondaryLabel))
                     .frame(height: 30)
                     .frame(maxWidth: .infinity)
-
             }
             
-//            .padding()
             Spacer()
                 .frame(height:50)
         }
         .padding(.horizontal)
-     
-       
-//        .navigationTitle("Sign In")
-//        .background(Color("bgColor"))
-       
-        
-    }
-    
-}
-
-/*
-struct AuthenticationView_Previews: PreviewProvider {
-    static var previews: some View {
-        NavigationStack{
-//            AuthenticationView(showSignInView: .constant(false), showCreateProfileView: .constant(false))
-            AuthenticationView(appModel.activeSheet: .constant(nil), userPhoneNumber: .constant(""))
-        }
-       
+        .background(Color("bgColor"))
     }
 }
-
-*/

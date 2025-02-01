@@ -21,7 +21,14 @@ struct SignInEmailView: View {
         
         VStack {
             Spacer()
-                .frame(height:200)
+                .frame(height:100)
+            
+            Image("TwoCentsLogo")
+                .resizable() // Makes the image resizable
+                .scaledToFit() // Maintains the aspect ratio
+                .frame(width: 200, height: 200) // Sets the desired size
+            
+            
             
             Text(viewModel.errorMessage)
                 .foregroundColor(.red)
