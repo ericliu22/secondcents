@@ -63,21 +63,21 @@ final class MessageManager {
     
     
     
-    func getMessage(messageId: String, spaceId: String)  async throws -> Message {
-           try await messageDocument(messageId: messageId, spaceId: spaceId).getDocument(as: Message.self)
+    func getMessage(messageId: String, spaceId: String)  async throws -> OldMessage {
+           try await messageDocument(messageId: messageId, spaceId: spaceId).getDocument(as: OldMessage.self)
        }
     
-    func getAllMessages(spaceId: String, count: Int, lastDocument: DocumentSnapshot?) async throws -> (products: [Message], lastDocument: DocumentSnapshot?) {
+    func getAllMessages(spaceId: String, count: Int, lastDocument: DocumentSnapshot?) async throws -> (products: [OldMessage], lastDocument: DocumentSnapshot?) {
         let query: Query = getMessagesQuery(spaceId: spaceId, count: count)
 
         
         
         return try await query
             .startOptionally(afterDocument: lastDocument)
-            .getDocumentsWithSnapshot(as: Message.self)
+            .getDocumentsWithSnapshot(as: OldMessage.self)
     }
     
-    func getThreadMessages(spaceId: String, count: Int, lastDocument: DocumentSnapshot?, threadId: String) async throws -> (products: [Message], lastDocument: DocumentSnapshot?) {
+    func getThreadMessages(spaceId: String, count: Int, lastDocument: DocumentSnapshot?, threadId: String) async throws -> (products: [OldMessage], lastDocument: DocumentSnapshot?) {
         let query: Query = getThreadQuery(spaceId: spaceId, count: count, threadId: threadId)
 
 //        
@@ -88,7 +88,7 @@ final class MessageManager {
         
         return try await query
             .startOptionally(afterDocument: lastDocument)
-            .getDocumentsWithSnapshot(as: Message.self)
+            .getDocumentsWithSnapshot(as: OldMessage.self)
     }
     
     

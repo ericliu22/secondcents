@@ -11,7 +11,7 @@ struct ChatBubbleViewBuilder: View {
 
     //    let messageId: String
     let spaceId: String
-    @State var message: Message
+    @State var message: OldMessage
     @State private var name: String = ""
     @State private var user: DBUser?
     @State private var userColor: Color = .gray

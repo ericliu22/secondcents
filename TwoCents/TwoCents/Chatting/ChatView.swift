@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 import UIKit
 
-struct Message: Identifiable, Codable, Equatable {
+struct OldMessage: Identifiable, Codable, Equatable {
     var id: String
     var sendBy: String
     var text: String?

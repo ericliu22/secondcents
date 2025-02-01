@@ -36,7 +36,7 @@
 		85C6759B2AB8EE6100FACCB2 /* SuperlativeGame.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20EBD092AB8A36100EFDDE8 /* SuperlativeGame.swift */; };
 		85CA3B4D2C2746C400F4A889 /* CalendarWidgetSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85CA3B4C2C2746C400F4A889 /* CalendarWidgetSheetView.swift */; };
 		A200F21B2C0026B400BC1005 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = A200F21A2C0026B400BC1005 /* FirebaseMessaging */; };
-		A200F72C2D3EDA5B009D4E2A /* CanvasWidgetMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200F72B2D3EDA55009D4E2A /* CanvasWidgetMessage.swift */; };
+		A200F72C2D3EDA5B009D4E2A /* WidgetMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200F72B2D3EDA55009D4E2A /* WidgetMessage.swift */; };
 		A21244E32C1E234B005E8C8B /* NewTextWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A21244E22C1E234B005E8C8B /* NewTextWidgetView.swift */; };
 		A212A19A2D398D820057E89D /* NewChatWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A212A1992D398D7D0057E89D /* NewChatWidgetView.swift */; };
 		A212A19C2D398E4F0057E89D /* ChatPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A212A19B2D398E4A0057E89D /* ChatPage.swift */; };
@@ -78,7 +78,7 @@
 		A2E7AAAE2D48231800C1DC1D /* InAppNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E7AAAD2D48231200C1DC1D /* InAppNotification.swift */; };
 		A2F504262D384C39002F88FD /* ChatWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F504242D384C31002F88FD /* ChatWidget.swift */; };
 		A2F504282D384C69002F88FD /* ChatWidgetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F504272D384C61002F88FD /* ChatWidgetViewModel.swift */; };
-		A2F5042A2D384CD9002F88FD /* WidgetMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F504292D384CD3002F88FD /* WidgetMessage.swift */; };
+		A2F5042A2D384CD9002F88FD /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F504292D384CD3002F88FD /* Message.swift */; };
 		A2F504312D38611A002F88FD /* TextMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F504302D386115002F88FD /* TextMessage.swift */; };
 		A2F5631E2AB4E6240026D8C9 /* CanvasPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F563182AB4E6240026D8C9 /* CanvasPage.swift */; };
 		AB01CB5F2B855E83004BEB5B /* TextWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB01CB5E2B855E83004BEB5B /* TextWidget.swift */; };
@@ -224,7 +224,7 @@
 		85DDD0CC2AB4E79A008A9C56 /* VoteGameReal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VoteGameReal.swift; sourceTree = "<group>"; };
 		85FDD15B2C308F430038944B /* EventView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventView.swift; sourceTree = "<group>"; };
 		A2003C942AABA08300B1E551 /* Line.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Line.swift; sourceTree = "<group>"; };
-		A200F72B2D3EDA55009D4E2A /* CanvasWidgetMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasWidgetMessage.swift; sourceTree = "<group>"; };
+		A200F72B2D3EDA55009D4E2A /* WidgetMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetMessage.swift; sourceTree = "<group>"; };
 		A20EBD062AB8A36100EFDDE8 /* HotSeat.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HotSeat.swift; sourceTree = "<group>"; };
 		A20EBD072AB8A36100EFDDE8 /* VoteGameReal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VoteGameReal.swift; sourceTree = "<group>"; };
 		A20EBD082AB8A36100EFDDE8 /* HotSeatManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HotSeatManager.swift; sourceTree = "<group>"; };
@@ -274,7 +274,7 @@
 		A2E7AAAD2D48231200C1DC1D /* InAppNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InAppNotification.swift; sourceTree = "<group>"; };
 		A2F504242D384C31002F88FD /* ChatWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatWidget.swift; sourceTree = "<group>"; };
 		A2F504272D384C61002F88FD /* ChatWidgetViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatWidgetViewModel.swift; sourceTree = "<group>"; };
-		A2F504292D384CD3002F88FD /* WidgetMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetMessage.swift; sourceTree = "<group>"; };
+		A2F504292D384CD3002F88FD /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		A2F504302D386115002F88FD /* TextMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextMessage.swift; sourceTree = "<group>"; };
 		A2F563182AB4E6240026D8C9 /* CanvasPage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CanvasPage.swift; sourceTree = "<group>"; };
 		AB01CB5E2B855E83004BEB5B /* TextWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextWidget.swift; sourceTree = "<group>"; };
@@ -640,8 +640,8 @@
 		A2F504322D386133002F88FD /* Messages */ = {
 			isa = PBXGroup;
 			children = (
-				A200F72B2D3EDA55009D4E2A /* CanvasWidgetMessage.swift */,
-				A2F504292D384CD3002F88FD /* WidgetMessage.swift */,
+				A200F72B2D3EDA55009D4E2A /* WidgetMessage.swift */,
+				A2F504292D384CD3002F88FD /* Message.swift */,
 				A2F504302D386115002F88FD /* TextMessage.swift */,
 			);
 			path = Messages;
@@ -1099,7 +1099,7 @@
 				A24087272D013265000E36DC /* AddFriendsFromContactsViewModel.swift in Sources */,
 				ABCDA06E2C39B04A002C23E1 /* NewTodoViewModel.swift in Sources */,
 				850958A72AB8F41D00018A32 /* HotSeat.swift in Sources */,
-				A2F5042A2D384CD9002F88FD /* WidgetMessage.swift in Sources */,
+				A2F5042A2D384CD9002F88FD /* Message.swift in Sources */,
 				A2DCA8E42D2628F6008551EE /* DeepLink.swift in Sources */,
 				ABC461E52BE28ECF00AE47FF /* TestView.swift in Sources */,
 				85C6759B2AB8EE6100FACCB2 /* SuperlativeGame.swift in Sources */,
@@ -1145,7 +1145,7 @@
 				AB2E56CD2AE9C59D0096A58C /* VoteGameView.swift in Sources */,
 				85629AA42C6EB031007F5D05 /* NewCalendarView.swift in Sources */,
 				A279471B2C7954C800EFC28A /* NotificationWidgetWrapper.swift in Sources */,
-				A200F72C2D3EDA5B009D4E2A /* CanvasWidgetMessage.swift in Sources */,
+				A200F72C2D3EDA5B009D4E2A /* WidgetMessage.swift in Sources */,
 				A22F84EE2C2912A20095A087 /* ZoomableScrollView.swift in Sources */,
 				A2F5631E2AB4E6240026D8C9 /* CanvasPage.swift in Sources */,
 				A21E87FD2C62A1D400B48BCA /* AppModel.swift in Sources */,

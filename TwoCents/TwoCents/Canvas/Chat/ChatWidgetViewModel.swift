@@ -19,7 +19,7 @@ class ChatWidgetViewModel {
     private let chatRef: DocumentReference
     private let FETCH_LIMIT: Int = 20
 
-    var messages: [any WidgetMessage] = []
+    var messages: [any Message] = []
 
     init(spaceId: String, chatId: String) {
         self.spaceId = spaceId
@@ -56,7 +56,7 @@ class ChatWidgetViewModel {
                 guard let snapshot = querySnapshot else { return }
                 // Convert snapshot documents to Message objects
                 self.messages = snapshot.documents.compactMap {
-                    doc -> (any WidgetMessage)? in
+                    doc -> (any Message)? in
 
                     guard
                         let messageTypeString = doc.data()["messageType"]
@@ -115,7 +115,7 @@ class ChatWidgetViewModel {
                 }
                 let empty = EmptyMessage()
 
-                let messages: [any WidgetMessage] = snapshot.documents
+                let messages: [any Message] = snapshot.documents
                     .compactMap { doc in
 
                         guard
@@ -175,7 +175,7 @@ class ChatWidgetViewModel {
 
     func sendMessage(userId: String) {
 
-        var finalMessage: any WidgetMessage
+        var finalMessage: any Message
         switch messageType {
         case .text:
             finalMessage = TextMessage(
