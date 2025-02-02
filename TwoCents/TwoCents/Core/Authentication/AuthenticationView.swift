@@ -19,7 +19,7 @@ struct AuthenticationView: View {
         "It's not personal,\nyou’re just easy to roast.",
         "Tears are a sign\nof a good joke.",
         "Your weakness is our\nfavorite target.",
-        "It’s not personal,\n it’s just brutal.",
+        "It’s not personal,\nit’s just brutal.",
         "In this kitchen,\nwe serve only flames.",
         "Don’t cry,\nit’s only your dignity.",
         "You look delicate."
