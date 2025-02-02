@@ -9,7 +9,7 @@ import Foundation
 import FirebaseFirestore
 import SwiftUI
 
-struct DBUser: Identifiable, Codable, Equatable {
+struct DBUser: Identifiable, Codable, Equatable, Requestable {
     var id: String { userId }
     let userId: String
    
@@ -84,6 +84,10 @@ struct DBUser: Identifiable, Codable, Equatable {
     }
     
     
+}
+
+extension DBUser {
+    var isSpaceRequest: Bool { false }
 }
 
 final class UserManager{
@@ -233,9 +237,27 @@ final class UserManager{
         
     }
     
+    func getSpaceRequests(userId: String) async throws -> [DBSpace] {
+        
+        let snapshot: QuerySnapshot
+        
+        snapshot = try await userCollection.whereField("spaceRequests", arrayContains: userId).getDocuments()
+        
+        var requests: [DBSpace] = []
+        
+        for document in snapshot.documents{
+            
+            
+            let request = try document.data(as: DBSpace.self)
+            
+            
+            requests.append(request)
+        }
+        
+        return requests
+    }
     
-    
-    func getAllRequests(userId: String) async throws -> [DBUser]{
+    func getFriendRequests(userId: String) async throws -> [DBUser]{
         
         let snapshot: QuerySnapshot
       

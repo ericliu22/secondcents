@@ -9,13 +9,13 @@ import SwiftUI
 
 struct ProfileView: View {
     @StateObject private var viewModel = ProfileViewModel()
-    @State var targetUserColor: Color?
+    var targetUserColor: Color?
     @Environment(AppModel.self) var appModel
     //    @Binding var showSignInView: Bool
     @State var target: Color?
     //    @Binding var showCreateProfileView: Bool
     
-    @State var targetUserId: String
+    let targetUserId: String
     
     
     private let columns = [
@@ -291,7 +291,7 @@ struct ProfileView: View {
                             NavigationLink {
                                 //                                FriendRequestsView(showSignInView: $showSignInView, appModel.loadedColor: $appModel.loadedColor, showCreateProfileView: $showCreateProfileView, targetUserId: viewModel.user?.userId ?? "")
                                 
-                                FriendRequestsView(targetUserId: viewModel.user?.userId ?? "")
+                                RequestsView(targetUserId: viewModel.user?.userId ?? "")
                             } label: {
                                 
                                 VStack{
