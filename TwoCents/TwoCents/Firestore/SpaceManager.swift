@@ -9,7 +9,7 @@ import FirebaseFirestore
 import Foundation
 import SwiftUI
 
-struct DBSpace: Identifiable, Codable, Hashable, Requestable {
+struct DBSpace: Identifiable, Codable, Hashable {
     var id: String { spaceId }
     let spaceId: String
     let dateCreated: Date
@@ -51,10 +51,6 @@ struct DBSpace: Identifiable, Codable, Hashable, Requestable {
         }
     }
 
-}
-
-extension DBSpace {
-    var isSpaceRequest: Bool { true }
 }
 
 let spaceCollection = Firestore.firestore().collection("spaces")

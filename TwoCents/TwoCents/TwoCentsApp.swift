@@ -412,7 +412,6 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         let userInfo = notification.request.content.userInfo
         if UIApplication.shared.applicationState == .active {
             
-            print("Received shit r")
             guard let user = appModel?.user else {
                 completionHandler([])
                 return

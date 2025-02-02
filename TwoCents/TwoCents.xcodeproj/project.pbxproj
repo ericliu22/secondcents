@@ -142,8 +142,8 @@
 		AB90EDBD2B55BB59002AD855 /* NewWidgetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB90EDBC2B55BB59002AD855 /* NewWidgetViewModel.swift */; };
 		AB9455232A9468130055B44A /* ColorPickerWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB9455222A9468130055B44A /* ColorPickerWidget.swift */; };
 		AB97981B2C78D2C1003CE9D4 /* Logo.png in Resources */ = {isa = PBXBuildFile; fileRef = AB97981A2C78D2C1003CE9D4 /* Logo.png */; };
-		AB9909AB2ABE3BF2004B3021 /* RequestsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB9909AA2ABE3BF2004B3021 /* RequestsView.swift */; };
-		AB9909AD2ABE3C1B004B3021 /* RequestsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB9909AC2ABE3C1B004B3021 /* RequestsViewModel.swift */; };
+		AB9909AB2ABE3BF2004B3021 /* FriendRequestsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB9909AA2ABE3BF2004B3021 /* FriendRequestsView.swift */; };
+		AB9909AD2ABE3C1B004B3021 /* FriendRequestsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB9909AC2ABE3C1B004B3021 /* FriendRequestsViewModel.swift */; };
 		AB9BF6D52C06ECDB00C72883 /* PollWidgetSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB9BF6D42C06ECDB00C72883 /* PollWidgetSheetView.swift */; };
 		AB9C053E2C3CD3B500C21DCE /* TodoWidgetSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB9C053D2C3CD3B500C21DCE /* TodoWidgetSheetView.swift */; };
 		AB9C7F682BD83B1E004FC549 /* EmojiCountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB9C7F672BD83B1E004FC549 /* EmojiCountView.swift */; };
@@ -338,8 +338,8 @@
 		AB90EDBC2B55BB59002AD855 /* NewWidgetViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewWidgetViewModel.swift; sourceTree = "<group>"; };
 		AB9455222A9468130055B44A /* ColorPickerWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorPickerWidget.swift; sourceTree = "<group>"; };
 		AB97981A2C78D2C1003CE9D4 /* Logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Logo.png; sourceTree = "<group>"; };
-		AB9909AA2ABE3BF2004B3021 /* RequestsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestsView.swift; sourceTree = "<group>"; };
-		AB9909AC2ABE3C1B004B3021 /* RequestsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestsViewModel.swift; sourceTree = "<group>"; };
+		AB9909AA2ABE3BF2004B3021 /* FriendRequestsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendRequestsView.swift; sourceTree = "<group>"; };
+		AB9909AC2ABE3C1B004B3021 /* FriendRequestsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendRequestsViewModel.swift; sourceTree = "<group>"; };
 		AB9BF6D42C06ECDB00C72883 /* PollWidgetSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollWidgetSheetView.swift; sourceTree = "<group>"; };
 		AB9C053D2C3CD3B500C21DCE /* TodoWidgetSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoWidgetSheetView.swift; sourceTree = "<group>"; };
 		AB9C7F672BD83B1E004FC549 /* EmojiCountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiCountView.swift; sourceTree = "<group>"; };
@@ -832,8 +832,8 @@
 		AB9909A52ABE3B78004B3021 /* FriendRequests */ = {
 			isa = PBXGroup;
 			children = (
-				AB9909AA2ABE3BF2004B3021 /* RequestsView.swift */,
-				AB9909AC2ABE3C1B004B3021 /* RequestsViewModel.swift */,
+				AB9909AA2ABE3BF2004B3021 /* FriendRequestsView.swift */,
+				AB9909AC2ABE3C1B004B3021 /* FriendRequestsViewModel.swift */,
 			);
 			path = FriendRequests;
 			sourceTree = "<group>";
@@ -1129,7 +1129,7 @@
 				ABD01A9F2C39CE3900C9F288 /* MentionUserViewModel.swift in Sources */,
 				A21244E32C1E234B005E8C8B /* NewTextWidgetView.swift in Sources */,
 				AB7F3AEE2C164CF000690EF1 /* NewTextWidgetViewModel.swift in Sources */,
-				AB9909AD2ABE3C1B004B3021 /* RequestsViewModel.swift in Sources */,
+				AB9909AD2ABE3C1B004B3021 /* FriendRequestsViewModel.swift in Sources */,
 				AB9BF6D52C06ECDB00C72883 /* PollWidgetSheetView.swift in Sources */,
 				ABCA39DA2A7A0881009447C3 /* SettingsView.swift in Sources */,
 				A246A42E2B43A1B700F0F6E6 /* NewWidgetView.swift in Sources */,
@@ -1242,7 +1242,7 @@
 				A2F504262D384C39002F88FD /* ChatWidget.swift in Sources */,
 				AB0D07662AE6FB95003AC8A4 /* SpacesView.swift in Sources */,
 				AB90021A2A8B85BD00F970B8 /* UploadExample.swift in Sources */,
-				AB9909AB2ABE3BF2004B3021 /* RequestsView.swift in Sources */,
+				AB9909AB2ABE3BF2004B3021 /* FriendRequestsView.swift in Sources */,
 				85741EAA2AD03B2C0085423E /* SnapCarouselPractice.swift in Sources */,
 				AB9455232A9468130055B44A /* ColorPickerWidget.swift in Sources */,
 				A2AC0C0C2D319E3100B6BF15 /* QRCodeView.swift in Sources */,
