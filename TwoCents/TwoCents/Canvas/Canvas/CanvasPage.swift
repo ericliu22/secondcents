@@ -65,13 +65,10 @@ struct CanvasPage: View, CanvasViewModelDelegate {
 
         .clipped()  // Ensure the content does not overflow
         .frame(width: FRAME_SIZE, height: FRAME_SIZE)
-
     }
 
     func canvasView() -> some View {
         ZStack {
-
-            //
             Color("bgColor")
                 .clipped()
                 .frame(width: FRAME_SIZE, height: FRAME_SIZE)
@@ -79,11 +76,12 @@ struct CanvasPage: View, CanvasViewModelDelegate {
             Background()
             GridView()
             NewWidgetOverlay()
-            //            DrawingCanvas(spaceId: spaceId)
-            //                .allowsHitTesting(viewModel.isDrawing)
-            //                .clipped() // Ensure the content does not overflow
-            //                .animation(.spring()) // Optional: Add some animation
-            //                .frame(width: FRAME_SIZE, height: FRAME_SIZE)
+            // Uncomment the following if you want a drawing canvas as well:
+            // DrawingCanvas(spaceId: spaceId)
+            //    .allowsHitTesting(viewModel.isDrawing)
+            //    .clipped() // Ensure the content does not overflow
+            //    .animation(.spring()) // Optional: Add some animation
+            //    .frame(width: FRAME_SIZE, height: FRAME_SIZE)
         }
         .dropDestination(for: CanvasWidget.self) { receivedWidgets, location in
             viewModel.canvasMode = .normal
@@ -103,7 +101,6 @@ struct CanvasPage: View, CanvasViewModelDelegate {
 
             return true
         }
-
     }
 
     @ViewBuilder
@@ -151,23 +148,22 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                     })
             }
         }
-        //pencilkit
-        //        ToolbarItem(placement: .topBarTrailing) {
-        //            Button(action: {
-        //                viewModel.isDrawing.toggle()
-        //            }, label: {
-        //                viewModel.isDrawing
-        //                ? Image(systemName: "pencil.tip.crop.circle.fill")
-        //                : Image(systemName: "pencil.tip.crop.circle")
-        //            })
-        //        }
+        // Uncomment if you want pencilkit toggle
+        // ToolbarItem(placement: .topBarTrailing) {
+        //     Button(action: {
+        //         viewModel.isDrawing.toggle()
+        //     }, label: {
+        //         viewModel.isDrawing
+        //         ? Image(systemName: "pencil.tip.crop.circle.fill")
+        //         : Image(systemName: "pencil.tip.crop.circle")
+        //     })
+        // }
         //add widget
         if viewModel.canvasMode != .placement {
             ToolbarItem(placement: .topBarTrailing) {
                 Button(
                     action: {
                         viewModel.activeSheet = .newWidgetView
-
                     },
                     label: {
                         Image(systemName: "plus.circle")
@@ -176,9 +172,7 @@ struct CanvasPage: View, CanvasViewModelDelegate {
 
             //SPACE SETTINGS
             ToolbarItem(placement: .topBarTrailing) {
-
                 NavigationLink {
-
                     SpaceSettingsView(spaceId: spaceId)
                         .environment(viewModel)
                         .onAppear {
@@ -190,7 +184,6 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                         }
                 } label: {
                     Image(systemName: "ellipsis")
-
                 }
             }
         } else {
@@ -207,7 +200,6 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                 Button(
                     action: {
                         viewModel.canvasMode = .normal
-
                         guard let newWidget = viewModel.newWidget else {
                             return
                         }
@@ -222,51 +214,42 @@ struct CanvasPage: View, CanvasViewModelDelegate {
         }
     }
 
+    // MARK: - GridView with fixed draggable behavior
     func GridView() -> some View {
         ForEach(viewModel.canvasWidgets, id: \.id) { widget in
-            //main widget
+            // Main widget view
             ZStack {
                 MediaView(widget: widget, spaceId: spaceId)
                     .environment(viewModel)
-                    .contextMenu(
-                        ContextMenu(menuItems: {
-
-                            EmojiReactionContextView(
-                                spaceId: spaceId, widget: widget,
-                                refreshId: $viewModel.refreshId)
-                            widgetButton(widget: widget)
-                            // Reply button
-                            //@TODO: This will not work for the time being
-                            Button(
-                                action: {
-                                    viewModel.activeSheet = nil
-                                    viewModel.selectedDetent = .large
-                                    viewModel.replyWidget = widget
-                                },
-                                label: {
-                                    Label(
-                                        "Reply",
-                                        systemImage: "arrowshape.turn.up.left")
-                                })
-                            // Delete button
-
-                            Button(role: .destructive) {
-                                viewModel.deleteWidget(widget: widget)
-                            } label: {
-
-                                Label("Delete", systemImage: "trash")
-
-                            }
-                            ShareLink(item: viewModel.generateWidgetLink(widget: widget)) {
-                                Label("Share widget", systemImage: "square.and.arrow.up")
-                            }
-                        })
-                    )
+                    .contextMenu {
+                        EmojiReactionContextView(
+                            spaceId: spaceId, widget: widget,
+                            refreshId: $viewModel.refreshId)
+                        widgetButton(widget: widget)
+                        // Reply button
+                        Button(
+                            action: {
+                                viewModel.activeSheet = nil
+                                viewModel.selectedDetent = .large
+                                viewModel.replyWidget = widget
+                            },
+                            label: {
+                                Label(
+                                    "Reply",
+                                    systemImage: "arrowshape.turn.up.left")
+                            })
+                        // Delete button
+                        Button(role: .destructive) {
+                            viewModel.deleteWidget(widget: widget)
+                        } label: {
+                            Label("Delete", systemImage: "trash")
+                        }
+                        ShareLink(item: viewModel.generateWidgetLink(widget: widget)) {
+                            Label("Share widget", systemImage: "square.and.arrow.up")
+                        }
+                    }
                     .cornerRadius(CORNER_RADIUS)
-                    .frame(
-                        width: widget.width,
-                        height: widget.height
-                    )
+                    .frame(width: widget.width, height: widget.height)
                     .position(
                         x: widget.x ?? FRAME_SIZE / 2,
                         y: widget.y ?? FRAME_SIZE / 2
@@ -288,33 +271,26 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                         }
                     }
                     .draggable(widget) {
+                        // Drag preview – note the removed .onAppear and disabled animations via transaction
                         MediaView(widget: widget, spaceId: spaceId)
-                            .contentShape(
-                                .dragPreview,
-                                RoundedRectangle(
-                                    cornerRadius: CORNER_RADIUS,
-                                    style: .continuous)
-                            )
-                            .frame(
-                                width: widget.width,
-                                height: widget.height
-                            )
+                            .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
+                            .frame(width: widget.width, height: widget.height)
                             .environment(viewModel)
                             .environment(appModel)
-                            .onAppear {
-                                viewModel.canvasMode = .dragging
+                            .transaction { transaction in
+                                transaction.animation = nil
                             }
                     }
-                    .animation(.spring(), value: widget.x)  // Add animation for x position
-                    .animation(.spring(), value: widget.y)
-                if viewModel.unreadWidgets.contains(where: { unread in
-                    return unread == widget.id.uuidString
-                }) {
+                    // Disable position animations while dragging to avoid jittery behavior
+                    .animation(viewModel.canvasMode == .dragging ? nil : .spring(), value: widget.x)
+                    .animation(viewModel.canvasMode == .dragging ? nil : .spring(), value: widget.y)
+
+                // Optional unread indicator overlay
+                if viewModel.unreadWidgets.contains(where: { $0 == widget.id.uuidString }) {
                     NotificationWidgetWrapper(widgetUserId: widget.userId)
                         .position(
                             x: widget.x ?? FRAME_SIZE / 2,
                             y: widget.y ?? FRAME_SIZE / 2)
-
                 }
             }
         }
@@ -339,7 +315,6 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                     viewModel.activeSheet = .todo
                 },
                 label: {
-
                     Label("Open List", systemImage: "checklist")
                 })
         case .map:
@@ -350,7 +325,6 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                     }
                 },
                 label: {
-
                     Label("Open Map", systemImage: "mappin.and.ellipse")
                 })
         case .link:
@@ -361,7 +335,6 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                     }
                 },
                 label: {
-
                     Label("Open Link", systemImage: "link")
                 })
         case .image:
@@ -371,7 +344,6 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                     viewModel.activeSheet = .image
                 },
                 label: {
-
                     Label("Open Image", systemImage: "photo")
                 })
         case .video:
@@ -381,7 +353,6 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                     viewModel.activeSheet = .video
                 },
                 label: {
-
                     Label("Open Video", systemImage: "video")
                 })
         case .calendar:
@@ -393,7 +364,6 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                 label: {
                     Label("Select Availability", systemImage: "calendar")
                 })
-        //boutta fuck up this section right here lmfao
         case .text:
             if appModel.user?.userId == widget.userId {
                 Button(
@@ -413,7 +383,6 @@ struct CanvasPage: View, CanvasViewModelDelegate {
     @Environment(\.undoManager) private var undoManager
     var body: some View {
         ZStack {
-
             ZoomableScrollView {
                 canvasView()
                     .frame(width: FRAME_SIZE * 1.5, height: FRAME_SIZE * 1.5)
@@ -428,34 +397,28 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                             ? "" : viewModel.space?.name ?? ""
                     )
                     .background(Color(UIColor.secondarySystemBackground))
-                    //IMPORTANT
-                    //onAppear and task must must must be here or else ZoomableScrollView is aed
-                    //Don't know the reason why -Eric
-                    .onAppear(perform: {
+                    // IMPORTANT: onAppear and task must be here or else ZoomableScrollView misbehaves.
+                    .onAppear {
                         viewModel.activeSheet = nil
                         viewModel.delegate = self
-
-                    })
+                    }
                     .task {
                         do {
                             try await viewModel.loadCurrentSpace()
                             viewModel.attachWidgetListener()
                             await viewModel.fetchUsers(
                                 currentUserId: appModel.user!.userId)
-                            //Scroll to has to happen here because widgets are not yet initialized until we attach the listener
+                            // Scroll to the specified widget after listener attachment.
                             if let id = widgetId {
                                 viewModel.scrollTo(widgetId: id)
                             }
-
                         } catch {
-                            //EXIT IF SPACE DOES NOT EXIST
+                            // EXIT IF SPACE DOES NOT EXIST
                             presentationMode.wrappedValue.dismiss()
                         }
-
                         viewModel.attachUnreadListener(
                             userId: appModel.user!.userId)
                     }
-
             }
             .ignoresSafeArea()
 
@@ -463,12 +426,11 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                 ForEach(viewModel.unreadWidgets, id: \.self) { widgetId in
                     OffScreenIndicator(widgetId: widgetId)
                         .environment(viewModel)
-                        // Make sure it takes the full size to compute positions
+                        // Ensure full-size frame for proper positioning
                         .frame(width: geo.size.width, height: geo.size.height)
                 }
             }
             .ignoresSafeArea()
-
         }
         .ignoresSafeArea()
         .sheet(
@@ -477,12 +439,10 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                 viewModel.sheetDismiss()
             },
             content: { item in
-
                 switch item {
                 case .newWidgetView:
                     NewWidgetView(spaceId: spaceId)
                         .environment(viewModel)
-                        //                            .presentationBackground(Color(UIColor.systemBackground))
                         .presentationBackground(.thickMaterial)
                 case .poll:
                     PollWidgetSheetView(
@@ -511,9 +471,8 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                     .presentationBackground(.thickMaterial)
                 case .calendar:
                     CalendarWidgetSheetView(
-                        widgetId: waitForVariable {
-                            viewModel.activeWidget?.id.uuidString
-                        }, spaceId: spaceId
+                        widgetId: waitForVariable { viewModel.activeWidget?.id.uuidString },
+                        spaceId: spaceId
                     )
                     .presentationBackground(.thickMaterial)
                     .environment(viewModel)
@@ -525,7 +484,6 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                     .presentationBackground(.thickMaterial)
                     .environment(viewModel)
                 }
-
             }
         )
         .onDisappear {
@@ -533,7 +491,6 @@ struct CanvasPage: View, CanvasViewModelDelegate {
         }
         .background(Color(UIColor.secondarySystemBackground))
         .environment(viewModel)
-
     }
 }
 
