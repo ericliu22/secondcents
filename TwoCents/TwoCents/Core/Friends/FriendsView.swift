@@ -51,7 +51,8 @@ struct FriendsView: View {
                             
                             //                        ProfileView(showSignInView: $showSignInView, appModel.loadedColor: $appModel.loadedColor,targetUserColor: targetUserColor, showCreateProfileView: $showCreateProfileView, targetUserId: userTile.userId)
                             
-                            ProfileView(targetUserColor: targetUserColor, targetUserId: userTile.userId)
+                            ProfileView(targetUserId: userTile.userId,
+                            targetUserColor: targetUserColor)
                         } label: {
                             HStack(spacing: 20){
                                 

@@ -12,7 +12,7 @@ struct FrontPageView: View {
     
     let CalendarTestWidget = CanvasWidget(width: .infinity, height:  .infinity, borderColor: .red, userId: "jisookim", media: .text, widgetName: "Text", widgetDescription: "A bar is a bar", textString: "Fruits can't even see so how my Apple Watch")
    
-    @State var friendRequests: Int = 0
+    @State var requests: Int = 0
     @State var selectedTab: Int = 0
     @Environment(AppModel.self) var appModel
     
@@ -44,7 +44,7 @@ struct FrontPageView: View {
             .tabItem {
                 Label("Profile", systemImage: "person")
             }
-            .badge(friendRequests)
+            .badge(requests)
             .tag(2)
             
             NavigationStack {
@@ -71,8 +71,12 @@ struct FrontPageView: View {
                     print("incoming friend requests failed")
                     return
                 }
-                friendRequests = incomingFriendRequests.count
-                print("FRIEND REQUESTS \(friendRequests)")
+                guard let spaceRequests = snapshot.get("spaceRequests") as? Array<String> else {
+                    print("incoming friend requests failed")
+                    return
+                }
+                requests = incomingFriendRequests.count + spaceRequests.count
+                print("REQUESTS \(requests)")
             })
 
         }

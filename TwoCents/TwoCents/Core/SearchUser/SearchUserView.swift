@@ -21,10 +21,10 @@ struct SearchUserView: View {
             LazyVStack(alignment: .leading) {
                 ForEach(filteredSearch) { userTile in
                 
-                    let targetUserColor: Color = viewModel.getUserColor(userColor: userTile.userColor!)
+                    let targetUserColor: Color = viewModel.getUserColor(userColor: userTile.userColor ?? "gray")
 
                     NavigationLink {
-                        ProfileView(targetUserColor: targetUserColor, targetUserId: userTile.userId)
+                        ProfileView( targetUserId: userTile.userId, targetUserColor: targetUserColor)
                     } label: {
                         HStack(spacing: 20) {
                             if let urlString = userTile.profileImageUrl,

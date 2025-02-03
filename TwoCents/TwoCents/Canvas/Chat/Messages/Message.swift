@@ -11,8 +11,8 @@ protocol MessageView: View {
     var message: any Message { get }
 }
 
-@ViewBuilder
-func makeMessage(message: any Message) -> some View{
+@MainActor @ViewBuilder
+func makeMessage(message: any Message) -> some View {
     switch message.messageType {
     case .text:
         if let textMsg = message as? TextMessage {

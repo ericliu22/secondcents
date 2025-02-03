@@ -44,6 +44,9 @@
 		A21E87FD2C62A1D400B48BCA /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A21E87FC2C62A1D400B48BCA /* AppModel.swift */; };
 		A21FDDAB2CB331B700A3EB7E /* WidgetSizeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A21FDDAA2CB3319D00A3EB7E /* WidgetSizeView.swift */; };
 		A22F84EE2C2912A20095A087 /* ZoomableScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A22F84ED2C2912A20095A087 /* ZoomableScrollView.swift */; };
+		A231E01F2D5091C9001F6EE6 /* RequestsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A231E01E2D5091C9001F6EE6 /* RequestsView.swift */; };
+		A231E0212D5091E2001F6EE6 /* RequestsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A231E0202D5091DE001F6EE6 /* RequestsViewModel.swift */; };
+		A232CF3D2D4EC87A009997F0 /* ChatSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A232CF3C2D4EC872009997F0 /* ChatSelectionView.swift */; };
 		A24087272D013265000E36DC /* AddFriendsFromContactsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24087262D01325E000E36DC /* AddFriendsFromContactsViewModel.swift */; };
 		A240F67B2C6965F100618903 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = A240F67A2C6965F100618903 /* Utilities.swift */; };
 		A246A42E2B43A1B700F0F6E6 /* NewWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A246A42D2B43A1B700F0F6E6 /* NewWidgetView.swift */; };
@@ -142,8 +145,6 @@
 		AB90EDBD2B55BB59002AD855 /* NewWidgetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB90EDBC2B55BB59002AD855 /* NewWidgetViewModel.swift */; };
 		AB9455232A9468130055B44A /* ColorPickerWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB9455222A9468130055B44A /* ColorPickerWidget.swift */; };
 		AB97981B2C78D2C1003CE9D4 /* Logo.png in Resources */ = {isa = PBXBuildFile; fileRef = AB97981A2C78D2C1003CE9D4 /* Logo.png */; };
-		AB9909AB2ABE3BF2004B3021 /* FriendRequestsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB9909AA2ABE3BF2004B3021 /* FriendRequestsView.swift */; };
-		AB9909AD2ABE3C1B004B3021 /* FriendRequestsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB9909AC2ABE3C1B004B3021 /* FriendRequestsViewModel.swift */; };
 		AB9BF6D52C06ECDB00C72883 /* PollWidgetSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB9BF6D42C06ECDB00C72883 /* PollWidgetSheetView.swift */; };
 		AB9C053E2C3CD3B500C21DCE /* TodoWidgetSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB9C053D2C3CD3B500C21DCE /* TodoWidgetSheetView.swift */; };
 		AB9C7F682BD83B1E004FC549 /* EmojiCountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB9C7F672BD83B1E004FC549 /* EmojiCountView.swift */; };
@@ -236,6 +237,9 @@
 		A21E87FC2C62A1D400B48BCA /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
 		A21FDDAA2CB3319D00A3EB7E /* WidgetSizeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetSizeView.swift; sourceTree = "<group>"; };
 		A22F84ED2C2912A20095A087 /* ZoomableScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomableScrollView.swift; sourceTree = "<group>"; };
+		A231E01E2D5091C9001F6EE6 /* RequestsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestsView.swift; sourceTree = "<group>"; };
+		A231E0202D5091DE001F6EE6 /* RequestsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestsViewModel.swift; sourceTree = "<group>"; };
+		A232CF3C2D4EC872009997F0 /* ChatSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatSelectionView.swift; sourceTree = "<group>"; };
 		A2354EF52AA0D6CB0092BF1C /* ImageWidget.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageWidget.swift; sourceTree = "<group>"; };
 		A2354EF72AA0D6CB0092BF1C /* CanvasWidget.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CanvasWidget.swift; sourceTree = "<group>"; };
 		A24087262D01325E000E36DC /* AddFriendsFromContactsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFriendsFromContactsViewModel.swift; sourceTree = "<group>"; };
@@ -338,8 +342,6 @@
 		AB90EDBC2B55BB59002AD855 /* NewWidgetViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewWidgetViewModel.swift; sourceTree = "<group>"; };
 		AB9455222A9468130055B44A /* ColorPickerWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorPickerWidget.swift; sourceTree = "<group>"; };
 		AB97981A2C78D2C1003CE9D4 /* Logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Logo.png; sourceTree = "<group>"; };
-		AB9909AA2ABE3BF2004B3021 /* FriendRequestsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendRequestsView.swift; sourceTree = "<group>"; };
-		AB9909AC2ABE3C1B004B3021 /* FriendRequestsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendRequestsViewModel.swift; sourceTree = "<group>"; };
 		AB9BF6D42C06ECDB00C72883 /* PollWidgetSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollWidgetSheetView.swift; sourceTree = "<group>"; };
 		AB9C053D2C3CD3B500C21DCE /* TodoWidgetSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoWidgetSheetView.swift; sourceTree = "<group>"; };
 		AB9C7F672BD83B1E004FC549 /* EmojiCountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiCountView.swift; sourceTree = "<group>"; };
@@ -633,6 +635,7 @@
 				A212A19D2D399B160057E89D /* NewChatWidgetViewModel.swift */,
 				A2F504242D384C31002F88FD /* ChatWidget.swift */,
 				A212A19B2D398E4A0057E89D /* ChatPage.swift */,
+				A232CF3C2D4EC872009997F0 /* ChatSelectionView.swift */,
 			);
 			path = Chat;
 			sourceTree = "<group>";
@@ -770,7 +773,7 @@
 		AB74383F2AAA339A001B4988 /* SearchUser */ = {
 			isa = PBXGroup;
 			children = (
-				AB9909A52ABE3B78004B3021 /* FriendRequests */,
+				AB9909A52ABE3B78004B3021 /* Requests */,
 				AB7438402AAA349C001B4988 /* SearchUserView.swift */,
 				AB7438422AAA34AD001B4988 /* SearchUserViewModel.swift */,
 			);
@@ -829,13 +832,13 @@
 			path = CustomizeProfile;
 			sourceTree = "<group>";
 		};
-		AB9909A52ABE3B78004B3021 /* FriendRequests */ = {
+		AB9909A52ABE3B78004B3021 /* Requests */ = {
 			isa = PBXGroup;
 			children = (
-				AB9909AA2ABE3BF2004B3021 /* FriendRequestsView.swift */,
-				AB9909AC2ABE3C1B004B3021 /* FriendRequestsViewModel.swift */,
+				A231E01E2D5091C9001F6EE6 /* RequestsView.swift */,
+				A231E0202D5091DE001F6EE6 /* RequestsViewModel.swift */,
 			);
-			path = FriendRequests;
+			path = Requests;
 			sourceTree = "<group>";
 		};
 		ABA45E7F2A7C8DA70015F000 /* Profile */ = {
@@ -1120,16 +1123,17 @@
 				AB2E56D12AE9C62C0096A58C /* CapsuleView.swift in Sources */,
 				AB6EA60C2B87A1FE00CC90FF /* EmojiReactionsView.swift in Sources */,
 				ABCA39DA2A7A0881009447C3 /* SettingsView.swift in Sources */,
+				A232CF3D2D4EC87A009997F0 /* ChatSelectionView.swift in Sources */,
 				85BAF9C72CCE9CC7002748FF /* EditTextWidgetView.swift in Sources */,
 				AB58C1E22BDAED9A000B0AC1 /* SpaceSettingsView.swift in Sources */,
 				A2DDB1BE2BB69DD800243E1B /* Poll.swift in Sources */,
 				AB6778E62AB8F67D00C11AA7 /* VideoWidget.swift in Sources */,
 				856E80BC2B50EB260078A2CE /* SabotageCarouselView.swift in Sources */,
 				A257D7862A6D707600A4E7BD /* ContentView.swift in Sources */,
+				A231E0212D5091E2001F6EE6 /* RequestsViewModel.swift in Sources */,
 				ABD01A9F2C39CE3900C9F288 /* MentionUserViewModel.swift in Sources */,
 				A21244E32C1E234B005E8C8B /* NewTextWidgetView.swift in Sources */,
 				AB7F3AEE2C164CF000690EF1 /* NewTextWidgetViewModel.swift in Sources */,
-				AB9909AD2ABE3C1B004B3021 /* FriendRequestsViewModel.swift in Sources */,
 				AB9BF6D52C06ECDB00C72883 /* PollWidgetSheetView.swift in Sources */,
 				ABCA39DA2A7A0881009447C3 /* SettingsView.swift in Sources */,
 				A246A42E2B43A1B700F0F6E6 /* NewWidgetView.swift in Sources */,
@@ -1180,6 +1184,7 @@
 				A2C0A2212C77E9060061F62D /* NotificationsCountView.swift in Sources */,
 				AB73A28A2C6F3BA2008C7190 /* VideoWidgetSheetView.swift in Sources */,
 				8573EC8B2AE6EF9C00CFB579 /* ParticleView.swift in Sources */,
+				A231E01F2D5091C9001F6EE6 /* RequestsView.swift in Sources */,
 				A212A19C2D398E4F0057E89D /* ChatPage.swift in Sources */,
 				A212A19A2D398D820057E89D /* NewChatWidgetView.swift in Sources */,
 				AB370E0B2C34EDA500C4431F /* ChatView.swift in Sources */,
@@ -1242,7 +1247,6 @@
 				A2F504262D384C39002F88FD /* ChatWidget.swift in Sources */,
 				AB0D07662AE6FB95003AC8A4 /* SpacesView.swift in Sources */,
 				AB90021A2A8B85BD00F970B8 /* UploadExample.swift in Sources */,
-				AB9909AB2ABE3BF2004B3021 /* FriendRequestsView.swift in Sources */,
 				85741EAA2AD03B2C0085423E /* SnapCarouselPractice.swift in Sources */,
 				AB9455232A9468130055B44A /* ColorPickerWidget.swift in Sources */,
 				A2AC0C0C2D319E3100B6BF15 /* QRCodeView.swift in Sources */,

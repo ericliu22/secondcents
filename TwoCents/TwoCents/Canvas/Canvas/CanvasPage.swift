@@ -221,33 +221,40 @@ struct CanvasPage: View, CanvasViewModelDelegate {
             ZStack {
                 MediaView(widget: widget, spaceId: spaceId)
                     .environment(viewModel)
-                    .contextMenu {
-                        EmojiReactionContextView(
-                            spaceId: spaceId, widget: widget,
-                            refreshId: $viewModel.refreshId)
-                        widgetButton(widget: widget)
-                        // Reply button
-                        Button(
-                            action: {
-                                viewModel.activeSheet = nil
-                                viewModel.selectedDetent = .large
-                                viewModel.replyWidget = widget
-                            },
-                            label: {
-                                Label(
-                                    "Reply",
-                                    systemImage: "arrowshape.turn.up.left")
-                            })
-                        // Delete button
-                        Button(role: .destructive) {
-                            viewModel.deleteWidget(widget: widget)
-                        } label: {
-                            Label("Delete", systemImage: "trash")
-                        }
-                        ShareLink(item: viewModel.generateWidgetLink(widget: widget)) {
-                            Label("Share widget", systemImage: "square.and.arrow.up")
-                        }
-                    }
+                    .contextMenu(
+                        ContextMenu(menuItems: {
+
+                            EmojiReactionContextView(
+                                spaceId: spaceId, widget: widget,
+                                refreshId: $viewModel.refreshId)
+                            widgetButton(widget: widget)
+                            // Reply button
+                            //@TODO: This will not work for the time being
+                            Button(
+                                action: {
+                                    viewModel.activeSheet = .reply
+                                    viewModel.selectedDetent = .large
+                                    viewModel.replyWidget = widget
+                                },
+                                label: {
+                                    Label(
+                                        "Reply",
+                                        systemImage: "arrowshape.turn.up.left")
+                                })
+                            // Delete button
+
+                            Button(role: .destructive) {
+                                viewModel.deleteWidget(widget: widget)
+                            } label: {
+
+                                Label("Delete", systemImage: "trash")
+
+                            }
+                            ShareLink(item: viewModel.generateWidgetLink(widget: widget)) {
+                                Label("Share widget", systemImage: "square.and.arrow.up")
+                            }
+                        })
+                    )
                     .cornerRadius(CORNER_RADIUS)
                     .frame(width: widget.width, height: widget.height)
                     .position(
@@ -279,6 +286,9 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                             .environment(appModel)
                             .transaction { transaction in
                                 transaction.animation = nil
+                            }
+                            .onDisappear {
+                                viewModel.canvasMode = .normal
                             }
                     }
                     // Disable position animations while dragging to avoid jittery behavior
@@ -483,6 +493,9 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                     )
                     .presentationBackground(.thickMaterial)
                     .environment(viewModel)
+                case .reply:
+                    ChatSelectionView()
+                        .environment(viewModel)
                 }
             }
         )

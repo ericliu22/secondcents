@@ -9,7 +9,7 @@ import FirebaseFirestore
 import Foundation
 import SwiftUI
 
-struct DBSpace: Identifiable, Codable, Hashable {
+struct DBSpace: Identifiable, Codable, Hashable, Requestable {
     var id: String { spaceId }
     let spaceId: String
     let dateCreated: Date
@@ -51,6 +51,10 @@ struct DBSpace: Identifiable, Codable, Hashable {
         }
     }
 
+}
+
+extension DBSpace {
+    var isSpaceRequest: Bool { true }
 }
 
 let spaceCollection = Firestore.firestore().collection("spaces")
@@ -111,6 +115,13 @@ final class SpaceManager {
         }
     }
     
+    func acceptSpaceRequest(spaceId: String) async throws {
+        try await TwoCents.acceptSpaceRequest(spaceId: spaceId)
+    }
+    
+    func declineSpaceRequest(spaceId: String) async throws {
+        try await TwoCents.declineSpaceRequest(spaceId: spaceId)
+    }
     func removeSpaceMembers(spaceId: String, members: [String]) async throws {
         try await spaceDocument(spaceId: spaceId).updateData([
             "members": FieldValue.arrayRemove(members)

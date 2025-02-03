@@ -56,7 +56,7 @@ final class CanvasPageViewModel {
 
     enum CanvasSheet: Identifiable {
         case newWidgetView, poll, newTextView, todo, image, video,
-            calendar, text
+            calendar, text, reply
 
         var id: Self {
             return self

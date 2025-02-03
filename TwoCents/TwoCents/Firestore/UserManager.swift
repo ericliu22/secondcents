@@ -9,7 +9,7 @@ import Foundation
 import FirebaseFirestore
 import SwiftUI
 
-struct DBUser: Identifiable, Codable, Equatable {
+struct DBUser: Identifiable, Codable, Equatable, Requestable {
     var id: String { userId }
     let userId: String
    
@@ -22,6 +22,7 @@ struct DBUser: Identifiable, Codable, Equatable {
     let friends: Array<String>?
     let incomingFriendRequests: Array<String>?
     let outgoingFriendRequests: Array<String>?
+    let spaceRequests: [String]?
     
     //create from just name
     
@@ -37,6 +38,7 @@ struct DBUser: Identifiable, Codable, Equatable {
         self.friends = []
         self.incomingFriendRequests = []
         self.outgoingFriendRequests = []
+        self.spaceRequests = []
     }
     
     
@@ -55,6 +57,7 @@ struct DBUser: Identifiable, Codable, Equatable {
         self.friends = []
         self.incomingFriendRequests = []
         self.outgoingFriendRequests = []
+        self.spaceRequests = []
     }
     
     
@@ -81,9 +84,14 @@ struct DBUser: Identifiable, Codable, Equatable {
         self.friends = []
         self.incomingFriendRequests = []
         self.outgoingFriendRequests = []
+        self.spaceRequests = []
     }
     
     
+}
+
+extension DBUser {
+    var isSpaceRequest: Bool { false }
 }
 
 final class UserManager{
