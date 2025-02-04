@@ -527,11 +527,16 @@ struct ProfileView: View {
                 }
             } else {
                 try? await viewModel.loadTargetUser(
-                    targetUserId: viewModel.targetUserId)
+           targetUserId: viewModel.targetUserId)
+                guard let currentUser = appModel.user else {
+                    print("No authenticated user")
+                    return
+                }
+                viewModel.checkFriendshipStatus(currentUserId: currentUser.userId)
+                viewModel.checkRequestStatus(currentUserId: currentUser.userId)
+                viewModel.checkRequestedMe(currentUserId: currentUser.userId)
+
             }
-            viewModel.checkFriendshipStatus()
-            viewModel.checkRequestStatus()
-            viewModel.checkRequestedMe()
         }
 
         .onDisappear(perform: {

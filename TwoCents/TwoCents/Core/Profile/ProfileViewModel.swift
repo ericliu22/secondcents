@@ -127,45 +127,20 @@ final class ProfileViewModel {
         }
     }
 
-    func checkFriendshipStatus() {
-        do {
-            let authDataResultUserId = try AuthenticationManager.shared
-                .getAuthenticatedUser().uid
-
-            isFriend = user?.friends?.contains(authDataResultUserId)
-
-        } catch {
-            print(error)
-        }
+    func checkFriendshipStatus(currentUserId: String) {
+        isFriend = user?.friends?.contains(currentUserId)
 
     }
 
-    func checkRequestStatus() {
-        do {
-            let authDataResultUserId = try AuthenticationManager.shared
-                .getAuthenticatedUser().uid
-
+    func checkRequestStatus(currentUserId: String) {
             requestSent = user?.incomingFriendRequests?.contains(
-                authDataResultUserId)
-
-        } catch {
-            print(error)
-        }
+                currentUserId)
 
     }
 
-    func checkRequestedMe() {
-        do {
-            let authDataResultUserId = try AuthenticationManager.shared
-                .getAuthenticatedUser().uid
-
+    func checkRequestedMe(currentUserId: String) {
             requestedMe = user?.outgoingFriendRequests?.contains(
-                authDataResultUserId)
-
-        } catch {
-            print(error)
-        }
-
+                currentUserId)
     }
 
 }
