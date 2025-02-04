@@ -105,7 +105,8 @@ struct ProfileView: View {
     }
 
     @ViewBuilder
-    func friendRequests(count: Int) -> some View {
+    func FriendRequests() -> some View {
+        let count: Int = (viewModel.user?.incomingFriendRequests?.count ?? 0) + (viewModel.user?.spaceRequests?.count ?? 0)
         if count == 0 {
             Label(
                 "No Requests",
@@ -289,13 +290,7 @@ struct ProfileView: View {
                             } label: {
 
                                 VStack {
-                                    if let user = viewModel.user {
-                                        if let incomingFriendRequests = user.incomingFriendRequests {
-                                            if let spaceRequests = user.spaceRequests {
-                                                friendRequests(count: incomingFriendRequests.count + spaceRequests.count)
-                                            }
-                                        }
-                                    }
+                                    FriendRequests()
                                 }
                                 .foregroundColor(Color(UIColor.label))
                                 .frame(
@@ -525,15 +520,18 @@ struct ProfileView: View {
         }
 
         .task {
-            viewModel.targetUserId.isEmpty
-                ? viewModel.user = appModel.user
-                : try? await viewModel.loadTargetUser(
+            if viewModel.targetUserId.isEmpty {
+                if let user = appModel.user {
+                    viewModel.user = user
+                    viewModel.attachUserListener(userId: user.userId)
+                }
+            } else {
+                try? await viewModel.loadTargetUser(
                     targetUserId: viewModel.targetUserId)
-
+            }
             viewModel.checkFriendshipStatus()
             viewModel.checkRequestStatus()
             viewModel.checkRequestedMe()
-
         }
 
         .onDisappear(perform: {

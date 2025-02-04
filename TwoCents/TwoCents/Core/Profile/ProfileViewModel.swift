@@ -13,6 +13,7 @@ import FirebaseFirestore
 final class ProfileViewModel {
 
     var user: DBUser? = nil
+    var requestCount: Int = 0
     var isFriend: Bool?
     var requestSent: Bool?
     var requestedMe: Bool?
@@ -42,6 +43,7 @@ final class ProfileViewModel {
                 print("Failed to get user")
                 return
             }
+            self.user = user
         })
     }
     
