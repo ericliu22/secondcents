@@ -60,6 +60,11 @@ import SwiftUI
     media: .chat, widgetName: "Chat",
     widgetDescription: "Chatting", textString: "")
 
+@MainActor var tickleViewTest = CanvasWidget(
+    width: .infinity, height: .infinity, borderColor: .red, userId: "jisookim",
+    media: .tickle, widgetName: "Tickle",
+    widgetDescription: "Tickle someone on demand", textString: "")
+
 struct NewWidgetView: View {
 
     //    @State private var userColor: Color = .gray
@@ -190,6 +195,11 @@ struct NewWidgetView: View {
 
         }
 
+    }
+    
+    func newTickleView(index: Int) -> some View {
+        
+        NewTickleView(spaceId: spaceId, closeNewWidgetview: $closeNewWidgetview)
     }
 
     @State private var showingView: Bool = false
@@ -325,6 +335,12 @@ struct NewWidgetView: View {
                                                 radius: 20, x: 8, y: 4)
                                     case .chat:
                                         newChatView(index: index)
+                                            .aspectRatio(1, contentMode: .fit)
+                                            .shadow(
+                                                color: Color.black.opacity(0.1),
+                                                radius: 20, x: 8, y: 4)
+                                    case .tickle:
+                                        newTickleView(index: index)
                                             .aspectRatio(1, contentMode: .fit)
                                             .shadow(
                                                 color: Color.black.opacity(0.1),

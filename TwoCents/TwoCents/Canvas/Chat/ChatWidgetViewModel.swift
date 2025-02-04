@@ -169,7 +169,10 @@ class ChatWidgetViewModel {
     }
     
     func messageChange(messageId: String) -> Bool {
-        return changeIndices.contains([messages.firstIndex(where: { $0.id == messageId})!])
+        guard let index = messages.firstIndex(where: { $0.id == messageId}) else {
+            return false
+        }
+        return changeIndices.contains([index])
     }
     
 

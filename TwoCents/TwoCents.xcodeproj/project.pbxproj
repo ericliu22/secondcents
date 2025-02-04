@@ -60,6 +60,8 @@
 		A257D79F2A6D707800A4E7BD /* TwoCentsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A257D79E2A6D707800A4E7BD /* TwoCentsUITests.swift */; };
 		A257D7A12A6D707800A4E7BD /* TwoCentsUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A257D7A02A6D707800A4E7BD /* TwoCentsUITestsLaunchTests.swift */; };
 		A26809CA2AB8A77E003B30DE /* VoteGameReal.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20EBD072AB8A36100EFDDE8 /* VoteGameReal.swift */; };
+		A26E6F112D529EA0009417A4 /* TickleWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = A26E6F102D529E9C009417A4 /* TickleWidget.swift */; };
+		A26E6F142D529EC2009417A4 /* NewTickleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A26E6F132D529EB9009417A4 /* NewTickleView.swift */; };
 		A26EFB1E2CFEC7D600238622 /* FriendRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A26EFB1D2CFEC7CF00238622 /* FriendRequest.swift */; };
 		A279471B2C7954C800EFC28A /* NotificationWidgetWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A279471A2C7954C800EFC28A /* NotificationWidgetWrapper.swift */; };
 		A27E2C322D35B1750050D9C8 /* UserNotifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = A27E2C312D35B16F0050D9C8 /* UserNotifications.swift */; };
@@ -257,6 +259,8 @@
 		A257D79A2A6D707800A4E7BD /* TwoCentsUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TwoCentsUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A257D79E2A6D707800A4E7BD /* TwoCentsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwoCentsUITests.swift; sourceTree = "<group>"; };
 		A257D7A02A6D707800A4E7BD /* TwoCentsUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwoCentsUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		A26E6F102D529E9C009417A4 /* TickleWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TickleWidget.swift; sourceTree = "<group>"; };
+		A26E6F132D529EB9009417A4 /* NewTickleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewTickleView.swift; sourceTree = "<group>"; };
 		A26EFB1D2CFEC7CF00238622 /* FriendRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendRequest.swift; sourceTree = "<group>"; };
 		A279471A2C7954C800EFC28A /* NotificationWidgetWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationWidgetWrapper.swift; sourceTree = "<group>"; };
 		A27E2C312D35B16F0050D9C8 /* UserNotifications.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserNotifications.swift; sourceTree = "<group>"; };
@@ -599,6 +603,15 @@
 			path = Links;
 			sourceTree = "<group>";
 		};
+		A26E6F122D529EAF009417A4 /* Tickle */ = {
+			isa = PBXGroup;
+			children = (
+				A26E6F132D529EB9009417A4 /* NewTickleView.swift */,
+				A26E6F102D529E9C009417A4 /* TickleWidget.swift */,
+			);
+			path = Tickle;
+			sourceTree = "<group>";
+		};
 		A2DAF3492C07CB0300E778FA /* API */ = {
 			isa = PBXGroup;
 			children = (
@@ -663,6 +676,7 @@
 				A240F6752C6964BA00618903 /* Canvas */,
 				AB73A2852C6EEEAE008C7190 /* Image */,
 				AB73A2882C6F3B8E008C7190 /* Video */,
+				A26E6F122D529EAF009417A4 /* Tickle */,
 				AB140E482C3094AE008321F9 /* EventWidget.swift */,
 				857753012C308B0E00B4A971 /* DateAlignment.swift */,
 				AB6778E32AB8F67800C11AA7 /* CanvasWidget.swift */,
@@ -1113,6 +1127,7 @@
 				AB77664E2C25283A00F95E65 /* DisplayLocationWidgetView.swift in Sources */,
 				ABD01A9A2C39C3CF00C9F288 /* TodoItem.swift in Sources */,
 				85C6759A2AB8EE5B00FACCB2 /* HotSeatManager.swift in Sources */,
+				A26E6F142D529EC2009417A4 /* NewTickleView.swift in Sources */,
 				A26809CA2AB8A77E003B30DE /* VoteGameReal.swift in Sources */,
 				ABD9F23B2C1F34D30041F110 /* SignUpPhoneNumberViewModel.swift in Sources */,
 				AB842C142A91F36D00E4A7CE /* CustomizeProfileViewModel.swift in Sources */,
@@ -1156,6 +1171,7 @@
 				A2F504312D38611A002F88FD /* TextMessage.swift in Sources */,
 				8534B8B92B8001660089AD5C /* NewPollView.swift in Sources */,
 				A2DAF34B2C07CB1C00E778FA /* SpaceNotifications.swift in Sources */,
+				A26E6F112D529EA0009417A4 /* TickleWidget.swift in Sources */,
 				ABD9F23D2C1F3F910041F110 /* AddFriendFromContactsView.swift in Sources */,
 				AB90021D2A8B85DA00F970B8 /* UploadExampleViewModel.swift in Sources */,
 				A27E2C322D35B1750050D9C8 /* UserNotifications.swift in Sources */,

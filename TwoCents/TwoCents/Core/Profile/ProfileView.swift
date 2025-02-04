@@ -18,7 +18,8 @@ struct ProfileView: View {
     private let feedbackGenerator = UIImpactFeedbackGenerator(style: .medium)
 
     init(targetUserId: String, targetUserColor: Color? = nil) {
-        self.viewModel = ProfileViewModel(targetUserId: targetUserId, targetUserColor: targetUserColor)
+        self.viewModel = ProfileViewModel(
+            targetUserId: targetUserId, targetUserColor: targetUserColor)
     }
 
     private func startHapticFeedback() {
@@ -106,7 +107,9 @@ struct ProfileView: View {
 
     @ViewBuilder
     func FriendRequests() -> some View {
-        let count: Int = (viewModel.user?.incomingFriendRequests?.count ?? 0) + (viewModel.user?.spaceRequests?.count ?? 0)
+        let count: Int =
+            (viewModel.user?.incomingFriendRequests?.count ?? 0)
+            + (viewModel.user?.spaceRequests?.count ?? 0)
         if count == 0 {
             Label(
                 "No Requests",
@@ -250,7 +253,6 @@ struct ProfileView: View {
                     .cornerRadius(20)
                     VStack {
                         NavigationLink {
-                            //                            FriendsView(showSignInView: $showSignInView, appModel.loadedColor: $appModel.loadedColor, showCreateProfileView: $showCreateProfileView, targetUserId: viewModel.user?.userId ?? "")
                             FriendsView(
                                 targetUserId: viewModel.user?.userId ?? "")
                         } label: {
@@ -527,7 +529,7 @@ struct ProfileView: View {
                 }
             } else {
                 try? await viewModel.loadTargetUser(
-           targetUserId: viewModel.targetUserId)
+                    targetUserId: viewModel.targetUserId)
                 guard let currentUser = appModel.user else {
                     print("No authenticated user")
                     return

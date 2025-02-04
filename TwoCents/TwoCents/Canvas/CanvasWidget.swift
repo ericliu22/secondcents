@@ -168,6 +168,8 @@ func MediaView(widget: CanvasWidget, spaceId: String) -> some View {
         CalendarWidget(widget: widget, spaceId: spaceId)
     case .chat:
         ChatWidget(widget: widget, spaceId: spaceId)
+    case .tickle:
+        TickleWidget(widget: widget)
     default:
         EmptyView()
     }
@@ -206,7 +208,7 @@ struct MediaView<WidgetView>: View where WidgetView: View {
 */
 enum Media: Codable {
 
-    case video, image, chat, text, poll, map, event, todo, calendar, link
+    case video, image, chat, text, poll, map, event, todo, calendar, link, tickle
 
     init (media: String) {
         switch media {
@@ -226,6 +228,8 @@ enum Media: Codable {
             self = .event
         case "chat":
             self = .chat
+        case "tickle":
+            self = .tickle
         default:
             self = .image
         }
