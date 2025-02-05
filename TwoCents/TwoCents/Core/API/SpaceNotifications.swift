@@ -12,6 +12,7 @@ enum SpaceNotificationType: String, Codable {
     case widget
     case emoji
     case chatWidget
+    case groupTickle
 }
 
 struct SpaceNotificationRequest: Codable {
@@ -147,6 +148,24 @@ func widgetNotification(
     let body: String = "\(name) added a new \(widget.media.name()) widget"
     return try await spaceNotification(
         type: .widget,
+        spaceId: spaceId,
+        body: body,
+        data: data
+    )
+}
+
+func groupTickleNotification(
+    spaceId: String,
+    name: String
+) async throws -> String {
+
+    let data: [String: String] = await [
+        "spaceId": spaceId,
+        "userId": try AuthenticationManager.shared.getAuthenticatedUser().uid,
+    ]
+    let body: String = "\(name) tickled everyone!"
+    return try await spaceNotification(
+        type: .groupTickle,
         spaceId: spaceId,
         body: body,
         data: data

@@ -285,6 +285,28 @@ struct SpaceSettingsView: View {
 
                 Divider()
                     .padding(.vertical)
+                
+                Button(
+                    action: {
+                        guard let name = appModel.user?.name else {
+                            return
+                        }
+                        Task {
+                            try await groupTickleNotification(spaceId: spaceId, name: name)
+                        }
+                    },
+                    label: {
+                        Text("Tickle Everyone!")
+                            .font(.headline)
+                            .frame(height: 55)
+                            .frame(maxWidth: .infinity)
+                    }
+                )
+
+                .buttonStyle(.bordered)
+                .tint(.gray)
+                .frame(height: 55)
+                .cornerRadius(10)
 
                 Button(
                     action: {

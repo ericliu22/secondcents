@@ -174,8 +174,9 @@ struct NewCalendarView: View {
                 userColor = .gray
                 return
             }
-            guard let color = try? await UserManager.shared.getUser(userId: userId) else {
+            guard let color = try? await UserManager.shared.getUser(userId: userId).userColor else {
                 userColor = .gray
+                return
             }
             userColor = Color.fromString(name: color)
         }

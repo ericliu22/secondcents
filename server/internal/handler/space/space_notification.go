@@ -98,6 +98,13 @@ func SpaceNotificationHandler(httpCtx *fasthttp.RequestCtx, firestoreClient *fir
 			Body:  notificationRequest.Body,
 			Data:  notificationRequest.Data,
 		}
+	case "groupTicke":
+		notification = notifications.TopicNotification{
+			Topic: notificationRequest.SpaceId,
+			Title: "[" + space.Name + "] " + user.Username,
+			Body:  notificationRequest.Body,
+			Data:  notificationRequest.Data,
+		}
 	default:
 		httpCtx.Error("Invalid request body", fasthttp.StatusBadRequest)
 		return

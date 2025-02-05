@@ -116,6 +116,8 @@ struct Poll: Codable, Identifiable {
         //Eric here manly is bad always error check
         if let name = canvasWidget.widgetName {
             self.name = name
+        } else {
+            self.name = ""
         }
         self.userId = canvasWidget.userId
     }
