@@ -83,6 +83,7 @@ struct CanvasPage: View, CanvasViewModelDelegate {
             //    .animation(.spring()) // Optional: Add some animation
             //    .frame(width: FRAME_SIZE, height: FRAME_SIZE)
         }
+        .coordinateSpace(name: "canvas")
         .dropDestination(for: CanvasWidget.self) { receivedWidgets, location in
             viewModel.canvasMode = .normal
             guard let draggingItem = receivedWidgets.first else {
@@ -91,6 +92,12 @@ struct CanvasPage: View, CanvasViewModelDelegate {
             }
             let x = roundToTile(number: location.x)
             let y = roundToTile(number: location.y)
+            let proposedPoint = CGPointMake(x, y)
+            if !viewModel.canPlaceWidget(draggingItem, at: proposedPoint) {
+                // Disallow drop
+                print("Collision detected—drop rejected")
+                return false
+            }
 
             SpaceManager.shared.moveWidget(
                 spaceId: spaceId,
@@ -118,6 +125,7 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                     .offset(x: widget.width / 2, y: widget.height / 2)
                     .animation(.spring(), value: widget.x)  // Add animation for x position
                     .animation(.spring(), value: widget.y)  // Add animation for y position
+                    .border(viewModel.canPlaceWidget(widget, at: viewModel.widgetCursor) ? Color.green : Color.red, width: 2)
             }
         } else {
             EmptyView()
@@ -190,6 +198,7 @@ struct CanvasPage: View, CanvasViewModelDelegate {
             ToolbarItem(placement: .topBarTrailing) {
                 Button(
                     action: {
+                        
                         viewModel.confirmPlacement()
                     },
                     label: {
@@ -292,11 +301,14 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                                     style: .continuous)
                             )
                             .frame(width: widget.width, height: widget.height)
+                            .scaleEffect(viewModel.zoomScale)
                             .environment(viewModel)
                             .environment(appModel)
+                            .border(viewModel.canPlaceWidget(widget, at: viewModel.widgetCursor) ? Color.green : Color.red, width: 2)
                             .transaction { transaction in
                                 transaction.animation = nil
                             }
+                        
                             .onDisappear {
                                 viewModel.canvasMode = .normal
                             }

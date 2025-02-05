@@ -39,6 +39,7 @@ final class CanvasPageViewModel {
     var unreadWidgets: [String] = []
     var visibleRectInCanvas: CGRect = CGRect(x: 0, y:0, width: 0, height: 0)
     var members: [DBUser] = []
+    var zoomScale: CGFloat = 1.0
     
     weak var coordinator: ZoomCoordinatorProtocol?
 
@@ -173,14 +174,23 @@ final class CanvasPageViewModel {
     }
     
     func confirmPlacement() {
+        
         guard let newWidget = newWidget else {
             print("New Widget is nil")
             return
         }
         
+        
         var uploadWidget = newWidget
         uploadWidget.x = widgetCursor.x
         uploadWidget.y = widgetCursor.y
+        let proposedPoint = CGPoint(x: widgetCursor.x, y: widgetCursor.y)
+        if !canPlaceWidget(newWidget, at: proposedPoint) {
+            // If collision, you can show an alert, or simply revert, etc.
+            print("Cannot place new widget here—collision detected.")
+            return
+        }
+
         SpaceManager.shared.uploadWidget(spaceId: spaceId, widget: uploadWidget)
         self.newWidget = nil
         canvasMode = .normal
@@ -234,4 +244,38 @@ final class CanvasPageViewModel {
         return "https://api.twocentsapp.com/app/widget/\(spaceId)/\(widget.id.uuidString)"
     }
     
+    func canPlaceWidget(_ proposedWidget: CanvasWidget, at point: CGPoint) -> Bool {
+        // Create a CGRect for the proposed widget at the new point
+        let proposedRect = CGRect(
+            x: point.x,
+            y: point.y,
+            width: proposedWidget.width,
+            height: proposedWidget.height
+        )
+
+        // Compare against all existing widgets
+        for existing in canvasWidgets {
+            // If it's the same widget, skip
+            if existing.id == proposedWidget.id { continue }
+
+            guard
+                let existingX = existing.x,
+                let existingY = existing.y
+            else { continue }
+
+            let existingRect = CGRect(
+                x: existingX,
+                y: existingY,
+                width: existing.width,
+                height: existing.height
+            )
+
+            // If the bounding boxes overlap, reject
+            if proposedRect.intersects(existingRect) {
+                return false
+            }
+        }
+
+        return true
+    }
 }

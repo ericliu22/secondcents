@@ -161,7 +161,9 @@ struct ZoomableScrollView<Content: View>: UIViewRepresentable {
             updateCenter(for: scrollView)
             resetIdleTimer(scrollView)
             checkVisibleBounds(scrollView)
+
             let rect = getUnscaledVisibleRect(scrollView: scrollView)
+            canvasViewModel.zoomScale = scrollView.zoomScale
             canvasViewModel.visibleRectInCanvas = rect
         }
 
