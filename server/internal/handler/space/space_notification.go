@@ -98,7 +98,7 @@ func SpaceNotificationHandler(httpCtx *fasthttp.RequestCtx, firestoreClient *fir
 			Body:  notificationRequest.Body,
 			Data:  notificationRequest.Data,
 		}
-	case "groupTicke":
+	case "groupTickle":
 		notification = notifications.TopicNotification{
 			Topic: notificationRequest.SpaceId,
 			Title: "[" + space.Name + "] " + user.Username,
