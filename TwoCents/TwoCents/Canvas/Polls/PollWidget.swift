@@ -47,7 +47,10 @@ struct PollWidget: WidgetView {
                         //                                                        print(pollData)
                         
                         self.poll = pollData
-                        totalVotes = poll!.totalVotes()
+                        guard let poll = poll else {
+                            return
+                        }
+                        totalVotes = poll.totalVotes()
                         //                            print("YOUR POLL IS \(self.poll)")
                         
                         // Update your SwiftUI view with the retrieved poll data.
@@ -144,7 +147,10 @@ struct PollWidget: WidgetView {
                         
                         ForEach(0..<poll.options.count) { index in
                             Button(action: {
-                                self.poll!.incrementOption(index: index, userVoted: appModel.user?.userId != nil ? poll.votes?[appModel.user!.userId] : nil, userId: appModel.user?.userId)
+                                guard let user = appModel.user else {
+                                    return
+                                }
+                                self.poll!.incrementOption(index: index, userVoted: poll.votes?[user.userId], userId: user.userId)
                                 totalVotes = self.poll!.totalVotes()
                                 self.poll!.updatePoll(spaceId: spaceId)
                             }, label: {

@@ -58,7 +58,7 @@ class NewTodoModel: ObservableObject {
         let newCanvasWidget: CanvasWidget = CanvasWidget(
             width: width,
             height: height,
-            borderColor: Color.fromString(name: user.userColor!),
+            borderColor: Color.fromString(name: user.userColor ?? "gray"),
             userId: uid,
             media: .todo,
             widgetName: listName
@@ -152,8 +152,9 @@ class NewTodoModel: ObservableObject {
      
      func getAllUsers(spaceId: String) async throws {
          try await loadCurrentSpace(spaceId: spaceId)
-         guard let space = space else { return }
-         self.allUsers = try await UserManager.shared.getMembersInfo(members: (space.members)!)
+         guard let members = space?.members else { return }
+         
+         self.allUsers = try await UserManager.shared.getMembersInfo(members: members)
      }
 
     

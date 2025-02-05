@@ -46,7 +46,10 @@ struct EmojiReactionsView: View {
     }
     
     private func updateEmoji(emoji: String) {
-        if !userPressed[emoji]! {
+        guard let pressed = userPressed[emoji] else {
+            return
+        }
+        if !pressed {
             addEmoji(emoji: emoji)
         } else {
             removeEmoji(emoji: emoji)
@@ -73,7 +76,7 @@ struct EmojiReactionsView: View {
     }
     
     private func addEmoji(emoji: String) {
-        emojiCount[emoji]! += 1
+        emojiCount[emoji] += 1
         
         db.collection("spaces")
             .document(spaceId)

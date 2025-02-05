@@ -93,15 +93,15 @@ struct TickleWidget: WidgetView {
                                         let duration = Date()
                                             .timeIntervalSince(startTime)
                                         let tickleCount = Int(duration * 10)
-                                        
+
                                         if !isPressing
                                             && tickleCount <= 1
                                         {
-                                            
+
                                             feedbackGenerator.impactOccurred()
-                                            
+
                                             let currentUserId =
-                                            try! AuthenticationManager
+                                                try! AuthenticationManager
                                                 .shared
                                                 .getAuthenticatedUser().uid
                                             //
@@ -114,9 +114,9 @@ struct TickleWidget: WidgetView {
                                             AnalyticsManager.shared.tickle(
                                                 count: tickleCount)
                                         }
-                                        
+
                                     }
-                                    
+
                                 }
                         )
                         .simultaneousGesture(
@@ -132,7 +132,7 @@ struct TickleWidget: WidgetView {
                                     if isPressing {
                                         isPressing = false
                                         stopHapticFeedback()
-                                        
+
                                         if let startTime =
                                             pressStartTime
                                         {
@@ -141,10 +141,10 @@ struct TickleWidget: WidgetView {
                                                     startTime)
                                             let tickleCount = Int(
                                                 duration * 10)
-                                            
+
                                             if tickleCount > 1 {
                                                 let currentUserId =
-                                                try! AuthenticationManager
+                                                    try! AuthenticationManager
                                                     .shared
                                                     .getAuthenticatedUser()
                                                     .uid
@@ -161,19 +161,19 @@ struct TickleWidget: WidgetView {
                                             }
                                         }
                                     }
-                                    
+
                                 }
                         )
-                    
+
                     Text(tickleString)
                         .font(
                             tickleString == "Tickle"
-                            ? .title2 : .largeTitle
+                                ? .title2 : .largeTitle
                         )
                         .fontWeight(.bold)
                         .fontDesign(
                             tickleString == "Tickle"
-                            ? .default : .monospaced
+                                ? .default : .monospaced
                         )
                         .foregroundStyle(.secondary)
                         .frame(height: 50)

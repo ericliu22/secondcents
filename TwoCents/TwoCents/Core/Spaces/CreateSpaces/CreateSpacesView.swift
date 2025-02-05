@@ -199,7 +199,7 @@ struct CreateSpacesView: View {
                                 
                             } else {
                                 ForEach(viewModel.allFriends) { userTile    in
-                                    let targetUserColor: Color = viewModel.getUserColor(userColor: userTile.userColor!)
+                                    let targetUserColor: Color = viewModel.getUserColor(userColor: userTile.userColor ?? "gray")
                                     Group{
                                         HStack{
                                             Group{
@@ -251,7 +251,7 @@ struct CreateSpacesView: View {
                                                 
                                             }
                                             
-                                            Text(userTile.name!)
+                                            Text(userTile.name ?? "")
                                                 .font(.headline)
                                             
                                             

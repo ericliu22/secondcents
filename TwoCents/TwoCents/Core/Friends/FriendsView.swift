@@ -24,7 +24,11 @@ struct FriendsView: View {
     
     var filteredSearch: [DBUser]{
         guard !searchTerm.isEmpty else { return viewModel.allFriends}
-        return viewModel.allFriends.filter{$0.name!.localizedCaseInsensitiveContains(searchTerm) /*|| $0.username!.localizedCaseInsensitiveContains(searchTerm)*/}
+        return viewModel.allFriends.filter{
+            guard let name = $0.name else {
+                return false
+            }
+            return name.localizedCaseInsensitiveContains(searchTerm) /*|| $0.username!.localizedCaseInsensitiveContains(searchTerm)*/}
     }
     var body: some View {
         //        VStack {
@@ -108,7 +112,7 @@ struct FriendsView: View {
                                 
                                 //                            VStack(alignment: .leading){
                                 
-                                Text(userTile.name!)
+                                Text(userTile.name ?? "gray")
                                     .font(.headline)
                                     .foregroundStyle(Color(UIColor.label))
                                 

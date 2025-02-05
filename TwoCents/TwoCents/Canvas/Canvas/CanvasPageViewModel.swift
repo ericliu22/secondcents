@@ -110,7 +110,7 @@ final class CanvasPageViewModel {
                 return
             }
             guard let document = documentSnapshot else {
-                print("Error fetching query: \(error!)")
+                print("Error fetching query: \(error)")
                 return
             }
             
@@ -159,12 +159,14 @@ final class CanvasPageViewModel {
                     return
                 }
                 guard let query = querySnapshot else {
-                    print("Error fetching query: \(error!)")
+                    print("Error fetching query: \(error)")
                     return
                 }
                 self.canvasWidgets = []
                 for document in query.documents {
-                    let newWidget = try! document.data(as: CanvasWidget.self)
+                    guard let newWidget = try? document.data(as: CanvasWidget.self) else {
+                        continue
+                    }
                     self.canvasWidgets.append(newWidget)
                 }
             }

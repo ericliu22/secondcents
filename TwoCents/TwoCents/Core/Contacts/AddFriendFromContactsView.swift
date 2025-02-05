@@ -127,7 +127,7 @@ struct AddFriendFromContactsView: View {
 
                             if let user {
 
-                                Text("@\(user.name!)")
+                                Text("@\(user.name)")
                                     .foregroundColor(.gray)
                                     .font(.caption)
                             } else {

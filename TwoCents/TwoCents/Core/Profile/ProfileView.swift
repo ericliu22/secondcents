@@ -534,7 +534,8 @@ struct ProfileView: View {
                     print("No authenticated user")
                     return
                 }
-                viewModel.checkFriendshipStatus(currentUserId: currentUser.userId)
+                viewModel.checkFriendshipStatus(
+                    currentUserId: currentUser.userId)
                 viewModel.checkRequestStatus(currentUserId: currentUser.userId)
                 viewModel.checkRequestedMe(currentUserId: currentUser.userId)
 
@@ -551,8 +552,10 @@ struct ProfileView: View {
                     let tickleCount = Int(duration * 10)
 
                     if tickleCount > 1 {
-                        let currentUserId = try! AuthenticationManager.shared
-                            .getAuthenticatedUser().uid
+                        guard let currentUserId = try? AuthenticationManager.shared
+                            .getAuthenticatedUser().uid else {
+                            return
+                        }
 
                         Task {
                             try await tickleNotification(

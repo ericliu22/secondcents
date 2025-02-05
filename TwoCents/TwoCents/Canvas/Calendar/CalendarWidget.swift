@@ -140,6 +140,7 @@ struct CalendarWidget: View {
                                                      second: 0,
                                                      of: date)
                     
+                    //We just set combined date so the exclamation is good here
                     return combinedDate ?? currentDate > currentDate || Calendar.current.isDateInToday(date) && combinedDate! >= currentDate
                 }
 
@@ -192,6 +193,7 @@ struct CalendarWidget: View {
             return (time, difference)
         }
         
+        //@TODO: Fix this with proper error handling -Eric
         let closestTime = timeDifferences.sorted {
             if $0.1 == $1.1 {
                 return formatter.date(from: $0.0)! < formatter.date(from: $1.0)!

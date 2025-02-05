@@ -139,7 +139,7 @@ struct SpacesView: View {
 
                 Spacer()
 
-                Text(spaceTile.space.name!)
+                Text(spaceTile.space.name ?? "")
                     .font(.title)
                     .fontWeight(.bold)
 

@@ -34,6 +34,7 @@ struct LinkView: UIViewRepresentable {
     let height: CGFloat
 
     init(widget: CanvasWidget) {
+        //This is a requirement for all link widgets if not then it's broken to begin with -Eric
         self.url = widget.mediaURL!
         self.width = widget.width
         self.height = widget.height

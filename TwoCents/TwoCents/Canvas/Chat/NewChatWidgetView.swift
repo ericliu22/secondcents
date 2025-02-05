@@ -23,9 +23,12 @@ struct NewChatWidgetView: View {
         TextField("Enter a name", text: $viewModel.text)
         Button {
             print("Uploading chat")
+            guard let user = appModel.user else {
+                return
+            }
             guard
                 let widget = try? viewModel.uploadChat(
-                    userId: appModel.user!.userId, spaceId: spaceId)
+                    userId: user.userId, spaceId: spaceId)
             else {
                 return
             }

@@ -170,7 +170,14 @@ struct NewCalendarView: View {
             }
         }
         .task {
-            userColor = try! await Color.fromString(name: UserManager.shared.getUser(userId: AuthenticationManager.shared.getAuthenticatedUser().uid).userColor ?? "")
+            guard let userId = try? AuthenticationManager.shared.getAuthenticatedUser().uid else {
+                userColor = .gray
+                return
+            }
+            guard let color = try? await UserManager.shared.getUser(userId: userId) else {
+                userColor = .gray
+            }
+            userColor = Color.fromString(name: color)
         }
     }
     

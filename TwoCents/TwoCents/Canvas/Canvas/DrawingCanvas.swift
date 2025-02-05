@@ -41,7 +41,7 @@ struct DrawingCanvas: UIViewRepresentable {
         db.collection("spaces").document(spaceId).addSnapshotListener { documentSnapshot, error in
             
             guard let document = documentSnapshot else {
-                print("Error fetching document: \(error!)")
+                print("Error fetching document: \(error)")
                 return
             }
             
@@ -56,7 +56,9 @@ struct DrawingCanvas: UIViewRepresentable {
             }
             
             if let drawingAccess = data["drawing"] as? Data {
-                let databaseDrawing = try! PKDrawingReference(data: drawingAccess)
+                guard let databaseDrawing = try? PKDrawingReference(data: drawingAccess) else {
+                    return
+                }
                 let newDrawing = databaseDrawing.appending(canvas.drawing)
                 canvas.drawing = newDrawing
             } else {

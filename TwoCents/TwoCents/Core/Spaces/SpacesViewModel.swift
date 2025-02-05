@@ -55,7 +55,9 @@ final class SpacesViewModel {
             
             self.allSpaces = []
             for document in query.documents {
-                let space = try! document.data(as: DBSpace.self)
+                guard let space = try? document.data(as: DBSpace.self) else {
+                    continue
+                }
                 let navigationSpace = NavigationSpace(space: space)
                 self.allSpaces.append(navigationSpace)
             }

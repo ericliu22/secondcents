@@ -47,9 +47,9 @@ struct TextMessageView: MessageView {
                     .foregroundStyle(userColor)
                     .font(.caption)
                     .padding(.top, 3)
-                    .padding(textMessage.sendBy == appModel.user!.userId ? .trailing : .leading, 6)
+                    .padding(textMessage.sendBy == appModel.user?.userId ? .trailing : .leading, 6)
                    
-                    .frame(maxWidth: .infinity,alignment: textMessage.sendBy == appModel.user!.userId ? .trailing : .leading)
+                    .frame(maxWidth: .infinity,alignment: textMessage.sendBy == appModel.user?.userId ? .trailing : .leading)
            
             }
             Text(textMessage.text)
@@ -61,7 +61,7 @@ struct TextMessageView: MessageView {
                 .background(.ultraThickMaterial)
                 .background(userColor)
                 .clipShape(RoundedRectangle(cornerRadius: 20))
-                .frame(maxWidth: .infinity,alignment: textMessage.sendBy == appModel.user!.userId ? .trailing : .leading)
+                .frame(maxWidth: .infinity,alignment: textMessage.sendBy == appModel.user?.userId ? .trailing : .leading)
        
         }
         .onAppear {

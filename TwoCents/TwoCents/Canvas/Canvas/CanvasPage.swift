@@ -250,8 +250,13 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                                 Label("Delete", systemImage: "trash")
 
                             }
-                            ShareLink(item: viewModel.generateWidgetLink(widget: widget)) {
-                                Label("Share widget", systemImage: "square.and.arrow.up")
+                            ShareLink(
+                                item: viewModel.generateWidgetLink(
+                                    widget: widget)
+                            ) {
+                                Label(
+                                    "Share widget",
+                                    systemImage: "square.and.arrow.up")
                             }
                         })
                     )
@@ -280,7 +285,12 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                     .draggable(widget) {
                         // Drag preview – note the removed .onAppear and disabled animations via transaction
                         MediaView(widget: widget, spaceId: spaceId)
-                            .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
+                            .contentShape(
+                                .dragPreview,
+                                RoundedRectangle(
+                                    cornerRadius: CORNER_RADIUS,
+                                    style: .continuous)
+                            )
                             .frame(width: widget.width, height: widget.height)
                             .environment(viewModel)
                             .environment(appModel)
@@ -292,11 +302,18 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                             }
                     }
                     // Disable position animations while dragging to avoid jittery behavior
-                    .animation(viewModel.canvasMode == .dragging ? nil : .spring(), value: widget.x)
-                    .animation(viewModel.canvasMode == .dragging ? nil : .spring(), value: widget.y)
+                    .animation(
+                        viewModel.canvasMode == .dragging ? nil : .spring(),
+                        value: widget.x
+                    )
+                    .animation(
+                        viewModel.canvasMode == .dragging ? nil : .spring(),
+                        value: widget.y)
 
                 // Optional unread indicator overlay
-                if viewModel.unreadWidgets.contains(where: { $0 == widget.id.uuidString }) {
+                if viewModel.unreadWidgets.contains(where: {
+                    $0 == widget.id.uuidString
+                }) {
                     NotificationWidgetWrapper(widgetUserId: widget.userId)
                         .position(
                             x: widget.x ?? FRAME_SIZE / 2,
@@ -416,8 +433,11 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                         do {
                             try await viewModel.loadCurrentSpace()
                             viewModel.attachWidgetListener()
-                            await viewModel.fetchUsers(
-                                currentUserId: appModel.user!.userId)
+                            if let user = appModel.user {
+                                await viewModel.fetchUsers(
+                                    currentUserId: appModel.user!.userId)
+
+                            }
                             // Scroll to the specified widget after listener attachment.
                             if let id = widgetId {
                                 viewModel.scrollTo(widgetId: id)
@@ -481,7 +501,9 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                     .presentationBackground(.thickMaterial)
                 case .calendar:
                     CalendarWidgetSheetView(
-                        widgetId: waitForVariable { viewModel.activeWidget?.id.uuidString },
+                        widgetId: waitForVariable {
+                            viewModel.activeWidget?.id.uuidString
+                        },
                         spaceId: spaceId
                     )
                     .presentationBackground(.thickMaterial)

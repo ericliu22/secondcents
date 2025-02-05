@@ -51,7 +51,7 @@ struct WidgetMessageView: MessageView {
                     .foregroundStyle(userColor)
                     .font(.caption)
                     .padding(.top, 3)
-                    .padding(canvasWidgetMessage.sendBy == appModel.user!.userId ? .leading : .trailing, 6)
+                    .padding(canvasWidgetMessage.sendBy == appModel.user?.userId ? .leading : .trailing, 6)
             }
             if let widget = canvasWidget {
                 MediaView(widget: widget, spaceId: chatViewModel.spaceId)

@@ -25,7 +25,11 @@ struct MentionUserView: View {
     
     var filteredSearch: [DBUser]{
         guard !searchTerm.isEmpty else { return allUsers}
-        return allUsers.filter{$0.name!.localizedCaseInsensitiveContains(searchTerm) /*|| $0.username!.localizedCaseInsensitiveContains(searchTerm)*/}
+        return allUsers.filter{
+            guard let name = $0.name else {
+                return false
+            }
+            return name.localizedCaseInsensitiveContains(searchTerm) /*|| $0.username!.localizedCaseInsensitiveContains(searchTerm)*/}
     }
     
     
@@ -40,7 +44,7 @@ struct MentionUserView: View {
             List{
                 
                 ForEach(filteredSearch) { userTile    in
-                    let targetUserColor: Color = Color.fromString(name: userTile.userColor!)
+                    let targetUserColor: Color = Color.fromString(name: userTile.userColor ?? "gray")
                     
                     
                     
@@ -107,7 +111,7 @@ struct MentionUserView: View {
                         
 //                        VStack(alignment: .leading){
                             
-                            Text(userTile.name!)
+                            Text(userTile.name ?? "")
                                 .font(.headline)
                             
 //                            

@@ -64,7 +64,7 @@ class NewPollModel: ObservableObject {
         let newCanvasWidget: CanvasWidget = CanvasWidget(
             width: width,
             height: height,
-            borderColor: Color.fromString(name: user.userColor!),
+            borderColor: Color.fromString(name: user.userColor ?? "gray"),
             userId: uid,
             media: .poll,
             widgetName: newPollName

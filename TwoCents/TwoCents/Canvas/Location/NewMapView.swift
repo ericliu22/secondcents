@@ -72,7 +72,15 @@ struct NewMapView: View{
       
         })
         .task {
-            userColor = try! await Color.fromString(name: UserManager.shared.getUser(userId: AuthenticationManager.shared.getAuthenticatedUser().uid).userColor ?? "")
+            guard let userId = try? AuthenticationManager.shared.getAuthenticatedUser().uid else {
+                userColor = Color.fromString(name: "gray")
+                return
+            }
+            guard let color = try? await UserManager.shared.getUser(userId: userId).userColor else {
+                userColor = Color.fromString(name: "gray")
+                return
+            }
+            userColor = Color.fromString(name: color)
             
         }
     }

@@ -50,7 +50,7 @@ struct NewTicklePage: View {
                     if member.userId != appModel.user?.userId {
 
                         let targetUserColor: Color =
-                            Color.fromString(name: member.userColor!)
+                            Color.fromString(name: member.userColor ?? "gray")
 
                         HStack(spacing: 20) {
                             Group {

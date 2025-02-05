@@ -141,14 +141,14 @@ struct AddMemberView: View {
 
                         ForEach(viewModel.selectedMembers) { userTile in
                             let targetUserColor: Color = viewModel.getUserColor(
-                                userColor: userTile.userColor!)
+                                userColor: userTile.userColor ?? "gray")
 
                             if userTile.userId != viewModel.user?.userId {
                                 Group {
                                     HStack {
                                         //Circle or Profile Pic
                                         Icon(userTile: userTile, targetUserColor: targetUserColor)
-                                        Text(userTile.name!)
+                                        Text(userTile.name ?? "")
                                             .font(.headline)
                                     }
                                 }
@@ -193,7 +193,7 @@ struct AddMemberView: View {
 
                         ForEach(viewModel.filterFriends()) { userTile in
                             let targetUserColor: Color = viewModel.getUserColor(
-                                userColor: userTile.userColor!)
+                                userColor: userTile.userColor ?? "gray")
                             Group {
                                 HStack {
                                     Group {
@@ -254,7 +254,7 @@ struct AddMemberView: View {
 
                                     }
 
-                                    Text(userTile.name!)
+                                    Text(userTile.name ?? "")
                                         .font(.headline)
 
                                 }
@@ -300,8 +300,11 @@ struct AddMemberView: View {
         .task {
             //to prevent list from refreshing when one exits tab and comes back
             if viewModel.selectedMembers.isEmpty {
-                try? await viewModel.getAllFriends(
-                    userId: appModel.user!.userId)
+                
+                if let user = appModel.user {
+                    try? await viewModel.getAllFriends(
+                        userId: user.userId)
+                }
 
             }
 

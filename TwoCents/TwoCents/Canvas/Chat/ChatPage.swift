@@ -21,7 +21,7 @@ struct ChatPage: View {
                                     top: 0, leading: 0, bottom: 0, trailing: 0)
                             )
                             .listRowBackground(Color.clear)
-                            .frame(maxWidth: .infinity, alignment: appModel.user!.userId == message.sendBy ? .leading : .trailing)
+                            .frame(maxWidth: .infinity, alignment: appModel.user?.userId == message.sendBy ? .leading : .trailing)
                             .environment(canvasViewModel)
                             .environment(viewModel)
                     }
@@ -45,7 +45,10 @@ struct ChatPage: View {
                 .focused($isFocused)
 
                 Button {
-                    viewModel.sendMessage(userId: appModel.user!.userId)
+                    guard let user = appModel.user else {
+                        return
+                    }
+                    viewModel.sendMessage(userId: user.userId)
                 } label: {
                     Image(systemName: "arrow.up")
                         .font(.headline)

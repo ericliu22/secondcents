@@ -113,7 +113,10 @@ struct Poll: Codable, Identifiable {
         self.id = canvasWidget.id
         self.options = options
         //Theoretically all polls will have names so we manly exclamation mark
-        self.name = canvasWidget.widgetName!
+        //Eric here manly is bad always error check
+        if let name = canvasWidget.widgetName {
+            self.name = name
+        }
         self.userId = canvasWidget.userId
     }
 }

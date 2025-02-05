@@ -231,7 +231,10 @@ struct CalendarWidgetSheetView: View {
     }
     func saveDates() {
         let db = Firestore.firestore()
-        let userId = try! AuthenticationManager.shared.getAuthenticatedUser().uid
+        
+        guard let userId = try? AuthenticationManager.shared.getAuthenticatedUser().uid else {
+            return
+        }
 
         var saveData: [String: [String]] = [:]
         var updatedTimeSlotCounts: [String: [String: Int]] = [:]
