@@ -76,7 +76,7 @@ struct EmojiReactionsView: View {
     }
     
     private func addEmoji(emoji: String) {
-        emojiCount[emoji] += 1
+        emojiCount[emoji]! += 1
         
         db.collection("spaces")
             .document(spaceId)

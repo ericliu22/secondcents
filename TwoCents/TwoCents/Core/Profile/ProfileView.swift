@@ -552,8 +552,11 @@ struct ProfileView: View {
                     let tickleCount = Int(duration * 10)
 
                     if tickleCount > 1 {
-                        guard let currentUserId = try? AuthenticationManager.shared
-                            .getAuthenticatedUser().uid else {
+                        guard
+                            let currentUserId =
+                                try? AuthenticationManager.shared
+                                .getAuthenticatedUser().uid
+                        else {
                             return
                         }
 

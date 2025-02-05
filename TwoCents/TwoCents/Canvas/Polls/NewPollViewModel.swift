@@ -5,49 +5,46 @@
 //  Created by Joshua Shen on 1/11/24.
 //
 
+import FirebaseFirestore
 import Foundation
 import SwiftUI
-import FirebaseFirestore
 
 class NewPollModel: ObservableObject {
-    
-    
-    
+
     let db = Firestore.firestore()
-    
+
     var error: String? = nil
     @Published var newPollName: String = ""
     var newOptionName: String = ""
     var newPollOptions: [Option] = []
-    
+
     var isLoading = false
-    
+
     private var spaceId: String
-    
-//    var isCreateNewPollButtonDisabled: Bool {
-//        isLoading ||
-//        newPollName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ||
-//        newPollOptions.count < 2
-//    }
-    
-//    var isAddOptionsButtonDisabled: Bool {
-//        isLoading ||
-//        newOptionName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ||
-//        newPollOptions.count == 10
-//    }
-    
+
+    //    var isCreateNewPollButtonDisabled: Bool {
+    //        isLoading ||
+    //        newPollName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ||
+    //        newPollOptions.count < 2
+    //    }
+
+    //    var isAddOptionsButtonDisabled: Bool {
+    //        isLoading ||
+    //        newOptionName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ||
+    //        newPollOptions.count == 10
+    //    }
+
     init(spaceId: String) {
         self.spaceId = spaceId
     }
-    
-    
+
     @MainActor
     func createNewPoll() async -> CanvasWidget? {
-        
+
         isLoading = true
-        
-        defer {isLoading = false}
-        
+
+        defer { isLoading = false }
+
         let uid: String
         let user: DBUser
         do {
@@ -57,10 +54,11 @@ class NewPollModel: ObservableObject {
             print("Error getting user in NewPollViewModel")
             return nil
         }
-        
+
         //copy for changing widget sizes
-        let (width, height): (CGFloat, CGFloat) = SpaceManager.shared.getMultipliedSize(widthMultiplier: 2, heightMultiplier: 2)
-        
+        let (width, height): (CGFloat, CGFloat) = SpaceManager.shared
+            .getMultipliedSize(widthMultiplier: 2, heightMultiplier: 2)
+
         let newCanvasWidget: CanvasWidget = CanvasWidget(
             width: width,
             height: height,
@@ -70,31 +68,33 @@ class NewPollModel: ObservableObject {
             widgetName: newPollName
         )
         //end of copy
-        
+
         print(newPollOptions)
-        let poll=Poll(canvasWidget: newCanvasWidget, options: newPollOptions)
+        let poll = Poll(canvasWidget: newCanvasWidget, options: newPollOptions)
         poll.uploadPoll(spaceId: spaceId)
         self.newPollName = ""
         self.newOptionName = ""
         self.newPollOptions = []
-        
+
         //@TODO: Dismiss after submission
         return newCanvasWidget
     }
-    
-//    func addOption() {
-//        let newOption = Option(name: newOptionName.trimmingCharacters(in: .whitespacesAndNewlines))
-//        self.newPollOptions.append(newOption)
-//        self.newOptionName = ""
-//    }
-    
+
+    //    func addOption() {
+    //        let newOption = Option(name: newOptionName.trimmingCharacters(in: .whitespacesAndNewlines))
+    //        self.newPollOptions.append(newOption)
+    //        self.newOptionName = ""
+    //    }
+
     func addOptions(OptionArray: [String]) {
         for object in OptionArray {
-            if object.trimmingCharacters(in: .whitespacesAndNewlines) == "" { continue }
-            let newOption = Option(name: object.trimmingCharacters(in: .whitespacesAndNewlines))
+            if object.trimmingCharacters(in: .whitespacesAndNewlines) == "" {
+                continue
+            }
+            let newOption = Option(
+                name: object.trimmingCharacters(in: .whitespacesAndNewlines))
             self.newPollOptions.append(newOption)
         }
     }
-    
-    
+
 }
