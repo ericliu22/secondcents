@@ -23,6 +23,7 @@ final class ProfileViewModel {
     var isPressing = false
     var pressStartTime: Date?
     var tickleString: String = "Tickle"
+    private var userListener: ListenerRegistration? // Store the listener reference
 
     init(targetUserId: String, targetUserColor: Color?) {
         self.targetUserId = targetUserId
@@ -30,7 +31,8 @@ final class ProfileViewModel {
     }
 
     func attachUserListener(userId: String) {
-        Firestore.firestore().collection("users").document(userId).addSnapshotListener({ [weak self] documentSnapshot, error in
+        userListener?.remove()
+        userListener = Firestore.firestore().collection("users").document(userId).addSnapshotListener({ [weak self] documentSnapshot, error in
             guard let self = self else {
                 print("attachUserListener: weak self no reference")
                 return
@@ -46,6 +48,12 @@ final class ProfileViewModel {
             self.user = user
         })
     }
+    
+    func detachListener() {
+        userListener?.remove()
+        userListener = nil
+    }
+    
     
     func loadTargetUser(targetUserId: String) async throws {
 

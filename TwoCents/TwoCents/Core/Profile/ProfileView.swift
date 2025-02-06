@@ -541,7 +541,13 @@ struct ProfileView: View {
 
             }
         }
-
+        .onChange(of: appModel.user) {
+            viewModel.detachListener()
+            if let user = appModel.user {
+                viewModel.user = user
+                viewModel.attachUserListener(userId: user.userId)
+            }
+        }
         .onDisappear(perform: {
             if viewModel.isPressing {
                 viewModel.isPressing = false
