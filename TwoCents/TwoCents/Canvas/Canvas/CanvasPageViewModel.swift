@@ -246,6 +246,7 @@ final class CanvasPageViewModel {
     
     func canPlaceWidget(_ proposedWidget: CanvasWidget, at point: CGPoint) -> Bool {
         // Create a CGRect for the proposed widget at the new point
+        print(point)
         let proposedRect = CGRect(
             x: point.x,
             y: point.y,
