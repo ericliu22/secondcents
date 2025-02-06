@@ -14,6 +14,7 @@ struct TextMessage: Message {
     let messageType: MessageType
     let sendBy: String
     var text: String
+    var emojis: [String: [String]]?
     
     init(sendBy: String, text: String) {
         self.id = UUID().uuidString
@@ -21,6 +22,7 @@ struct TextMessage: Message {
         self.messageType = .text
         self.sendBy = sendBy
         self.text = text
+        self.emojis = [:]
     }
 
 }

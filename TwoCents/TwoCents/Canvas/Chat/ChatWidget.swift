@@ -91,6 +91,7 @@ struct ChatPreview: View {
             }
             .rotationEffect(.degrees(180))
         }
+        .scrollDisabled(true)
 
     }
 }

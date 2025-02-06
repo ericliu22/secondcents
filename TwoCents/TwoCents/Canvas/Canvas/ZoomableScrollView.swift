@@ -38,12 +38,12 @@ struct ZoomableScrollView<Content: View>: UIViewRepresentable {
         hostedView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.addSubview(hostedView)
 
-        let edgePanGesture = UIPanGestureRecognizer(
-            target: context.coordinator,
-            action: #selector(Coordinator.handleEdgePan(_:))
-        )
-        edgePanGesture.delegate = context.coordinator
-        scrollView.addGestureRecognizer(edgePanGesture)
+//        let edgePanGesture = UIPanGestureRecognizer(
+//            target: context.coordinator,
+//            action: #selector(Coordinator.handleEdgePan(_:))
+//        )
+//        edgePanGesture.delegate = context.coordinator
+//        scrollView.addGestureRecognizer(edgePanGesture)
 
         context.coordinator.scrollView = scrollView
         return scrollView
@@ -365,36 +365,36 @@ struct ZoomableScrollView<Content: View>: UIViewRepresentable {
             return CGRect(x: x, y: y, width: width, height: height)
         }
 
-        @objc func handleEdgePan(_ gesture: UIPanGestureRecognizer) {
-            guard let scrollView = scrollView else { return }
-
-            if canvasViewModel.canvasMode != .dragging { return }
-            let location = gesture.location(in: scrollView)
-
-            switch gesture.state {
-            case .began, .changed:
-                // Figure out which edge we’re nearest to:
-                autoScrollDirection = calculateDirectionIfNearEdge(
-                    location: location,
-                    scrollView: scrollView
-                )
-
-                if autoScrollDirection != .none {
-                    // If not already auto-scrolling, start it
-                    startAutoScroll()
-                } else {
-                    // If we’ve moved away from the edge, stop auto-scrolling
-                    stopAutoScroll()
-                }
-
-            case .ended, .cancelled, .failed:
-                // User lifted finger or gesture ended—stop auto-scrolling
-                stopAutoScroll()
-
-            default:
-                break
-            }
-        }
+//        @objc func handleEdgePan(_ gesture: UIPanGestureRecognizer) {
+//            guard let scrollView = scrollView else { return }
+//
+//            if canvasViewModel.canvasMode != .dragging { return }
+//            let location = gesture.location(in: scrollView)
+//
+//            switch gesture.state {
+//            case .began, .changed:
+//                // Figure out which edge we’re nearest to:
+//                autoScrollDirection = calculateDirectionIfNearEdge(
+//                    location: location,
+//                    scrollView: scrollView
+//                )
+//
+//                if autoScrollDirection != .none {
+//                    // If not already auto-scrolling, start it
+//                    startAutoScroll()
+//                } else {
+//                    // If we’ve moved away from the edge, stop auto-scrolling
+//                    stopAutoScroll()
+//                }
+//
+//            case .ended, .cancelled, .failed:
+//                // User lifted finger or gesture ended—stop auto-scrolling
+//                stopAutoScroll()
+//
+//            default:
+//                break
+//            }
+//        }
 
         private func calculateDirectionIfNearEdge(
             location: CGPoint,

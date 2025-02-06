@@ -51,6 +51,7 @@ protocol Message: Codable, Equatable, Identifiable {
     var dateCreated: Date { get }
     var messageType: MessageType { get }
     var sendBy: String { get }
+    var emojis: [String: [String]]? { get }
 }
 
 enum MessageType: String, Codable {
@@ -61,16 +62,19 @@ enum MessageType: String, Codable {
 
 
 struct EmptyMessage: Message {
+    
     let id: String
     let dateCreated: Date
     let messageType: MessageType
     let sendBy: String
-    
+    var emojis: [String : [String]]?
+
     init() {
         self.id = UUID().uuidString
         self.dateCreated = Date()
         self.messageType = .empty
         self.sendBy = ""
+        self.emojis = [:]
     }
 }
 
