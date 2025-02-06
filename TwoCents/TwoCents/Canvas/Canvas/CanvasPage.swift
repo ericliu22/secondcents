@@ -125,7 +125,10 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                     .offset(x: widget.width / 2, y: widget.height / 2)
                     .animation(.spring(), value: widget.x)  // Add animation for x position
                     .animation(.spring(), value: widget.y)  // Add animation for y position
-                    .border(viewModel.canPlaceWidget(widget, at: viewModel.widgetCursor) ? Color.green : Color.red, width: 2)
+                    .border(
+                        viewModel.canPlaceWidget(
+                            widget, at: viewModel.widgetCursor)
+                            ? Color.green : Color.red, width: 2)
             }
         } else {
             EmptyView()
@@ -198,7 +201,7 @@ struct CanvasPage: View, CanvasViewModelDelegate {
             ToolbarItem(placement: .topBarTrailing) {
                 Button(
                     action: {
-                        
+
                         viewModel.confirmPlacement()
                     },
                     label: {
@@ -228,99 +231,107 @@ struct CanvasPage: View, CanvasViewModelDelegate {
         ForEach(viewModel.canvasWidgets, id: \.id) { widget in
             // Main widget view
             ZStack {
-                MediaView(widget: widget, spaceId: spaceId)
-                    .environment(viewModel)
-                    .contextMenu(
-                        ContextMenu(menuItems: {
-
-                            EmojiReactionContextView(
-                                spaceId: spaceId, widget: widget,
-                                refreshId: $viewModel.refreshId)
-                            widgetButton(widget: widget)
-                            // Reply button
-                            //@TODO: This will not work for the time being
-                            Button(
-                                action: {
-                                    viewModel.activeSheet = .reply
-                                    viewModel.selectedDetent = .large
-                                    viewModel.replyWidget = widget
-                                },
-                                label: {
-                                    Label(
-                                        "Reply",
-                                        systemImage: "arrowshape.turn.up.left")
-                                })
-                            // Delete button
-
-                            Button(role: .destructive) {
-                                viewModel.deleteWidget(widget: widget)
-                            } label: {
-
-                                Label("Delete", systemImage: "trash")
-
-                            }
-                            ShareLink(
-                                item: viewModel.generateWidgetLink(
-                                    widget: widget)
-                            ) {
-                                Label(
-                                    "Share widget",
-                                    systemImage: "square.and.arrow.up")
-                            }
-                        })
-                    )
-                    .cornerRadius(CORNER_RADIUS)
-                    .frame(width: widget.width, height: widget.height)
-                    .position(
-                        x: widget.x ?? FRAME_SIZE / 2,
-                        y: widget.y ?? FRAME_SIZE / 2
-                    )
-                    .offset(x: widget.width / 2, y: widget.height / 2)
-                    .overlay {
-                        if viewModel.selectedWidget == nil {
-                            EmojiCountOverlayView(
-                                spaceId: spaceId, widget: widget
-                            )
-                            .offset(x: widget.width / 2, y: widget.height)
-                            .position(
-                                x: widget.x ?? FRAME_SIZE / 2,
-                                y: widget.y ?? FRAME_SIZE / 2
-                            )
-                            .id(viewModel.refreshId)
-                        } else {
-                            EmptyView()
+                DraggableView(
+                    onDrag: {
+                        // Supply drag items. For example, you can encode your widget’s id.
+                        let provider = NSItemProvider(
+                            object: NSString(string: widget.id.uuidString))
+                        return [UIDragItem(itemProvider: provider)]
+                    },
+                    onDrop: { session, dropPoint in
+                        // Here you can call your viewModel’s drop logic.
+                        // For example:
+                        let x = roundToTile(number: dropPoint.x)
+                        let y = roundToTile(number: dropPoint.y)
+                        let proposedPoint = CGPoint(x: x, y: y)
+                        if !viewModel.canPlaceWidget(widget, at: proposedPoint)
+                        {
+                            print("Collision detected—drop rejected")
+                            return false
                         }
+                        SpaceManager.shared.moveWidget(
+                            spaceId: spaceId,
+                            widgetId: widget.id.uuidString,
+                            x: x,
+                            y: y)
+                        return true
                     }
-                    .draggable(widget) {
-                        // Drag preview – note the removed .onAppear and disabled animations via transaction
-                        MediaView(widget: widget, spaceId: spaceId)
-                            .contentShape(
-                                .dragPreview,
-                                RoundedRectangle(
-                                    cornerRadius: CORNER_RADIUS,
-                                    style: .continuous)
-                            )
-                            .frame(width: widget.width, height: widget.height)
-                            .scaleEffect(viewModel.zoomScale)
-                            .environment(viewModel)
-                            .environment(appModel)
-                            .border(viewModel.canPlaceWidget(widget, at: viewModel.widgetCursor) ? Color.green : Color.red, width: 2)
-                            .transaction { transaction in
-                                transaction.animation = nil
+                ) {
+                    MediaView(widget: widget, spaceId: spaceId)
+                        .environment(viewModel)
+                        .cornerRadius(CORNER_RADIUS)
+                        .frame(width: widget.width, height: widget.height)
+                        .contextMenu(
+                            ContextMenu(menuItems: {
+
+                                EmojiReactionContextView(
+                                    spaceId: spaceId, widget: widget,
+                                    refreshId: $viewModel.refreshId)
+                                widgetButton(widget: widget)
+                                // Reply button
+                                //@TODO: This will not work for the time being
+                                Button(
+                                    action: {
+                                        viewModel.activeSheet = .reply
+                                        viewModel.selectedDetent = .large
+                                        viewModel.replyWidget = widget
+                                    },
+                                    label: {
+                                        Label(
+                                            "Reply",
+                                            systemImage:
+                                                "arrowshape.turn.up.left")
+                                    })
+                                // Delete button
+
+                                Button(role: .destructive) {
+                                    viewModel.deleteWidget(widget: widget)
+                                } label: {
+
+                                    Label("Delete", systemImage: "trash")
+
+                                }
+                                ShareLink(
+                                    item: viewModel.generateWidgetLink(
+                                        widget: widget)
+                                ) {
+                                    Label(
+                                        "Share widget",
+                                        systemImage: "square.and.arrow.up")
+                                }
+                            })
+                        )
+                        .cornerRadius(CORNER_RADIUS)
+                        .frame(width: widget.width, height: widget.height)
+                        .position(
+                            x: widget.x ?? FRAME_SIZE / 2,
+                            y: widget.y ?? FRAME_SIZE / 2
+                        )
+                        .offset(x: widget.width / 2, y: widget.height / 2)
+                        .overlay {
+                            if viewModel.selectedWidget == nil {
+                                EmojiCountOverlayView(
+                                    spaceId: spaceId, widget: widget
+                                )
+                                .offset(x: widget.width / 2, y: widget.height)
+                                .position(
+                                    x: widget.x ?? FRAME_SIZE / 2,
+                                    y: widget.y ?? FRAME_SIZE / 2
+                                )
+                                .id(viewModel.refreshId)
+                            } else {
+                                EmptyView()
                             }
-                        
-                            .onDisappear {
-                                viewModel.canvasMode = .normal
-                            }
-                    }
-                    // Disable position animations while dragging to avoid jittery behavior
-                    .animation(
-                        viewModel.canvasMode == .dragging ? nil : .spring(),
-                        value: widget.x
-                    )
-                    .animation(
-                        viewModel.canvasMode == .dragging ? nil : .spring(),
-                        value: widget.y)
+                        }
+                        .animation(
+                            viewModel.canvasMode == .dragging ? nil : .spring(),
+                            value: widget.x
+                        )
+                        .animation(
+                            viewModel.canvasMode == .dragging ? nil : .spring(),
+                            value: widget.y)
+                }
+                // Disable position animations while dragging to avoid jittery behavior
 
                 // Optional unread indicator overlay
                 if viewModel.unreadWidgets.contains(where: {

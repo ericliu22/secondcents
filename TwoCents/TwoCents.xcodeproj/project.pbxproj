@@ -68,6 +68,7 @@
 		A2A33CA02D32D35600056DE6 /* OffScreenIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2A33C9F2D32D34B00056DE6 /* OffScreenIndicator.swift */; };
 		A2AC0C0C2D319E3100B6BF15 /* QRCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2AC0C0B2D319E2900B6BF15 /* QRCodeView.swift */; };
 		A2AC0C0E2D31C5C600B6BF15 /* JoinSpaceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2AC0C0D2D31C5C000B6BF15 /* JoinSpaceView.swift */; };
+		A2BF7DE22D54339C00D1E9CD /* DraggableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2BF7DE12D54339900D1E9CD /* DraggableView.swift */; };
 		A2C0A2212C77E9060061F62D /* NotificationsCountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2C0A2202C77E9060061F62D /* NotificationsCountView.swift */; };
 		A2C6FE962C5EB94F0074C475 /* LinkWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2C6FE952C5EB94F0074C475 /* LinkWidget.swift */; };
 		A2C6FE982C5ECAD40074C475 /* NewLinkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2C6FE972C5ECAD40074C475 /* NewLinkView.swift */; };
@@ -267,6 +268,7 @@
 		A2A33C9F2D32D34B00056DE6 /* OffScreenIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OffScreenIndicator.swift; sourceTree = "<group>"; };
 		A2AC0C0B2D319E2900B6BF15 /* QRCodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeView.swift; sourceTree = "<group>"; };
 		A2AC0C0D2D31C5C000B6BF15 /* JoinSpaceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoinSpaceView.swift; sourceTree = "<group>"; };
+		A2BF7DE12D54339900D1E9CD /* DraggableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DraggableView.swift; sourceTree = "<group>"; };
 		A2C0A2202C77E9060061F62D /* NotificationsCountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsCountView.swift; sourceTree = "<group>"; };
 		A2C6FE952C5EB94F0074C475 /* LinkWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkWidget.swift; sourceTree = "<group>"; };
 		A2C6FE972C5ECAD40074C475 /* NewLinkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewLinkView.swift; sourceTree = "<group>"; };
@@ -487,6 +489,7 @@
 				A2A33C9F2D32D34B00056DE6 /* OffScreenIndicator.swift */,
 				A2E5F52A2B5A12D30019C6ED /* DrawingCanvas.swift */,
 				A2F563182AB4E6240026D8C9 /* CanvasPage.swift */,
+				A2BF7DE12D54339900D1E9CD /* DraggableView.swift */,
 				AB6EA6092B879B7C00CC90FF /* CanvasPageViewModel.swift */,
 				A22F84ED2C2912A20095A087 /* ZoomableScrollView.swift */,
 				A279471A2C7954C800EFC28A /* NotificationWidgetWrapper.swift */,
@@ -1207,6 +1210,7 @@
 				ABA45E842A7C92B00015F000 /* UserManager.swift in Sources */,
 				AB842C0E2A91E2B500E4A7CE /* StorageManager.swift in Sources */,
 				AB370E132C34F36A00C4431F /* MessageManager.swift in Sources */,
+				A2BF7DE22D54339C00D1E9CD /* DraggableView.swift in Sources */,
 				AB15AC0B2AF6F00C0055D5D0 /* SpaceProfilePicView.swift in Sources */,
 				AB6EA6102B87A27D00CC90FF /* SplashView.swift in Sources */,
 				85A8835A2C42F2B20030AE3A /* CustomCalendarView.swift in Sources */,
