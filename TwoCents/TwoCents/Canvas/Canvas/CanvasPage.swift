@@ -84,28 +84,29 @@ struct CanvasPage: View, CanvasViewModelDelegate {
             //    .frame(width: FRAME_SIZE, height: FRAME_SIZE)
         }
         .coordinateSpace(name: "canvas")
-        .dropDestination(for: CanvasWidget.self) { receivedWidgets, location in
+        .dropDestination(for: String.self) { receivedItems, location in
             viewModel.canvasMode = .normal
-            guard let draggingItem = receivedWidgets.first else {
-                print("Failed to intialize dragging item")
+            // receivedItems now is an array of Strings.
+            guard let widgetID = receivedItems.first else {
+                print("No widget id found in drop items")
+                return false
+            }
+            // Look up the widget from your viewModel by id.
+            guard let draggedWidget = viewModel.canvasWidgets.first(where: { $0.id.uuidString == widgetID }) else {
+                print("Could not find widget with id \(widgetID)")
                 return false
             }
             let x = roundToTile(number: location.x)
             let y = roundToTile(number: location.y)
-            let proposedPoint = CGPointMake(x, y)
-            if !viewModel.canPlaceWidget(draggingItem, at: proposedPoint) {
-                // Disallow drop
+            let proposedPoint = CGPoint(x: x, y: y)
+            if !viewModel.canPlaceWidget(draggedWidget, at: proposedPoint) {
                 print("Collision detected—drop rejected")
                 return false
             }
-
-            SpaceManager.shared.moveWidget(
-                spaceId: spaceId,
-                widgetId: draggingItem.id.uuidString,
-                x: x,
-                y: y
-            )
-
+            SpaceManager.shared.moveWidget(spaceId: spaceId,
+                                           widgetId: draggedWidget.id.uuidString,
+                                           x: x,
+                                           y: y)
             return true
         }
     }
@@ -233,29 +234,34 @@ struct CanvasPage: View, CanvasViewModelDelegate {
             ZStack {
                 DraggableView(
                     onDrag: {
-                        // Supply drag items. For example, you can encode your widget’s id.
-                        let provider = NSItemProvider(
-                            object: NSString(string: widget.id.uuidString))
-                        return [UIDragItem(itemProvider: provider)]
+                        viewModel.canvasMode = .dragging
+                        let provider = NSItemProvider(object: NSString(string: widget.id.uuidString))
+                        let dragItem = UIDragItem(itemProvider: provider)
+                        dragItem.localObject = widget  // attach the widget so we know which one is being dragged
+                        return [dragItem]
                     },
                     onDrop: { session, dropPoint in
-                        // Here you can call your viewModel’s drop logic.
-                        // For example:
+                        // Retrieve the dragged widget from the session's drag items.
+                        viewModel.canvasMode = .normal
+                        guard let draggedWidget = session.items.first?.localObject as? CanvasWidget else {
+                            print("Failed to retrieve the dragged widget")
+                            return false
+                        }
                         let x = roundToTile(number: dropPoint.x)
                         let y = roundToTile(number: dropPoint.y)
                         let proposedPoint = CGPoint(x: x, y: y)
-                        if !viewModel.canPlaceWidget(widget, at: proposedPoint)
-                        {
+                        if !viewModel.canPlaceWidget(draggedWidget, at: proposedPoint) {
                             print("Collision detected—drop rejected")
                             return false
                         }
                         SpaceManager.shared.moveWidget(
                             spaceId: spaceId,
-                            widgetId: widget.id.uuidString,
+                            widgetId: draggedWidget.id.uuidString,
                             x: x,
                             y: y)
                         return true
                     }
+
                 ) {
                     MediaView(widget: widget, spaceId: spaceId)
                         .environment(viewModel)
@@ -302,34 +308,27 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                             })
                         )
                         .cornerRadius(CORNER_RADIUS)
-                        .frame(width: widget.width, height: widget.height)
+                }
+                .frame(width: widget.width, height: widget.height)
+                .position(
+                    x: widget.x ?? FRAME_SIZE / 2,
+                    y: widget.y ?? FRAME_SIZE / 2
+                )
+                .offset(x: widget.width / 2, y: widget.height / 2)
+                .overlay {
+                    if viewModel.selectedWidget == nil {
+                        EmojiCountOverlayView(
+                            spaceId: spaceId, widget: widget
+                        )
+                        .offset(x: widget.width / 2, y: widget.height)
                         .position(
                             x: widget.x ?? FRAME_SIZE / 2,
                             y: widget.y ?? FRAME_SIZE / 2
                         )
-                        .offset(x: widget.width / 2, y: widget.height / 2)
-                        .overlay {
-                            if viewModel.selectedWidget == nil {
-                                EmojiCountOverlayView(
-                                    spaceId: spaceId, widget: widget
-                                )
-                                .offset(x: widget.width / 2, y: widget.height)
-                                .position(
-                                    x: widget.x ?? FRAME_SIZE / 2,
-                                    y: widget.y ?? FRAME_SIZE / 2
-                                )
-                                .id(viewModel.refreshId)
-                            } else {
-                                EmptyView()
-                            }
-                        }
-                        .animation(
-                            viewModel.canvasMode == .dragging ? nil : .spring(),
-                            value: widget.x
-                        )
-                        .animation(
-                            viewModel.canvasMode == .dragging ? nil : .spring(),
-                            value: widget.y)
+                        .id(viewModel.refreshId)
+                    } else {
+                        EmptyView()
+                    }
                 }
                 // Disable position animations while dragging to avoid jittery behavior
 
