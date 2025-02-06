@@ -46,7 +46,7 @@ struct TextMessageView: MessageView {
         VStack{
             if chatViewModel.messageChange(messageId: textMessage.id) {
                 Text(canvasViewModel.members[id: message.sendBy]?.name ?? "")
-                    .foregroundStyle(userColor)
+                    .foregroundStyle(Color.fromString(name: canvasViewModel.members[id: message.sendBy]?.userColor ?? "gray"))
                     .font(.caption)
                     .padding(.top, 3)
                     .padding(textMessage.sendBy == appModel.user?.userId ? .trailing : .leading, 6)
@@ -59,18 +59,12 @@ struct TextMessageView: MessageView {
                 .fontWeight(.regular)
                 .padding(.horizontal, 12)
                 .padding(.vertical, 8)
-                .foregroundStyle(userColor)
+                .foregroundStyle(Color.fromString(name: canvasViewModel.members[id: message.sendBy]?.userColor ?? "gray"))
                 .background(.ultraThickMaterial)
-                .background(userColor)
+                .background(Color.fromString(name: canvasViewModel.members[id: message.sendBy]?.userColor ?? "gray"))
                 .clipShape(RoundedRectangle(cornerRadius: 20))
                 .frame(maxWidth: .infinity,alignment: textMessage.sendBy == appModel.user?.userId ? .trailing : .leading)
        
-        }
-        .onAppear {
-            guard let colorString = canvasViewModel.members[id: message.sendBy]?.userColor else {
-                return
-            }
-            userColor = Color.fromString(name: colorString)
         }
     }
     
