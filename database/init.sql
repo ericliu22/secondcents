@@ -1,7 +1,6 @@
 -- Enable UUID extension
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
-<<<<<<< HEAD
 CREATE DATABASE twocents WITH TEMPLATE twocents OWNER admin;
 
 -- Table for spaces
@@ -71,7 +70,6 @@ CREATE TYPE LOCATION AS (
 CREATE TABLE IF NOT EXISTS maps (
     id UUID PRIMARY KEY NOT NULL,
     location LOCATION NOT NULL,
-=======
 -- Table for Poll media type
 CREATE TABLE polls (
     id UUID PRIMARY KEY,
