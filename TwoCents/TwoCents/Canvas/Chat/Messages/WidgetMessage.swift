@@ -49,7 +49,7 @@ struct WidgetMessageView: MessageView {
     var body: some View {
         VStack{
             if chatViewModel.messageChange(messageId: canvasWidgetMessage.id) {
-                Text(canvasViewModel.members.first(where: { u in u.userId == canvasWidgetMessage.sendBy})?.name ?? "")
+                Text(canvasViewModel.members[id: message.sendBy]?.name ?? "")
                     .foregroundStyle(userColor)
                     .font(.caption)
                     .padding(.top, 3)
@@ -78,7 +78,7 @@ struct WidgetMessageView: MessageView {
                 .clipShape(RoundedRectangle(cornerRadius: 20))
         }
         .onAppear {
-            guard let colorString = canvasViewModel.members.first(where: {u in u.userId == canvasWidgetMessage.sendBy})?.userColor else {
+            guard let colorString = canvasViewModel.members[id: message.sendBy]?.userColor else {
                 return
             }
             userColor = Color.fromString(name: colorString)

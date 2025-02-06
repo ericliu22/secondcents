@@ -38,7 +38,7 @@ final class CanvasPageViewModel {
     var widgetCursor: CGPoint = CGPoint(x: 0, y: 0)
     var unreadWidgets: [String] = []
     var visibleRectInCanvas: CGRect = CGRect(x: 0, y:0, width: 0, height: 0)
-    var members: [DBUser] = []
+    var members: IdentifiedCollection = IdentifiedCollection<DBUser>()
     var zoomScale: CGFloat = 1.0
     
     weak var coordinator: ZoomCoordinatorProtocol?
@@ -94,7 +94,7 @@ final class CanvasPageViewModel {
         guard let members = space.members else {
             return
         }
-        self.members = []
+        self.members = IdentifiedCollection<DBUser>()
         for member in members {
             guard let user = try? await UserManager.shared.getUser(userId: member) else {
                 continue

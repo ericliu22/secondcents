@@ -133,3 +133,43 @@ extension Array where Element: Hashable {
         return Array(thisSet.symmetricDifference(otherSet))
     }
 }
+
+struct IdentifiedCollection<Element: Identifiable & Hashable>: RandomAccessCollection {
+    private var elements: [Element]
+    private var elementsByID: [Element.ID: Int] // store index for O(1) lookups
+
+    init(_ elements: [Element] = []) {
+        self.elements = elements
+        self.elementsByID = Dictionary(
+            uniqueKeysWithValues: elements.enumerated().map { (index, element) in
+                (element.id, index)
+            }
+        )
+    }
+
+    // MARK: - RandomAccessCollection
+    
+    var startIndex: Int { elements.startIndex }
+    var endIndex: Int { elements.endIndex }
+    
+    func index(after i: Int) -> Int {
+        elements.index(after: i)
+    }
+    
+    subscript(position: Int) -> Element {
+        elements[position]
+    }
+
+    // MARK: - Custom lookups
+    
+    subscript(id id: Element.ID) -> Element? {
+        guard let idx = elementsByID[id] else { return nil }
+        return elements[idx]
+    }
+    
+    // Example mutation
+    mutating func append(_ element: Element) {
+        elements.append(element)
+        elementsByID[element.id] = elements.endIndex - 1
+    }
+}

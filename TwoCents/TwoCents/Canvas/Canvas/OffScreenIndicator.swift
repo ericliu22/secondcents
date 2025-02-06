@@ -100,7 +100,7 @@ struct OffScreenIndicator: View {
                     .task {
                         // Load user info, etc.
                         do {
-                            self.user = self.canvasViewModel.members.first(where: { u in u.userId == widget.userId})
+                            self.user = self.canvasViewModel.members[id: widget.userId]
                             guard let user = self.user else {
                                 return
                             }

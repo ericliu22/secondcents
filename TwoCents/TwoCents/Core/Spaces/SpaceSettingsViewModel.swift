@@ -62,7 +62,7 @@ final class SpaceSettingsViewModel {
 
     }
 
-    func leaveSpaceButton(members: [DBUser]) {
+    func leaveSpaceButton(members: IdentifiedCollection<DBUser>) {
             if members.count <= 3 {
                 Task {
                     try? await deleteSpace(

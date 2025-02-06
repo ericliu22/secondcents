@@ -9,7 +9,7 @@ import Foundation
 import FirebaseFirestore
 import SwiftUI
 
-struct DBUser: Identifiable, Codable, Equatable, Requestable {
+struct DBUser: Identifiable, Codable, Equatable, Requestable, Hashable {
     var id: String { userId }
     let userId: String
    

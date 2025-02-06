@@ -70,9 +70,7 @@ struct TickleWidget: WidgetView {
 
     var body: some View {
         VStack {
-            let member = canvasViewModel.members.first(where: {
-                $0.userId == widget.userId
-            })
+            let member = canvasViewModel.members[id: widget.userId]
             if let member {
                 if let profileImageUrl = member.profileImageUrl {
                     ProfilePic(
