@@ -36,17 +36,11 @@ struct VideoWidgetSheetView: View {
         .task {
             // 1. Build the Firebase Storage reference
             do {
-                let ref = StorageManager.shared
-                    .videoWidgetReference(spaceId: spaceId)
-                    .child(widget.id.uuidString)
-                
-                // 2. Let the cache manager fetch or download the local URL
+                guard let mediaURL = widget.mediaURL else {
+                    throw FetchVideoError.noUrl
+                }
                 let localURL =
-                try await MediaCacheManager.fetchCachedAssetURL(
-                    for: ref,
-                    fileType: .video
-                )
-                
+                try await MediaCacheManager.fetchCachedVideoURL(for: mediaURL)
                 // 3. Create the AVPlayer
                 let asset = AVAsset(url: localURL)
                 let playerItem = AVPlayerItem(asset: asset)

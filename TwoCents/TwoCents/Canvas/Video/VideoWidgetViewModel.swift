@@ -13,6 +13,10 @@ import SwiftUI
 
 //WARNING: This is not and should not be @MainActor for a reason
 //Loading times are slow asf if it is
+enum FetchVideoError: Error {
+    case noUrl
+}
+
 @Observable @MainActor
 final class VideoWidgetViewModel {
 
@@ -33,18 +37,12 @@ final class VideoWidgetViewModel {
     var videoThumbnail: UIImage?
 
     func fetchVideo() async throws {
-        // 1. Build the Firebase Storage reference
-        let ref = StorageManager.shared
-            .videoWidgetReference(spaceId: spaceId)
-            .child(widget.id.uuidString)
-
         // 2. Let the cache manager fetch or download the local URL
+        guard let mediaURL = widget.mediaURL else {
+            throw FetchVideoError.noUrl
+        }
         let localURL =
-            try await MediaCacheManager.fetchCachedAssetURL(
-                for: ref,
-                fileType: .video
-            )
-
+        try await MediaCacheManager.fetchCachedVideoURL(for: mediaURL)
         await getVideoThumbnail(from: localURL)
     }
 

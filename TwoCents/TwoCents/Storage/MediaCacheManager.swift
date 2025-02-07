@@ -132,6 +132,71 @@ struct MediaCacheManager {
         return localURL
     }
     
+    // MARK: - Video Fetch with ETag / Last-Modified
+        
+        /// Fetches and caches a video from a remote URL (HTTPS).
+        /// 1. If local file is present, issues a HEAD request to compare ETag/Last-Modified.
+        /// 2. If changed or missing, downloads again.
+        /// 3. Returns the local cached file URL.
+        static func fetchCachedVideoURL(for remoteURL: URL) async throws -> URL {
+            
+            // 1) Generate a unique local filename by hashing the remote URL
+            let urlString = remoteURL.absoluteString
+            let hashedName = sha256(urlString)
+            let localURL = makeLocalURL(forHashedName: hashedName, fileType: .video)
+            
+            // 2) Prepare keys to store ETag / Last-Modified in UserDefaults
+            let localEtagKey  = "MediaCacheManager.etag.video.\(hashedName)"
+            let localModKey   = "MediaCacheManager.lastModified.video.\(hashedName)"
+            
+            // 3) If local file already exists, do a HEAD request to see if changed
+            let fileExists = FileManager.default.fileExists(atPath: localURL.path)
+            
+            if fileExists {
+                do {
+                    let (etag, lastModified) = try await fetchHttpHeaders(for: remoteURL)
+                    
+                    let localEtag = UserDefaults.standard.string(forKey: localEtagKey)
+                    let localLastMod = UserDefaults.standard.string(forKey: localModKey)
+                    
+                    // Compare ETag / Last-Modified
+                    let changed = (etag != nil && etag != localEtag)
+                                || (lastModified != nil && lastModified != localLastMod)
+                    
+                    // If changed, remove the old file to force a new download
+                    if changed {
+                        try? FileManager.default.removeItem(at: localURL)
+                    }
+                } catch {
+                    // If HEAD fails, you can decide to keep the old file or re-download
+                    // Here we’ll just print the error and continue
+                    print("HEAD request failed for video:", error)
+                }
+            }
+            
+            // 4) If file not found or removed, download again
+            if !FileManager.default.fileExists(atPath: localURL.path) {
+                let (data, response) = try await URLSession.shared.data(from: remoteURL)
+                try data.write(to: localURL, options: .atomic)
+                
+                // Update ETag / Last-Modified from GET response
+                if let httpResp = response as? HTTPURLResponse {
+                    let etag    = httpResp.value(forHTTPHeaderField: "ETag")
+                    let lastMod = httpResp.value(forHTTPHeaderField: "Last-Modified")
+                    
+                    if let etag = etag {
+                        UserDefaults.standard.set(etag, forKey: localEtagKey)
+                    }
+                    if let lastMod = lastMod {
+                        UserDefaults.standard.set(lastMod, forKey: localModKey)
+                    }
+                }
+            }
+            
+            // 5) Return the local file URL
+            return localURL
+        }
+    
     
     // MARK: - Helper: HEAD request to fetch ETag/Last-Modified
     
