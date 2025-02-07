@@ -22,6 +22,7 @@ struct PollWidget: WidgetView {
     @State var poll: Poll?
     @State var totalVotes: Int = 0
     @Environment(AppModel.self) var appModel
+    @Environment(CanvasPageViewModel.self) var canvasViewModel
     
     
     init(widget: CanvasWidget, spaceId: String) {
@@ -232,6 +233,10 @@ struct PollWidget: WidgetView {
                 //                .background(Color.accentColor)
                 
                 .frame(width: widget.width, height: widget.height)
+                .onTapGesture {
+                    canvasViewModel.activeWidget = widget
+                    canvasViewModel.activeSheet = .poll
+                }
             } else {
                 //                ProgressView()
                 //                    .foregroundStyle(Color(UIColor.label))

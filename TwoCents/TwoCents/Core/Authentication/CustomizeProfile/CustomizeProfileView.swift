@@ -69,7 +69,7 @@ struct CustomizeProfileView: View {
                     
                     
                     //profile pic in middle
-                    CachedUrlImage(imageUrl: url)
+                    CachedImage(imageUrl: url)
                     
                     .frame(width: 176, height: 176)
                     

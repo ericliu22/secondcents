@@ -74,7 +74,7 @@ struct OffScreenIndicator: View {
                         // Possibly an avatar or text overlay
                         if let user {
                             if let profileImageUrl = user.profileImageUrl {
-                                CachedUrlImage(imageUrl: URL(string: profileImageUrl)!)
+                                CachedImage(imageUrl: URL(string: profileImageUrl)!)
                                     .clipShape(Circle())
                                     .frame(width: 40, height: 40)
 

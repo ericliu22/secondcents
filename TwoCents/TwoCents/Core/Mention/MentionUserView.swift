@@ -71,7 +71,7 @@ struct MentionUserView: View {
                                 
                                 //If there is URL for profile pic, show
                                 //circle with stroke
-                                CachedUrlImage(imageUrl: url)
+                                CachedImage(imageUrl: url)
                                     .clipShape(Circle())
                                     .frame(width: 48, height: 48)
                                 

@@ -39,7 +39,7 @@ struct SpaceProfilePicView: View {
                     //circle with stroke
                  
                             //profile pic in middle
-                    CachedUrlImage(imageUrl: url)
+                    CachedImage(imageUrl: url)
                     .frame(width: 176, height: 176)
                     .clipShape(Circle())
                     

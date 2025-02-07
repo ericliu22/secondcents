@@ -24,7 +24,7 @@ struct ImageWidget: WidgetView {
 
     var body: some View {
         if let mediaURL = widget.mediaURL {
-            CachedUrlImage(imageUrl: mediaURL)
+            CachedImage(imageUrl: mediaURL)
                 .frame(width: widget.width, height: widget.height)
                 .onTapGesture {
                     guard let canvasViewModel = canvasViewModel else { return }

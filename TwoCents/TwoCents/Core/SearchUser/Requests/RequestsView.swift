@@ -91,7 +91,7 @@ struct SpaceRequestTile: View {
                         if let urlString = requestSpace.profileImageUrl,
                             let url = URL(string: urlString)
                         {
-                            CachedUrlImage(imageUrl: url)
+                            CachedImage(imageUrl: url)
                                 .clipShape(Circle())
                                 .frame(width: 64, height: 64)
                         } else {

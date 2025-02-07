@@ -19,7 +19,7 @@ struct ImageWidgetSheetView: View {
             VStack {
                 ZStack {
                     if let mediaURL = widget.mediaURL {
-                        CachedUrlImage(imageUrl: mediaURL)
+                        CachedImage(imageUrl: mediaURL)
                     }
                 }
             }

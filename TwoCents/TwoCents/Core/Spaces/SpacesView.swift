@@ -77,7 +77,7 @@ struct SpacesView: View {
                         .aspectRatio(1, contentMode: .fit)
                         .background(
 
-                            CachedUrlImage(imageUrl: url)
+                            CachedImage(imageUrl: url)
                                 .clipShape(Circle())
                                     .layoutPriority(-1)
 
@@ -100,7 +100,7 @@ struct SpacesView: View {
 
                         //If there is URL for profile pic, show
                         //circle with stroke
-                        CachedUrlImage(imageUrl: url)
+                        CachedImage(imageUrl: url)
                             .clipShape(Circle())
                             .frame(width: 64, height: 64)
 

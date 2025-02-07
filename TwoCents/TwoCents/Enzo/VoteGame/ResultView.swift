@@ -25,7 +25,7 @@ struct ResultView: View {
                 .edgesIgnoringSafeArea(.all)
             VStack{
                 let url = URL(string: urlString)!
-                CachedUrlImage(imageUrl: url)
+                CachedImage(imageUrl: url)
                 .clipShape(Circle())
                 .frame(width: frameSize, height: frameSize)
                 

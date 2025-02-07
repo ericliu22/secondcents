@@ -28,7 +28,7 @@ struct AcceptSpaceRequestView: View {
                         if let urlString = space.profileImageUrl,
                             let url = URL(string: urlString)
                         {
-                            CachedUrlImage(imageUrl: url)
+                            CachedImage(imageUrl: url)
                                 .clipShape(Circle())
                                 .frame(width: 160, height: 160)
                         } else {

@@ -1,15 +1,14 @@
 //
-//  CachedImage.swift
+//  CachedUrlImage.swift
 //  TwoCents
 //
 //  Created by Eric Liu on 2025/2/6.
 //
 import SwiftUI
-import FirebaseStorage
 
 struct CachedImage: View {
 
-    let storageReference: StorageReference
+    let imageUrl: URL
     @State private var cachedURL: URL?
     @State private var isLoading: Bool = true
     
@@ -39,16 +38,12 @@ struct CachedImage: View {
             }
         }
         .task {
+            
             do {
-                let localURL =
-                try await MediaCacheManager.fetchCachedAssetURL(
-                    for: storageReference,
-                    fileType: .image
-                )
-                
-                cachedURL = localURL
+                cachedURL = try await MediaCacheManager.fetchCachedImageURL(for: imageUrl)
                 isLoading = false
             } catch {
+                print("Failed to fetch")
                 isLoading = false
             }
         }
