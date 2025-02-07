@@ -11,7 +11,7 @@ struct CachedImage: View {
 
     let storageReference: StorageReference
     @State private var cachedURL: URL?
-    @State private var isLoading: Bool = false
+    @State private var isLoading: Bool = true
     
     var body: some View {
         ZStack {
