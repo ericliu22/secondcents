@@ -11,7 +11,7 @@ final class WidgetSizeModel {
     
     var widgets: [CanvasWidget] = []
     let widget: CanvasWidget
-    let sizes: [(CGFloat, CGFloat)] = [(TILE_SIZE, TILE_SIZE), SpaceManager.shared.getMultipliedSize(widthMultiplier: 1, heightMultiplier: 2), SpaceManager.shared.getMultipliedSize(widthMultiplier: 2, heightMultiplier: 1), SpaceManager.shared.getMultipliedSize(widthMultiplier: 2, heightMultiplier: 2)]
+    let sizes: [(CGFloat, CGFloat)] = [(TILE_SIZE, TILE_SIZE), getMultipliedSize(widthMultiplier: 1, heightMultiplier: 2), getMultipliedSize(widthMultiplier: 2, heightMultiplier: 1), getMultipliedSize(widthMultiplier: 2, heightMultiplier: 2)]
     
     init(widget: CanvasWidget) {
         self.widget = widget

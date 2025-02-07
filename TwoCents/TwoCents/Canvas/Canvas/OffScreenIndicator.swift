@@ -74,16 +74,10 @@ struct OffScreenIndicator: View {
                         // Possibly an avatar or text overlay
                         if let user {
                             if let profileImageUrl = user.profileImageUrl {
-                                AsyncImage(url: URL(string: profileImageUrl)!) { image in
-                                    image
-                                        .resizable()
-                                        .scaledToFill()
-                                        .clipShape(Circle())
-                                        .frame(width: 40, height: 40)
-                                } placeholder: {
-                                    ProgressView()
-                                        .frame(width: 30, height: 30)
-                                }
+                                CachedUrlImage(imageUrl: URL(string: profileImageUrl)!)
+                                    .clipShape(Circle())
+                                    .frame(width: 40, height: 40)
+
                             } else {
                                 Text("New")
                             }

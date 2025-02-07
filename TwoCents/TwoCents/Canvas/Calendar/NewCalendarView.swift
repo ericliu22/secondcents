@@ -125,7 +125,7 @@ struct NewCalendarView: View {
                                 return
                             }
                             
-                            let (width, height): (CGFloat, CGFloat) = SpaceManager.shared.getMultipliedSize(widthMultiplier: 2, heightMultiplier: 2)
+                            let (width, height): (CGFloat, CGFloat) = getMultipliedSize(widthMultiplier: 2, heightMultiplier: 2)
                             
                             let newWidget: CanvasWidget = CanvasWidget(
                                 width: width,

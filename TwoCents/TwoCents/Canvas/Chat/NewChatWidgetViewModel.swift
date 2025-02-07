@@ -18,7 +18,7 @@ class NewChatWidgetViewModel {
     
     func uploadChat(userId: String, spaceId: String) throws -> CanvasWidget {
         
-        let (width, height) = SpaceManager.shared.getMultipliedSize(widthMultiplier: 2, heightMultiplier: 2)
+        let (width, height) = getMultipliedSize(widthMultiplier: 2, heightMultiplier: 2)
         
         let widget = CanvasWidget(width: width, height: height, borderColor: .red, userId: userId, media: .chat, widgetName: text)
         let chat = Chat(userId: userId, spaceId: spaceId, name: text, members: members, id: widget.id.uuidString)

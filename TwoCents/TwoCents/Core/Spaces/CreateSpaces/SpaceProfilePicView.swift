@@ -39,29 +39,7 @@ struct SpaceProfilePicView: View {
                     //circle with stroke
                  
                             //profile pic in middle
-                            AsyncImage(url: url) {image in
-                                image
-                                    .resizable()
-                                    .scaledToFill()
-                                    
-                                
-                            } placeholder: {
-                                //else show loading after user uploads but sending/downloading from database
-                                
-                                ProgressView()
-                                    .progressViewStyle(CircularProgressViewStyle(tint: Color(UIColor.systemBackground)))
-                                    .scaleEffect(1.5, anchor: .center)
-                                    .background(
-                                        Circle()
-                                        .fill(Color.accentColor)
-                                        .frame(width: 176, height: 176)
-                                    )
-                                    
-                            }
-                            
-                        
-                        .frame(width: 176, height: 176)
-                    
+                    CachedUrlImage(imageUrl: url)
                     .frame(width: 176, height: 176)
                     .clipShape(Circle())
                     

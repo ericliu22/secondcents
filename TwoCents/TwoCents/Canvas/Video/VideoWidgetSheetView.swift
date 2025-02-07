@@ -1,52 +1,61 @@
-import SwiftUI
 import AVKit
+import SwiftUI
 
 struct VideoWidgetSheetView: View {
-    
+
     init(widget: CanvasWidget, spaceId: String) {
         assert(widget.media == .video)
         self.widget = widget
         self.spaceId = spaceId
-        self.playerModel = VideoPlayerModel(url: widget.mediaURL!)
     }
-    
-    private var spaceId: String
-    private var widget: CanvasWidget
-    
-    @State private var user: DBUser? = nil
+
+    let spaceId: String
+    let widget: CanvasWidget
+    @State var videoPlayer: AVPlayer?
+    @State var isLoading: Bool = true
     @Environment(\.dismiss) var dismissScreen
-    
-    
-    @Environment(CanvasPageViewModel.self) var canvasViewModel: CanvasPageViewModel?
-    
-    private var playerModel: VideoPlayerModel
-  
+
+    @Environment(CanvasPageViewModel.self) var canvasViewModel:
+        CanvasPageViewModel?
+
     var body: some View {
         NavigationStack {
-            VideoPlayer(player: playerModel.videoPlayer)
-                .ignoresSafeArea()
-                .onDisappear {
-                    playerModel.videoPlayer.pause()
-                    playerModel.isPlaying = false
+            if isLoading {
+                ProgressView()
+                    .progressViewStyle(CircularProgressViewStyle(tint: .primary))
+            } else {
+                if let videoPlayer {
+                    VideoPlayer(player: videoPlayer)
+                        .ignoresSafeArea()
+                        .onDisappear {
+                            videoPlayer.pause()
+                        }
                 }
-               
-//                .background(.black)
-//            .toolbar {
-//                ToolbarItem(placement: .navigationBarLeading) {
-//                    Button(action: {
-//                        dismissScreen()
-//                    }, label: {
-//                        Image(systemName: "xmark")
-////                            .foregroundColor(Color(UIColor.label))
-//                            .foregroundColor(.white)
-//                    })
-//                }
-//            }
-          
-//            .navigationTitle(user?.name ?? "Loading...")
-//            
-//            .navigationBarTitleDisplayMode(.inline)
-         
+            }
+        }
+        .task {
+            // 1. Build the Firebase Storage reference
+            do {
+                let ref = StorageManager.shared
+                    .videoWidgetReference(spaceId: spaceId)
+                    .child(widget.id.uuidString)
+                
+                // 2. Let the cache manager fetch or download the local URL
+                let localURL =
+                try await MediaCacheManager.fetchCachedAssetURL(
+                    for: ref,
+                    fileType: .video
+                )
+                
+                // 3. Create the AVPlayer
+                let asset = AVAsset(url: localURL)
+                let playerItem = AVPlayerItem(asset: asset)
+                videoPlayer = AVPlayer(playerItem: playerItem)
+                
+                isLoading = false
+            } catch {
+                isLoading = false
+            }
         }
     }
 }

@@ -47,43 +47,9 @@ struct AddMemberView: View {
                 
                 //If there is URL for profile pic, show
                 //circle with stroke
-                AsyncImage(url: url) { image in
-                    image
-                        .resizable()
-                        .scaledToFill()
-                        .clipShape(Circle())
-                        .frame(
-                            width: 16,
-                            height: 16)
-                    
-                } placeholder: {
-                    //else show loading after user uploads but sending/downloading from database
-                    
-                    ProgressView()
-                        .progressViewStyle(
-                            CircularProgressViewStyle(
-                                tint: Color(
-                                    UIColor
-                                        .systemBackground
-                                ))
-                        )
-                        .scaleEffect(
-                            0.5, anchor: .center
-                        )
-                        .frame(
-                            width: 16,
-                            height: 16
-                        )
-                        .background(
-                            Circle()
-                                .fill(
-                                    targetUserColor
-                                )
-                                .frame(
-                                    width: 16,
-                                    height: 16)
-                        )
-                }
+                CachedUrlImage(imageUrl: url)
+                    .clipShape(Circle())
+                    .frame(width: 16, height: 16)
                 
             } else {
                 
@@ -206,41 +172,9 @@ struct AddMemberView: View {
 
                                             //If there is URL for profile pic, show
                                             //circle with stroke
-                                            AsyncImage(url: url) { image in
-                                                image
-                                                    .resizable()
-                                                    .scaledToFill()
-                                                    .clipShape(Circle())
-                                                    .frame(
-                                                        width: 16, height: 16)
-
-                                            } placeholder: {
-                                                //else show loading after user uploads but sending/downloading from database
-
-                                                ProgressView()
-                                                    .progressViewStyle(
-                                                        CircularProgressViewStyle(
-                                                            tint: Color(
-                                                                UIColor
-                                                                    .systemBackground
-                                                            ))
-                                                    )
-                                                    .scaleEffect(
-                                                        0.5, anchor: .center
-                                                    )
-                                                    .frame(
-                                                        width: 16, height: 16
-                                                    )
-                                                    .background(
-                                                        Circle()
-                                                            .fill(
-                                                                targetUserColor
-                                                            )
-                                                            .frame(
-                                                                width: 16,
-                                                                height: 16)
-                                                    )
-                                            }
+                                            CachedUrlImage(imageUrl: url)
+                                                .clipShape(Circle())
+                                                .frame(width: 16, height: 16)
 
                                         } else {
 

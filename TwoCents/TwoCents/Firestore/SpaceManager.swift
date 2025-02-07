@@ -217,18 +217,7 @@ final class SpaceManager {
             + (max(CGFloat(heightMultiplier - 1), 0) * TILE_SPACING)
     }
 
-    func getMultipliedSize(widthMultiplier: Int, heightMultiplier: Int) -> (
-        CGFloat, CGFloat
-    ) {
-        let width: CGFloat =
-            TILE_SIZE * CGFloat(widthMultiplier)
-            + (max(CGFloat(widthMultiplier - 1), 0) * TILE_SPACING)
-        let height: CGFloat =
-            TILE_SIZE * CGFloat(heightMultiplier)
-            + (max(CGFloat(heightMultiplier - 1), 0) * TILE_SPACING)
 
-        return (width, height)
-    }
 
     private func setSize(
         spaceId: String, widgetId: String, width: CGFloat, height: CGFloat

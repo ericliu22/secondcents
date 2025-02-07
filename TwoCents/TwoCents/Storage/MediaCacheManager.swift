@@ -1,0 +1,169 @@
+//
+//  MediaCacheManager.swift
+//  TwoCents
+//
+//  Created by Eric Liu on 2025/2/6.
+//
+import SwiftUI
+import FirebaseStorage
+import CryptoKit
+
+/// Simple enum to handle file type -> extension mapping.
+enum FileType {
+    case image
+    case video
+    
+    var fileExtension: String {
+        switch self {
+        case .image: return "jpeg"
+        case .video: return "mp4"
+        }
+    }
+}
+
+/// A manager for caching images/videos with version checks to detect changes.
+struct MediaCacheManager {
+    
+    // MARK: - 1) Firebase Reference-based Fetch with Metadata Check
+    
+    /// Fetch a local file URL for a given Firebase `StorageReference`.
+    /// 1. Calls `getMetadata()` to get `updated` time.
+    /// 2. If local copy is stale, deletes it.
+    /// 3. Downloads & caches if needed.
+    /// 4. Returns the local file URL.
+    static func fetchCachedAssetURL(
+        for ref: StorageReference,
+        fileType: FileType
+    ) async throws -> URL {
+        
+        // Create a local file path (hashing the fullPath to avoid special chars)
+        let remotePath = ref.fullPath
+        let hashedName = sha256(remotePath)
+        let localURL = makeLocalURL(forHashedName: hashedName, fileType: fileType)
+        
+        // Use UserDefaults to track the last-updated time we’ve seen
+        let localUpdatedKey = "MediaCacheManager.lastUpdated.\(hashedName)"
+        let localUpdated = UserDefaults.standard.double(forKey: localUpdatedKey)  // 0 if not set
+        
+        // 1. Check metadata for last update time
+        let metadata = try await ref.getMetadata()
+        let serverUpdated = metadata.updated?.timeIntervalSince1970 ?? 0
+        
+        // 2. Compare local vs. server update times
+        if serverUpdated > localUpdated {
+            // The file on the server is newer => remove local cache
+            if FileManager.default.fileExists(atPath: localURL.path) {
+                try? FileManager.default.removeItem(at: localURL)
+            }
+        }
+        
+        // 3. If we don’t have a local file, download it
+        if !FileManager.default.fileExists(atPath: localURL.path) {
+            _ = ref.write(toFile: localURL)
+            // Update local "lastUpdated"
+            UserDefaults.standard.set(serverUpdated, forKey: localUpdatedKey)
+        }
+        
+        // 4. Return local file URL
+        return localURL
+    }
+    
+    
+    // MARK: - 2) Direct URL-based Fetch with ETag or Last-Modified Check
+    
+    /// Fetch a local file URL for a direct (HTTPS) image URL.
+    /// 1. Issues a HEAD request to get ETag/Last-Modified.
+    /// 2. If local is stale, re-download.
+    /// 3. Returns local file URL.
+    static func fetchCachedImageURL(for remoteURL: URL) async throws -> URL {
+        
+        // Hash the URL string to form a unique local filename
+        let urlString = remoteURL.absoluteString
+        let hashedName = sha256(urlString)
+        let localURL = makeLocalURL(forHashedName: hashedName, fileType: .image)
+        
+        // Keys for storing ETag & last-modified in UserDefaults
+        let localEtagKey  = "MediaCacheManager.etag.\(hashedName)"
+        let localModKey   = "MediaCacheManager.lastModified.\(hashedName)"
+        
+        // Check if local file exists
+        let fileExists = FileManager.default.fileExists(atPath: localURL.path)
+        
+        // We'll do a HEAD request to check headers only if we already have a local file
+        if fileExists {
+            do {
+                let (etag, lastMod) = try await fetchHttpHeaders(for: remoteURL)
+                let localEtag = UserDefaults.standard.string(forKey: localEtagKey)
+                let localLastMod = UserDefaults.standard.string(forKey: localModKey)
+                
+                // If ETag or Last-Modified differs, the file changed => remove local
+                let changed = (etag != nil && etag != localEtag)
+                            || (lastMod != nil && lastMod != localLastMod)
+                
+                if changed {
+                    try? FileManager.default.removeItem(at: localURL)
+                }
+            } catch {
+                // If HEAD fails, we’ll ignore and proceed with the existing file
+                // Or you might choose to re-download.
+                print("HEAD request failed:", error)
+            }
+        }
+        
+        // If the file is gone or didn’t exist, download it
+        if !FileManager.default.fileExists(atPath: localURL.path) {
+            // Download data
+            let (data, response) = try await URLSession.shared.data(from: remoteURL)
+            try data.write(to: localURL)
+            
+            // Read ETag/Last-Modified from the *GET* response too
+            if let httpResp = response as? HTTPURLResponse {
+                let etag    = httpResp.value(forHTTPHeaderField: "ETag")
+                let lastMod = httpResp.value(forHTTPHeaderField: "Last-Modified")
+                if let etag = etag {
+                    UserDefaults.standard.set(etag, forKey: localEtagKey)
+                }
+                if let lastMod = lastMod {
+                    UserDefaults.standard.set(lastMod, forKey: localModKey)
+                }
+            }
+        }
+        
+        return localURL
+    }
+    
+    
+    // MARK: - Helper: HEAD request to fetch ETag/Last-Modified
+    
+    /// Sends a HEAD request to get ETag or Last-Modified from the server
+    private static func fetchHttpHeaders(for url: URL) async throws -> (etag: String?, lastModified: String?) {
+        var request = URLRequest(url: url)
+        request.httpMethod = "HEAD"
+        
+        let (_, response) = try await URLSession.shared.data(for: request)
+        guard let httpResp = response as? HTTPURLResponse, httpResp.statusCode == 200 else {
+            throw URLError(.badServerResponse)
+        }
+        
+        let etag    = httpResp.value(forHTTPHeaderField: "ETag")
+        let lastMod = httpResp.value(forHTTPHeaderField: "Last-Modified")
+        return (etag, lastMod)
+    }
+    
+    
+    // MARK: - Internal Helpers
+    
+    /// Creates a local cache URL in the Caches directory.
+    private static func makeLocalURL(forHashedName hashedName: String, fileType: FileType) -> URL {
+        let cacheDir = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!
+        let fileName = "\(hashedName).\(fileType.fileExtension)"
+        return cacheDir.appendingPathComponent(fileName)
+    }
+    
+    /// Create a SHA256 hash for string-based paths or URLs (to safely generate file names).
+    private static func sha256(_ input: String) -> String {
+        let data = Data(input.utf8)
+        let hash = SHA256.hash(data: data)
+        return hash.map { String(format: "%02x", $0) }.joined()
+    }
+}

@@ -24,19 +24,19 @@ final class StorageManager{
     }
     
     
-    private func userReference(userId: String) -> StorageReference{
+    func userReference(userId: String) -> StorageReference{
         storage.child("users").child(userId)
     }
     
-    private func spaceReference(spaceId: String) -> StorageReference{
+    func spaceReference(spaceId: String) -> StorageReference{
         storage.child("spaces").child(spaceId)
     }
     
-    private func imageWidgetReference(spaceId: String) -> StorageReference{
+    func imageWidgetReference(spaceId: String) -> StorageReference{
         storage.child("spaces").child(spaceId).child("imageWidgets")
     }
     
-    private func videoWidgetReference(spaceId: String) -> StorageReference{
+    func videoWidgetReference(spaceId: String) -> StorageReference{
         storage.child("spaces").child(spaceId).child("videoWidgets")
     }
 

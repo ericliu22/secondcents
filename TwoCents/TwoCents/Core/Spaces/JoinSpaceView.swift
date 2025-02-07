@@ -29,27 +29,9 @@ struct JoinSpaceView: View {
                         if let urlString = space.profileImageUrl,
                             let url = URL(string: urlString)
                         {
-                            AsyncImage(url: url) { image in
-                                image
-                                    .resizable()
-                                    .scaledToFill()
-                                    .clipShape(Circle())
-                                    .frame(width: 160, height: 160)
-
-                            } placeholder: {
-                                ProgressView()
-                                    .progressViewStyle(
-                                        CircularProgressViewStyle(
-                                            tint:
-                                                Color(UIColor.systemBackground)
-                                        )
-                                    )
-                                    .frame(width: 160, height: 160)
-                                    .background(
-                                        Circle()
-                                            .fill(Color.accentColor)
-                                    )
-                            }
+                            CachedUrlImage(imageUrl: url)
+                                .clipShape(Circle())
+                                .frame(width: 160, height: 160)
                         } else {
                             Circle()
                                 .fill(Color.accentColor)

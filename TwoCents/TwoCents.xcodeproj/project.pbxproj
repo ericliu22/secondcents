@@ -64,6 +64,9 @@
 		A26E6F142D529EC2009417A4 /* NewTickleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A26E6F132D529EB9009417A4 /* NewTickleView.swift */; };
 		A26EFB1E2CFEC7D600238622 /* FriendRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A26EFB1D2CFEC7CF00238622 /* FriendRequest.swift */; };
 		A279471B2C7954C800EFC28A /* NotificationWidgetWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A279471A2C7954C800EFC28A /* NotificationWidgetWrapper.swift */; };
+		A27C76072D5582F10075DCF1 /* MediaCacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A27C76062D5582E00075DCF1 /* MediaCacheManager.swift */; };
+		A27C76092D558EA20075DCF1 /* CachedImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A27C76082D558E9D0075DCF1 /* CachedImage.swift */; };
+		A27C760B2D5591990075DCF1 /* CachedUrlImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A27C760A2D5591940075DCF1 /* CachedUrlImage.swift */; };
 		A27E2C322D35B1750050D9C8 /* UserNotifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = A27E2C312D35B16F0050D9C8 /* UserNotifications.swift */; };
 		A2A33CA02D32D35600056DE6 /* OffScreenIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2A33C9F2D32D34B00056DE6 /* OffScreenIndicator.swift */; };
 		A2AC0C0C2D319E3100B6BF15 /* QRCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2AC0C0B2D319E2900B6BF15 /* QRCodeView.swift */; };
@@ -264,6 +267,9 @@
 		A26E6F132D529EB9009417A4 /* NewTickleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewTickleView.swift; sourceTree = "<group>"; };
 		A26EFB1D2CFEC7CF00238622 /* FriendRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendRequest.swift; sourceTree = "<group>"; };
 		A279471A2C7954C800EFC28A /* NotificationWidgetWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationWidgetWrapper.swift; sourceTree = "<group>"; };
+		A27C76062D5582E00075DCF1 /* MediaCacheManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaCacheManager.swift; sourceTree = "<group>"; };
+		A27C76082D558E9D0075DCF1 /* CachedImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachedImage.swift; sourceTree = "<group>"; };
+		A27C760A2D5591940075DCF1 /* CachedUrlImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachedUrlImage.swift; sourceTree = "<group>"; };
 		A27E2C312D35B16F0050D9C8 /* UserNotifications.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserNotifications.swift; sourceTree = "<group>"; };
 		A2A33C9F2D32D34B00056DE6 /* OffScreenIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OffScreenIndicator.swift; sourceTree = "<group>"; };
 		A2AC0C0B2D319E2900B6BF15 /* QRCodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeView.swift; sourceTree = "<group>"; };
@@ -800,6 +806,9 @@
 		AB842C0C2A91E2A600E4A7CE /* Storage */ = {
 			isa = PBXGroup;
 			children = (
+				A27C76082D558E9D0075DCF1 /* CachedImage.swift */,
+				A27C760A2D5591940075DCF1 /* CachedUrlImage.swift */,
+				A27C76062D5582E00075DCF1 /* MediaCacheManager.swift */,
 				AB842C0D2A91E2B500E4A7CE /* StorageManager.swift */,
 			);
 			path = Storage;
@@ -1195,6 +1204,7 @@
 				ABCA39D62A7A0159009447C3 /* AuthenticationManager.swift in Sources */,
 				AB300FAE2AC7406500C6719D /* FriendsViewModel.swift in Sources */,
 				ABCDA06C2C39B009002C23E1 /* NewTodoView.swift in Sources */,
+				A27C760B2D5591990075DCF1 /* CachedUrlImage.swift in Sources */,
 				ABCA39D82A7A0671009447C3 /* RootView.swift in Sources */,
 				A2C6FE982C5ECAD40074C475 /* NewLinkView.swift in Sources */,
 				857753022C308B0E00B4A971 /* DateAlignment.swift in Sources */,
@@ -1243,6 +1253,7 @@
 				AB6EA60A2B879B7C00CC90FF /* CanvasPageViewModel.swift in Sources */,
 				A212A19E2D399B1C0057E89D /* NewChatWidgetViewModel.swift in Sources */,
 				AB2E56CF2AE9C5E60096A58C /* ResultView.swift in Sources */,
+				A27C76092D558EA20075DCF1 /* CachedImage.swift in Sources */,
 				ABB84C342A8CBA03009C7550 /* FrontPageView.swift in Sources */,
 				850E12AA2C30A14C000E07C8 /* CalendarWidget.swift in Sources */,
 				A2F504282D384C69002F88FD /* ChatWidgetViewModel.swift in Sources */,
@@ -1258,6 +1269,7 @@
 				AB6B3ACF2C3CF90D00009686 /* TodoWidgetSheetViewModel.swift in Sources */,
 				AB90EDBD2B55BB59002AD855 /* NewWidgetViewModel.swift in Sources */,
 				ABF172A72BFC6686000B6F9B /* AddMemberView.swift in Sources */,
+				A27C76072D5582F10075DCF1 /* MediaCacheManager.swift in Sources */,
 				ABA45E812A7C8DC50015F000 /* ProfileView.swift in Sources */,
 				ABC426B32A86438400873EE1 /* SignUpEmailViewModel.swift in Sources */,
 				ABD9F2392C1F34C30041F110 /* SignUpPhoneNumberView.swift in Sources */,

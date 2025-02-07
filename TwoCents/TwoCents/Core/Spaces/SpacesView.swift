@@ -77,16 +77,10 @@ struct SpacesView: View {
                         .aspectRatio(1, contentMode: .fit)
                         .background(
 
-                            AsyncImage(url: url) { image in
-                                image
-                                    .resizable()
-                                    .scaledToFill()
+                            CachedUrlImage(imageUrl: url)
+                                .clipShape(Circle())
                                     .layoutPriority(-1)
 
-                            } placeholder: {
-                                Rectangle()
-                                    .fill(Color.accentColor)
-                            }
 
                         )
                         .clipped()
@@ -106,26 +100,9 @@ struct SpacesView: View {
 
                         //If there is URL for profile pic, show
                         //circle with stroke
-                        AsyncImage(url: url) { image in
-                            image
-                                .resizable()
-                                .scaledToFill()
-
-                        } placeholder: {
-                            //else show loading after user uploads but sending/downloading from database
-                            ProgressView()
-                                .progressViewStyle(
-                                    CircularProgressViewStyle(
-                                        tint: Color(UIColor.systemBackground))
-                                )
-                                .frame(width: 64, height: 64)
-                                .background(
-                                    Circle()
-                                        .fill(Color.accentColor)
-                                )
-                        }
-                        .clipShape(Circle())
-                        .frame(width: 64, height: 64)
+                        CachedUrlImage(imageUrl: url)
+                            .clipShape(Circle())
+                            .frame(width: 64, height: 64)
 
                     } else {
                         //if space does not have profile pic, show circle

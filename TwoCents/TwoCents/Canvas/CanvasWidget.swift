@@ -145,15 +145,15 @@ protocol WidgetView: View {
 }
 
 //There are two implementations and for this one func is faster than struct
-@ViewBuilder
+@MainActor @ViewBuilder
 func MediaView(widget: CanvasWidget, spaceId: String) -> some View {
     switch widget.media {
     case .text:
         TextWidget(widget: widget, spaceId: spaceId) //added spaceId?
     case .video:
-        VideoWidget(widget: widget)
+        VideoWidget(widget: widget, spaceId: spaceId)
     case .image:
-        ImageWidget(widget: widget)
+        ImageWidget(widget: widget, spaceId: spaceId)
     case .poll:
         PollWidget(widget: widget, spaceId: spaceId)
     case .map:

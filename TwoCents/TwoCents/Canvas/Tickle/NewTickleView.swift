@@ -62,36 +62,9 @@ struct NewTicklePage: View {
 
                                     //If there is URL for profile pic, show
                                     //circle with stroke
-                                    AsyncImage(url: url) { image in
-                                        image
-                                            .resizable()
-                                            .scaledToFill()
-                                            .clipShape(Circle())
-                                            .frame(
-                                                width: 64, height: 64)
-
-                                    } placeholder: {
-                                        //else show loading after user uploads but sending/downloading from database
-
-                                        ProgressView()
-                                            .progressViewStyle(
-                                                CircularProgressViewStyle(
-                                                    tint: Color(
-                                                        UIColor
-                                                            .systemBackground
-                                                    ))
-                                            )
-                                            //                                                .scaleEffect(0.5, anchor: .center)
-                                            .frame(
-                                                width: 64, height: 64
-                                            )
-                                            .background(
-                                                Circle()
-                                                    .fill(
-                                                        targetUserColor)
-
-                                            )
-                                    }
+                                    CachedUrlImage(imageUrl: url)
+                                        .clipShape(Circle())
+                                        .frame(width: 64, height: 64)
 
                                 } else {
 
@@ -125,7 +98,7 @@ struct NewTicklePage: View {
                 guard let userId = selectedUser?.userId else {
                     return
                 }
-                let (width, height) = SpaceManager.shared.getMultipliedSize(widthMultiplier: 1, heightMultiplier: 1)
+                let (width, height) = getMultipliedSize(widthMultiplier: 1, heightMultiplier: 1)
                 let widget = CanvasWidget(width: width, height: height, borderColor: .black, userId: userId, media: .tickle)
                 
                 canvasViewModel.newWidget = widget

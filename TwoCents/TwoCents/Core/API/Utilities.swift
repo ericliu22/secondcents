@@ -18,7 +18,7 @@ func waitForVariable<T>(_ variable: @escaping () -> T?) -> T {
                 result = value
                 semaphore.signal()
             } else {
-                usleep(100_000) // sleep for 100ms to prevent busy waiting
+                usleep(100_000)  // sleep for 100ms to prevent busy waiting
             }
         }
     }
@@ -29,18 +29,17 @@ func waitForVariable<T>(_ variable: @escaping () -> T?) -> T {
 
 extension Collection {
     /// Returns the element at the specified index if it is within bounds, otherwise nil.
-    subscript (safe index: Index) -> Element? {
+    subscript(safe index: Index) -> Element? {
         return indices.contains(index) ? self[index] : nil
     }
 }
 
-
 extension Color {
-    
-    static func fromString(name: String) -> Color{
-        
+
+    static func fromString(name: String) -> Color {
+
         switch name {
-            
+
         case "red":
             return Color.red
         case "orange":
@@ -68,14 +67,27 @@ extension Color {
         default:
             return Color.gray
         }
-        
+
     }
 }
 
 //Size multiplier is width/height divided by TILE_SIZE
-func roundToTile(number : CGFloat) -> CGFloat {
+func roundToTile(number: CGFloat) -> CGFloat {
     let tile = WIDGET_SPACING
     return tile * CGFloat(Int(round(number / (tile))))
+}
+
+func getMultipliedSize(widthMultiplier: Int, heightMultiplier: Int) -> (
+    CGFloat, CGFloat
+) {
+    let width: CGFloat =
+        TILE_SIZE * CGFloat(widthMultiplier)
+        + (max(CGFloat(widthMultiplier - 1), 0) * TILE_SPACING)
+    let height: CGFloat =
+        TILE_SIZE * CGFloat(heightMultiplier)
+        + (max(CGFloat(heightMultiplier - 1), 0) * TILE_SPACING)
+
+    return (width, height)
 }
 
 func getUID() async throws -> String? {
@@ -91,17 +103,17 @@ func convertSwiftUIPointToUIKit(
     // 1) Get the SwiftUI view’s frame in the global (screen) coordinate space.
     let globalRect = geometry.frame(in: .global)
     // This rect’s origin is where the SwiftUI view starts on the screen.
-    
+
     // 2) Add the SwiftUI point to the SwiftUI view’s global origin.
     //    That yields a "screen coordinate" in UIKit terms.
     let screenX = globalRect.origin.x + swiftUIPoint.x
     let screenY = globalRect.origin.y + swiftUIPoint.y
     let screenPoint = CGPoint(x: screenX, y: screenY)
-    
+
     // 3) Convert from screen coords into `hostView`’s local coords.
     //    Passing `nil` for `from`/`to` generally means "the window’s coordinate space."
     let uiKitPoint = hostView.convert(screenPoint, from: nil)
-    
+
     return uiKitPoint
 }
 
@@ -114,15 +126,15 @@ func convertUIKitPointToSwiftUI(
 ) -> CGPoint {
     // 1) Convert from the hostView’s local coords to the screen coords
     let screenPoint = hostView.convert(uiKitPoint, to: nil)
-    
+
     // 2) Get the SwiftUI view’s global frame
     let globalRect = geometry.frame(in: .global)
-    
+
     // 3) Subtract the SwiftUI view’s global origin from the screen point
     //    to get a local SwiftUI coordinate
     let swiftUIX = screenPoint.x - globalRect.origin.x
     let swiftUIY = screenPoint.y - globalRect.origin.y
-    
+
     return CGPoint(x: swiftUIX, y: swiftUIY)
 }
 
@@ -134,39 +146,42 @@ extension Array where Element: Hashable {
     }
 }
 
-struct IdentifiedCollection<Element: Identifiable & Hashable>: RandomAccessCollection {
+struct IdentifiedCollection<Element: Identifiable & Hashable>:
+    RandomAccessCollection
+{
     private var elements: [Element]
-    private var elementsByID: [Element.ID: Int] // store index for O(1) lookups
+    private var elementsByID: [Element.ID: Int]  // store index for O(1) lookups
 
     init(_ elements: [Element] = []) {
         self.elements = elements
         self.elementsByID = Dictionary(
-            uniqueKeysWithValues: elements.enumerated().map { (index, element) in
+            uniqueKeysWithValues: elements.enumerated().map {
+                (index, element) in
                 (element.id, index)
             }
         )
     }
 
     // MARK: - RandomAccessCollection
-    
+
     var startIndex: Int { elements.startIndex }
     var endIndex: Int { elements.endIndex }
-    
+
     func index(after i: Int) -> Int {
         elements.index(after: i)
     }
-    
+
     subscript(position: Int) -> Element {
         elements[position]
     }
 
     // MARK: - Custom lookups
-    
+
     subscript(id id: Element.ID) -> Element? {
         guard let idx = elementsByID[id] else { return nil }
         return elements[idx]
     }
-    
+
     // Example mutation
     mutating func append(_ element: Element) {
         elements.append(element)

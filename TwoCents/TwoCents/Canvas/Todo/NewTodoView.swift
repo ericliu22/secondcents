@@ -364,27 +364,9 @@ struct UserChip: View {
             HStack {
                 Group {
                     if let urlString = user.profileImageUrl, let url = URL(string: urlString) {
-                        AsyncImage(url: url) { image in
-                            image
-                                .resizable()
-                                .scaledToFill()
-                                .clipShape(Circle())
-                                .frame(width: 16, height: 16)
-                        } placeholder: {
-                            ProgressView()
-                                .progressViewStyle(CircularProgressViewStyle(tint: Color(UIColor.systemBackground)))
-                                .scaleEffect(0.5, anchor: .center)
-                                .frame(width: 16, height: 16)
-                                .background(
-                                    Circle()
-                                        .fill(targetUserColor)
-                                     
-                                    
-                                    
-                                )
-                            
-                            
-                        }
+                        CachedUrlImage(imageUrl: url)
+                            .clipShape(Circle())
+                            .frame(width: 16, height: 16)
                     } else {
                         Circle()
                           .fill(targetUserColor)

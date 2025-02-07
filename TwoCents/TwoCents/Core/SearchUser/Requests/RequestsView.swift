@@ -82,172 +82,158 @@ struct SpaceRequestTile: View {
 
     var body: some View {
         VStack {
-                NavigationLink {
-                    AcceptSpaceRequestView(spaceId: requestSpace.spaceId)
-                } label: {
+            NavigationLink {
+                AcceptSpaceRequestView(spaceId: requestSpace.spaceId)
+            } label: {
 
-                    HStack(spacing: 20) {
-                        Group {
-                            if let urlString = requestSpace.profileImageUrl,
-                                let url = URL(string: urlString)
-                            {
-                                AsyncImage(url: url) { image in
-                                    image
-                                        .resizable()
-                                        .scaledToFill()
-                                        .clipShape(Circle())
-                                        .frame(width: 64, height: 64)
-                                } placeholder: {
-                                    ProgressView()
-                                        .progressViewStyle(
-                                            CircularProgressViewStyle(
-                                                tint: Color(
-                                                    UIColor.systemBackground
-                                                ))
-                                        )
-                                        .frame(width: 64, height: 64)
-                                        .background(
-                                            Circle().fill(appModel.loadedColor)
-                                                .frame(
-                                                    width: 64, height: 64))
-                                }
-                            } else {
+                HStack(spacing: 20) {
+                    Group {
+                        if let urlString = requestSpace.profileImageUrl,
+                            let url = URL(string: urlString)
+                        {
+                            CachedUrlImage(imageUrl: url)
+                                .clipShape(Circle())
+                                .frame(width: 64, height: 64)
+                        } else {
 
-                                Circle().fill(appModel.loadedColor)
-                                    .frame(width: 64, height: 64)
-                            }
-                        }
-
-                        VStack(alignment: .leading) {
-                            Text(requestSpace.name ?? "")
-                                .font(.headline)
-
-                            Text(spaceRequestMessage)
-                                .font(.caption)
-                                .foregroundColor(
-                                    Color(UIColor.secondaryLabel))
-
-                            HStack {
-                                Button {
-                                    viewModel.acceptSpaceRequest(spaceId: requestSpace.spaceId)
-                                } label: {
-                                    Text("Accept")
-                                        .font(.caption)
-                                        .frame(maxWidth: .infinity)
-                                }
-                                .tint(.green)
-                                .buttonStyle(.bordered)
-                                .cornerRadius(10)
-
-                                Button {
-                                    viewModel.declineSpaceRequest(spaceId:
-                                         requestSpace.spaceId)
-                                } label: {
-                                    Text("Decline")
-                                        .font(.caption)
-                                        .frame(maxWidth: .infinity)
-                                }
-                                .tint(.gray)
-                                .buttonStyle(.bordered)
-                                .cornerRadius(10)
-                            }
+                            Circle().fill(appModel.loadedColor)
+                                .frame(width: 64, height: 64)
                         }
                     }
-                
+
+                    VStack(alignment: .leading) {
+                        Text(requestSpace.name ?? "")
+                            .font(.headline)
+
+                        Text(spaceRequestMessage)
+                            .font(.caption)
+                            .foregroundColor(
+                                Color(UIColor.secondaryLabel))
+
+                        HStack {
+                            Button {
+                                viewModel.acceptSpaceRequest(
+                                    spaceId: requestSpace.spaceId)
+                            } label: {
+                                Text("Accept")
+                                    .font(.caption)
+                                    .frame(maxWidth: .infinity)
+                            }
+                            .tint(.green)
+                            .buttonStyle(.bordered)
+                            .cornerRadius(10)
+
+                            Button {
+                                viewModel.declineSpaceRequest(
+                                    spaceId:
+                                        requestSpace.spaceId)
+                            } label: {
+                                Text("Decline")
+                                    .font(.caption)
+                                    .frame(maxWidth: .infinity)
+                            }
+                            .tint(.gray)
+                            .buttonStyle(.bordered)
+                            .cornerRadius(10)
+                        }
+                    }
                 }
+
+            }
         }
     }
 }
 
-    struct FriendRequestTile: View {
-        let requestUser: DBUser
-        let friendRequestMessage: String
-        @Environment(RequestsViewModel.self) var viewModel
+struct FriendRequestTile: View {
+    let requestUser: DBUser
+    let friendRequestMessage: String
+    @Environment(RequestsViewModel.self) var viewModel
 
-        init(requestUser: DBUser) {
-            self.requestUser = requestUser
-            self.friendRequestMessage =
-                friendRequestMessages.randomElement()
-                ?? "requests to be your friend"
-        }
+    init(requestUser: DBUser) {
+        self.requestUser = requestUser
+        self.friendRequestMessage =
+            friendRequestMessages.randomElement()
+            ?? "requests to be your friend"
+    }
 
-        var body: some View {
-            VStack {
-                let targetUserColor = Color.fromString(
-                    name: requestUser.userColor ?? "gray")
-                NavigationLink {
-                    ProfileView(
-                        targetUserId: requestUser.userId, targetUserColor: targetUserColor)
-                } label: {
-                    HStack(spacing: 20) {
-                        Group {
-                            if let urlString = requestUser.profileImageUrl,
-                                let url = URL(string: urlString)
-                            {
-                                AsyncImage(url: url) { image in
-                                    image
-                                        .resizable()
-                                        .scaledToFill()
-                                        .clipShape(Circle())
-                                        .frame(width: 64, height: 64)
-                                } placeholder: {
-                                    ProgressView()
-                                        .progressViewStyle(
-                                            CircularProgressViewStyle(
-                                                tint: Color(
-                                                    UIColor.systemBackground
-                                                ))
-                                        )
-                                        .frame(width: 64, height: 64)
-                                        .background(
-                                            Circle().fill(targetUserColor)
-                                                .frame(
-                                                    width: 64, height: 64))
-                                }
-                            } else {
-
-                                Circle().fill(targetUserColor)
+    var body: some View {
+        VStack {
+            let targetUserColor = Color.fromString(
+                name: requestUser.userColor ?? "gray")
+            NavigationLink {
+                ProfileView(
+                    targetUserId: requestUser.userId,
+                    targetUserColor: targetUserColor)
+            } label: {
+                HStack(spacing: 20) {
+                    Group {
+                        if let urlString = requestUser.profileImageUrl,
+                            let url = URL(string: urlString)
+                        {
+                            AsyncImage(url: url) { image in
+                                image
+                                    .resizable()
+                                    .scaledToFill()
+                                    .clipShape(Circle())
                                     .frame(width: 64, height: 64)
+                            } placeholder: {
+                                ProgressView()
+                                    .progressViewStyle(
+                                        CircularProgressViewStyle(
+                                            tint: Color(
+                                                UIColor.systemBackground
+                                            ))
+                                    )
+                                    .frame(width: 64, height: 64)
+                                    .background(
+                                        Circle().fill(targetUserColor)
+                                            .frame(
+                                                width: 64, height: 64))
                             }
+                        } else {
+
+                            Circle().fill(targetUserColor)
+                                .frame(width: 64, height: 64)
                         }
+                    }
 
-                        VStack(alignment: .leading) {
-                            Text(requestUser.name ?? "Blank")
-                                .font(.headline)
+                    VStack(alignment: .leading) {
+                        Text(requestUser.name ?? "Blank")
+                            .font(.headline)
 
-                            Text(friendRequestMessage)
-                                .font(.caption)
-                                .foregroundColor(
-                                    Color(UIColor.secondaryLabel))
+                        Text(friendRequestMessage)
+                            .font(.caption)
+                            .foregroundColor(
+                                Color(UIColor.secondaryLabel))
 
-                            HStack {
-                                Button {
-                                    viewModel.acceptFriendRequest(
-                                        friendUserId: requestUser.userId)
-                                } label: {
-                                    Text("Accept")
-                                        .font(.caption)
-                                        .frame(maxWidth: .infinity)
-                                }
-                                .tint(.green)
-                                .buttonStyle(.bordered)
-                                .cornerRadius(10)
-
-                                Button {
-                                    viewModel.declineFriendRequest(
-                                        friendUserId: requestUser.userId)
-                                } label: {
-                                    Text("Decline")
-                                        .font(.caption)
-                                        .frame(maxWidth: .infinity)
-                                }
-                                .tint(.gray)
-                                .buttonStyle(.bordered)
-                                .cornerRadius(10)
+                        HStack {
+                            Button {
+                                viewModel.acceptFriendRequest(
+                                    friendUserId: requestUser.userId)
+                            } label: {
+                                Text("Accept")
+                                    .font(.caption)
+                                    .frame(maxWidth: .infinity)
                             }
+                            .tint(.green)
+                            .buttonStyle(.bordered)
+                            .cornerRadius(10)
+
+                            Button {
+                                viewModel.declineFriendRequest(
+                                    friendUserId: requestUser.userId)
+                            } label: {
+                                Text("Decline")
+                                    .font(.caption)
+                                    .frame(maxWidth: .infinity)
+                            }
+                            .tint(.gray)
+                            .buttonStyle(.bordered)
+                            .cornerRadius(10)
                         }
                     }
                 }
             }
         }
     }
+}

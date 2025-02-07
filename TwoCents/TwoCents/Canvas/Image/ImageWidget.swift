@@ -9,42 +9,28 @@ import Foundation
 import SwiftUI
 
 struct ImageWidget: WidgetView {
-    
+
     let widget: CanvasWidget
-    
-    init(widget: CanvasWidget) {
+    let spaceId: String
+
+    init(widget: CanvasWidget, spaceId: String) {
         assert(widget.media == .image)
         self.widget = widget
+        self.spaceId = spaceId
     }
-    
-    @Environment(CanvasPageViewModel.self) var canvasViewModel: CanvasPageViewModel?
-    
+
+    @Environment(CanvasPageViewModel.self) var canvasViewModel:
+        CanvasPageViewModel?
+
     var body: some View {
-        AsyncImage(url: widget.mediaURL) {image in
-            image
-                .resizable()
-                .aspectRatio(contentMode: .fill)
+        if let mediaURL = widget.mediaURL {
+            CachedUrlImage(imageUrl: mediaURL)
                 .frame(width: widget.width, height: widget.height)
-                .clipShape(
-                    RoundedRectangle(cornerRadius: CORNER_RADIUS)
-                )
-        } placeholder: {
-            ProgressView()
-                .progressViewStyle(
-                    CircularProgressViewStyle(tint:
-                            .primary)
-                )
-           
-                .frame(width: widget.width, height: widget.height)
-                .background(.thickMaterial)
-        }//AsyncImage
-        .onTapGesture {
-            guard let canvasViewModel = canvasViewModel else { return }
-            canvasViewModel.activeSheet = .image
-            canvasViewModel.activeWidget = widget
-            
-            
-            print("tapped")
+                .onTapGesture {
+                    guard let canvasViewModel = canvasViewModel else { return }
+                    canvasViewModel.activeSheet = .image
+                    canvasViewModel.activeWidget = widget
+                }
         }
     }
 }

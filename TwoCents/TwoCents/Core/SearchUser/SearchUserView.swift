@@ -33,19 +33,9 @@ struct SearchUserView: View {
                         HStack(spacing: 20) {
                             if let urlString = userTile.profileImageUrl,
                                let url = URL(string: urlString) {
-                                AsyncImage(url: url) { image in
-                                    image
-                                        .resizable()
-                                        .scaledToFill()
-                                        .clipShape(Circle())
-                                        .frame(width: 64, height: 64)
-                                } placeholder: {
-                                    ProgressView()
-                                    
-                                        .progressViewStyle(CircularProgressViewStyle(tint: Color(UIColor.systemBackground)))
-                                        .frame(width: 64, height: 64)
-                                        .background(Circle().fill(targetUserColor))
-                                }
+                                CachedUrlImage(imageUrl: url)
+                                    .clipShape(Circle())
+                                    .frame(width: 64, height: 64)
                             } else {
                                 Circle()
                                     .fill(targetUserColor)
