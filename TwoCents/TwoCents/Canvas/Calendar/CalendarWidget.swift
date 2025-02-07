@@ -41,11 +41,12 @@ struct OptimalDate {
 }
 
 // Main view for displaying the calendar widget
-struct CalendarWidget: View {
+struct CalendarWidget: WidgetView {
     let widget: CanvasWidget
     var spaceId: String
     private let preferredTime: String = "7:00 PM"
 
+    @Environment(CanvasPageViewModel.self) var canvasViewModel
     @State private var closestTime: String = ""
     @State private var optimalDate = OptimalDate(from: "", maxTimeFrequency: 0)
     @State private var eventName: String = "Eventful Event"
@@ -67,6 +68,10 @@ struct CalendarWidget: View {
             .background(Color(UIColor.systemBackground))
             .frame(width: widget.width, height: widget.height)
             .cornerRadius(CORNER_RADIUS)
+            .onTapGesture {
+                canvasViewModel.activeWidget = widget
+                canvasViewModel.activeSheet = .calendar
+            }
    
         .task {
             await setupSnapshotListener()
