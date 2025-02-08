@@ -457,7 +457,7 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                             viewModel.attachWidgetListener()
                             if let user = appModel.user {
                                 await viewModel.fetchUsers(
-                                    currentUserId: user)
+                                    currentUserId: user.userId)
 
                             }
                             // Scroll to the specified widget after listener attachment.
@@ -470,7 +470,7 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                         }
                         if let user = appModel.user {
                             viewModel.attachUnreadListener(
-                                userId: user)
+                                userId: user.userId)
                         }
                     }
             }
