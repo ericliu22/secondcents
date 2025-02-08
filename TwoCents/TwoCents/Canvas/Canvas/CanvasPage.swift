@@ -457,7 +457,7 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                             viewModel.attachWidgetListener()
                             if let user = appModel.user {
                                 await viewModel.fetchUsers(
-                                    currentUserId: appModel.user!.userId)
+                                    currentUserId: user)
 
                             }
                             // Scroll to the specified widget after listener attachment.
@@ -468,8 +468,10 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                             // EXIT IF SPACE DOES NOT EXIST
                             presentationMode.wrappedValue.dismiss()
                         }
-                        viewModel.attachUnreadListener(
-                            userId: appModel.user!.userId)
+                        if let user = appModel.user {
+                            viewModel.attachUnreadListener(
+                                userId: user)
+                        }
                     }
             }
             .ignoresSafeArea()
