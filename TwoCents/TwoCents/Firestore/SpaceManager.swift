@@ -203,6 +203,25 @@ final class SpaceManager {
             .collection("widgets")
             .document(widget.id.uuidString)
             .delete()
+        deleteAssociatedWidget(spaceId: spaceId, widgetId: widget.id.uuidString, media: widget.media)
+    }
+    
+    func deleteAssociatedWidget(spaceId: String, widgetId: String, media: Media) {
+        
+        switch media {
+            case .poll:
+                deletePoll(spaceId: spaceId, pollId: widgetId)
+            case .todo:
+                deleteTodoList(spaceId: spaceId, todoId: widgetId)
+            case .calendar:
+                deleteCalendar(
+                    spaceId: spaceId, calendarId: widgetId)
+            case .chat:
+            deleteChat(spaceId: spaceId, chatId: widgetId)
+            default:
+                break
+        }
+    
     }
 
     func changeWidgetSize(

@@ -187,4 +187,48 @@ struct IdentifiedCollection<Element: Identifiable & Hashable>:
         elements.append(element)
         elementsByID[element.id] = elements.endIndex - 1
     }
+    
+    /// Removes the element with the given ID, if it exists.
+    /// Returns the removed element or nil if not found.
+    ///
+    /// **Note:** Removing from the middle of the array is O(n),
+    /// because we have to shift elements and update their indices.
+    @discardableResult
+    mutating func remove(id: Element.ID) -> Element? {
+        guard let index = elementsByID[id] else {
+            return nil
+        }
+        
+        // Remove the element from the array
+        let removedElement = elements.remove(at: index)
+        
+        // Remove the ID from our dictionary
+        elementsByID[id] = nil
+        
+        // Update indices for all elements after the removed index
+        for i in index..<elements.count {
+            elementsByID[elements[i].id] = i
+        }
+        
+        return removedElement
+    }
+    
+    /// Removes and returns the element at the specified index.
+    ///
+    /// **Note:** Removing from the middle is O(n) because of shifting elements
+    /// and updating dictionary entries for subsequent items.
+    @discardableResult
+    mutating func remove(at index: Int) -> Element {
+        precondition(index >= startIndex && index < endIndex, "Index out of range.")
+        
+        let removedElement = elements.remove(at: index)
+        elementsByID[removedElement.id] = nil
+        
+        // Update dictionary entries for all subsequent elements
+        for i in index..<elements.count {
+            elementsByID[elements[i].id] = i
+        }
+        
+        return removedElement
+    }
 }

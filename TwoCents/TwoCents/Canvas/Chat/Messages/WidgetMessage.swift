@@ -82,7 +82,7 @@ struct WidgetMessageView: MessageView {
                 return
             }
             userColor = Color.fromString(name: colorString)
-            canvasWidget = canvasViewModel.canvasWidgets.first(where: { $0.id.uuidString == canvasWidgetMessage.widgetId})
+            canvasWidget = canvasViewModel.canvasWidgets[id: UUID(uuidString: canvasWidgetMessage.widgetId)!]
         }
     }
     
