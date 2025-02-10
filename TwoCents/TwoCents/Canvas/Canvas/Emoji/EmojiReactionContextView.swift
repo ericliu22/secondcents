@@ -81,7 +81,7 @@ struct EmojiReactionContextView: View {
     private func addEmoji(emoji: String) {
         emojiCount[emoji]! += 1
         
-        db.collection("spaces")
+        Firestore.firestore().collection("spaces")
             .document(spaceId)
             .collection("widgets")
             .document(widget.id.uuidString)
@@ -109,7 +109,7 @@ struct EmojiReactionContextView: View {
     private func removeEmoji(emoji: String) {
         emojiCount[emoji]! -= 1
         
-        db.collection("spaces")
+        Firestore.firestore().collection("spaces")
             .document(spaceId)
             .collection("widgets")
             .document(widget.id.uuidString)

@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 import UIKit
 import Charts
+import FirebaseFirestore
 
 
 
@@ -32,7 +33,7 @@ struct PollWidget: WidgetView {
     }
     
     func fetchPoll() {
-        db.collection("spaces")
+        Firestore.firestore().collection("spaces")
             .document(spaceId)
             .collection("polls")
             .document(widget.id.uuidString)

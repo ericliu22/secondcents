@@ -46,7 +46,7 @@ final class MessageFieldViewModel: ObservableObject {
     }
     
     func sendMessages(text: String?, widget: CanvasWidget?, spaceId: String, threadId: String){
-        let docRef = db.collection("spaces").document(spaceId).collection("chat").document("mainChat")
+        let docRef = Firestore.firestore().collection("spaces").document(spaceId).collection("chat").document("mainChat")
 
         docRef.getDocument { [self] (document, error) in
             guard let document = document, error == nil else {
@@ -79,7 +79,7 @@ final class MessageFieldViewModel: ObservableObject {
                         threadId: resolvedThreadId
                     )
 
-                    let mainChatReference = db.collection("spaces").document(spaceId).collection("chat").document("mainChat")
+                    let mainChatReference = Firestore.firestore().collection("spaces").document(spaceId).collection("chat").document("mainChat")
                     try mainChatReference.collection("chatlogs").document(uuidString).setData(from: newMessage)
 
                     mainChatReference.setData([

@@ -1,6 +1,6 @@
 import SwiftUI
 import Foundation
-import Firebase
+import FirebaseFirestore
 
 struct CustomCalendarView: View {
     @State private var month: String = ""

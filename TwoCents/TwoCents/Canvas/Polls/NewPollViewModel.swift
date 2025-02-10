@@ -11,7 +11,6 @@ import SwiftUI
 
 class NewPollModel: ObservableObject {
 
-    let db = Firestore.firestore()
 
     var error: String? = nil
     @Published var newPollName: String = ""

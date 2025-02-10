@@ -1,5 +1,5 @@
 import SwiftUI
-import Firebase
+import FirebaseFirestore
 
 struct CalendarWidgetSheetView: View {
     var widgetId: String
@@ -230,8 +230,6 @@ struct CalendarWidgetSheetView: View {
         }
     }
     func saveDates() {
-        let db = Firestore.firestore()
-        
         guard let userId = try? AuthenticationManager.shared.getAuthenticatedUser().uid else {
             return
         }
@@ -260,7 +258,7 @@ struct CalendarWidgetSheetView: View {
 
         let preferredTimeString = preferredTime != nil ? timeFormatter.string(from: preferredTime!) : ""
 
-        let documentRef = db.collection("spaces")
+        let documentRef = Firestore.firestore().collection("spaces")
             .document(spaceId)
             .collection("calendar")
             .document(widgetId)
@@ -365,14 +363,13 @@ struct CalendarWidgetSheetView: View {
         }
     }
     private func loadSavedDates() {
-        let db = Firestore.firestore()
         
         guard let userId: String = try? AuthenticationManager.shared.getAuthenticatedUser().uid else {
             print("User ID not available")
             return
         }
         
-        db.collection("spaces")
+        Firestore.firestore().collection("spaces")
             .document(spaceId)
             .collection("calendar")
             .document(widgetId)
@@ -478,11 +475,10 @@ struct CalendarWidgetSheetView: View {
     }
     
     private func loadTimesForDate(_ date: Date, completion: @escaping ([Date]?) -> Void) {
-        let db = Firestore.firestore()
         let userId = try! AuthenticationManager.shared.getAuthenticatedUser().uid
         let dateKey = dateFormatter.string(from: date)
         
-        db.collection("spaces")
+        Firestore.firestore().collection("spaces")
             .document(spaceId)
             .collection("calendar")
             .document(widgetId)

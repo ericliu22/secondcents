@@ -11,11 +11,6 @@ import PencilKit
 import SwiftUI
 
 //CONSTANTS
-let db = Firestore.firestore()
-/*
- Strategy for limit widget editing to user: load user, load widget creator for each widget --> compare and show separate views
- */
-
 let TILE_SIZE: CGFloat = 150
 let TILE_SPACING: CGFloat = 30
 let MAX_ZOOM: CGFloat = 3.0

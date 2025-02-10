@@ -7,7 +7,7 @@
 
 import Foundation
 import SwiftUI
-import Firebase
+import FirebaseFirestore
 
 //let arrayOfDateArrays: [[Date]] = [
 //    ["Jun 27, 2024", "Jun 25, 2024", "Jun 26, 2024", "Jun 28, 2024", "Jun 24, 2024"],

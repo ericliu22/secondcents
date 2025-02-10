@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import Firebase
+import FirebaseFirestore
 
 struct FrontPageView: View {
     
@@ -54,7 +54,7 @@ struct FrontPageView: View {
                 print("auth manager failed")
                 return
             }
-            db.collection("users").document(userId).addSnapshotListener({ snapshot, error in
+            Firestore.firestore().collection("users").document(userId).addSnapshotListener({ snapshot, error in
                 guard let snapshot = snapshot else {
                     print("snapshot failed")
                     return

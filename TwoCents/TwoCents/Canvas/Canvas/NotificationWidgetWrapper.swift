@@ -7,9 +7,11 @@
 
 import Foundation
 import SwiftUI
+import FirebaseFirestore
 
 struct NotificationWidgetWrapper : View {
     
+    @Environment(CanvasPageViewModel.self) var canvasViewModel
     @State var loadedColor: Color = .gray
     let widgetUserId: String
     private let FOREGROUND_COLOR: Color = .white
@@ -19,12 +21,8 @@ struct NotificationWidgetWrapper : View {
         self.widgetUserId = widgetUserId
     }
     
-    func loadColor(widgetUserId: String) async {
-        guard let user = try? await db.collection("users").document(widgetUserId).getDocument(as: DBUser.self) else {
-            print("NotificationWidgetWrapper: failed to get user color")
-            return
-        }
-        guard let colorName = user.userColor else {
+    func loadColor(widgetUserId: String) {
+        guard let colorName = canvasViewModel.members[id: widgetUserId]?.userColor else {
             return
         }
         loadedColor = Color.fromString(name: colorName)
@@ -40,8 +38,8 @@ struct NotificationWidgetWrapper : View {
                 .foregroundColor(FOREGROUND_COLOR)
                 .font(Font.caption)
         }
-        .task {
-            await loadColor(widgetUserId: widgetUserId)
+        .onAppear {
+            loadColor(widgetUserId: widgetUserId)
         }
     }
     

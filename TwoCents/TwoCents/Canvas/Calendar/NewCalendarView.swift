@@ -1,6 +1,6 @@
 import SwiftUI
 import Foundation
-import Firebase
+import FirebaseFirestore
 
 struct NewCalendarView: View {
     
@@ -187,8 +187,7 @@ struct NewCalendarView: View {
     }
     
     func saveCalendar(userId: String) {
-        let db = Firestore.firestore()
-        db.collection("spaces")
+        Firestore.firestore().collection("spaces")
             .document(spaceId)
             .collection("calendar")
             .document(createdWidgetId)

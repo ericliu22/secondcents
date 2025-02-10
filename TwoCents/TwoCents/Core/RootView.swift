@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import Firebase
+import FirebaseFirestore
 
 
 enum PopupSheet: Identifiable, Equatable {

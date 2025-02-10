@@ -1,6 +1,6 @@
 import Foundation
 import SwiftUI
-import Firebase
+import FirebaseFirestore
 
 
 // Model to handle date formatting
@@ -79,9 +79,7 @@ struct CalendarWidget: WidgetView {
     }
 
     private func setupSnapshotListener() async {
-        let db = Firestore.firestore()
-
-        db.collection("spaces")
+        Firestore.firestore().collection("spaces")
             .document(spaceId)
             .collection("calendar")
             .document(widget.id.uuidString)
@@ -634,7 +632,7 @@ struct EventPassedView: View {
 
 
 func deleteCalendar(spaceId: String, calendarId: String) {
-    db.collection("spaces")
+    Firestore.firestore().collection("spaces")
         .document(spaceId)
         .collection("calendar")
         .document(calendarId)

@@ -5,7 +5,7 @@
 //  Created by Eric Liu on 2024/6/23.
 //
 
-import Firebase
+import FirebaseFirestore
 import Foundation
 import SwiftUI
 
@@ -240,7 +240,7 @@ struct ZoomableScrollView<Content: View>: UIViewRepresentable {
             guard let userId = appModel.user?.userId else { return }
             let spaceId = canvasViewModel.spaceId
             do {
-                try await db.collection("spaces")
+                try await Firestore.firestore().collection("spaces")
                     .document(spaceId)
                     .collection("unreads")
                     .document(userId)

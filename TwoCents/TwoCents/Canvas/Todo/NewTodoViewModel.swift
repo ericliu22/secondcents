@@ -13,8 +13,6 @@ class NewTodoModel: ObservableObject {
     
     
     
-    let db = Firestore.firestore()
-    
     var error: String? = nil
     @Published var listName: String = ""
     var newItemName: String = ""

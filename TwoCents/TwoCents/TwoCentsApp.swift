@@ -390,7 +390,7 @@ extension AppDelegate: MessagingDelegate {
         do {
             let uid = try AuthenticationManager.shared.getAuthenticatedUser()
                 .uid
-            db.collection("usersPrivate").document(uid).setData(
+            Firestore.firestore().collection("usersPrivate").document(uid).setData(
                 ["token": token], merge: true)
         } catch {
             print("FAILED TO UPLOAD DEVICE TOKEN")

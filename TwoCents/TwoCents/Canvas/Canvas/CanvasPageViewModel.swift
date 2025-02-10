@@ -155,7 +155,7 @@ final class CanvasPageViewModel {
     }
 
     func attachWidgetListener() {
-        db.collection("spaces").document(spaceId).collection("widgets")
+        Firestore.firestore().collection("spaces").document(spaceId).collection("widgets")
             .addSnapshotListener { [weak self] querySnapshot, error in
                 guard let self = self else {
                     print(

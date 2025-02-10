@@ -26,10 +26,9 @@ final class UploadExampleViewModel: ObservableObject {
     
     //THIS UPDATES THE USER INFO
     func updateUserInfo() throws {
-        let db = Firestore.firestore()
         
         //THE INPUT VARIABLE IN DIRECTLY SENT IN HERE.
-        db.collection("Example").document(user!.userId).setData(["UserFavMember": inputVariable],merge: true)
+        Firestore.firestore().collection("Example").document(user!.userId).setData(["UserFavMember": inputVariable],merge: true)
     }
     
     

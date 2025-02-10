@@ -7,7 +7,7 @@
 
 import Foundation
 import SwiftUI
-import SwiftUI
+import FirebaseFirestore
 
 struct TextWidget: WidgetView {
     
@@ -50,7 +50,7 @@ struct TextWidget: WidgetView {
     
     //plswork
     func fetchText() {
-        db.collection("spaces")
+        Firestore.firestore().collection("spaces")
             .document(spaceId)
             .collection("widgets")
             .document(widget.id.uuidString)

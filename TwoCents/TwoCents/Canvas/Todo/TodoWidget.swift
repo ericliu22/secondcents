@@ -22,8 +22,7 @@ struct TodoWidget: View {
     
     
     func fetchTodo() {
-        let db = Firestore.firestore()
-        db.collection("spaces")
+        Firestore.firestore().collection("spaces")
             .document(spaceId)
             .collection("todo")
             .document(widget.id.uuidString)
