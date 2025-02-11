@@ -41,7 +41,9 @@ final class CanvasPageViewModel {
     var members: IdentifiedCollection = IdentifiedCollection<DBUser>()
     var zoomScale: CGFloat = 1.0
     var lastChatId: String?
-    
+    @ObservationIgnored private var widgetListener: ListenerRegistration?
+    @ObservationIgnored private var unreadListener: ListenerRegistration?
+
     weak var coordinator: ZoomCoordinatorProtocol?
 
     /* Eric: Don't delete this
@@ -74,6 +76,10 @@ final class CanvasPageViewModel {
             }
         }
 
+    }
+    deinit {
+        widgetListener?.remove()
+        unreadListener?.remove()
     }
 
     func scrollTo(widgetId: String) {
@@ -108,7 +114,7 @@ final class CanvasPageViewModel {
     }
     
     func attachUnreadListener(userId: String) {
-        spaceReference(spaceId: spaceId).collection("unreads").document(userId).addSnapshotListener({ [weak self] documentSnapshot, error in
+        unreadListener = spaceReference(spaceId: spaceId).collection("unreads").document(userId).addSnapshotListener({ [weak self] documentSnapshot, error in
             guard let self = self else {
                 print(
                     "attachUnreadListener closure: weak self no reference")
@@ -169,7 +175,7 @@ final class CanvasPageViewModel {
     }
 
     func attachWidgetListener() {
-        spaceReference(spaceId: spaceId)
+        widgetListener = spaceReference(spaceId: spaceId)
         .collection("widgets")
             .addSnapshotListener { [weak self] querySnapshot, error in
                 guard let self = self else {

@@ -5,10 +5,12 @@ import FirebaseFirestore
 struct TodoWidget: View {
     
     let widget: CanvasWidget // Assuming CanvasWidget is a defined type
-    private var spaceId: String
     let cutoff: Int
+    private var spaceId: String
     
+    @Environment(CanvasPageViewModel.self) var canvasViewModel: CanvasPageViewModel?
     @State var todo: Todo?
+    @State private var todoListener: ListenerRegistration?
 
     init(widget: CanvasWidget, spaceId: String) {
         assert(widget.media == .todo)
@@ -17,12 +19,8 @@ struct TodoWidget: View {
         self.cutoff = Int((widget.height-50) / 20)
     }
     
-    
-    @Environment(CanvasPageViewModel.self) var canvasViewModel: CanvasPageViewModel?
-    
-    
     func fetchTodo() {
-        spaceReference(spaceId: spaceId)
+        todoListener = spaceReference(spaceId: spaceId)
             .collection("todo")
             .document(widget.id.uuidString)
             .addSnapshotListener { snapshot, error in
@@ -143,7 +141,9 @@ struct TodoWidget: View {
             canvasViewModel.activeSheet = .todo
             canvasViewModel.activeWidget = widget
         }
-    
+        .onDisappear {
+            todoListener?.remove()
+        }
         
         
     }

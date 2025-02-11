@@ -22,6 +22,7 @@ struct PollWidgetSheetView: View {
     @State var poll: Poll?
     @State var totalVotes: Int = 0
     @State var userVote: [String: Int] = [:]
+    @State var pollListener: ListenerRegistration?
     
     @Environment(AppModel.self) var appModel
     @Environment(\.dismiss) var dismissScreen
@@ -35,7 +36,7 @@ struct PollWidgetSheetView: View {
     }
     
     func fetchPoll() {
-        spaceReference(spaceId: spaceId)
+        pollListener = spaceReference(spaceId: spaceId)
                 .collection("polls")
                 .document(widget.id.uuidString)
                 .addSnapshotListener { snapshot, error in
@@ -245,16 +246,17 @@ struct PollWidgetSheetView: View {
                 .navigationBarTitleDisplayMode(.inline)
                 .padding(.horizontal)
             }
+            .onDisappear {
+                pollListener?.remove()
+            }
+
             
             
         } else {
             ProgressView()
                 .backgroundStyle(Color(UIColor.systemBackground) )
                 .onAppear {
-                    
                     fetchPoll()
-                    
-                    
                 }
         }
         

@@ -42,8 +42,11 @@ final class TodoWidgetSheetViewModel: ObservableObject {
     
     @Published var isFilterActive: Bool = false
     @Published private(set) var userId: String? = try? AuthenticationManager.shared.getAuthenticatedUser().uid
+    private var todoListener: ListenerRegistration?
 
-    
+    deinit {
+        todoListener?.remove()
+    }
     
     // Define the new addNewTodoItem function
     func addNewTodoItem(spaceId: String, todoId: String, mentionedUserId: String) {
@@ -100,7 +103,7 @@ final class TodoWidgetSheetViewModel: ObservableObject {
     
     
     func fetchTodo(spaceId: String, widget: CanvasWidget) {
-        spaceReference(spaceId: spaceId)
+        todoListener = spaceReference(spaceId: spaceId)
             .collection("todo")
             .document(widget.id.uuidString)
             .addSnapshotListener { snapshot, error in

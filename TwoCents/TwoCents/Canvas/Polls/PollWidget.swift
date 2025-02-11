@@ -24,6 +24,7 @@ struct PollWidget: WidgetView {
     @State var totalVotes: Int = 0
     @Environment(AppModel.self) var appModel
     @Environment(CanvasPageViewModel.self) var canvasViewModel
+    @State private var pollListener: ListenerRegistration?
     
     
     init(widget: CanvasWidget, spaceId: String) {
@@ -33,7 +34,7 @@ struct PollWidget: WidgetView {
     }
     
     func fetchPoll() {
-        spaceReference(spaceId: spaceId)
+        pollListener = spaceReference(spaceId: spaceId)
             .collection("polls")
             .document(widget.id.uuidString)
             .addSnapshotListener { snapshot, error in
@@ -251,6 +252,9 @@ struct PollWidget: WidgetView {
                     .cornerRadius(20)
                     .onAppear {
                         fetchPoll()
+                    }
+                    .onDisappear {
+                        pollListener?.remove()
                     }
             }
         }

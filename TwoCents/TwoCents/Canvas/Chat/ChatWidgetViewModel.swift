@@ -18,6 +18,7 @@ class ChatWidgetViewModel {
     var lastDocument: DocumentSnapshot?
     private let chatRef: DocumentReference
     private let FETCH_LIMIT: Int = 20
+    @ObservationIgnored private var messageListener: ListenerRegistration?
 
     var messages: [any Message] = []
 
@@ -38,12 +39,16 @@ class ChatWidgetViewModel {
         }
         chat = chatDoc
     }
+    
+    deinit {
+        messageListener?.remove()
+    }
 
     func attachMessageListener() {
         let messagesRef = chatRef.collection("messages")
 
         // Order by timestamp descending, limited to last 20
-        messagesRef
+        messageListener = messagesRef
             .order(by: "dateCreated", descending: true)
             .limit(to: FETCH_LIMIT)
             .addSnapshotListener { [weak self] querySnapshot, error in

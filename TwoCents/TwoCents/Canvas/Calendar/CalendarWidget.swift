@@ -50,6 +50,7 @@ struct CalendarWidget: WidgetView {
     @State private var closestTime: String = ""
     @State private var optimalDate = OptimalDate(from: "", maxTimeFrequency: 0)
     @State private var eventName: String = "Eventful Event"
+    @State private var calendarListener: ListenerRegistration?
     
     var body: some View {
             VStack {
@@ -76,10 +77,13 @@ struct CalendarWidget: WidgetView {
         .task {
             await setupSnapshotListener()
         }
+        .onDisappear {
+            calendarListener?.remove()
+        }
     }
 
     private func setupSnapshotListener() async {
-        spaceReference(spaceId: spaceId)
+        calendarListener = spaceReference(spaceId: spaceId)
             .collection("calendar")
             .document(widget.id.uuidString)
             .addSnapshotListener { documentSnapshot, error in

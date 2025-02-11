@@ -9,35 +9,20 @@ import Foundation
 import FirebaseFirestore
 import SwiftUI
 
-@MainActor
-final class TextWidgetViewModel: ObservableObject {
+@Observable @MainActor
+final class TextWidgetViewModel {
     
     //this might cause errors bc several places are running and creating and overriding db user below... but for now its good
-    @Published private(set) var user:  DBUser? = nil
-    func loadCurrentUser() async throws {
-        let authDataResult = try AuthenticationManager.shared.getAuthenticatedUser()
-        self.user = try await UserManager.shared.getUser(userId: authDataResult.uid)
-    }
-    
-    func loadUser(userId: String) async throws {
-        self.user = try await UserManager.shared.getUser(userId: userId)
-    }
+    var user:  DBUser? = nil
+    var WidgetMessage: CanvasWidget? = nil
+    var canvasWidgetTextString: String? = nil
+    var userColor:  Color? = nil
 
-    
-    @Published private(set) var WidgetMessage: CanvasWidget? = nil
-    func loadWidget(spaceId: String, widgetId: String) async throws {
-        
-        self.WidgetMessage = try await SpaceManager.shared.getWidget(spaceId: spaceId, widgetId: widgetId)
-        
-    }
-    
-    
     func getUserColorWrapper(userColor: String) {
         
         self.userColor = getUserColor(userColor: userColor)
     }
     
-    @Published private(set)var userColor:  Color? = nil
     
     func getUserColor(userColor: String) -> Color{
         
@@ -45,7 +30,6 @@ final class TextWidgetViewModel: ObservableObject {
         
     }
     //Josh Added
-    @Published var canvasWidgetTextString: String? = nil
     func loadWidgetTextString(spaceId: String, widgetId: String) async throws {
         self.canvasWidgetTextString = try await SpaceManager.shared.getWidget(spaceId: spaceId, widgetId: widgetId).textString
     }
