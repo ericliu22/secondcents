@@ -11,15 +11,11 @@ import FirebaseFirestore
 
 struct TextWidget: WidgetView {
     
-    //@TODO: Clean all of this up
-    //1. Put the state variables in VM
-    //2. Put functions in VM
     @State private var isPresented: Bool = false
     @State var textString: String
     @State private var userColor: Color = .gray
-    @State private var viewModel = TextWidgetViewModel()
     @State private var textListener: ListenerRegistration?
-    @Environment(CanvasPageViewModel.self) var canvasViewModel
+    @StateObject private var viewModel = TextWidgetViewModel()
 
     var widget: CanvasWidget // Assuming CanvasWidget is a defined type
     private var spaceId: String
@@ -44,11 +40,9 @@ struct TextWidget: WidgetView {
             .background(userColor)
             .foregroundColor(userColor)
             .task {
-                guard let userColor = canvasViewModel.members[id: widget.userId]?.userColor else {
-                    return
-                }
+                try? await viewModel.loadUser(userId: widget.userId)
                 withAnimation{
-                    self.userColor = Color.fromString(name: userColor)
+                    self.userColor = viewModel.getUserColor(userColor:viewModel.user?.userColor ?? "")
                 }
                 fetchText()
                 
