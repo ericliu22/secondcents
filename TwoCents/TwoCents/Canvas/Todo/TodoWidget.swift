@@ -22,8 +22,7 @@ struct TodoWidget: View {
     
     
     func fetchTodo() {
-        Firestore.firestore().collection("spaces")
-            .document(spaceId)
+        spaceReference(spaceId: spaceId)
             .collection("todo")
             .document(widget.id.uuidString)
             .addSnapshotListener { snapshot, error in

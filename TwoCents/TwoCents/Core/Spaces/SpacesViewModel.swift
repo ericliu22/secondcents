@@ -76,8 +76,7 @@ final class SpacesViewModel {
             return
         }
         for space in allSpaces {
-            guard let unreadCount = try? await Firestore.firestore().collection("spaces")
-                .document(space.space.id)
+            guard let unreadCount = try? await spaceReference(spaceId: space.space.spaceId)
                 .collection("unreads")
                 .document(user.id)
                 .getDocument()

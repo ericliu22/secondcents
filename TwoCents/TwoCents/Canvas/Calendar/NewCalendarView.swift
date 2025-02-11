@@ -187,8 +187,7 @@ struct NewCalendarView: View {
     }
     
     func saveCalendar(userId: String) {
-        Firestore.firestore().collection("spaces")
-            .document(spaceId)
+        spaceReference(spaceId: spaceId)
             .collection("calendar")
             .document(createdWidgetId)
             .setData([

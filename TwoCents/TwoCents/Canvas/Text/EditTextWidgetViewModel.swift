@@ -32,8 +32,7 @@ final class EditTextWidgetViewModel: ObservableObject {
     
     //I think just update field is fine?
     func uploadEditedText(spaceId: String, text: String, widgetId: UUID) {
-        Firestore.firestore().collection("spaces")
-            .document(spaceId)
+        spaceReference(spaceId: spaceId)
             .collection("widgets")
             .document(widgetId.uuidString)
             .updateData(["textString": text])

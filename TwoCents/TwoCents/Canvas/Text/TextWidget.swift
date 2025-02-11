@@ -50,8 +50,7 @@ struct TextWidget: WidgetView {
     
     //plswork
     func fetchText() {
-        Firestore.firestore().collection("spaces")
-            .document(spaceId)
+        spaceReference(spaceId: spaceId)
             .collection("widgets")
             .document(widget.id.uuidString)
             .addSnapshotListener{ documentSnapshot, error in

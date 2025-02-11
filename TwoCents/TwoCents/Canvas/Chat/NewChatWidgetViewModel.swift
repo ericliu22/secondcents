@@ -22,7 +22,7 @@ class NewChatWidgetViewModel {
         
         let widget = CanvasWidget(width: width, height: height, borderColor: .red, userId: userId, media: .chat, widgetName: text)
         let chat = Chat(userId: userId, spaceId: spaceId, name: text, members: members, id: widget.id.uuidString)
-            try Firestore.firestore().collection("spaces").document(spaceId).collection("chats").document(widget.id.uuidString).setData(from: chat)
+        try spaceReference(spaceId: spaceId).collection("chats").document(widget.id.uuidString).setData(from: chat)
             return widget
     }
 }

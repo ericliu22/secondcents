@@ -53,8 +53,7 @@ final class ChatViewModel {
     func fetchNewMessages(spaceId: String) {
         let currentTime = Date()
         
-        Firestore.firestore().collection("spaces")
-            .document(spaceId)
+        spaceReference(spaceId: spaceId)
             .collection("chat")
             .document("mainChat")
             .collection("chatlogs")

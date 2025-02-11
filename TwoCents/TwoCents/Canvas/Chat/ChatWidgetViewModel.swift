@@ -24,8 +24,8 @@ class ChatWidgetViewModel {
     init(spaceId: String, chatId: String) {
         self.spaceId = spaceId
         self.chatId = chatId
-        chatRef = Firestore.firestore().collection("spaces").document(spaceId)
-            .collection("chats").document(chatId)
+        chatRef = spaceReference(spaceId: spaceId)
+.collection("chats").document(chatId)
         attachMessageListener()
         Task {
             await fetchChat()

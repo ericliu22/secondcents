@@ -33,8 +33,7 @@ struct PollWidget: WidgetView {
     }
     
     func fetchPoll() {
-        Firestore.firestore().collection("spaces")
-            .document(spaceId)
+        spaceReference(spaceId: spaceId)
             .collection("polls")
             .document(widget.id.uuidString)
             .addSnapshotListener { snapshot, error in

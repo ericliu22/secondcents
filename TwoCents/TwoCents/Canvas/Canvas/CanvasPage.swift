@@ -430,7 +430,6 @@ struct CanvasPage: View, CanvasViewModelDelegate {
 
     @Environment(\.undoManager) private var undoManager
     var body: some View {
-        VStack {
             ZStack {
                 ZoomableScrollView {
                     canvasView()
@@ -485,6 +484,10 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                     }
                 }
                 .ignoresSafeArea()
+                VStack {
+                    Spacer()
+                    BottomButtons()
+                }
             }
             .ignoresSafeArea()
             .sheet(
@@ -548,34 +551,6 @@ struct CanvasPage: View, CanvasViewModelDelegate {
             .onDisappear {
                 viewModel.activeSheet = nil
             }
-            if viewModel.canvasMode == .placement {
-                HStack {
-                    Button(
-                        action: {
-                            
-                            viewModel.confirmPlacement()
-                        },
-                        label: {
-                            Image(systemName: "checkmark.circle")
-                                .font(.system(size: 72))
-                        })
-                    Button(
-                        action: {
-                            viewModel.canvasMode = .normal
-                            guard let newWidget = viewModel.newWidget else {
-                                return
-                            }
-                            SpaceManager.shared.deleteAssociatedWidget(
-                                spaceId: spaceId, widgetId: newWidget.id.uuidString,
-                                media: newWidget.media)
-                        },
-                        label: {
-                            Image(systemName: "x.circle")
-                                .font(.system(size: 72))
-                        })
-                }.background(Color.clear)
-            }
-        }
         .background(Color(UIColor.secondarySystemBackground))
         .environment(viewModel)
     }

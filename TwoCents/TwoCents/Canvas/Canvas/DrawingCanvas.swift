@@ -39,7 +39,8 @@ struct DrawingCanvas: UIViewRepresentable {
     }
     
     func attachDrawingListener() {
-        Firestore.firestore().collection("spaces").document(spaceId).addSnapshotListener { documentSnapshot, error in
+        spaceReference(spaceId: spaceId)
+        .addSnapshotListener { documentSnapshot, error in
             
             guard let document = documentSnapshot else {
                 print("Error fetching document: \(error)")
@@ -136,7 +137,7 @@ extension PKCanvasView {
     public func upload(spaceId: String) {
         Task {
             do {
-                try await Firestore.firestore().collection("spaces").document(spaceId).updateData([
+                try await spaceReference(spaceId: spaceId).updateData([
                     "drawing": self.drawing.dataRepresentation(),
                 ])
             } catch {

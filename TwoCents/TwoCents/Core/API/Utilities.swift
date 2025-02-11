@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import FirebaseFirestore
 
 func waitForVariable<T>(_ variable: @escaping () -> T?) -> T {
     let semaphore = DispatchSemaphore(value: 0)
@@ -231,4 +232,8 @@ struct IdentifiedCollection<Element: Identifiable & Hashable>:
         
         return removedElement
     }
+}
+
+func spaceReference(spaceId: String) -> DocumentReference {
+    return Firestore.firestore().collection("spaces").document(spaceId)
 }

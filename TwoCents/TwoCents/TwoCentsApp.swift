@@ -274,7 +274,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 
     func isValidSpaceLink(spaceId: String, completion: @escaping (Bool) -> Void)
     {
-        Firestore.firestore().collection("spaces").document(spaceId)
+        spaceReference(spaceId: spaceId)
             .getDocument(completion: { snapshot, error in
                 if let error = error {
                     print("Error fetching documents: \(error)")

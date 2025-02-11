@@ -231,27 +231,11 @@ struct ZoomableScrollView<Content: View>: UIViewRepresentable {
 
             // 3) Do your Firebase call to mark it as read
             Task {
-                await removeWidgetFromUnreads(widgetId: widgetId)
+                guard let userId = appModel.user?.userId else { return }
+                await readWidgetUnread(spaceId: canvasViewModel.spaceId, userId: userId, widgetId: widgetId)
             }
         }
 
-        /// Example of removing that widget from the "unreads" array in Firestore
-        private func removeWidgetFromUnreads(widgetId: String) async {
-            guard let userId = appModel.user?.userId else { return }
-            let spaceId = canvasViewModel.spaceId
-            do {
-                try await Firestore.firestore().collection("spaces")
-                    .document(spaceId)
-                    .collection("unreads")
-                    .document(userId)
-                    .updateData([
-                        "widgets": FieldValue.arrayRemove([widgetId]),
-                        "count": FieldValue.increment(Int64(-1)),
-                    ])
-            } catch {
-                print("Failed to remove widget from unreads: \(error)")
-            }
-        }
 
         private func updateContentSize(for scrollView: UIScrollView) {
             guard let view = scrollView.subviews.first else {

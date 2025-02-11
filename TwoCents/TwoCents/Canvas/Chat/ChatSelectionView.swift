@@ -22,11 +22,11 @@ struct ChatSelectionView: View {
                         .onAppear {
                             canvasViewModel.activeSheet = nil
                             canvasViewModel.inSubView = true
-                            canvasViewModel.activeWidget = chatWidget
+                            canvasViewModel.replyWidget = chatWidget
                         }
                         .onDisappear {
                             canvasViewModel.inSubView = false
-                            canvasViewModel.activeWidget = nil
+                            canvasViewModel.replyWidget = nil
                         }
                         .environment(
                             ChatWidgetViewModel(

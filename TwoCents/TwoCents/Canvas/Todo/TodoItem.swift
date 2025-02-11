@@ -52,8 +52,7 @@ struct Todo: Codable, Identifiable {
             "options": optionsData
         ]
      
-        Firestore.firestore().collection("spaces")
-            .document(spaceId)
+        spaceReference(spaceId: spaceId)
             .collection("todo")
             .document(id.uuidString)
             .updateData(data)
@@ -63,8 +62,7 @@ struct Todo: Codable, Identifiable {
     
     func uploadTodo(spaceId: String) {
         do {
-            try Firestore.firestore().collection("spaces")
-                .document(spaceId)
+            try spaceReference(spaceId: spaceId)
                 .collection("todo")
                 .document(id.uuidString)
                 .setData(from: self)
@@ -87,8 +85,7 @@ struct Todo: Codable, Identifiable {
 
 
 func deleteTodoList(spaceId: String, todoId: String) {
-    Firestore.firestore().collection("spaces")
-        .document(spaceId)
+    spaceReference(spaceId: spaceId)
         .collection("todo")
         .document(todoId)
         .delete()

@@ -40,6 +40,7 @@ final class CanvasPageViewModel {
     var visibleRectInCanvas: CGRect = CGRect(x: 0, y:0, width: 0, height: 0)
     var members: IdentifiedCollection = IdentifiedCollection<DBUser>()
     var zoomScale: CGFloat = 1.0
+    var lastChatId: String?
     
     weak var coordinator: ZoomCoordinatorProtocol?
 
@@ -107,7 +108,7 @@ final class CanvasPageViewModel {
     }
     
     func attachUnreadListener(userId: String) {
-        Firestore.firestore().collection("spaces").document(spaceId).collection("unreads").document(userId).addSnapshotListener({ [weak self] documentSnapshot, error in
+        spaceReference(spaceId: spaceId).collection("unreads").document(userId).addSnapshotListener({ [weak self] documentSnapshot, error in
             guard let self = self else {
                 print(
                     "attachUnreadListener closure: weak self no reference")
@@ -124,6 +125,19 @@ final class CanvasPageViewModel {
             }
             
             self.unreadWidgets = unreads
+            let chatUnreads = unreads.filter({ unread in
+                guard let uuid = UUID(uuidString: unread) else {
+                    return false
+                }
+                guard let widget = self.canvasWidgets[id: uuid] else {
+                    return false
+                }
+                if widget.media == .chat { return true }
+                return false
+            })
+            if let latest = chatUnreads.last {
+                self.lastChatId = latest
+            }
         })
     }
     
@@ -155,7 +169,8 @@ final class CanvasPageViewModel {
     }
 
     func attachWidgetListener() {
-        Firestore.firestore().collection("spaces").document(spaceId).collection("widgets")
+        spaceReference(spaceId: spaceId)
+        .collection("widgets")
             .addSnapshotListener { [weak self] querySnapshot, error in
                 guard let self = self else {
                     print(

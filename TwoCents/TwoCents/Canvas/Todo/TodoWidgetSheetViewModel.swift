@@ -100,8 +100,7 @@ final class TodoWidgetSheetViewModel: ObservableObject {
     
     
     func fetchTodo(spaceId: String, widget: CanvasWidget) {
-        Firestore.firestore().collection("spaces")
-            .document(spaceId)
+        spaceReference(spaceId: spaceId)
             .collection("todo")
             .document(widget.id.uuidString)
             .addSnapshotListener { snapshot, error in
@@ -154,7 +153,7 @@ final class TodoWidgetSheetViewModel: ObservableObject {
     }
     
     func saveChanges(spaceId: String, todoId: String) {
-        let ref = Firestore.firestore().collection("spaces").document(spaceId).collection("todo").document(todoId)
+        let ref = spaceReference(spaceId: spaceId).collection("todo").document(todoId)
         
         ref.getDocument { [weak self] document, error in
             guard let self = self else {
@@ -271,7 +270,7 @@ final class TodoWidgetSheetViewModel: ObservableObject {
         // Remove the corresponding mentioned user
         mentionedUsers.remove(at: index)
         
-        let ref = Firestore.firestore().collection("spaces").document(spaceId).collection("todo").document(todoId)
+        let ref = spaceReference(spaceId: spaceId).collection("todo").document(todoId)
         
         ref.getDocument { document, error in
             

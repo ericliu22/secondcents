@@ -369,8 +369,7 @@ struct CalendarWidgetSheetView: View {
             return
         }
         
-        Firestore.firestore().collection("spaces")
-            .document(spaceId)
+        spaceReference(spaceId: spaceId)
             .collection("calendar")
             .document(widgetId)
             .getDocument { document, error in
@@ -478,8 +477,7 @@ struct CalendarWidgetSheetView: View {
         let userId = try! AuthenticationManager.shared.getAuthenticatedUser().uid
         let dateKey = dateFormatter.string(from: date)
         
-        Firestore.firestore().collection("spaces")
-            .document(spaceId)
+        spaceReference(spaceId: spaceId)
             .collection("calendar")
             .document(widgetId)
             .getDocument { document, error in

@@ -28,14 +28,15 @@ import FirebaseFirestore
 
 func addMessageUnread(spaceId: String, userId: String) {
     print("ADDDING MESSAGE UNREAD")
-    Firestore.firestore().collection("spaces").document(spaceId).collection("unreads").document(userId).setData([
+    spaceReference(spaceId: spaceId).collection("unreads").document(userId).setData([
         "count": FieldValue.increment(Double(1))
     ], merge: true)
 }
 
 func addWidgetUnread(spaceId: String, userId: String, widgetId: String) {
     DispatchQueue.global().async {
-        Firestore.firestore().collection("spaces").document(spaceId).collection("unreads").document(userId).setData([
+        spaceReference(spaceId: spaceId)
+        .collection("unreads").document(userId).setData([
             "widgets": FieldValue.arrayUnion([widgetId]),
             "count": FieldValue.increment(Double(1))
         ], merge: true)
@@ -43,8 +44,7 @@ func addWidgetUnread(spaceId: String, userId: String, widgetId: String) {
 }
 
 fileprivate func fetchLatestMessage(spaceId: String) async -> String? {
-    guard let first = try? await Firestore.firestore().collection("spaces")
-        .document(spaceId)
+    guard let first = try? await spaceReference(spaceId: spaceId)
         .collection("chat")
         .document("mainChat")
         .collection("chatlogs")
@@ -76,8 +76,7 @@ func widgetUnread(spaceId: String, widgetId: String) async {
 }
 
 func getUnreadWidgets(spaceId: String, userId: String) async -> [String]? {
-    return try? await Firestore.firestore().collection("spaces")
-        .document(spaceId)
+    return try? await spaceReference(spaceId: spaceId)
         .collection("unreads")
         .document(userId)
         .getDocument()
@@ -108,12 +107,32 @@ func readNotifications (spaceId: String, userId: String) async {
     }
     
     do {
-        try await Firestore.firestore().collection("spaces").document(spaceId).collection("unreads").document(userId).setData([
+        try await spaceReference(spaceId: spaceId).collection("unreads").document(userId).setData([
             "count": 0,
             "widgets": [],
             "message": messageId
         ], merge: true)
     } catch {
         print("Unreads: failed to update notification")
+    }
+}
+
+func readWidgetUnread(spaceId: String, userId: String, widgetId: String) async {
+    do {
+        try await spaceReference(
+            spaceId: spaceId
+        )
+        .collection("unreads")
+        .document(userId)
+        .updateData([
+            "widgets":
+                FieldValue.arrayRemove([
+                    widgetId
+                ]),
+            "count": FieldValue.increment(
+                Int64(-1)),
+        ])
+    } catch {
+        print("Failed to read widget unreaad")
     }
 }

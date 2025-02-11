@@ -43,6 +43,7 @@
 		A212A19E2D399B1C0057E89D /* NewChatWidgetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A212A19D2D399B160057E89D /* NewChatWidgetViewModel.swift */; };
 		A21E87FD2C62A1D400B48BCA /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A21E87FC2C62A1D400B48BCA /* AppModel.swift */; };
 		A21FDDAB2CB331B700A3EB7E /* WidgetSizeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A21FDDAA2CB3319D00A3EB7E /* WidgetSizeView.swift */; };
+		A223B7432D5ACB0B00C2FACC /* BottomButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = A223B7422D5ACB0400C2FACC /* BottomButtons.swift */; };
 		A22F84EE2C2912A20095A087 /* ZoomableScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A22F84ED2C2912A20095A087 /* ZoomableScrollView.swift */; };
 		A231E01F2D5091C9001F6EE6 /* RequestsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A231E01E2D5091C9001F6EE6 /* RequestsView.swift */; };
 		A231E0212D5091E2001F6EE6 /* RequestsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A231E0202D5091DE001F6EE6 /* RequestsViewModel.swift */; };
@@ -241,6 +242,7 @@
 		A212A19D2D399B160057E89D /* NewChatWidgetViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewChatWidgetViewModel.swift; sourceTree = "<group>"; };
 		A21E87FC2C62A1D400B48BCA /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
 		A21FDDAA2CB3319D00A3EB7E /* WidgetSizeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetSizeView.swift; sourceTree = "<group>"; };
+		A223B7422D5ACB0400C2FACC /* BottomButtons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomButtons.swift; sourceTree = "<group>"; };
 		A22F84ED2C2912A20095A087 /* ZoomableScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomableScrollView.swift; sourceTree = "<group>"; };
 		A231E01E2D5091C9001F6EE6 /* RequestsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestsView.swift; sourceTree = "<group>"; };
 		A231E0202D5091DE001F6EE6 /* RequestsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestsViewModel.swift; sourceTree = "<group>"; };
@@ -692,6 +694,7 @@
 				AB90EDBC2B55BB59002AD855 /* NewWidgetViewModel.swift */,
 				A246A42D2B43A1B700F0F6E6 /* NewWidgetView.swift */,
 				A21FDDAA2CB3319D00A3EB7E /* WidgetSizeView.swift */,
+				A223B7422D5ACB0400C2FACC /* BottomButtons.swift */,
 			);
 			path = Canvas;
 			sourceTree = "<group>";
@@ -1164,6 +1167,7 @@
 				AB842C122A91F36300E4A7CE /* CustomizeProfileView.swift in Sources */,
 				856E80BB2B50EB260078A2CE /* SabotageGameView.swift in Sources */,
 				85741EA82AD03A0C0085423E /* CarouselPractice.swift in Sources */,
+				A223B7432D5ACB0B00C2FACC /* BottomButtons.swift in Sources */,
 				AB77664C2C2526BE00F95E65 /* LocationManager.swift in Sources */,
 				A2C6FE9A2C5ECC170074C475 /* NewLinkViewModel.swift in Sources */,
 				AB2E56D32AE9C6F00096A58C /* VoteGameViewModel.swift in Sources */,

@@ -79,8 +79,7 @@ struct CalendarWidget: WidgetView {
     }
 
     private func setupSnapshotListener() async {
-        Firestore.firestore().collection("spaces")
-            .document(spaceId)
+        spaceReference(spaceId: spaceId)
             .collection("calendar")
             .document(widget.id.uuidString)
             .addSnapshotListener { documentSnapshot, error in
@@ -632,8 +631,7 @@ struct EventPassedView: View {
 
 
 func deleteCalendar(spaceId: String, calendarId: String) {
-    Firestore.firestore().collection("spaces")
-        .document(spaceId)
+    spaceReference(spaceId: spaceId)
         .collection("calendar")
         .document(calendarId)
         .delete()

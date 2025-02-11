@@ -48,6 +48,7 @@ struct ChatWidget: WidgetView {
                     .onAppear {
                         canvasViewModel.inSubView = true
                         canvasViewModel.activeWidget = widget
+                        canvasViewModel.lastChatId = widget.id.uuidString
                     }
                     .onDisappear {
                         canvasViewModel.inSubView = false
@@ -140,8 +141,7 @@ struct NewChatPreview: View {
 }
 
 func deleteChat(spaceId: String, chatId: String) {
-    Firestore.firestore().collection("spaces")
-        .document(spaceId)
+    spaceReference(spaceId: spaceId)
         .collection("chatas")
         .document(chatId)
         .delete()
