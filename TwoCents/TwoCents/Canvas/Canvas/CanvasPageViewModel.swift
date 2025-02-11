@@ -24,7 +24,7 @@ final class CanvasPageViewModel {
     var activeSheet: CanvasSheet?
     var replyWidget: CanvasWidget?
     var newWidget: CanvasWidget?
-    var canvasWidgets: [CanvasWidget] = []
+    var canvasWidgets: IdentifiedCollection = IdentifiedCollection<CanvasWidget>()
     var spaceId: String
     var inSubView: Bool = false
     var selectedDetent: PresentationDetent = .height(50)
@@ -76,7 +76,10 @@ final class CanvasPageViewModel {
     }
 
     func scrollTo(widgetId: String) {
-        guard let widget = canvasWidgets.first(where: { $0.id.uuidString == widgetId }) else {
+        guard let uuid = UUID(uuidString: widgetId) else {
+            return
+        }
+        guard let widget = canvasWidgets[id: uuid] else {
             return
         }
         coordinator?.scrollToWidget(widget)
@@ -152,7 +155,7 @@ final class CanvasPageViewModel {
     }
 
     func attachWidgetListener() {
-        db.collection("spaces").document(spaceId).collection("widgets")
+        Firestore.firestore().collection("spaces").document(spaceId).collection("widgets")
             .addSnapshotListener { [weak self] querySnapshot, error in
                 guard let self = self else {
                     print(
@@ -163,7 +166,7 @@ final class CanvasPageViewModel {
                     print("Error fetching query: \(error)")
                     return
                 }
-                self.canvasWidgets = []
+                self.canvasWidgets = IdentifiedCollection<CanvasWidget>()
                 for document in query.documents {
                     guard let newWidget = try? document.data(as: CanvasWidget.self) else {
                         continue
@@ -197,33 +200,11 @@ final class CanvasPageViewModel {
     }
 
     func deleteWidget(widget: CanvasWidget) {
-        if let index = canvasWidgets.firstIndex(of: widget) {
-            canvasWidgets.remove(at: index)
-            SpaceManager.shared.removeWidget(spaceId: spaceId, widget: widget)
-
-            //delete specific widget items (in their own folders)
-            deleteAssociatedWidget(spaceId: spaceId, widgetId: widget.id.uuidString, media: widget.media)
-
-            activeSheet = nil
-
-        }
+        canvasWidgets.remove(id: widget.id)
+        SpaceManager.shared.removeWidget(spaceId: spaceId, widget: widget)
+        activeSheet = nil
     }
     
-    func deleteAssociatedWidget(spaceId: String, widgetId: String, media: Media) {
-        switch media {
-            case .poll:
-                deletePoll(spaceId: spaceId, pollId: widgetId)
-            case .todo:
-                deleteTodoList(spaceId: spaceId, todoId: widgetId)
-            case .calendar:
-                deleteCalendar(
-                    spaceId: spaceId, calendarId: widgetId)
-            case .chat:
-            deleteChat(spaceId: spaceId, chatId: widgetId)
-            default:
-                break
-        }
-    }
 
     func sheetDismiss() {
         replyWidget = nil

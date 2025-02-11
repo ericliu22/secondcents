@@ -1,6 +1,6 @@
 import SwiftUI
 import Foundation
-import Firebase
+import FirebaseFirestore
 
 struct NewCalendarView: View {
     
@@ -125,7 +125,7 @@ struct NewCalendarView: View {
                                 return
                             }
                             
-                            let (width, height): (CGFloat, CGFloat) = SpaceManager.shared.getMultipliedSize(widthMultiplier: 2, heightMultiplier: 2)
+                            let (width, height): (CGFloat, CGFloat) = getMultipliedSize(widthMultiplier: 2, heightMultiplier: 2)
                             
                             let newWidget: CanvasWidget = CanvasWidget(
                                 width: width,
@@ -187,8 +187,7 @@ struct NewCalendarView: View {
     }
     
     func saveCalendar(userId: String) {
-        let db = Firestore.firestore()
-        db.collection("spaces")
+        Firestore.firestore().collection("spaces")
             .document(spaceId)
             .collection("calendar")
             .document(createdWidgetId)

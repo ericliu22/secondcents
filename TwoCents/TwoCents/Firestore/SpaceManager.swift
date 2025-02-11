@@ -203,6 +203,25 @@ final class SpaceManager {
             .collection("widgets")
             .document(widget.id.uuidString)
             .delete()
+        deleteAssociatedWidget(spaceId: spaceId, widgetId: widget.id.uuidString, media: widget.media)
+    }
+    
+    func deleteAssociatedWidget(spaceId: String, widgetId: String, media: Media) {
+        
+        switch media {
+            case .poll:
+                deletePoll(spaceId: spaceId, pollId: widgetId)
+            case .todo:
+                deleteTodoList(spaceId: spaceId, todoId: widgetId)
+            case .calendar:
+                deleteCalendar(
+                    spaceId: spaceId, calendarId: widgetId)
+            case .chat:
+            deleteChat(spaceId: spaceId, chatId: widgetId)
+            default:
+                break
+        }
+    
     }
 
     func changeWidgetSize(
@@ -217,18 +236,7 @@ final class SpaceManager {
             + (max(CGFloat(heightMultiplier - 1), 0) * TILE_SPACING)
     }
 
-    func getMultipliedSize(widthMultiplier: Int, heightMultiplier: Int) -> (
-        CGFloat, CGFloat
-    ) {
-        let width: CGFloat =
-            TILE_SIZE * CGFloat(widthMultiplier)
-            + (max(CGFloat(widthMultiplier - 1), 0) * TILE_SPACING)
-        let height: CGFloat =
-            TILE_SIZE * CGFloat(heightMultiplier)
-            + (max(CGFloat(heightMultiplier - 1), 0) * TILE_SPACING)
 
-        return (width, height)
-    }
 
     private func setSize(
         spaceId: String, widgetId: String, width: CGFloat, height: CGFloat

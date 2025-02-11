@@ -43,29 +43,9 @@ struct TickleWidget: WidgetView {
     func ProfilePic(url: URL, targetUserColor: Color) -> some View {
         //If there is URL for profile pic, show
         //circle with stroke
-        AsyncImage(url: url) { image in
-            image
-                .resizable()
-                .scaledToFill()
-                .clipShape(Circle())
+        CachedImage(imageUrl: url)
+            .clipShape(Circle())
                 .frame(width: 128, height: 128)
-        } placeholder: {
-            //else show loading after user uploads but sending/downloading from database
-            ProgressView()
-                .progressViewStyle(
-                    CircularProgressViewStyle(
-                        tint:
-                            Color(UIColor.systemBackground)
-
-                    )
-                )
-                .frame(width: 128, height: 128)
-                .background(
-                    Circle()
-                        .fill(targetUserColor)
-                        .frame(width: 128, height: 128)
-                )
-        }
     }
 
     var body: some View {

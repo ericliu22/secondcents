@@ -80,7 +80,7 @@ struct Poll: Codable, Identifiable {
             "votes": votes ?? [:]
         ]
      
-        db.collection("spaces")
+        Firestore.firestore().collection("spaces")
             .document(spaceId)
             .collection("polls")
             .document(id.uuidString)
@@ -91,7 +91,7 @@ struct Poll: Codable, Identifiable {
     
     func uploadPoll(spaceId: String) {
         do {
-            try db.collection("spaces")
+            try Firestore.firestore().collection("spaces")
                 .document(spaceId)
                 .collection("polls")
                 .document(id.uuidString)
@@ -125,15 +125,11 @@ struct Poll: Codable, Identifiable {
 
 
 func deletePoll(spaceId: String, pollId: String) {
-    do {
-        try db.collection("spaces")
-            .document(spaceId)
-            .collection("polls")
-            .document(pollId)
-            .delete()
-    } catch {
-        print("Error deleting poll")
-    }
+    Firestore.firestore().collection("spaces")
+        .document(spaceId)
+        .collection("polls")
+        .document(pollId)
+        .delete()
 }
 
 

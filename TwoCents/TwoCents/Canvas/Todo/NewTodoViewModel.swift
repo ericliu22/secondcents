@@ -13,8 +13,6 @@ class NewTodoModel: ObservableObject {
     
     
     
-    let db = Firestore.firestore()
-    
     var error: String? = nil
     @Published var listName: String = ""
     var newItemName: String = ""
@@ -53,7 +51,7 @@ class NewTodoModel: ObservableObject {
             return nil
         }
 
-        let (width, height) = SpaceManager.shared.getMultipliedSize(widthMultiplier: 1, heightMultiplier: 2)
+        let (width, height) = getMultipliedSize(widthMultiplier: 1, heightMultiplier: 2)
         
         let newCanvasWidget: CanvasWidget = CanvasWidget(
             width: width,

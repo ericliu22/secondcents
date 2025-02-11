@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import Firebase
+import FirebaseFirestore
 
 /*
  Unread types:
@@ -35,7 +35,7 @@ func addMessageUnread(spaceId: String, userId: String) {
 
 func addWidgetUnread(spaceId: String, userId: String, widgetId: String) {
     DispatchQueue.global().async {
-        db.collection("spaces").document(spaceId).collection("unreads").document(userId).setData([
+        Firestore.firestore().collection("spaces").document(spaceId).collection("unreads").document(userId).setData([
             "widgets": FieldValue.arrayUnion([widgetId]),
             "count": FieldValue.increment(Double(1))
         ], merge: true)
@@ -43,7 +43,7 @@ func addWidgetUnread(spaceId: String, userId: String, widgetId: String) {
 }
 
 fileprivate func fetchLatestMessage(spaceId: String) async -> String? {
-    guard let first = try? await db.collection("spaces")
+    guard let first = try? await Firestore.firestore().collection("spaces")
         .document(spaceId)
         .collection("chat")
         .document("mainChat")
@@ -76,7 +76,7 @@ func widgetUnread(spaceId: String, widgetId: String) async {
 }
 
 func getUnreadWidgets(spaceId: String, userId: String) async -> [String]? {
-    return try? await db.collection("spaces")
+    return try? await Firestore.firestore().collection("spaces")
         .document(spaceId)
         .collection("unreads")
         .document(userId)
@@ -108,7 +108,7 @@ func readNotifications (spaceId: String, userId: String) async {
     }
     
     do {
-        try await db.collection("spaces").document(spaceId).collection("unreads").document(userId).setData([
+        try await Firestore.firestore().collection("spaces").document(spaceId).collection("unreads").document(userId).setData([
             "count": 0,
             "widgets": [],
             "message": messageId

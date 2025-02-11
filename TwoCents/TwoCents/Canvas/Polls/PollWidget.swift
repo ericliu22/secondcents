@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 import UIKit
 import Charts
+import FirebaseFirestore
 
 
 
@@ -22,6 +23,7 @@ struct PollWidget: WidgetView {
     @State var poll: Poll?
     @State var totalVotes: Int = 0
     @Environment(AppModel.self) var appModel
+    @Environment(CanvasPageViewModel.self) var canvasViewModel
     
     
     init(widget: CanvasWidget, spaceId: String) {
@@ -31,7 +33,7 @@ struct PollWidget: WidgetView {
     }
     
     func fetchPoll() {
-        db.collection("spaces")
+        Firestore.firestore().collection("spaces")
             .document(spaceId)
             .collection("polls")
             .document(widget.id.uuidString)
@@ -232,6 +234,10 @@ struct PollWidget: WidgetView {
                 //                .background(Color.accentColor)
                 
                 .frame(width: widget.width, height: widget.height)
+                .onTapGesture {
+                    canvasViewModel.activeWidget = widget
+                    canvasViewModel.activeSheet = .poll
+                }
             } else {
                 //                ProgressView()
                 //                    .foregroundStyle(Color(UIColor.label))

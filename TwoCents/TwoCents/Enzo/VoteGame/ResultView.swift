@@ -24,21 +24,8 @@ struct ResultView: View {
             Color(playerColor)
                 .edgesIgnoringSafeArea(.all)
             VStack{
-                let url = URL(string: urlString)
-                AsyncImage(url: url) {image in
-                    image
-                        .resizable()
-                        .scaledToFill()
-                }  placeholder: {
-                    //else show loading after user uploads but sending/downloading from database
-                    ProgressView()
-                        .progressViewStyle(CircularProgressViewStyle(tint: Color(UIColor.systemBackground)))
-                        .frame(width: frameSize, height: frameSize)
-                        .background(
-                            Circle()
-                                .fill(Color.accentColor)
-                        )
-                }
+                let url = URL(string: urlString)!
+                CachedImage(imageUrl: url)
                 .clipShape(Circle())
                 .frame(width: frameSize, height: frameSize)
                 

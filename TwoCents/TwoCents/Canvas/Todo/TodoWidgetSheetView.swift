@@ -4,9 +4,9 @@
 //  Created by jonathan on 7/8/24.
 //
 
-import SwiftUI
-import Foundation
 import FirebaseFirestore
+import Foundation
+import SwiftUI
 
 struct TodoWidgetSheetView: View {
 
@@ -14,7 +14,7 @@ struct TodoWidgetSheetView: View {
     private var spaceId: String
 
     @StateObject private var viewModel = TodoWidgetSheetViewModel()
-    
+
     @Environment(AppModel.self) var appModel
 
     init(widget: CanvasWidget, spaceId: String) {
@@ -26,63 +26,76 @@ struct TodoWidgetSheetView: View {
     @Environment(\.dismiss) var dismissScreen
 
     var sortedTodoItems: [TodoItem] {
-        let items = viewModel.localTodoList.sorted { !$0.completed && $1.completed }
-        
+        let items = viewModel.localTodoList.sorted {
+            !$0.completed && $1.completed
+        }
+
         if viewModel.isFilterActive, let userId = viewModel.userId {
             return items.filter { $0.mentionedUserId == userId }
         }
-        
+
         return items
     }
 
     @ToolbarContentBuilder
     func toolbar() -> some ToolbarContent {
-        
-       
-        
+
         ToolbarItem(placement: .navigationBarTrailing) {
-            Button(action: {
-                dismissScreen()
-                withAnimation {
-                    viewModel.saveChanges(spaceId: spaceId, todoId: widget.id.uuidString)
-                }
-            }, label: {
-                Text("Done")
-            })
+            Button(
+                action: {
+                    dismissScreen()
+                    withAnimation {
+                        viewModel.saveChanges(
+                            spaceId: spaceId, todoId: widget.id.uuidString)
+                    }
+                },
+                label: {
+                    Text("Done")
+                })
         }
 
         ToolbarItem(placement: .navigationBarLeading) {
             Menu {
                 Button(action: {
                     if !viewModel.isFilterActive {
-                        viewModel.saveChanges(spaceId: spaceId, todoId: widget.id.uuidString)
+                        viewModel.saveChanges(
+                            spaceId: spaceId, todoId: widget.id.uuidString)
                     }
                     viewModel.isFilterActive.toggle()
                 }) {
-                    Label(viewModel.isFilterActive ? "Show All Tasks" : "Show My Tasks", systemImage: viewModel.isFilterActive ? "checklist" : "person.crop.circle")
+                    Label(
+                        viewModel.isFilterActive
+                            ? "Show All Tasks" : "Show My Tasks",
+                        systemImage: viewModel.isFilterActive
+                            ? "checklist" : "person.crop.circle")
                 }
             } label: {
-                Image(systemName: viewModel.isFilterActive ?  "line.3.horizontal.decrease.circle.fill" : "line.3.horizontal.decrease.circle")
-//                Text("Filter")
+                Image(
+                    systemName: viewModel.isFilterActive
+                        ? "line.3.horizontal.decrease.circle.fill"
+                        : "line.3.horizontal.decrease.circle")
+                //                Text("Filter")
             }
         }
-        
 
-        if viewModel.mentionedUsers.contains(where: { $0 == nil }) && !viewModel.allUsers.isEmpty && !viewModel.isFilterActive {
+        if viewModel.mentionedUsers.contains(where: { $0 == nil })
+            && !viewModel.allUsers.isEmpty && !viewModel.isFilterActive
+        {
             ToolbarItem(placement: .bottomBar) {
-                Button(action: {
-                    viewModel.autoAssignTasks(spaceId: spaceId)
-                }, label: {
-                    HStack {
-                        Image(systemName: "wand.and.stars")
-                        Text("Auto Assign Tasks")
-                    }
-                })
-               
+                Button(
+                    action: {
+                        viewModel.autoAssignTasks(spaceId: spaceId)
+                    },
+                    label: {
+                        HStack {
+                            Image(systemName: "wand.and.stars")
+                            Text("Auto Assign Tasks")
+                        }
+                    })
+
             }
         }
     }
-
 
     var body: some View {
         if let todo = viewModel.todo {
@@ -93,150 +106,195 @@ struct TodoWidgetSheetView: View {
                         .multilineTextAlignment(.leading)
                         .fontWeight(.bold)
                         .lineLimit(1...3)
-                        .frame(maxWidth: .infinity,alignment: .leading)
+                        .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.horizontal)
                     VStack {
-                        ForEach(Array(sortedTodoItems.enumerated()), id: \.element.id) { index, todoItem in
-                            
-                            let originalIndex = viewModel.localTodoList.firstIndex(where: { $0.id == todoItem.id }) ?? 0
-                            
-                            
+                        ForEach(
+                            Array(sortedTodoItems.enumerated()),
+                            id: \.element.id
+                        ) { index, todoItem in
+
+                            let originalIndex =
+                                viewModel.localTodoList.firstIndex(where: {
+                                    $0.id == todoItem.id
+                                }) ?? 0
+
                             HStack(spacing: 0) {
-                                
+
                                 Button(action: {
                                     withAnimation {
                                         // Find the index of the todoItem in the original list
-                                        
-                                        viewModel.toggleCompletionStatus(index: originalIndex)
+
+                                        viewModel.toggleCompletionStatus(
+                                            index: originalIndex)
                                     }
                                 }) {
-                                    Image(systemName: todoItem.completed ? "circle.inset.filled" : "circle")
-                                        .foregroundColor(todoItem.completed ? Color.fromString(name: viewModel.mentionedUsers[viewModel.localTodoList.firstIndex(where: { $0.id == todoItem.id }) ?? 0]?.userColor ?? "") : .gray)
-                                        .font(.title3)
+                                    Image(
+                                        systemName: todoItem.completed
+                                            ? "circle.inset.filled" : "circle"
+                                    )
+                                    .foregroundColor(
+                                        todoItem.completed
+                                            ? Color.fromString(
+                                                name: viewModel.mentionedUsers[
+                                                    viewModel.localTodoList
+                                                        .firstIndex(where: {
+                                                            $0.id == todoItem.id
+                                                        }) ?? 0]?.userColor
+                                                    ?? "") : .gray
+                                    )
+                                    .font(.title3)
                                 }
                                 .padding(.trailing)
-                                
-                                TextField("Item \(index)", text: $viewModel.localTodoList[originalIndex].task ,axis: .vertical)
-                                    .textFieldStyle(PlainTextFieldStyle())
-                                 
-                                    .submitLabel(.return)
-                                    .truncationMode(.tail)
-                                   
-                           
-                                  
+
+                                TextField(
+                                    "Item \(index)",
+                                    text: $viewModel.localTodoList[
+                                        originalIndex
+                                    ].task, axis: .vertical
+                                )
+                                .textFieldStyle(PlainTextFieldStyle())
+
+                                .submitLabel(.return)
+                                .truncationMode(.tail)
+
                                 NavigationLink {
-                                    MentionUserView(mentionedUser: $viewModel.mentionedUsers[viewModel.localTodoList.firstIndex(where: { $0.id == todoItem.id }) ?? 0], allUsers: viewModel.allUsers)
-                                        .onDisappear(perform: {
-                                            viewModel.modifiedMentionedUsers[viewModel.localTodoList.firstIndex(where: { $0.id == todoItem.id }) ?? 0] = viewModel.mentionedUsers[viewModel.localTodoList.firstIndex(where: { $0.id == todoItem.id }) ?? 0]?.id ?? ""
-                                        })
+                                    MentionUserView(
+                                        mentionedUser:
+                                            $viewModel.mentionedUsers[
+                                                viewModel.localTodoList
+                                                    .firstIndex(where: {
+                                                        $0.id == todoItem.id
+                                                    }) ?? 0],
+                                        allUsers: viewModel.allUsers
+                                    )
+                                    .onDisappear(perform: {
+                                        viewModel.modifiedMentionedUsers[
+                                            viewModel.localTodoList.firstIndex(
+                                                where: { $0.id == todoItem.id })
+                                                ?? 0] =
+                                            viewModel.mentionedUsers[
+                                                viewModel.localTodoList
+                                                    .firstIndex(where: {
+                                                        $0.id == todoItem.id
+                                                    }) ?? 0]?.id ?? ""
+                                    })
                                 } label: {
-                                    UserChip(user: viewModel.mentionedUsers[viewModel.localTodoList.firstIndex(where: { $0.id == todoItem.id }) ?? 0])
+                                    UserChip(
+                                        user: viewModel.mentionedUsers[
+                                            viewModel.localTodoList.firstIndex(
+                                                where: { $0.id == todoItem.id })
+                                                ?? 0])
                                 }
                                 .disabled(viewModel.allUsers.isEmpty)
-                                
-                            }
-//                            .frame(height: 48)
-                            .frame(minHeight:48)
-                            .padding(.horizontal)
-                            .contextMenu(ContextMenu(menuItems: {
-                                Button (role: .destructive){
-                                    viewModel.deleteItem(index: originalIndex, todoItemId: todoItem.id, spaceId: spaceId, todoId: widget.id.uuidString)
-                                } label: {
-                                    Label("Delete", systemImage: "trash")
-                  
-                                }
 
-                            }))
+                            }
+                            //                            .frame(height: 48)
+                            .frame(minHeight: 48)
+                            .padding(.horizontal)
+                            .contextMenu(
+                                ContextMenu(menuItems: {
+                                    Button(role: .destructive) {
+                                        viewModel.deleteItem(
+                                            index: originalIndex,
+                                            todoItemId: todoItem.id,
+                                            spaceId: spaceId,
+                                            todoId: widget.id.uuidString)
+                                    } label: {
+                                        Label("Delete", systemImage: "trash")
+
+                                    }
+
+                                }))
                             Divider()
                         }
-                    
-                        
-                        Group{
+
+                        Group {
                             HStack(spacing: 0) {
-                                
-                                
+
                                 Image(systemName: "circle.badge.plus")
                                     .foregroundColor(.gray)
                                     .font(.title3)
                                     .padding(.trailing)
-                                
-                                
-                                
-                                TextField("New Item", text: $viewModel.newTodoItem.task)
-                                    .textFieldStyle(PlainTextFieldStyle())
-                                    .submitLabel(.return)
-                                    .truncationMode(.tail)
-                                    .onChange(of: viewModel.newTodoItem.task, { oldValue, newValue in
-                                        
+
+                                TextField(
+                                    "New Item",
+                                    text: $viewModel.newTodoItem.task
+                                )
+                                .textFieldStyle(PlainTextFieldStyle())
+                                .submitLabel(.return)
+                                .truncationMode(.tail)
+                                .onChange(
+                                    of: viewModel.newTodoItem.task,
+                                    { oldValue, newValue in
+
                                         if newValue != "" && oldValue == "" {
-                                            Task{
+                                            Task {
                                                 withAnimation {
-                                                    viewModel.saveChanges(spaceId: spaceId, todoId: widget.id.uuidString)
+                                                    viewModel.saveChanges(
+                                                        spaceId: spaceId,
+                                                        todoId: widget.id
+                                                            .uuidString)
                                                 }
                                             }
                                         }
-                                    })
-                                    .onSubmit {
-//                                        viewModel.addNewTodoItem(spaceId: spaceId, todoId: widget.id.uuidString , mentionedUserId: viewModel.isFilterActive ? viewModel.userId : "")
-                                        if let authDataResult = try? AuthenticationManager.shared.getAuthenticatedUser(){
-                                            viewModel.addNewTodoItem(spaceId: spaceId, todoId:  widget.id.uuidString, mentionedUserId: viewModel.isFilterActive ? authDataResult.uid : "")
-                                        }
                                     }
-                                
-                                
+                                )
+                                .onSubmit {
+                                    //                                        viewModel.addNewTodoItem(spaceId: spaceId, todoId: widget.id.uuidString , mentionedUserId: viewModel.isFilterActive ? viewModel.userId : "")
+                                    if let authDataResult =
+                                        try? AuthenticationManager.shared
+                                        .getAuthenticatedUser()
+                                    {
+                                        viewModel.addNewTodoItem(
+                                            spaceId: spaceId,
+                                            todoId: widget.id.uuidString,
+                                            mentionedUserId: viewModel
+                                                .isFilterActive
+                                                ? authDataResult.uid : "")
+                                    }
+                                }
+
                                 Spacer()
-                                
-                            
-                                
-                                
-                                
-                                
-                                
+
                             }
-                            .frame(minHeight:48)
+                            .frame(minHeight: 48)
                             .padding(.horizontal)
                             Divider()
-                            
-                            
-                            
+
                         }
-                        
-                        
+
                         Spacer()
-                            .frame(height:300)
-                        
-                        
+                            .frame(height: 300)
+
                         Spacer()
                     }
-//                    .navigationTitle(todo.name)
-                    .toolbar {toolbar()}
+                    //                    .navigationTitle(todo.name)
+                    .toolbar { toolbar() }
                 }
                 .scrollDismissesKeyboard(.interactively)
             }
             .onDisappear(perform: {
-                viewModel.saveChanges(spaceId: spaceId, todoId: widget.id.uuidString)
+                viewModel.saveChanges(
+                    spaceId: spaceId, todoId: widget.id.uuidString)
             })
-//            .interactiveDismissDisabled(true)
-            .task{
-                
+            //            .interactiveDismissDisabled(true)
+            .task {
+
                 try? await viewModel.getAllUsers(spaceId: spaceId)
             }
-           
-            
+
         } else {
             ProgressView()
-               
+
                 .onAppear {
-                    
-                   
-                      
-                        viewModel.fetchTodo(spaceId: spaceId, widget: widget)
-                   
+
+                    viewModel.fetchTodo(spaceId: spaceId, widget: widget)
+
                 }
-               
+
         }
-        
-           
+
     }
 
     struct UserChip: View {
@@ -244,30 +302,19 @@ struct TodoWidgetSheetView: View {
 
         var body: some View {
             if let user = user {
-                let targetUserColor: Color = Color.fromString(name: user.userColor ?? "")
+                let targetUserColor: Color = Color.fromString(
+                    name: user.userColor ?? "")
                 HStack {
                     Group {
-                        if let urlString = user.profileImageUrl, let url = URL(string: urlString) {
-                            AsyncImage(url: url) { image in
-                                image
-                                    .resizable()
-                                    .scaledToFill()
-                                    .clipShape(Circle())
-                                    .frame(width: 16, height: 16)
-                            } placeholder: {
-                                ProgressView()
-                                    .progressViewStyle(CircularProgressViewStyle(tint: Color(UIColor.systemBackground)))
-                                    .scaleEffect(0.5, anchor: .center)
-                                    .frame(width: 16, height: 16)
-                                    .background(
-                                        Circle()
-                                            .fill(targetUserColor)
-                                            .frame(width: 16, height: 16)
-                                    )
-                            }
+                        if let urlString = user.profileImageUrl,
+                            let url = URL(string: urlString)
+                        {
+                            CachedImage(imageUrl: url)
+                                .clipShape(Circle())
+                                .frame(width: 16, height: 16)
                         } else {
                             Circle()
-                             .fill(targetUserColor)
+                                .fill(targetUserColor)
                                 .frame(width: 16, height: 16)
                         }
                     }
@@ -290,6 +337,3 @@ struct TodoWidgetSheetView: View {
         }
     }
 }
-
-
-

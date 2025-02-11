@@ -11,7 +11,6 @@ import SwiftUI
 
 class NewPollModel: ObservableObject {
 
-    let db = Firestore.firestore()
 
     var error: String? = nil
     @Published var newPollName: String = ""
@@ -56,8 +55,8 @@ class NewPollModel: ObservableObject {
         }
 
         //copy for changing widget sizes
-        let (width, height): (CGFloat, CGFloat) = SpaceManager.shared
-            .getMultipliedSize(widthMultiplier: 2, heightMultiplier: 2)
+        let (width, height): (CGFloat, CGFloat) =
+            getMultipliedSize(widthMultiplier: 2, heightMultiplier: 2)
 
         let newCanvasWidget: CanvasWidget = CanvasWidget(
             width: width,

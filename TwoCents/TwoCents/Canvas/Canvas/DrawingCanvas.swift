@@ -7,6 +7,7 @@
 
 import SwiftUI
 import PencilKit
+import FirebaseFirestore
 
 struct DrawingCanvas: UIViewRepresentable {
     
@@ -38,7 +39,7 @@ struct DrawingCanvas: UIViewRepresentable {
     }
     
     func attachDrawingListener() {
-        db.collection("spaces").document(spaceId).addSnapshotListener { documentSnapshot, error in
+        Firestore.firestore().collection("spaces").document(spaceId).addSnapshotListener { documentSnapshot, error in
             
             guard let document = documentSnapshot else {
                 print("Error fetching document: \(error)")
@@ -135,7 +136,7 @@ extension PKCanvasView {
     public func upload(spaceId: String) {
         Task {
             do {
-                try await db.collection("spaces").document(spaceId).updateData([
+                try await Firestore.firestore().collection("spaces").document(spaceId).updateData([
                     "drawing": self.drawing.dataRepresentation(),
                 ])
             } catch {

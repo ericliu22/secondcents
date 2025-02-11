@@ -79,7 +79,7 @@ final class NewWidgetViewModel {
                 self.url = url.absoluteString
                 let uid = try! AuthenticationManager.shared.getAuthenticatedUser().uid
                 
-                let (width, height) = SpaceManager.shared.getMultipliedSize(widthMultiplier: 1, heightMultiplier: 1)
+                let (width, height) = getMultipliedSize(widthMultiplier: 1, heightMultiplier: 1)
                 tempWidget = CanvasWidget(width: width, height:  height, borderColor: .black, userId: uid, media: .image, mediaURL: URL(string: self.url)!, widgetName: "Photo Widget", widgetDescription: "Add a photo to spice the convo")
                 
                 

@@ -2,11 +2,11 @@ import SwiftUI
 
 struct ImageWidgetSheetView: View {
     
-    private var spaceId: String
-    private var widget: CanvasWidget
+    let spaceId: String
+    let widget: CanvasWidget
     
-    @State private var user: DBUser? = nil
     @Environment(\.dismiss) var dismissScreen
+    @Environment(CanvasPageViewModel.self) var canvasViewModel
     
     init(widget: CanvasWidget, spaceId: String) {
         assert(widget.media == .image)
@@ -17,14 +17,11 @@ struct ImageWidgetSheetView: View {
     var body: some View {
         NavigationStack {
             VStack {
-                AsyncImage(url: widget.mediaURL) { image in
-                    image
-                } placeholder: {
-                    ProgressView()
-                        .progressViewStyle(
-                            CircularProgressViewStyle(tint: .primary)
-                        )
-                } // AsyncImage
+                ZStack {
+                    if let mediaURL = widget.mediaURL {
+                        CachedImage(imageUrl: mediaURL)
+                    }
+                }
             }
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
@@ -36,17 +33,10 @@ struct ImageWidgetSheetView: View {
                     })
                 }
             }
-            .navigationTitle(user?.name ?? "Loading...")
+            .navigationTitle(canvasViewModel.members[id: widget.userId]?.name ?? "Photo")
             .navigationBarTitleDisplayMode(.inline)
             .padding(.horizontal)
-            .task {
-                do {
-                    let fetchedUser = try await UserManager.shared.getUser(userId: widget.userId)
-                    user = fetchedUser // Update the state variable
-                } catch {
-                    print("Failed to get user: \(error.localizedDescription)")
-                }
-            }
+
         }
     }
 }

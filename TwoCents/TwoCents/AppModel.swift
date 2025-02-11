@@ -7,7 +7,7 @@
 
 import Foundation
 import SwiftUI
-import Firebase
+import FirebaseFirestore
 
 enum NavigationRequest: Equatable {
     case none
