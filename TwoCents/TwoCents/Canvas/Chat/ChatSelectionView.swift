@@ -21,12 +21,9 @@ struct ChatSelectionView: View {
                     NavigationLink {
                         ChatPage()
                             .onAppear {
-                                canvasViewModel.activeSheet = nil
-                                canvasViewModel.inSubView = true
                                 canvasViewModel.activeWidget = chatWidget
                             }
                             .onDisappear {
-                                canvasViewModel.inSubView = false
                                 canvasViewModel.activeWidget = nil
                             }
                             .environment(

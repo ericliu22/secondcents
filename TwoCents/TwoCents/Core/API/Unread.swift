@@ -71,7 +71,7 @@ func widgetUnread(spaceId: String, widgetId: String, userId: String) async {
         return
     }
     for memberId in members {
-        if memberId == userId {
+        if userId == memberId {
             continue
         }
         addWidgetUnread(spaceId: spaceId, userId: memberId, widgetId: widgetId)

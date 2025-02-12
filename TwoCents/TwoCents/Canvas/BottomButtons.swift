@@ -11,6 +11,58 @@ import SwiftUI
 struct BottomButtons: View {
     @Environment(CanvasPageViewModel.self) var viewModel
     @Environment(AppModel.self) var appModel
+    
+    @ViewBuilder
+    func NormalButtons() -> some View {
+        HStack {
+        }.frame(maxWidth: .infinity)
+        HStack {
+            Button {
+                viewModel.activeSheet = .newWidgetView(startingLocation: nil)
+            } label: {
+                Image(systemName: "plus.circle.fill")
+                    .font(.system(size: 50))
+                    .foregroundStyle(appModel.loadedColor)
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .center)
+        HStack {
+            if let lastChatId = viewModel.lastChatId {
+                NavigationLink {
+                    ChatPage()
+                        .environment(
+                            ChatWidgetViewModel(
+                                spaceId: viewModel.spaceId,
+                                chatId: lastChatId)
+                        )
+                        .environment(viewModel)
+                        .onAppear {
+                            if let index = viewModel.unreadWidgets
+                                .firstIndex(
+                                    of: lastChatId)
+                            {
+                                viewModel.unreadWidgets.remove(at: index)
+                                Task {
+                                    guard let userId = appModel.user?.userId
+                                    else {
+                                        return
+                                    }
+                                    await readWidgetUnread(
+                                        spaceId: viewModel.spaceId,
+                                        userId: userId, widgetId: lastChatId
+                                    )
+                                }
+                            }
+                        }
+                } label: {
+                    Image(systemName: "bubble.circle.fill")
+                        .font(.system(size: 50))
+                        .foregroundStyle(appModel.loadedColor)
+                }
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
 
     var body: some View {
         HStack {
@@ -44,43 +96,12 @@ struct BottomButtons: View {
                 )
             }
             if viewModel.canvasMode == .normal {
-                if let lastChatId = viewModel.lastChatId {
-                    NavigationLink {
-                        ChatPage()
-                            .environment(
-                                ChatWidgetViewModel(
-                                    spaceId: viewModel.spaceId,
-                                    chatId: lastChatId)
-                            )
-                            .environment(viewModel)
-                            .onAppear {
-                                if let index = viewModel.unreadWidgets
-                                    .firstIndex(
-                                        of: lastChatId)
-                                {
-                                    viewModel.unreadWidgets.remove(at: index)
-                                    Task {
-                                        guard let userId = appModel.user?.userId
-                                        else {
-                                            return
-                                        }
-                                        await readWidgetUnread(
-                                            spaceId: viewModel.spaceId,
-                                            userId: userId, widgetId: lastChatId
-                                        )
-                                    }
-                                }
-                            }
-                    } label: {
-                        Image(systemName: "bubble.circle.fill")
-                            .font(.system(size: 50))
-                            .foregroundStyle(appModel.loadedColor)
-                    }
-                }
+                NormalButtons()
             }
         }
         .background(Color.clear)
         .padding(.bottom, 20)
         .contentMargins(50)
     }
+    
 }

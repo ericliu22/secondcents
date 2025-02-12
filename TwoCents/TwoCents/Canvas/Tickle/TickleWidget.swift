@@ -45,7 +45,7 @@ struct TickleWidget: WidgetView {
         //circle with stroke
         CachedImage(imageUrl: url)
             .clipShape(Circle())
-                .frame(width: 128, height: 128)
+                .frame(width: 100, height: 100)
     }
 
     var body: some View {
@@ -97,52 +97,6 @@ struct TickleWidget: WidgetView {
 
                                 }
                         )
-                        .simultaneousGesture(
-                            DragGesture(minimumDistance: 0)  // Detects any drag or press
-                                .onChanged { _ in
-                                    if !isPressing {
-                                        isPressing = true
-                                        pressStartTime = Date()
-                                        startHapticFeedback()
-                                    }
-                                }
-                                .onEnded { _ in
-                                    if isPressing {
-                                        isPressing = false
-                                        stopHapticFeedback()
-
-                                        if let startTime =
-                                            pressStartTime
-                                        {
-                                            let duration = Date()
-                                                .timeIntervalSince(
-                                                    startTime)
-                                            let tickleCount = Int(
-                                                duration * 10)
-
-                                            if tickleCount > 1 {
-                                                let currentUserId =
-                                                    try! AuthenticationManager
-                                                    .shared
-                                                    .getAuthenticatedUser()
-                                                    .uid
-                                                Task {
-                                                    try await tickleNotification(
-                                                        userId:
-                                                            widget.userId,
-                                                        count:
-                                                            tickleCount)
-                                                }
-                                                AnalyticsManager.shared
-                                                    .tickle(
-                                                        count: tickleCount)
-                                            }
-                                        }
-                                    }
-
-                                }
-                        )
-
                     Text(tickleString)
                         .font(
                             tickleString == "Tickle"
@@ -154,11 +108,12 @@ struct TickleWidget: WidgetView {
                                 ? .default : .monospaced
                         )
                         .foregroundStyle(.secondary)
-                        .frame(height: 50)
+                        .frame(width: .infinity, height: 50)
                 }
-                .frame(maxWidth: .infinity)
             }
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(.ultraThickMaterial)
     }
 }
 

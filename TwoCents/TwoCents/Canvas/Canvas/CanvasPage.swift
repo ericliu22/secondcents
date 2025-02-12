@@ -102,10 +102,11 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                 print("Collision detected—drop rejected")
                 return false
             }
-            SpaceManager.shared.moveWidget(spaceId: spaceId,
-                                           widgetId: draggedWidget.id.uuidString,
-                                           x: x,
-                                           y: y)
+            SpaceManager.shared.moveWidget(
+                spaceId: spaceId,
+                widgetId: draggedWidget.id.uuidString,
+                x: x,
+                y: y)
             return true
         }
     }
@@ -174,7 +175,8 @@ struct CanvasPage: View, CanvasViewModelDelegate {
             ToolbarItem(placement: .topBarTrailing) {
                 Button(
                     action: {
-                        viewModel.activeSheet = .newWidgetView(startingLocation: nil)
+                        viewModel.activeSheet = .newWidgetView(
+                            startingLocation: nil)
                     },
                     label: {
                         Image(systemName: "plus.circle")
@@ -202,7 +204,9 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                 Button(
                     action: {
 
-                        viewModel.confirmPlacement(x: viewModel.widgetCursor.x, y: viewModel.widgetCursor.y)
+                        viewModel.confirmPlacement(
+                            x: viewModel.widgetCursor.x,
+                            y: viewModel.widgetCursor.y)
                     },
                     label: {
                         Image(systemName: "checkmark.circle")
@@ -234,7 +238,8 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                 DraggableView(
                     onDrag: {
                         viewModel.canvasMode = .dragging
-                        let provider = NSItemProvider(object: NSString(string: widget.id.uuidString))
+                        let provider = NSItemProvider(
+                            object: NSString(string: widget.id.uuidString))
                         let dragItem = UIDragItem(itemProvider: provider)
                         dragItem.localObject = widget  // attach the widget so we know which one is being dragged
                         return [dragItem]
@@ -242,14 +247,19 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                     onDrop: { session, dropPoint in
                         // Retrieve the dragged widget from the session's drag items.
                         viewModel.canvasMode = .normal
-                        guard let draggedWidget = session.items.first?.localObject as? CanvasWidget else {
+                        guard
+                            let draggedWidget = session.items.first?.localObject
+                                as? CanvasWidget
+                        else {
                             print("Failed to retrieve the dragged widget")
                             return false
                         }
                         let x = roundToTile(number: dropPoint.x)
                         let y = roundToTile(number: dropPoint.y)
                         let proposedPoint = CGPoint(x: x, y: y)
-                        if !viewModel.canPlaceWidget(draggedWidget, at: proposedPoint) {
+                        if !viewModel.canPlaceWidget(
+                            draggedWidget, at: proposedPoint)
+                        {
                             print("Collision detected—drop rejected")
                             return false
                         }
@@ -430,127 +440,129 @@ struct CanvasPage: View, CanvasViewModelDelegate {
 
     @Environment(\.undoManager) private var undoManager
     var body: some View {
-            ZStack {
-                ZoomableScrollView {
-                    canvasView()
-                        .frame(width: FRAME_SIZE * 1.5, height: FRAME_SIZE * 1.5)
-                        .ignoresSafeArea()
-                        .toolbar(.hidden, for: .tabBar)
-                        .toolbar { CanvasToolbar() }
-                        .navigationBarTitleDisplayMode(.inline)
+        ZStack {
+            ZoomableScrollView {
+                canvasView()
+                    .frame(width: FRAME_SIZE * 1.5, height: FRAME_SIZE * 1.5)
+                    .ignoresSafeArea()
+                    .toolbar(.hidden, for: .tabBar)
+                    .toolbar { CanvasToolbar() }
+                    .navigationBarTitleDisplayMode(.inline)
                     //SHOW BACKGROUND BY CHANGING BELOW TO VISIBLE
-                        .toolbarBackground(.hidden, for: .navigationBar)
-                        .navigationTitle(
-                            viewModel.canvasMode != .normal
+                    .toolbarBackground(.hidden, for: .navigationBar)
+                    .navigationTitle(
+                        viewModel.canvasMode != .normal
                             ? "" : viewModel.space?.name ?? ""
-                        )
-                        .background(Color(UIColor.secondarySystemBackground))
+                    )
+                    .background(Color(UIColor.secondarySystemBackground))
                     // IMPORTANT: onAppear and task must be here or else ZoomableScrollView misbehaves.
-                        .onAppear {
-                            viewModel.activeSheet = nil
-                            viewModel.delegate = self
-                        }
-                        .task {
-                            do {
-                                try await viewModel.loadCurrentSpace()
-                                viewModel.attachWidgetListener()
-                                if let user = appModel.user {
-                                    await viewModel.fetchUsers(
-                                        currentUserId: user.userId)
-                                    
-                                }
-                                // Scroll to the specified widget after listener attachment.
-                                if let id = widgetId {
-                                    viewModel.scrollTo(widgetId: id)
-                                }
-                            } catch {
-                                // EXIT IF SPACE DOES NOT EXIST
-                                presentationMode.wrappedValue.dismiss()
-                            }
-                            if let user = appModel.user {
-                                viewModel.attachUnreadListener(
-                                    userId: user.userId)
-                            }
-                        }
-                }
-                .ignoresSafeArea()
-                
-                GeometryReader { geo in
-                    ForEach(viewModel.unreadWidgets, id: \.self) { widgetId in
-                        OffScreenIndicator(widgetId: widgetId)
-                            .environment(viewModel)
-                        // Ensure full-size frame for proper positioning
-                            .frame(width: geo.size.width, height: geo.size.height)
+                    .onAppear {
+                        viewModel.activeSheet = nil
+                        viewModel.delegate = self
                     }
-                }
-                .ignoresSafeArea()
-                VStack {
-                    Spacer()
-                    BottomButtons()
+                    .task {
+                        do {
+                            try await viewModel.loadCurrentSpace()
+                            viewModel.attachWidgetListener()
+                            if let user = appModel.user {
+                                await viewModel.fetchUsers(
+                                    currentUserId: user.userId)
+
+                            }
+                            // Scroll to the specified widget after listener attachment.
+                            if let id = widgetId {
+                                viewModel.scrollTo(widgetId: id)
+                            }
+                        } catch {
+                            // EXIT IF SPACE DOES NOT EXIST
+                            presentationMode.wrappedValue.dismiss()
+                        }
+                        if let user = appModel.user {
+                            viewModel.attachUnreadListener(
+                                userId: user.userId)
+                        }
+                    }
+            }
+            .ignoresSafeArea()
+
+            GeometryReader { geo in
+                ForEach(viewModel.unreadWidgets, id: \.self) { widgetId in
+                    OffScreenIndicator(widgetId: widgetId)
+                        .environment(viewModel)
+                        // Ensure full-size frame for proper positioning
+                        .frame(width: geo.size.width, height: geo.size.height)
                 }
             }
             .ignoresSafeArea()
-            .sheet(
-                item: $viewModel.activeSheet,
-                onDismiss: {
-                    viewModel.sheetDismiss()
-                },
-                content: { item in
-                    switch item {
-                    case .newWidgetView(let startingLocation):
-                        NewWidgetView(spaceId: spaceId, startingLocation: startingLocation)
-                            .environment(viewModel)
-                            .presentationBackground(.thickMaterial)
-                    case .poll:
-                        PollWidgetSheetView(
-                            widget: waitForVariable { viewModel.activeWidget },
-                            spaceId: spaceId)
-                    case .newTextView:
-                        NewTextWidgetView(spaceId: spaceId)
-                            .presentationBackground(Color(UIColor.systemBackground))
-                    case .todo:
-                        TodoWidgetSheetView(
-                            widget: waitForVariable { viewModel.activeWidget },
-                            spaceId: spaceId
-                        )
-                        .presentationBackground(Color(UIColor.systemBackground))
-                    case .image:
-                        ImageWidgetSheetView(
-                            widget: waitForVariable { viewModel.activeWidget },
-                            spaceId: spaceId
-                        )
-                        .presentationBackground(.thickMaterial)
-                    case .video:
-                        VideoWidgetSheetView(
-                            widget: waitForVariable { viewModel.activeWidget },
-                            spaceId: spaceId
-                        )
-                        .presentationBackground(.thickMaterial)
-                    case .calendar:
-                        CalendarWidgetSheetView(
-                            widgetId: waitForVariable {
-                                viewModel.activeWidget?.id.uuidString
-                            },
-                            spaceId: spaceId
-                        )
-                        .presentationBackground(.thickMaterial)
-                        .environment(viewModel)
-                    case .text:
-                        EditTextWidgetView(
-                            widget: waitForVariable { viewModel.activeWidget },
-                            spaceId: spaceId
-                        )
-                        .presentationBackground(.thickMaterial)
-                        .environment(viewModel)
-                    case .reply:
-                        ChatSelectionView()
-                            .environment(viewModel)
-                    }
-                }
-            )
-            .onDisappear {
-                viewModel.activeSheet = nil
+            VStack {
+                Spacer()
+                BottomButtons()
             }
+        }
+        .ignoresSafeArea()
+        .sheet(
+            item: $viewModel.activeSheet,
+            onDismiss: {
+                viewModel.sheetDismiss()
+            },
+            content: { item in
+                switch item {
+                case .newWidgetView(let startingLocation):
+                    NewWidgetView(
+                        spaceId: spaceId, startingLocation: startingLocation
+                    )
+                    .environment(viewModel)
+                    .presentationBackground(.thickMaterial)
+                case .poll:
+                    PollWidgetSheetView(
+                        widget: waitForVariable { viewModel.activeWidget },
+                        spaceId: spaceId)
+                case .newTextView:
+                    NewTextWidgetView(spaceId: spaceId)
+                        .presentationBackground(Color(UIColor.systemBackground))
+                case .todo:
+                    TodoWidgetSheetView(
+                        widget: waitForVariable { viewModel.activeWidget },
+                        spaceId: spaceId
+                    )
+                    .presentationBackground(Color(UIColor.systemBackground))
+                case .image:
+                    ImageWidgetSheetView(
+                        widget: waitForVariable { viewModel.activeWidget },
+                        spaceId: spaceId
+                    )
+                    .presentationBackground(.thickMaterial)
+                case .video:
+                    VideoWidgetSheetView(
+                        widget: waitForVariable { viewModel.activeWidget },
+                        spaceId: spaceId
+                    )
+                    .presentationBackground(.thickMaterial)
+                case .calendar:
+                    CalendarWidgetSheetView(
+                        widgetId: waitForVariable {
+                            viewModel.activeWidget?.id.uuidString
+                        },
+                        spaceId: spaceId
+                    )
+                    .presentationBackground(.thickMaterial)
+                    .environment(viewModel)
+                case .text:
+                    EditTextWidgetView(
+                        widget: waitForVariable { viewModel.activeWidget },
+                        spaceId: spaceId
+                    )
+                    .presentationBackground(.thickMaterial)
+                    .environment(viewModel)
+                case .reply:
+                    ChatSelectionView()
+                        .environment(viewModel)
+                }
+            }
+        )
+        .onDisappear {
+            viewModel.activeSheet = nil
+        }
         .background(Color(UIColor.secondarySystemBackground))
         .environment(viewModel)
     }

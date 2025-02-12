@@ -84,9 +84,6 @@ struct NewWidgetView: View {
         self.spaceId = spaceId
         self.viewModel = NewWidgetViewModel(spaceId: spaceId)
         self.startingLocation = startingLocation
-        if let startingLocation {
-            print("HAS STARTING LOCATION")
-        }
     }
 
     private let columns = [
@@ -433,7 +430,6 @@ struct NewWidgetView: View {
             if newValue {
                 print("RAN THIS SHIT")
                 if let location = startingLocation {
-                    print("HAS STARTING LOCATION")
                     canvasViewModel.confirmPlacement(x: location.x, y: location.y)
                 }
                 dismissScreen()

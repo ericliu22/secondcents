@@ -144,6 +144,7 @@ final class CanvasPageViewModel {
             if let latest = chatUnreads.last {
                 self.lastChatId = latest
             }
+            print(self.unreadWidgets)
         })
     }
     
@@ -248,7 +249,6 @@ final class CanvasPageViewModel {
     
     func canPlaceWidget(_ proposedWidget: CanvasWidget, at point: CGPoint) -> Bool {
         // Create a CGRect for the proposed widget at the new point
-        print(point)
         let proposedRect = CGRect(
             x: point.x,
             y: point.y,

@@ -30,6 +30,18 @@ struct ChatPage: View {
             }
             .navigationTitle(viewModel.chat?.name ?? "")
             .scrollIndicators(.hidden)
+            if let widget = canvasViewModel.replyWidget {
+                MediaView(widget: widget, spaceId: viewModel.spaceId)
+                    .contentShape(.dragPreview, RoundedRectangle(cornerRadius: CORNER_RADIUS, style: .continuous))
+                    .cornerRadius(CORNER_RADIUS)
+                    .frame(width: TILE_SIZE, alignment: .trailing)
+                    .frame(maxWidth: .infinity, alignment: .trailing)
+                    .id("replyWidget")
+                    .listRowSeparator(.hidden)
+                    .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+                    .padding(.bottom, 3)
+                    .listRowBackground(Color.clear)
+            }
 
             ZStack(alignment: .bottomTrailing) {
                 TextField(

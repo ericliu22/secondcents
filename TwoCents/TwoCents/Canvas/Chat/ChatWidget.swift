@@ -8,7 +8,7 @@
 import SwiftUI
 import FirebaseFirestore
 
-struct Chat: Identifiable, Codable {
+struct Chat: Identifiable, Codable, Hashable {
     let id: String
     let spaceId: String
     var name: String

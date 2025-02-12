@@ -203,8 +203,8 @@ class ChatWidgetViewModel {
         message = ""
         Task {
             try await chatWidgetNotification(spaceId: spaceId, body: tempMessage, widgetId: chatId)
+            await widgetUnread(spaceId: spaceId, widgetId: chatId, userId: userId)
         }
-        addWidgetUnread(spaceId: spaceId, userId: userId, widgetId: chatId)
     }
 
 }
