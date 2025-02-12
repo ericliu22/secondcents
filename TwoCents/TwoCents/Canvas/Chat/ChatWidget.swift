@@ -43,7 +43,7 @@ struct ChatWidget: WidgetView {
 
     var body: some View {
         if let chat = viewModel.chat {
-            NavigationLink {
+            NavigationLink() {
                 ChatPage()
                     .onAppear {
                         canvasViewModel.inSubView = true

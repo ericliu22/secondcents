@@ -61,7 +61,7 @@ fileprivate func fetchLatestMessage(spaceId: String) async -> String? {
     return first.documentID
 }
 
-func widgetUnread(spaceId: String, widgetId: String) async {
+func widgetUnread(spaceId: String, widgetId: String, userId: String) async {
     guard let space = try? await spaceCollection.document(spaceId).getDocument(as: DBSpace.self) else {
         print("Unreads: failed to get space")
         return
@@ -71,6 +71,9 @@ func widgetUnread(spaceId: String, widgetId: String) async {
         return
     }
     for memberId in members {
+        if memberId == userId {
+            continue
+        }
         addWidgetUnread(spaceId: spaceId, userId: memberId, widgetId: widgetId)
     }
 }

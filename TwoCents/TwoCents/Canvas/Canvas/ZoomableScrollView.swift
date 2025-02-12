@@ -44,6 +44,13 @@ struct ZoomableScrollView<Content: View>: UIViewRepresentable {
 //        )
 //        edgePanGesture.delegate = context.coordinator
 //        scrollView.addGestureRecognizer(edgePanGesture)
+        let longPressGesture = UILongPressGestureRecognizer(
+            target: context.coordinator,
+            action: #selector(Coordinator.handleLongPress(_:))
+        )
+        longPressGesture.minimumPressDuration = 1.0
+        longPressGesture.delegate = context.coordinator
+        scrollView.addGestureRecognizer(longPressGesture)
 
         context.coordinator.scrollView = scrollView
         return scrollView
@@ -280,6 +287,34 @@ struct ZoomableScrollView<Content: View>: UIViewRepresentable {
             scrollView.setContentOffset(
                 CGPoint(x: clampedX, y: clampedY), animated: true)
         }
+        
+        func scrollToCoordinates(_ x: CGFloat, _ y: CGFloat) {
+             // 1) Grab the scrollView from our stored reference
+            guard let scrollView = self.scrollView else { return }
+
+            // 2) The rest of your logic is unchanged:
+            guard let hostedView = scrollView.subviews.first else { return }
+
+            let unscaledWidth = hostedView.intrinsicContentSize.width
+            let unscaledHeight = hostedView.intrinsicContentSize.height
+
+            let zoomedX = x * scrollView.zoomScale
+            let zoomedY = y * scrollView.zoomScale
+
+            let offsetX = zoomedX - (scrollView.bounds.width / 2)
+            let offsetY = zoomedY - (scrollView.bounds.height / 2)
+
+            let maxOffsetX =
+                scrollView.contentSize.width - scrollView.bounds.width
+            let maxOffsetY =
+                scrollView.contentSize.height - scrollView.bounds.height
+
+            let clampedX = max(0, min(offsetX, maxOffsetX))
+            let clampedY = max(0, min(offsetY, maxOffsetY))
+
+            scrollView.setContentOffset(
+                CGPoint(x: clampedX, y: clampedY), animated: true)
+        }
 
         private func autoCenterOnCursor(_ scrollView: UIScrollView) {
             // Only auto-center in .normal mode
@@ -347,6 +382,20 @@ struct ZoomableScrollView<Content: View>: UIViewRepresentable {
             let height = scrollView.bounds.size.height / scale
 
             return CGRect(x: x, y: y, width: width, height: height)
+        }
+        
+        @objc func handleLongPress(_ gesture: UILongPressGestureRecognizer) {
+            guard scrollView != nil else { return }
+            if gesture.state == .began {
+                let location = gesture.location(in: gesture.view)
+                
+                let gridX = roundToTile(number: location.x)
+                let gridY = roundToTile(number: location.y)
+                
+                let point = CGPoint(x: gridX, y: gridY)
+                
+                canvasViewModel.activeSheet = .newWidgetView(startingLocation: point)
+            }
         }
 
 //        @objc func handleEdgePan(_ gesture: UIPanGestureRecognizer) {

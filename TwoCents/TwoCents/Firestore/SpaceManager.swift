@@ -179,7 +179,7 @@ final class SpaceManager {
                 try await widgetNotification(
                     spaceId: spaceId, name: name, widget: widget)
                 await widgetUnread(
-                    spaceId: spaceId, widgetId: widget.id.uuidString)
+                    spaceId: spaceId, widgetId: widget.id.uuidString, userId: uid)
             }
         } catch {
             print("Some shit fucked up")

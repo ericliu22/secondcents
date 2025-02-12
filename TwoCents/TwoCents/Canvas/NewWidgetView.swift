@@ -76,12 +76,17 @@ struct NewWidgetView: View {
 
     @State private var selectedPhoto: PhotosPickerItem? = nil
     @State private var selectedVideo: PhotosPickerItem? = nil
-    @State var spaceId: String
+    let spaceId: String
+    let startingLocation: CGPoint?
     @State var closeNewWidgetview: Bool = false
 
-    init(spaceId: String) {
+    init(spaceId: String, startingLocation: CGPoint? = nil) {
         self.spaceId = spaceId
         self.viewModel = NewWidgetViewModel(spaceId: spaceId)
+        self.startingLocation = startingLocation
+        if let startingLocation {
+            print("HAS STARTING LOCATION")
+        }
     }
 
     private let columns = [
@@ -426,7 +431,11 @@ struct NewWidgetView: View {
         }
         .onChange(of: closeNewWidgetview) { oldValue, newValue in
             if newValue {
-
+                print("RAN THIS SHIT")
+                if let location = startingLocation {
+                    print("HAS STARTING LOCATION")
+                    canvasViewModel.confirmPlacement(x: location.x, y: location.y)
+                }
                 dismissScreen()
             }
         }

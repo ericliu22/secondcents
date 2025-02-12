@@ -58,8 +58,8 @@ final class CanvasPageViewModel {
         case normal, placement, drawing, dragging
     }
 
-    enum CanvasSheet: Identifiable {
-        case newWidgetView, poll, newTextView, todo, image, video,
+    enum CanvasSheet: Hashable, Identifiable {
+        case newWidgetView(startingLocation: CGPoint?), poll, newTextView, todo, image, video,
             calendar, text, reply
 
         var id: Self {
@@ -197,7 +197,7 @@ final class CanvasPageViewModel {
             }
     }
     
-    func confirmPlacement() {
+    func confirmPlacement(x: CGFloat, y: CGFloat) {
         
         guard let newWidget = newWidget else {
             print("New Widget is nil")
@@ -206,8 +206,8 @@ final class CanvasPageViewModel {
         
         
         var uploadWidget = newWidget
-        uploadWidget.x = widgetCursor.x
-        uploadWidget.y = widgetCursor.y
+        uploadWidget.x = x
+        uploadWidget.y = y
         let proposedPoint = CGPoint(x: widgetCursor.x, y: widgetCursor.y)
         if !canPlaceWidget(newWidget, at: proposedPoint) {
             // If collision, you can show an alert, or simply revert, etc.

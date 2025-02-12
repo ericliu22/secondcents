@@ -84,16 +84,16 @@ struct NewTextWidgetView: View {
      
                     if let userId = appModel.user?.id {
                         
-                        dismissScreen()
-                        
-                        closeNewWidgetview = true
                         let newText = CanvasWidget(x: 0, y: 0, borderColor: Color.accentColor, userId: userId, media: .text, textString: inputText)
                         
                         canvasViewModel.newWidget = newText
                         canvasViewModel.canvasMode = .placement
                         
                         inputText = ""
+                        dismissScreen()
                         
+                        closeNewWidgetview = true
+
                         
                         
                         

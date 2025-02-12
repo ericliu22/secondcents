@@ -112,12 +112,12 @@ struct NewPoll: View{
                                 pollModel.addOptions(OptionArray: OptionsArray)
                                 showingView = false
                                 
-                                closeNewWidgetview = true
                                 if let newPoll = await pollModel.createNewPoll() {
                                     canvasViewModel.newWidget = newPoll
                                     canvasViewModel.canvasMode = .placement
                                 }
                                 
+                                closeNewWidgetview = true
                             }
                         }, label: {
                             Text("Submit")

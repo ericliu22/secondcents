@@ -17,8 +17,7 @@ struct BottomButtons: View {
             if viewModel.canvasMode == .placement {
                 Button(
                     action: {
-
-                        viewModel.confirmPlacement()
+                        viewModel.confirmPlacement(x: viewModel.widgetCursor.x, y: viewModel.widgetCursor.y)
                     },
                     label: {
                         Image(systemName: "checkmark.circle.fill")

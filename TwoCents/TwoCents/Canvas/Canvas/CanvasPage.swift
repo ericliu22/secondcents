@@ -174,7 +174,7 @@ struct CanvasPage: View, CanvasViewModelDelegate {
             ToolbarItem(placement: .topBarTrailing) {
                 Button(
                     action: {
-                        viewModel.activeSheet = .newWidgetView
+                        viewModel.activeSheet = .newWidgetView(startingLocation: nil)
                     },
                     label: {
                         Image(systemName: "plus.circle")
@@ -202,7 +202,7 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                 Button(
                     action: {
 
-                        viewModel.confirmPlacement()
+                        viewModel.confirmPlacement(x: viewModel.widgetCursor.x, y: viewModel.widgetCursor.y)
                     },
                     label: {
                         Image(systemName: "checkmark.circle")
@@ -497,8 +497,8 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                 },
                 content: { item in
                     switch item {
-                    case .newWidgetView:
-                        NewWidgetView(spaceId: spaceId)
+                    case .newWidgetView(let startingLocation):
+                        NewWidgetView(spaceId: spaceId, startingLocation: startingLocation)
                             .environment(viewModel)
                             .presentationBackground(.thickMaterial)
                     case .poll:

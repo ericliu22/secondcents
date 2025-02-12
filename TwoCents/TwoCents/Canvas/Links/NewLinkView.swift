@@ -75,13 +75,13 @@ struct NewLinkView: View {
                             Button(action: {
                                 if let userId = appModel.user?.id, let url = formattedURL {
                                     print("User ID: \(userId), URL: \(url.absoluteString)")
-                                    dismissScreen()
                                     showingView = false
-                                    closeNewWidgetview = true
                                     let newLink = CanvasWidget(x: 0, y: 0, borderColor: Color.accentColor, userId: userId, media: .link, mediaURL: url)
                                     canvasViewModel.newWidget = newLink
                                     canvasViewModel.canvasMode = .placement
                                     
+                                    dismissScreen()
+                                    closeNewWidgetview = true
                                 } else {
                                     print("Error: User ID or URL is nil")
                                 }
