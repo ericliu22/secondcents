@@ -15,18 +15,6 @@ struct BottomButtons: View {
     @ViewBuilder
     func NormalButtons() -> some View {
         HStack {
-        }.frame(maxWidth: .infinity)
-        HStack {
-            Button {
-                viewModel.activeSheet = .newWidgetView(startingLocation: nil)
-            } label: {
-                Image(systemName: "plus.circle.fill")
-                    .font(.system(size: 50))
-                    .foregroundStyle(appModel.loadedColor)
-            }
-        }
-        .frame(maxWidth: .infinity, alignment: .center)
-        HStack {
             if let lastChatId = viewModel.lastChatId {
                 NavigationLink {
                     ChatPage()
@@ -60,8 +48,17 @@ struct BottomButtons: View {
                         .foregroundStyle(appModel.loadedColor)
                 }
             }
+            
+            Button {
+                viewModel.activeSheet = .newWidgetView(startingLocation: nil)
+            } label: {
+                Image(systemName: "plus.circle.fill")
+                    .font(.system(size: 50))
+                    .foregroundStyle(appModel.loadedColor)
+            }
+            .padding()
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
+        .frame(maxWidth: .infinity, alignment: .trailing)
     }
 
     var body: some View {
