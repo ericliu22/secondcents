@@ -26,7 +26,7 @@ class ChatWidgetViewModel {
         self.spaceId = spaceId
         self.chatId = chatId
         chatRef = spaceReference(spaceId: spaceId)
-.collection("chats").document(chatId)
+            .collection("chats").document(chatId)
         attachMessageListener()
         Task {
             await fetchChat()
@@ -39,7 +39,7 @@ class ChatWidgetViewModel {
         }
         chat = chatDoc
     }
-    
+
     deinit {
         messageListener?.remove()
     }
@@ -48,7 +48,8 @@ class ChatWidgetViewModel {
         let messagesRef = chatRef.collection("messages")
 
         // Order by timestamp descending, limited to last 20
-        messageListener = messagesRef
+        messageListener =
+            messagesRef
             .order(by: "dateCreated", descending: true)
             .limit(to: FETCH_LIMIT)
             .addSnapshotListener { [weak self] querySnapshot, error in
@@ -156,30 +157,29 @@ class ChatWidgetViewModel {
                 messageSenderChangeIndices()
             }
     }
-    
-    
+
     func messageSenderChangeIndices() {
         // If we have no messages, return an empty array
         guard !messages.isEmpty else { return }
-        
+
         // The first message is always a "change" since there's nothing before it
-        changeIndices = [messages.count-1]
-        
-        for i in 0..<messages.count-1 {
+        changeIndices = [messages.count - 1]
+
+        for i in 0..<messages.count - 1 {
             // Check if this message is from a different sender than the previous one
             if messages[i].sendBy != messages[i + 1].sendBy {
                 changeIndices.append(i)
             }
         }
     }
-    
+
     func messageChange(messageId: String) -> Bool {
-        guard let index = messages.firstIndex(where: { $0.id == messageId}) else {
+        guard let index = messages.firstIndex(where: { $0.id == messageId })
+        else {
             return false
         }
         return changeIndices.contains([index])
     }
-    
 
     func sendMessage(userId: String) {
 
@@ -202,8 +202,10 @@ class ChatWidgetViewModel {
         let tempMessage = message
         message = ""
         Task {
-            try await chatWidgetNotification(spaceId: spaceId, body: tempMessage, widgetId: chatId)
-            await widgetUnread(spaceId: spaceId, widgetId: chatId, userId: userId)
+            try await chatWidgetNotification(
+                spaceId: spaceId, body: tempMessage, widgetId: chatId)
+            await widgetUnread(
+                spaceId: spaceId, widgetId: chatId, userId: userId)
         }
     }
 

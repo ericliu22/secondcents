@@ -95,18 +95,18 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                 print("Could not find widget with id \(widgetId)")
                 return false
             }
-            let x = roundToTile(number: location.x)
-            let y = roundToTile(number: location.y)
-            let proposedPoint = CGPoint(x: x, y: y)
-            if !viewModel.canPlaceWidget(draggedWidget, at: proposedPoint) {
+            let proposedPoint = snapWidgetToGrid(draggedWidget, CGPoint(x: location.x, y: location.y))
+            if !viewModel.canPlaceWidget(
+                draggedWidget, at: proposedPoint)
+            {
                 print("Collision detected—drop rejected")
                 return false
             }
             SpaceManager.shared.moveWidget(
                 spaceId: spaceId,
                 widgetId: draggedWidget.id.uuidString,
-                x: x,
-                y: y)
+                x: proposedPoint.x,
+                y: proposedPoint.y)
             return true
         }
     }
@@ -115,6 +115,7 @@ struct CanvasPage: View, CanvasViewModelDelegate {
     func NewWidgetOverlay() -> some View {
         if viewModel.canvasMode == .placement {
             if let widget = viewModel.newWidget {
+                let position = snapWidgetToGrid(widget, viewModel.widgetCursor)
                 MediaView(widget: widget, spaceId: spaceId)
                     .environment(viewModel)
                     .cornerRadius(CORNER_RADIUS)
@@ -122,13 +123,12 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                         width: widget.width,
                         height: widget.height
                     )
-                    .position(viewModel.widgetCursor)
-                    .offset(x: widget.width / 2, y: widget.height / 2)
+                    .position(position)
                     .animation(.spring(), value: widget.x)  // Add animation for x position
                     .animation(.spring(), value: widget.y)  // Add animation for y position
                     .border(
                         viewModel.canPlaceWidget(
-                            widget, at: viewModel.widgetCursor)
+                            widget, at: position)
                             ? Color.green : Color.red, width: 2)
             }
         } else {
@@ -238,6 +238,7 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                 DraggableView(
                     onDrag: {
                         viewModel.canvasMode = .dragging
+                        viewModel.dragWidget = widget
                         let provider = NSItemProvider(
                             object: NSString(string: widget.id.uuidString))
                         let dragItem = UIDragItem(itemProvider: provider)
@@ -247,6 +248,7 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                     onDrop: { session, dropPoint in
                         // Retrieve the dragged widget from the session's drag items.
                         viewModel.canvasMode = .normal
+                        viewModel.dragWidget = nil
                         guard
                             let draggedWidget = session.items.first?.localObject
                                 as? CanvasWidget
@@ -254,9 +256,7 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                             print("Failed to retrieve the dragged widget")
                             return false
                         }
-                        let x = roundToTile(number: dropPoint.x)
-                        let y = roundToTile(number: dropPoint.y)
-                        let proposedPoint = CGPoint(x: x, y: y)
+                        let proposedPoint = snapWidgetToGrid(draggedWidget, CGPoint(x: dropPoint.x, y: dropPoint.y))
                         if !viewModel.canPlaceWidget(
                             draggedWidget, at: proposedPoint)
                         {
@@ -266,8 +266,8 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                         SpaceManager.shared.moveWidget(
                             spaceId: spaceId,
                             widgetId: draggedWidget.id.uuidString,
-                            x: x,
-                            y: y)
+                            x: proposedPoint.x,
+                            y: proposedPoint.y)
                         return true
                     }
 
@@ -323,13 +323,12 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                     x: widget.x ?? FRAME_SIZE / 2,
                     y: widget.y ?? FRAME_SIZE / 2
                 )
-                .offset(x: widget.width / 2, y: widget.height / 2)
                 .overlay {
                     if viewModel.selectedWidget == nil {
                         EmojiCountOverlayView(
                             spaceId: spaceId, widget: widget
                         )
-                        .offset(x: widget.width / 2, y: widget.height)
+                        .offset(y: widget.height / 2)
                         .position(
                             x: widget.x ?? FRAME_SIZE / 2,
                             y: widget.y ?? FRAME_SIZE / 2

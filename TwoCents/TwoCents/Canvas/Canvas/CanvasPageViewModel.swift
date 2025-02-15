@@ -20,6 +20,7 @@ final class CanvasPageViewModel {
 
     var space: DBSpace? = nil
     var selectedWidget: CanvasWidget? = nil
+    var dragWidget: CanvasWidget?
     var activeWidget: CanvasWidget?
     var activeSheet: CanvasSheet?
     var replyWidget: CanvasWidget?
@@ -207,15 +208,14 @@ final class CanvasPageViewModel {
         
         
         var uploadWidget = newWidget
-        uploadWidget.x = x
-        uploadWidget.y = y
-        let proposedPoint = CGPoint(x: widgetCursor.x, y: widgetCursor.y)
+        let proposedPoint = snapWidgetToGrid(newWidget, CGPoint(x: x, y: y))
         if !canPlaceWidget(newWidget, at: proposedPoint) {
             // If collision, you can show an alert, or simply revert, etc.
             print("Cannot place new widget here—collision detected.")
             return
         }
-
+        uploadWidget.x = proposedPoint.x
+        uploadWidget.y = proposedPoint.y
         SpaceManager.shared.uploadWidget(spaceId: spaceId, widget: uploadWidget)
         self.newWidget = nil
         canvasMode = .normal

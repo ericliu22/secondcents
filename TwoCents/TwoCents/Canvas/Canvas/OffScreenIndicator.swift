@@ -8,6 +8,7 @@ struct OffScreenIndicator: View {
     // If you have the widget itself (with x, y, width, height), you might pass
     // the whole `CanvasWidget` to avoid a second lookup in the canvasViewModel
     @Environment(CanvasPageViewModel.self) var canvasViewModel
+    @Environment(AppModel.self) var appModel
 
     // State for angle, color, user info, etc.
     @State var userColor: Color = .gray
@@ -92,7 +93,14 @@ struct OffScreenIndicator: View {
                         // Possibly call your scrollToWidget here
                         // e.g. canvasViewModel.scrollToWidget(widget)
                         // or environment(\.scrollToWidget) if you followed that approach
+                        
                         canvasViewModel.coordinator?.scrollToWidget(widget)
+                        guard let user = appModel.user else {
+                            return
+                        }
+                        Task {
+                            await readWidgetUnread(spaceId: canvasViewModel.spaceId, userId: user.userId, widgetId: widgetId)
+                        }
                     }
                     .task {
                         // Load user info, etc.

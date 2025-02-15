@@ -73,10 +73,38 @@ extension Color {
 }
 
 //Size multiplier is width/height divided by TILE_SIZE
-func roundToTile(number: CGFloat) -> CGFloat {
+func roundToTile(_ number: CGFloat) -> CGFloat {
     let tile = WIDGET_SPACING
     return tile * CGFloat(Int(round(number / (tile))))
 }
+
+func snapWidgetToGrid(_ widget: CanvasWidget, _ point: CGPoint) -> CGPoint {
+    
+    let (width, height) = getSizeMultipliers(width: widget.width, height: widget.height)
+    
+    let roundingWidth = WIDGET_SPACING * CGFloat(width)
+    let roundingHeight = WIDGET_SPACING * CGFloat(height)
+    
+    let roundedX = roundingWidth * CGFloat(Int(round(point.x / (roundingWidth)))) + (roundingWidth/2)
+    let roundedY = roundingWidth * CGFloat(Int(round(point.y / (roundingHeight)))) + (roundingHeight/2)
+
+    return CGPoint(x: roundedX, y: roundedY)
+}
+
+func getSizeMultipliers(width: CGFloat, height: CGFloat) -> (Int, Int) {
+
+    let widthMultiplier = Int(
+        round((width + TILE_SPACING) / (TILE_SIZE + TILE_SPACING))
+    )
+    
+    let heightMultiplier = Int(
+        round((height + TILE_SPACING) / (TILE_SIZE + TILE_SPACING))
+    )
+    
+    // Ensure at least 1, in case the size is slightly under one tile
+    return (max(widthMultiplier, 1), max(heightMultiplier, 1))
+}
+
 
 func getMultipliedSize(widthMultiplier: Int, heightMultiplier: Int) -> (
     CGFloat, CGFloat
@@ -92,7 +120,7 @@ func getMultipliedSize(widthMultiplier: Int, heightMultiplier: Int) -> (
 }
 
 func getUID() async throws -> String? {
-    let authDataResult = try AuthenticationManager.shared.getAuthenticatedUser()
+    let authDataResult = try await AuthenticationManager.shared.getAuthenticatedUser()
     return authDataResult.uid
 }
 

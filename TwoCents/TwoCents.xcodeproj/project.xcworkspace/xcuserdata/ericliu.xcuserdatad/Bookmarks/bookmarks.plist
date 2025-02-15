@@ -42,7 +42,7 @@
 </string>
 				<key>trailing</key>
 				<string>    {
-        weak var scrollView: UIScrollView?
+        var scrollView: UIScrollView?
 
 </string>
 			</dict>

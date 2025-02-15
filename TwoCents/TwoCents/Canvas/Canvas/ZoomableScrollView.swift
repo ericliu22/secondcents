@@ -106,7 +106,7 @@ struct ZoomableScrollView<Content: View>: UIViewRepresentable {
     class Coordinator: NSObject, UIScrollViewDelegate,
         UIGestureRecognizerDelegate
     {
-        weak var scrollView: UIScrollView?
+        var scrollView: UIScrollView?
 
         private var displayLink: CADisplayLink?
         private var autoScrollDirection: AutoScrollDirection = .none
@@ -353,24 +353,16 @@ struct ZoomableScrollView<Content: View>: UIViewRepresentable {
 
             canvasViewModel.canvasPageCursor = CGPoint(
                 x: unscaledCenterX, y: unscaledCenterY)
+            
+            guard let newWidget = canvasViewModel.newWidget else {
+                return
+            }
 
             canvasViewModel.widgetCursor = CGPoint(
-                x: roundToTile(number: unscaledCenterX),
-                y: roundToTile(number: unscaledCenterY)
+                x: unscaledCenterX,
+                y: unscaledCenterY
             )
 
-            // 3) If you want (0,0) to be the subview’s center:
-            let unscaledWidth = hostedView.intrinsicContentSize.width
-            let unscaledHeight = hostedView.intrinsicContentSize.height
-
-            unscaledCenterX -= unscaledWidth / 2
-            unscaledCenterY -= unscaledHeight / 2
-
-            // 4) Assign to your ViewModel
-            let centerPoint = CGPoint(
-                x: roundToTile(number: unscaledCenterX),
-                y: roundToTile(number: unscaledCenterY))
-            canvasViewModel.scrollViewCursor = centerPoint
         }
 
         func getUnscaledVisibleRect(scrollView: UIScrollView) -> CGRect {
@@ -389,12 +381,7 @@ struct ZoomableScrollView<Content: View>: UIViewRepresentable {
             if gesture.state == .began {
                 let location = gesture.location(in: gesture.view)
                 
-                let gridX = roundToTile(number: location.x)
-                let gridY = roundToTile(number: location.y)
-                
-                let point = CGPoint(x: gridX, y: gridY)
-                
-                canvasViewModel.activeSheet = .newWidgetView(startingLocation: point)
+                canvasViewModel.activeSheet = .newWidgetView(startingLocation: location)
             }
         }
 
@@ -563,6 +550,7 @@ struct ZoomableScrollView<Content: View>: UIViewRepresentable {
 
 protocol ZoomCoordinatorProtocol: AnyObject {
     func scrollToWidget(_ widget: CanvasWidget)
+    var scrollView: UIScrollView? { get }
 }
 
 extension ZoomableScrollView.Coordinator: ZoomCoordinatorProtocol {
