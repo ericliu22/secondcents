@@ -202,6 +202,9 @@ struct NewWidgetView: View {
     func newTickleView(index: Int) -> some View {
         
         NewTickleView(spaceId: spaceId, closeNewWidgetview: $closeNewWidgetview)
+        
+        
+            .cornerRadius(20)
     }
 
     @State private var showingView: Bool = false
