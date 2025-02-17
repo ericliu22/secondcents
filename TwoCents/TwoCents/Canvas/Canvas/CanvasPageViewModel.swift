@@ -102,11 +102,11 @@ final class CanvasPageViewModel {
             return
         }
         
-        guard let members = space.members else {
+        guard let spaceMembers = space.members else {
             return
         }
         self.members = IdentifiedCollection<DBUser>()
-        for member in members {
+        for member in spaceMembers {
             guard let user = try? await UserManager.shared.getUser(userId: member) else {
                 continue
             }
