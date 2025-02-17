@@ -27,9 +27,9 @@ struct NewChatWidgetView: View {
             .onTapGesture { showingView.toggle() }
             .fullScreenCover(isPresented: $showingView) {
                 NavigationStack {
-                    VStack(spacing: 20) {
+                    VStack {
                         TextField("Enter a name", text: $viewModel.text)
-                            .padding(.horizontal)
+                            .padding()
                             .background(Color(UIColor.secondarySystemBackground))
                             .cornerRadius(10)
 
@@ -50,9 +50,12 @@ struct NewChatWidgetView: View {
                                 .frame(height: 55)
                                 .frame(maxWidth: .infinity)
                         }
-                        .disabled(viewModel.text.isEmpty)
                         .buttonStyle(.bordered)
-                        .tint(.accentColor)
+                        .frame(height: 55)
+                        .cornerRadius(10)
+                        .disabled(viewModel.text.isEmpty)
+             
+                        .tint(appModel.loadedColor)
                     }
                     .padding()
                     .navigationTitle("New Chat")

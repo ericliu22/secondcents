@@ -76,7 +76,7 @@ struct NewLinkView: View {
                                 if let userId = appModel.user?.id, let url = formattedURL {
                                     print("User ID: \(userId), URL: \(url.absoluteString)")
                                     showingView = false
-                                    let newLink = CanvasWidget(x: 0, y: 0, borderColor: Color.accentColor, userId: userId, media: .link, mediaURL: url)
+                                    let newLink = CanvasWidget(x: 0, y: 0, borderColor: appModel.loadedColor, userId: userId, media: .link, mediaURL: url)
                                     canvasViewModel.newWidget = newLink
                                     canvasViewModel.canvasMode = .placement
                                     
@@ -98,6 +98,7 @@ struct NewLinkView: View {
                             .onAppear {
                                 isTextFieldFocused = true // Add this line to focus text field on appear
                             }
+                            .tint(appModel.loadedColor)
                         }
                         .navigationTitle("New Link 🔗")
                         .navigationBarTitleDisplayMode(.inline)
