@@ -58,9 +58,6 @@ struct CreateSpacesView: View {
                         .font(.title3)
                         .fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/)
                     
-                    
-                    
-                    
                     ScrollView(.horizontal, showsIndicators: false) {
                         
                         HStack{

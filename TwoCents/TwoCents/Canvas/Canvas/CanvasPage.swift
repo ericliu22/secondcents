@@ -348,6 +348,10 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                         .position(
                             x: widget.x ?? FRAME_SIZE / 2,
                             y: widget.y ?? FRAME_SIZE / 2)
+                        .offset(
+                            x: -widget.width/2,
+                            y: -widget.height/2
+                        )
                 }
             }
         }

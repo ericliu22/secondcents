@@ -72,6 +72,7 @@ final class CreateSpacesViewModel: ObservableObject{
         }
         
         for member in selectedMembers {
+            print("tried")
             try await SpaceManager.shared.inviteMember(spaceId: spaceId, userId: member.userId)
         }
         
