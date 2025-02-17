@@ -177,7 +177,7 @@ struct NewWidgetView: View {
     }
 
     func newChatView(index: Int) -> some View {
-        NewChatWidgetPreview(spaceId: spaceId, closeNewWidgetView: $closeNewWidgetview)
+        NewChatWidgetView(spaceId: spaceId, closeNewWidgetView: $closeNewWidgetview)
             .cornerRadius(20)
     }
 
