@@ -106,7 +106,7 @@ struct ZoomableScrollView<Content: View>: UIViewRepresentable {
     class Coordinator: NSObject, UIScrollViewDelegate,
         UIGestureRecognizerDelegate
     {
-        var scrollView: UIScrollView?
+        weak var scrollView: UIScrollView?
 
         private var displayLink: CADisplayLink?
         private var autoScrollDirection: AutoScrollDirection = .none
@@ -256,36 +256,32 @@ struct ZoomableScrollView<Content: View>: UIViewRepresentable {
             scrollView.contentSize = contentSize
         }
 
-        // In ZoomableScrollView.Coordinator
         func scrollToWidget(_ widget: CanvasWidget) {
-            // 1) Grab the scrollView from our stored reference
-            guard let scrollView = self.scrollView else { return }
+            guard let scrollView = self.scrollView,
+                  let hostedView = scrollView.subviews.first
+            else { return }
 
-            // 2) The rest of your logic is unchanged:
-            guard let hostedView = scrollView.subviews.first else { return }
+            // 1) The widget center in the *unscaled* coordinate system
+            let widgetCenterX = (widget.x ?? 0)
+            let widgetCenterY = (widget.y ?? 0)
 
-            let unscaledWidth = hostedView.intrinsicContentSize.width
-            let unscaledHeight = hostedView.intrinsicContentSize.height
+            // 2) Convert to the *scaled* coordinates used by scrollView
+            let scaledX = widgetCenterX * scrollView.zoomScale
+            let scaledY = widgetCenterY * scrollView.zoomScale
 
-            let widgetCenterX = (widget.x ?? 0) + widget.width / 2
-            let widgetCenterY = (widget.y ?? 0) + widget.height / 2
+            // 3) Offset so that this widget center appears in the middle
+            //    of the visible scrollView area
+            let offsetX = scaledX - (scrollView.bounds.width / 2)
+            let offsetY = scaledY - (scrollView.bounds.height / 2)
 
-            let zoomedX = widgetCenterX * scrollView.zoomScale
-            let zoomedY = widgetCenterY * scrollView.zoomScale
-
-            let offsetX = zoomedX - (scrollView.bounds.width / 2)
-            let offsetY = zoomedY - (scrollView.bounds.height / 2)
-
-            let maxOffsetX =
-                scrollView.contentSize.width - scrollView.bounds.width
-            let maxOffsetY =
-                scrollView.contentSize.height - scrollView.bounds.height
-
+            // 4) Clamp to ensure we don’t scroll beyond the content boundaries
+            let maxOffsetX = scrollView.contentSize.width - scrollView.bounds.width
+            let maxOffsetY = scrollView.contentSize.height - scrollView.bounds.height
             let clampedX = max(0, min(offsetX, maxOffsetX))
             let clampedY = max(0, min(offsetY, maxOffsetY))
 
-            scrollView.setContentOffset(
-                CGPoint(x: clampedX, y: clampedY), animated: true)
+            // 5) Scroll to the new offset
+            scrollView.setContentOffset(CGPoint(x: clampedX, y: clampedY), animated: true)
         }
         
         func scrollToCoordinates(_ x: CGFloat, _ y: CGFloat) {
