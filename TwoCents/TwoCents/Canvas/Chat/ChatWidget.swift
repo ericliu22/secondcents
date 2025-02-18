@@ -142,7 +142,7 @@ struct NewChatPreview: View {
 
 func deleteChat(spaceId: String, chatId: String) {
     spaceReference(spaceId: spaceId)
-        .collection("chatas")
+        .collection("chats")
         .document(chatId)
         .delete()
 }

@@ -116,20 +116,28 @@ struct CanvasPage: View, CanvasViewModelDelegate {
         if viewModel.canvasMode == .placement {
             if let widget = viewModel.newWidget {
                 let position = snapWidgetToGrid(widget, viewModel.widgetCursor)
-                MediaView(widget: widget, spaceId: spaceId)
-                    .environment(viewModel)
+                ZStack {
+                    MediaView(widget: widget, spaceId: spaceId)
+                        .environment(viewModel)
+                        .cornerRadius(CORNER_RADIUS)
+                        .frame(
+                            width: widget.width,
+                            height: widget.height
+                        )
+                        .animation(.spring(), value: widget.x)  // Add animation for x position
+                        .animation(.spring(), value: widget.y)  // Add animation for y position
+                    Color(
+                            viewModel.canPlaceWidget(
+                                widget, at: position)
+                            ? Color.green : Color.red)
+                    .opacity(0.3)
                     .cornerRadius(CORNER_RADIUS)
                     .frame(
                         width: widget.width,
                         height: widget.height
                     )
-                    .position(position)
-                    .animation(.spring(), value: widget.x)  // Add animation for x position
-                    .animation(.spring(), value: widget.y)  // Add animation for y position
-                    .border(
-                        viewModel.canPlaceWidget(
-                            widget, at: position)
-                            ? Color.green : Color.red, width: 2)
+                }
+                .position(position)
             }
         } else {
             EmptyView()

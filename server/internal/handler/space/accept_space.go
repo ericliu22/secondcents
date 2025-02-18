@@ -86,7 +86,7 @@ func AcceptSpaceRequestHandler(httpCtx *fasthttp.RequestCtx, firestoreClient *fi
 
 	var notification notifications.TopicNotification
 	notification = notifications.TopicNotification{
-		Topic: space.SpaceID,
+		Topic: space.Name,
 		Title: user.Name + " just joined the Space!",
 		Body:  "",
 	}
