@@ -29,7 +29,7 @@ func InviteSpaceRequestHandler(httpCtx *fasthttp.RequestCtx, firestoreClient *fi
 	}
 	var inviteRequest InviteSpaceRequest
 
-	log.Printf("JoinSpaceRequest body: %s\n", string(httpCtx.PostBody()))
+	log.Printf("InviteSpaceRequest body: %s\n", string(httpCtx.PostBody()))
 
 	if err := json.Unmarshal(httpCtx.PostBody(), &inviteRequest); err != nil {
 		httpCtx.Error("Invalid request body", fasthttp.StatusBadRequest)

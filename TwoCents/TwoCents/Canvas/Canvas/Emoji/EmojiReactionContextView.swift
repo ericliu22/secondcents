@@ -97,6 +97,7 @@ struct EmojiReactionContextView: View {
                         let body = "\(username) \(emojiNotification(emoji: emoji))"
                         
                         try await reactionNotification(spaceId: spaceId, body: body, widgetId: widget.id.uuidString)
+                        await widgetUnread(spaceId: spaceId, widgetId: widget.id.uuidString, userId: userUID)
                         refreshId = UUID() // Only refresh when the update is successful
                     }
                 } else {
