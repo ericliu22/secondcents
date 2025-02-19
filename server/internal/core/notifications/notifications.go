@@ -70,14 +70,14 @@ func SendSpaceNotification(notification *SpaceNotification, space *models.DBSpac
 			continue
 		}
 
-		var notification SingleNotification
-		notification = SingleNotification{
+		var singleNotification SingleNotification
+		singleNotification = SingleNotification{
 			Token: *privateUser.Token,
 			Title: notification.Title,
 			Body:  notification.Body,
 			Image: notification.Image,
 		}
-		SendSingleNotification(&notification, messagingClient, firebaseCtx)
+		SendSingleNotification(&singleNotification, messagingClient, firebaseCtx)
 	}
 	return nil
 }
