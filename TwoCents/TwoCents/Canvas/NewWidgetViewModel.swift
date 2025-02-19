@@ -51,8 +51,10 @@ final class NewWidgetViewModel {
             self.path = path
             self.url = url.absoluteString
             let uid = try! AuthenticationManager.shared.getAuthenticatedUser().uid
+            
+            let (width, height) = getMultipliedSize(widthMultiplier: 2, heightMultiplier: 2)
 
-            tempWidget = CanvasWidget(width: 250, height: 250, x: 0, y: 0, borderColor: .black, userId: uid, media: .video, mediaURL: URL(string: self.url)!, widgetName: "Video Widget", widgetDescription: "Add a video")
+            tempWidget = CanvasWidget(width: width, height: height, x: 0, y: 0, borderColor: .black, userId: uid, media: .video, mediaURL: URL(string: self.url)!, widgetName: "Video Widget", widgetDescription: "Add a video")
             loading = false
             completion(true)
         }

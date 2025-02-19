@@ -247,11 +247,11 @@ final class CanvasPageViewModel {
         return "https://api.twocentsapp.com/app/widget/\(spaceId)/\(widget.id.uuidString)"
     }
     
-    func canPlaceWidget(_ proposedWidget: CanvasWidget, at point: CGPoint) -> Bool {
-        // Create a CGRect for the proposed widget at the new point
+    func canPlaceWidget(_ proposedWidget: CanvasWidget, at centerPoint: CGPoint) -> Bool {
+        // Adjust the proposed rectangle so that centerPoint is at its center
         let proposedRect = CGRect(
-            x: point.x,
-            y: point.y,
+            x: centerPoint.x - proposedWidget.width / 2,
+            y: centerPoint.y - proposedWidget.height / 2,
             width: proposedWidget.width,
             height: proposedWidget.height
         )
@@ -262,23 +262,23 @@ final class CanvasPageViewModel {
             if existing.id == proposedWidget.id { continue }
 
             guard
-                let existingX = existing.x,
-                let existingY = existing.y
+                let existingCenterX = existing.x,
+                let existingCenterY = existing.y
             else { continue }
 
             let existingRect = CGRect(
-                x: existingX,
-                y: existingY,
+                x: existingCenterX - existing.width / 2,
+                y: existingCenterY - existing.height / 2,
                 width: existing.width,
                 height: existing.height
             )
 
-            // If the bounding boxes overlap, reject
+            // If the bounding boxes overlap, reject the placement
             if proposedRect.intersects(existingRect) {
                 return false
             }
         }
-
         return true
     }
+
 }
