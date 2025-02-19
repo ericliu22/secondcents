@@ -172,16 +172,16 @@ struct CanvasPage: View, CanvasViewModelDelegate {
         // }
         //add widget
         if viewModel.canvasMode != .placement {
-            ToolbarItem(placement: .topBarTrailing) {
-                Button(
-                    action: {
-                        viewModel.activeSheet = .newWidgetView(
-                            startingLocation: nil)
-                    },
-                    label: {
-                        Image(systemName: "plus.circle")
-                    })
-            }
+//            ToolbarItem(placement: .topBarTrailing) {
+//                Button(
+//                    action: {
+//                        viewModel.activeSheet = .newWidgetView(
+//                            startingLocation: nil)
+//                    },
+//                    label: {
+//                        Image(systemName: "plus.circle")
+//                    })
+//            }
 
             //SPACE SETTINGS
             ToolbarItem(placement: .topBarTrailing) {

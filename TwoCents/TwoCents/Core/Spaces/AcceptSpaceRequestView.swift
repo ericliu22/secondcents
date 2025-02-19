@@ -16,6 +16,9 @@ struct AcceptSpaceRequestView: View {
     @State var space: DBSpace?
     @State var loaded: Bool = false
 
+    @Environment(\.dismiss) private var dismiss
+    
+    
     init(spaceId: String) {
         self.spaceId = spaceId
     }
@@ -65,6 +68,7 @@ struct AcceptSpaceRequestView: View {
                 Task {
                     do {
                         try await acceptSpaceRequest(spaceId: spaceId)
+                        dismiss()
                     } catch {
                         print("Failed to join space")
                     }
@@ -80,6 +84,7 @@ struct AcceptSpaceRequestView: View {
             .frame(height: 55)
             .cornerRadius(10)
         }
+        .padding(.horizontal)
         .task {
             do {
                 try await space = SpaceManager.shared.getSpace(spaceId: spaceId)

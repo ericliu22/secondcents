@@ -84,5 +84,6 @@ struct JoinSpaceView: View {
                 loaded = true
             }
         }
+  
     }
 }
