@@ -83,7 +83,7 @@ final class SpaceManager {
 
     func deleteSpace(spaceId: String) async throws {
         
-        
+        try await deleteSpaceRequest(spaceId: spaceId)
         try await spaceDocument(spaceId: spaceId).delete()
     }
 
