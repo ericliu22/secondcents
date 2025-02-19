@@ -51,6 +51,14 @@ struct ZoomableScrollView<Content: View>: UIViewRepresentable {
         longPressGesture.minimumPressDuration = 1.0
         longPressGesture.delegate = context.coordinator
         scrollView.addGestureRecognizer(longPressGesture)
+        
+        /* FOR DEBUGGING PURPOSES
+        let tapGesture = UITapGestureRecognizer(
+            target: context.coordinator,
+            action: #selector(Coordinator.handleTap(_:))
+        )
+        scrollView.addGestureRecognizer(tapGesture)
+         */
 
         context.coordinator.scrollView = scrollView
         return scrollView
@@ -379,6 +387,13 @@ struct ZoomableScrollView<Content: View>: UIViewRepresentable {
                 
                 canvasViewModel.activeSheet = .newWidgetView(startingLocation: location)
             }
+        }
+        
+        @objc func handleTap(_ gesture: UITapGestureRecognizer) {
+            guard scrollView != nil else { return }
+            let location = gesture.location(in: gesture.view)
+            
+            print(location)
         }
 
 //        @objc func handleEdgePan(_ gesture: UIPanGestureRecognizer) {

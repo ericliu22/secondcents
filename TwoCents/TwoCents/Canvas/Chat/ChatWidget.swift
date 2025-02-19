@@ -82,16 +82,22 @@ struct ChatPreview: View {
 
     var body: some View {
         VStack {
-            List {
-                ForEach(messages, id: \.id) { message in
-                    makePreviewMessage(message: message)
-                        .rotationEffect(.degrees(180))
-                        .listRowSeparator(.hidden)
-                        .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-                        .listRowBackground(Color.clear)
-                        .frame(maxWidth: .infinity, alignment: appModel.user?.userId == message.sendBy ? .leading : .trailing)
+            ScrollView {
+                VStack {
+                    ForEach(messages, id: \.id) { message in
+                        makePreviewMessage(message: message)
+                            .rotationEffect(.degrees(180))
+                            .listRowSeparator(.hidden)
+                            .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+                            .listRowBackground(Color.clear)
+                            .frame(maxWidth: .infinity, alignment: appModel.user?.userId == message.sendBy ? .leading : .trailing)
+                    }
                 }
             }
+            .padding(.leading, 20)
+            .padding(.trailing, 20)
+            .padding(.bottom, 20)
+            .background(.thinMaterial)
             .rotationEffect(.degrees(180))
         }
         .scrollDisabled(true)

@@ -260,31 +260,33 @@ final class CanvasPageViewModel {
         for existing in canvasWidgets {
             // If it's the same widget, skip
             if existing.id == proposedWidget.id { continue }
-
-            guard
-                let existingCenterX = existing.x,
-                let existingCenterY = existing.y
-            else { continue }
-
+            guard let existingCenterX = existing.x, let existingCenterY = existing.y else { continue }
+            
             let existingRect = CGRect(
                 x: existingCenterX - existing.width / 2,
                 y: existingCenterY - existing.height / 2,
                 width: existing.width,
                 height: existing.height
             )
-
+            
             // If the bounding boxes overlap, reject the placement
             if proposedRect.intersects(existingRect) {
                 return false
             }
         }
-        let canvasFrame = CGRect(x: 500, y: 500, width: FRAME_SIZE, height: FRAME_SIZE)
+        
+        // LEAVE THE +5 -Eric
+        // This is dogshit but it works lmao
+        let canvasFrame = CGRect(x: STARTING_POINT.x, y: STARTING_POINT.y, width: FRAME_SIZE+5, height: FRAME_SIZE+5)
         if !canvasFrame.contains(proposedRect) {
+            print(proposedRect)
+            print(canvasFrame)
             print("The widget is not fully contained within the canvas.")
             return false
         }
-
+        
         return true
     }
+
 
 }

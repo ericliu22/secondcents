@@ -18,6 +18,7 @@ let MIN_ZOOM: CGFloat = 0.6
 let CORNER_RADIUS: CGFloat = 15
 let FRAME_SIZE: CGFloat = 2000
 let WIDGET_SPACING: CGFloat = TILE_SIZE + TILE_SPACING
+let STARTING_POINT: CGPoint = CGPoint(x: 500, y: 500)
 
 //CanvasViewModelDelegate is so that we can call dismiss the view from viewModel
 struct CanvasPage: View, CanvasViewModelDelegate {
