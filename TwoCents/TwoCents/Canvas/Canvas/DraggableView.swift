@@ -7,7 +7,8 @@ class DraggableContainerView: UIView {
 
     override var intrinsicContentSize: CGSize {
         // Return the content's size (or .zero if not available)
-        return contentView?.bounds.size ?? .zero
+        return self.bounds.size
+        
     }
 
     override func layoutSubviews() {
@@ -42,10 +43,13 @@ struct DraggableView<Content: View>: UIViewRepresentable {
         // Use the custom container view instead of a plain UIView.
         let containerView = DraggableContainerView()
         containerView.backgroundColor = .clear
+        containerView.clipsToBounds = true
+
 
         // Use the persistent hosting controller from the coordinator.
         let hostingController = context.coordinator.hostingController
         hostingController.view.backgroundColor = .clear
+        hostingController.view.clipsToBounds = true
         hostingController.view.translatesAutoresizingMaskIntoConstraints = false
         containerView.addSubview(hostingController.view)
 

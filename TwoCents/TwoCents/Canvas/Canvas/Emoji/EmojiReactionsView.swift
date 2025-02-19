@@ -92,6 +92,7 @@ struct EmojiReactionsView: View {
             }
             let body = "\(username) \(emojiNotification(emoji: emoji))"
             try await reactionNotification(spaceId: spaceId, body: body, widgetId: widget.id.uuidString)
+            await widgetUnread(spaceId: spaceId, widgetId: widget.id.uuidString, userId: userUID)
         }
     }
     
