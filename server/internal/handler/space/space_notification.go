@@ -62,26 +62,26 @@ func SpaceNotificationHandler(httpCtx *fasthttp.RequestCtx, firestoreClient *fir
 	var notification notifications.TopicNotification
 	switch notificationRequest.Type {
 	case "chat":
-		notification = notifications.TopicNotification{
+		notification = notifications.SpaceNotification{
 
-			Topic: notificationRequest.SpaceId,
-			Title: "[" + space.Name + "] " + user.Username,
-			Body:  notificationRequest.Body,
-			Data:  notificationRequest.Data,
+			SpaceId: notificationRequest.SpaceId,
+			Title:   "[" + space.Name + "] " + user.Username,
+			Body:    notificationRequest.Body,
+			Data:    notificationRequest.Data,
 		}
 	case "emoji":
-		notification = notifications.TopicNotification{
-			Topic: notificationRequest.SpaceId,
-			Title: "[" + space.Name + "] " + user.Username,
-			Body:  notificationRequest.Body,
-			Data:  notificationRequest.Data,
+		notification = notifications.SpaceNotification{
+			SpaceId: notificationRequest.SpaceId,
+			Title:   "[" + space.Name + "] " + user.Username,
+			Body:    notificationRequest.Body,
+			Data:    notificationRequest.Data,
 		}
 	case "widget":
-		notification = notifications.TopicNotification{
-			Topic: notificationRequest.SpaceId,
-			Title: "[" + space.Name + "] " + user.Username,
-			Body:  notificationRequest.Body,
-			Data:  notificationRequest.Data,
+		notification = notifications.SpaceNotification{
+			SpaceId: notificationRequest.SpaceId,
+			Title:   "[" + space.Name + "] " + user.Username,
+			Body:    notificationRequest.Body,
+			Data:    notificationRequest.Data,
 		}
 	case "chatWidget":
 
@@ -92,26 +92,26 @@ func SpaceNotificationHandler(httpCtx *fasthttp.RequestCtx, firestoreClient *fir
 			return
 		}
 
-		notification = notifications.TopicNotification{
-			Topic: notificationRequest.SpaceId,
-			Title: "[" + space.Name + "/" + chat.Name + "] " + user.Username,
-			Body:  notificationRequest.Body,
-			Data:  notificationRequest.Data,
+		notification = notifications.SpaceNotification{
+			SpaceId: notificationRequest.SpaceId,
+			Title:   "[" + space.Name + "/" + chat.Name + "] " + user.Username,
+			Body:    notificationRequest.Body,
+			Data:    notificationRequest.Data,
 		}
 	case "groupTickle":
-		notification = notifications.TopicNotification{
-			Topic: notificationRequest.SpaceId,
-			Title: "[" + space.Name + "] " + user.Username,
-			Body:  notificationRequest.Body,
-			Data:  notificationRequest.Data,
+		notification = notifications.SpaceNotification{
+			SpaceId: notificationRequest.SpaceId,
+			Title:   "[" + space.Name + "] " + user.Username,
+			Body:    notificationRequest.Body,
+			Data:    notificationRequest.Data,
 		}
 	default:
 		httpCtx.Error("Invalid request body", fasthttp.StatusBadRequest)
 		return
 	}
-	if err := notifications.SendTopicNotification(&notification, messagingClient, firebaseCtx); err != nil {
+	if err := notifications.SendSpaceNotification(&notification, space, messagingClient, firebaseCtx); err != nil {
 		httpCtx.Error("Internal server error", fasthttp.StatusInternalServerError)
-		log.Printf("Failed to get user: %v", err.Error())
+		log.Printf("Failed to send notification: %v", err.Error())
 		return
 	}
 	httpCtx.SetStatusCode(fasthttp.StatusOK)

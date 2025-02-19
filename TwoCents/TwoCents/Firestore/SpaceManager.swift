@@ -82,6 +82,8 @@ final class SpaceManager {
     }
 
     func deleteSpace(spaceId: String) async throws {
+        
+        
         try await spaceDocument(spaceId: spaceId).delete()
     }
 
@@ -93,9 +95,8 @@ final class SpaceManager {
 
         ]
         try await spaceDocument(spaceId: spaceId).updateData(newArray)
-
     }
-
+    
     func moveWidget(spaceId: String, widgetId: String, x: CGFloat, y: CGFloat) {
         spaceDocument(spaceId: spaceId).collection("widgets").document(widgetId)
             .updateData([

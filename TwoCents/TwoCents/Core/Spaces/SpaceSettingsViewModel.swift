@@ -6,6 +6,7 @@
 //
 
 import FirebaseFirestore
+import FirebaseMessaging
 import Foundation
 import SwiftUI
 
@@ -51,9 +52,9 @@ final class SpaceSettingsViewModel {
     }
 
     func deleteSpace(spaceId: String) async throws {
-
+        
         try await SpaceManager.shared.deleteSpace(spaceId: spaceId)
-
+        
     }
 
     func getUserColor(userColor: String) -> Color {
