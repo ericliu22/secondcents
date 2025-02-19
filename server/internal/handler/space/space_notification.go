@@ -59,7 +59,7 @@ func SpaceNotificationHandler(httpCtx *fasthttp.RequestCtx, firestoreClient *fir
 		return
 	}
 
-	var notification notifications.TopicNotification
+	var notification notifications.SpaceNotification
 	switch notificationRequest.Type {
 	case "chat":
 		notification = notifications.SpaceNotification{
@@ -109,7 +109,7 @@ func SpaceNotificationHandler(httpCtx *fasthttp.RequestCtx, firestoreClient *fir
 		httpCtx.Error("Invalid request body", fasthttp.StatusBadRequest)
 		return
 	}
-	if err := notifications.SendSpaceNotification(&notification, space, messagingClient, firebaseCtx); err != nil {
+	if err := notifications.SendSpaceNotification(&notification, space, messagingClient, firestoreClient, firebaseCtx); err != nil {
 		httpCtx.Error("Internal server error", fasthttp.StatusInternalServerError)
 		log.Printf("Failed to send notification: %v", err.Error())
 		return
