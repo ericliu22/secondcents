@@ -28,7 +28,7 @@ func AcceptSpaceRequestHandler(httpCtx *fasthttp.RequestCtx, firestoreClient *fi
 
 	var acceptRequest AcceptSpaceRequest
 
-	log.Printf("JoinSpaceRequest body: %s\n", string(httpCtx.PostBody()))
+	log.Printf("AcceptSpaceRequest body: %s\n", string(httpCtx.PostBody()))
 
 	if err := json.Unmarshal(httpCtx.PostBody(), &acceptRequest); err != nil {
 		httpCtx.Error("Invalid request body", fasthttp.StatusBadRequest)
