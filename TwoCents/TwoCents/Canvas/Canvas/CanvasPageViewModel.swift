@@ -278,6 +278,12 @@ final class CanvasPageViewModel {
                 return false
             }
         }
+        let canvasFrame = CGRect(x: 500, y: 500, width: FRAME_SIZE, height: FRAME_SIZE)
+        if !canvasFrame.contains(proposedRect) {
+            print("The widget is not fully contained within the canvas.")
+            return false
+        }
+
         return true
     }
 
