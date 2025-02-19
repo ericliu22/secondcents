@@ -60,7 +60,7 @@ func JoinSpaceHandler(httpCtx *fasthttp.RequestCtx, firestoreClient *firestore.C
 	user, userErr := models.GetUser(firestoreClient, firebaseCtx, userId)
 	if userErr != nil {
 		httpCtx.Error("Internal server error", fasthttp.StatusBadRequest)
-		log.Printf("Failed to get private user: %v", userErr.Error())
+		log.Printf("Failed to get public user: %v", userErr.Error())
 		return
 	}
 
@@ -71,13 +71,13 @@ func JoinSpaceHandler(httpCtx *fasthttp.RequestCtx, firestoreClient *firestore.C
 		return
 	}
 
-	var notification notifications.TopicNotification
-	notification = notifications.TopicNotification{
-		Topic: joinRequest.SpaceId,
-		Title: space.Name,
-		Body:  user.Name + " just joined the Space!",
+	var notification notifications.SpaceNotification
+	notification = notifications.SpaceNotification{
+		SpaceId: joinRequest.SpaceId,
+		Title: "[" + space.Name + "] " + user.Name + " just joined the Space!",
+		Body:  user.Name + " just joined the space!",
 	}
-	if err := notifications.SendTopicNotification(&notification, messagingClient, firebaseCtx); err != nil {
+	if err := notifications.SendSpaceNotification(&notification, space, messagingClient, firestoreClient, firebaseCtx); err != nil {
 		log.Printf("Failed to send notification: %v", err.Error())
 	}
 
