@@ -52,9 +52,11 @@ struct NewTickleView: View {
                                             .padding(.vertical, 8)
                                             .background(selectedUser?.userId == member.userId ? Color.gray.opacity(0.2) : Color.clear)
                                             .cornerRadius(10)
+                                            .contentShape(Rectangle())  // Ensures the entire row is tappable
                                             .onTapGesture {
                                                 selectedUser = member
                                             }
+
                                         }
                                     }
                                 }

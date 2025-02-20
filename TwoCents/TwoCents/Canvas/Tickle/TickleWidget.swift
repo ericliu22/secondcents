@@ -54,29 +54,24 @@ struct TickleWidget: WidgetView {
                     }
                     AnalyticsManager.tickle(userId: userId, targetUserId: widget.userId,
                         count: 1)
+                    
+                    let generator = UIImpactFeedbackGenerator(style: .medium)
+                    generator.impactOccurred()
                 } label: {
-                    ZStack {
-                        RoundedRectangle(cornerRadius: 20)
-                            .fill(.thinMaterial)
-                            .aspectRatio(1, contentMode: .fit)
-                        Text(tickleString)
-                            .font(
-                                tickleString == "Tickle"
-                                ? .title2 : .largeTitle
-                            )
-                            .fontWeight(.bold)
-                            .fontDesign(
-                                tickleString == "Tickle"
-                                ? .default : .monospaced
-                            )
-                            .foregroundStyle(.secondary)
-                            .frame(width: .infinity, height: 50)
-                    }
+//                    ZStack {
+//                        RoundedRectangle(cornerRadius: 20)
+//                            .fill(.thinMaterial)
+//                            .aspectRatio(1, contentMode: .fit)
+                    Label("Tickle", systemImage: "hand.tap")
+                        .font(.subheadline)
+//                            .frame(width: .infinity, height: 50)
+//                    }
                 }
+                .buttonStyle(.bordered)
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(.ultraThickMaterial)
+        .background(Color(UIColor.systemBackground))
     }
 }
 
