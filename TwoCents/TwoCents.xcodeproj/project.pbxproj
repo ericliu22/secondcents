@@ -70,6 +70,7 @@
 		A27C76072D5582F10075DCF1 /* MediaCacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A27C76062D5582E00075DCF1 /* MediaCacheManager.swift */; };
 		A27C760B2D5591990075DCF1 /* CachedImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A27C760A2D5591940075DCF1 /* CachedImage.swift */; };
 		A27E2C322D35B1750050D9C8 /* UserNotifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = A27E2C312D35B16F0050D9C8 /* UserNotifications.swift */; };
+		A2952C592D66BA6C001C5B53 /* TodoWidgetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2952C582D66BA68001C5B53 /* TodoWidgetViewModel.swift */; };
 		A2A33CA02D32D35600056DE6 /* OffScreenIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2A33C9F2D32D34B00056DE6 /* OffScreenIndicator.swift */; };
 		A2AC0C0C2D319E3100B6BF15 /* QRCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2AC0C0B2D319E2900B6BF15 /* QRCodeView.swift */; };
 		A2AC0C0E2D31C5C600B6BF15 /* JoinSpaceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2AC0C0D2D31C5C000B6BF15 /* JoinSpaceView.swift */; };
@@ -276,6 +277,7 @@
 		A27C76062D5582E00075DCF1 /* MediaCacheManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaCacheManager.swift; sourceTree = "<group>"; };
 		A27C760A2D5591940075DCF1 /* CachedImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachedImage.swift; sourceTree = "<group>"; };
 		A27E2C312D35B16F0050D9C8 /* UserNotifications.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserNotifications.swift; sourceTree = "<group>"; };
+		A2952C582D66BA68001C5B53 /* TodoWidgetViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoWidgetViewModel.swift; sourceTree = "<group>"; };
 		A2A33C9F2D32D34B00056DE6 /* OffScreenIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OffScreenIndicator.swift; sourceTree = "<group>"; };
 		A2AC0C0B2D319E2900B6BF15 /* QRCodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeView.swift; sourceTree = "<group>"; };
 		A2AC0C0D2D31C5C000B6BF15 /* JoinSpaceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoinSpaceView.swift; sourceTree = "<group>"; };
@@ -922,6 +924,7 @@
 			isa = PBXGroup;
 			children = (
 				AB53655E2C31C807001C444B /* TodoWidget.swift */,
+				A2952C582D66BA68001C5B53 /* TodoWidgetViewModel.swift */,
 				ABCDA06B2C39B009002C23E1 /* NewTodoView.swift */,
 				ABCDA06D2C39B04A002C23E1 /* NewTodoViewModel.swift */,
 				ABD01A992C39C3CF00C9F288 /* TodoItem.swift */,
@@ -1206,6 +1209,7 @@
 				ABD9F23D2C1F3F910041F110 /* AddFriendFromContactsView.swift in Sources */,
 				AB90021D2A8B85DA00F970B8 /* UploadExampleViewModel.swift in Sources */,
 				A27E2C322D35B1750050D9C8 /* UserNotifications.swift in Sources */,
+				A2952C592D66BA6C001C5B53 /* TodoWidgetViewModel.swift in Sources */,
 				AB4C1E4F2A8785BF00588160 /* ColorSelectionView.swift in Sources */,
 				AB7438412AAA349C001B4988 /* SearchUserView.swift in Sources */,
 				AB8C6E202AE6FBD50005B7F9 /* SpacesViewModel.swift in Sources */,

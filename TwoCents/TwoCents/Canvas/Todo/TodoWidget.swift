@@ -6,44 +6,21 @@ struct TodoWidget: View {
     
     let widget: CanvasWidget // Assuming CanvasWidget is a defined type
     let cutoff: Int
-    private var spaceId: String
     
     @Environment(CanvasPageViewModel.self) var canvasViewModel: CanvasPageViewModel?
-    @State var todo: Todo?
-    @State private var todoListener: ListenerRegistration?
+    @State var viewModel: TodoWidgetViewModel
 
     init(widget: CanvasWidget, spaceId: String) {
         assert(widget.media == .todo)
         self.widget = widget
-        self.spaceId = spaceId
         self.cutoff = Int((widget.height-50) / 20)
+        self.viewModel = TodoWidgetViewModel(widget: widget, spaceId: spaceId)
     }
     
-    func fetchTodo() {
-        todoListener = spaceReference(spaceId: spaceId)
-            .collection("todo")
-            .document(widget.id.uuidString)
-            .addSnapshotListener { snapshot, error in
-                if let error = error {
-                    print("Error getting document: \(error)")
-                    return
-                }
-                
-                do {
-                    if let todoData = try snapshot?.data(as: Todo.self) {
-                        self.todo = todoData
-                    } else {
-                        print("Document data is empty.")
-                    }
-                } catch {
-                    print("Error decoding document: \(error)")
-                }
-            }
-    }
 
     var body: some View {
         ZStack {
-            if let todo = todo {
+            if let todo = viewModel.todo {
                 VStack(alignment: .leading, spacing: 0) {
                     HStack {
                         Text(todo.name)
@@ -130,21 +107,17 @@ struct TodoWidget: View {
                   
                     .cornerRadius(CORNER_RADIUS)
                     .frame(maxWidth: widget.width, maxHeight: widget.height)
-                    .onAppear {
-                        fetchTodo()
-                    }
                     .background(.thinMaterial)
             }
+        }
+        .onAppear {
+            viewModel.fetchTodo()
         }
         .onTapGesture {
             guard let canvasViewModel = canvasViewModel else { return }
             canvasViewModel.activeSheet = .todo
             canvasViewModel.activeWidget = widget
         }
-        .onDisappear {
-            todoListener?.remove()
-        }
-        
         
     }
     
