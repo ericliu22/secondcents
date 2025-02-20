@@ -35,9 +35,9 @@ func DeleteSpaceRequestHandler(httpCtx *fasthttp.RequestCtx, firestoreClient *fi
 
 	space, spaceErr := models.GetSpace(firestoreClient, firebaseCtx, deleteRequest.SpaceId)
 	if spaceErr != nil {
-			httpCtx.Error("Internal server error", fasthttp.StatusBadRequest)
-			log.Printf("Failed to get space: %v", spaceErr.Error())
-			return
+		httpCtx.Error("Internal server error", fasthttp.StatusBadRequest)
+		log.Printf("Failed to get space: %v", spaceErr.Error())
+		return
 	}
 
 	if !auth.IsMember(space, userId) {
@@ -46,10 +46,14 @@ func DeleteSpaceRequestHandler(httpCtx *fasthttp.RequestCtx, firestoreClient *fi
 		return
 	}
 
+	if space.SpaceRequests == nil {
+		httpCtx.SetStatusCode(fasthttp.StatusOK)
+		httpCtx.SetBodyString("Deleted Space successfully")
+	}
 	for _, requestId := range *space.SpaceRequests {
 		_, updateErr := firestoreClient.Collection("users").Doc(requestId).Update(firebaseCtx, []firestore.Update{
 			{
-				Path: "spaceRequests",
+				Path:  "spaceRequests",
 				Value: firestore.ArrayRemove(deleteRequest.SpaceId),
 			},
 		})

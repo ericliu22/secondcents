@@ -87,8 +87,8 @@ func AcceptSpaceRequestHandler(httpCtx *fasthttp.RequestCtx, firestoreClient *fi
 	var notification notifications.SpaceNotification
 	notification = notifications.SpaceNotification{
 		SpaceId: acceptRequest.SpaceId,
-		Title: "[" + space.Name + "] " + user.Name + " just joined the Space!",
-		Body:  user.Name + " just joined the space!",
+		Title:   "[" + space.Name + "] " + user.Name + " just joined the Space!",
+		Body:    user.Name + " just joined the space!",
 	}
 	if err := notifications.SendSpaceNotification(&notification, space, messagingClient, firestoreClient, firebaseCtx); err != nil {
 		log.Printf("Failed to send notification: %v", err.Error())
