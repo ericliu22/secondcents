@@ -60,20 +60,21 @@ final class AnalyticsManager {
     
     static func login() {
         logEvent("login", parameters: [
-            "time": Date()
+            "time": Date().description(with: Locale(identifier: "en_US"))
         ])
     }
     
     static func register() {
         logEvent("register", parameters: [
-            "time": Date()
+            "time": Date().description(with: Locale(identifier: "en_US"))
         ])
     }
 
     static func openedApp() {
         logEvent("opened_app", parameters: [
-            "time": Date()
+            "time": Date().description(with: Locale(identifier: "en_US"))
         ])
+        logEvent("pageview", parameters: [:])
     }
     
     static func joinSpace(spaceId: String, method: String) {
@@ -92,7 +93,7 @@ final class AnalyticsManager {
     static func widgetCreated(widget: CanvasWidget) {
         logEvent("widget_created", parameters: [
             "userId": widget.userId,
-            "media": widget.media.rawValue,
+            "media": widget.media.name(),
         ])
     }
     
