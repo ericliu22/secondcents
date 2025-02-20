@@ -199,10 +199,7 @@ struct DraggableView<Content: View>: UIViewRepresentable {
             }
             
             let snappedLocation = snapWidgetToGrid(widget, location)
-            if snappedLocation == CGPoint(x: widgetX, y: widgetY) {
-                print("No snapped widget coords")
-                return
-            }
+            
             if !canvasViewModel.canPlaceWidget(widget, at: snappedLocation) {
                 print("Cannot place widget here—collision detected.")
                 canPlace = false
