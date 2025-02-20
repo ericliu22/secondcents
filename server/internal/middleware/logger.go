@@ -14,18 +14,18 @@ type timestampWriter struct {
 }
 
 func (tw *timestampWriter) Write(p []byte) (n int, err error) {
-	// Get current time in the desired location for each log call.
 	now := time.Now().In(tw.loc)
 	timestamp := now.Format("2006-01-02 15:04:05 ")
-	// Prepend the timestamp to the log entry.
 	return tw.writer.Write([]byte(timestamp + string(p)))
 }
 
 func SetupLogging() (*os.File, error) {
-	// Use a location that properly handles DST (e.g., "America/New_York").
+	// Try loading a location that handles DST correctly.
 	loc, err := time.LoadLocation("America/New_York")
 	if err != nil {
-		return nil, err
+		// Fallback: tzdata might not be installed. Use a fixed EST (UTC-5).
+		log.Printf("Warning: unable to load location America/New_York: %v. Falling back to fixed EST.", err)
+		loc = time.FixedZone("EST", -5*60*60)
 	}
 
 	now := time.Now().In(loc)
@@ -35,9 +35,9 @@ func SetupLogging() (*os.File, error) {
 		return nil, err
 	}
 
-	// Disable the default logger's timestamp.
+	// Disable the default logger timestamp.
 	log.SetFlags(0)
-	// Set our custom writer as the output so that each log call gets a new timestamp.
+	// Set our custom writer to prepend the dynamic timestamp.
 	log.SetOutput(&timestampWriter{
 		writer: logFile,
 		loc:    loc,
