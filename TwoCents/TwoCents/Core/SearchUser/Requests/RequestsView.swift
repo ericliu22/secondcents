@@ -23,8 +23,8 @@ struct RequestsView: View {
     @Environment(AppModel.self) var appModel
 
     private let noFriendsMessage: [String] = [
-        "it's getting dry 😬",
-        "no friends 🫵😂",
+        "It's getting dry 😬",
+        "No friends 🫵😂",
     ]
 
     init(userId: String) {
@@ -34,19 +34,29 @@ struct RequestsView: View {
 
     var body: some View {
         NavigationStack {
-            List {
-                ForEach(viewModel.filteredSearch, id: \.id) { request in
-                    makeRequestTile(request: request)
-                        .environment(viewModel)
+            if !viewModel.filteredSearch.isEmpty {
+                List {
+                    ForEach(viewModel.filteredSearch, id: \.id) { request in
+                        makeRequestTile(request: request)
+                            .environment(viewModel)
+                    }
+                    .listStyle(PlainListStyle())
+                    .navigationTitle("Requests ✨")
+                    .searchable(
+                        text: $viewModel.searchTerm,
+                        placement: .navigationBarDrawer(displayMode: .always),
+                        prompt: "Search"
+                    )
+                    .scrollDismissesKeyboard(.interactively)
                 }
-                .listStyle(PlainListStyle())
-                .navigationTitle("Requests ✨")
-                .searchable(
-                    text: $viewModel.searchTerm,
-                    placement: .navigationBarDrawer(displayMode: .always),
-                    prompt: "Search"
+            } else {
+                ContentUnavailableView(
+                    noFriendsMessage.randomElement() ?? "No Friends LMAO",
+                    systemImage: "person.crop.circle.badge.exclamationmark",
+                    description: Text(
+                        "Come back when you're not a loner"
+                    )
                 )
-                .scrollDismissesKeyboard(.interactively)
             }
         }
         .onAppear {

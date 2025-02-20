@@ -27,13 +27,18 @@ final class RequestsViewModel {
             $0.id.localizedCaseInsensitiveContains(searchTerm)
         }
     }
-    
+    @ObservationIgnored private var requestsListener: ListenerRegistration?
+
     init(userId: String) {
         self.userId = userId
     }
+    
+    deinit {
+        requestsListener?.remove()
+    }
 
     func attachRequestsListener() {
-        Firestore.firestore().collection("users").document(userId).addSnapshotListener({ [weak self] documentSnapshot, error in
+        requestsListener = Firestore.firestore().collection("users").document(userId).addSnapshotListener({ [weak self] documentSnapshot, error in
             guard let self = self else {
                 print("attachRequestsListener: weak self no reference")
                 return
