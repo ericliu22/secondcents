@@ -36,7 +36,7 @@ func DeleteSpaceRequestHandler(httpCtx *fasthttp.RequestCtx, firestoreClient *fi
 	space, spaceErr := models.GetSpace(firestoreClient, firebaseCtx, deleteRequest.SpaceId)
 	if spaceErr != nil {
 			httpCtx.Error("Internal server error", fasthttp.StatusBadRequest)
-			log.Printf("Failed to get space: %v", err.Error())
+			log.Printf("Failed to get space: %v", spaceErr.Error())
 			return
 	}
 
@@ -55,8 +55,11 @@ func DeleteSpaceRequestHandler(httpCtx *fasthttp.RequestCtx, firestoreClient *fi
 		})
 		if updateErr != nil {
 			httpCtx.Error("Internal server error", fasthttp.StatusBadRequest)
-			log.Printf("Failed to update user space requests: %v", err.Error())
+			log.Printf("Failed to update user space requests: %v", updateErr.Error())
 			return
 		}
 	}
+
+	httpCtx.SetStatusCode(fasthttp.StatusOK)
+	httpCtx.SetBodyString("Deleted Space successfully")
 }

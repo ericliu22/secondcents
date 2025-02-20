@@ -56,9 +56,6 @@ func SendSingleNotification(notification *SingleNotification, messagingClient *m
 	return nil
 }
 
-/*
-DEPRECATED DON'T USE THIS IT'S NOT SECURE
-*/
 func SendSpaceNotification(notification *SpaceNotification, space *models.DBSpace, messagingClient *messaging.Client, firestoreClient *firestore.Client, firebaseCtx context.Context) error {
 
 	for _, member := range *space.Members {

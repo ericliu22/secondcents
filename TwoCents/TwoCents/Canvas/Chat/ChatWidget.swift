@@ -58,7 +58,7 @@ struct ChatWidget: WidgetView {
                     .environment(canvasViewModel)
 
             } label: {
-                ChatPreview(messages: viewModel.messages)
+                ChatPreview(messages: viewModel.messages, chatName: viewModel.chat?.name)
                     .frame(width: widget.width, height: widget.height)
             }
             .frame(width: widget.width, height: widget.height)
@@ -75,13 +75,15 @@ struct ChatWidget: WidgetView {
 struct ChatPreview: View {
     @Environment(AppModel.self) var appModel
     var messages: [any Message]
+    let chatName: String?
 
-    init(messages: [any Message]) {
+    init(messages: [any Message], chatName: String? = nil) {
         self.messages = messages
+        self.chatName = chatName
     }
 
     var body: some View {
-        VStack {
+        ZStack(alignment: .topLeading) {
             ScrollView {
                 VStack {
                     ForEach(messages, id: \.id) { message in
@@ -91,14 +93,20 @@ struct ChatPreview: View {
                             .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
                             .listRowBackground(Color.clear)
                             .frame(maxWidth: .infinity, alignment: appModel.user?.userId == message.sendBy ? .leading : .trailing)
+                            .frame(maxWidth: .infinity, alignment: appModel.user?.userId == message.sendBy ? .leading : .trailing)
                     }
                 }
             }
-            .padding(.leading, 20)
-            .padding(.trailing, 20)
+            .padding(.horizontal, 20)
             .padding(.bottom, 20)
             .background(.thinMaterial)
             .rotationEffect(.degrees(180))
+            
+            if let name = chatName {
+                Text(name)
+                    .font(.headline)
+                    .padding(.all, 10)
+            }
         }
         .scrollDisabled(true)
 
