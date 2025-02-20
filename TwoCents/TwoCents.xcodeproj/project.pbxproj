@@ -14,6 +14,9 @@
 		850E12AA2C30A14C000E07C8 /* CalendarWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 850E12A92C30A14C000E07C8 /* CalendarWidget.swift */; };
 		8534B8B92B8001660089AD5C /* NewPollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8534B8B82B8001660089AD5C /* NewPollView.swift */; };
 		855BDECF2C1E54C0002FC428 /* FirebaseDynamicLinks in Frameworks */ = {isa = PBXBuildFile; productRef = 855BDECE2C1E54C0002FC428 /* FirebaseDynamicLinks */; };
+		855D55BC2D6145B600B5CDC1 /* PlanningSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 855D55BB2D6145A500B5CDC1 /* PlanningSheetView.swift */; };
+		855D55BE2D63EFB300B5CDC1 /* TimeSelection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 855D55BD2D63EF9E00B5CDC1 /* TimeSelection.swift */; };
+		855D55C02D63F0D800B5CDC1 /* AppleCalendarExperiments.swift in Sources */ = {isa = PBXBuildFile; fileRef = 855D55BF2D63F0D200B5CDC1 /* AppleCalendarExperiments.swift */; };
 		85629AA42C6EB031007F5D05 /* NewCalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85629AA32C6EB031007F5D05 /* NewCalendarView.swift */; };
 		856E80B12B50E9D00078A2CE /* PencilKitPractice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 856E80B02B50E9CF0078A2CE /* PencilKitPractice.swift */; };
 		856E80B92B50EB260078A2CE /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 856E80B42B50EB260078A2CE /* CardView.swift */; };
@@ -22,7 +25,6 @@
 		856E80BC2B50EB260078A2CE /* SabotageCarouselView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 856E80B72B50EB260078A2CE /* SabotageCarouselView.swift */; };
 		856E80BD2B50EB260078A2CE /* SabotageGameViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 856E80B82B50EB260078A2CE /* SabotageGameViewModel.swift */; };
 		8573EC892AE6EF4A00CFB579 /* HeartParticle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8573EC882AE6EF4A00CFB579 /* HeartParticle.swift */; };
-		8573EC8B2AE6EF9C00CFB579 /* ParticleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8573EC8A2AE6EF9C00CFB579 /* ParticleView.swift */; };
 		85741EA82AD03A0C0085423E /* CarouselPractice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85741EA72AD03A0C0085423E /* CarouselPractice.swift */; };
 		85741EAA2AD03B2C0085423E /* SnapCarouselPractice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85741EA92AD03B2C0085423E /* SnapCarouselPractice.swift */; };
 		85741EAF2AD03D370085423E /* PostModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85741EAE2AD03D370085423E /* PostModel.swift */; };
@@ -210,6 +212,9 @@
 		850958A92AB8F82D00018A32 /* LuckiestGuy-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "LuckiestGuy-Regular.ttf"; sourceTree = "<group>"; };
 		850E12A92C30A14C000E07C8 /* CalendarWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarWidget.swift; sourceTree = "<group>"; };
 		8534B8B82B8001660089AD5C /* NewPollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewPollView.swift; sourceTree = "<group>"; };
+		855D55BB2D6145A500B5CDC1 /* PlanningSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanningSheetView.swift; sourceTree = "<group>"; };
+		855D55BD2D63EF9E00B5CDC1 /* TimeSelection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeSelection.swift; sourceTree = "<group>"; };
+		855D55BF2D63F0D200B5CDC1 /* AppleCalendarExperiments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleCalendarExperiments.swift; sourceTree = "<group>"; };
 		85629AA32C6EB031007F5D05 /* NewCalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewCalendarView.swift; sourceTree = "<group>"; };
 		856E80B02B50E9CF0078A2CE /* PencilKitPractice.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PencilKitPractice.swift; sourceTree = "<group>"; };
 		856E80B42B50EB260078A2CE /* CardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
@@ -218,7 +223,6 @@
 		856E80B72B50EB260078A2CE /* SabotageCarouselView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SabotageCarouselView.swift; sourceTree = "<group>"; };
 		856E80B82B50EB260078A2CE /* SabotageGameViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SabotageGameViewModel.swift; sourceTree = "<group>"; };
 		8573EC882AE6EF4A00CFB579 /* HeartParticle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeartParticle.swift; sourceTree = "<group>"; };
-		8573EC8A2AE6EF9C00CFB579 /* ParticleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParticleView.swift; sourceTree = "<group>"; };
 		85741EA72AD03A0C0085423E /* CarouselPractice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarouselPractice.swift; sourceTree = "<group>"; };
 		85741EA92AD03B2C0085423E /* SnapCarouselPractice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapCarouselPractice.swift; sourceTree = "<group>"; };
 		85741EAE2AD03D370085423E /* PostModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostModel.swift; sourceTree = "<group>"; };
@@ -420,6 +424,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		855D55BA2D61459A00B5CDC1 /* Planning */ = {
+			isa = PBXGroup;
+			children = (
+				855D55BB2D6145A500B5CDC1 /* PlanningSheetView.swift */,
+				855D55BF2D63F0D200B5CDC1 /* AppleCalendarExperiments.swift */,
+				855D55BD2D63EF9E00B5CDC1 /* TimeSelection.swift */,
+			);
+			path = Planning;
+			sourceTree = "<group>";
+		};
 		856E80B32B50EB260078A2CE /* SabotageGame */ = {
 			isa = PBXGroup;
 			children = (
@@ -436,7 +450,6 @@
 			isa = PBXGroup;
 			children = (
 				8573EC882AE6EF4A00CFB579 /* HeartParticle.swift */,
-				8573EC8A2AE6EF9C00CFB579 /* ParticleView.swift */,
 			);
 			path = "Animations Group";
 			sourceTree = "<group>";
@@ -684,6 +697,7 @@
 				A267CB712C6339A90002E5BD /* Links */,
 				AB6EE7742C25CDF400F6FDE2 /* Location */,
 				A240F67E2C69693F00618903 /* Text */,
+				855D55BA2D61459A00B5CDC1 /* Planning */,
 				A240F67F2C69695E00618903 /* Calendar */,
 				A240F6752C6964BA00618903 /* Canvas */,
 				AB73A2852C6EEEAE008C7190 /* Image */,
@@ -1177,6 +1191,7 @@
 				A2DDB1BB2BB693FD00243E1B /* NewPollViewModel.swift in Sources */,
 				AB9C7F682BD83B1E004FC549 /* EmojiCountView.swift in Sources */,
 				AB370E1A2C35D14400C4431F /* MessageFieldViewModel.swift in Sources */,
+				855D55C02D63F0D800B5CDC1 /* AppleCalendarExperiments.swift in Sources */,
 				AB2E56CD2AE9C59D0096A58C /* VoteGameView.swift in Sources */,
 				85629AA42C6EB031007F5D05 /* NewCalendarView.swift in Sources */,
 				A279471B2C7954C800EFC28A /* NotificationWidgetWrapper.swift in Sources */,
@@ -1217,7 +1232,6 @@
 				AB69F03D2C1D188E00B81E79 /* SignInPhoneNumberView.swift in Sources */,
 				A2C0A2212C77E9060061F62D /* NotificationsCountView.swift in Sources */,
 				AB73A28A2C6F3BA2008C7190 /* VideoWidgetSheetView.swift in Sources */,
-				8573EC8B2AE6EF9C00CFB579 /* ParticleView.swift in Sources */,
 				A231E01F2D5091C9001F6EE6 /* RequestsView.swift in Sources */,
 				A212A19C2D398E4F0057E89D /* ChatPage.swift in Sources */,
 				A212A19A2D398D820057E89D /* NewChatWidgetView.swift in Sources */,
@@ -1250,6 +1264,8 @@
 				AB300FB02AC7407000C6719D /* FriendsView.swift in Sources */,
 				ABCA39D42A79FFAD009447C3 /* SignInEmailView.swift in Sources */,
 				A2E1BB572D42A131002993F0 /* AcceptSpaceRequestView.swift in Sources */,
+				855D55BC2D6145B600B5CDC1 /* PlanningSheetView.swift in Sources */,
+				855D55BE2D63EFB300B5CDC1 /* TimeSelection.swift in Sources */,
 				ABEE2CF22C7368E6001D2108 /* EmojiReactionContextView.swift in Sources */,
 				AB53655F2C31C807001C444B /* TodoWidget.swift in Sources */,
 				8573EC892AE6EF4A00CFB579 /* HeartParticle.swift in Sources */,
