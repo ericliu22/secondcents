@@ -49,7 +49,10 @@ struct TickleWidget: WidgetView {
                             userId: widget.userId,
                             count: 1)
                     }
-                    AnalyticsManager.shared.tickle(
+                    guard let userId = try? AuthenticationManager.shared.getAuthenticatedUser().uid else {
+                        return
+                    }
+                    AnalyticsManager.tickle(userId: userId, targetUserId: widget.userId,
                         count: 1)
                 } label: {
                     ZStack {

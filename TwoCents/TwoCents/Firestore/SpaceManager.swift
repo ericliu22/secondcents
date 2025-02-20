@@ -118,6 +118,7 @@ final class SpaceManager {
     
     func acceptSpaceRequest(spaceId: String) async throws {
         try await TwoCents.acceptSpaceRequest(spaceId: spaceId)
+        AnalyticsManager.joinSpace(spaceId: spaceId, method: "space_request")
     }
     
     func declineSpaceRequest(spaceId: String) async throws {
@@ -177,6 +178,7 @@ final class SpaceManager {
                     .collection("widgets")
                     .document(uploadWidget.id.uuidString)
                     .setData(from: uploadWidget)
+                AnalyticsManager.widgetCreated(widget: widget)
                 try await widgetNotification(
                     spaceId: spaceId, name: name, widget: widget)
                 await widgetUnread(

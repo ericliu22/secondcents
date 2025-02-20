@@ -407,10 +407,13 @@ struct ProfileView: View {
 
                                                 feedbackGenerator.impactOccurred()
 
-                                                let currentUserId =
-                                                    try! AuthenticationManager
+                                                guard let currentUserId =
+                                                    try? AuthenticationManager
                                                     .shared
                                                     .getAuthenticatedUser().uid
+                                                else {
+                                                    return
+                                                }
                                                 //
                                                 //
                                                 Task {
@@ -419,8 +422,7 @@ struct ProfileView: View {
                                                             .targetUserId,
                                                         count: tickleCount)
                                                 }
-                                                AnalyticsManager.shared.tickle(
-                                                    count: tickleCount)
+                                                AnalyticsManager.tickle(userId: currentUserId, targetUserId: viewModel.targetUserId, count: tickleCount)
                                             }
 
                                         }
@@ -451,12 +453,14 @@ struct ProfileView: View {
                                                     duration * 10)
 
                                                 if tickleCount > 1 {
-                                                    let currentUserId =
-                                                        try!
+                                                    guard let currentUserId =
+                                                        try?
                                                         AuthenticationManager
                                                         .shared
                                                         .getAuthenticatedUser()
-                                                        .uid
+                                                        .uid else {
+                                                        return
+                                                    }
                                                     Task {
                                                         try await
                                                             tickleNotification(
@@ -466,8 +470,8 @@ struct ProfileView: View {
                                                                 count:
                                                                     tickleCount)
                                                     }
-                                                    AnalyticsManager.shared
-                                                        .tickle(
+                                                    AnalyticsManager
+                                                        .tickle(userId: currentUserId, targetUserId: viewModel.targetUserId,
                                                             count: tickleCount)
                                                 }
                                             }
@@ -561,7 +565,9 @@ struct ProfileView: View {
                                 userId: viewModel.targetUserId,
                                 count: tickleCount)
                         }
-                        AnalyticsManager.shared.tickle(count: tickleCount)
+                        AnalyticsManager
+                            .tickle(userId: currentUserId, targetUserId: viewModel.targetUserId,
+                                count: tickleCount)
                     }
                 }
             }

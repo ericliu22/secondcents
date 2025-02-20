@@ -21,7 +21,7 @@ struct TwoCentsApp: App {
             RootView()
                 .environment(delegate.appModel!)
                 .onAppear {
-                    AnalyticsManager.shared.pageView(url: ANALYTICS_URL)
+                    AnalyticsManager.openedApp()
                 }
         }
     }
@@ -36,7 +36,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         super.init()
         print("RAN APP DELEGATE INIT")
         NSSetUncaughtExceptionHandler({ exception in
-            AnalyticsManager.shared.crashEvent(exception: exception)
+            AnalyticsManager.crashEvent(exception: exception)
         })
     }
 

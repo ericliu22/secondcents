@@ -206,7 +206,7 @@ struct MediaView<WidgetView>: View where WidgetView: View {
     }
 }
 */
-enum Media: Codable {
+enum Media: String, Codable {
 
     case video, image, chat, text, poll, map, event, todo, calendar, link, tickle
 

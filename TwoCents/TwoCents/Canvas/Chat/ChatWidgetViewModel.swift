@@ -206,6 +206,7 @@ class ChatWidgetViewModel {
                 spaceId: spaceId, body: tempMessage, widgetId: chatId)
             await widgetUnread(
                 spaceId: spaceId, widgetId: chatId, userId: userId)
+            AnalyticsManager.messageSend(message: finalMessage)
         }
     }
 

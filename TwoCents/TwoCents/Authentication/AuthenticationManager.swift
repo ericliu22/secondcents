@@ -62,6 +62,7 @@ final class AuthenticationManager{
     func createUser(email: String, password: String) async throws -> AuthDataResultModel {
         let authDataResult = try await Auth.auth().createUser(withEmail: email, password: password)
         
+        AnalyticsManager.register()
         return AuthDataResultModel(user: authDataResult.user)
     }
     
@@ -123,6 +124,7 @@ final class AuthenticationManager{
     @discardableResult
     func signInUser(email: String, password: String) async throws -> AuthDataResultModel {
         let authDataResult = try await Auth.auth().signIn(withEmail: email, password: password)
+        AnalyticsManager.login()
         return AuthDataResultModel(user: authDataResult.user)
        
     }

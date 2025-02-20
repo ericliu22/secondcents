@@ -95,7 +95,6 @@ final class MessageFieldViewModel: ObservableObject {
                     Task {
                         await messageUnread(spaceId: spaceId)
                     }
-                    AnalyticsManager.shared.messageSend()
 
 //                    completion(true)  // Indicate success
                 }

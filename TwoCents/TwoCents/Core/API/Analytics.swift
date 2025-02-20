@@ -7,45 +7,11 @@
 
 import Foundation
 import Darwin
-import UIKit
 
 let ANALYTICS_URL = "https://analytics.twocentsapp.com"
 
 final class AnalyticsManager {
-    
-    @MainActor static let shared = AnalyticsManager()
-    
-    private func sendPlausible(name: String, url: String = ANALYTICS_URL, props: [String: Any]? = nil) {
-        let url = URL(string: "\(ANALYTICS_URL)/api/event")!
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        
-        
-        var payload: [String: Any] = [
-            "name": name,
-            "url": ANALYTICS_URL,
-            "domain": "api.twocentsapp.com",
-        ]
-        
-        if let props {
-            payload["props"] = props
-        }
-        
-        request.httpBody = try? JSONSerialization.data(withJSONObject: payload)
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        
-        let task = URLSession.shared.dataTask(with: request) { data, response, error in
-            if let error = error {
-                print("Failed to send analytics: \(error)")
-            } else {
-                print("Analytics sent successfully.")
-            }
-        }
-        task.resume()
-    }
-    
-    //@TODO: Make this so that it doesn't allocate any new memory at crash runtime
-    func crashEvent(exception: NSException) {
+    static func crashEvent(exception: NSException) {
         let exception_name: String = exception.name.rawValue
         let exception_reason: String = exception.reason ?? "unknown_reason"
         let appVersion: String = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "unknown"
@@ -55,29 +21,86 @@ final class AnalyticsManager {
             "Exception Reason": exception_reason,
             "App Version": appVersion
         ]
+        logEvent("crash", parameters: props)
+    }
+    
+    private static func sendPlausible(name: String, url: String = ANALYTICS_URL, props: [String: Any]? = nil) {
+            let url = URL(string: "\(ANALYTICS_URL)/api/event")!
+            var request = URLRequest(url: url)
+            request.httpMethod = "POST"
+            
+            
+            var payload: [String: Any] = [
+                "name": name,
+                "url": ANALYTICS_URL,
+                "domain": "api.twocentsapp.com",
+            ]
+            
+            if let props {
+                payload["props"] = props
+            }
+            
+            request.httpBody = try? JSONSerialization.data(withJSONObject: payload)
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            
+            let task = URLSession.shared.dataTask(with: request) { data, response, error in
+                if let error = error {
+                    print("Failed to send analytics: \(error)")
+                } else {
+                    print("Analytics sent successfully.")
+                }
+            }
+            task.resume()
+        }
+    
+    private static func logEvent(_ name: String, parameters: [String: Any]) {
         
-        sendPlausible(name: "Crash", props: props)
+        sendPlausible(name: name, props: parameters)
     }
     
-    func pageView(url: String, props: [String: Any]? = nil) {
-        sendPlausible(name: "pageview", url: url, props: props)
+    static func login() {
+        logEvent("login", parameters: [
+            "time": Date()
+        ])
     }
     
-    func messageSend() {
-        sendPlausible(name: "Message Send")
+    static func register() {
+        logEvent("register", parameters: [
+            "time": Date()
+        ])
+    }
+
+    static func openedApp() {
+        logEvent("opened_app", parameters: [
+            "time": Date()
+        ])
     }
     
-    func widgetCreated(widget: CanvasWidget) {
-        let props: [String: Any] = [
-            "Widget Type": widget.media.name()
-        ]
-        sendPlausible(name: "Widget Created")
+    static func joinSpace(spaceId: String, method: String) {
+        logEvent("join_space", parameters: [
+            "spaceId": spaceId,
+            "method": method
+        ])
     }
     
-    func tickle(count: Int = 1) {
-        let props: [String: Any] = [
-            "Tickle Count": count
-        ]
-        sendPlausible(name: "Tickle", props: props)
+    static func messageSend(message: any Message) {
+        logEvent("message_send", parameters: [
+            "message_type": message.messageType.rawValue
+        ])
+    }
+    
+    static func widgetCreated(widget: CanvasWidget) {
+        logEvent("widget_created", parameters: [
+            "userId": widget.userId,
+            "media": widget.media.rawValue,
+        ])
+    }
+    
+    static func tickle(userId: String, targetUserId: String, count: Int = 1) {
+        logEvent("tickle", parameters: [
+            "userId": userId,
+            "count": count,
+            "targetUserId": targetUserId
+        ])
     }
 }

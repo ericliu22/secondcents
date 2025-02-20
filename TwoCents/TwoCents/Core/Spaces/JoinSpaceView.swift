@@ -60,6 +60,7 @@ struct JoinSpaceView: View {
                 Task {
                     do {
                         try await joinSpace(spaceId: spaceId, spaceToken: spaceToken)
+                        AnalyticsManager.joinSpace(spaceId: spaceId, method: "link")
                     } catch {
                         print("Failed to join space")
                     }
