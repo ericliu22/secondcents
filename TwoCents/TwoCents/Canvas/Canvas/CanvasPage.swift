@@ -299,6 +299,7 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                                         viewModel.activeSheet = .reply
                                         viewModel.selectedDetent = .large
                                         viewModel.replyWidget = widget
+                                        viewModel.canvasMode = .normal
                                     },
                                     label: {
                                         Label(
@@ -310,6 +311,7 @@ struct CanvasPage: View, CanvasViewModelDelegate {
 
                                 Button(role: .destructive) {
                                     viewModel.deleteWidget(widget: widget)
+                                    viewModel.canvasMode = .normal
                                 } label: {
 
                                     Label("Delete", systemImage: "trash")
@@ -322,6 +324,10 @@ struct CanvasPage: View, CanvasViewModelDelegate {
                                     Label(
                                         "Share widget",
                                         systemImage: "square.and.arrow.up")
+                                    .onTapGesture {
+                                        viewModel.canvasMode = .normal
+                                    }
+
                                 }
                             })
                         )
