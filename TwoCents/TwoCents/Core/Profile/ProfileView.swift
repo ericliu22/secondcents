@@ -252,6 +252,16 @@ struct ProfileView: View {
                                         )
                                         .font(.headline)
                                         .fontWeight(.regular)
+                                    } else {
+                                        Text(String(0))
+                                            .font(.title)
+                                            .fontWeight(.bold)
+                                            .foregroundColor(
+                                                viewModel.targetUserColor
+                                                    ?? appModel.loadedColor)
+                                        Text(
+                                            "Friends🫵😂"
+                                        )
                                     }
                                 }
                             }
