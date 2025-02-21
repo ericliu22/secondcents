@@ -83,7 +83,7 @@ struct ChatPage: View {
 
             }
             .foregroundStyle(Color(UIColor.label))
-            .background(.regularMaterial)
+            .background(Color(UIColor.systemBackground))
             .cornerRadius(20)
             .padding(.horizontal)
             .padding(.top, 15)

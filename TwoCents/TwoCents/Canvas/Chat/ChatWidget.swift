@@ -118,12 +118,13 @@ struct NewChatPreview: View {
     
     var body: some View {
         VStack {
-            VStack {
-                Text("Alice")
+            VStack (alignment: .trailing){
+                Text(appModel.user?.name ?? "Alice")
                     .foregroundStyle(appModel.loadedColor)
                     .font(.caption)
-                    .padding(.top, 3)
-                    .padding(.leading)
+                    .padding(.horizontal, 3)
+//                    .padding(.top, 3)
+
                 Text("Heyyy")
                     .font(.headline)
                     .fontWeight(.regular)
@@ -135,12 +136,13 @@ struct NewChatPreview: View {
                     .clipShape(RoundedRectangle(cornerRadius: 20))
             }
             .frame(maxWidth: .infinity, alignment: .trailing)
-            VStack{
+            VStack(alignment: .leading){
                 Text("Bob")
                     .foregroundStyle(.purple)
                     .font(.caption)
-                    .padding(.top, 3)
-                    .padding(.trailing)
+                
+                .padding(.horizontal, 3)
+                 
                 Text("Ew")
                     .font(.headline)
                     .fontWeight(.regular)
@@ -153,6 +155,10 @@ struct NewChatPreview: View {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         }
+        .padding()
+        .frame(maxHeight: .infinity, alignment: .leading)
+        .contentShape(Rectangle())
+        .background(Color(UIColor.systemBackground))
     }
 }
 
