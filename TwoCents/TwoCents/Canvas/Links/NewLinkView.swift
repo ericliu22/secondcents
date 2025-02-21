@@ -48,6 +48,7 @@ struct NewLinkView: View {
         LinkView(url: formattedURL ?? URL(string: "https://twocentsapp.com")!)
             .disabled(true)
             .background(Color(UIColor.systemBackground))
+            .frame(width: .infinity, height: .infinity)
             .onTapGesture {
                 showingView.toggle()
             }
